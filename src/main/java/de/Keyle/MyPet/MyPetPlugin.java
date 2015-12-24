@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet;
 
+import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
@@ -57,7 +58,10 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.repository.*;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.repository.RepositoryCallback;
+import de.Keyle.MyPet.repository.RepositoryInitException;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;

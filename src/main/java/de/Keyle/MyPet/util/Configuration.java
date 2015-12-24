@@ -275,10 +275,6 @@ public class Configuration {
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
         Behavior.BehaviorState.Duel.setActive(config.getBoolean("MyPet.Skill.Behavior.Duel", true));
 
-        Backup.MAKE_BACKUPS = config.getBoolean("MyPet.Repository.NBT.Backup.Active", Backup.MAKE_BACKUPS);
-        Backup.SAVE_INTERVAL = config.getInt("MyPet.Repository.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
-        Backup.DATE_FORMAT = config.getString("MyPet.Repository.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
-
         SKILLTREE_SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         SKILLTREE_SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
         SKILLTREE_SWITCH_PENALTY_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
@@ -324,6 +320,9 @@ public class Configuration {
         NbtRepository.SAVE_ON_PLAYER_ADD = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
         NbtRepository.SAVE_ON_PLAYER_UPDATE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
         NbtRepository.SAVE_ON_PLAYER_REMOVE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
+        Backup.MAKE_BACKUPS = config.getBoolean("MyPet.Repository.NBT.Backup.Active", Backup.MAKE_BACKUPS);
+        Backup.SAVE_INTERVAL = config.getInt("MyPet.Repository.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
+        Backup.DATE_FORMAT = config.getString("MyPet.Repository.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
 
         MySqlRepository.DATABASE = config.getString("MyPet.Repository.MySQL.Database", MySqlRepository.DATABASE);
         MySqlRepository.HOST = config.getString("MyPet.Repository.MySQL.Host", MySqlRepository.HOST);

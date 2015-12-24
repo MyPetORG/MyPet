@@ -22,13 +22,13 @@ package de.Keyle.MyPet.repository.types;
 
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.BukkitUtil;
@@ -171,6 +171,11 @@ public class NbtRepository implements Repository, IScheduler {
     }
 
     // Pets ------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public List<InactiveMyPet> getAllMyPets(Map<UUID, MyPetPlayer> owners) {
+        return new ArrayList<>(myPets.values());
+    }
 
     @Override
     public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
@@ -332,6 +337,11 @@ public class NbtRepository implements Repository, IScheduler {
 
 
     // Players ---------------------------------------------------------------------------------------------------------
+
+    @Override
+    public List<MyPetPlayer> getAllMyPetPlayers() {
+        return new ArrayList<>(players.values());
+    }
 
     @Override
     public void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback) {
