@@ -58,10 +58,7 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.repository.MyPetList;
-import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.repository.RepositoryCallback;
-import de.Keyle.MyPet.repository.RepositoryInitException;
+import de.Keyle.MyPet.repository.*;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
@@ -306,6 +303,8 @@ public class MyPetPlugin extends JavaPlugin {
             } catch (RepositoryInitException ignored) {
             }
         }
+
+        Converter.convert();
 
         if (repo instanceof IScheduler) {
             Timer.addTask((IScheduler) repo);

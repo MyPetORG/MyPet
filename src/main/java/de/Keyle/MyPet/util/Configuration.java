@@ -40,6 +40,7 @@ import de.Keyle.MyPet.entity.types.snowman.MySnowman;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
+import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
@@ -112,6 +113,7 @@ public class Configuration {
         config.addDefault("MyPet.Log.WARNING", DebugLogger.WARNING);
 
         config.addDefault("MyPet.Repository.Type", MyPetPlugin.REPOSITORY_TYPE);
+        config.addDefault("MyPet.Repository.ConvertFrom", Converter.CONVERT_FROM);
 
         config.addDefault("MyPet.Repository.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
         config.addDefault("MyPet.Repository.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
@@ -312,6 +314,7 @@ public class Configuration {
         }
 
         MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", MyPetPlugin.REPOSITORY_TYPE);
+        Converter.CONVERT_FROM = config.getString("MyPet.Repository.ConvertFrom", Converter.CONVERT_FROM);
 
         NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.Repository.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
         NbtRepository.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);

@@ -22,10 +22,14 @@ package de.Keyle.MyPet.repository.types;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.repository.*;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.repository.RepositoryCallback;
+import de.Keyle.MyPet.repository.RepositoryInitException;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
@@ -388,6 +392,56 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
+    public List<InactiveMyPet> getAllMyPets(Map<UUID, MyPetPlayer> owners) {
+        try {
+            checkConnection();
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM pets;");
+            List<InactiveMyPet> pets = new ArrayList<>();
+            while (resultSet.next()) {
+                if (!owners.containsKey(UUID.fromString(resultSet.getString("owner_uuid")))) {
+                    continue;
+                }
+                MyPetPlayer owner = owners.get(UUID.fromString(resultSet.getString("owner_uuid")));
+
+                InactiveMyPet pet = new InactiveMyPet(owner);
+                pet.setUUID(UUID.fromString(resultSet.getString("uuid")));
+                pet.setExp(resultSet.getDouble("exp"));
+                pet.setHealth(resultSet.getDouble("health"));
+                pet.setRespawnTime(resultSet.getInt("respawn_time"));
+                pet.setPetName(resultSet.getString("name"));
+                pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
+                pet.setLastUsed(resultSet.getLong("last_used"));
+                pet.setHungerValue(resultSet.getInt("hunger"));
+                pet.setWorldGroup(resultSet.getString("world_group"));
+                pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
+
+                String skillTreeName = resultSet.getString("skilltree");
+                if (skillTreeName != null) {
+                    if (SkillTreeMobType.getMobTypeByPetType(pet.getPetType()) != null) {
+                        SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByPetType(pet.getPetType());
+
+                        if (mobType.hasSkillTree(skillTreeName)) {
+                            pet.setSkillTree(mobType.getSkillTree(skillTreeName));
+                        }
+                    }
+                }
+
+                pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
+                pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
+
+                pets.add(pet);
+            }
+
+            return pets;
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
     public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
         if (callback != null) {
             Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
@@ -537,39 +591,56 @@ public class MySqlRepository implements Repository {
             public void run() {
                 checkConnection();
 
-                try {
-                    PreparedStatement statement = connection.prepareStatement(
-                            "INSERT INTO pets (uuid, owner_uuid, exp, health, respawn_time, name, type, last_used, hunger, world_group, wants_to_spawn, skilltree, skills, info) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-                    statement.setString(1, inactiveMyPet.getUUID().toString());
-                    statement.setString(2, inactiveMyPet.getOwner().getInternalUUID().toString());
-                    statement.setDouble(3, inactiveMyPet.getExp());
-                    statement.setDouble(4, inactiveMyPet.getHealth());
-                    statement.setInt(5, inactiveMyPet.getRespawnTime());
-                    statement.setString(6, inactiveMyPet.getPetName());
-                    statement.setString(7, inactiveMyPet.getPetType().getTypeName());
-                    statement.setLong(8, inactiveMyPet.getLastUsed());
-                    statement.setInt(9, inactiveMyPet.getHungerValue());
-                    statement.setString(10, inactiveMyPet.getWorldGroup());
-                    statement.setBoolean(11, inactiveMyPet.wantsToRespawn);
-                    statement.setString(12, inactiveMyPet.getSkillTree() != null ? inactiveMyPet.getSkillTree().getName() : null);
+                boolean result = addMyPet(inactiveMyPet);
+                //MyPetLogger.write("INSERT pet: " + result);
 
-                    statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(inactiveMyPet.getSkills(), true)));
-                    statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(inactiveMyPet.getInfo(), true)));
-
-                    int result = statement.executeUpdate();
-
-                    //MyPetLogger.write("INSERT pet: " + result);
-
-                    if (callback != null) {
-                        callback.setValue(result > 0);
-                        Bukkit.getScheduler().runTask(MyPetPlugin.getPlugin(), callback);
-                    }
-                } catch (SQLException | IOException e) {
-                    e.printStackTrace();
+                if (callback != null) {
+                    callback.setValue(result);
+                    Bukkit.getScheduler().runTask(MyPetPlugin.getPlugin(), callback);
                 }
             }
         });
+    }
+
+    public boolean addMyPet(InactiveMyPet myPet) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO pets (uuid, " +
+                            "owner_uuid, " +
+                            "exp, " +
+                            "health, " +
+                            "respawn_time, " +
+                            "name, " +
+                            "type, " +
+                            "last_used, " +
+                            "hunger, " +
+                            "world_group, " +
+                            "wants_to_spawn, " +
+                            "skilltree, " +
+                            "skills, " +
+                            "info) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            statement.setString(1, myPet.getUUID().toString());
+            statement.setString(2, myPet.getOwner().getInternalUUID().toString());
+            statement.setDouble(3, myPet.getExp());
+            statement.setDouble(4, myPet.getHealth());
+            statement.setInt(5, myPet.getRespawnTime());
+            statement.setString(6, myPet.getPetName());
+            statement.setString(7, myPet.getPetType().getTypeName());
+            statement.setLong(8, myPet.getLastUsed());
+            statement.setInt(9, myPet.getHungerValue());
+            statement.setString(10, myPet.getWorldGroup());
+            statement.setBoolean(11, myPet.wantsToRespawn);
+            statement.setString(12, myPet.getSkillTree() != null ? myPet.getSkillTree().getName() : null);
+
+            statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkills(), true)));
+            statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -655,7 +726,7 @@ public class MySqlRepository implements Repository {
 
     private MyPetPlayer resultSetToMyPetPlayer(ResultSet resultSet) {
         try {
-            if (resultSet.first()) {
+            if (resultSet.next()) {
 
                 MyPetPlayer petPlayer = null;
 
@@ -708,6 +779,30 @@ public class MySqlRepository implements Repository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<MyPetPlayer> getAllMyPetPlayers() {
+        checkConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM players;");
+
+            List<MyPetPlayer> players = new ArrayList<>();
+            MyPetPlayer player;
+            while (true) {
+                player = resultSetToMyPetPlayer(resultSet);
+                if (player == null) {
+                    break;
+                }
+                players.add(player);
+            }
+            return players;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -841,38 +936,53 @@ public class MySqlRepository implements Repository {
             public void run() {
                 checkConnection();
 
-                try {
-                    PreparedStatement statement = connection.prepareStatement(
-                            "INSERT INTO players (internal_uuid, mojang_uuid, offline_uuid, name, auto_respawn, auto_respawn_min, capture_mode, health_bar, extended_info, multi_world) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-                    statement.setString(1, player.getInternalUUID().toString());
-                    statement.setString(2, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
-                    statement.setString(3, player.getOfflineUUID() != null ? player.getOfflineUUID().toString() : null);
-                    statement.setString(4, player.getName());
-                    statement.setBoolean(5, player.hasAutoRespawnEnabled());
-                    statement.setInt(6, player.getAutoRespawnMin());
-                    statement.setBoolean(7, player.isCaptureHelperActive());
-                    statement.setBoolean(8, player.isHealthBarActive());
-                    statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+                boolean result = addMyPetPlayer(player);
+                //MyPetLogger.write("INSERT player: " + result);
 
-                    TagCompound multiWorldCompound = new TagCompound();
-                    for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                        multiWorldCompound.getCompoundData().put(worldGroupName, new TagString(player.getMyPetsForWorldGroups().get(worldGroupName).toString()));
-                    }
-                    statement.setBlob(10, new ByteArrayInputStream(TagStream.writeTag(multiWorldCompound, true)));
-
-                    int result = statement.executeUpdate();
-
-                    //MyPetLogger.write("INSERT player: " + result);
-
-                    if (callback != null) {
-                        callback.setValue(result > 0);
-                        Bukkit.getScheduler().runTask(MyPetPlugin.getPlugin(), callback);
-                    }
-                } catch (SQLException | IOException e) {
-                    e.printStackTrace();
+                if (callback != null) {
+                    callback.setValue(result);
+                    Bukkit.getScheduler().runTask(MyPetPlugin.getPlugin(), callback);
                 }
             }
         });
+    }
+
+    public boolean addMyPetPlayer(MyPetPlayer player) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO players (" +
+                            "internal_uuid, " +
+                            "mojang_uuid, " +
+                            "offline_uuid, " +
+                            "name, " +
+                            "auto_respawn, " +
+                            "auto_respawn_min, " +
+                            "capture_mode, " +
+                            "health_bar, " +
+                            "extended_info, " +
+                            "multi_world) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            statement.setString(1, player.getInternalUUID().toString());
+            statement.setString(2, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
+            statement.setString(3, player.getOfflineUUID() != null ? player.getOfflineUUID().toString() : null);
+            statement.setString(4, player.getName());
+            statement.setBoolean(5, player.hasAutoRespawnEnabled());
+            statement.setInt(6, player.getAutoRespawnMin());
+            statement.setBoolean(7, player.isCaptureHelperActive());
+            statement.setBoolean(8, player.isHealthBarActive());
+            statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+
+            TagCompound multiWorldCompound = new TagCompound();
+            for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
+                multiWorldCompound.getCompoundData().put(worldGroupName, new TagString(player.getMyPetsForWorldGroups().get(worldGroupName).toString()));
+            }
+            statement.setBlob(10, new ByteArrayInputStream(TagStream.writeTag(multiWorldCompound, true)));
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
