@@ -61,8 +61,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
-    private final int[] ControllIgnoreBlocks = {6, 27, 28, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 64, 65, 66, 67, 68, 69, 70, 72, 75, 76, 77, 78, 90, 92, 93, 94, 96, 101, 102, 104, 105, 106, 111, 115, 116, 117, 118, 119};
-
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Control.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasActiveMyPet(event.getPlayer())) {
@@ -88,11 +86,8 @@ public class PlayerListener implements Listener {
                     }
                     Block block = event.getPlayer().getTargetBlock((HashSet<Byte>) null, 100);
                     if (block != null && block.getType() != Material.AIR) {
-                        for (int i : ControllIgnoreBlocks) {
-                            if (block.getTypeId() == i) {
-                                block = block.getRelative(BlockFace.DOWN);
-                                break;
-                            }
+                        if (!block.getType().isSolid()) {
+                            block = block.getRelative(BlockFace.DOWN);
                         }
                         myPet.getSkills().getSkill(Control.class).setMoveTo(block.getLocation());
                     }
