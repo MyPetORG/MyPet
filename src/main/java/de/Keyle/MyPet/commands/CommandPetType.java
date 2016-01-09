@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.ConfigItem;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -65,19 +65,19 @@ public class CommandPetType implements CommandExecutor, TabCompleter {
                 leashFlagString += leashFlag.name() + ", ";
             }
             leashFlagString = leashFlagString.substring(0, leashFlagString.lastIndexOf(","));
-            commandSender.sendMessage(Locales.getString("Name.LeashFlag", lang) + ": " + leashFlagString);
+            commandSender.sendMessage(Translation.getString("Name.LeashFlag", lang) + ": " + leashFlagString);
 
             String foodString = "";
             for (ConfigItem material : MyPet.getFood(myPetType.getMyPetClass())) {
                 foodString += WordUtils.capitalizeFully(BukkitUtil.getMaterialName(material.getItem().getTypeId()).replace("_", " ")) + ", ";
             }
             foodString = foodString.substring(0, foodString.lastIndexOf(","));
-            commandSender.sendMessage(Locales.getString("Name.Food", lang) + ": " + foodString);
+            commandSender.sendMessage(Translation.getString("Name.Food", lang) + ": " + foodString);
 
-            commandSender.sendMessage(Locales.getString("Name.HP", lang) + ": " + MyPet.getStartHP(myPetType.getMyPetClass()));
+            commandSender.sendMessage(Translation.getString("Name.HP", lang) + ": " + MyPet.getStartHP(myPetType.getMyPetClass()));
             return true;
         }
-        commandSender.sendMessage(Locales.getString("Message.Command.PetType.Unknown", lang));
+        commandSender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", lang));
 
         return true;
     }

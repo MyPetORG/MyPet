@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,42 +57,42 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.CanUse", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.CanUse", petOwner), myPet.getPetName()));
                     return true;
                 } else if (myPet.getSkills().hasSkill(Behavior.class)) {
                     Behavior behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
                     if (args.length == 1) {
                         if ((args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend"))) {
                             if (!Permissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Friendly") || !behaviorSkill.isModeUsable(BehaviorState.Friendly)) {
-                                myPet.sendMessageToOwner(Locales.getString("Message.No.Allowed", petOwner));
+                                myPet.sendMessageToOwner(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
                         } else if ((args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("Aggro"))) {
                             if (!Permissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.aggressive") || !behaviorSkill.isModeUsable(BehaviorState.Aggressive)) {
-                                myPet.sendMessageToOwner(Locales.getString("Message.No.Allowed", petOwner));
+                                myPet.sendMessageToOwner(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
                         } else if (args[0].equalsIgnoreCase("farm")) {
                             if (!Permissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Farm") || !behaviorSkill.isModeUsable(BehaviorState.Farm)) {
-                                myPet.sendMessageToOwner(Locales.getString("Message.No.Allowed", petOwner));
+                                myPet.sendMessageToOwner(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(BehaviorState.Farm);
                         } else if (args[0].equalsIgnoreCase("raid")) {
                             if (!Permissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Raid") || !behaviorSkill.isModeUsable(BehaviorState.Raid)) {
-                                myPet.sendMessageToOwner(Locales.getString("Message.No.Allowed", petOwner));
+                                myPet.sendMessageToOwner(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
                         } else if (args[0].equalsIgnoreCase("duel")) {
                             if (!Permissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Duel") || !behaviorSkill.isModeUsable(BehaviorState.Duel)) {
-                                myPet.sendMessageToOwner(Locales.getString("Message.No.Allowed", petOwner));
+                                myPet.sendMessageToOwner(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Duel);
@@ -108,7 +108,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                 }
                 return true;
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

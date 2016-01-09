@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.HPInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
@@ -69,7 +69,7 @@ public class HP extends HPInfo implements ISkillInstance {
                 }
 
                 if (!quiet) {
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), myPet.getMaxHealth()));
+                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), myPet.getMaxHealth()));
                 }
             }
         }

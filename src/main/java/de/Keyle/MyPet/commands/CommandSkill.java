@@ -26,7 +26,7 @@ import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -48,10 +48,10 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                 petOwner = Bukkit.getServer().getPlayer(args[0]);
 
                 if (petOwner == null || !petOwner.isOnline()) {
-                    sender.sendMessage(Locales.getString("Message.No.PlayerOnline", petOwner));
+                    sender.sendMessage(Translation.getString("Message.No.PlayerOnline", petOwner));
                     return true;
                 } else if (!MyPetList.hasActiveMyPet(petOwner)) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
                     return true;
                 }
             }
@@ -59,7 +59,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
             if (MyPetList.hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
-                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
 
                 for (ISkillInstance skill : myPet.getSkills().getSkills()) {
                     if (skill.isActive()) {
@@ -68,7 +68,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                 }
                 return true;
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

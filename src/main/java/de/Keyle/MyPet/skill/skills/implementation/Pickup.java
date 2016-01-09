@@ -30,7 +30,7 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.PickupInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagDouble;
@@ -75,7 +75,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                     range = upgrade.getProperties().getAs("range", TagDouble.class).getDoubleData();
                 }
                 if (!quiet) {
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range)));
+                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range)));
                 }
             }
             if (upgrade.getProperties().getCompoundData().containsKey("exp_pickup")) {
@@ -85,7 +85,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
     }
 
     public String getFormattedValue() {
-        return Locales.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + String.format("%1.2f", range) + " " + Locales.getString("Name.Blocks", myPet.getOwner().getPlayer());
+        return Translation.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + String.format("%1.2f", range) + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }
 
     public void reset() {
@@ -97,15 +97,15 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         if (range > 0) {
             if (myPet.getSkills().isSkillActive(Inventory.class)) {
                 pickup = !pickup;
-                String mode = pickup ? Locales.getString("Name.Enabled", myPet.getOwner()) : Locales.getString("Name.Disabled", myPet.getOwner());
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), mode));
+                String mode = pickup ? Translation.getString("Name.Enabled", myPet.getOwner()) : Translation.getString("Name.Disabled", myPet.getOwner());
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), mode));
                 return true;
             } else {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Pickup.NoInventory", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Pickup.NoInventory", myPet.getOwner().getLanguage()), myPet.getPetName()));
                 return false;
             }
         } else {
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
+            myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
             return false;
         }
     }
@@ -113,11 +113,11 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
     public void schedule() {
         if (pickup && (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup") || myPet.getOwner().isInExternalGames())) {
             pickup = false;
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Locales.getString("Name.Disabled", myPet.getOwner())));
+            myPet.sendMessageToOwner(Util.formatText(Translation.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Translation.getString("Name.Disabled", myPet.getOwner())));
             return;
         }
         if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Inventory.OPEN_IN_CREATIVEMODE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
-            myPet.sendMessageToOwner(Locales.getString("Message.Skill.Pickup.Creative", myPet.getOwner()));
+            myPet.sendMessageToOwner(Translation.getString("Message.Skill.Pickup.Creative", myPet.getOwner()));
             pickup = false;
             return;
         }

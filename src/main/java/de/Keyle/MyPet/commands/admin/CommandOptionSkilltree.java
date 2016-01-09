@@ -28,7 +28,7 @@ import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -48,10 +48,10 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
         if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
             return true;
         } else if (!MyPetList.hasActiveMyPet(petOwner)) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), petOwner.getName()));
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
         MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -60,12 +60,12 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         if (skillTreeMobType.hasSkillTree(args[1])) {
             SkillTree skillTree = skillTreeMobType.getSkillTree(args[1]);
             if (myPet.setSkilltree(skillTree)) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), skillTree.getName()));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), skillTree.getName()));
             } else {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.Skilltree.NotSwitched", lang));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.Skilltree.NotSwitched", lang));
             }
         } else {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.Command.Skilltree.CantFindSkilltree", lang), args[1]));
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Command.Skilltree.CantFindSkilltree", lang), args[1]));
         }
         return true;
     }

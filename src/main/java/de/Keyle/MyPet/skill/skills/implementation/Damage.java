@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.DamageInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
@@ -66,7 +66,7 @@ public class Damage extends DamageInfo implements ISkillInstance {
                     damage = upgrade.getProperties().getAs("damage_double", TagDouble.class).getDoubleData();
                 }
                 if (!quiet) {
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Damage.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), damage));
+                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Damage.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), damage));
                 }
             }
             if (isPassive != (damage <= 0)) {
@@ -83,7 +83,7 @@ public class Damage extends DamageInfo implements ISkillInstance {
     }
 
     public String getFormattedValue() {
-        return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
+        return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset() {

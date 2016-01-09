@@ -28,7 +28,7 @@ import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.WorldGroup;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,7 +45,7 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
         if (args.length >= 1) {
             Player player = Bukkit.getPlayer(args[0]);
             if (player == null || !player.isOnline()) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
             if (PlayerList.isMyPetPlayer(player)) {

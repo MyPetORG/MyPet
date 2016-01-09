@@ -34,7 +34,7 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.PartyManager;
 import de.Keyle.MyPet.util.iconmenu.IconMenu;
 import de.Keyle.MyPet.util.iconmenu.IconMenuItem;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.EnumParticle;
@@ -216,9 +216,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                                 }
 
                                 if (selectableBuffs > selectedBuffs.size()) {
-                                    menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                                    menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
                                 } else {
-                                    menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                                    menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
                                 }
                             } else {
                                 if (!selectedBuffs.contains(selectedBuff)) {
@@ -237,55 +237,55 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }, MyPetPlugin.getPlugin());
 
         if (beacon.active) {
-            menu.setOption(4, new IconMenuItem().setMaterial(EMERALD_BLOCK).setTitle(Util.formatText(Locales.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), GREEN + Locales.getString("Name.On", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Locales.getString("Message.Skill.Beacon.ClickOff", myPet.getOwner().getLanguage())));
+            menu.setOption(4, new IconMenuItem().setMaterial(EMERALD_BLOCK).setTitle(Util.formatText(Translation.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), GREEN + Translation.getString("Name.On", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Translation.getString("Message.Skill.Beacon.ClickOff", myPet.getOwner().getLanguage())));
         } else {
-            menu.setOption(4, new IconMenuItem().setMaterial(REDSTONE_BLOCK).setTitle(Util.formatText(Locales.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), RED + Locales.getString("Name.Off", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Locales.getString("Message.Skill.Beacon.ClickOn", myPet.getOwner().getLanguage())));
+            menu.setOption(4, new IconMenuItem().setMaterial(REDSTONE_BLOCK).setTitle(Util.formatText(Translation.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), RED + Translation.getString("Name.Off", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Translation.getString("Message.Skill.Beacon.ClickOn", myPet.getOwner().getLanguage())));
         }
 
-        menu.setOption(3, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(5).setTitle(GREEN + Locales.getString("Name.Done", myPet.getOwner().getLanguage())));
-        menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Locales.getString("Name.Cancel", myPet.getOwner().getLanguage())));
+        menu.setOption(3, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(5).setTitle(GREEN + Translation.getString("Name.Done", myPet.getOwner().getLanguage())));
+        menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Translation.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
-        menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Locales.getString("Name.Owner", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Owner));
+        menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Owner));
         if (PARTY_SUPPORT && PartyManager.isInParty(getMyPet().getOwner().getPlayer())) {
-            menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(1).setTitle(GOLD + Locales.getString("Name.Party", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Party));
+            menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(1).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Party));
         }
-        menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(2).setTitle(GOLD + Locales.getString("Name.Everyone", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Everyone));
+        menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(2).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Everyone));
 
         if (buffLevel.get(1) > 0) {
-            menu.setOption(0, new IconMenuItem().setMaterial(LEATHER_BOOTS).setAmount(buffLevel.get(1)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(1), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(1))));
+            menu.setOption(0, new IconMenuItem().setMaterial(LEATHER_BOOTS).setAmount(buffLevel.get(1)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(1), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(1))));
         }
         if (buffLevel.get(3) > 0) {
-            menu.setOption(9, new IconMenuItem().setMaterial(GOLD_PICKAXE).setAmount(buffLevel.get(3)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(3), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(3))));
+            menu.setOption(9, new IconMenuItem().setMaterial(GOLD_PICKAXE).setAmount(buffLevel.get(3)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(3), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(3))));
         }
         if (buffLevel.get(5) > 0) {
-            menu.setOption(18, new IconMenuItem().setMaterial(DIAMOND_SWORD).setAmount(buffLevel.get(5)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(5), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(5))));
+            menu.setOption(18, new IconMenuItem().setMaterial(DIAMOND_SWORD).setAmount(buffLevel.get(5)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(5), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(5))));
         }
         if (buffLevel.get(8) > 0) {
-            menu.setOption(1, new IconMenuItem().setMaterial(FIREWORK).setAmount(buffLevel.get(8)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(8), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(8))));
+            menu.setOption(1, new IconMenuItem().setMaterial(FIREWORK).setAmount(buffLevel.get(8)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(8), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(8))));
         }
         if (buffLevel.get(10) > 0) {
-            menu.setOption(10, new IconMenuItem().setMaterial(APPLE).setAmount(buffLevel.get(10)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(10), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(10))));
+            menu.setOption(10, new IconMenuItem().setMaterial(APPLE).setAmount(buffLevel.get(10)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(10), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(10))));
         }
         if (buffLevel.get(11) > 0) {
-            menu.setOption(19, new IconMenuItem().setMaterial(DIAMOND_CHESTPLATE).setAmount(buffLevel.get(11)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(11), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(11))));
+            menu.setOption(19, new IconMenuItem().setMaterial(DIAMOND_CHESTPLATE).setAmount(buffLevel.get(11)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(11), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(11))));
         }
         if (buffLevel.get(12) > 0) {
-            menu.setOption(7, new IconMenuItem().setMaterial(LAVA_BUCKET).setAmount(buffLevel.get(12)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(12), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(12))));
+            menu.setOption(7, new IconMenuItem().setMaterial(LAVA_BUCKET).setAmount(buffLevel.get(12)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(12), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(12))));
         }
         if (buffLevel.get(13) > 0) {
-            menu.setOption(16, new IconMenuItem().setMaterial(RAW_FISH).setAmount(buffLevel.get(13)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(13), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(13))));
+            menu.setOption(16, new IconMenuItem().setMaterial(RAW_FISH).setAmount(buffLevel.get(13)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(13), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(13))));
         }
         if (buffLevel.get(14) > 0) {
-            menu.setOption(25, new IconMenuItem().setMaterial(EYE_OF_ENDER).setAmount(buffLevel.get(14)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(14), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(14))));
+            menu.setOption(25, new IconMenuItem().setMaterial(EYE_OF_ENDER).setAmount(buffLevel.get(14)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(14), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(14))));
         }
         if (buffLevel.get(16) > 0) {
-            menu.setOption(8, new IconMenuItem().setMaterial(TORCH).setAmount(buffLevel.get(16)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(16), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(16))));
+            menu.setOption(8, new IconMenuItem().setMaterial(TORCH).setAmount(buffLevel.get(16)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(16), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(16))));
         }
         if (buffLevel.get(21) > 0) {
-            menu.setOption(17, new IconMenuItem().setMaterial(GOLDEN_APPLE).setAmount(buffLevel.get(21)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(21), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(21))));
+            menu.setOption(17, new IconMenuItem().setMaterial(GOLDEN_APPLE).setAmount(buffLevel.get(21)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(21), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(21))));
         }
         if (buffLevel.get(22) > 0) {
-            menu.setOption(26, new IconMenuItem().setMaterial(SPONGE).setAmount(buffLevel.get(22)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(22), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(22))));
+            menu.setOption(26, new IconMenuItem().setMaterial(SPONGE).setAmount(buffLevel.get(22)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(22), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(22))));
         }
 
         for (int buff : selectedBuffs) {
@@ -298,9 +298,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
 
         if (selectableBuffs > 1) {
             if (selectableBuffs > selectedBuffs.size()) {
-                menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
             } else {
-                menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
             }
         }
 
@@ -423,7 +423,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             }
 
             if (!quiet) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range), duration));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range), duration));
                 myPet.sendMessageToOwner(" " + getFormattedValue());
             }
         }
@@ -436,7 +436,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 if (!availableBuffs.equalsIgnoreCase("")) {
                     availableBuffs += ", ";
                 }
-                availableBuffs += GOLD + Locales.getString("Name." + buffNames.get(primaryBuffId), myPet.getOwner().getLanguage());
+                availableBuffs += GOLD + Translation.getString("Name." + buffNames.get(primaryBuffId), myPet.getOwner().getLanguage());
                 availableBuffs += GRAY + " " + Util.decimal2roman(buffLevel.get(primaryBuffId));
                 availableBuffs += ChatColor.RESET;
             }

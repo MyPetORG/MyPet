@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
@@ -86,7 +86,7 @@ public class Ranged extends RangedInfo implements ISkillInstance {
                 }
             }
             if (!quiet) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner()), myPet.getPetName(), Locales.getString("Name." + getProjectile().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner()), myPet.getPetName(), Translation.getString("Name." + getProjectile().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)));
             }
             if (isPassive != (damage <= 0)) {
                 if (myPet.getStatus() == PetState.Here) {
@@ -102,7 +102,7 @@ public class Ranged extends RangedInfo implements ISkillInstance {
     }
 
     public String getFormattedValue() {
-        return Util.formatText(Locales.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
+        return Util.formatText(Translation.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset() {

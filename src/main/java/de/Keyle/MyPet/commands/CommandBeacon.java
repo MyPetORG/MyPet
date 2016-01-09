@@ -26,7 +26,7 @@ import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,22 +45,22 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
             if (MyPetList.hasActiveMyPet(player)) {
                 MyPet myPet = MyPetList.getMyPet(player);
                 if (!Permissions.hasExtended(player, "MyPet.user.extended.Beacon", true)) {
-                    myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", player));
+                    myPet.sendMessageToOwner(Translation.getString("Message.No.CanUse", player));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", player), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", player), myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill(Beacon.class)) {
                     myPet.getSkills().getSkill(Beacon.class).activate();
                 }
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", player));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", player));
             }
             return true;
         }

@@ -29,7 +29,7 @@ import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.DonateCheck;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -63,18 +63,18 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 if (PlayerList.isMyPetPlayer(player)) {
                     petOwner = PlayerList.getMyPetPlayer(player);
                 } else {
-                    sender.sendMessage(Locales.getString("Message.No.HasPet", player));
+                    sender.sendMessage(Translation.getString("Message.No.HasPet", player));
                     return true;
                 }
             } else if (Permissions.has(player, "MyPet.admin", false)) {
                 if (PlayerList.isMyPetPlayer(args[0])) {
                     petOwner = PlayerList.getMyPetPlayer(args[0]);
                 } else {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), args[0]));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", player), args[0]));
                     return true;
                 }
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", player));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", player));
                 return true;
             }
 
@@ -87,13 +87,13 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     infoShown = true;
                 }
                 if (player != petOwner && canSee(!PetInfoDisplay.Owner.adminOnly, player, myPet)) {
-                    player.sendMessage("   " + Locales.getString("Name.Owner", player) + ": " + myPet.getOwner().getName());
+                    player.sendMessage("   " + Translation.getString("Name.Owner", player) + ": " + myPet.getOwner().getName());
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.HP.adminOnly, player, myPet)) {
                     String msg;
                     if (myPet.getStatus() == PetState.Dead) {
-                        msg = ChatColor.RED + Locales.getString("Name.Dead", player);
+                        msg = ChatColor.RED + Translation.getString("Name.Dead", player);
                     } else {
                         if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
                             msg = "" + ChatColor.GREEN;
@@ -104,50 +104,50 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         }
                         msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                     }
-                    player.sendMessage("   " + Locales.getString("Name.HP", player) + ": " + msg);
+                    player.sendMessage("   " + Translation.getString("Name.HP", player) + ": " + msg);
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.RespawnTime.adminOnly, player, myPet)) {
                     if (myPet.getStatus() == PetState.Dead) {
-                        player.sendMessage("   " + Locales.getString("Name.Respawntime", player) + ": " + myPet.getRespawnTime());
+                        player.sendMessage("   " + Translation.getString("Name.Respawntime", player) + ": " + myPet.getRespawnTime());
                         infoShown = true;
                     }
                 }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, player, myPet)) {
                     double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).getDamage() : 0);
-                    player.sendMessage("   " + Locales.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
+                    player.sendMessage("   " + Translation.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }
                 if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, player, myPet)) {
                     double damage = myPet.getRangedDamage();
-                    player.sendMessage("   " + Locales.getString("Name.RangedDamage", player) + ": " + String.format("%1.2f", damage));
+                    player.sendMessage("   " + Translation.getString("Name.RangedDamage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }
                 if (Configuration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, player, myPet)) {
-                    player.sendMessage("   " + Locales.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
+                    player.sendMessage("   " + Translation.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.Behavior.adminOnly, player, myPet)) {
                     if (myPet.getSkills().hasSkill(Behavior.class)) {
                         Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
-                        player.sendMessage("   Behavior: " + Locales.getString("Name." + behavior.getBehavior().name(), player));
+                        player.sendMessage("   Behavior: " + Translation.getString("Name." + behavior.getBehavior().name(), player));
                         infoShown = true;
                     }
                 }
                 if (canSee(PetInfoDisplay.Skilltree.adminOnly, player, myPet) && myPet.getSkillTree() != null) {
-                    player.sendMessage("   " + Locales.getString("Name.Skilltree", player) + ": " + myPet.getSkillTree().getName());
+                    player.sendMessage("   " + Translation.getString("Name.Skilltree", player) + ": " + myPet.getSkillTree().getName());
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.Level.adminOnly, player, myPet)) {
                     int lvl = myPet.getExperience().getLevel();
-                    player.sendMessage("   " + Locales.getString("Name.Level", player) + ": " + lvl);
+                    player.sendMessage("   " + Translation.getString("Name.Level", player) + ": " + lvl);
                     infoShown = true;
                 }
                 int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Configuration.LEVEL_CAP;
                 if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                     double exp = myPet.getExperience().getCurrentExp();
                     double reqEXP = myPet.getExperience().getRequiredExp();
-                    player.sendMessage("   " + Locales.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
+                    player.sendMessage("   " + Translation.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
                     infoShown = true;
                 }
                 if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
@@ -155,14 +155,14 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     sender.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
                 }
                 if (!infoShown) {
-                    sender.sendMessage(Locales.getString("Message.CantViewPetInfo", player));
+                    sender.sendMessage(Translation.getString("Message.CantViewPetInfo", player));
                 }
                 return true;
             } else {
                 if (args.length > 0) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), args[0]));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", player), args[0]));
                 } else {
-                    sender.sendMessage(Locales.getString("Message.No.HasPet", player));
+                    sender.sendMessage(Translation.getString("Message.No.HasPet", player));
                 }
             }
             return true;

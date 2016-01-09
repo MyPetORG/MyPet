@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.hooks.PluginHookManager;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import me.maker56.survivalgames.events.UserLobbyJoinedEvent;
@@ -64,7 +64,7 @@ public class UltimateSurvivalGames implements Listener {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getUser().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet(true);
-                player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
+                player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
             }
         }
     }

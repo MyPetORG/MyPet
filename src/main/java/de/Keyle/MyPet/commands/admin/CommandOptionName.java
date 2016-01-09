@@ -27,7 +27,7 @@ import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -48,10 +48,10 @@ public class CommandOptionName implements CommandOptionTabCompleter {
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
         if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
             return true;
         } else if (!MyPetList.hasActiveMyPet(petOwner)) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), petOwner.getName()));
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
         MyPet myPet = MyPetList.getMyPet(petOwner);

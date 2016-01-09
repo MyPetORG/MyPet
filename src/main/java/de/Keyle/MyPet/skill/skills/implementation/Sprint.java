@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.SprintInfo;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 
 public class Sprint extends SprintInfo implements ISkillInstance {
     private boolean active = false;
@@ -49,7 +49,7 @@ public class Sprint extends SprintInfo implements ISkillInstance {
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof SprintInfo) {
             if (!quiet && !active) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
 
             }
             active = true;

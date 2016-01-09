@@ -79,7 +79,7 @@ import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.hooks.arenas.*;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
@@ -279,7 +279,7 @@ public class MyPetPlugin extends JavaPlugin {
         BukkitUtil.registerMyPetEntity(EntityMyRabbit.class, "Rabbit", 101);
         BukkitUtil.registerMyPetEntity(EntityMyVillager.class, "Villager", 120);
 
-        new Locales();
+        Translation.init();
         Bungee.reset();
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
@@ -388,22 +388,22 @@ public class MyPetPlugin extends JavaPlugin {
                                                 MyPet runMyPet = myPetPlayer.getMyPet();
                                                 switch (runMyPet.createPet()) {
                                                     case Canceled:
-                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
                                                         break;
                                                     case NoSpace:
-                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
                                                         break;
                                                     case NotAllowed:
-                                                        runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                                                        runMyPet.sendMessageToOwner(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                                                         break;
                                                     case Dead:
-                                                        runMyPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                                                        runMyPet.sendMessageToOwner(Translation.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
                                                         break;
                                                     case Flying:
-                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
                                                         break;
                                                     case Success:
-                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
                                                         break;
                                                 }
                                             }

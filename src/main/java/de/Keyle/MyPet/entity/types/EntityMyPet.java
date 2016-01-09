@@ -34,7 +34,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
@@ -313,7 +313,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                         ((CraftPlayer) owner).getHandle().mount(this);
                         return true;
                     } else {
-                        getMyPet().sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
+                        getMyPet().sendMessageToOwner(Translation.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                     }
                 }
             }
@@ -328,7 +328,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                         final String name = itemStack.getName();
                         getMyPet().setPetName(name);
                         EntityMyPet.super.setCustomName("-");
-                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Name.New", myPet.getOwner()), name));
+                        myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Name.New", myPet.getOwner()), name));
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             --itemStack.count;
                         }
@@ -472,7 +472,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                 }
             }
         } else {
-            msg += Locales.getString("Name.Dead", getOwner());
+            msg += Translation.getString("Name.Dead", getOwner());
         }
 
         BukkitUtil.sendMessageActionBar(getOwner().getPlayer(), msg);

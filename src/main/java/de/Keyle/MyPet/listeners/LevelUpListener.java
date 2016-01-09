@@ -30,7 +30,7 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -52,9 +52,9 @@ public class LevelUpListener implements Listener {
         if (!event.isQuiet()) {
             int maxlevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
             if (maxlevel != 0 && lvl >= maxlevel) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.LevelSystem.ReachedMaxLevel", event.getOwner().getLanguage()), myPet.getPetName(), maxlevel));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.LevelSystem.ReachedMaxLevel", event.getOwner().getLanguage()), myPet.getPetName(), maxlevel));
             } else {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.LevelSystem.LevelUp", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.LevelSystem.LevelUp", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
             }
         }
         SkillTree skillTree = myPet.getSkillTree();

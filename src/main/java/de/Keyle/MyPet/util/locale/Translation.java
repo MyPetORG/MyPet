@@ -22,11 +22,8 @@ package de.Keyle.MyPet.util.locale;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.BukkitUtil;
-import de.Keyle.MyPet.util.Colorizer;
-import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,21 +34,16 @@ import java.util.PropertyResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class Locales {
-    private static Locales latestMyPetLocales = null;
+public class Translation {
+    private static Translation instance = null;
 
-    private Map<String, ResourceBundle> locales = new HashMap<>();
-    private JarFile jarFile;
+    private Map<String, Language> languages = new HashMap<>();
 
-    public Locales() {
-        File pluginFile = MyPetPlugin.getPlugin().getFile();
-        try {
-            jarFile = new JarFile(pluginFile);
-        } catch (IOException ignored) {
-            jarFile = null;
-        }
-        loadLocale("en");
-        latestMyPetLocales = this;
+    private Translation() {
+    }
+
+    public static void init() {
+        instance = new Translation();
     }
 
     public static String getString(String key, Player player) {
@@ -82,68 +74,66 @@ public class Locales {
     }
 
     public static String getString(String key, String localeString) {
-        localeString = Util.cutString(localeString, 2);
-        LocaleUtils.toLocale(localeString);
-
-        if (latestMyPetLocales == null) {
+        if (instance == null) {
             return key;
         }
-        return latestMyPetLocales.getText(key, localeString);
+        return instance.getText(key, localeString);
     }
 
     public String getText(String key, String localeString) {
-        localeString = Util.cutString(localeString, 2).toLowerCase();
+        String[] codes = localeString.toLowerCase().split("_");
 
-        if (!locales.containsKey(localeString)) {
-            loadLocale(localeString);
+        String languageCode = codes[0];
+
+        if (!languages.containsKey(languageCode)) {
+            languages.put(languageCode, new Language(languageCode));
         }
 
-        java.util.ResourceBundle locale = locales.get(localeString);
-        if (locale.containsKey(key)) {
-            return Colorizer.setColors(locale.getString(key));
-        }
+        Language language = languages.get(languageCode);
 
-        locale = locales.get("en");
-        if (locale.containsKey(key)) {
-            return Colorizer.setColors(locale.getString(key));
+        if (codes.length >= 2) {
+            return language.translate(key, codes[1]);
         }
-        return key;
+        return language.translate(key);
     }
 
-    public void loadLocale(String localeString) {
-        ResourceBundle newLocale = null;
-        if (jarFile != null) {
-            try {
-                JarEntry jarEntry = jarFile.getJarEntry("locale/MyPet_" + localeString + ".properties");
-                if (jarEntry != null) {
-                    java.util.ResourceBundle defaultBundle = new PropertyResourceBundle(new InputStreamReader(jarFile.getInputStream(jarEntry), "UTF-8"));
-                    newLocale = new ResourceBundle(defaultBundle);
-                } else {
-                    throw new IOException();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                DebugLogger.printThrowable(e);
-            } catch (IOException ignored) {
-            }
+    public static ResourceBundle loadLocale(String localeString) {
+
+        JarFile jarFile;
+        try {
+            jarFile = new JarFile(MyPetPlugin.getPlugin().getFile());
+        } catch (IOException ignored) {
+            return null;
         }
-        if (newLocale == null) {
-            newLocale = new ResourceBundle();
+
+        ResourceBundle newLocale = null;
+        try {
+            JarEntry jarEntry = jarFile.getJarEntry("locale/MyPet_" + localeString + ".properties");
+            if (jarEntry != null) {
+                java.util.ResourceBundle defaultBundle = new PropertyResourceBundle(new InputStreamReader(jarFile.getInputStream(jarEntry), "UTF-8"));
+                newLocale = new ResourceBundle(defaultBundle);
+            } else {
+                throw new IOException();
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            DebugLogger.printThrowable(e);
+        } catch (IOException ignored) {
         }
 
         File localeFile = new File(MyPetPlugin.getPlugin().getDataFolder() + File.separator + "locale" + File.separator + "MyPet_" + localeString + ".properties");
         if (localeFile.exists()) {
+            if (newLocale == null) {
+                newLocale = new ResourceBundle();
+            }
             try {
                 java.util.ResourceBundle optionalBundle = new PropertyResourceBundle(new InputStreamReader(new FileInputStream(localeFile), "UTF-8"));
                 newLocale.addExtensionBundle(optionalBundle);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                DebugLogger.printThrowable(e);
             } catch (IOException e) {
                 e.printStackTrace();
                 DebugLogger.printThrowable(e);
             }
         }
-        locales.put(localeString, newLocale);
+        return newLocale;
     }
 }

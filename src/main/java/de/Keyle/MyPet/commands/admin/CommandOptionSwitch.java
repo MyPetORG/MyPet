@@ -30,7 +30,7 @@ import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
@@ -68,14 +68,14 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         } else if (parameter.length == 1) {
             Player player = Bukkit.getPlayer(parameter[0]);
             if (player == null || !player.isOnline()) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
             if (PlayerList.isMyPetPlayer(player)) {
                 o = PlayerList.getMyPetPlayer(player);
             }
             if (o == null) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), o.getName()));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), o.getName()));
             }
         } else if (parameter.length == 2) {
             show = false;
@@ -97,15 +97,15 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                     FancyMessage message = new FancyMessage("");
                     for (InactiveMyPet mypet : value) {
                         List<String> lore = new ArrayList<>();
-                        lore.add(RESET + Locales.getString("Name.Hunger", lang) + ": " + GOLD + mypet.getHungerValue());
+                        lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + mypet.getHungerValue());
                         if (mypet.getRespawnTime() > 0) {
-                            lore.add(RESET + Locales.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
+                            lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
                         } else {
-                            lore.add(RESET + Locales.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+                            lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
                         }
-                        lore.add(RESET + Locales.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
-                        lore.add(RESET + Locales.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().getTypeName());
-                        lore.add(RESET + Locales.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkillTree() != null ? mypet.getSkillTree().getDisplayName() : "-"));
+                        lore.add(RESET + Translation.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+                        lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().getTypeName());
+                        lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkillTree() != null ? mypet.getSkillTree().getDisplayName() : "-"));
 
                         if (doComma) {
                             message.then(", ");
@@ -132,32 +132,32 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                         }
 
                         MyPet myPet = MyPetList.activateMyPet(newPet);
-                        sender.sendMessage(Locales.getString("Message.Command.Success", sender));
+                        sender.sendMessage(Translation.getString("Message.Command.Success", sender));
                         if (myPet != null) {
 
                             WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
                             newPet.setWorldGroup(worldGroup.getName());
                             newPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), newPet.getUUID());
 
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", owner), myPet.getPetName()));
+                            myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.MultiWorld.NowActivePet", owner), myPet.getPetName()));
                             switch (myPet.createPet()) {
                                 case Success:
-                                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Call.Success", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", owner), myPet.getPetName()));
                                     break;
                                 case Canceled:
-                                    sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Prevent", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), myPet.getPetName()));
                                     break;
                                 case NoSpace:
-                                    sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.NoSpace", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), myPet.getPetName()));
                                     break;
                                 case NotAllowed:
-                                    sender.sendMessage(Locales.getString("Message.No.AllowedHere", owner).replace("%petname%", myPet.getPetName()));
+                                    sender.sendMessage(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", myPet.getPetName()));
                                     break;
                                 case Dead:
-                                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                                     break;
                                 case Flying:
-                                    sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Flying", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", owner), myPet.getPetName()));
                                     break;
                             }
                         }

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,17 +38,17 @@ public class CommandStop implements CommandExecutor {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                sender.sendMessage(Locales.getString("Message.Command.Stop.Attack", petOwner).replace("%petname%", myPet.getPetName()));
+                sender.sendMessage(Translation.getString("Message.Command.Stop.Attack", petOwner).replace("%petname%", myPet.getPetName()));
                 myPet.getCraftPet().getHandle().setGoalTarget(null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }
