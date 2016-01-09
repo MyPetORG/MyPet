@@ -122,7 +122,7 @@ public class SkillTree {
     }
 
     public int getMaxLevel() {
-        return maxLevel;
+        return maxLevel == 0 ? Configuration.LEVEL_CAP : maxLevel;
     }
 
     public void setMaxLevel(int maxLevel) {
