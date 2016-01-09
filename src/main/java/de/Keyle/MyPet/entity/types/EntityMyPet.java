@@ -41,7 +41,6 @@ import de.Keyle.MyPet.util.player.MyPetPlayer;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -75,7 +74,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
             setSize();
 
             setMyPet(myPet);
-            myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
+            myPet.craftMyPet = this.getBukkitEntity();
 
             this.petPathfinderSelector = new AIGoalSelector();
             this.petTargetSelector = new AIGoalSelector();
@@ -286,11 +285,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
     }
 
     @Override
-    public CraftEntity getBukkitEntity() {
+    public CraftMyPet getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPet(this.world.getServer(), this);
         }
-        return this.bukkitEntity;
+        return (CraftMyPet) this.bukkitEntity;
     }
 
     // Obfuscated Method handler ------------------------------------------------------------------------------------
@@ -434,9 +433,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
             if (Configuration.INVISIBLE_LIKE_OWNER) {
                 if (!isInvisible && getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                     isInvisible = true;
-                    myPet.craftMyPet.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
+                    getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
                 } else if (isInvisible && !getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                    myPet.craftMyPet.removePotionEffect(PotionEffectType.INVISIBILITY);
+                    getBukkitEntity().removePotionEffect(PotionEffectType.INVISIBILITY);
                     isInvisible = false;
                 }
             }
