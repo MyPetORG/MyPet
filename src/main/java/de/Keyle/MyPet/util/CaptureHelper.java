@@ -24,7 +24,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.entity.*;
 
 import java.util.List;
@@ -41,18 +41,18 @@ public class CaptureHelper {
             switch (flag) {
                 case Impossible:
                     tameNow = false;
-                    attacker.sendMessage(Locales.getString("Message.NotLeashable", attacker));
+                    attacker.sendMessage(Translation.getString("Message.NotLeashable", attacker));
                     break flagloop;
                 case Adult:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).isAdult()) {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.NotAdult", attacker));
+                        attacker.sendMessage(Translation.getString("Message.NotAdult", attacker));
                     }
                     break;
                 case Baby:
                     if (leashTarget instanceof Ageable && ((Ageable) leashTarget).isAdult()) {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.NotBaby", attacker));
+                        attacker.sendMessage(Translation.getString("Message.NotBaby", attacker));
                     }
                     break;
                 case LowHp:
@@ -60,17 +60,17 @@ public class CaptureHelper {
                         tameNow = false;
                     }
                     if (newHealth <= leashTarget.getMaxHealth() && (newHealth * 100) / leashTarget.getMaxHealth() > 10) {
-                        attacker.sendMessage(String.format("%1.2f", newHealth) + "/" + String.format("%1.2f", leashTarget.getMaxHealth()) + " " + Locales.getString("Name.HP", attacker));
+                        attacker.sendMessage(String.format("%1.2f", newHealth) + "/" + String.format("%1.2f", leashTarget.getMaxHealth()) + " " + Translation.getString("Name.HP", attacker));
                     }
                     break;
                 case Angry:
                     if (leashTarget instanceof Wolf && !((Wolf) leashTarget).isAngry()) {
-                        attacker.sendMessage(Locales.getString("Message.NotAngry", attacker));
+                        attacker.sendMessage(Translation.getString("Message.NotAngry", attacker));
                     }
                     break;
                 case CanBreed:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).canBreed()) {
-                        attacker.sendMessage(Locales.getString("Message.CanNotBreed", attacker));
+                        attacker.sendMessage(Translation.getString("Message.CanNotBreed", attacker));
                     }
                     break;
                 case None:
@@ -79,27 +79,27 @@ public class CaptureHelper {
                 case Tamed:
                     if (leashTarget instanceof Tameable && !((Tameable) leashTarget).isTamed()) {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.CaptureHelper.NotTamed", attacker));
+                        attacker.sendMessage(Translation.getString("Message.CaptureHelper.NotTamed", attacker));
                     }
                     break;
                 case UserCreated:
                     if (leashTarget instanceof IronGolem && !((IronGolem) leashTarget).isPlayerCreated()) {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.CaptureHelper.NotUserCreated", attacker));
+                        attacker.sendMessage(Translation.getString("Message.CaptureHelper.NotUserCreated", attacker));
                     }
                     break;
                 case Wild:
                     if (leashTarget instanceof IronGolem && ((IronGolem) leashTarget).isPlayerCreated()) {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.NotWild", attacker));
+                        attacker.sendMessage(Translation.getString("Message.NotWild", attacker));
                     } else if (leashTarget instanceof Tameable && ((Tameable) leashTarget).isTamed()) {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.NotWild", attacker));
+                        attacker.sendMessage(Translation.getString("Message.NotWild", attacker));
                     }
             }
         }
         if (tameNow) {
-            attacker.sendMessage(Locales.getString("Message.CaptureHelper.TameNow", attacker));
+            attacker.sendMessage(Translation.getString("Message.CaptureHelper.TameNow", attacker));
         }
         return tameNow;
     }

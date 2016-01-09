@@ -26,7 +26,7 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.ThornsInfo;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_8_R3.EnumParticle;
@@ -70,14 +70,14 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive {
                 reflectedDamagePercent = Math.min(reflectedDamagePercent, 100);
                 chance = Math.min(chance, 100);
                 if (!quiet) {
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, reflectedDamagePercent));
+                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, reflectedDamagePercent));
                 }
             }
         }
     }
 
     public String getFormattedValue() {
-        return chance + "% -> " + reflectedDamagePercent + "% " + Locales.getString("Name.Damage", myPet.getOwner().getLanguage());
+        return chance + "% -> " + reflectedDamagePercent + "% " + Translation.getString("Name.Damage", myPet.getOwner().getLanguage());
     }
 
     public void reset() {

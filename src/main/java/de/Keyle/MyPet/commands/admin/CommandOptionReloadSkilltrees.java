@@ -33,7 +33,7 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -97,7 +97,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
             }
             myPet.setSkilltree(skillTree);
             if (skillTree != null) {
-                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skills.Show", myPet.getOwner()), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", myPet.getOwner()), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
                 for (ISkillInstance skill : myPet.getSkills().getSkills()) {
                     if (skill.isActive()) {
                         myPet.sendMessageToOwner("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.getFormattedValue());

@@ -25,7 +25,7 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RideInfo;
 import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
@@ -69,16 +69,16 @@ public class Ride extends RideInfo implements ISkillInstance {
                 }
             }
             if (!active && !quiet) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Receive", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Ride.Receive", myPet.getOwner().getLanguage()), myPet.getPetName()));
             } else if (active && !quiet) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), speedPercent));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), speedPercent));
             }
             active = true;
         }
     }
 
     public String getFormattedValue() {
-        return Locales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + "%" + ChatColor.RESET;
+        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + "%" + ChatColor.RESET;
     }
 
     public void reset() {

@@ -26,7 +26,7 @@ import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Pickup;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,20 +40,20 @@ public class CommandPickup implements CommandExecutor {
                 MyPet myPet = MyPetList.getMyPet(owner);
 
                 if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup")) {
-                    sender.sendMessage(Locales.getString("Message.No.Allowed", owner));
+                    sender.sendMessage(Translation.getString("Message.No.Allowed", owner));
                     return true;
                 } else if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", owner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", owner), myPet.getPetName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill(Pickup.class)) {
                     myPet.getSkills().getSkill(Pickup.class).activate();
                 }
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", owner));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", owner));
             }
             return true;
         }

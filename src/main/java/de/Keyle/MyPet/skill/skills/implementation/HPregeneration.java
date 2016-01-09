@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.HPregenerationInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
@@ -87,13 +87,13 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
                 valuesEdit = true;
             }
             if (!quiet && valuesEdit) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), increaseHpBy, regenTime));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), increaseHpBy, regenTime));
             }
         }
     }
 
     public String getFormattedValue() {
-        return "+" + increaseHpBy + Locales.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + regenTime + "sec";
+        return "+" + increaseHpBy + Translation.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + regenTime + "sec";
     }
 
     public void reset() {

@@ -25,7 +25,7 @@ import de.Keyle.MyPet.skill.skills.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.PoisonInfo;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 import org.bukkit.entity.LivingEntity;
@@ -75,7 +75,7 @@ public class Poison extends PoisonInfo implements ISkillInstance, ISkillActive {
             }
             chance = Math.min(chance, 100);
             if (!quiet && valuesEdit) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Poison.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, duration));
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Poison.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, duration));
             }
         }
     }

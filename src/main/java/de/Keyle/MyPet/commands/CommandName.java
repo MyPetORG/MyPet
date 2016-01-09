@@ -26,7 +26,7 @@ import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,7 +47,7 @@ public class CommandName implements CommandExecutor {
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 if (!Permissions.has(petOwner, "MyPet.user.command.name")) {
-                    myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", petOwner));
+                    myPet.sendMessageToOwner(Translation.getString("Message.No.CanUse", petOwner));
                     return true;
                 }
 
@@ -72,16 +72,16 @@ public class CommandName implements CommandExecutor {
                 if (nameWihtoutColors.length() <= Configuration.MAX_PET_NAME_LENGTH) {
                     if (Permissions.has(petOwner, "MyPet.user.command.name.color")) {
                         myPet.setPetName(name);
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), name));
+                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), name));
                     } else {
                         myPet.setPetName(nameWihtoutColors);
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), nameWihtoutColors));
+                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), nameWihtoutColors));
                     }
                 } else {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.ToLong", petOwner), name, Configuration.MAX_PET_NAME_LENGTH));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.ToLong", petOwner), name, Configuration.MAX_PET_NAME_LENGTH));
                 }
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

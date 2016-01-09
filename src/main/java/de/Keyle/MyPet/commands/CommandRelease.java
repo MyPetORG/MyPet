@@ -53,7 +53,7 @@ import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
@@ -96,10 +96,10 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
 
@@ -239,7 +239,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     myPet.removePet();
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()).getName(), null);
 
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
                     MyPetList.deactivateMyPet(myPet.getOwner());
                     MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID(), new RepositoryCallback<Boolean>() {
                         @Override
@@ -250,18 +250,18 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
 
                     return true;
                 } else {
-                    FancyMessage message = new FancyMessage(Locales.getString("Message.Command.Release.Confirm", petOwner) + " ");
+                    FancyMessage message = new FancyMessage(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ");
 
                     List<String> lore = new ArrayList<>();
-                    lore.add(RESET + Locales.getString("Name.Hunger", petOwner) + ": " + GOLD + myPet.getHungerValue());
+                    lore.add(RESET + Translation.getString("Name.Hunger", petOwner) + ": " + GOLD + myPet.getHungerValue());
                     if (myPet.getRespawnTime() > 0) {
-                        lore.add(RESET + Locales.getString("Name.Respawntime", petOwner) + ": " + GOLD + myPet.getRespawnTime() + "sec");
+                        lore.add(RESET + Translation.getString("Name.Respawntime", petOwner) + ": " + GOLD + myPet.getRespawnTime() + "sec");
                     } else {
-                        lore.add(RESET + Locales.getString("Name.HP", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getHealth()));
+                        lore.add(RESET + Translation.getString("Name.HP", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getHealth()));
                     }
-                    lore.add(RESET + Locales.getString("Name.Exp", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getExp()));
-                    lore.add(RESET + Locales.getString("Name.Type", petOwner) + ": " + GOLD + myPet.getPetType().getTypeName());
-                    lore.add(RESET + Locales.getString("Name.Skilltree", petOwner) + ": " + GOLD + (myPet.getSkillTree() != null ? myPet.getSkillTree().getDisplayName() : "-"));
+                    lore.add(RESET + Translation.getString("Name.Exp", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getExp()));
+                    lore.add(RESET + Translation.getString("Name.Type", petOwner) + ": " + GOLD + myPet.getPetType().getTypeName());
+                    lore.add(RESET + Translation.getString("Name.Skilltree", petOwner) + ": " + GOLD + (myPet.getSkillTree() != null ? myPet.getSkillTree().getDisplayName() : "-"));
 
                     message.then(myPet.getPetName())
                             .color(ChatColor.AQUA)
@@ -271,7 +271,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     return true;
                 }
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

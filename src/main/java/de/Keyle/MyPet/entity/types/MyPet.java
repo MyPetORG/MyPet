@@ -40,7 +40,7 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.arenas.*;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
@@ -107,7 +107,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         skills = new Skills(this);
         experience = new Experience(this);
         hungerTime = Configuration.HUNGER_SYSTEM_TIME;
-        petName = Locales.getString("Name." + getPetType().getTypeName(), this.petOwner);
+        petName = Translation.getString("Name." + getPetType().getTypeName(), this.petOwner);
     }
 
     public CraftMyPet getCraftPet() {
@@ -249,7 +249,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             } else {
                 for (SkillTree skillTree : SkillTreeMobType.getSkillTrees(this.getPetType())) {
                     if (Permissions.has(this.petOwner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission())) {
-                        sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
+                        sendMessageToOwner(Util.formatText(Translation.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
                         break;
                     }
                 }
@@ -423,7 +423,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             craftMyPet.getHandle().dead = true;
             craftMyPet = null;
             if (wantToRespawn) {
-                sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Despawn", getOwner().getLanguage()), petName));
+                sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Despawn", getOwner().getLanguage()), petName));
             }
         }
     }
@@ -433,16 +433,16 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             respawnTime = 0;
             switch (createPet()) {
                 case Success:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Respawn", petOwner), petName));
+                    sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Respawn", petOwner), petName));
                     break;
                 case Canceled:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", petOwner), petName));
+                    sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", petOwner), petName));
                     break;
                 case NoSpace:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", petOwner), petName));
+                    sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", petOwner), petName));
                     break;
                 case Flying:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", petOwner), petName));
+                    sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", petOwner), petName));
                     break;
             }
             if (Configuration.USE_HUNGER_SYSTEM) {
@@ -484,7 +484,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                     double cost = respawnTime * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
                     if (Economy.canPay(getOwner(), cost)) {
                         Economy.pay(getOwner(), cost);
-                        sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + Economy.getEconomy().currencyNameSingular()));
+                        sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + Economy.getEconomy().currencyNameSingular()));
                         respawnTime = 1;
                     }
                 }
@@ -499,11 +499,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                         hunger--;
                         hungerTime = Configuration.HUNGER_SYSTEM_TIME;
                         if (hunger == 66) {
-                            sendMessageToOwner(Util.formatText(Locales.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
+                            sendMessageToOwner(Util.formatText(Translation.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
                         } else if (hunger == 33) {
-                            sendMessageToOwner(Util.formatText(Locales.getString("Message.Hunger.Hungry", getOwner()), getPetName()));
+                            sendMessageToOwner(Util.formatText(Translation.getString("Message.Hunger.Hungry", getOwner()), getPetName()));
                         } else if (hunger == 1) {
-                            sendMessageToOwner(Util.formatText(Locales.getString("Message.Hunger.Starving", getOwner()), getPetName()));
+                            sendMessageToOwner(Util.formatText(Translation.getString("Message.Hunger.Starving", getOwner()), getPetName()));
                         }
                     }
                     if (hunger == 1 && getHealth() >= 2) {

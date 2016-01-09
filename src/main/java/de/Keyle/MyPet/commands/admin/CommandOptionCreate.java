@@ -32,7 +32,7 @@ import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
-import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -153,7 +153,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         if (myPetType != null) {
             Player owner = Bukkit.getPlayer(args[forceOffset]);
             if (owner == null || !owner.isOnline()) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
 
@@ -171,7 +171,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             if (!newOwner.hasMyPet()) {
                 InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
                 inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(Locales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
+                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
 
                 TagCompound TagCompound = inactiveMyPet.getInfo();
                 if (args.length > 2 + forceOffset) {
@@ -278,7 +278,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 MyPet myPet = MyPetList.activateMyPet(inactiveMyPet);
                 if (myPet != null) {
                     myPet.createPet();
-                    sender.sendMessage(Locales.getString("Message.Command.Success", sender));
+                    sender.sendMessage(Translation.getString("Message.Command.Success", sender));
                 } else {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
                 }
