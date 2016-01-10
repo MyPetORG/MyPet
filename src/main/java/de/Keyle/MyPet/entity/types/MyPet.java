@@ -46,6 +46,8 @@ import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -336,14 +338,28 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 status = PetState.Despawned;
                 return SpawnFlags.OwnerDead;
             }
-            if (getOwner().getPlayer().isFlying()) {
-                return SpawnFlags.Flying;
-            }
+
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
+                if (getOwner().getPlayer().isFlying()) {
+                    boolean groundFound = false;
+                    for (int i = 10; i >= 0; i--) {
+                        Block b = loc.getBlock();
+                        if (b.getRelative(BlockFace.DOWN).getType().isSolid()) {
+                            groundFound = true;
+                            break;
+                        }
+                        loc = loc.subtract(0, 1, 0);
+                    }
+
+                    if (!groundFound) {
+                        return SpawnFlags.Flying;
+                    }
+                }
+
                 net.minecraft.server.v1_8_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
-                craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
+                craftMyPet = petEntity.getBukkitEntity();
                 if (getYSpawnOffset() > 0) {
                     loc = loc.add(0, getYSpawnOffset(), 0);
                 }
