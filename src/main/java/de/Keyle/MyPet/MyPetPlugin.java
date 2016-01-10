@@ -102,7 +102,6 @@ import java.util.*;
 public class MyPetPlugin extends JavaPlugin {
     private static MyPetPlugin plugin;
     private boolean isReady = false;
-    private PluginStorage pluginStorage;
     private Repository repo;
     public static String REPOSITORY_TYPE = "NBT";
 
@@ -286,7 +285,6 @@ public class MyPetPlugin extends JavaPlugin {
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
 
-        pluginStorage = new PluginStorage();
         if (repo == null) {
             repo = new NbtRepository();
             try {
@@ -528,10 +526,6 @@ public class MyPetPlugin extends JavaPlugin {
 
     public File getFile() {
         return super.getFile();
-    }
-
-    public PluginStorage getPluginStorage() {
-        return pluginStorage;
     }
 
     public Repository getRepository() {
