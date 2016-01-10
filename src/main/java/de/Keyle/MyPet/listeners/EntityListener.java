@@ -49,7 +49,6 @@ import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -79,7 +78,10 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -401,7 +403,6 @@ public class EntityListener implements Listener {
 
                             if (horse.isCarryingChest()) {
                                 ItemStack[] contents = horse.getInventory().getContents();
-                                MyPetLogger.write(Arrays.toString(contents));
                                 for (int i = 2; i < contents.length; i++) {
                                     ItemStack item = contents[i];
                                     if (item != null) {
