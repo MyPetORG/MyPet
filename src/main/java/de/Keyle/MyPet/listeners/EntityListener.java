@@ -49,6 +49,7 @@ import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -78,10 +79,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -319,10 +317,10 @@ public class EntityListener implements Listener {
                                 break;
                             case Tamed:
                                 if (leashTarget instanceof Tameable) {
-                                    willBeLeashed = ((Tameable) leashTarget).isTamed();
+                                    willBeLeashed = ((Tameable) leashTarget).isTamed() && ((Tameable) leashTarget).getOwner() == damager;
                                 }
                                 if (leashTarget instanceof Horse) {
-                                    willBeLeashed = ((CraftHorse) leashTarget).getHandle().isTame();
+                                    willBeLeashed = ((CraftHorse) leashTarget).getHandle().isTame() && ((CraftHorse) leashTarget).getOwner() == damager;
                                 }
                                 break;
                             case CanBreed:
@@ -400,6 +398,17 @@ public class EntityListener implements Listener {
                             extendedInfo.getCompoundData().put("Chest", new TagByte(horse.isCarryingChest()));
                             extendedInfo.getCompoundData().put("Saddle", new TagByte(((CraftHorse) leashTarget).getHandle().cG()));
                             extendedInfo.getCompoundData().put("Age", new TagInt(((CraftHorse) leashTarget).getHandle().getAge()));
+
+                            if (horse.isCarryingChest()) {
+                                ItemStack[] contents = horse.getInventory().getContents();
+                                MyPetLogger.write(Arrays.toString(contents));
+                                for (int i = 2; i < contents.length; i++) {
+                                    ItemStack item = contents[i];
+                                    if (item != null) {
+                                        horse.getWorld().dropItem(horse.getLocation(), item);
+                                    }
+                                }
+                            }
                         } else if (leashTarget instanceof Zombie) {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(((Zombie) leashTarget).isBaby()));
                             extendedInfo.getCompoundData().put("Villager", new TagByte(((Zombie) leashTarget).isVillager()));
