@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util.locale;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.command.CommandSender;
@@ -92,9 +93,9 @@ public class Translation {
         Language language = languages.get(languageCode);
 
         if (codes.length >= 2) {
-            return language.translate(key, codes[1]);
+            return Colorizer.setColors(language.translate(key, codes[1]));
         }
-        return language.translate(key);
+        return Colorizer.setColors(language.translate(key));
     }
 
     public static ResourceBundle loadLocale(String localeString) {
