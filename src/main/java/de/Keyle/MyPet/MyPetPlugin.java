@@ -100,7 +100,6 @@ import java.util.*;
 public class MyPetPlugin extends JavaPlugin {
     private static MyPetPlugin plugin;
     private boolean isReady = false;
-    private PluginStorage pluginStorage;
     private Repository repo;
     public static String REPOSITORY_TYPE = "NBT";
 
@@ -283,8 +282,6 @@ public class MyPetPlugin extends JavaPlugin {
         Bungee.reset();
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
-
-        pluginStorage = new PluginStorage();
 
         if (REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
             repo = new MySqlRepository();
@@ -538,10 +535,6 @@ public class MyPetPlugin extends JavaPlugin {
 
     public File getFile() {
         return super.getFile();
-    }
-
-    public PluginStorage getPluginStorage() {
-        return pluginStorage;
     }
 
     public Repository getRepository() {

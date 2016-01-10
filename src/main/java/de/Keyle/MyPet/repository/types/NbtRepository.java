@@ -113,7 +113,6 @@ public class NbtRepository implements Repository, IScheduler {
         nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(BukkitUtil.isInOnlineMode()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", savePets());
         nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
-        nbtConfiguration.getNBTCompound().getCompoundData().put("PluginStorage", MyPetPlugin.getPlugin().getPluginStorage().save());
         if (async) {
             Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
                 public void run() {
