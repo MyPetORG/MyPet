@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.admin.*;
@@ -73,6 +74,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 1) {
+            sender.sendMessage(MyPetPlugin.getPlugin().getCommand("mypetadmin").getDescription());
             return false;
         }
 
