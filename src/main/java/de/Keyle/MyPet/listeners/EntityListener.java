@@ -591,7 +591,7 @@ public class EntityListener implements Listener {
 
             if (damager instanceof Player) {
                 Player player = (Player) damager;
-                if (event.getDamage() == 0) {
+                if (event.getDamage() == 0 || event.isCancelled()) {
                     return;
                 } else if (damagedEntity instanceof CraftMyPet) {
                     if (MyPet.getLeashItem(((CraftMyPet) damagedEntity).getPetType().getMyPetClass()).compare(player.getItemInHand())) {
