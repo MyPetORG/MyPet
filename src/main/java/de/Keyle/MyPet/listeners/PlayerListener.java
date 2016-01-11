@@ -49,6 +49,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -91,6 +92,17 @@ public class PlayerListener implements Listener {
                         }
                         myPet.getSkills().getSkill(Control.class).setMoveTo(block.getLocation());
                     }
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
+        if (event.isCancelled()) {
+            if (event.getRightClicked() instanceof CraftMyPet) {
+                if (((CraftMyPet) event.getRightClicked()).getOwner().equals(event.getPlayer())) {
+                    event.setCancelled(false);
                 }
             }
         }
