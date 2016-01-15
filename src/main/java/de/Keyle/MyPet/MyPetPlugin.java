@@ -142,7 +142,6 @@ public class MyPetPlugin extends JavaPlugin {
         PluginHookManager.reset();
         Economy.reset();
         Experience.resetMode();
-        Configuration.config = this.getConfig();
         Configuration.setDefault();
         Configuration.loadConfiguration();
         DebugLogger.setup();

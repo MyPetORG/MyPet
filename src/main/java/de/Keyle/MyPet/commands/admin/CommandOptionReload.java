@@ -31,7 +31,6 @@ public class CommandOptionReload implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         MyPetPlugin.getPlugin().reloadConfig();
-        Configuration.config = MyPetPlugin.getPlugin().getConfig();
         Configuration.loadConfiguration();
         DebugLogger.info("Config reloaded.");
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!");
