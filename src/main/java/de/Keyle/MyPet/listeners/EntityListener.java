@@ -86,6 +86,8 @@ import java.util.Random;
 import static org.bukkit.Bukkit.getPluginManager;
 
 public class EntityListener implements Listener {
+    private Field goalSelectorField = null;
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onMyPetEntitySpawn(final CreatureSpawnEvent event) {
         if (event.getEntity() instanceof CraftMyPet) {
@@ -94,19 +96,25 @@ public class EntityListener implements Listener {
         if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
-        if (Configuration.ADD_ZOMBIE_TARGET_GOAL && event.getEntity() instanceof CraftZombie && !event.isCancelled()) {
+        if (!event.isCancelled() && event.getEntity() instanceof Zombie) {
             EntityZombie ez = ((CraftZombie) event.getEntity()).getHandle();
-            try {
-                Field goalSelector = EntityInsentient.class.getDeclaredField("goalSelector");
-                goalSelector.setAccessible(true);
-                PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelector.get(ez);
-                pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-                DebugLogger.printThrowable(e);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                DebugLogger.printThrowable(e);
+            if (goalSelectorField == null) {
+                try {
+                    goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
+                    goalSelectorField.setAccessible(true);
+
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                    DebugLogger.printThrowable(e);
+                }
+            }
+            if (goalSelectorField != null) {
+                try {
+                    PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelectorField.get(ez);
+                    pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

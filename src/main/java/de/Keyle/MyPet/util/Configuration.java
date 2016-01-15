@@ -92,7 +92,6 @@ public class Configuration {
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
     public static boolean PET_INFO_OVERHEAD_NAME = true;
     public static boolean RELEASE_PETS_ON_DEATH = false;
-    public static boolean ADD_ZOMBIE_TARGET_GOAL = true;
     public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
     public static boolean INVISIBLE_LIKE_OWNER = true;
 
@@ -104,7 +103,6 @@ public class Configuration {
         config.addDefault("MyPet.RemovePetsAfterRelease", REMOVE_PETS_AFTER_RELEASE);
         config.addDefault("MyPet.FollowStartDistance", MYPET_FOLLOW_START_DISTANCE);
         config.addDefault("MyPet.ReleasePetsOnDeath", RELEASE_PETS_ON_DEATH);
-        config.addDefault("MyPet.ZombieVsMyPet", ADD_ZOMBIE_TARGET_GOAL);
         config.addDefault("MyPet.MaxPetNameLength", MAX_PET_NAME_LENGTH);
         config.addDefault("MyPet.RetainEquipmentOnTame", RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", INVISIBLE_LIKE_OWNER);
@@ -298,7 +296,6 @@ public class Configuration {
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         RELEASE_PETS_ON_DEATH = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
-        ADD_ZOMBIE_TARGET_GOAL = config.getBoolean("MyPet.ZombieVsMyPet", false);
         RETAIN_EQUIPMENT_ON_TAME = config.getBoolean("MyPet.RetainEquipmentOnTame", true);
         INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
         MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
