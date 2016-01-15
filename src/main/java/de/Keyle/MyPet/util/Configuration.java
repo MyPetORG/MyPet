@@ -173,6 +173,9 @@ public class Configuration {
 
         config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
         config.addDefault("MyPet.Name.MaxLength", MAX_PET_NAME_LENGTH);
+        config.addDefault("MyPet.Name.OverHead.Visible", PET_INFO_OVERHEAD_NAME);
+        config.addDefault("MyPet.Name.OverHead.Prefix", PET_INFO_OVERHEAD_PREFIX);
+        config.addDefault("MyPet.Name.OverHead.Suffix", PET_INFO_OVERHEAD_SUFFIX);
 
         config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION);
         config.addDefault("MyPet.Exp.Passive.Always-Grant-Passive-XP", Experience.ALWAYS_GRANT_PASSIVE_XP);
@@ -203,10 +206,6 @@ public class Configuration {
         config.addDefault("MyPet.Info.AdminOnly.PetLevel", PetInfoDisplay.Level.adminOnly);
         config.addDefault("MyPet.Info.AdminOnly.PetEXP", PetInfoDisplay.Exp.adminOnly);
         config.addDefault("MyPet.Info.AdminOnly.PetSkilltree", PetInfoDisplay.Skilltree.adminOnly);
-
-        config.addDefault("MyPet.Info.OverHead.Name", PET_INFO_OVERHEAD_NAME);
-        config.addDefault("MyPet.Info.OverHead.Prefix", PET_INFO_OVERHEAD_PREFIX);
-        config.addDefault("MyPet.Info.OverHead.Suffix", PET_INFO_OVERHEAD_SUFFIX);
 
         for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
             config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
@@ -314,6 +313,9 @@ public class Configuration {
             NameFilter.NAME_FILTER.add(o.toString());
         }
         MAX_PET_NAME_LENGTH = config.getInt("MyPet.Name.MaxLength", 64);
+        PET_INFO_OVERHEAD_NAME = config.getBoolean("MyPet.Name.OverHead.Visible", true);
+        PET_INFO_OVERHEAD_PREFIX = Colorizer.setColors(config.getString("MyPet.Name.OverHead.Prefix", "<aqua>"));
+        PET_INFO_OVERHEAD_SUFFIX = Colorizer.setColors(config.getString("MyPet.Name.OverHead.Suffix", ""));
 
         MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", MyPetPlugin.REPOSITORY_TYPE);
 
@@ -336,10 +338,6 @@ public class Configuration {
         PetInfoDisplay.Exp.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", true);
         PetInfoDisplay.Owner.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
         PetInfoDisplay.Skilltree.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
-
-        PET_INFO_OVERHEAD_NAME = config.getBoolean("MyPet.Info.OverHead.Name", true);
-        PET_INFO_OVERHEAD_PREFIX = Colorizer.setColors(config.getString("MyPet.Info.OverHead.Prefix", "<aqua>"));
-        PET_INFO_OVERHEAD_SUFFIX = Colorizer.setColors(config.getString("MyPet.Info.OverHead.Suffix", ""));
 
         Permissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
