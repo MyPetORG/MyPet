@@ -103,7 +103,6 @@ public class Configuration {
         config.addDefault("MyPet.RemovePetsAfterRelease", REMOVE_PETS_AFTER_RELEASE);
         config.addDefault("MyPet.FollowStartDistance", MYPET_FOLLOW_START_DISTANCE);
         config.addDefault("MyPet.ReleasePetsOnDeath", RELEASE_PETS_ON_DEATH);
-        config.addDefault("MyPet.MaxPetNameLength", MAX_PET_NAME_LENGTH);
         config.addDefault("MyPet.RetainEquipmentOnTame", RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.INFO", DebugLogger.INFO);
@@ -180,6 +179,7 @@ public class Configuration {
         config.addDefault("MyPet.Hooks.Vault.Economy", true);
 
         config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
+        config.addDefault("MyPet.Name.MaxLength", MAX_PET_NAME_LENGTH);
 
         config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION);
         config.addDefault("MyPet.Exp.Passive.Always-Grant-Passive-XP", Experience.ALWAYS_GRANT_PASSIVE_XP);
@@ -292,7 +292,6 @@ public class Configuration {
         DISABLE_PET_VS_PLAYER = config.getBoolean("MyPet.DisablePetVersusPlayer", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
-        MAX_PET_NAME_LENGTH = config.getInt("MyPet.MaxPetNameLength", 64);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         RELEASE_PETS_ON_DEATH = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
@@ -309,6 +308,7 @@ public class Configuration {
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {
             NameFilter.NAME_FILTER.add(o.toString());
         }
+        MAX_PET_NAME_LENGTH = config.getInt("MyPet.Name.MaxLength", 64);
 
         MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", MyPetPlugin.REPOSITORY_TYPE);
         Converter.CONVERT_FROM = config.getString("MyPet.Repository.ConvertFrom", Converter.CONVERT_FROM);
