@@ -53,12 +53,16 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 
-public class Configuration {
-    public static FileConfiguration config;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+public class Configuration {
     public static String PET_INFO_OVERHEAD_PREFIX = "<aqua>";
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
     public static int LEVEL_CAP = 100;
@@ -92,6 +96,8 @@ public class Configuration {
     public static boolean INVISIBLE_LIKE_OWNER = true;
 
     public static void setDefault() {
+        FileConfiguration config = MyPetPlugin.getPlugin().getConfig();
+
         config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.ShowAlwaysForOwner", ALWAYS_SHOW_LEASH_FOR_OWNER);
         config.addDefault("MyPet.OwnerCanAttackPet", OWNER_CAN_ATTACK_PET);
@@ -189,6 +195,45 @@ public class Configuration {
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Beacon.HUNGER_DECREASE_TIME);
         config.addDefault("MyPet.Skill.Beacon.Party-Support", true);
 
+        config.addDefault("MyPet.Info.AdminOnly.PetName", PetInfoDisplay.Name.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetOwner", PetInfoDisplay.Owner.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetHP", PetInfoDisplay.HP.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetDamage", PetInfoDisplay.Damage.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetHunger", PetInfoDisplay.Hunger.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetLevel", PetInfoDisplay.Level.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetEXP", PetInfoDisplay.Exp.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetSkilltree", PetInfoDisplay.Skilltree.adminOnly);
+
+        config.addDefault("MyPet.Info.OverHead.Name", PET_INFO_OVERHEAD_NAME);
+        config.addDefault("MyPet.Info.OverHead.Prefix", PET_INFO_OVERHEAD_PREFIX);
+        config.addDefault("MyPet.Info.OverHead.Suffix", PET_INFO_OVERHEAD_SUFFIX);
+
+        for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
+            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
+            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
+        }
+
+        config.options().copyDefaults(true);
+        MyPetPlugin.getPlugin().saveConfig();
+
+        File petConfigFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
+        config = new YamlConfiguration();
+
+        for (MyPetType petType : MyPetType.values()) {
+            MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
+            if (pi == null) {
+                continue;
+            }
+
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0);
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0);
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".LeashItem", Material.LEASH.getId());
+        }
+
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyChicken.CAN_LAY_EGGS);
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyCow.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MySheep.CAN_BE_SHEARED);
@@ -209,44 +254,17 @@ public class Configuration {
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", Material.POTION.getId());
 
-        config.addDefault("MyPet.Info.AdminOnly.PetName", PetInfoDisplay.Name.adminOnly);
-        config.addDefault("MyPet.Info.AdminOnly.PetOwner", PetInfoDisplay.Owner.adminOnly);
-        config.addDefault("MyPet.Info.AdminOnly.PetHP", PetInfoDisplay.HP.adminOnly);
-        config.addDefault("MyPet.Info.AdminOnly.PetDamage", PetInfoDisplay.Damage.adminOnly);
-        config.addDefault("MyPet.Info.AdminOnly.PetHunger", PetInfoDisplay.Hunger.adminOnly);
-        config.addDefault("MyPet.Info.AdminOnly.PetLevel", PetInfoDisplay.Level.adminOnly);
-        config.addDefault("MyPet.Info.AdminOnly.PetEXP", PetInfoDisplay.Exp.adminOnly);
-        config.addDefault("MyPet.Info.AdminOnly.PetSkilltree", PetInfoDisplay.Skilltree.adminOnly);
-
-        config.addDefault("MyPet.Info.OverHead.Name", PET_INFO_OVERHEAD_NAME);
-        config.addDefault("MyPet.Info.OverHead.Prefix", PET_INFO_OVERHEAD_PREFIX);
-        config.addDefault("MyPet.Info.OverHead.Suffix", PET_INFO_OVERHEAD_SUFFIX);
-
-        for (MyPetType petType : MyPetType.values()) {
-            MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
-            if (pi == null) {
-                continue;
-            }
-
-            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
-            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
-            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));
-            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
-            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0);
-            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0);
-            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".LeashItem", Material.LEASH.getId());
-        }
-
-        for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
-            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
-            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
-        }
-
         config.options().copyDefaults(true);
-        MyPetPlugin.getPlugin().saveConfig();
+        try {
+            config.save(petConfigFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void loadConfiguration() {
+        FileConfiguration config = MyPetPlugin.getPlugin().getConfig();
+
         CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
         ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
 
@@ -291,7 +309,7 @@ public class Configuration {
         DebugLogger.ERROR = config.getBoolean("MyPet.Log.ERROR", DebugLogger.ERROR);
         DebugLogger.WARNING = config.getBoolean("MyPet.Log.WARNING", DebugLogger.WARNING);
 
-        NameFilter.NAME_FILTER = Lists.newArrayList();
+        NameFilter.NAME_FILTER = new ArrayList<>();
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {
             NameFilter.NAME_FILTER.add(o.toString());
         }
@@ -359,6 +377,31 @@ public class Configuration {
         Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", true);
         Experience.FIREWORK_ON_LEVELUP = config.getBoolean("MyPet.LevelSystem.Firework", true);
 
+        if (config.getStringList("MyPet.exp.active") != null) {
+            double min;
+            double max;
+            for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
+                max = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Max", 0.);
+                min = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Min", 0.);
+                if (min == max) {
+                    MonsterExperience.getMonsterExperience(entityType).setExp(max);
+                } else {
+                    MonsterExperience.getMonsterExperience(entityType).setMin(min);
+                    MonsterExperience.getMonsterExperience(entityType).setMax(max);
+                }
+            }
+        }
+
+        File petConfigFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
+        if (petConfigFile.exists()) {
+            YamlConfiguration ymlcnf = new YamlConfiguration();
+            try {
+                ymlcnf.load(petConfigFile);
+                config = ymlcnf;
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
         MyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         MyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         MySheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
@@ -389,21 +432,6 @@ public class Configuration {
             MyPet.setCustomRespawnTimeFactor(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0));
             MyPet.setCustomRespawnTimeFixed(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0));
             MyPet.setLeashItem(petType.getMyPetClass(), ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashItem", "" + Material.LEASH.getId())));
-        }
-
-        if (config.getStringList("MyPet.exp.active") != null) {
-            double min;
-            double max;
-            for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
-                max = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Max", 0.);
-                min = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Min", 0.);
-                if (min == max) {
-                    MonsterExperience.getMonsterExperience(entityType).setExp(max);
-                } else {
-                    MonsterExperience.getMonsterExperience(entityType).setMin(min);
-                    MonsterExperience.getMonsterExperience(entityType).setMax(max);
-                }
-            }
         }
     }
 
