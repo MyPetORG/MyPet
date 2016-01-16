@@ -297,7 +297,6 @@ public class MyPetPlugin extends JavaPlugin {
         loadGroups(groupsFile);
         Timer.startTimer();
 
-        ProtocolLib.findPlugin();
         MobArena.findPlugin();
         Minigames.findPlugin();
         PvPArena.findPlugin();
@@ -305,6 +304,9 @@ public class MyPetPlugin extends JavaPlugin {
         SurvivalGames.findPlugin();
         UltimateSurvivalGames.findPlugin();
         MyHungerGames.findPlugin();
+        if (PluginHookManager.isPluginUsable("ProtocolLib")) {
+            ProtocolLib.findPlugin();
+        }
 
         try {
             Metrics metrics = new Metrics(this);

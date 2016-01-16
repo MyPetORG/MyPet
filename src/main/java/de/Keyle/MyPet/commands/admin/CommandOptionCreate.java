@@ -150,7 +150,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         }
 
         MyPetType myPetType = MyPetType.getMyPetTypeByName(args[1 + forceOffset]);
-        if (myPetType != null) {
+        if (myPetType != null && myPetType.isUsable()) {
             Player owner = Bukkit.getPlayer(args[forceOffset]);
             if (owner == null || !owner.isOnline()) {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
