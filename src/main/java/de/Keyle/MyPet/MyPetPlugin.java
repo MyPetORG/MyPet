@@ -32,6 +32,7 @@ import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
+import de.Keyle.MyPet.entity.types.enderdragon.EntityMyEnderDragon;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.endermite.EntityMyEndermite;
 import de.Keyle.MyPet.entity.types.ghast.EntityMyGhast;
@@ -74,10 +75,7 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
-import de.Keyle.MyPet.util.hooks.Bungee;
-import de.Keyle.MyPet.util.hooks.Economy;
-import de.Keyle.MyPet.util.hooks.PluginHookManager;
-import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -258,6 +256,7 @@ public class MyPetPlugin extends JavaPlugin {
         BukkitUtil.registerMyPetEntity(EntityMySilverfish.class, "Silverfish", 60);
         BukkitUtil.registerMyPetEntity(EntityMyBlaze.class, "Blaze", 61);
         BukkitUtil.registerMyPetEntity(EntityMyMagmaCube.class, "LavaSlime", 62);
+        BukkitUtil.registerMyPetEntity(EntityMyEnderDragon.class, "EnderDragon", 63);
         BukkitUtil.registerMyPetEntity(EntityMyWither.class, "WitherBoss", 64);
         BukkitUtil.registerMyPetEntity(EntityMyBat.class, "Bat", 65);
         BukkitUtil.registerMyPetEntity(EntityMyWitch.class, "Witch", 66);
@@ -309,6 +308,7 @@ public class MyPetPlugin extends JavaPlugin {
         loadGroups(groupsFile);
         Timer.startTimer();
 
+        ProtocolLib.findPlugin();
         MobArena.findPlugin();
         Minigames.findPlugin();
         PvPArena.findPlugin();

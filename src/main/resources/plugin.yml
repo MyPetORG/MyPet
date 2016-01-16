@@ -3,7 +3,7 @@ main: de.Keyle.MyPet.MyPetPlugin
 version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
 author: Keyle
 website: ${project.url}
-softdepend: [Vault, Heroes, AncientRPG, BattleArena, Minigames, MobArena, pvparena, Multiverse-Core, SurvivalGames]
+softdepend: [Vault, Heroes, AncientRPG, BattleArena, Minigames, MobArena, pvparena, Multiverse-Core, SurvivalGames, ProtocolLib]
 commands:
   myPet:
     description: Help for all MyPet commands.
