@@ -56,6 +56,7 @@
         <griefprevention.version>13.0</griefprevention.version>
         <pvpmanager.version>3.0</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
+        <protocol-lib.version>3.6.4</protocol-lib.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
 
@@ -95,6 +96,10 @@
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>http://repo.dmulloy2.net/content/groups/public</url>
         </repository>
     </repositories>
 
@@ -291,6 +296,13 @@
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
             <version>${heroes.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>${protocol-lib.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
