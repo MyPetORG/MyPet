@@ -84,6 +84,8 @@ import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.util.hooks.ProtocolLib;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
@@ -101,7 +103,12 @@ public enum MyPetType {
     Chicken(EntityType.CHICKEN, "Chicken", EntityMyChicken.class, MyChicken.class),
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
     Creeper(EntityType.CREEPER, "Creeper", EntityMyCreeper.class, MyCreeper.class),
-    EnderDragon(EntityType.ENDER_DRAGON, "EnderDragon", EntityMyEnderDragon.class, MyEnderDragon.class),
+    EnderDragon(EntityType.ENDER_DRAGON, "EnderDragon", EntityMyEnderDragon.class, MyEnderDragon.class, new VersionCheck() {
+        @Override
+        public boolean isUsable() {
+            return PluginHookManager.isPluginUsable("ProtocolLib") && ProtocolLib.isActive();
+        }
+    }),
     Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
     Endermite(EntityType.ENDERMITE, "Endermite", EntityMyEndermite.class, MyEndermite.class),
     Ghast(EntityType.GHAST, "Ghast", EntityMyGhast.class, MyGhast.class),
@@ -132,12 +139,18 @@ public enum MyPetType {
     private String name;
     private Class<? extends EntityMyPet> entityClass;
     private Class<? extends MyPet> myPetClass;
+    private VersionCheck versionCheck = null;
 
     MyPetType(EntityType bukkitType, String typeName, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass) {
+        this(bukkitType, typeName, entityClass, myPetClass, new VersionCheck());
+    }
+
+    MyPetType(EntityType bukkitType, String typeName, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass, VersionCheck versionCheck) {
         this.bukkitType = bukkitType;
         this.name = typeName;
         this.entityClass = entityClass;
         this.myPetClass = myPetClass;
+        this.versionCheck = versionCheck;
     }
 
     public Class<? extends EntityMyPet> getEntityClass() {
@@ -150,6 +163,10 @@ public enum MyPetType {
 
     public Class<? extends MyPet> getMyPetClass() {
         return myPetClass;
+    }
+
+    public boolean isUsable() {
+        return versionCheck.isUsable();
     }
 
     public static MyPetType getMyPetTypeByEntityClass(Class<? extends EntityCreature> entityClass) {
@@ -220,9 +237,15 @@ public enum MyPetType {
     public static boolean isLeashableEntityType(EntityType type) {
         for (MyPetType myPetType : MyPetType.values()) {
             if (myPetType.bukkitType == type) {
-                return true;
+                return myPetType.isUsable();
             }
         }
         return false;
+    }
+
+    private static class VersionCheck {
+        public boolean isUsable() {
+            return true;
+        }
     }
 }

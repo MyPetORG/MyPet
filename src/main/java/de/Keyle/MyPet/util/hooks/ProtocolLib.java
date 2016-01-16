@@ -22,7 +22,6 @@ package de.Keyle.MyPet.util.hooks;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -37,43 +36,49 @@ public class ProtocolLib {
 
     public static void findPlugin() {
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
-            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-            active = true;
+            try {
+                ProtocolLibrary.getProtocolManager().addPacketListener(
+                        new PacketAdapter(MyPetPlugin.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
+                            @Override
+                            public void onPacketSending(PacketEvent event) {
+                                PacketContainer packet = event.getPacket();
 
-            protocolManager.addPacketListener(
-                    new PacketAdapter(MyPetPlugin.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
-                        @Override
-                        public void onPacketSending(PacketEvent event) {
-                            PacketContainer packet = event.getPacket();
+                                final Entity entity = packet.getEntityModifier(event).readSafely(0);
 
-                            final Entity entity = packet.getEntityModifier(event).readSafely(0);
+                                // Now - are we dealing with an invisible slime?
+                                if (entity instanceof CraftMyPet && ((CraftMyPet) entity).getPetType() == MyPetType.EnderDragon) {
 
-                            // Now - are we dealing with an invisible slime?
-                            if (entity instanceof CraftMyPet && ((CraftMyPet) entity).getPetType() == MyPetType.EnderDragon) {
+                                    if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {
+                                        //MyPetLogger.write("ENTITY_LOOK: " + packet.getBytes().getValues());
 
-                                if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {
-                                    //MyPetLogger.write("ENTITY_LOOK: " + packet.getBytes().getValues());
+                                        byte angle = packet.getBytes().read(3);
+                                        angle += Byte.MAX_VALUE;
+                                        packet.getBytes().write(3, angle);
+                                    } else if (packet.getType() == PacketType.Play.Server.ENTITY_MOVE_LOOK) {
+                                        //MyPetLogger.write("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
 
-                                    byte angle = packet.getBytes().read(3);
-                                    angle += Byte.MAX_VALUE;
-                                    packet.getBytes().write(3, angle);
-                                } else if (packet.getType() == PacketType.Play.Server.ENTITY_MOVE_LOOK) {
-                                    //MyPetLogger.write("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
+                                        byte angle = packet.getBytes().read(3);
+                                        angle += Byte.MAX_VALUE;
+                                        packet.getBytes().write(3, angle);
+                                    } else if (packet.getType() == PacketType.Play.Server.ENTITY_TELEPORT) {
+                                        //MyPetLogger.write("ENTITY_TELEPORT: " + packet.getBytes().getValues());
 
-                                    byte angle = packet.getBytes().read(3);
-                                    angle += Byte.MAX_VALUE;
-                                    packet.getBytes().write(3, angle);
-                                } else if (packet.getType() == PacketType.Play.Server.ENTITY_TELEPORT) {
-                                    //MyPetLogger.write("ENTITY_TELEPORT: " + packet.getBytes().getValues());
-
-                                    byte angle = packet.getBytes().read(1);
-                                    angle += Byte.MAX_VALUE;
-                                    packet.getBytes().write(1, angle);
+                                        byte angle = packet.getBytes().read(1);
+                                        angle += Byte.MAX_VALUE;
+                                        packet.getBytes().write(1, angle);
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                active = true;
+            } catch (Exception e) {
+                active = false;
+            }
         }
         DebugLogger.info("ProtocolLib hook " + (active ? "" : "not ") + "activated.");
+    }
+
+    public static boolean isActive() {
+        return active;
     }
 }
