@@ -75,8 +75,9 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
-import de.Keyle.MyPet.util.hooks.*;
-import de.Keyle.MyPet.util.hooks.arenas.*;
+import de.Keyle.MyPet.util.hooks.Bungee;
+import de.Keyle.MyPet.util.hooks.Hooks;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -115,6 +116,10 @@ public class MyPetPlugin extends JavaPlugin {
             BukkitUtil.unregisterMyPetEntities();
         }
         Timer.reset();
+
+        PluginHookManager.reset();
+        Hooks.disable();
+
         PlayerList.onlinePlayerUUIDList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
@@ -137,9 +142,9 @@ public class MyPetPlugin extends JavaPlugin {
             return;
         }
 
-        PvPChecker.reset();
         PluginHookManager.reset();
-        Economy.reset();
+        Hooks.enable();
+
         Experience.resetMode();
         Configuration.setDefault();
         Configuration.loadConfiguration();
@@ -309,16 +314,6 @@ public class MyPetPlugin extends JavaPlugin {
         loadGroups(groupsFile);
         Timer.startTimer();
 
-        MobArena.findPlugin();
-        Minigames.findPlugin();
-        PvPArena.findPlugin();
-        BattleArena.findPlugin();
-        SurvivalGames.findPlugin();
-        UltimateSurvivalGames.findPlugin();
-        MyHungerGames.findPlugin();
-        if (PluginHookManager.isPluginUsable("ProtocolLib")) {
-            ProtocolLib.findPlugin();
-        }
 
         try {
             Metrics metrics = new Metrics(this);
