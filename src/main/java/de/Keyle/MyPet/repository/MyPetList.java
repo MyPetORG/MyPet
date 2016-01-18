@@ -185,7 +185,6 @@ public class MyPetList {
     }
 
     public static void clearList() {
-        MyPetPlugin.getPlugin().getRepository().disable();
         mActivePlayerPets.clear();
     }
 
