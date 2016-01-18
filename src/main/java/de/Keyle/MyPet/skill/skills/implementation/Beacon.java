@@ -70,7 +70,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         buffNames.put(13, "WaterBreathing");
         buffNames.put(14, "Invisibility");
         buffNames.put(16, "NightVision");
-        buffNames.put(21, "HealthBoost");
+        //buffNames.put(21, "HealthBoost");
         buffNames.put(22, "Absorption");
 
         buffItemPositions.put(1, 0);
@@ -83,7 +83,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         buffItemPositions.put(13, 16);
         buffItemPositions.put(14, 25);
         buffItemPositions.put(16, 8);
-        buffItemPositions.put(21, 17);
+        //buffItemPositions.put(21, 17);
         buffItemPositions.put(22, 26);
     }
 
@@ -281,9 +281,11 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         if (buffLevel.get(16) > 0) {
             menu.setOption(8, new IconMenuItem().setMaterial(TORCH).setAmount(buffLevel.get(16)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(16), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(16))));
         }
+        /*
         if (buffLevel.get(21) > 0) {
             menu.setOption(17, new IconMenuItem().setMaterial(GOLDEN_APPLE).setAmount(buffLevel.get(21)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(21), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(21))));
         }
+        */
         if (buffLevel.get(22) > 0) {
             menu.setOption(26, new IconMenuItem().setMaterial(SPONGE).setAmount(buffLevel.get(22)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(22), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(22))));
         }
@@ -380,6 +382,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             if (TagCompound.getCompoundData().containsKey("buff_night_vision_enable")) {
                 buffLevel.put(16, (int) TagCompound.getAs("buff_night_vision_enable", TagByte.class).getByteData());
             }
+            /*
             if (TagCompound.getCompoundData().containsKey("buff_health_boost_enable")) {
                 if (TagCompound.getAs("buff_health_boost_enable", TagByte.class).getBooleanData()) {
                     if (TagCompound.getCompoundData().containsKey("buff_health_boost_level")) {
@@ -389,6 +392,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                     buffLevel.put(21, 0);
                 }
             }
+            */
             if (TagCompound.getCompoundData().containsKey("buff_absorption_enable")) {
                 if (TagCompound.getAs("buff_absorption_enable", TagByte.class).getBooleanData()) {
                     if (TagCompound.getCompoundData().containsKey("buff_absorption_level")) {
@@ -460,7 +464,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         buffLevel.put(13, 0);
         buffLevel.put(14, 0);
         buffLevel.put(16, 0);
-        buffLevel.put(21, 0);
+        //buffLevel.put(21, 0);
         buffLevel.put(22, 0);
     }
 
