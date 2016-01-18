@@ -50,12 +50,15 @@ import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
+import de.keyle.fanciful.FancyMessage;
+import de.keyle.fanciful.ItemTooltip;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_8_R3.*;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -191,6 +194,32 @@ public class EntityListener implements Listener {
                     }
                     if (Configuration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
                         damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + myPet.getHungerValue());
+
+                        FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", damager) + ": ");
+                        boolean noComma = true;
+                        for (ConfigItem material : MyPet.getFood(myPet.getPetType().getMyPetClass())) {
+                            ItemStack is = material.getItem();
+                            if (!noComma) {
+                                m.then(", ");
+                                noComma = false;
+                            }
+                            if (is.getItemMeta().hasDisplayName()) {
+                                m.then(is.getItemMeta().getDisplayName());
+                            } else {
+                                m.then(WordUtils.capitalizeFully(BukkitUtil.getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
+                            }
+                            ItemTooltip it = new ItemTooltip();
+                            it.setMaterial(is.getType());
+                            if (is.getItemMeta().hasDisplayName()) {
+                                it.setTitle(is.getItemMeta().getDisplayName());
+                            }
+                            if (is.getItemMeta().hasLore()) {
+                                it.setLore(is.getItemMeta().getLore().toArray(new String[is.getItemMeta().getLore().size()]));
+                            }
+                            m.itemTooltip(it);
+                        }
+                        BukkitUtil.sendMessageRaw(damager, m.toJSONString());
+
                         infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet) && myPet.getSkillTree() != null) {

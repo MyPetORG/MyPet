@@ -25,18 +25,20 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
-import de.Keyle.MyPet.util.Configuration;
-import de.Keyle.MyPet.util.DonateCheck;
-import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
+import de.keyle.fanciful.FancyMessage;
+import de.keyle.fanciful.ItemTooltip;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,6 +127,32 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 }
                 if (Configuration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, player, myPet)) {
                     player.sendMessage("   " + Translation.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
+
+                    FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", player) + ": ");
+                    boolean noComma = true;
+                    for (ConfigItem material : MyPet.getFood(myPet.getPetType().getMyPetClass())) {
+                        ItemStack is = material.getItem();
+                        if (!noComma) {
+                            m.then(", ");
+                            noComma = false;
+                        }
+                        if (is.getItemMeta().hasDisplayName()) {
+                            m.then(is.getItemMeta().getDisplayName());
+                        } else {
+                            m.then(WordUtils.capitalizeFully(BukkitUtil.getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
+                        }
+                        ItemTooltip it = new ItemTooltip();
+                        it.setMaterial(is.getType());
+                        if (is.getItemMeta().hasDisplayName()) {
+                            it.setTitle(is.getItemMeta().getDisplayName());
+                        }
+                        if (is.getItemMeta().hasLore()) {
+                            it.setLore(is.getItemMeta().getLore().toArray(new String[is.getItemMeta().getLore().size()]));
+                        }
+                        m.itemTooltip(it);
+                    }
+                    BukkitUtil.sendMessageRaw(player, m.toJSONString());
+
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.Behavior.adminOnly, player, myPet)) {
