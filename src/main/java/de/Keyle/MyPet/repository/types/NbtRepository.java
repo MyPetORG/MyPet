@@ -392,7 +392,7 @@ public class NbtRepository implements Repository, IScheduler {
 
     @Override
     public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        if (players.containsKey(player.getInternalUUID())) {
+        if (!players.containsKey(player.getInternalUUID())) {
             players.put(player.getInternalUUID(), player);
             if (SAVE_ON_PLAYER_ADD) {
                 saveData(true);
