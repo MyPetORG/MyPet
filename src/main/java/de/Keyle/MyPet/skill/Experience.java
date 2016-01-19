@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
-import de.Keyle.MyPet.util.Configuration;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -85,7 +85,7 @@ public class Experience {
     }
 
     public void reset() {
-        levelCapExp = getExpByLevel(Configuration.LEVEL_CAP);
+        levelCapExp = getExpByLevel(SkillTree.LEVEL_CAP);
         exp = 0;
         Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, getLevel(), 0, true));
     }

@@ -42,6 +42,7 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.Permissions;
@@ -231,7 +232,7 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Translation.getString("Name.Level", damager) + ": " + lvl);
                         infoShown = true;
                     }
-                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Configuration.LEVEL_CAP;
+                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : SkillTree.LEVEL_CAP;
                     if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
