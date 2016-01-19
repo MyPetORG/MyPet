@@ -46,6 +46,7 @@ import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.Permissions;
@@ -67,7 +68,6 @@ import java.util.ArrayList;
 public class Configuration {
     public static String PET_INFO_OVERHEAD_PREFIX = "<aqua>";
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
-    public static int LEVEL_CAP = 100;
     public static int RESPAWN_TIME_FACTOR = 5;
     public static int RESPAWN_TIME_PLAYER_FACTOR = 5;
     public static int RESPAWN_TIME_FIXED = 0;
@@ -195,7 +195,7 @@ public class Configuration {
         config.addDefault("MyPet.Exp.Loss.Fixed", Experience.LOSS_FIXED);
         config.addDefault("MyPet.Exp.Loss.Drop", Experience.DROP_LOST_EXP);
         config.addDefault("MyPet.Exp.Gain.MonsterSpawner", Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS);
-        config.addDefault("MyPet.Exp.LevelCap", LEVEL_CAP);
+        config.addDefault("MyPet.Exp.LevelCap", SkillTree.LEVEL_CAP);
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
         config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
@@ -382,7 +382,7 @@ public class Configuration {
         PvPChecker.USE_GriefPrevention = config.getBoolean("MyPet.Hooks.GriefPrevention", true);
         PvPChecker.USE_PvPManager = config.getBoolean("MyPet.Hooks.PvPManager", true);
 
-        LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LEVEL_CAP);
+        SkillTree.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", SkillTree.LEVEL_CAP);
         Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
         Experience.LOSS_FIXED = config.getDouble("MyPet.Exp.Loss.Fixed", 0.0);
         Experience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
