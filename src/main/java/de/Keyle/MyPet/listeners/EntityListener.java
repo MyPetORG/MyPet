@@ -417,7 +417,7 @@ public class EntityListener implements Listener {
                         } else if (leashTarget instanceof Wolf) {
                             extendedInfo.getCompoundData().put("Sitting", new TagByte(((Wolf) leashTarget).isSitting()));
                             extendedInfo.getCompoundData().put("Tamed", new TagByte(((Wolf) leashTarget).isTamed()));
-                            extendedInfo.getCompoundData().put("CollarColor", new TagByte(((Wolf) leashTarget).getCollarColor().getDyeData()));
+                            extendedInfo.getCompoundData().put("CollarColor", new TagByte(((Wolf) leashTarget).getCollarColor().getWoolData()));
                         } else if (leashTarget instanceof Sheep) {
                             extendedInfo.getCompoundData().put("Color", new TagInt(((Sheep) leashTarget).getColor().getDyeData()));
                             extendedInfo.getCompoundData().put("Sheared", new TagByte(((Sheep) leashTarget).isSheared()));
