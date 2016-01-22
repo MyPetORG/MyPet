@@ -27,8 +27,8 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 @SkillName(value = "Behavior", translationNode = "Name.Skill.Behavior")
 @SkillProperties(
@@ -38,9 +38,9 @@ import java.util.Map;
 public class BehaviorInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
-    protected Map<BehaviorState, Boolean> behaviorActive = new HashMap<>();
+    protected Set<BehaviorState> activeBehaviors = new HashSet<>();
 
-    public static enum BehaviorState {
+    public enum BehaviorState {
         Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true), Duel(true);
 
         boolean active;
