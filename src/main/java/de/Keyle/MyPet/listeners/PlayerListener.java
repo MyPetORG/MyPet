@@ -207,12 +207,6 @@ public class PlayerListener implements Listener {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet()) {
                 MyPet myPet = player.getMyPet();
-                if (myPet.getSkills().isSkillActive(Behavior.class)) {
-                    Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
-                    if (behavior.getBehavior() != BehaviorState.Normal && behavior.getBehavior() != BehaviorState.Friendly) {
-                        behavior.setBehavior(BehaviorState.Normal);
-                    }
-                }
                 myPet.removePet(true);
                 MyPetList.deactivateMyPet(player);
             }
