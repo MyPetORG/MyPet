@@ -578,7 +578,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     public void load(TagCompound compound) {
         if (compound.getCompoundData().containsKey("Buff")) {
             int oldSelectedBuff = compound.getAs("Buff", TagInt.class).getIntData();
-            if (oldSelectedBuff != 0) {
+            if (oldSelectedBuff != 0 && buffNames.containsKey(oldSelectedBuff)) {
                 this.selectedBuffs.add(oldSelectedBuff);
             }
         }
@@ -586,7 +586,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             int[] selectedBuffs = compound.getAs("Buffs", TagIntArray.class).getIntArrayData();
             if (selectedBuffs.length != 0) {
                 for (int selectedBuff : selectedBuffs) {
-                    this.selectedBuffs.add(selectedBuff);
+                    if (buffNames.containsKey(selectedBuff)) {
+                        this.selectedBuffs.add(selectedBuff);
+                    }
                 }
             }
         }
