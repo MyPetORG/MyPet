@@ -109,7 +109,7 @@ public class MyPetPlugin extends JavaPlugin {
     public void onDisable() {
         if (isReady) {
             for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
-                myPet.removePet(myPet.wantToRespawn());
+                myPet.removePet();
             }
             MyPetList.clearList();
             getRepository().disable();

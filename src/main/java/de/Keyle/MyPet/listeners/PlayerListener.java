@@ -58,6 +58,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -167,9 +168,6 @@ public class PlayerListener implements Listener {
                                                     case Flying:
                                                         runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
                                                         break;
-                                                    case Success:
-                                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.MultiWorld.NowActivePet", myPet.getOwner()), myPet.getPetName()));
-                                                        break;
                                                 }
                                             }
                                         } else {
@@ -214,7 +212,7 @@ public class PlayerListener implements Listener {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet()) {
                 MyPet myPet = player.getMyPet();
-                myPet.removePet(true);
+                myPet.removePet();
                 MyPetList.deactivateMyPet(player);
             }
 
@@ -227,26 +225,50 @@ public class PlayerListener implements Listener {
         if (!event.getPlayer().isOnline()) {
             return;
         }
-        if (PlayerList.isMyPetPlayer(event.getPlayer().getName())) {
+        if (PlayerList.isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer myPetPlayer = PlayerList.getMyPetPlayer(event.getPlayer());
 
-            WorldGroup fromGroup = WorldGroup.getGroupByWorld(event.getFrom().getName());
-            WorldGroup toGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
+            final WorldGroup fromGroup = WorldGroup.getGroupByWorld(event.getFrom().getName());
+            final WorldGroup toGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
 
-            boolean callAfterSwap = false;
-            if (myPetPlayer.hasMyPet()) {
-                callAfterSwap = myPetPlayer.getMyPet().getStatus() == PetState.Here;
-                myPetPlayer.getMyPet().removePet(callAfterSwap);
-            }
 
-            boolean hadMyPetInFromWorld = false;
-            if (fromGroup != toGroup) {
-                if (myPetPlayer.hasMyPet()) {
-                    hadMyPetInFromWorld = true;
-                    MyPetList.deactivateMyPet(myPetPlayer);
+            final MyPet myPet = myPetPlayer.hasMyPet() ? myPetPlayer.getMyPet() : null;
+            final BukkitRunnable callPet = new BukkitRunnable() {
+                public void run() {
+                    if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet()) {
+                        MyPet runMyPet = myPetPlayer.getMyPet();
+                        switch (runMyPet.createPet()) {
+                            case Canceled:
+                                runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", runMyPet.getOwner()), runMyPet.getPetName()));
+                                break;
+                            case NoSpace:
+                                runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", runMyPet.getOwner()), runMyPet.getPetName()));
+                                break;
+                            case NotAllowed:
+                                runMyPet.sendMessageToOwner(Translation.getString("Message.No.AllowedHere", runMyPet.getOwner()).replace("%petname%", runMyPet.getPetName()));
+                                break;
+                            case Dead:
+                                if (runMyPet != myPet) {
+                                    runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Call.Dead", runMyPet.getOwner()), runMyPet.getPetName(), runMyPet.getRespawnTime()));
+                                }
+                                break;
+                            case Flying:
+                                runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", runMyPet.getOwner()), runMyPet.getPetName()));
+                                break;
+                            case Success:
+                                if (runMyPet != myPet) {
+                                    runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Call.Success", runMyPet.getOwner()), runMyPet.getPetName()));
+                                }
+                                break;
+                        }
+                    }
                 }
-                if (myPetPlayer.hasMyPetInWorldGroup(toGroup.getName())) {
-                    final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup.getName());
+            };
+
+            if (fromGroup != toGroup) {
+                final boolean hadMyPetInFromWorld = MyPetList.deactivateMyPet(myPetPlayer);
+                if (myPetPlayer.hasMyPetInWorldGroup(toGroup)) {
+                    final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
                     myPetPlayer.getInactiveMyPets(new RepositoryCallback<List<InactiveMyPet>>() {
                         @Override
                         public void callback(List<InactiveMyPet> inactiveMyPets) {
@@ -256,50 +278,21 @@ public class PlayerListener implements Listener {
                                     break;
                                 }
                             }
-                        }
-                    });
-                    if (!myPetPlayer.hasMyPet()) {
-                        myPetPlayer.setMyPetForWorldGroup(toGroup.getName(), null);
-                    }
-                }
-
-            }
-            if (hadMyPetInFromWorld && !myPetPlayer.hasMyPet()) {
-                myPetPlayer.getPlayer().sendMessage(Translation.getString("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));
-            } else {
-                final MyPet myPet = myPetPlayer.getMyPet();
-                if (callAfterSwap) {
-                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
-                        public void run() {
                             if (myPetPlayer.hasMyPet()) {
-                                MyPet runMyPet = myPetPlayer.getMyPet();
-                                switch (runMyPet.createPet()) {
-                                    case Canceled:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
-                                        break;
-                                    case NoSpace:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
-                                        break;
-                                    case NotAllowed:
-                                        runMyPet.sendMessageToOwner(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
-                                        break;
-                                    case Dead:
-                                        if (runMyPet != myPet) {
-                                            runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Call.Dead", myPet.getOwner()), runMyPet.getPetName(), runMyPet.getRespawnTime()));
-                                        }
-                                        break;
-                                    case Flying:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
-                                        break;
-                                    case Success:
-                                        if (runMyPet != myPet) {
-                                            runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
-                                        }
-                                        break;
+                                if (myPetPlayer.getMyPet().wantToRespawn()) {
+                                    callPet.runTaskLater(MyPetPlugin.getPlugin(), 20L);
                                 }
+                            } else {
+                                myPetPlayer.setMyPetForWorldGroup(toGroup.getName(), null);
                             }
                         }
-                    }, 25L);
+                    });
+                } else if (hadMyPetInFromWorld) {
+                    myPetPlayer.getPlayer().sendMessage(Translation.getString("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));
+                }
+            } else if (myPet != null) {
+                if (myPet.wantToRespawn()) {
+                    callPet.runTaskLater(MyPetPlugin.getPlugin(), 20L);
                 }
             }
         }
@@ -316,10 +309,10 @@ public class PlayerListener implements Listener {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == PetState.Here) {
                     if (myPet.getLocation().getWorld() != event.getTo().getWorld() || myPet.getLocation().distance(event.getTo()) > 10) {
-                        myPet.removePet(false);
-                        MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                        myPet.removePet(true);
+                        new BukkitRunnable() {
                             public void run() {
-                                if (myPetPlayer.hasMyPet()) {
+                                if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet()) {
                                     MyPet runMyPet = myPetPlayer.getMyPet();
                                     switch (runMyPet.createPet()) {
                                         case Canceled:
@@ -337,7 +330,7 @@ public class PlayerListener implements Listener {
                                     }
                                 }
                             }
-                        }, 20L);
+                        }.runTaskLater(MyPetPlugin.getPlugin(), 20L);
                     }
                 }
             }

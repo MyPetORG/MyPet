@@ -33,8 +33,10 @@ import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.DonateCheck;
 import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.arenas.*;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_8_R3.EntityHuman;
@@ -148,6 +150,10 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         return petWorldUUID.get(worldGroup);
     }
 
+    public UUID getMyPetForWorldGroup(WorldGroup worldGroup) {
+        return petWorldUUID.get(worldGroup.getName());
+    }
+
     public BiMap<String, UUID> getMyPetsForWorldGroups() {
         return petWorldUUID;
     }
@@ -158,6 +164,10 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     public boolean hasMyPetInWorldGroup(String worldGroup) {
         return petWorldUUID.containsKey(worldGroup);
+    }
+
+    public boolean hasMyPetInWorldGroup(WorldGroup worldGroup) {
+        return petWorldUUID.containsKey(worldGroup.getName());
     }
 
     public void setExtendedInfo(TagCompound compound) {
@@ -366,6 +376,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
             if (myPet.getStatus() == PetState.Here) {
                 if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 40) {
                     myPet.removePet(true);
+                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
                 }
 
                 if (showHealthBar) {
