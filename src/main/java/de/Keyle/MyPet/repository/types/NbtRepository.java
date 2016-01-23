@@ -93,8 +93,7 @@ public class NbtRepository implements Repository, IScheduler {
 
     @Override
     public void countMyPets(final RepositoryCallback<Integer> callback) {
-        callback.setValue(myPets.values().size());
-        callback.run();
+        callback.run(myPets.values().size());
     }
 
     @Override
@@ -105,8 +104,7 @@ public class NbtRepository implements Repository, IScheduler {
                 counter++;
             }
         }
-        callback.setValue(counter);
-        callback.run();
+        callback.run(counter);
     }
 
     public void saveData(boolean async) {
@@ -184,16 +182,14 @@ public class NbtRepository implements Repository, IScheduler {
     @Override
     public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
         if (callback != null) {
-            callback.setValue(myPets.containsKey(myPetPlayer));
-            callback.run();
+            callback.run(myPets.containsKey(myPetPlayer));
         }
     }
 
     @Override
     public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<InactiveMyPet>> callback) {
         if (callback != null) {
-            callback.setValue(myPets.get(owner));
-            callback.run();
+            callback.run(myPets.get(owner));
         }
     }
 
@@ -202,8 +198,7 @@ public class NbtRepository implements Repository, IScheduler {
         if (callback != null) {
             for (InactiveMyPet pet : myPets.values()) {
                 if (uuid.equals(pet.getUUID())) {
-                    callback.setValue(pet);
-                    callback.run();
+                    callback.run(pet);
                     return;
                 }
             }
@@ -219,8 +214,7 @@ public class NbtRepository implements Repository, IScheduler {
                     saveData(true);
                 }
                 if (callback != null) {
-                    callback.setValue(true);
-                    callback.run();
+                    callback.run(true);
                 }
                 return;
             }
@@ -234,8 +228,7 @@ public class NbtRepository implements Repository, IScheduler {
             saveData(true);
         }
         if (callback != null) {
-            callback.setValue(result);
-            callback.run();
+            callback.run(result);
         }
     }
 
@@ -247,14 +240,12 @@ public class NbtRepository implements Repository, IScheduler {
                 saveData(true);
             }
             if (callback != null) {
-                callback.setValue(true);
-                callback.run();
+                callback.run(true);
             }
             return;
         }
         if (callback != null) {
-            callback.setValue(false);
-            callback.run();
+            callback.run(false);
         }
     }
 
@@ -271,15 +262,13 @@ public class NbtRepository implements Repository, IScheduler {
                 }
 
                 if (callback != null) {
-                    callback.setValue(true);
-                    callback.run();
+                    callback.run(true);
                 }
                 return;
             }
         }
         if (callback != null) {
-            callback.setValue(false);
-            callback.run();
+            callback.run(false);
         }
     }
 
@@ -352,20 +341,17 @@ public class NbtRepository implements Repository, IScheduler {
         if (callback != null) {
             for (MyPetPlayer p : players.values()) {
                 if (p.getPlayerUUID().equals(player.getUniqueId())) {
-                    callback.setValue(true);
-                    callback.run();
+                    callback.run(true);
                     return;
                 }
             }
-            callback.setValue(false);
-            callback.run();
+            callback.run(false);
         }
     }
 
     public void getMyPetPlayer(final UUID uuid, final RepositoryCallback<MyPetPlayer> callback) {
         if (callback != null) {
-            callback.setValue(players.get(uuid));
-            callback.run();
+            callback.run(players.get(uuid));
         }
     }
 
@@ -374,8 +360,7 @@ public class NbtRepository implements Repository, IScheduler {
         if (callback != null) {
             for (MyPetPlayer p : players.values()) {
                 if (p.getPlayerUUID().equals(player.getUniqueId())) {
-                    callback.setValue(p);
-                    callback.run();
+                    callback.run(p);
                     return;
                 }
             }
@@ -398,14 +383,12 @@ public class NbtRepository implements Repository, IScheduler {
                 saveData(true);
             }
             if (callback != null) {
-                callback.setValue(true);
-                callback.run();
+                callback.run(true);
             }
             return;
         }
         if (callback != null) {
-            callback.setValue(false);
-            callback.run();
+            callback.run(false);
         }
     }
 
@@ -418,8 +401,7 @@ public class NbtRepository implements Repository, IScheduler {
         }
 
         if (callback != null) {
-            callback.setValue(result);
-            callback.run();
+            callback.run(result);
         }
     }
 
