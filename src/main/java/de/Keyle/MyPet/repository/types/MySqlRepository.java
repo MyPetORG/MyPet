@@ -162,7 +162,7 @@ public class MySqlRepository implements Repository {
                     "capture_mode BOOLEAN, " +
                     "health_bar INTEGER , " +
                     "extended_info BLOB, " +
-                    "multi_world BLOB, " +
+                    "multi_world VARCHAR(2000), " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
                     "PRIMARY KEY ( internal_uuid )" +
                     ")");
