@@ -557,6 +557,7 @@ public class EntityListener implements Listener {
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 
                 myPet.removePet(true);
+                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPetPlayer.getLanguage()), myPet.getPetName()));
 
                 MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
                     public void run() {

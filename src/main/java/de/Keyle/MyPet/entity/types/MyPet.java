@@ -428,20 +428,17 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     }
 
     public void removePet() {
-        removePet(false);
-    }
-
-    public void removePet(boolean wantToRespawn) {
         if (status == PetState.Here) {
             health = craftMyPet.getHealth();
             status = PetState.Despawned;
-            this.wantsToRespawn = wantToRespawn;
             craftMyPet.getHandle().dead = true;
             craftMyPet = null;
-            if (wantToRespawn) {
-                sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Despawn", getOwner().getLanguage()), petName));
-            }
         }
+    }
+
+    public void removePet(boolean wantToRespawn) {
+        this.wantsToRespawn = wantToRespawn;
+        removePet();
     }
 
     public void respawnPet() {
