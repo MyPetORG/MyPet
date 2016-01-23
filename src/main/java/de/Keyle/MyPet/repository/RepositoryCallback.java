@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.repository;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public abstract class RepositoryCallback<T> extends BukkitRunnable {
     T value;
@@ -35,4 +37,39 @@ public abstract class RepositoryCallback<T> extends BukkitRunnable {
     }
 
     public abstract void callback(T value);
+
+    public void run(T value) {
+        setValue(value);
+        callback(value);
+    }
+
+    public synchronized BukkitTask runTask(Plugin plugin, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTask(plugin);
+    }
+
+    public synchronized BukkitTask runTaskAsynchronously(Plugin plugin, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskAsynchronously(plugin);
+    }
+
+    public synchronized BukkitTask runTaskLater(Plugin plugin, long delay, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskLater(plugin, delay);
+    }
+
+    public synchronized BukkitTask runTaskLaterAsynchronously(Plugin plugin, long delay, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskLaterAsynchronously(plugin, delay);
+    }
+
+    public synchronized BukkitTask runTaskTimer(Plugin plugin, long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskTimer(plugin, delay, period);
+    }
+
+    public synchronized BukkitTask runTaskTimerAsynchronously(Plugin plugin, long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskTimerAsynchronously(plugin, delay, period);
+    }
 }

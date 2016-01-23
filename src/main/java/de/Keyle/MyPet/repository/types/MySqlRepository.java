@@ -44,9 +44,9 @@ import de.Keyle.MyPet.util.player.UUIDFetcher;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
 import de.keyle.knbt.TagString;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -239,7 +239,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void countMyPets(final RepositoryCallback<Integer> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -254,12 +254,12 @@ public class MySqlRepository implements Repository {
                     e.printStackTrace();
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     @Override
     public void countMyPets(final MyPetType type, final RepositoryCallback<Integer> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -275,7 +275,7 @@ public class MySqlRepository implements Repository {
                     e.printStackTrace();
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     public void saveData() {
@@ -466,7 +466,7 @@ public class MySqlRepository implements Repository {
     @Override
     public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
         if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     checkConnection();
@@ -478,20 +478,19 @@ public class MySqlRepository implements Repository {
                         resultSet.next();
                         //MyPetLogger.write("HAS pet: " + (resultSet.getInt(1) > 0));
 
-                        callback.setValue(resultSet.getInt(1) > 0);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), resultSet.getInt(1) > 0);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
-            });
+            }.runTaskAsynchronously(MyPetPlugin.getPlugin());
         }
     }
 
     @Override
     public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<InactiveMyPet>> callback) {
         if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     checkConnection();
@@ -502,20 +501,19 @@ public class MySqlRepository implements Repository {
                         ResultSet resultSet = statement.executeQuery();
                         List<InactiveMyPet> pets = resultSetToMyPet(owner, resultSet);
                         //MyPetLogger.write("LOAD pets: " + pets);
-                        callback.setValue(pets);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), pets);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
-            });
+            }.runTaskAsynchronously(MyPetPlugin.getPlugin());
         }
     }
 
     @Override
     public void getMyPet(final UUID uuid, final RepositoryCallback<InactiveMyPet> callback) {
         if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     checkConnection();
@@ -533,8 +531,7 @@ public class MySqlRepository implements Repository {
                                 List<InactiveMyPet> pets = resultSetToMyPet(owner, resultSet);
                                 if (pets.size() > 0) {
                                     //MyPetLogger.write("LOAD pet: " + pets.get(0));
-                                    callback.setValue(pets.get(0));
-                                    callback.runTask(MyPetPlugin.getPlugin());
+                                    callback.runTask(MyPetPlugin.getPlugin(), pets.get(0));
                                 }
                             }
                         }
@@ -542,13 +539,13 @@ public class MySqlRepository implements Repository {
                         e.printStackTrace();
                     }
                 }
-            });
+            }.runTaskAsynchronously(MyPetPlugin.getPlugin());
         }
     }
 
     @Override
     public void removeMyPet(final UUID uuid, final RepositoryCallback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -562,23 +559,21 @@ public class MySqlRepository implements Repository {
                     //MyPetLogger.write("DELETE pet: " + result);
 
                     if (callback != null) {
-                        callback.setValue(result > 0);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), result > 0);
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                     if (callback != null) {
-                        callback.setValue(false);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), false);
                     }
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     @Override
     public void removeMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -592,23 +587,21 @@ public class MySqlRepository implements Repository {
                     //MyPetLogger.write("DELETE pet: " + result);
 
                     if (callback != null) {
-                        callback.setValue(result > 0);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), result > 0);
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                     if (callback != null) {
-                        callback.setValue(false);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), false);
                     }
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     @Override
     public void addMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -617,11 +610,10 @@ public class MySqlRepository implements Repository {
                 //MyPetLogger.write("INSERT pet: " + result);
 
                 if (callback != null) {
-                    callback.setValue(result);
-                    callback.runTask(MyPetPlugin.getPlugin());
+                    callback.runTask(MyPetPlugin.getPlugin(), result);
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     public boolean addMyPet(InactiveMyPet myPet) {
@@ -667,7 +659,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void updateMyPet(final MyPet myPet, final RepositoryCallback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -708,14 +700,13 @@ public class MySqlRepository implements Repository {
                     //MyPetLogger.write("UPDATE pet: " + result);
 
                     if (callback != null) {
-                        callback.setValue(result > 0);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), result > 0);
                     }
                 } catch (SQLException | IOException e) {
                     e.printStackTrace();
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     /*
@@ -850,7 +841,7 @@ public class MySqlRepository implements Repository {
     @Override
     public void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback) {
         if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     checkConnection();
@@ -865,19 +856,18 @@ public class MySqlRepository implements Repository {
 
                         //MyPetLogger.write("IS player: " + (resultSet.getInt(1) > 0));
 
-                        callback.setValue(resultSet.getInt(1) > 0);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), resultSet.getInt(1) > 0);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
-            });
+            }.runTaskAsynchronously(MyPetPlugin.getPlugin());
         }
     }
 
     public void getMyPetPlayer(final UUID uuid, final RepositoryCallback<MyPetPlayer> callback) {
         if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     checkConnection();
@@ -889,21 +879,20 @@ public class MySqlRepository implements Repository {
                         MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
                         if (player != null) {
                             //MyPetLogger.write("LOAD player: " + player);
-                            callback.setValue(player);
-                            callback.runTask(MyPetPlugin.getPlugin());
+                            callback.runTask(MyPetPlugin.getPlugin(), player);
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
-            });
+            }.runTaskAsynchronously(MyPetPlugin.getPlugin());
         }
     }
 
     @Override
     public void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback) {
         if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     checkConnection();
@@ -917,31 +906,29 @@ public class MySqlRepository implements Repository {
                         MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
                         if (player != null) {
                             //MyPetLogger.write("LOAD player: " + player);
-                            callback.setValue(player);
-                            callback.runTask(MyPetPlugin.getPlugin());
+                            callback.runTask(MyPetPlugin.getPlugin(), player);
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
-            });
+            }.runTaskAsynchronously(MyPetPlugin.getPlugin());
         }
     }
 
     @Override
     public void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
 
                 boolean result = updatePlayer(player);
 
                 if (callback != null) {
-                    callback.setValue(result);
-                    callback.runTask(MyPetPlugin.getPlugin());
+                    callback.runTask(MyPetPlugin.getPlugin(), result);
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     @SuppressWarnings("unchecked")
@@ -983,7 +970,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -992,11 +979,10 @@ public class MySqlRepository implements Repository {
                 //MyPetLogger.write("INSERT player: " + result);
 
                 if (callback != null) {
-                    callback.setValue(result);
-                    callback.runTask(MyPetPlugin.getPlugin());
+                    callback.runTask(MyPetPlugin.getPlugin(), result);
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
     @SuppressWarnings("unchecked")
@@ -1040,7 +1026,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
@@ -1054,17 +1040,15 @@ public class MySqlRepository implements Repository {
                     //MyPetLogger.write("DELETE player: " + result);
 
                     if (callback != null) {
-                        callback.setValue(result > 0);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), result > 0);
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                     if (callback != null) {
-                        callback.setValue(false);
-                        callback.runTask(MyPetPlugin.getPlugin());
+                        callback.runTask(MyPetPlugin.getPlugin(), false);
                     }
                 }
             }
-        });
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 }
