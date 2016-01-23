@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.repository;
 
-public abstract class RepositoryCallback<T> implements Runnable {
+import org.bukkit.scheduler.BukkitRunnable;
+
+public abstract class RepositoryCallback<T> extends BukkitRunnable {
     T value;
 
     public void setValue(T value) {
