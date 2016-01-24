@@ -39,6 +39,7 @@ public class CommandHelp implements CommandExecutor {
             player.sendMessage("-------------------- " + ChatColor.GOLD + "MyPet - " + Translation.getString("Name.Help", player) + ChatColor.RESET + " --------------------");
             player.sendMessage(ChatColor.GOLD + "/petinfo" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Info", player));
             player.sendMessage(ChatColor.GOLD + "/pettype" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Type", player));
+            player.sendMessage(ChatColor.GOLD + "/petoptions" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Options", player));
             if (Permissions.has(player, "MyPet.user.command.capturehelper")) {
                 player.sendMessage(ChatColor.GOLD + "/petcapturehelper" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.CaptureHelper", player));
             }
