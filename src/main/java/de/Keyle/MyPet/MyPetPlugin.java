@@ -326,9 +326,6 @@ public class MyPetPlugin extends JavaPlugin {
             MyPetLogger.write(e.getMessage());
         }
 
-        if (MyPetVersion.isPremium()) {
-            MyPetLogger.write("Thank you for buying MyPet-" + ChatColor.YELLOW + "Premium" + ChatColor.RESET + "!");
-        }
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + (MyPetVersion.isPremium() ? "P" : "") + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
