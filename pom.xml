@@ -24,7 +24,7 @@
 
     <groupId>de.keyle</groupId>
     <artifactId>mypet</artifactId>
-    <version>1.2.4-SNAPSHOT</version>
+    <version>1.2.4</version>
     <packaging>jar</packaging>
     <name>MyPet</name>
     <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
