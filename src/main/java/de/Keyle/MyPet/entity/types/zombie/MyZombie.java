@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.entity.types.zombie;
 
-import de.Keyle.MyPet.entity.EquipmentSlot;
-import de.Keyle.MyPet.entity.MyPetInfo;
-import de.Keyle.MyPet.entity.types.IMyPetBaby;
-import de.Keyle.MyPet.entity.types.IMyPetEquipment;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.ConfigItem;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -44,7 +44,7 @@ import java.util.Map;
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @MyPetInfo(food = {ROTTEN_FLESH})
-public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
+public class MyZombie extends MyPet implements MyPetEquipment, MyPetBaby {
     public static ConfigItem GROW_UP_ITEM;
 
     protected boolean isBaby = false;

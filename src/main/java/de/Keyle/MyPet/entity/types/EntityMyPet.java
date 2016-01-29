@@ -21,7 +21,9 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.ai.attack.RangedAttack;
@@ -37,7 +39,6 @@ import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -491,8 +492,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
      */
     public float getSoundSpeed() {
         float pitchAddition = 0;
-        if (getMyPet() instanceof IMyPetBaby) {
-            if (((IMyPetBaby) getMyPet()).isBaby()) {
+        if (getMyPet() instanceof MyPetBaby) {
+            if (((MyPetBaby) getMyPet()).isBaby()) {
                 pitchAddition += 0.5F;
             }
         }

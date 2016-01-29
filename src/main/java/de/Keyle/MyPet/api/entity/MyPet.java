@@ -18,19 +18,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.repository;
+package de.Keyle.MyPet.api.entity;
 
-public class RepositoryInitException extends Exception {
-    final public Exception exception;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
 
-    public RepositoryInitException(Exception e) {
-        exception = e;
-    }
+import java.util.UUID;
 
-    @Override
-    public String toString() {
-        return "RepositoryInitException{" +
-                "exception=" + exception +
-                '}';
-    }
+public interface MyPet {
+    public double getExp();
+
+    public double getHealth();
+
+    public int getHungerValue();
+
+    public MyPetPlayer getOwner();
+
+    public String getPetName();
+
+    public MyPetType getPetType();
+
+    public int getRespawnTime();
+
+    public SkillTree getSkillTree();
+
+    public UUID getUUID();
+
+    public String getWorldGroup();
+
+    public long getLastUsed();
 }

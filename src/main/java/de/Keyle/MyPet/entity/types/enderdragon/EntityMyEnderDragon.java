@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.types.enderdragon;
 
-import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;

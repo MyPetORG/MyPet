@@ -18,33 +18,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
+public enum EquipmentSlot {
+    Weapon(0),
+    Boots(1),
+    Leggins(2),
+    Chestplate(3),
+    Helmet(4);
 
-import java.util.UUID;
+    int slot;
 
-public interface IMyPet {
-    public double getExp();
+    EquipmentSlot(int slot) {
+        this.slot = slot;
+    }
 
-    public double getHealth();
+    public static EquipmentSlot getSlotById(int id) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (slot.getSlotId() == id) {
+                return slot;
+            }
+        }
+        return EquipmentSlot.Weapon;
+    }
 
-    public int getHungerValue();
-
-    public MyPetPlayer getOwner();
-
-    public String getPetName();
-
-    public MyPetType getPetType();
-
-    public int getRespawnTime();
-
-    public SkillTree getSkillTree();
-
-    public UUID getUUID();
-
-    public String getWorldGroup();
-
-    public long getLastUsed();
+    public int getSlotId() {
+        return this.slot;
+    }
 }

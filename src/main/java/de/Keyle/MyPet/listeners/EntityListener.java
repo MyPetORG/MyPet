@@ -21,10 +21,13 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
-import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.ai.target.BehaviorDuelTarget;
 import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
@@ -33,7 +36,6 @@ import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.rabbit.MyRabbit;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
@@ -50,7 +52,6 @@ import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import de.keyle.knbt.TagByte;
@@ -732,10 +733,10 @@ public class EntityListener implements Listener {
                     CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                     inv.dropContentAt(myPet.getLocation());
                 }
-                if (myPet instanceof IMyPetEquipment) {
+                if (myPet instanceof MyPetEquipment) {
                     World world = myPet.getCraftPet().getHandle().world;
                     Location petLocation = myPet.getLocation();
-                    for (net.minecraft.server.v1_8_R3.ItemStack is : ((IMyPetEquipment) myPet).getEquipment()) {
+                    for (net.minecraft.server.v1_8_R3.ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
                         if (is != null) {
                             EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
                             itemEntity.pickupDelay = 10;

@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.player.OfflineMyPetPlayer;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import de.Keyle.MyPet.util.player.UUIDFetcher;

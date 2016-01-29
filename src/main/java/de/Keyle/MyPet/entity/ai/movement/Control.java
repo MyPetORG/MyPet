@@ -20,14 +20,14 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.Timer;
 import org.bukkit.Location;
 
-public class Control extends AIGoal implements IScheduler {
+public class Control extends AIGoal implements Scheduler {
     private MyPet myPet;
     private float speedModifier;
     public Location moveTo = null;

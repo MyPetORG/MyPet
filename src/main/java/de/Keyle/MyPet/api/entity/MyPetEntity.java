@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.entity.Creature;
 
 public interface MyPetEntity extends Creature {

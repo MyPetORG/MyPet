@@ -22,11 +22,12 @@ package de.Keyle.MyPet.entity.types;
 
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.NBTStorage;
-import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.Skills;
@@ -41,7 +42,6 @@ import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.locale.Translation;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -56,7 +56,7 @@ import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
-public abstract class MyPet implements IMyPet, NBTStorage {
+public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
     private static Map<Class<? extends MyPet>, Double> startHP = new HashMap<>();
     private static Map<Class<? extends MyPet>, Double> startSpeed = new HashMap<>();
     private static ArrayListMultimap<Class<? extends MyPet>, ConfigItem> food = ArrayListMultimap.create();
@@ -487,8 +487,8 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     public void scheduleTask() {
         if (status != PetState.Despawned && getOwner().isOnline()) {
             for (ISkillInstance skill : skills.getSkills()) {
-                if (skill instanceof IScheduler) {
-                    ((IScheduler) skill).schedule();
+                if (skill instanceof Scheduler) {
+                    ((Scheduler) skill).schedule();
                 }
             }
             if (status == PetState.Dead) {

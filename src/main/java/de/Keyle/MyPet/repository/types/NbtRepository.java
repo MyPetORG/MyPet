@@ -22,21 +22,21 @@ package de.Keyle.MyPet.repository.types;
 
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.repository.RepositoryCallback;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.player.UUIDFetcher;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
@@ -46,7 +46,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.*;
 
-public class NbtRepository implements Repository, IScheduler {
+public class NbtRepository implements Repository, Scheduler {
     public static final ArrayListMultimap<MyPetPlayer, InactiveMyPet> myPets = ArrayListMultimap.create();
     protected final static Map<UUID, MyPetPlayer> players = new HashMap<>();
 

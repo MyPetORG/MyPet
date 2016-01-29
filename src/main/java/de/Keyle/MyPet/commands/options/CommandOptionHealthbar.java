@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.commands.options;
 
 import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.locale.Translation;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

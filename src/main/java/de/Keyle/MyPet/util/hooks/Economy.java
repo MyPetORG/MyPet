@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;

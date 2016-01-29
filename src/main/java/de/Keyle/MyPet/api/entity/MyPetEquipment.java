@@ -18,12 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.entity.EquipmentSlot;
 import net.minecraft.server.v1_8_R3.ItemStack;
 
-public interface IMyPetEquipment {
+public interface MyPetEquipment {
     public ItemStack[] getEquipment();
 
     public ItemStack getEquipment(EquipmentSlot slot);

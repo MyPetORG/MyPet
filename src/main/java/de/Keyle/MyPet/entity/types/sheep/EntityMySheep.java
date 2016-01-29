@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.types.sheep;
 
-import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.EatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;

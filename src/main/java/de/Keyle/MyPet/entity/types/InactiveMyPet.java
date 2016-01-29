@@ -20,18 +20,19 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.*;
 
 import java.util.Collection;
 import java.util.UUID;
 
-public class InactiveMyPet implements IMyPet, NBTStorage {
+public class InactiveMyPet implements MyPet, NBTStorage {
     private final MyPetPlayer petOwner;
     private UUID uuid = null;
     private String petName = "";
@@ -114,7 +115,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
     public void setPetType(MyPetType petType) {
         this.petType = petType;
         if (respawnTime <= 0 && health == -1) {
-            this.health = MyPet.getStartHP(petType.getMyPetClass());
+            this.health = de.Keyle.MyPet.entity.types.MyPet.getStartHP(petType.getMyPetClass());
         }
 
     }

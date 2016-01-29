@@ -21,7 +21,8 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.types.IMyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
@@ -45,7 +46,6 @@ import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.util.BukkitUtil;
@@ -121,10 +121,10 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     if (!Configuration.REMOVE_PETS_AFTER_RELEASE) {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
 
-                        if (myPet instanceof IMyPetEquipment) {
+                        if (myPet instanceof MyPetEquipment) {
                             World world = myPet.getCraftPet().getHandle().world;
                             Location petLocation = myPet.getLocation();
-                            for (ItemStack is : ((IMyPetEquipment) myPet).getEquipment()) {
+                            for (ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
                                 if (is != null) {
                                     EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
                                     itemEntity.pickupDelay = 10;

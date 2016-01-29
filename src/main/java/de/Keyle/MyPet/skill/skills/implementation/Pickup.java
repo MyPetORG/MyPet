@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation;
 
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.ISkillActive;
@@ -46,7 +46,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
+public class Pickup extends PickupInfo implements ISkillInstance, Scheduler, ISkillStorage, ISkillActive {
     private boolean pickup = false;
     private MyPet myPet;
 

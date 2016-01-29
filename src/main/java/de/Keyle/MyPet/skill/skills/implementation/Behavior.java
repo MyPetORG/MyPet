@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills.implementation;
 
 import com.google.common.collect.Iterables;
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.skill.skills.ISkillActive;
@@ -41,7 +41,7 @@ import org.bukkit.ChatColor;
 import java.util.Iterator;
 import java.util.Random;
 
-public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
+public class Behavior extends BehaviorInfo implements ISkillInstance, Scheduler, ISkillStorage, ISkillActive {
     private static Random random = new Random();
 
     private BehaviorState behavior = BehaviorState.Normal;

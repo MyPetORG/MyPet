@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.repository.MyPetList;
@@ -29,7 +30,6 @@ import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Translation;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

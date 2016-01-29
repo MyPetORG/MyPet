@@ -18,31 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity;
+package de.Keyle.MyPet.api.entity;
 
-public enum EquipmentSlot {
-    Weapon(0),
-    Boots(1),
-    Leggins(2),
-    Chestplate(3),
-    Helmet(4);
+public interface MyPetSlimeSize {
+    public int getSize();
 
-    int slot;
-
-    EquipmentSlot(int slot) {
-        this.slot = slot;
-    }
-
-    public static EquipmentSlot getSlotById(int id) {
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot.getSlotId() == id) {
-                return slot;
-            }
-        }
-        return EquipmentSlot.Weapon;
-    }
-
-    public int getSlotId() {
-        return this.slot;
-    }
+    public void setSize(int value);
 }

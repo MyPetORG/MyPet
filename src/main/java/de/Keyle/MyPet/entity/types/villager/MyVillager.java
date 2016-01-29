@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.entity.types.villager;
 
-import de.Keyle.MyPet.entity.MyPetInfo;
-import de.Keyle.MyPet.entity.types.IMyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.ConfigItem;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -34,7 +34,7 @@ import org.bukkit.ChatColor;
 import static org.bukkit.Material.APPLE;
 
 @MyPetInfo(food = {APPLE})
-public class MyVillager extends MyPet implements IMyPetBaby {
+public class MyVillager extends MyPet implements MyPetBaby {
     public static ConfigItem GROW_UP_ITEM;
 
     protected int profession = 0;

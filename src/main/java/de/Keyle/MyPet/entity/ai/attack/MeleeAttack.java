@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.entity.ai.attack;
 
-import de.Keyle.MyPet.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import net.minecraft.server.v1_8_R3.EntityLiving;
@@ -104,8 +104,8 @@ public class MeleeAttack extends AIGoal {
         }
         if (this.petEntity.f(targetEntity.locX, targetEntity.getBoundingBox().b, targetEntity.locZ) - (targetEntity.length * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
             this.ticksUntilNextHitLeft = ticksUntilNextHit;
-            if (this.petEntity instanceof IMyPetEquipment) {
-                if (((IMyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {
+            if (this.petEntity instanceof MyPetEquipment) {
+                if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {
                     this.petEntity.bv(); // -> swingItem()
                 }
             }
