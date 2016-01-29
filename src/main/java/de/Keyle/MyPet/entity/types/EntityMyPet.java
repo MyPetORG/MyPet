@@ -32,6 +32,7 @@ import de.Keyle.MyPet.entity.ai.movement.Float;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.entity.ai.target.*;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
@@ -522,6 +523,27 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
         playStepSound();
     }
 
+    private void makeLivingSound() {
+        for (int j = 0; j < this.world.players.size(); ++j) {
+            EntityPlayer entityplayer = (EntityPlayer) this.world.players.get(j);
+
+            float volume = 1f;
+            if (PlayerList.isMyPetPlayer(entityplayer.getBukkitEntity())) {
+                volume = PlayerList.getMyPetPlayer(entityplayer.getBukkitEntity()).getPetLivingSoundVolume();
+            }
+
+            double deltaX = locX - entityplayer.locX;
+            double deltaY = locY - entityplayer.locY;
+            double deltaZ = locZ - entityplayer.locZ;
+            double maxDistance = volume > 1.0F ? (double) (16.0F * volume) : 16.0D;
+            if (deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ < maxDistance * maxDistance) {
+
+                entityplayer.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(getLivingSound(), locX, locY, locZ, volume, getSoundSpeed()));
+            }
+        }
+    }
+
+
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     /**
@@ -597,14 +619,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
     /**
      * Returns the speed of played sounds
      */
-    protected float bB() {
+    protected float bC() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
             DebugLogger.printThrowable(e);
         }
-        return super.bg();
+        return super.bC();
     }
 
 
@@ -785,7 +807,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
      */
     protected String z() {
         try {
-            return playIdleSound() ? getLivingSound() : null;
+            if (playIdleSound()) {
+                makeLivingSound();
+            }
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
             DebugLogger.printThrowable(e);

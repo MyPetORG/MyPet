@@ -62,6 +62,7 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
     protected int autoRespawnMin = 1;
+    protected float petLivingSoundVolume = 1f;
 
     protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
@@ -93,6 +94,8 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
             return true;
         } else if (showHealthBar) {
             return true;
+        } else if (petLivingSoundVolume < 1f) {
+            return true;
         }
         return false;
     }
@@ -113,6 +116,14 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
 
     public int getAutoRespawnMin() {
         return autoRespawnMin;
+    }
+
+    public float getPetLivingSoundVolume() {
+        return petLivingSoundVolume;
+    }
+
+    public void setPetLivingSoundVolume(float volume) {
+        petLivingSoundVolume = Math.min(Math.max(volume, 0), 1f);
     }
 
     public boolean isHealthBarActive() {
@@ -301,6 +312,7 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
         playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
         playerNBT.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
         playerNBT.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
+        playerNBT.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
 
         TagCompound playerUUIDTag = new TagCompound();
         if (mojangUUID != null) {
@@ -356,6 +368,9 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
         }
         if (myplayerNBT.getCompoundData().containsKey("HealthBar")) {
             setHealthBarActive(myplayerNBT.getAs("HealthBar", TagByte.class).getBooleanData());
+        }
+        if (myplayerNBT.getCompoundData().containsKey("PetLivingSoundVolume")) {
+            setPetLivingSoundVolume(myplayerNBT.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());
         }
         if (myplayerNBT.getCompoundData().containsKey("ExtendedInfo")) {
             setExtendedInfo(myplayerNBT.getAs("ExtendedInfo", TagCompound.class));
