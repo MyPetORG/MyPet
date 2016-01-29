@@ -790,6 +790,7 @@ public class MySqlRepository implements Repository {
                     petPlayer.setAutoRespawnMin(resultSet.getInt("auto_respawn_min"));
                     petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
                     petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
+                    petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
                     petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBlob("extended_info").getBinaryStream(), true));
 
                     ResultSetMetaData metaData = resultSet.getMetaData();
