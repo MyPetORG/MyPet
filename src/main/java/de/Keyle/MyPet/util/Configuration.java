@@ -85,6 +85,7 @@ public class Configuration {
     public static boolean CONSUME_LEASH_ITEM = false;
     public static boolean SKILLTREE_SWITCH_PENALTY_ADMIN = false;
     public static boolean AUTOMATIC_SKILLTREE_ASSIGNMENT = false;
+    public static boolean RANDOM_SKILLTREE_ASSIGNMENT = false;
     public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = true;
     public static boolean PREVENT_LEVELLING_WITHOUT_SKILLTREE = true;
     public static boolean OWNER_CAN_ATTACK_PET = false;
@@ -152,6 +153,7 @@ public class Configuration {
         config.addDefault("MyPet.HungerSystem.HungerPointsPerFeed", HUNGER_SYSTEM_POINTS_PER_FEED);
 
         config.addDefault("MyPet.Skilltree.AutomaticAssignment", AUTOMATIC_SKILLTREE_ASSIGNMENT);
+        config.addDefault("MyPet.Skilltree.RandomAssignment", RANDOM_SKILLTREE_ASSIGNMENT);
         config.addDefault("MyPet.Skilltree.InheritAlreadyInheritedSkills", INHERIT_ALREADY_INHERITED_SKILLS);
         config.addDefault("MyPet.Skilltree.ChooseOnce", CHOOSE_SKILLTREE_ONLY_ONCE);
         config.addDefault("MyPet.Skilltree.PreventLevellingWithout", PREVENT_LEVELLING_WITHOUT_SKILLTREE);
@@ -301,6 +303,7 @@ public class Configuration {
         RESPAWN_COSTS_FACTOR = config.getDouble("MyPet.Respawn.EconomyCost.Factor", 1.0);
         RESPAWN_COSTS_FIXED = config.getDouble("MyPet.Respawn.EconomyCost.Fixed", 0.0);
         AUTOMATIC_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", false);
+        RANDOM_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.RandomAssignment", false);
         CHOOSE_SKILLTREE_ONLY_ONCE = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
         PREVENT_LEVELLING_WITHOUT_SKILLTREE = config.getBoolean("MyPet.Skilltree.PreventLevellingWithout", true);
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
