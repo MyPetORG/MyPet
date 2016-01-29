@@ -133,11 +133,14 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     boolean noComma = true;
                     for (ConfigItem material : MyPet.getFood(myPet.getPetType().getMyPetClass())) {
                         ItemStack is = material.getItem();
+                        if (is == null) {
+                            continue;
+                        }
                         if (!noComma) {
                             m.then(", ");
                             noComma = false;
                         }
-                        if (is.getItemMeta().hasDisplayName()) {
+                        if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                             m.then(is.getItemMeta().getDisplayName());
                         } else {
                             m.then(WordUtils.capitalizeFully(BukkitUtil.getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
