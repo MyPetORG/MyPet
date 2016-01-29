@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.entity.types.enderman;
 
-import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;

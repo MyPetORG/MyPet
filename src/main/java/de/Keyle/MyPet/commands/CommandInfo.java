@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
@@ -29,7 +30,6 @@ import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Translation;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.WordUtils;

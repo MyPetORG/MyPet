@@ -18,24 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
-import org.bukkit.Material;
+public interface MyPetBaby {
+    public boolean isBaby();
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface MyPetInfo {
-    public Material[] food() default {};
-
-    public double hp() default 20D;
-
-    public LeashFlag[] leashFlags() default {LeashFlag.LowHp};
-
-    public double walkSpeed() default 0.30D;
+    public void setBaby(boolean flag);
 }

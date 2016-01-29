@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills.implementation;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -37,7 +37,7 @@ import net.minecraft.server.v1_8_R3.PotionBrewer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
-public class HPregeneration extends HPregenerationInfo implements ISkillInstance, IScheduler {
+public class HPregeneration extends HPregenerationInfo implements ISkillInstance, Scheduler {
     private int timeCounter = 0;
     private MyPet myPet;
 

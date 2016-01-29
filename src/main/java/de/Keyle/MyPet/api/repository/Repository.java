@@ -20,12 +20,10 @@
 
 package de.Keyle.MyPet.api.repository;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.repository.RepositoryCallback;
-import de.Keyle.MyPet.repository.RepositoryInitException;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;

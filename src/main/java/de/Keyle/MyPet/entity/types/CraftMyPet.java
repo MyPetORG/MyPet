@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.entity.MyPetEntity;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import net.minecraft.server.v1_8_R3.EntityCreature;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;

@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.entity.types.ghast;
 
-import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.ChatColor;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Impossible;

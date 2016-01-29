@@ -21,12 +21,12 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
 
 public class Timer {
     private static List<Integer> timerIDs = new ArrayList<>();
-    private static final List<IScheduler> tasksToSchedule = new ArrayList<>();
+    private static final List<Scheduler> tasksToSchedule = new ArrayList<>();
 
     private Timer() {
     }
@@ -62,7 +62,7 @@ public class Timer {
         }, 0L, 20L));
         timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable() {
             public void run() {
-                for (IScheduler task : tasksToSchedule) {
+                for (Scheduler task : tasksToSchedule) {
                     task.schedule();
                 }
             }
@@ -81,11 +81,11 @@ public class Timer {
         stopTimer();
     }
 
-    public static void addTask(IScheduler task) {
+    public static void addTask(Scheduler task) {
         tasksToSchedule.add(task);
     }
 
-    public static void removeTask(IScheduler task) {
+    public static void removeTask(Scheduler task) {
         tasksToSchedule.remove(task);
     }
 }

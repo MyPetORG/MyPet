@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.entity.types.skeleton;
 
-import de.Keyle.MyPet.entity.EquipmentSlot;
-import de.Keyle.MyPet.entity.MyPetInfo;
-import de.Keyle.MyPet.entity.types.IMyPetEquipment;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -42,7 +42,7 @@ import java.util.Map;
 import static org.bukkit.Material.BONE;
 
 @MyPetInfo(food = {BONE})
-public class MySkeleton extends MyPet implements IMyPetEquipment {
+public class MySkeleton extends MyPet implements MyPetEquipment {
     protected boolean isWither = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 

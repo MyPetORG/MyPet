@@ -18,10 +18,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types;
+package de.Keyle.MyPet.api.repository;
 
-public interface IMyPetBaby {
-    public boolean isBaby();
+public class RepositoryInitException extends Exception {
+    final public Exception exception;
 
-    public void setBaby(boolean flag);
+    public RepositoryInitException(Exception e) {
+        exception = e;
+    }
+
+    @Override
+    public String toString() {
+        return "RepositoryInitException{" +
+                "exception=" + exception +
+                '}';
+    }
 }

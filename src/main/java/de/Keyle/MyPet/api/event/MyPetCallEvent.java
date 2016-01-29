@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.entity.types.IMyPet;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -30,13 +30,13 @@ public class MyPetCallEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     boolean isCancelled = false;
 
-    private final IMyPet myPet;
+    private final MyPet myPet;
 
-    public MyPetCallEvent(IMyPet myPet) {
+    public MyPetCallEvent(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public IMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

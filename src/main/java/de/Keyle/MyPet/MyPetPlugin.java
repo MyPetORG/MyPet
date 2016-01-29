@@ -20,8 +20,11 @@
 
 package de.Keyle.MyPet;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.repository.RepositoryCallback;
+import de.Keyle.MyPet.api.repository.RepositoryInitException;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -61,8 +64,6 @@ import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.repository.RepositoryCallback;
-import de.Keyle.MyPet.repository.RepositoryInitException;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.Skills;
@@ -83,7 +84,6 @@ import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -296,8 +296,8 @@ public class MyPetPlugin extends JavaPlugin {
             } catch (RepositoryInitException ignored) {
             }
         }
-        if (repo instanceof IScheduler) {
-            Timer.addTask((IScheduler) repo);
+        if (repo instanceof Scheduler) {
+            Timer.addTask((Scheduler) repo);
         }
 
         loadGroups(groupsFile);

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.player;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.Util;
 

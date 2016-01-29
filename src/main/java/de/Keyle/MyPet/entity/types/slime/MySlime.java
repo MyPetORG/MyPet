@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.entity.types.slime;
 
-import de.Keyle.MyPet.entity.MyPetInfo;
-import de.Keyle.MyPet.entity.types.IMyPetSlimeSize;
+import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.MyPetSlimeSize;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
@@ -32,7 +32,7 @@ import org.bukkit.ChatColor;
 import static org.bukkit.Material.SUGAR;
 
 @MyPetInfo(food = {SUGAR})
-public class MySlime extends MyPet implements IMyPetSlimeSize {
+public class MySlime extends MyPet implements MyPetSlimeSize {
     protected int size = 1;
 
     public MySlime(MyPetPlayer petOwner) {

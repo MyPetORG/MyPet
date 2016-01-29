@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.util.IScheduler;
+import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.ISkillActive;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
@@ -52,7 +52,7 @@ import java.util.Map;
 import static org.bukkit.ChatColor.*;
 import static org.bukkit.Material.*;
 
-public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
+public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISkillStorage, ISkillActive {
     public static int HUNGER_DECREASE_TIME = 100;
     public static boolean PARTY_SUPPORT = true;
     private static Map<Integer, String> buffNames = new HashMap<>();
