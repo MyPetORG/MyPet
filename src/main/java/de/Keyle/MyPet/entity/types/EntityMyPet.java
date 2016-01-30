@@ -806,7 +806,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                 if (onGround) {
                     this.motY = Math.sqrt(jumpHeight);
                 } else if (rideSkill != null && rideSkill.canFly()) {
-                    this.motY = 0.5F;
+                    this.motY = 0.2F;
                     this.fallDistance = 0;
                     this.isFlying = true;
                 }
