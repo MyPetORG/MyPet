@@ -807,7 +807,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
      */
     protected String z() {
         try {
-            if (playIdleSound()) {
+            if (getLivingSound() != null && playIdleSound()) {
                 makeLivingSound();
             }
             return null;
