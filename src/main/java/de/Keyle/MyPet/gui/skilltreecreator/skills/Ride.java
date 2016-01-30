@@ -20,10 +20,7 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagDouble;
-import de.keyle.knbt.TagInt;
-import de.keyle.knbt.TagString;
+import de.keyle.knbt.*;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -38,6 +35,7 @@ public class Ride implements SkillPropertiesPanel {
     private JTextField jumpHeightInput;
     private JRadioButton addJumpHeightRadioButton;
     private JRadioButton setJumpHeightRadioButton;
+    protected JCheckBox canFlyCheckBox;
 
     private TagCompound tagCompound;
 
@@ -85,6 +83,8 @@ public class Ride implements SkillPropertiesPanel {
         tagCompound.getCompoundData().put("addset_jump_height", new TagString(addJumpHeightRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("jump_height", new TagDouble(Double.parseDouble(jumpHeightInput.getText())));
 
+        tagCompound.getCompoundData().put("can_fly", new TagByte(canFlyCheckBox.isSelected()));
+
         return tagCompound;
     }
 
@@ -106,6 +106,9 @@ public class Ride implements SkillPropertiesPanel {
         }
         if (TagCompound.getCompoundData().containsKey("jump_height")) {
             jumpHeightInput.setText("" + TagCompound.getAs("jump_height", TagDouble.class).getDoubleData());
+        }
+        if (TagCompound.getCompoundData().containsKey("can_fly")) {
+            canFlyCheckBox.setSelected(TagCompound.getAs("can_fly", TagByte.class).getBooleanData());
         }
     }
 }

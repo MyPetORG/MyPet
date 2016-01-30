@@ -59,6 +59,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
     protected double walkSpeed = 0.3F;
     protected boolean hasRider = false;
     protected boolean isMyPet = false;
+    protected boolean isFlying = false;
     protected boolean isInvisible = false;
     protected MyPet myPet;
     protected int idleSoundTimer = 0;
@@ -748,10 +749,24 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
         return false;
     }
 
+    /**
+     * -> falldamage
+     */
+    public void e(float f, float f1) {
+        if (!this.isFlying) {
+            super.e(f, f1);
+        }
+    }
+
     public void g(float motionSideways, float motionForward) {
         if (!hasRider || this.passenger == null) {
             super.g(motionSideways, motionForward);
             return;
+        }
+
+        if (this.onGround && this.isFlying) {
+            isFlying = false;
+            this.fallDistance = 0;
         }
 
         //apply pitch & yaw
@@ -781,12 +796,20 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
         super.g(motionSideways, motionForward); // apply motion
 
         // jump when the player jumps
-        if (jump != null && onGround) {
+        if (jump != null) {
+            boolean doJump = false;
             try {
-                if (jump.getBoolean(this.passenger)) {
-                    this.motY = Math.sqrt(jumpHeight);
-                }
+                doJump = jump.getBoolean(this.passenger);
             } catch (IllegalAccessException ignored) {
+            }
+            if (doJump) {
+                if (onGround) {
+                    this.motY = Math.sqrt(jumpHeight);
+                } else if (rideSkill != null && rideSkill.canFly()) {
+                    this.motY = 0.5F;
+                    this.fallDistance = 0;
+                    this.isFlying = true;
+                }
             }
         }
     }

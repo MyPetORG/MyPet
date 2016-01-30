@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.skills.info.RideInfo;
 import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Translation;
+import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
@@ -68,6 +69,9 @@ public class Ride extends RideInfo implements ISkillInstance {
                     jumpHeigth = upgrade.getProperties().getAs("jump_height", TagDouble.class).getDoubleData();
                 }
             }
+            if (upgrade.getProperties().getCompoundData().containsKey("can_fly")) {
+                canFly = upgrade.getProperties().getAs("can_fly", TagByte.class).getBooleanData();
+            }
             if (!active && !quiet) {
                 myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Ride.Receive", myPet.getOwner().getLanguage()), myPet.getPetName()));
             } else if (active && !quiet) {
@@ -78,12 +82,13 @@ public class Ride extends RideInfo implements ISkillInstance {
     }
 
     public String getFormattedValue() {
-        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + "%" + ChatColor.RESET;
+        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + "%" + (canFly() ? ChatColor.RESET + " (" + ChatColor.GOLD + "can fly" + ChatColor.RESET + ")" : "") + ChatColor.RESET;
     }
 
     public void reset() {
         active = false;
         speedPercent = 0;
+        canFly = false;
     }
 
     public int getSpeedPercent() {
@@ -92,6 +97,10 @@ public class Ride extends RideInfo implements ISkillInstance {
 
     public double getJumpHeight() {
         return jumpHeigth;
+    }
+
+    public boolean canFly() {
+        return canFly;
     }
 
     @Override
