@@ -162,10 +162,10 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                                                     }
                                                     break;
                                                 case Boolean:
-                                                    if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false")) {
-                                                        propertiesCompound.getCompoundData().put(propertyName, new TagByte(false));
-                                                    } else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true")) {
+                                                    if (value != null && (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true"))) {
                                                         propertiesCompound.getCompoundData().put(propertyName, new TagByte(true));
+                                                    } else {
+                                                        propertiesCompound.getCompoundData().put(propertyName, new TagByte(false));
                                                     }
                                                     break;
                                                 case String:
