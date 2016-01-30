@@ -376,8 +376,8 @@ public class MySqlRepository implements Repository {
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                     multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                 }
-                statement.setString(9, multiWorldObject.toJSONString());
-                statement.setString(10, player.getInternalUUID().toString());
+                statement.setString(10, multiWorldObject.toJSONString());
+                statement.setString(11, player.getInternalUUID().toString());
 
                 int result = statement.executeUpdate();
 
