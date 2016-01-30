@@ -200,14 +200,13 @@ public class MyPetPlugin extends JavaPlugin {
         registerSkillsInfo();
         registerSkills();
 
-        File defaultSkillConfigNBT = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.st");
-        File defaultSkillConfigYAML = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
-        File defaultSkillConfigJSON = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.json");
+        File skilltreeFolder = new File(getPlugin().getDataFolder().getPath(), "skilltrees");
+        File[] files = skilltreeFolder.listFiles();
 
-        if (!defaultSkillConfigNBT.exists() && !defaultSkillConfigYAML.exists() && !defaultSkillConfigJSON.exists()) {
+        if (files == null || files.length == 0) {
             try {
                 InputStream template = getPlugin().getResource("skilltrees/default.st");
-                OutputStream out = new FileOutputStream(defaultSkillConfigNBT);
+                OutputStream out = new FileOutputStream(new File(skilltreeFolder, "default.st"));
 
                 byte[] buf = new byte[1024];
                 int len;
