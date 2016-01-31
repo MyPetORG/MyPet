@@ -156,9 +156,6 @@ public class PlayerListener implements Listener {
                                                     case Canceled:
                                                         runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
                                                         break;
-                                                    case NoSpace:
-                                                        runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
-                                                        break;
                                                     case NotAllowed:
                                                         runMyPet.sendMessageToOwner(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                                                         break;
@@ -311,6 +308,7 @@ public class PlayerListener implements Listener {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == PetState.Here) {
                     if (myPet.getLocation().getWorld() != event.getTo().getWorld() || myPet.getLocation().distance(event.getTo()) > 10) {
+                        final boolean sameWorld = myPet.getLocation().getWorld() == event.getTo().getWorld();
                         myPet.removePet(true);
                         new BukkitRunnable() {
                             public void run() {
@@ -321,10 +319,14 @@ public class PlayerListener implements Listener {
                                             runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
                                             break;
                                         case NoSpace:
-                                            runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                            if (sameWorld) {
+                                                runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                            }
                                             break;
                                         case Flying:
-                                            runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                            if (sameWorld) {
+                                                runMyPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                            }
                                             break;
                                         case NotAllowed:
                                             runMyPet.sendMessageToOwner(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
