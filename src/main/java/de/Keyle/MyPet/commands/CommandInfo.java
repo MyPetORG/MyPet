@@ -136,7 +136,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         if (is == null) {
                             continue;
                         }
-                        if (!noComma) {
+                        if (noComma) {
                             m.then(", ");
                             noComma = false;
                         }
