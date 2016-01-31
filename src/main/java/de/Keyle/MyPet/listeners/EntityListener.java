@@ -215,11 +215,13 @@ public class EntityListener implements Listener {
                             }
                             ItemTooltip it = new ItemTooltip();
                             it.setMaterial(is.getType());
-                            if (is.getItemMeta().hasDisplayName()) {
-                                it.setTitle(is.getItemMeta().getDisplayName());
-                            }
-                            if (is.getItemMeta().hasLore()) {
-                                it.setLore(is.getItemMeta().getLore().toArray(new String[is.getItemMeta().getLore().size()]));
+                            if (is.hasItemMeta()) {
+                                if (is.getItemMeta().hasDisplayName()) {
+                                    it.setTitle(is.getItemMeta().getDisplayName());
+                                }
+                                if (is.getItemMeta().hasLore()) {
+                                    it.setLore(is.getItemMeta().getLore().toArray(new String[is.getItemMeta().getLore().size()]));
+                                }
                             }
                             m.itemTooltip(it);
                         }
