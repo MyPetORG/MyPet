@@ -20,51 +20,64 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.Util;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class CommandOptionCleanup implements CommandOption {
     @Override
     public boolean onCommandOption(final CommandSender sender, String[] args) {
-        if (args.length < 1) {
-            return false;
-        }
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] cleaning up MyPet database...");
 
-        if (Util.isInt(args[0])) {
-            final int days = Integer.parseInt(args[0]);
+        long timestamp;
+        if (args.length == 0) {
+            timestamp = -1;
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] delete unused MyPets...");
+        } else {
+            Calendar cal = Calendar.getInstance();
 
-            /*
-            MyPetList.getAllInactiveMyPets(new RepositoryCallback<Collection<InactiveMyPet>>() {
-                @Override
-                public void callback(Collection<InactiveMyPet> value) {
-                    boolean deleteOld = days == -1;
-                    List<InactiveMyPet> deletionList = new ArrayList<>();
-                    for (InactiveMyPet inactiveMyPet : value) {
-                        if (inactiveMyPet.getLastUsed() != -1 && !deleteOld) {
-                            if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - inactiveMyPet.getLastUsed()) > days) {
-                                deletionList.add(inactiveMyPet);
-                            }
-                        } else if (inactiveMyPet.getLastUsed() == -1 && deleteOld) {
-                            deletionList.add(inactiveMyPet);
-                        }
+            for (String arg : args) {
+                if (arg.endsWith("y") || arg.endsWith("Y")) {
+                    if (Util.isInt(arg.replaceAll("[yY]", ""))) {
+                        int years = Integer.parseInt(arg.replaceAll("[yY]", ""));
+                        cal.add(Calendar.YEAR, -years);
                     }
-                    int deletedPetCount = deletionList.size();
-                    if (deletedPetCount > 0) {
-                        if (Backup.MAKE_BACKUPS) {
-                            //ToDo
-                            //sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] created backup -> " + MyPetPlugin.getPlugin().getBackupManager().createBackup());
-                        }
-
-                        for (InactiveMyPet inactiveMyPet : deletionList) {
-                            MyPetList.removeInactiveMyPet(inactiveMyPet);
-                        }
-                    }
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + deletedPetCount + " MyPets.");
                 }
-            });
-            */
+                if (arg.endsWith("d") || arg.endsWith("D")) {
+                    if (Util.isInt(arg.replaceAll("[dD]", ""))) {
+                        int days = Integer.parseInt(arg.replaceAll("[dD]", ""));
+                        cal.add(Calendar.DAY_OF_YEAR, -days);
+                    }
+                }
+                if (arg.endsWith("h") || arg.endsWith("H")) {
+                    if (Util.isInt(arg.replaceAll("[hH]", ""))) {
+                        int hours = Integer.parseInt(arg.replaceAll("[hH]", ""));
+                        cal.add(Calendar.HOUR, -hours);
+                    }
+                }
+                if (arg.endsWith("m") || arg.endsWith("M")) {
+                    if (Util.isInt(arg.replaceAll("[mM]", ""))) {
+                        int minutes = Integer.parseInt(arg.replaceAll("[mM]", ""));
+                        cal.add(Calendar.MINUTE, -minutes);
+                    }
+                }
+            }
+            timestamp = cal.getTimeInMillis();
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] delete MyPets older than " + new Date(cal.getTimeInMillis()) + "...");
         }
+
+        MyPetPlugin.getPlugin().getRepository().cleanup(timestamp, new RepositoryCallback<Integer>() {
+            @Override
+            public void callback(Integer value) {
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + " MyPets.");
+            }
+        });
         return true;
     }
 }

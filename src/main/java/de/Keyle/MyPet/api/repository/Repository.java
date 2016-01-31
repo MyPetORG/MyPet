@@ -27,7 +27,6 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public interface Repository {
@@ -37,9 +36,11 @@ public interface Repository {
 
     void init() throws RepositoryInitException;
 
-    List<InactiveMyPet> getAllMyPets(Map<UUID, MyPetPlayer> owners);
+    List<InactiveMyPet> getAllMyPets();
 
     List<MyPetPlayer> getAllMyPetPlayers();
+
+    void cleanup(long timestamp, final RepositoryCallback<Integer> callback);
 
     void countMyPets(final RepositoryCallback<Integer> callback);
 
