@@ -204,7 +204,7 @@ public class EntityListener implements Listener {
                             if (is == null) {
                                 continue;
                             }
-                            if (!noComma) {
+                            if (noComma) {
                                 m.then(", ");
                                 noComma = false;
                             }
