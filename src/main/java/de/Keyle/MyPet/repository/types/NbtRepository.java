@@ -87,6 +87,37 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     @Override
+    public void cleanup(long timestamp, final RepositoryCallback<Integer> callback) {
+        boolean deleteOld = timestamp < 0;
+
+        List<InactiveMyPet> deletionList = new ArrayList<>();
+        for (InactiveMyPet inactiveMyPet : getAllMyPets()) {
+            if (inactiveMyPet.getLastUsed() != -1 && !deleteOld) {
+                if (inactiveMyPet.getLastUsed() < timestamp) {
+                    deletionList.add(inactiveMyPet);
+                }
+            } else if (inactiveMyPet.getLastUsed() == -1 && deleteOld) {
+                deletionList.add(inactiveMyPet);
+            }
+        }
+        int deletedPetCount = deletionList.size();
+        if (deletedPetCount > 0) {
+            if (Backup.MAKE_BACKUPS) {
+                backupManager.createAsyncBackup();
+            }
+
+            for (InactiveMyPet inactiveMyPet : deletionList) {
+                myPets.remove(inactiveMyPet.getOwner(), inactiveMyPet);
+            }
+
+            saveData(true);
+        }
+        if (callback != null) {
+            callback.run(deletedPetCount);
+        }
+    }
+
+    @Override
     public void countMyPets(final RepositoryCallback<Integer> callback) {
         callback.run(myPets.values().size());
     }
@@ -170,7 +201,7 @@ public class NbtRepository implements Repository, Scheduler {
     // Pets ------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<InactiveMyPet> getAllMyPets(Map<UUID, MyPetPlayer> owners) {
+    public List<InactiveMyPet> getAllMyPets() {
         return new ArrayList<>(myPets.values());
     }
 

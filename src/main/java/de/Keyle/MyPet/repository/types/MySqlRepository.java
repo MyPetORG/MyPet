@@ -252,6 +252,34 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
+    public void cleanup(final long timestamp, final RepositoryCallback<Integer> callback) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                checkConnection();
+
+                try {
+                    PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE last_used<?;");
+                    statement.setLong(1, timestamp);
+
+                    int result = statement.executeUpdate();
+
+                    //MyPetLogger.write("DELETE pet: " + result);
+
+                    if (callback != null) {
+                        callback.runTask(MyPetPlugin.getPlugin(), result);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    if (callback != null) {
+                        callback.runTask(MyPetPlugin.getPlugin(), 0);
+                    }
+                }
+            }
+        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
+    }
+
+    @Override
     public void countMyPets(final RepositoryCallback<Integer> callback) {
         new BukkitRunnable() {
             @Override
@@ -429,9 +457,16 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public List<InactiveMyPet> getAllMyPets(Map<UUID, MyPetPlayer> owners) {
+    public List<InactiveMyPet> getAllMyPets() {
         try {
             checkConnection();
+
+            List<MyPetPlayer> playerList = getAllMyPetPlayers();
+            Map<UUID, MyPetPlayer> owners = new HashMap<>();
+
+            for (MyPetPlayer player : playerList) {
+                owners.put(player.getInternalUUID(), player);
+            }
 
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM pets;");

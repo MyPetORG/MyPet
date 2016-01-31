@@ -29,10 +29,7 @@ import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class Converter {
     public static String CONVERT_FROM = "-";
@@ -62,14 +59,6 @@ public class Converter {
         toRepo = MyPetPlugin.getPlugin().getRepository();
 
         List<MyPetPlayer> playerList = fromRepo.getAllMyPetPlayers();
-        Map<UUID, MyPetPlayer> players = new HashMap<>();
-
-        for (MyPetPlayer player : playerList) {
-            players.put(player.getInternalUUID(), player);
-        }
-
-        List<InactiveMyPet> pets = fromRepo.getAllMyPets(players);
-
         for (MyPetPlayer player : playerList) {
             if (toRepo instanceof NbtRepository) {
                 toRepo.addMyPetPlayer(player, null);
@@ -78,6 +67,7 @@ public class Converter {
             }
         }
 
+        List<InactiveMyPet> pets = fromRepo.getAllMyPets();
         for (InactiveMyPet pet : pets) {
             if (toRepo instanceof NbtRepository) {
                 toRepo.addMyPet(pet, null);
