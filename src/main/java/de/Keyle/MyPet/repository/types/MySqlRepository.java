@@ -388,7 +388,7 @@ public class MySqlRepository implements Repository {
             try {
                 PreparedStatement statement = connection.prepareStatement(
                         "UPDATE players " +
-                                "SET mojang_uuid= ?, offline_uuid= ?, name= ?, auto_respawn= ?, auto_respawn_min=?, capture_mode=?, health_bar=?, pet_idle_volume=?, extended_info=?, multi_world=? " +
+                                "SET mojang_uuid=?, offline_uuid=?, name=?, auto_respawn=?, auto_respawn_min=?, capture_mode=?, health_bar=?, pet_idle_volume=?, extended_info=?, multi_world=? " +
                                 "WHERE internal_uuid=?;");
                 statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
                 statement.setString(2, player.getOfflineUUID() != null ? player.getOfflineUUID().toString() : null);
@@ -989,7 +989,7 @@ public class MySqlRepository implements Repository {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE players " +
-                            "SET mojang_uuid= ?, offline_uuid= ?, name= ?, auto_respawn= ?, auto_respawn_min=?, capture_mode=?, health_bar=?, pet_idle_volume=?, extended_info=?, multi_world=? " +
+                            "SET mojang_uuid=?, offline_uuid=?, name=?, auto_respawn=?, auto_respawn_min=?, capture_mode=?, health_bar=?, pet_idle_volume=?, extended_info=?, multi_world=? " +
                             "WHERE internal_uuid=?;");
             statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
             statement.setString(2, player.getOfflineUUID() != null ? player.getOfflineUUID().toString() : null);
