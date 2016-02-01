@@ -82,6 +82,6 @@ public class CommandOptionName implements CommandOptionTabCompleter {
         if (strings.length == 2) {
             return null;
         }
-        return CommandAdmin.emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

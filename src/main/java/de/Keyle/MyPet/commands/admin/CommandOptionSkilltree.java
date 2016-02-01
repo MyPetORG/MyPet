@@ -78,7 +78,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         if (strings.length == 3) {
             Player player = Bukkit.getServer().getPlayer(strings[1]);
             if (player == null || !player.isOnline()) {
-                return CommandAdmin.emptyList;
+                return CommandAdmin.EMPTY_LIST;
             }
             if (MyPetList.hasActiveMyPet(player)) {
                 MyPet myPet = MyPetList.getMyPet(player);
@@ -91,6 +91,6 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
                 return skilltreeList;
             }
         }
-        return CommandAdmin.emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

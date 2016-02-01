@@ -129,6 +129,6 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         if (strings.length == 3) {
             return null;
         }
-        return CommandAdmin.emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

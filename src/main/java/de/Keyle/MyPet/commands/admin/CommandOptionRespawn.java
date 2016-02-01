@@ -88,6 +88,6 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
         if (strings.length == 3) {
             return showList;
         }
-        return CommandAdmin.emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }
