@@ -46,10 +46,7 @@ import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.hooks.Economy;
-import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.hooks.PluginHookManager;
-import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.fanciful.FancyMessage;
@@ -842,6 +839,9 @@ public class EntityListener implements Listener {
     public void onEntityDeath(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
         if (deadEntity instanceof CraftMyPet) {
+            return;
+        }
+        if (SkillApi.DISABLE_VANILLA_EXP) {
             return;
         }
         if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner")) {

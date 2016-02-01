@@ -45,10 +45,7 @@ import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.util.hooks.Bungee;
-import de.Keyle.MyPet.util.hooks.Economy;
-import de.Keyle.MyPet.util.hooks.Permissions;
-import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -172,6 +169,8 @@ public class Configuration {
         config.addDefault("MyPet.Hooks.MyHungerGames.DisablePetsInGames", true);
         config.addDefault("MyPet.Hooks.BattleArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Hooks.Vault.Economy", true);
+        config.addDefault("MyPet.Hooks.SkillAPI.GrantExp", true);
+        config.addDefault("MyPet.Hooks.SkillAPI.Disable-Vanilla-Exp", false);
 
         config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
         config.addDefault("MyPet.Name.MaxLength", MAX_PET_NAME_LENGTH);
@@ -352,6 +351,9 @@ public class Configuration {
         SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES = config.getBoolean("MyPet.Hooks.SurvivalGames.DisablePetsInGames", true);
         MyHungerGames.DISABLE_PETS_IN_HUNGER_GAMES = config.getBoolean("MyPet.Hooks.MyHungerGames.DisablePetsInGames", true);
         MobArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Hooks.MobArena.DisablePetsInArena", false);
+        SkillApi.GRANT_EXP = config.getBoolean("MyPet.Hooks.SkillAPI.GrantExp", true);
+        SkillApi.DISABLE_VANILLA_EXP = config.getBoolean("MyPet.Hooks.SkillAPI.Disable-Vanilla-Exp", false);
+        SkillApi.EXP_PERCENT = config.getInt("MyPet.Hooks.SkillAPI.ExpPercent", 100);
         PvPChecker.USE_PvPArena = config.getBoolean("MyPet.Hooks.PvPArena.PvP", true);
         PvPChecker.USE_Towny = config.getBoolean("MyPet.Hooks.Towny", true);
         PvPChecker.USE_Factions = config.getBoolean("MyPet.Hooks.Factions", true);

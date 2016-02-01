@@ -56,6 +56,7 @@
         <griefprevention.version>13.0</griefprevention.version>
         <pvpmanager.version>3.0</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
+        <skill-api.version>3.37</skill-api.version>
         <protocol-lib.version>3.6.4</protocol-lib.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
@@ -296,6 +297,13 @@
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
             <version>${heroes.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.sucy.skill</groupId>
+            <artifactId>SkillAPI</artifactId>
+            <version>${skill-api.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
