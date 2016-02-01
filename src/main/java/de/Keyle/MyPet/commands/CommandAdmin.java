@@ -38,7 +38,7 @@ import java.util.*;
 
 public class CommandAdmin implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<>();
-    public final static List<String> emptyList = Collections.unmodifiableList(new ArrayList<String>());
+    public final static List<String> EMPTY_LIST = Collections.unmodifiableList(new ArrayList<String>());
     private static Map<String, CommandOption> commandOptions = new HashMap<>();
 
     public CommandAdmin() {
@@ -90,7 +90,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player && !Permissions.has((Player) commandSender, "MyPet.admin", false)) {
-            return emptyList;
+            return EMPTY_LIST;
         }
         if (strings.length == 1) {
             if (optionsList.size() != commandOptions.keySet().size()) {
@@ -106,6 +106,6 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return emptyList;
+        return EMPTY_LIST;
     }
 }

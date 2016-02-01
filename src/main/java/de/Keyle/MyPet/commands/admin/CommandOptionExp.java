@@ -130,6 +130,6 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
         } else if (strings.length == 4) {
             return addSetRemoveList;
         }
-        return CommandAdmin.emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

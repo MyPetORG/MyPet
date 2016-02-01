@@ -306,6 +306,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 return petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
             }
         }
-        return CommandAdmin.emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }
