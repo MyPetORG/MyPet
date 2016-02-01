@@ -57,6 +57,7 @@
         <pvpmanager.version>3.0</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
         <skill-api.version>3.37</skill-api.version>
+        <magicspells.version>3.4.2</magicspells.version>
         <protocol-lib.version>3.6.4</protocol-lib.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
@@ -304,6 +305,13 @@
             <groupId>com.sucy.skill</groupId>
             <artifactId>SkillAPI</artifactId>
             <version>${skill-api.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.nisovin.magicspells</groupId>
+            <artifactId>MagicSpells</artifactId>
+            <version>${magicspells.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
