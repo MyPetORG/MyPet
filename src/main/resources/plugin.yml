@@ -75,6 +75,11 @@ commands:
     description: MyPet player options
     usage: '/<command>'
     permission: MyPet.user.command.options
+  petswitch:
+    aliases: [petswitch, pswitch]
+    description: Opens a MyPet selection GUI
+    usage: '/<command>'
+    permission: MyPet.user.command.petswitch
 
 permissions:
   MyPet.user.leash.*:
@@ -145,3 +150,6 @@ permissions:
   MyPet.user.command.options:
     default: true
     description: Allows to use the MyPet options command
+  MyPet.user.command.petswitch:
+    default: op
+    description: Allows to switch between MyPets
