@@ -196,6 +196,7 @@ public class MyPetPlugin extends JavaPlugin {
         getCommand("pettype").setExecutor(new CommandPetType());
         getCommand("petcapturehelper").setExecutor(new CommandCaptureHelper());
         getCommand("petoptions").setExecutor(new CommandOptions());
+        getCommand("petswitch").setExecutor(new CommandSwitchMyPet());
 
         registerSkillsInfo();
         registerSkills();
