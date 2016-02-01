@@ -24,6 +24,7 @@ import de.Keyle.MyPet.util.hooks.arenas.*;
 
 public class Hooks {
     public static void enable() {
+        SkillApi.findPlugin();
         MobArena.findPlugin();
         Minigames.findPlugin();
         PvPArena.findPlugin();
