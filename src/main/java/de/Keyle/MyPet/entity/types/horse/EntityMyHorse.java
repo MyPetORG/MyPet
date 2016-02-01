@@ -27,7 +27,7 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 
-@EntitySize(width = 1.4F, length = 1.6F, height = 1.6F)
+@EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
     int soundCounter = 0;
     int rearCounter = -1;

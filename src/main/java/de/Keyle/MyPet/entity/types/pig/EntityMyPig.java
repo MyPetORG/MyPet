@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 
-@EntitySize(width = 0.9F, length = 0.9F, height = 0.9F)
+@EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
     public EntityMyPig(World world, MyPet myPet) {
         super(world, myPet);

@@ -27,7 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.DyeColor;
 
-@EntitySize(width = 0.6F, length = 0.8F, height = 0.64f)
+@EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
     protected boolean shaking;
     protected boolean isWet;

@@ -28,7 +28,7 @@ import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.Items;
 import net.minecraft.server.v1_8_R3.World;
 
-@EntitySize(width = 0.4F, length = 0.7F, height = 0.7F)
+@EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
     private int nextEggTimer;
 

@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_8_R3.World;
 
-@EntitySize(width = 0.5100001F, length = 0.5100001F, height = 0.5100001F)
+@EntitySize(width = 0.5100001F, height = 0.5100001F)
 public class EntityMySlime extends EntityMyPet {
     int jumpDelay;
 
@@ -55,7 +55,7 @@ public class EntityMySlime extends EntityMyPet {
         this.datawatcher.watch(16, new Byte((byte) value));
         EntitySize es = EntityMySlime.class.getAnnotation(EntitySize.class);
         if (es != null) {
-            this.setSize(es.width() * value, es.length() * value);
+            this.setSize(es.width() * value, es.width() * value);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
