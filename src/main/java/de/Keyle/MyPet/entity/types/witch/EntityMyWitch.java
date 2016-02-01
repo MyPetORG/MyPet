@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_8_R3.World;
 
-@EntitySize(width = 0.6F, length = 0.6F, height = 1.62F)
+@EntitySize(width = 0.6F, height = 1.62F)
 public class EntityMyWitch extends EntityMyPet {
     public EntityMyWitch(World world, MyPet myPet) {
         super(world, myPet);

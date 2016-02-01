@@ -30,7 +30,7 @@ import net.minecraft.server.v1_8_R3.Items;
 import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Bukkit;
 
-@EntitySize(width = 0.9F, length = 0.9F, height = 1.3F)
+@EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
     public EntityMyMooshroom(World world, MyPet myPet) {
         super(world, myPet);

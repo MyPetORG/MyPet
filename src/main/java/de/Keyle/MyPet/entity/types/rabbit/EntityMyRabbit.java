@@ -28,7 +28,7 @@ import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.World;
 
-@EntitySize(width = 0.6F, length = 0.7F, height = 0.7F)
+@EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
     int jumpDelay;
 

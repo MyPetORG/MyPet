@@ -30,7 +30,7 @@ import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.entity.Ocelot.Type;
 
-@EntitySize(width = 0.6F, length = 0.6F, height = 0.8F)
+@EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
     private Sit sitPathfinder;
 

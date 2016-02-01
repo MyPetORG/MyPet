@@ -28,7 +28,7 @@ import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.Items;
 import net.minecraft.server.v1_8_R3.World;
 
-@EntitySize(width = 0.9F, length = 1.3F, height = 1.3F)
+@EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
     public EntityMyCow(World world, MyPet myPet) {
         super(world, myPet);

@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@EntitySize(width = 0.7F, length = 0.7F, height = 1.7F)
+@EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
     Map<Location, Integer> snowMap = new HashMap<>();
 

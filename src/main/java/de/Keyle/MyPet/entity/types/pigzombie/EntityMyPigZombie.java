@@ -32,7 +32,7 @@ import de.Keyle.MyPet.util.Util;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 
-@EntitySize(width = 0.6F, length = 0.6F, height = 1.9F)
+@EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPigZombie extends EntityMyPet {
     public EntityMyPigZombie(World world, MyPet myPet) {
         super(world, myPet);
