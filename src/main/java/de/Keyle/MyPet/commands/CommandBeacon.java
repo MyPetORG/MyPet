@@ -33,12 +33,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommandBeacon implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<>();
-
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -70,6 +67,6 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

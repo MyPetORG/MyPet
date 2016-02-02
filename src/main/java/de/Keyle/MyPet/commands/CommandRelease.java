@@ -84,8 +84,6 @@ import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RESET;
 
 public class CommandRelease implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<>();
-
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
@@ -287,6 +285,6 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
             petnameList.add(PlayerList.getMyPetPlayer((Player) commandSender).getMyPet().getPetName());
             return petnameList;
         }
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

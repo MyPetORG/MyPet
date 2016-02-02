@@ -28,9 +28,12 @@ import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class CommandStop implements CommandExecutor {
+import java.util.List;
+
+public class CommandStop implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
@@ -54,5 +57,10 @@ public class CommandStop implements CommandExecutor {
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        return CommandAdmin.EMPTY_LIST;
     }
 }

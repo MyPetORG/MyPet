@@ -47,8 +47,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<>();
-
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("You can't use this command from server console!");
@@ -194,9 +192,9 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
         if (MyPetList.hasActiveMyPet(player)) {
             MyPet myPet = MyPetList.getMyPet(player);
             if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
-                return emptyList;
+                return CommandAdmin.EMPTY_LIST;
             } else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
-                return emptyList;
+                return CommandAdmin.EMPTY_LIST;
             } else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName())) {
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
 
@@ -209,6 +207,6 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                 return skilltreeList;
             }
         }
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

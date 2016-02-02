@@ -33,7 +33,6 @@ import java.util.*;
 
 public class CommandOptions implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<>();
-    public final static List<String> emptyList = Collections.unmodifiableList(new ArrayList<String>());
     private static Map<String, CommandOption> commandOptions = new HashMap<>();
 
     public CommandOptions() {
@@ -73,6 +72,6 @@ public class CommandOptions implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

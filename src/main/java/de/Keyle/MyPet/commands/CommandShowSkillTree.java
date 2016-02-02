@@ -28,12 +28,11 @@ import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.*;
 
-public class CommandShowSkillTree implements CommandExecutor {
+import java.util.List;
+
+public class CommandShowSkillTree implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 1) {
@@ -73,5 +72,10 @@ public class CommandShowSkillTree implements CommandExecutor {
             sender.sendMessage("Can only be used in server console");
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        return CommandAdmin.EMPTY_LIST;
     }
 }
