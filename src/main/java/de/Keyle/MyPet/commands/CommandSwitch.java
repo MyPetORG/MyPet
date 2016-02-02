@@ -37,9 +37,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CommandSwitchMyPet implements CommandExecutor, TabCompleter {
+public class CommandSwitch implements CommandExecutor, TabCompleter {
+    private List<String> storeList = new ArrayList<>();
+
+    public CommandSwitch() {
+        storeList.add("store");
+    }
+
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player)) {
@@ -53,6 +60,18 @@ public class CommandSwitchMyPet implements CommandExecutor, TabCompleter {
 
         if (PlayerList.isMyPetPlayer(player)) {
             final MyPetPlayer owner = PlayerList.getMyPetPlayer(player);
+
+            if (args.length > 0 && args[0].equalsIgnoreCase("store")) {
+                if (owner.hasMyPet()) {
+                    MyPet myPet = owner.getMyPet();
+                    if (MyPetList.deactivateMyPet(owner)) {
+                        String wg = owner.getWorldGroupForMyPet(myPet.getUUID());
+                        owner.setMyPetForWorldGroup(wg, null);
+                        myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Switch", owner), myPet.getPetName()));
+                        return true;
+                    }
+                }
+            }
 
             MyPetSelectionGui gui = new MyPetSelectionGui(owner);
             gui.open(new RepositoryCallback<InactiveMyPet>() {
@@ -90,6 +109,9 @@ public class CommandSwitchMyPet implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if (MyPetList.hasActiveMyPet((Player) commandSender)) {
+            return storeList;
+        }
         return CommandAdmin.EMPTY_LIST;
     }
 }
