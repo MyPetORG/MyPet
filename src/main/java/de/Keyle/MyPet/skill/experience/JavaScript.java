@@ -207,19 +207,19 @@ public class JavaScript extends Experience {
         }
 
         public int getLevel(double exp, MyPetScriptInfo mypet) {
-            return ((Double) getLevel.call(cx, scope, scope, new Object[]{exp, mypet})).intValue();
+            return ((Number) getLevel.call(cx, scope, scope, new Object[]{exp, mypet})).intValue();
         }
 
         public double getRequiredExp(double exp, MyPetScriptInfo mypet) {
-            return (Double) getRequiredExp.call(cx, scope, scope, new Object[]{exp, mypet});
+            return ((Number) getRequiredExp.call(cx, scope, scope, new Object[]{exp, mypet})).doubleValue();
         }
 
         public double getCurrentExp(double exp, MyPetScriptInfo mypet) {
-            return (Double) getCurrentExp.call(cx, scope, scope, new Object[]{exp, mypet});
+            return ((Number) getCurrentExp.call(cx, scope, scope, new Object[]{exp, mypet})).doubleValue();
         }
 
         public double getExpByLevel(int level, MyPetScriptInfo mypet) {
-            return (Double) getExpByLevel.call(cx, scope, scope, new Object[]{level, mypet});
+            return ((Number) getExpByLevel.call(cx, scope, scope, new Object[]{level, mypet})).doubleValue();
         }
     }
 
