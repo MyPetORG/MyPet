@@ -41,12 +41,9 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommandInfo implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<>();
-
     public enum PetInfoDisplay {
         Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);
 
@@ -210,7 +207,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
         if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false)) {
             return null;
         }
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 
     public static boolean canSee(boolean adminOnly, Player player, MyPet myPet) {

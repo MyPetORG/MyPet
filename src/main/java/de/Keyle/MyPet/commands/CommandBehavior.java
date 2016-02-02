@@ -39,7 +39,6 @@ import java.util.List;
 
 public class CommandBehavior implements CommandExecutor, TabCompleter {
     private static List<String> behaviorList = new ArrayList<>();
-    private static List<String> emptyList = new ArrayList<>();
 
     static {
         behaviorList.add("normal");
@@ -121,6 +120,6 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
         if (strings.length == 1) {
             return behaviorList;
         }
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

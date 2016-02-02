@@ -40,7 +40,6 @@ import java.util.List;
 
 public class CommandRespawn implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<>();
-    private static List<String> emptyList = new ArrayList<>();
 
     static {
         optionsList.add("show");
@@ -113,6 +112,6 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
         if (strings.length == 1) {
             return optionsList;
         }
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }

@@ -31,12 +31,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<>();
-
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
@@ -63,6 +60,6 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return emptyList;
+        return CommandAdmin.EMPTY_LIST;
     }
 }
