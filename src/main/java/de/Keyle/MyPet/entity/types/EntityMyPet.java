@@ -560,6 +560,104 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
         }
     }
 
+    private void ride(float motionSideways, float motionForward, float speedModifier) {
+        double locY;
+        float f2;
+        float speed;
+        float swimmSpeed;
+
+        if (this.V()) { // in water
+            locY = this.locY;
+            speed = 0.8F;
+            swimmSpeed = 0.02F;
+            f2 = (float) EnchantmentManager.b(this);
+            if (f2 > 3.0F) {
+                f2 = 3.0F;
+            }
+
+            if (!this.onGround) {
+                f2 *= 0.5F;
+            }
+
+            if (f2 > 0.0F) {
+                speed += (0.54600006F - speed) * f2 / 3.0F;
+                swimmSpeed += (speedModifier * 1.0F - swimmSpeed) * f2 / 3.0F;
+            }
+
+            this.a(motionSideways, motionForward, swimmSpeed);
+            this.move(this.motX, this.motY, this.motZ);
+            this.motX *= (double) speed;
+            this.motY *= 0.800000011920929D;
+            this.motZ *= (double) speed;
+            this.motY -= 0.02D;
+            if (this.positionChanged && this.c(this.motX, this.motY + 0.6000000238418579D - this.locY + locY, this.motZ)) {
+                this.motY = 0.30000001192092896D;
+            }
+        } else if (this.ab()) { // in lava
+            locY = this.locY;
+            this.a(motionSideways, motionForward, 0.02F);
+            this.move(this.motX, this.motY, this.motZ);
+            this.motX *= 0.5D;
+            this.motY *= 0.5D;
+            this.motZ *= 0.5D;
+            this.motY -= 0.02D;
+            if (this.positionChanged && this.c(this.motX, this.motY + 0.6000000238418579D - this.locY + locY, this.motZ)) {
+                this.motY = 0.30000001192092896D;
+            }
+        } else {
+            float friction = 0.91F;
+            if (this.onGround) {
+                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(this.getBoundingBox().b) - 1, MathHelper.floor(this.locZ))).getBlock().frictionFactor * 0.91F;
+            }
+
+            speed = speedModifier * (0.16277136F / (friction * friction * friction));
+
+            this.a(motionSideways, motionForward, speed);
+            friction = 0.91F;
+            if (this.onGround) {
+                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(this.getBoundingBox().b) - 1, MathHelper.floor(this.locZ))).getBlock().frictionFactor * 0.91F;
+            }
+
+            if (this.k_()) {
+                swimmSpeed = 0.15F;
+                this.motX = MathHelper.a(this.motX, (double) (-swimmSpeed), (double) swimmSpeed);
+                this.motZ = MathHelper.a(this.motZ, (double) (-swimmSpeed), (double) swimmSpeed);
+                this.fallDistance = 0.0F;
+                if (this.motY < -0.15D) {
+                    this.motY = -0.15D;
+                }
+            }
+
+            this.move(this.motX, this.motY, this.motZ);
+            if (this.positionChanged && this.k_()) {
+                this.motY = 0.2D;
+            }
+
+            if (!this.world.isClientSide || this.world.isLoaded(new BlockPosition((int) this.locX, 0, (int) this.locZ)) && this.world.getChunkAtWorldCoords(new BlockPosition((int) this.locX, 0, (int) this.locZ)).o()) {
+                this.motY -= 0.08D;
+            } else if (this.locY > 0.0D) {
+                this.motY = -0.1D;
+            } else {
+                this.motY = 0.0D;
+            }
+
+            this.motY *= 0.9800000190734863D;
+            this.motX *= (double) friction;
+            this.motZ *= (double) friction;
+        }
+
+        this.aA = this.aB;
+        locY = this.locX - this.lastX;
+        double d1 = this.locZ - this.lastZ;
+        f2 = MathHelper.sqrt(locY * locY + d1 * d1) * 4.0F;
+        if (f2 > 1.0F) {
+            f2 = 1.0F;
+        }
+
+        this.aB += (f2 - this.aB) * 0.4F;
+        this.aC += this.aB;
+    }
+
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
@@ -808,8 +906,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
             speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
             jumpHeight = rideSkill.getJumpHeight() * 0.18D;
         }
-        k(speed); // set ride speed
-        super.g(motionSideways, motionForward); // apply motion
+
+        ride(motionSideways, motionForward, speed); // apply motion
 
         // jump when the player jumps
         if (jump != null) {
