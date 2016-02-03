@@ -48,7 +48,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -361,8 +360,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
                 }
 
-                net.minecraft.server.v1_8_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-                EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
+                EntityMyPet petEntity = getPetType().getNewEntityInstance(BukkitUtil.getWorldNMS(loc.getWorld()), this);
                 craftMyPet = petEntity.getBukkitEntity();
                 if (getYSpawnOffset() > 0) {
                     loc = loc.add(0, getYSpawnOffset(), 0);
@@ -407,7 +405,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.NotAllowed;
                 }
 
-                if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+                if (!BukkitUtil.getWorldNMS(loc.getWorld()).addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
                     status = PetState.Despawned;
                     return SpawnFlags.Canceled;
                 }

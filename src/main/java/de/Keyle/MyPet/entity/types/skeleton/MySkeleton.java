@@ -27,12 +27,13 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
-import net.minecraft.server.v1_8_R3.ItemStack;
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +90,7 @@ public class MySkeleton extends MyPet implements MyPetEquipment {
             for (int i = 0; i < equipment.size(); i++) {
                 TagCompound item = equipment.getTagAs(i, TagCompound.class);
 
-                ItemStack itemStack = ItemStackNBTConverter.compundToItemStack(item);
+                ItemStack itemStack = BukkitUtil.asBukkitItemStack(ItemStackNBTConverter.compundToItemStack(item));
                 setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
             }
         }
@@ -117,11 +118,11 @@ public class MySkeleton extends MyPet implements MyPetEquipment {
             ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), null);
             return;
         }
-        item = item.cloneItemStack();
-        item.count = 1;
+        item = item.clone();
+        item.setAmount(1);
         equipment.put(slot, item);
         if (status == PetState.Here) {
-            ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
+            ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), BukkitUtil.asNmsItemStack(item));
         }
     }
 

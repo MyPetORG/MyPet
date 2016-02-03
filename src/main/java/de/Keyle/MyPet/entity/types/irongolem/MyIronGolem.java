@@ -25,10 +25,10 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.UserCreated;
@@ -47,7 +47,7 @@ public class MyIronGolem extends MyPet {
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         if (hasFlower()) {
-            info.getCompoundData().put("Flower", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getFlower())));
+            info.getCompoundData().put("Flower", ItemStackNBTConverter.itemStackToCompund(getFlower()));
         }
         return info;
     }
@@ -56,7 +56,7 @@ public class MyIronGolem extends MyPet {
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Flower", TagCompound.class)) {
             TagCompound itemTag = info.get("Flower");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
+            ItemStack item = BukkitUtil.asBukkitItemStack(ItemStackNBTConverter.compundToItemStack(itemTag));
             setFlower(item);
         }
     }

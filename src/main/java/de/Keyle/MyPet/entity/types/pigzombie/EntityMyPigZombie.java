@@ -63,7 +63,7 @@ public class EntityMyPigZombie extends EntityMyPet {
             if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                 boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
-                    ItemStack itemInSlot = getMyPet().getEquipment(slot);
+                    ItemStack itemInSlot = BukkitUtil.asNmsItemStack(getMyPet().getEquipment(slot));
                     if (itemInSlot != null) {
                         EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
@@ -81,14 +81,14 @@ public class EntityMyPigZombie extends EntityMyPet {
                 return true;
             } else if (BukkitUtil.isEquipment(itemStack) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(c(itemStack));
-                ItemStack itemInSlot = getMyPet().getEquipment(slot);
+                ItemStack itemInSlot = BukkitUtil.asNmsItemStack(getMyPet().getEquipment(slot));
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                getMyPet().setEquipment(slot, itemStack);
+                getMyPet().setEquipment(slot, BukkitUtil.asBukkitItemStack(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -138,7 +138,7 @@ public class EntityMyPigZombie extends EntityMyPet {
                     if (myPigZombie.getStatus() == PetState.Here) {
                         for (EquipmentSlot slot : EquipmentSlot.values()) {
                             if (myPigZombie.getEquipment(slot) != null) {
-                                entityMyPigZombie.setPetEquipment(slot.getSlotId(), myPigZombie.getEquipment(slot));
+                                entityMyPigZombie.setPetEquipment(slot.getSlotId(), BukkitUtil.asNmsItemStack(myPigZombie.getEquipment(slot)));
                             }
                         }
                     }
@@ -159,7 +159,7 @@ public class EntityMyPigZombie extends EntityMyPet {
         if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetVersion.getBukkitPacket() + ".EntityTrackerEntry", 2)) {
             EquipmentSlot slot = EquipmentSlot.getSlotById(i);
             if (getMyPet().getEquipment(slot) != null) {
-                return getMyPet().getEquipment(slot);
+                return BukkitUtil.asNmsItemStack(getMyPet().getEquipment(slot));
             }
         }
         return super.getEquipment(i);

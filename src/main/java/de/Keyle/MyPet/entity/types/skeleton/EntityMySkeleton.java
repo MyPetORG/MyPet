@@ -61,7 +61,7 @@ public class EntityMySkeleton extends EntityMyPet {
             if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                 boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
-                    ItemStack itemInSlot = getMyPet().getEquipment(slot);
+                    ItemStack itemInSlot = BukkitUtil.asNmsItemStack(getMyPet().getEquipment(slot));
                     if (itemInSlot != null) {
                         EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
@@ -79,14 +79,14 @@ public class EntityMySkeleton extends EntityMyPet {
                 return true;
             } else if (BukkitUtil.isEquipment(itemStack) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(c(itemStack));
-                ItemStack itemInSlot = getMyPet().getEquipment(slot);
+                ItemStack itemInSlot = BukkitUtil.asNmsItemStack(getMyPet().getEquipment(slot));
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                getMyPet().setEquipment(slot, itemStack);
+                getMyPet().setEquipment(slot, BukkitUtil.asBukkitItemStack(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     --itemStack.count;
                 }
@@ -125,7 +125,7 @@ public class EntityMySkeleton extends EntityMyPet {
                     if (mySkeleton.getStatus() == PetState.Here) {
                         for (EquipmentSlot slot : EquipmentSlot.values()) {
                             if (mySkeleton.getEquipment(slot) != null) {
-                                entityMySkeleton.setPetEquipment(slot.getSlotId(), mySkeleton.getEquipment(slot));
+                                entityMySkeleton.setPetEquipment(slot.getSlotId(), BukkitUtil.asNmsItemStack(mySkeleton.getEquipment(slot)));
                             }
                         }
                     }
@@ -146,7 +146,7 @@ public class EntityMySkeleton extends EntityMyPet {
         if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetVersion.getBukkitPacket() + ".EntityTrackerEntry", 2)) {
             EquipmentSlot slot = EquipmentSlot.getSlotById(i);
             if (getMyPet().getEquipment(slot) != null) {
-                return getMyPet().getEquipment(slot);
+                return BukkitUtil.asNmsItemStack(getMyPet().getEquipment(slot));
             }
         }
         return super.getEquipment(i);
