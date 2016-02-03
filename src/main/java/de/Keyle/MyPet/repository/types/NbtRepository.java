@@ -342,8 +342,11 @@ public class NbtRepository implements Repository, Scheduler {
             List<InactiveMyPet> pets = myPets.get(myPet.getOwner());
             for (InactiveMyPet pet : pets) {
                 if (myPet.getUUID().equals(pet.getUUID())) {
-                    myPets.put(myPet.getOwner(), MyPetList.getInactiveMyPetFromMyPet(myPet));
-                    myPets.remove(myPet.getOwner(), pet);
+                    InactiveMyPet inactiveMyPet = MyPetList.getInactiveMyPetFromMyPet(myPet);
+                    if (inactiveMyPet != null) {
+                        myPets.remove(myPet.getOwner(), pet);
+                        myPets.put(myPet.getOwner(), inactiveMyPet);
+                    }
                     break;
                 }
             }
