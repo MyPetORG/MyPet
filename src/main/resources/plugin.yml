@@ -91,9 +91,11 @@ permissions:
       MyPet.user.leash.Chicken: true
       MyPet.user.leash.Cow: true
       MyPet.user.leash.Creeper: true
+      MyPet.user.leash.Enderdragon: true
       MyPet.user.leash.Enderman: true
       MyPet.user.leash.Endermite: true
       MyPet.user.leash.Giant: true
+      MyPet.user.leash.Ghast: true
       MyPet.user.leash.Guardian: true
       MyPet.user.leash.Horse: true
       MyPet.user.leash.IronGolem: true
