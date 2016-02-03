@@ -26,13 +26,13 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.ConfigItem;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
@@ -137,14 +137,14 @@ public class MyHorse extends MyPet implements MyPetBaby {
         info.getCompoundData().put("Type", new TagByte(getHorseType()));
         info.getCompoundData().put("Variant", new TagInt(getVariant()));
         if (hasArmor()) {
-            info.getCompoundData().put("Armor", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getArmor())));
+            info.getCompoundData().put("Armor", ItemStackNBTConverter.itemStackToCompund(getArmor()));
         }
         info.getCompoundData().put("Age", new TagInt(getAge()));
         if (hasChest()) {
-            info.getCompoundData().put("Chest", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getChest())));
+            info.getCompoundData().put("Chest", ItemStackNBTConverter.itemStackToCompund(getChest()));
         }
         if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
+            info.getCompoundData().put("Saddle", ItemStackNBTConverter.itemStackToCompund(getSaddle()));
         }
         return info;
     }
@@ -168,7 +168,7 @@ public class MyHorse extends MyPet implements MyPetBaby {
             }
         } else if (info.containsKeyAs("Armor", TagCompound.class)) {
             TagCompound itemTag = info.get("Armor");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
+            ItemStack item = BukkitUtil.asBukkitItemStack(ItemStackNBTConverter.compundToItemStack(itemTag));
             setArmor(item);
         }
         if (info.getCompoundData().containsKey("Age")) {
@@ -182,7 +182,7 @@ public class MyHorse extends MyPet implements MyPetBaby {
             }
         } else if (info.containsKeyAs("Chest", TagCompound.class)) {
             TagCompound itemTag = info.get("Chest");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
+            ItemStack item = BukkitUtil.asBukkitItemStack(ItemStackNBTConverter.compundToItemStack(itemTag));
             setChest(item);
         }
         if (info.containsKeyAs("Saddle", TagByte.class)) {
@@ -193,7 +193,7 @@ public class MyHorse extends MyPet implements MyPetBaby {
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
+            ItemStack item = BukkitUtil.asBukkitItemStack(ItemStackNBTConverter.compundToItemStack(itemTag));
             setSaddle(item);
         }
     }

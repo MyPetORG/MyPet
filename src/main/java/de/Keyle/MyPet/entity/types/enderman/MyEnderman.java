@@ -25,12 +25,12 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.Material.AIR;
@@ -54,7 +54,7 @@ public class MyEnderman extends MyPet {
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         if (block != null && block.getType() != AIR) {
-            info.getCompoundData().put("Block", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(block)));
+            info.getCompoundData().put("Block", ItemStackNBTConverter.itemStackToCompund(block));
         }
         //info.getValue().put("Screaming", new TagByte("Screaming", isScreaming()));
         return info;
@@ -79,7 +79,7 @@ public class MyEnderman extends MyPet {
             setBlock(new ItemStack(Material.getMaterial(id), 1, (short) data));
         } else if (info.getCompoundData().containsKey("Block")) {
             TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
-            ItemStack block = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemStackCompund));
+            ItemStack block = BukkitUtil.asBukkitItemStack(ItemStackNBTConverter.compundToItemStack(itemStackCompund));
             setBlock(block);
         }
 

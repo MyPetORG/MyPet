@@ -33,8 +33,7 @@ public class ItemStackNBTConverter {
     private static Field TAG_LIST_LIST = null;
 
     public static TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
-        net.minecraft.server.v1_8_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-        return itemStackToCompund(nmsItemStack);
+        return itemStackToCompund(CraftItemStack.asNMSCopy(itemStack));
     }
 
     public static TagCompound itemStackToCompund(ItemStack itemStack) {

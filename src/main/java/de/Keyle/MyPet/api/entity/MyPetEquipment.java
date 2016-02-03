@@ -20,12 +20,13 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import net.minecraft.server.v1_8_R3.ItemStack;
+
+import org.bukkit.inventory.ItemStack;
 
 public interface MyPetEquipment {
-    public ItemStack[] getEquipment();
+    ItemStack[] getEquipment();
 
-    public ItemStack getEquipment(EquipmentSlot slot);
+    ItemStack getEquipment(EquipmentSlot slot);
 
-    public void setEquipment(EquipmentSlot slot, ItemStack item);
+    void setEquipment(EquipmentSlot slot, ItemStack item);
 }

@@ -26,12 +26,12 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.ConfigItem;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.Material.CARROT_ITEM;
@@ -51,7 +51,7 @@ public class MyPig extends MyPet implements MyPetBaby {
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
+            info.getCompoundData().put("Saddle", ItemStackNBTConverter.itemStackToCompund(getSaddle()));
         }
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
@@ -67,7 +67,7 @@ public class MyPig extends MyPet implements MyPetBaby {
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
+            ItemStack item = BukkitUtil.asBukkitItemStack(ItemStackNBTConverter.compundToItemStack(itemTag));
             setSaddle(item);
         }
         if (info.getCompoundData().containsKey("Baby")) {

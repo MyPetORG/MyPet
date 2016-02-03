@@ -245,11 +245,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
 
     public void dropEquipment() {
         if (myPet instanceof MyPetEquipment) {
-            for (net.minecraft.server.v1_8_R3.ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
+            org.bukkit.World world = getBukkitEntity().getWorld();
+            Location loc = getBukkitEntity().getLocation();
+            for (org.bukkit.inventory.ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
                 if (is != null) {
-                    EntityItem itemEntity = new EntityItem(world, locX, locY, locZ, is);
-                    itemEntity.pickupDelay = 10;
-                    world.addEntity(itemEntity);
+                    org.bukkit.entity.Item i = world.dropItem(loc, is);
+                    if (i != null) {
+                        i.setPickupDelay(10);
+                    }
                 }
             }
         }

@@ -33,6 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_8_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
@@ -287,5 +288,17 @@ public class BukkitUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static org.bukkit.inventory.ItemStack asBukkitItemStack(ItemStack itemStack) {
+        return CraftItemStack.asBukkitCopy(itemStack);
+    }
+
+    public static ItemStack asNmsItemStack(org.bukkit.inventory.ItemStack itemStack) {
+        return CraftItemStack.asNMSCopy(itemStack);
+    }
+
+    public static net.minecraft.server.v1_8_R3.World getWorldNMS(World world) {
+        return ((CraftWorld) world).getHandle();
     }
 }
