@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
-import net.minecraft.server.v1_8_R3.EntityCreature;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
@@ -132,14 +131,14 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity {
     }
 
     public void setTarget(LivingEntity target) {
-        EntityCreature entity = getHandle();
+        EntityMyPet entity = getHandle();
         if (target == null) {
             entity.setGoalTarget(null);
         } else if (target instanceof CraftLivingEntity) {
-            if (!getHandle().isMyPet) {
+            if (!entity.isMyPet) {
                 return;
             }
-            if (getHandle().myPet.getSkills().isSkillActive(Behavior.class)) {
+            if (entity.myPet.getSkills().isSkillActive(Behavior.class)) {
                 Behavior behaviorSkill = getMyPet().getSkills().getSkill(Behavior.class);
                 if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
                     return;
@@ -147,6 +146,10 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity {
             }
             petEntity.setGoalTarget(((CraftLivingEntity) target).getHandle());
         }
+    }
+
+    public void setGoalTarget(LivingEntity target) {
+        getHandle().goalTarget = ((CraftLivingEntity) target).getHandle();
     }
 
     @Override

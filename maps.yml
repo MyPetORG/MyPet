@@ -7,3 +7,13 @@ members:
   "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_setMaxHealth (I)V": setMaxHealth
   "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_getLastDamage ()I": getLastDamage
   "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_setLastDamage (I)V": setLastDamage
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetArrow _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetArrow _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetLargeFireball _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetLargeFireball _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetSmallFireball _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetSmallFireball _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetSnowball _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetSnowball _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetWitherSkull _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetWitherSkull _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter

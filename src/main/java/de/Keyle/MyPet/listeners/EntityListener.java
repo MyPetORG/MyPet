@@ -22,7 +22,6 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
@@ -42,7 +41,8 @@ import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.implementation.Wither;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
-import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.CraftMyPetProjectile;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.*;
@@ -56,16 +56,11 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
 import net.citizensnpcs.api.CitizensAPI;
-import net.minecraft.server.v1_8_R3.*;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.*;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -79,7 +74,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +82,7 @@ import java.util.Random;
 import static org.bukkit.Bukkit.getPluginManager;
 
 public class EntityListener implements Listener {
-    private Field goalSelectorField = null;
+    Random random = new Random();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onMyPetEntitySpawn(final CreatureSpawnEvent event) {
@@ -99,25 +93,7 @@ public class EntityListener implements Listener {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
         if (!event.isCancelled() && event.getEntity() instanceof Zombie) {
-            EntityZombie ez = ((CraftZombie) event.getEntity()).getHandle();
-            if (goalSelectorField == null) {
-                try {
-                    goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
-                    goalSelectorField.setAccessible(true);
-
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                    DebugLogger.printThrowable(e);
-                }
-            }
-            if (goalSelectorField != null) {
-                try {
-                    PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelectorField.get(ez);
-                    pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
+            BukkitUtil.addZombieTargetGoal((Zombie) event.getEntity());
         }
     }
 
@@ -258,8 +234,8 @@ public class EntityListener implements Listener {
                     event.setCancelled(true);
                 }
             }
-            if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile) {
-                MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
+            if (event.getDamager() instanceof CraftMyPetProjectile) {
+                EntityMyPetProjectile projectile = ((CraftMyPetProjectile) event.getDamager()).getMyPetProjectile();
 
                 if (myPet == projectile.getShooter().getMyPet()) {
                     event.setCancelled(true);
@@ -314,8 +290,7 @@ public class EntityListener implements Listener {
                             if (CitizensAPI.getNPCRegistry().isNPC(leashTarget)) {
                                 return;
                             }
-                        } catch (Error ignored) {
-                        } catch (Exception ignored) {
+                        } catch (Error | Exception ignored) {
                         }
                     }
                     if (!PvPChecker.canHurt(damager, leashTarget)) {
@@ -355,7 +330,7 @@ public class EntityListener implements Listener {
                                 } else if (leashTarget instanceof Tameable) {
                                     willBeLeashed = !((Tameable) leashTarget).isTamed();
                                 } else if (leashTarget instanceof Horse) {
-                                    willBeLeashed = !((CraftHorse) leashTarget).getHandle().isTame();
+                                    willBeLeashed = !((Horse) leashTarget).isTamed();
                                 }
                                 break;
                             case Tamed:
@@ -363,7 +338,7 @@ public class EntityListener implements Listener {
                                     willBeLeashed = ((Tameable) leashTarget).isTamed() && ((Tameable) leashTarget).getOwner() == damager;
                                 }
                                 if (leashTarget instanceof Horse) {
-                                    willBeLeashed = ((CraftHorse) leashTarget).getHandle().isTame() && ((CraftHorse) leashTarget).getOwner() == damager;
+                                    willBeLeashed = ((Horse) leashTarget).isTamed() && ((Horse) leashTarget).getOwner() == damager;
                                 }
                                 break;
                             case CanBreed:
@@ -435,12 +410,20 @@ public class EntityListener implements Listener {
                         } else if (leashTarget instanceof Horse) {
                             Horse horse = (Horse) leashTarget;
 
-                            extendedInfo.getCompoundData().put("Type", new TagByte((byte) ((CraftHorse) leashTarget).getHandle().getType()));
-                            extendedInfo.getCompoundData().put("Variant", new TagInt(((CraftHorse) leashTarget).getHandle().getVariant()));
-                            extendedInfo.getCompoundData().put("Armor", new TagInt(((CraftHorse) leashTarget).getHandle().cx()));
+                            byte type = (byte) horse.getVariant().ordinal();
+                            int style = horse.getStyle().ordinal();
+                            int color = horse.getColor().ordinal();
+                            int variant = color & 255 | style << 8;
+                            TagCompound armor = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getArmor());
+                            TagCompound chest = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getArmor());
+                            TagCompound saddle = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getSaddle());
+
+                            extendedInfo.getCompoundData().put("Type", new TagByte(type));
+                            extendedInfo.getCompoundData().put("Variant", new TagInt(variant));
+                            extendedInfo.getCompoundData().put("Armor", armor);
                             extendedInfo.getCompoundData().put("Chest", new TagByte(horse.isCarryingChest()));
-                            extendedInfo.getCompoundData().put("Saddle", new TagByte(((CraftHorse) leashTarget).getHandle().cG()));
-                            extendedInfo.getCompoundData().put("Age", new TagInt(((CraftHorse) leashTarget).getHandle().getAge()));
+                            extendedInfo.getCompoundData().put("Saddle", saddle);
+                            extendedInfo.getCompoundData().put("Age", new TagInt(horse.getAge()));
 
                             if (horse.isCarryingChest()) {
                                 ItemStack[] contents = horse.getInventory().getContents();
@@ -455,13 +438,13 @@ public class EntityListener implements Listener {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(((Zombie) leashTarget).isBaby()));
                             extendedInfo.getCompoundData().put("Villager", new TagByte(((Zombie) leashTarget).isVillager()));
                         } else if (leashTarget instanceof Enderman) {
-                            CraftEnderman enderman = (CraftEnderman) leashTarget;
-                            if (enderman.getHandle().getCarried() != Blocks.AIR) {
-                                net.minecraft.server.v1_8_R3.ItemStack block = new net.minecraft.server.v1_8_R3.ItemStack(enderman.getHandle().getCarried().getBlock(), 1, enderman.getHandle().getCarried().getBlock().getDropData(enderman.getHandle().getCarried()));
+                            Enderman enderman = (Enderman) leashTarget;
+                            if (enderman.getCarriedMaterial().getItemType() != Material.AIR) {
+                                ItemStack block = enderman.getCarriedMaterial().toItemStack(1);
                                 extendedInfo.getCompoundData().put("Block", ItemStackNBTConverter.itemStackToCompund(block));
                             }
                         } else if (leashTarget instanceof Skeleton) {
-                            extendedInfo.getCompoundData().put("Wither", new TagByte(((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
+                            extendedInfo.getCompoundData().put("Wither", new TagByte(((Skeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
                         } else if (leashTarget instanceof Guardian) {
                             extendedInfo.getCompoundData().put("Elder", new TagByte(((Guardian) leashTarget).isElder()));
                         } else if (leashTarget instanceof Rabbit) {
@@ -471,13 +454,11 @@ public class EntityListener implements Listener {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(!((Ageable) leashTarget).isAdult()));
                         }
                         if (leashTarget.getWorld().getGameRuleValue("doMobLoot").equalsIgnoreCase("true") && Configuration.RETAIN_EQUIPMENT_ON_TAME && (leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Skeleton)) {
-                            Random random = ((CraftLivingEntity) leashTarget).getHandle().bc();
                             List<TagCompound> equipmentList = new ArrayList<>();
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_8_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -485,8 +466,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_8_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -494,8 +474,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_8_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -503,8 +482,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_8_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -642,7 +620,7 @@ public class EntityListener implements Listener {
                 if (MyPetList.hasActiveMyPet(player)) {
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Here && damagedEntity != myPet.getCraftPet()) {
-                        myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) damagedEntity).getHandle();
+                        myPet.getCraftPet().setGoalTarget((LivingEntity) damagedEntity);
                     }
                 }
             } else if (damager instanceof CraftMyPet) {
@@ -735,17 +713,7 @@ public class EntityListener implements Listener {
                     CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                     inv.dropContentAt(myPet.getLocation());
                 }
-                if (myPet instanceof MyPetEquipment) {
-                    World world = myPet.getCraftPet().getHandle().world;
-                    Location petLocation = myPet.getLocation();
-                    for (net.minecraft.server.v1_8_R3.ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
-                        if (is != null) {
-                            EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                            itemEntity.pickupDelay = 10;
-                            world.addEntity(itemEntity);
-                        }
-                    }
-                }
+                myPet.getCraftPet().getHandle().dropEquipment();
 
                 myPet.removePet();
                 owner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()).getName(), null);

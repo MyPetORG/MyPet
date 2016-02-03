@@ -32,9 +32,11 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftZombie;
 import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_8_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.json.simple.JSONObject;
 
 import java.lang.reflect.Field;
@@ -43,6 +45,19 @@ import java.util.List;
 import java.util.Map;
 
 public class BukkitUtil {
+    private static Field goalSelectorField = null;
+
+    static {
+        try {
+            goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
+            goalSelectorField.setAccessible(true);
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            DebugLogger.printThrowable(e);
+        }
+    }
+
     /**
      * @param location the {@link Location} around which players must be to see the effect
      * @param effect   list of effects: https://gist.github.com/riking/5759002
@@ -259,6 +274,18 @@ public class BukkitUtil {
         if (player instanceof CraftPlayer) {
             IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + JSONObject.escape(message) + "\"}");
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, (byte) 2));
+        }
+    }
+
+    public static void addZombieTargetGoal(Zombie zombie) {
+        EntityZombie ez = ((CraftZombie) zombie).getHandle();
+        if (goalSelectorField != null) {
+            try {
+                PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelectorField.get(ez);
+                pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

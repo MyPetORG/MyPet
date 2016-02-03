@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -57,12 +56,9 @@ import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
-import net.minecraft.server.v1_8_R3.EntityItem;
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.Items;
-import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -119,17 +115,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     if (!Configuration.REMOVE_PETS_AFTER_RELEASE) {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
 
-                        if (myPet instanceof MyPetEquipment) {
-                            World world = myPet.getCraftPet().getHandle().world;
-                            Location petLocation = myPet.getLocation();
-                            for (ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
-                                if (is != null) {
-                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                    itemEntity.pickupDelay = 10;
-                                    world.addEntity(itemEntity);
-                                }
-                            }
-                        }
+                        myPet.getCraftPet().getHandle().dropEquipment();
 
                         if (myPet instanceof MyChicken) {
                             if (((MyChicken) myPet).isBaby()) {

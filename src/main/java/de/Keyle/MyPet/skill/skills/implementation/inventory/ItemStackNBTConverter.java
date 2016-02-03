@@ -22,6 +22,7 @@ package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -30,6 +31,11 @@ import java.util.Set;
 
 public class ItemStackNBTConverter {
     private static Field TAG_LIST_LIST = null;
+
+    public static TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
+        net.minecraft.server.v1_8_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+        return itemStackToCompund(nmsItemStack);
+    }
 
     public static TagCompound itemStackToCompund(ItemStack itemStack) {
         TagCompound compound = new TagCompound();

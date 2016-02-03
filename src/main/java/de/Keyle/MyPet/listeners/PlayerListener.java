@@ -35,7 +35,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
-import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
@@ -185,8 +185,8 @@ public class PlayerListener implements Listener {
     public void onPlayerDamageByEntity(final EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
-            if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile) {
-                MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
+            if (((CraftEntity) event.getDamager()).getHandle() instanceof EntityMyPetProjectile) {
+                EntityMyPetProjectile projectile = (EntityMyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
                 if (PlayerList.isMyPetPlayer(victim)) {
                     MyPetPlayer myPetPlayerDamagee = PlayerList.getMyPetPlayer(victim);
                     if (myPetPlayerDamagee.hasMyPet()) {
