@@ -18,20 +18,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill.skills.implementation.ranged;
+package de.Keyle.MyPet.skill.skills.implementation.ranged.nms;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.bukkit.CraftMyPetSnowball;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLargeFireball;
 
-public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProjectile {
+public class MyPetSnowball extends EntitySnowball implements EntityMyPetProjectile {
     protected float damage = 0;
-    protected int deathCounter = 100;
 
-    public MyPetLargeFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
-        super(world, entityliving, d0, d1, d2);
+    public MyPetSnowball(World world, EntityMyPet entityLiving) {
+        super(world, entityLiving);
     }
 
     @Override
@@ -44,20 +43,9 @@ public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProj
     }
 
     @Override
-    public void setDirection(double d0, double d1, double d2) {
-        d0 += this.random.nextGaussian() * 0.2D;
-        d1 += this.random.nextGaussian() * 0.2D;
-        d2 += this.random.nextGaussian() * 0.2D;
-        double d3 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-        this.dirX = (d0 / d3 * 0.1D);
-        this.dirY = (d1 / d3 * 0.1D);
-        this.dirZ = (d2 / d3 * 0.1D);
-    }
-
-    @Override
     public CraftEntity getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftLargeFireball(this.world.getServer(), this);
+            this.bukkitEntity = new CraftMyPetSnowball(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }
@@ -71,22 +59,13 @@ public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProj
     }
 
     @Override
-    protected void a(MovingObjectPosition movingobjectposition) {
-        if (movingobjectposition.entity != null) {
-            movingobjectposition.entity.damageEntity(DamageSource.fireball(this, this.shooter), damage);
+    protected void a(MovingObjectPosition paramMovingObjectPosition) {
+        if (paramMovingObjectPosition.entity != null) {
+            paramMovingObjectPosition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+        }
+        for (int i = 0; i < 8; i++) {
+            this.world.addParticle(EnumParticle.SNOWBALL, this.locX, this.locY, this.locZ, 0.0D, 0.0D, 0.0D);
         }
         die();
-    }
-
-    public void t_() {
-        try {
-            super.t_();
-            if (deathCounter-- <= 0) {
-                die();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            DebugLogger.printThrowable(e);
-        }
     }
 }

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
@@ -240,6 +241,18 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
 
     public boolean canEquip() {
         return Permissions.hasExtended(getOwner().getPlayer(), "MyPet.user.extended.Equip") && canUseItem();
+    }
+
+    public void dropEquipment() {
+        if (myPet instanceof MyPetEquipment) {
+            for (net.minecraft.server.v1_8_R3.ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
+                if (is != null) {
+                    EntityItem itemEntity = new EntityItem(world, locX, locY, locZ, is);
+                    itemEntity.pickupDelay = 10;
+                    world.addEntity(itemEntity);
+                }
+            }
+        }
     }
 
     public boolean canUseItem() {

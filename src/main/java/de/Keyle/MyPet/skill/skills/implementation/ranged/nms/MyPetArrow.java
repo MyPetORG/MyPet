@@ -18,20 +18,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill.skills.implementation.ranged;
+package de.Keyle.MyPet.skill.skills.implementation.ranged.nms;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.bukkit.CraftMyPetArrow;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_8_R3.EntityArrow;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftSmallFireball;
 
-public class MyPetSmallFireball extends EntitySmallFireball implements MyPetProjectile {
-    protected float damage = 0;
-    protected int deathCounter = 100;
-
-    public MyPetSmallFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
-        super(world, entityliving, d0, d1, d2);
+public class MyPetArrow extends EntityArrow implements EntityMyPetProjectile {
+    public MyPetArrow(World world, EntityMyPet entityMyPet, EntityLiving target, float v, int i) {
+        super(world, entityMyPet, target, v, i);
     }
 
     @Override
@@ -39,25 +40,10 @@ public class MyPetSmallFireball extends EntitySmallFireball implements MyPetProj
         return (EntityMyPet) this.shooter;
     }
 
-    public void setDamage(float damage) {
-        this.damage = damage;
-    }
-
-    @Override
-    public void setDirection(double d0, double d1, double d2) {
-        d0 += this.random.nextGaussian() * 0.2D;
-        d1 += this.random.nextGaussian() * 0.2D;
-        d2 += this.random.nextGaussian() * 0.2D;
-        double d3 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-        this.dirX = (d0 / d3 * 0.1D);
-        this.dirY = (d1 / d3 * 0.1D);
-        this.dirZ = (d2 / d3 * 0.1D);
-    }
-
     @Override
     public CraftEntity getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftSmallFireball(this.world.getServer(), this);
+            this.bukkitEntity = new CraftMyPetArrow(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }
@@ -70,18 +56,10 @@ public class MyPetSmallFireball extends EntitySmallFireball implements MyPetProj
     public void b(NBTTagCompound nbtTagCompound) {
     }
 
-    @Override
-    protected void a(MovingObjectPosition movingobjectposition) {
-        if (movingobjectposition.entity != null) {
-            movingobjectposition.entity.damageEntity(DamageSource.fireball(this, this.shooter), damage);
-        }
-        die();
-    }
-
     public void t_() {
         try {
             super.t_();
-            if (deathCounter-- <= 0) {
+            if (this.isInGround()) {
                 die();
             }
         } catch (Exception e) {

@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
-import de.Keyle.MyPet.skill.skills.implementation.ranged.*;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.nms.*;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo.Projectiles;
 import net.minecraft.server.v1_8_R3.*;
 

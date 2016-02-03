@@ -18,19 +18,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill.skills.implementation.ranged;
+package de.Keyle.MyPet.skill.skills.implementation.ranged.nms;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.bukkit.CraftMyPetLargeFireball;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWitherSkull;
 
-public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjectile {
+public class MyPetLargeFireball extends EntityLargeFireball implements EntityMyPetProjectile {
     protected float damage = 0;
     protected int deathCounter = 100;
 
-    public MyPetWitherSkull(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
+    public MyPetLargeFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2);
     }
 
@@ -57,7 +58,7 @@ public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjecti
     @Override
     public CraftEntity getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftWitherSkull(this.world.getServer(), this);
+            this.bukkitEntity = new CraftMyPetLargeFireball(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }
@@ -73,7 +74,7 @@ public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjecti
     @Override
     protected void a(MovingObjectPosition movingobjectposition) {
         if (movingobjectposition.entity != null) {
-            movingobjectposition.entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
+            movingobjectposition.entity.damageEntity(DamageSource.fireball(this, this.shooter), damage);
         }
         die();
     }
