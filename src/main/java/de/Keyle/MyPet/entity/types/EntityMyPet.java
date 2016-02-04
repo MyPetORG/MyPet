@@ -436,6 +436,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                     if (getOwner().equals(this.passenger)) {
                         hasRider = true;
                         this.S = 1.0F; // climb height -> 1 block
+                        petTargetSelector.finish();
+                        petPathfinderSelector.finish();
                     } else {
                         this.passenger.mount(null); // just the owner can ride a pet
                     }
@@ -830,9 +832,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
             if (isAlive()) {
                 getEntitySenses().a(); // sensing
 
-                petTargetSelector.tick(); // target selector
-                petPathfinderSelector.tick(); // pathfinder selector
-                petNavigation.tick(); // navigation
+                if (!hasRider()) {
+                    petTargetSelector.tick(); // target selector
+                    petPathfinderSelector.tick(); // pathfinder selector
+                    petNavigation.tick(); // navigation
+                }
             }
 
             E(); // "mob tick"
