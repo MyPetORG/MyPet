@@ -39,7 +39,7 @@ public class RangedInfo extends SkillTreeSkill implements ISkillInfo {
     protected int rateOfFire = 0;
 
     public enum Projectiles {
-        Arrow, Snowball, LargeFireball, SmallFireball, WitherSkull
+        Arrow, Snowball, LargeFireball, SmallFireball, WitherSkull, Egg
     }
 
     protected Projectiles selectedProjectile = Projectiles.Arrow;

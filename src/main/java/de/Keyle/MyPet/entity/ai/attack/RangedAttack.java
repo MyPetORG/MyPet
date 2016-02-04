@@ -151,6 +151,16 @@ public class RangedAttack extends AIGoal {
             snowball.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
             entityMyPet.makeSound("random.bow", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
             world.addEntity(snowball);
+        } else if (projectile == Projectiles.Egg) {
+            MyPetEgg egg = new MyPetEgg(world, entityMyPet);
+            double distanceX = target.locX - entityMyPet.locX;
+            double distanceY = target.locY + target.getHeadHeight() - 1.100000023841858D - egg.locY;
+            double distanceZ = target.locZ - entityMyPet.locZ;
+            float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
+            egg.setDamage(damage);
+            egg.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
+            entityMyPet.makeSound("random.bow", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+            world.addEntity(egg);
         } else if (projectile == Projectiles.LargeFireball) {
             double distanceX = this.target.locX - entityMyPet.locX;
             double distanceY = this.target.getBoundingBox().b + (double)(this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double)(entityMyPet.length / 2.0F));

@@ -17,3 +17,5 @@ members:
   "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetSnowball _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
   "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetWitherSkull _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
   "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetWitherSkull _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetEgg _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
+  "de/Keyle/MyPet/skill/skills/implementation/ranged/bukkit/CraftMyPetEgg _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
