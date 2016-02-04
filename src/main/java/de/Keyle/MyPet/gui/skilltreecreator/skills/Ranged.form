@@ -103,6 +103,7 @@
                 <item value="Large Fireball"/>
                 <item value="Small Fireball"/>
                 <item value="Wither Skull"/>
+                <item value="Egg"/>
               </model>
             </properties>
           </component>
