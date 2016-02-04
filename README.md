@@ -8,11 +8,13 @@ Do you like MyPet? Feel free to donate!<br />
 MyPet is a highly customizable pet plugin with a lot of features.<br />
 Take them on a lead, train them and make them a very powerful companion!
 
-[![BukkitDev][Logo]][BukkitDev]
 [![MCStats][MCStatsImage]][MCStats]
 [![Builds][BuildsImage]][Builds]
 [![Wiki][WikiImage]][Wiki]
-[![BukkitDev][BukkitDevImage]][BukkitDev]
+
+[![BukkitDev][BukkitDevImage]][BukkitDev] 
+[![Spigot][SpigotImage]][Spigot]
+[![Premium][PremiumImage]][Premium]
 
 ## The License
 Copyright (c) 2011-2016, Keyle<br />
@@ -31,9 +33,13 @@ Download the latest builds from our [Jenkins-Server][Builds].
 [Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
 [MCStats]: http://mcstats.org/plugin/MyPet
 [MCStatsImage]: http://dl.keyle.de/images/metrics.png
-[Builds]: http://build.keyle.de/job/MyPet/
+[Builds]: https://build.keyle.de/job/MyPet/
 [BuildsImage]: http://dl.keyle.de/images/devbuilds.png
-[Wiki]: http://mypet.keyle.de/
+[Wiki]: https://mypet.keyle.de/
 [WikiImage]: http://dl.keyle.de/images/wiki.png
 [BukkitDev]: http://dev.bukkit.org/server-mods/mypet/
-[BukkitDevImage]: http://dl.keyle.de/images/bukkitdev.png
+[BukkitDevImage]: http://dl.keyle.de/images/bukkitdev.png 
+[Spigot]: https://www.spigotmc.org/resources/mypet.12725/
+[SpigotImage]: http://dl.keyle.de/images/spigot.png
+[Premium]: https://www.spigotmc.org/resources/mypet-premium.17566/
+[PremiumImage]: http://dl.keyle.de/images/mypet-premium.png
