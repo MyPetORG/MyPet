@@ -88,6 +88,13 @@ public class AIGoalSelector {
         activeAIGoalList.clear();
     }
 
+    public void finish() {
+        for (AIGoal goal : activeAIGoalList) {
+            goal.finish();
+        }
+        activeAIGoalList.clear();
+    }
+
     public void tick() {
         // add goals
         ListIterator iterator = AIGoalList.listIterator();
