@@ -31,11 +31,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MyPetInfo {
-    public Material[] food() default {};
+    Material[] food() default {};
 
-    public double hp() default 20D;
+    double hp() default 20D;
 
-    public LeashFlag[] leashFlags() default {LeashFlag.LowHp};
+    LeashFlag[] leashFlags() default {LeashFlag.LowHp};
 
-    public double walkSpeed() default 0.30D;
+    double walkSpeed() default 0.30D;
 }

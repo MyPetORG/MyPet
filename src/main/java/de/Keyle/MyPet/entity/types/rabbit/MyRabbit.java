@@ -32,10 +32,10 @@ import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Rabbit;
 
-import static org.bukkit.Material.CARROT;
+import static org.bukkit.Material.CARROT_ITEM;
 import static org.bukkit.Material.RED_ROSE;
 
-@MyPetInfo(food = {CARROT, RED_ROSE})
+@MyPetInfo(food = {CARROT_ITEM, RED_ROSE})
 public class MyRabbit extends MyPet implements MyPetBaby {
     public static ConfigItem GROW_UP_ITEM;
 

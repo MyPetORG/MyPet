@@ -59,6 +59,7 @@ import org.bukkit.entity.EntityType;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Configuration {
     public static String PET_INFO_OVERHEAD_PREFIX = "<aqua>";
@@ -217,7 +218,13 @@ public class Configuration {
         MyPetPlugin.getPlugin().saveConfig();
 
         File petConfigFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
-        config = new YamlConfiguration();
+        try {
+            YamlConfiguration petConfig = new YamlConfiguration();
+            petConfig.load(petConfigFile);
+            config = petConfig;
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
 
         for (MyPetType petType : MyPetType.values()) {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
@@ -395,7 +402,7 @@ public class Configuration {
             }
         }
 
-        File petConfigFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
+        File petConfigFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath(), "pet-config.yml");
         if (petConfigFile.exists()) {
             YamlConfiguration ymlcnf = new YamlConfiguration();
             try {
@@ -430,7 +437,17 @@ public class Configuration {
 
             MyPet.setStartHP(petType.getMyPetClass(), config.getDouble("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp()));
             MyPet.setStartSpeed(petType.getMyPetClass(), config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed()));
-            seperateFood(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food())));
+            if (config.get("MyPet.Pets." + petType.getTypeName() + ".Food") instanceof ArrayList) {
+                List<String> foodList = config.getStringList("MyPet.Pets." + petType.getTypeName() + ".Food");
+                for (String foodString : foodList) {
+                    ConfigItem ci = ConfigItem.createConfigItem(foodString);
+                    if (ci.getItem().getType() != Material.AIR) {
+                        MyPet.setFood(petType.getMyPetClass(), ci);
+                    }
+                }
+            } else {
+                seperateFood(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".Food", "0"));
+            }
             seperateLeashFlags(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
             MyPet.setCustomRespawnTimeFactor(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0));
             MyPet.setCustomRespawnTimeFixed(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0));
@@ -438,15 +455,12 @@ public class Configuration {
         }
     }
 
-    private static String linkFood(Material[] foodTypes) {
-        String linkedFood = "";
+    private static List<Integer> linkFood(Material[] foodTypes) {
+        List<Integer> foodList = new ArrayList<>();
         for (Material foodType : foodTypes) {
-            if (!linkedFood.equalsIgnoreCase("")) {
-                linkedFood += ";";
-            }
-            linkedFood += foodType.getId();
+            foodList.add(foodType.getId());
         }
-        return linkedFood;
+        return foodList;
     }
 
     private static void seperateFood(Class<? extends MyPet> myPetClass, String foodString) {
