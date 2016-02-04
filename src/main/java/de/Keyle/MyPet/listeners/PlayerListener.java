@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
@@ -176,6 +177,8 @@ public class PlayerListener implements Listener {
                         //donate-delete-start
                         joinedPlayer.checkForDonation();
                         //donate-delete-end
+
+                        Bukkit.getServer().getPluginManager().callEvent(new MyPetPlayerJoinEvent(joinedPlayer));
                     }
                 });
             }
