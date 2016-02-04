@@ -184,5 +184,6 @@ public class GuiMain {
         SkillsInfo.registerSkill(ThornsInfo.class);
         SkillsInfo.registerSkill(WitherInfo.class);
         SkillsInfo.registerSkill(StompInfo.class);
+        SkillsInfo.registerSkill(ShieldInfo.class);
     }
 }

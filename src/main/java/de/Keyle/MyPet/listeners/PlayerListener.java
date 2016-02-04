@@ -30,10 +30,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.repository.types.NbtRepository;
-import de.Keyle.MyPet.skill.skills.implementation.Behavior;
-import de.Keyle.MyPet.skill.skills.implementation.Control;
-import de.Keyle.MyPet.skill.skills.implementation.Inventory;
-import de.Keyle.MyPet.skill.skills.implementation.Ride;
+import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
@@ -196,6 +193,30 @@ public class PlayerListener implements Listener {
                 }
                 if (!PvPChecker.canHurt(projectile.getMyPetProjectile().getShooter().getOwner().getPlayer(), victim, true)) {
                     event.setCancelled(true);
+                }
+            }
+
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerDamage(EntityDamageEvent event) {
+        if(!event.isCancelled()) {
+            if (event.getEntity() instanceof Player) {
+                Player victim = (Player) event.getEntity();
+                if (PlayerList.isMyPetPlayer(victim)) {
+                    MyPetPlayer myPetPlayerDamagee = PlayerList.getMyPetPlayer(victim);
+                    if (myPetPlayerDamagee.hasMyPet()) {
+                        MyPet myPet = myPetPlayerDamagee.getMyPet();
+                        if (myPet.getSkills().hasSkill(Shield.class)) {
+                            Shield shield = myPet.getSkills().getSkill(Shield.class);
+
+                            if (shield.activate()) {
+                                double redirected = shield.redirectDamage(event.getDamage());
+                                event.setDamage(event.getDamage() - redirected);
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -438,6 +438,7 @@ public class MyPetPlugin extends JavaPlugin {
         Skills.registerSkill(Ranged.class);
         Skills.registerSkill(Sprint.class);
         Skills.registerSkill(Stomp.class);
+        Skills.registerSkill(Shield.class);
     }
 
     public static void registerSkillsInfo() {
@@ -460,6 +461,7 @@ public class MyPetPlugin extends JavaPlugin {
         SkillsInfo.registerSkill(RangedInfo.class);
         SkillsInfo.registerSkill(SprintInfo.class);
         SkillsInfo.registerSkill(StompInfo.class);
+        SkillsInfo.registerSkill(ShieldInfo.class);
     }
 
     private int loadGroups(File f) {
