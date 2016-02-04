@@ -472,7 +472,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISk
         if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;
 
-            double range = this.range * myPet.getHungerValue() / 100.;
+            double range = 100. * (Math.log10(myPet.getHungerValue()) / 2);
 
             if (range < 0.7) {
                 active = false;
