@@ -39,6 +39,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CommandSwitch implements CommandExecutor, TabCompleter {
     private List<String> storeList = new ArrayList<>();
@@ -54,7 +55,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
-        if (!Permissions.has(player, "MyPet.user.command.petswitch")) {
+        if (!Permissions.has(player, "MyPet.user.command.switch")) {
             player.sendMessage(Translation.getString("Message.No.Allowed", player));
         }
 
@@ -63,14 +64,46 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
 
             if (args.length > 0 && args[0].equalsIgnoreCase("store")) {
                 if (owner.hasMyPet()) {
-                    MyPet myPet = owner.getMyPet();
-                    if (MyPetList.deactivateMyPet(owner)) {
-                        String wg = owner.getWorldGroupForMyPet(myPet.getUUID());
-                        owner.setMyPetForWorldGroup(wg, null);
-                        myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Switch", owner), myPet.getPetName()));
-                        return true;
-                    }
+                    MyPetList.getInactiveMyPets(owner, new RepositoryCallback<List<InactiveMyPet>>() {
+                        @Override
+                        public void callback(List<InactiveMyPet> pets) {
+                            WorldGroup wg = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
+                            int inactivePetCount = 0;
+                            UUID activePetUUID = owner.getMyPet().getUUID();
+
+                            for (InactiveMyPet mypet : pets) {
+                                if (activePetUUID.equals(mypet.getUUID()) || !mypet.getWorldGroup().equals("") || !mypet.getWorldGroup().equals(wg.getName())) {
+                                    continue;
+                                }
+                                inactivePetCount++;
+                            }
+                            int maxPetCount = 0;
+                            Player p = owner.getPlayer();
+                            if (!p.isOp()) {
+                                for (int i = 54; i > 0; i--) {
+                                    if (Permissions.has(p, "MyPet.user.command.switch." + i)) {
+                                        maxPetCount = i;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                maxPetCount = 54;
+                            }
+                            if (inactivePetCount >= maxPetCount) {
+                                p.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
+                                return;
+                            }
+                            MyPet myPet = owner.getMyPet();
+                            if (MyPetList.deactivateMyPet(owner)) {
+                                owner.setMyPetForWorldGroup(wg.getName(), null);
+                                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Switch.Success", owner), myPet.getPetName()));
+                            }
+                        }
+                    });
+                } else {
+                    sender.sendMessage(Translation.getString("Message.Command.Switch.NoPet", player));
                 }
+                return true;
             }
 
             MyPetSelectionGui gui = new MyPetSelectionGui(owner);
