@@ -891,6 +891,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
             jumpHeight = rideSkill.getJumpHeight() * 0.18D;
         }
 
+        if (Configuration.USE_HUNGER_SYSTEM) {
+            double factor = Math.log10(myPet.getHungerValue()) / 2;
+            speed *= factor;
+            jumpHeight *= factor;
+        }
+
         ride(motionSideways, motionForward, speed); // apply motion
 
         // jump when the player jumps
