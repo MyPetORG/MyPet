@@ -152,6 +152,6 @@ permissions:
   MyPet.user.command.options:
     default: true
     description: Allows to use the MyPet options command
-  MyPet.user.command.petswitch:
+  MyPet.user.command.switch:
     default: op
     description: Allows to switch between MyPets

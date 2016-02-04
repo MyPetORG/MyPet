@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
@@ -27,6 +28,13 @@ import org.bukkit.permissions.PermissibleBase;
 public class Permissions {
     public static boolean USE_EXTENDET_PERMISSIONS = false;
     public static boolean ENABLED = true;
+
+    public static boolean has(MyPetPlayer player, String node) {
+        if (player != null && player.isOnline()) {
+            return has(player.getPlayer(), node);
+        }
+        return false;
+    }
 
     public static boolean has(Player player, String node) {
         if (player != null) {
