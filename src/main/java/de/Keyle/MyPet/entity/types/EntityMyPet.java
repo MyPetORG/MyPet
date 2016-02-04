@@ -902,9 +902,18 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
 
         float speed = 0.22222F;
         double jumpHeight = 0.3D;
+        float ascenSpeed = 0.2f;
+
         if (rideSkill != null) {
             speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
             jumpHeight = rideSkill.getJumpHeight() * 0.18D;
+        }
+
+        if (Configuration.USE_HUNGER_SYSTEM) {
+            double factor = Math.log10(myPet.getHungerValue()) / 2;
+            speed *= factor;
+            jumpHeight *= factor;
+            ascenSpeed *= factor;
         }
 
         ride(motionSideways, motionForward, speed); // apply motion
@@ -920,7 +929,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                 if (onGround) {
                     this.motY = Math.sqrt(jumpHeight);
                 } else if (rideSkill != null && rideSkill.canFly()) {
-                    this.motY = 0.2F;
+                    this.motY = ascenSpeed;
                     this.fallDistance = 0;
                     this.isFlying = true;
                 }
