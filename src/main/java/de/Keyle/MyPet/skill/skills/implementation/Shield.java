@@ -76,7 +76,7 @@ public class Shield extends ShieldInfo implements ISkillInstance, ISkillActive {
     }
 
     public String getFormattedValue() {
-        return chance + "% -> " + redirectedDamagePercent + "% " + Translation.getString("Name.Damage", myPet.getOwner().getLanguage());
+        return Util.formatText(Translation.getString("Message.Skill.Shield.Format", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, redirectedDamagePercent);
     }
 
     public void reset() {
