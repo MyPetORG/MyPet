@@ -69,18 +69,42 @@ public class BukkitUtil {
      * @param count    the number of particles
      * @param radius   the radius around the location
      */
-    public static void playParticleEffect(Location location, EnumParticle effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
+    public static void playParticleEffect(Location location, EnumParticle effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effect, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, data);
 
         for (Player player : location.getWorld().getPlayers()) {
             if (player.getLocation().getWorld() == location.getWorld()) {
                 if ((int) player.getLocation().distance(location) <= radius) {
                     ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
                 }
+            }
+        }
+    }
+
+    /**
+     * @param location the {@link Location} around which players must be to see the effect
+     * @param effect   list of effects: https://gist.github.com/riking/5759002
+     * @param offsetX  the amount to be randomly offset by in the X axis
+     * @param offsetY  the amount to be randomly offset by in the Y axis
+     * @param offsetZ  the amount to be randomly offset by in the Z axis
+     * @param speed    the speed of the particles
+     * @param count    the number of particles
+     * @param radius   the radius around the location
+     */
+    public static void playParticleEffect(Player player, Location location, EnumParticle effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
+        Validate.notNull(location, "Location cannot be null");
+        Validate.notNull(effect, "Effect cannot be null");
+        Validate.notNull(location.getWorld(), "World cannot be null");
+
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, data);
+
+        if (player.getLocation().getWorld() == location.getWorld()) {
+            if ((int) player.getLocation().distance(location) <= radius) {
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
         }
     }

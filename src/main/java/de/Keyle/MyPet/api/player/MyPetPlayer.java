@@ -23,17 +23,16 @@ package de.Keyle.MyPet.api.player;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
-import de.Keyle.MyPet.util.BukkitUtil;
-import de.Keyle.MyPet.util.DonateCheck;
-import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.WorldGroup;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.locale.Translation;
@@ -41,11 +40,15 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -405,6 +408,25 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
                     }
                     msg += String.format("%1.2f", myPet.getHealth()) + org.bukkit.ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                     BukkitUtil.sendMessageActionBar(getPlayer(), msg);
+                }
+            }
+        }
+
+        if (isCaptureHelperActive()) {
+            Player p = getPlayer();
+            List<Entity> entities = p.getNearbyEntities(16, 16, 16);
+
+            for (Entity entity : entities) {
+                if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetEntity)) {
+                    if (MyPetType.isLeashableEntityType(entity.getType())) {
+                        Location l = entity.getLocation();
+                        l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
+                        if (CaptureHelper.checkTamable((LivingEntity) entity)) {
+                            BukkitUtil.playParticleEffect(p, l, EnumParticle.ITEM_CRACK, 0, 0, 0, 0.02f, 20, 16, 351, 10);
+                        } else {
+                            BukkitUtil.playParticleEffect(p, l, EnumParticle.ITEM_CRACK, 0, 0, 0, 0.02f, 20, 16, 351, +1);
+                        }
+                    }
                 }
             }
         }

@@ -44,6 +44,11 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
                 MyPetPlayer myPetPlayer;
                 if (PlayerList.isMyPetPlayer(player)) {
                     myPetPlayer = PlayerList.getMyPetPlayer(player);
+
+                    if (myPetPlayer.hasMyPet()) {
+                        player.sendMessage(Translation.getString("Message.Command.CaptureHelper.HasPet", player));
+                        return true;
+                    }
                 } else {
                     myPetPlayer = PlayerList.registerMyPetPlayer(player);
                 }

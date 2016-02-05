@@ -24,83 +24,64 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.entity.*;
 
 import java.util.List;
 
 public class CaptureHelper {
-    public static boolean checkTamable(LivingEntity leashTarget, double damage, Player attacker) {
-        double newHealth = leashTarget.getHealth() - damage;
-
-        boolean tameNow = true;
+    public static boolean checkTamable(LivingEntity leashTarget) {
         List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
 
-        flagloop:
+        boolean tamable = true;
         for (LeashFlag flag : leashFlags) {
             switch (flag) {
                 case Impossible:
-                    tameNow = false;
-                    attacker.sendMessage(Translation.getString("Message.NotLeashable", attacker));
-                    break flagloop;
+                    return false;
+                case None:
+                    return true;
                 case Adult:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).isAdult()) {
-                        tameNow = false;
-                        attacker.sendMessage(Translation.getString("Message.NotAdult", attacker));
+                        tamable = false;
                     }
                     break;
                 case Baby:
                     if (leashTarget instanceof Ageable && ((Ageable) leashTarget).isAdult()) {
-                        tameNow = false;
-                        attacker.sendMessage(Translation.getString("Message.NotBaby", attacker));
+                        tamable = false;
                     }
                     break;
                 case LowHp:
-                    if ((newHealth * 100) / leashTarget.getMaxHealth() > 10) {
-                        tameNow = false;
-                    }
-                    if (newHealth <= leashTarget.getMaxHealth() && (newHealth * 100) / leashTarget.getMaxHealth() > 10) {
-                        attacker.sendMessage(String.format("%1.2f", newHealth) + "/" + String.format("%1.2f", leashTarget.getMaxHealth()) + " " + Translation.getString("Name.HP", attacker));
+                    if (((leashTarget.getHealth() - 1) * 100) / leashTarget.getMaxHealth() > 10) {
+                        tamable = false;
                     }
                     break;
                 case Angry:
                     if (leashTarget instanceof Wolf && !((Wolf) leashTarget).isAngry()) {
-                        attacker.sendMessage(Translation.getString("Message.NotAngry", attacker));
+                        tamable = false;
                     }
                     break;
                 case CanBreed:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).canBreed()) {
-                        attacker.sendMessage(Translation.getString("Message.CanNotBreed", attacker));
+                        tamable = false;
                     }
                     break;
-                case None:
-                    tameNow = false;
-                    break flagloop;
                 case Tamed:
                     if (leashTarget instanceof Tameable && !((Tameable) leashTarget).isTamed()) {
-                        tameNow = false;
-                        attacker.sendMessage(Translation.getString("Message.CaptureHelper.NotTamed", attacker));
+                        tamable = false;
                     }
                     break;
                 case UserCreated:
                     if (leashTarget instanceof IronGolem && !((IronGolem) leashTarget).isPlayerCreated()) {
-                        tameNow = false;
-                        attacker.sendMessage(Translation.getString("Message.CaptureHelper.NotUserCreated", attacker));
+                        tamable = false;
                     }
                     break;
                 case Wild:
                     if (leashTarget instanceof IronGolem && ((IronGolem) leashTarget).isPlayerCreated()) {
-                        tameNow = false;
-                        attacker.sendMessage(Translation.getString("Message.NotWild", attacker));
+                        tamable = false;
                     } else if (leashTarget instanceof Tameable && ((Tameable) leashTarget).isTamed()) {
-                        tameNow = false;
-                        attacker.sendMessage(Translation.getString("Message.NotWild", attacker));
+                        tamable = false;
                     }
             }
         }
-        if (tameNow) {
-            attacker.sendMessage(Translation.getString("Message.CaptureHelper.TameNow", attacker));
-        }
-        return tameNow;
+        return tamable;
     }
 }

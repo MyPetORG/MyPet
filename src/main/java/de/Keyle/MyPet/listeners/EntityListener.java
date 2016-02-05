@@ -282,9 +282,6 @@ public class EntityListener implements Listener {
                     if (!leashItem.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName())) {
                         return;
                     }
-                    if (Permissions.has(damager, "MyPet.user.capturehelper") && PlayerList.isMyPetPlayer(damager) && PlayerList.getMyPetPlayer(damager).isCaptureHelperActive()) {
-                        CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
-                    }
                     if (PluginHookManager.isPluginUsable("Citizens")) {
                         try {
                             if (CitizensAPI.getNPCRegistry().isNPC(leashTarget)) {
