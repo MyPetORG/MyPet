@@ -34,10 +34,13 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.knbt.*;
+import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.EnumParticle;
@@ -412,13 +415,26 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
             }
         }
 
+        boolean citizensUsable = PluginHookManager.isPluginUsable("Citizens");
+
         if (isCaptureHelperActive()) {
             Player p = getPlayer();
-            List<Entity> entities = p.getNearbyEntities(16, 16, 16);
+            List<Entity> entities = p.getNearbyEntities(10, 10, 10);
 
             for (Entity entity : entities) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetEntity)) {
                     if (MyPetType.isLeashableEntityType(entity.getType())) {
+                        if (citizensUsable) {
+                            try {
+                                if (CitizensAPI.getNPCRegistry().isNPC(entity)) {
+                                    continue;
+                                }
+                            } catch (Error | Exception ignored) {
+                            }
+                        }
+                        if (!PvPChecker.canHurt(p, entity)) {
+                            continue;
+                        }
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
                         if (CaptureHelper.checkTamable((LivingEntity) entity)) {
