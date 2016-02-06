@@ -809,7 +809,7 @@ public class MySqlRepository implements Repository {
                             MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pets may not be loaded for this player!");
                             return null;
                         } else {
-                            petPlayer = new OnlineMyPetPlayer(fetchedUUIDs.get(playerName));
+                            petPlayer = new OnlineMyPetPlayer(internalUUID, fetchedUUIDs.get(playerName));
                             ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
                         }
                     }
