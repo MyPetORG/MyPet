@@ -82,7 +82,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                             Player p = owner.getPlayer();
                             if (!p.isOp()) {
                                 for (int i = 54; i > 0; i--) {
-                                    if (Permissions.has(p, "MyPet.user.command.switch." + i)) {
+                                    if (Permissions.has(p, "MyPet.user.command.switch.limit." + i)) {
                                         maxPetCount = i;
                                         break;
                                     }
