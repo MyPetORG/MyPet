@@ -76,7 +76,7 @@ commands:
     usage: '/<command>'
     permission: MyPet.user.command.options
   petswitch:
-    aliases: [pswitch]
+    aliases: [pswitch, psw]
     description: Opens a MyPet selection GUI
     usage: '/<command>'
     permission: MyPet.user.command.switch
