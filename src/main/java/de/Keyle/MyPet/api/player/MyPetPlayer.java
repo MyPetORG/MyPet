@@ -65,6 +65,7 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
     protected final UUID internalUUID;
 
     protected boolean captureHelperMode = false;
+    protected int captureHelperTimer = 90;
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
     protected int autoRespawnMin = 1;
@@ -146,6 +147,9 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
 
     public void setCaptureHelperActive(boolean captureHelperMode) {
         this.captureHelperMode = captureHelperMode;
+        if (captureHelperMode) {
+            captureHelperTimer = 90;
+        }
     }
 
     public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID) {
@@ -418,6 +422,10 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
         boolean citizensUsable = PluginHookManager.isPluginUsable("Citizens");
 
         if (isCaptureHelperActive()) {
+            if (captureHelperTimer-- <= 0) {
+                setCaptureHelperActive(false);
+            }
+
             Player p = getPlayer();
             List<Entity> entities = p.getNearbyEntities(10, 10, 10);
 
