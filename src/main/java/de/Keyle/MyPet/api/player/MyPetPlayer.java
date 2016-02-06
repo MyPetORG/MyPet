@@ -435,6 +435,9 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
                         if (!PvPChecker.canHurt(p, entity)) {
                             continue;
                         }
+                        if (!Permissions.has(this, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(entity.getType()).getTypeName())) {
+                            continue;
+                        }
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
                         if (CaptureHelper.checkTamable((LivingEntity) entity)) {
