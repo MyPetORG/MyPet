@@ -411,15 +411,19 @@ public class EntityListener implements Listener {
                             int style = horse.getStyle().ordinal();
                             int color = horse.getColor().ordinal();
                             int variant = color & 255 | style << 8;
-                            TagCompound armor = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getArmor());
-                            TagCompound chest = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getArmor());
-                            TagCompound saddle = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getSaddle());
+
+                            if (horse.getInventory().getArmor() != null) {
+                                TagCompound armor = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getArmor());
+                                extendedInfo.getCompoundData().put("Armor", armor);
+                            }
+                            if (horse.getInventory().getSaddle() != null) {
+                                TagCompound saddle = ItemStackNBTConverter.itemStackToCompund(horse.getInventory().getSaddle());
+                                extendedInfo.getCompoundData().put("Saddle", saddle);
+                            }
 
                             extendedInfo.getCompoundData().put("Type", new TagByte(type));
                             extendedInfo.getCompoundData().put("Variant", new TagInt(variant));
-                            extendedInfo.getCompoundData().put("Armor", armor);
                             extendedInfo.getCompoundData().put("Chest", new TagByte(horse.isCarryingChest()));
-                            extendedInfo.getCompoundData().put("Saddle", saddle);
                             extendedInfo.getCompoundData().put("Age", new TagInt(horse.getAge()));
 
                             if (horse.isCarryingChest()) {
