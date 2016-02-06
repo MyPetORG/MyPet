@@ -30,13 +30,14 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
-import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.player.OfflineMyPetPlayer;
+import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import de.Keyle.MyPet.util.player.UUIDFetcher;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
@@ -472,12 +473,75 @@ public class NbtRepository implements Repository, Scheduler {
 
         for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
             TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);
-            MyPetPlayer player = PlayerList.createMyPetPlayer(playerTag);
+            MyPetPlayer player = createMyPetPlayer(playerTag);
             if (player != null) {
                 players.put(player.getInternalUUID(), player);
                 playerCount++;
             }
         }
         return playerCount;
+    }
+
+    public static MyPetPlayer createMyPetPlayer(TagCompound playerTag) {
+        MyPetPlayer petPlayer = null;
+        if (BukkitUtil.isInOnlineMode()) {
+            UUID mojangUUID = null;
+            UUID internalUUID = null;
+            if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
+                TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+                if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
+                    internalUUID = UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
+                }
+                if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
+                    mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
+                }
+            } else if (playerTag.getCompoundData().containsKey("Mojang-UUID")) {
+                mojangUUID = UUID.fromString(playerTag.getAs("Mojang-UUID", TagString.class).getStringData());
+            }
+            if (internalUUID == null) {
+                internalUUID = UUID.randomUUID();
+            }
+            if (mojangUUID != null) {
+                petPlayer = new OnlineMyPetPlayer(internalUUID, mojangUUID);
+                if (playerTag.containsKeyAs("Name", TagString.class)) {
+                    String playerName = playerTag.getAs("Name", TagString.class).getStringData();
+                    ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
+                }
+            } else if (playerTag.containsKeyAs("Name", TagString.class)) {
+                String playerName = playerTag.getAs("Name", TagString.class).getStringData();
+                Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
+                if (!fetchedUUIDs.containsKey(playerName)) {
+                    MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pets may not be loaded for this player!");
+                    return null;
+                } else {
+                    petPlayer = new OnlineMyPetPlayer(fetchedUUIDs.get(playerName));
+                    ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
+                }
+            }
+        } else {
+            UUID internalUUID = null;
+            String playerName = null;
+            if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
+                TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+                if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
+                    internalUUID = UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
+                }
+            }
+            if (playerTag.containsKeyAs("Name", TagString.class)) {
+                playerName = playerTag.getAs("Name", TagString.class).getStringData();
+            }
+            if (playerName == null) {
+                return null;
+            }
+            if (internalUUID == null) {
+                internalUUID = UUID.randomUUID();
+            }
+            petPlayer = new OfflineMyPetPlayer(internalUUID, playerName);
+        }
+        if (petPlayer != null) {
+            petPlayer.load(playerTag);
+            DebugLogger.info("   " + petPlayer);
+        }
+        return petPlayer;
     }
 }
