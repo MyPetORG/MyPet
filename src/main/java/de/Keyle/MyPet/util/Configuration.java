@@ -370,7 +370,7 @@ public class Configuration {
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
 
         Bungee.BUNGEE_MODE = config.getString("MyPet.Hooks.BungeeCord.UUID-Mode", "online");
-        Economy.USE_ECONOMY = config.getBoolean("MyPet.Hooks.Vault.Economy", true);
+        EconomyHook.USE_ECONOMY = config.getBoolean("MyPet.Hooks.Vault.Economy", true);
         Minigames.DISABLE_PETS_IN_MINIGAMES = config.getBoolean("MyPet.Hooks.Minigames.DisablePetsInGames", true);
         PvPArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Hooks.PvPArena.DisablePetsInArena", true);
         SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES = config.getBoolean("MyPet.Hooks.SurvivalGames.DisablePetsInGames", true);

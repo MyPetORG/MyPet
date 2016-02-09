@@ -22,14 +22,16 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class Economy {
+public class EconomyHook {
     public static boolean USE_ECONOMY = true;
     private static boolean searchedVaultEconomy = false;
-    private static net.milkbowl.vault.economy.Economy economy = null;
+    private static Economy economy = null;
 
     public static boolean canUseEconomy() {
         if (!USE_ECONOMY) {
@@ -49,7 +51,13 @@ public class Economy {
             setupEconomy();
         }
         if (economy != null && economy.isEnabled()) {
-            return economy.has(Bukkit.getOfflinePlayer(petOwner.getPlayerUUID()), costs);
+            try {
+                return economy.has(Bukkit.getOfflinePlayer(petOwner.getPlayerUUID()), costs);
+            } catch (Exception e) {
+                DebugLogger.printThrowable(e);
+                MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
+                USE_ECONOMY = false;
+            }
         }
         return true;
     }
@@ -64,10 +72,15 @@ public class Economy {
         if (economy != null && economy.isEnabled()) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(petOwner.getPlayerUUID());
             if (economy.has(player, costs)) {
-                return economy.withdrawPlayer(player, costs).transactionSuccess();
-            } else {
-                return false;
+                try {
+                    return economy.withdrawPlayer(player, costs).transactionSuccess();
+                } catch (Exception e) {
+                    DebugLogger.printThrowable(e);
+                    MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
+                    USE_ECONOMY = false;
+                }
             }
+            return false;
         }
         return true;
     }
@@ -78,13 +91,13 @@ public class Economy {
         economy = null;
     }
 
-    public static net.milkbowl.vault.economy.Economy getEconomy() {
+    public static Economy getEconomy() {
         return economy;
     }
 
     public static void setupEconomy() {
         if (PluginHookManager.isPluginUsable("Vault")) {
-            RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+            RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
             if (economyProvider != null) {
                 economy = economyProvider.getProvider();
                 searchedVaultEconomy = true;

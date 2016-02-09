@@ -38,7 +38,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.hooks.Economy;
+import de.Keyle.MyPet.util.hooks.EconomyHook;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.locale.Translation;
@@ -495,11 +495,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
             if (status == PetState.Dead) {
                 respawnTime--;
-                if (Economy.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
+                if (EconomyHook.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
                     double cost = respawnTime * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
-                    if (Economy.canPay(getOwner(), cost)) {
-                        Economy.pay(getOwner(), cost);
-                        sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + Economy.getEconomy().currencyNameSingular()));
+                    if (EconomyHook.canPay(getOwner(), cost)) {
+                        EconomyHook.pay(getOwner(), cost);
+                        sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + EconomyHook.getEconomy().currencyNameSingular()));
                         respawnTime = 1;
                     }
                 }

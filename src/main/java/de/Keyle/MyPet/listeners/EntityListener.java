@@ -789,14 +789,14 @@ public class EntityListener implements Listener {
             sendDeathMessage(event);
             myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner.getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
-            if (Economy.canUseEconomy() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.user.respawn")) {
+            if (EconomyHook.canUseEconomy() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.user.respawn")) {
                 double costs = myPet.getRespawnTime() * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
-                if (Economy.canPay(owner, costs)) {
-                    Economy.pay(owner, costs);
-                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", owner.getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
+                if (EconomyHook.canPay(owner, costs)) {
+                    EconomyHook.pay(owner, costs);
+                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", owner.getPlayer()), myPet.getPetName(), costs + " " + EconomyHook.getEconomy().currencyNameSingular()));
                     myPet.setRespawnTime(1);
                 } else {
-                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", owner.getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
+                    myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", owner.getPlayer()), myPet.getPetName(), costs + " " + EconomyHook.getEconomy().currencyNameSingular()));
                 }
             }
         }
