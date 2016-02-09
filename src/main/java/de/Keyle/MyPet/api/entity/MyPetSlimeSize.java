@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.entity;
 
 public interface MyPetSlimeSize {
-    public int getSize();
+    int getSize();
 
-    public void setSize(int value);
+    void setSize(int value);
 }

@@ -27,25 +27,25 @@ import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import java.util.UUID;
 
 public interface MyPet {
-    public double getExp();
+    double getExp();
 
-    public double getHealth();
+    double getHealth();
 
-    public int getHungerValue();
+    int getHungerValue();
 
-    public MyPetPlayer getOwner();
+    MyPetPlayer getOwner();
 
-    public String getPetName();
+    String getPetName();
 
-    public MyPetType getPetType();
+    MyPetType getPetType();
 
-    public int getRespawnTime();
+    int getRespawnTime();
 
-    public SkillTree getSkillTree();
+    SkillTree getSkillTree();
 
-    public UUID getUUID();
+    UUID getUUID();
 
-    public String getWorldGroup();
+    String getWorldGroup();
 
-    public long getLastUsed();
+    long getLastUsed();
 }

@@ -24,21 +24,21 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 
 public interface ISkillInstance extends ISkillInfo {
-    public void setMyPet(MyPet myPet);
+    void setMyPet(MyPet myPet);
 
-    public MyPet getMyPet();
+    MyPet getMyPet();
 
-    public boolean isActive();
+    boolean isActive();
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet);
+    void upgrade(ISkillInfo upgrade, boolean quiet);
 
-    public String getFormattedValue();
+    String getFormattedValue();
 
-    public void reset();
+    void reset();
 
-    public String getName();
+    String getName();
 
-    public String getName(String locale);
+    String getName(String locale);
 
-    public ISkillInstance cloneSkill();
+    ISkillInstance cloneSkill();
 }

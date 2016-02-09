@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.entity;
 
 public interface MyPetBaby {
-    public boolean isBaby();
+    boolean isBaby();
 
-    public void setBaby(boolean flag);
+    void setBaby(boolean flag);
 }

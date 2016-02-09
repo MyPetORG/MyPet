@@ -25,7 +25,10 @@ import de.Keyle.MyPet.api.commands.CommandOption;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -49,8 +52,6 @@ public class CommandOptionTicket implements CommandOption {
             sender.sendMessage("Ticket file created. Please upload this file somewhere and add the link to your ticket.");
             sender.sendMessage("  " + ticketFile.getAbsoluteFile());
             sender.sendMessage(ChatColor.RED + "------------------------------------------------");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

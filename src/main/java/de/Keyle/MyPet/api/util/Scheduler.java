@@ -21,5 +21,5 @@
 package de.Keyle.MyPet.api.util;
 
 public interface Scheduler {
-    public void schedule();
+    void schedule();
 }
