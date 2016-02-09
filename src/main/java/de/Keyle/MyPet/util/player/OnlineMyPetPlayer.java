@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.player;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -36,10 +35,6 @@ public class OnlineMyPetPlayer extends MyPetPlayer {
 
     public OnlineMyPetPlayer(UUID mojangUUID) {
         this(UUID.randomUUID(), mojangUUID);
-    }
-
-    public boolean isOnline() {
-        return PlayerList.onlinePlayerUUIDList.contains(mojangUUID);
     }
 
     public void setLastKnownName(String name) {

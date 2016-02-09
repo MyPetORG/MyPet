@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.player;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.Util;
 
 import java.util.UUID;
@@ -35,10 +34,6 @@ public class OfflineMyPetPlayer extends MyPetPlayer {
 
     public OfflineMyPetPlayer(String playerName) {
         this(UUID.randomUUID(), playerName);
-    }
-
-    public boolean isOnline() {
-        return PlayerList.onlinePlayerUUIDList.contains(offlineUUID);
     }
 
     @Override
