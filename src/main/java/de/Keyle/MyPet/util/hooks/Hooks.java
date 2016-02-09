@@ -40,6 +40,6 @@ public class Hooks {
 
     public static void disable() {
         PvPChecker.reset();
-        Economy.reset();
+        EconomyHook.reset();
     }
 }
