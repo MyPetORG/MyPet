@@ -214,7 +214,10 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
 
     // -----------------------------------------------------------------------------
 
-    public abstract boolean isOnline();
+    public boolean isOnline() {
+        Player p = Bukkit.getPlayer(getPlayerUUID());
+        return p != null && p.isOnline();
+    }
 
     public boolean isInExternalGames() {
         if (MobArena.isInMobArena(this) ||

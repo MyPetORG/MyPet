@@ -110,8 +110,6 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event) {
-        PlayerList.onlinePlayerUUIDList.add(event.getPlayer().getUniqueId());
-
         long delay = MyPetPlugin.getPlugin().getRepository() instanceof NbtRepository ? 1L : 20L;
 
         Bukkit.getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
@@ -227,7 +225,6 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event) {
-        PlayerList.onlinePlayerUUIDList.remove(event.getPlayer().getUniqueId());
         if (PlayerList.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet()) {

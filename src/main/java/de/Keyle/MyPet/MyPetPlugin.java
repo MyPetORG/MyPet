@@ -123,7 +123,6 @@ public class MyPetPlugin extends JavaPlugin {
         PluginHookManager.reset();
         Hooks.disable();
 
-        PlayerList.onlinePlayerUUIDList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
@@ -353,8 +352,6 @@ public class MyPetPlugin extends JavaPlugin {
 
         // load pets for online players
         for (final Player player : getServer().getOnlinePlayers()) {
-            PlayerList.onlinePlayerUUIDList.add(player.getUniqueId());
-
             MyPetPlugin.getPlugin().getRepository().getMyPetPlayer(player, new RepositoryCallback<MyPetPlayer>() {
                 @Override
                 public void callback(final MyPetPlayer joinedPlayer) {

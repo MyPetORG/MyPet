@@ -28,14 +28,11 @@ import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerList {
-    public final static Set<UUID> onlinePlayerUUIDList = new HashSet<>();
     protected final static Map<UUID, UUID> uuidToInternalUUID = new ConcurrentHashMap<>();
     protected final static Map<UUID, MyPetPlayer> onlinePlayers = new ConcurrentHashMap<>();
 
