@@ -634,13 +634,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                 this.motY = 0.2D;
             }
 
-            if (!this.world.isClientSide || this.world.isLoaded(new BlockPosition((int) this.locX, 0, (int) this.locZ)) && this.world.getChunkAtWorldCoords(new BlockPosition((int) this.locX, 0, (int) this.locZ)).o()) {
-                this.motY -= 0.08D;
-            } else if (this.locY > 0.0D) {
-                this.motY = -0.1D;
-            } else {
-                this.motY = 0.0D;
-            }
+            this.motY -= 0.08D;
 
             this.motY *= 0.9800000190734863D;
             this.motX *= (double) friction;
@@ -806,9 +800,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
         this.g(this.aZ, this.ba);
         this.world.methodProfiler.b();
         this.world.methodProfiler.a("push");
-        if (!this.world.isClientSide) {
-            this.bL();
-        }
+        this.bL();
 
         this.world.methodProfiler.b();
     }
