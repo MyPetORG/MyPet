@@ -33,7 +33,7 @@ public @interface SkillProperties {
 
     NBTdatatypes[] parameterTypes() default {};
 
-    public enum NBTdatatypes {
+    enum NBTdatatypes {
         Byte, Short, Int, Long, Float, Double, String, Boolean
     }
 }

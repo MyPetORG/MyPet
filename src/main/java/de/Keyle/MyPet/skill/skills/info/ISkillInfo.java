@@ -24,21 +24,21 @@ import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.keyle.knbt.TagCompound;
 
 public interface ISkillInfo {
-    public SkillPropertiesPanel getGuiPanel();
+    SkillPropertiesPanel getGuiPanel();
 
-    public void setProperties(TagCompound propertiesCompound);
+    void setProperties(TagCompound propertiesCompound);
 
-    public TagCompound getProperties();
+    TagCompound getProperties();
 
-    public void setDefaultProperties();
+    void setDefaultProperties();
 
-    public boolean isAddedByInheritance();
+    boolean isAddedByInheritance();
 
-    public void setIsInherited(boolean flag);
+    void setIsInherited(boolean flag);
 
-    public ISkillInfo cloneSkill();
+    ISkillInfo cloneSkill();
 
-    public String getName();
+    String getName();
 
-    public String getName(String locale);
+    String getName(String locale);
 }

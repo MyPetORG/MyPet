@@ -128,10 +128,7 @@ public class IconMenuItem {
 
                 hasChanged = true;
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            DebugLogger.printThrowable(e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             DebugLogger.printThrowable(e);
         }

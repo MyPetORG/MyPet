@@ -27,13 +27,13 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import org.bukkit.entity.Creature;
 
 public interface MyPetEntity extends Creature {
-    public MyPet getMyPet();
+    MyPet getMyPet();
 
-    public EntityMyPet getHandle();
+    EntityMyPet getHandle();
 
-    public boolean canMove();
+    boolean canMove();
 
-    public MyPetType getPetType();
+    MyPetType getPetType();
 
-    public MyPetPlayer getOwner();
+    MyPetPlayer getOwner();
 }

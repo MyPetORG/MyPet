@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.util;
 import de.keyle.knbt.TagCompound;
 
 public interface NBTStorage {
-    public TagCompound save();
+    TagCompound save();
 
-    public void load(TagCompound compound);
+    void load(TagCompound compound);
 }

@@ -25,5 +25,5 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public interface CommandOptionTabCompleter extends CommandOption {
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings);
+    List<String> onTabComplete(CommandSender commandSender, String[] strings);
 }

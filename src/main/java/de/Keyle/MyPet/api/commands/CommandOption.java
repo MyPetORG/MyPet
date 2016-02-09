@@ -23,5 +23,5 @@ package de.Keyle.MyPet.api.commands;
 import org.bukkit.command.CommandSender;
 
 public interface CommandOption {
-    public boolean onCommandOption(CommandSender sender, String[] parameter);
+    boolean onCommandOption(CommandSender sender, String[] parameter);
 }

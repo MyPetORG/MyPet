@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.util.NBTStorage;
 import javax.swing.*;
 
 public interface SkillPropertiesPanel extends NBTStorage {
-    public JPanel getMainPanel();
+    JPanel getMainPanel();
 
-    public void verifyInput();
+    void verifyInput();
 }
