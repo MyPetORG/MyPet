@@ -132,13 +132,16 @@ public class MyPetPlugin extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         this.isReady = false;
+        // create folders
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "locale" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "logs" + File.separator).mkdirs();
 
+        // load version from manifest
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
 
+        // Bukkit/Spigot version check
         if (!Bukkit.getServer().getClass().getName().contains(MyPetVersion.getBukkitPacket())) {
             MyPetLogger.write(ChatColor.RED + "This version of MyPet is only compatible with Craftbukkit/Spigot " + MyPetVersion.getMinecraftVersion() + " (" + MyPetVersion.getBukkitPacket() + ") !!!");
             Bukkit.getPluginManager().disablePlugin(this);
@@ -153,6 +156,7 @@ public class MyPetPlugin extends JavaPlugin {
         Configuration.loadConfiguration();
         DebugLogger.setup();
 
+        // print debug info to logfile
         DebugLogger.info("----------- loading MyPet ... -----------");
         DebugLogger.info("MyPet " + MyPetVersion.getVersion() + " build: " + MyPetVersion.getBuild() + (MyPetVersion.isPremium() ? "P" : ""));
         DebugLogger.info("Bukkit " + getServer().getVersion());
@@ -161,24 +165,21 @@ public class MyPetPlugin extends JavaPlugin {
         DebugLogger.info("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
+        // register event listener
         PlayerListener playerListener = new PlayerListener();
         getServer().getPluginManager().registerEvents(playerListener, this);
-
         VehicleListener vehicleListener = new VehicleListener();
         getServer().getPluginManager().registerEvents(vehicleListener, this);
-
         EntityListener entityListener = new EntityListener();
         getServer().getPluginManager().registerEvents(entityListener, this);
-
         LevelUpListener levelupListener = new LevelUpListener();
         getServer().getPluginManager().registerEvents(levelupListener, this);
-
         WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
-
         PluginHookManager pluginSupportListener = new PluginHookManager();
         getServer().getPluginManager().registerEvents(pluginSupportListener, this);
 
+        // register commands
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());
         getCommand("petsendaway").setExecutor(new CommandSendAway());
@@ -200,9 +201,11 @@ public class MyPetPlugin extends JavaPlugin {
         getCommand("petoptions").setExecutor(new CommandOptions());
         getCommand("petswitch").setExecutor(new CommandSwitch());
 
+        // register skills
         registerSkillsInfo();
         registerSkills();
 
+        // create default skilltrees
         File skilltreeFolder = new File(getPlugin().getDataFolder().getPath(), "skilltrees");
         File[] files = skilltreeFolder.listFiles();
 
@@ -226,6 +229,7 @@ public class MyPetPlugin extends JavaPlugin {
             }
         }
 
+        // load skilltrees
         String[] petTypes = new String[MyPetType.values().length + 1];
         petTypes[0] = "default";
         for (int i = 1; i <= MyPetType.values().length; i++) {
@@ -243,6 +247,7 @@ public class MyPetPlugin extends JavaPlugin {
             SkillTreeLoader.manageInheritance(skillTreeMobType);
             skilltreeNames.addAll(skillTreeMobType.getSkillTreeNames());
         }
+        // register skilltree permissions
         for (String skilltreeName : skilltreeNames) {
             try {
                 Bukkit.getPluginManager().addPermission(new Permission("MyPet.custom.skilltree." + skilltreeName));
@@ -251,6 +256,7 @@ public class MyPetPlugin extends JavaPlugin {
             }
         }
 
+        // register custom entities
         BukkitUtil.registerMyPetEntity(EntityMyCreeper.class, "Creeper", 50);
         BukkitUtil.registerMyPetEntity(EntityMySkeleton.class, "Skeleton", 51);
         BukkitUtil.registerMyPetEntity(EntityMySpider.class, "Spider", 52);
@@ -287,8 +293,7 @@ public class MyPetPlugin extends JavaPlugin {
         Translation.init();
         Bungee.reset();
 
-        File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
-
+        // init repository
         if (REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
             repo = new MySqlRepository();
             try {
@@ -313,10 +318,11 @@ public class MyPetPlugin extends JavaPlugin {
             Timer.addTask((Scheduler) repo);
         }
 
-        loadGroups(groupsFile);
+        // load worldgroups
+        loadGroups(new File(getPlugin().getDataFolder().getPath(), "worldgroups.yml"));
         Timer.startTimer();
 
-
+        // init Metrics
         try {
             Metrics metrics = new Metrics(this);
             boolean metricsActive = false;
@@ -345,6 +351,7 @@ public class MyPetPlugin extends JavaPlugin {
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + (MyPetVersion.isPremium() ? "P" : "") + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
+        // load pets for online players
         for (final Player player : getServer().getOnlinePlayers()) {
             PlayerList.onlinePlayerUUIDList.add(player.getUniqueId());
 
