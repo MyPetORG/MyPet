@@ -64,6 +64,7 @@ import java.util.List;
 public class Configuration {
     public static String PET_INFO_OVERHEAD_PREFIX = "<aqua>";
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
+    public static String WIKI_URL = "http://mypet.keyle.de";
     public static int RESPAWN_TIME_FACTOR = 5;
     public static int RESPAWN_TIME_PLAYER_FACTOR = 5;
     public static int RESPAWN_TIME_FIXED = 0;
@@ -200,6 +201,7 @@ public class Configuration {
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Beacon.HUNGER_DECREASE_TIME);
         config.addDefault("MyPet.Skill.Beacon.Party-Support", true);
 
+        config.addDefault("MyPet.Info.Wiki-URL", WIKI_URL);
         config.addDefault("MyPet.Info.AdminOnly.PetName", PetInfoDisplay.Name.adminOnly);
         config.addDefault("MyPet.Info.AdminOnly.PetOwner", PetInfoDisplay.Owner.adminOnly);
         config.addDefault("MyPet.Info.AdminOnly.PetHP", PetInfoDisplay.HP.adminOnly);
@@ -339,6 +341,7 @@ public class Configuration {
         Backup.SAVE_INTERVAL = config.getInt("MyPet.Repository.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
         Backup.DATE_FORMAT = config.getString("MyPet.Repository.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
 
+        WIKI_URL = config.getString("MyPet.Info.Wiki-URL", WIKI_URL);
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);
         PetInfoDisplay.Damage.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetDamage", false);
