@@ -24,6 +24,7 @@ import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.Pickup;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Translation;
 import org.bukkit.ChatColor;
@@ -76,7 +77,7 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 }
             }
             player.sendMessage("");
-            player.sendMessage(Translation.getString("Message.Command.Help.MoreInfo", player) + ChatColor.GOLD + " http://mypet.keyle.de");
+            player.sendMessage(Translation.getString("Message.Command.Help.MoreInfo", player) + ChatColor.GOLD + " " + Configuration.WIKI_URL);
             player.sendMessage("----------------------------------------------------");
             return true;
         }
