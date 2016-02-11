@@ -220,12 +220,14 @@ public class Configuration {
         MyPetPlugin.getPlugin().saveConfig();
 
         File petConfigFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
-        try {
-            YamlConfiguration petConfig = new YamlConfiguration();
-            petConfig.load(petConfigFile);
-            config = petConfig;
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+        config = new YamlConfiguration();
+
+        if (petConfigFile.exists()) {
+            try {
+                config.load(petConfigFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
         }
 
         for (MyPetType petType : MyPetType.values()) {
