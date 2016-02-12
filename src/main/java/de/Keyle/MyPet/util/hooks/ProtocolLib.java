@@ -37,39 +37,9 @@ public class ProtocolLib {
     public static void findPlugin() {
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
             try {
-                ProtocolLibrary.getProtocolManager().addPacketListener(
-                        new PacketAdapter(MyPetPlugin.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
-                            @Override
-                            public void onPacketSending(PacketEvent event) {
-                                PacketContainer packet = event.getPacket();
+                // reverse dragon facing direction
+                registerEnderDragonFix();
 
-                                final Entity entity = packet.getEntityModifier(event).readSafely(0);
-
-                                // Now - are we dealing with an invisible slime?
-                                if (entity instanceof CraftMyPet && ((CraftMyPet) entity).getPetType() == MyPetType.EnderDragon) {
-
-                                    if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {
-                                        //MyPetLogger.write("ENTITY_LOOK: " + packet.getBytes().getValues());
-
-                                        byte angle = packet.getBytes().read(3);
-                                        angle += Byte.MAX_VALUE;
-                                        packet.getBytes().write(3, angle);
-                                    } else if (packet.getType() == PacketType.Play.Server.ENTITY_MOVE_LOOK) {
-                                        //MyPetLogger.write("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
-
-                                        byte angle = packet.getBytes().read(3);
-                                        angle += Byte.MAX_VALUE;
-                                        packet.getBytes().write(3, angle);
-                                    } else if (packet.getType() == PacketType.Play.Server.ENTITY_TELEPORT) {
-                                        //MyPetLogger.write("ENTITY_TELEPORT: " + packet.getBytes().getValues());
-
-                                        byte angle = packet.getBytes().read(1);
-                                        angle += Byte.MAX_VALUE;
-                                        packet.getBytes().write(1, angle);
-                                    }
-                                }
-                            }
-                        });
                 active = true;
             } catch (Exception e) {
                 active = false;
@@ -80,5 +50,41 @@ public class ProtocolLib {
 
     public static boolean isActive() {
         return active;
+    }
+
+    private static void registerEnderDragonFix() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(
+                new PacketAdapter(MyPetPlugin.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
+                    @Override
+                    public void onPacketSending(PacketEvent event) {
+                        PacketContainer packet = event.getPacket();
+
+                        final Entity entity = packet.getEntityModifier(event).readSafely(0);
+
+                        // Now - are we dealing with an invisible slime?
+                        if (entity instanceof CraftMyPet && ((CraftMyPet) entity).getPetType() == MyPetType.EnderDragon) {
+
+                            if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {
+                                //MyPetLogger.write("ENTITY_LOOK: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(3);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(3, angle);
+                            } else if (packet.getType() == PacketType.Play.Server.ENTITY_MOVE_LOOK) {
+                                //MyPetLogger.write("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(3);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(3, angle);
+                            } else if (packet.getType() == PacketType.Play.Server.ENTITY_TELEPORT) {
+                                //MyPetLogger.write("ENTITY_TELEPORT: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(1);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(1, angle);
+                            }
+                        }
+                    }
+                });
     }
 }
