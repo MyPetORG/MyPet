@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.Configuration;
+import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Translation;
@@ -60,6 +61,12 @@ public class CommandName implements CommandExecutor, TabCompleter {
                     }
                     name += arg;
                 }
+
+                if (!NameFilter.isClean(name)) {
+                    sender.sendMessage(Translation.getString("Message.Command.Name.Filter", petOwner));
+                    return true;
+                }
+
                 name = Colorizer.setColors(name);
 
                 Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
