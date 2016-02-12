@@ -23,14 +23,25 @@ package de.Keyle.MyPet.util;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NameFilter {
     public static List<String> NAME_FILTER = Lists.newArrayList();
 
-    public static String clean(String text) {
+    public static boolean isClean(String text) {
+        text = Colorizer.stripColors(text);
         for (String pattern : NAME_FILTER) {
-            text = text.replaceAll(pattern, "*");
+            if (findRegEx(pattern, text)) {
+                return false;
+            }
         }
-        return text;
+        return true;
+    }
+
+    private static boolean findRegEx(String pattern, String text) {
+        Pattern regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+        Matcher regexMatcher = regex.matcher(text);
+        return regexMatcher.find();
     }
 }

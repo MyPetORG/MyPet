@@ -214,7 +214,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void setPetName(String newName) {
-        this.petName = NameFilter.clean(newName);
+        if (!NameFilter.isClean(newName)) {
+            newName = Translation.getString("Name." + getPetType().getTypeName(), getOwner().getLanguage());
+        }
+        this.petName = newName;
         if (status == PetState.Here) {
             if (Configuration.PET_INFO_OVERHEAD_NAME) {
                 getCraftPet().getHandle().setCustomNameVisible(true);
