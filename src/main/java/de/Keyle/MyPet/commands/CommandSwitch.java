@@ -95,7 +95,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                                 return;
                             }
                             MyPet myPet = owner.getMyPet();
-                            if (MyPetList.deactivateMyPet(owner)) {
+                            if (MyPetList.deactivateMyPet(owner, true)) {
                                 owner.setMyPetForWorldGroup(wg.getName(), null);
                                 myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Switch.Success", owner), myPet.getPetName()));
                             }

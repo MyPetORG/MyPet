@@ -133,7 +133,7 @@ public class PlayerListener implements Listener {
                         if (joinedPlayer.hasMyPet()) {
                             MyPet myPet = joinedPlayer.getMyPet();
                             if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                                MyPetList.deactivateMyPet(joinedPlayer);
+                                MyPetList.deactivateMyPet(joinedPlayer, true);
                             }
                         }
 
@@ -211,7 +211,7 @@ public class PlayerListener implements Listener {
             if (player.hasMyPet()) {
                 MyPet myPet = player.getMyPet();
                 myPet.removePet();
-                MyPetList.deactivateMyPet(player);
+                MyPetList.deactivateMyPet(player, true);
             }
 
             PlayerList.setOffline(player);
@@ -264,7 +264,7 @@ public class PlayerListener implements Listener {
             };
 
             if (fromGroup != toGroup) {
-                final boolean hadMyPetInFromWorld = MyPetList.deactivateMyPet(myPetPlayer);
+                final boolean hadMyPetInFromWorld = MyPetList.deactivateMyPet(myPetPlayer, true);
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup)) {
                     final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
                     myPetPlayer.getInactiveMyPets(new RepositoryCallback<List<InactiveMyPet>>() {

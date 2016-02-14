@@ -128,7 +128,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                 public void callback(InactiveMyPet newPet) {
                     if (newPet != null) {
                         if (owner.hasMyPet()) {
-                            MyPetList.deactivateMyPet(owner);
+                            MyPetList.deactivateMyPet(owner, true);
                         }
 
                         MyPet myPet = MyPetList.activateMyPet(newPet);

@@ -725,7 +725,7 @@ public class EntityListener implements Listener {
 
                 myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Release.Dead", owner), myPet.getPetName()));
 
-                MyPetList.deactivateMyPet(owner);
+                MyPetList.deactivateMyPet(owner, false);
                 MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID(), new RepositoryCallback<Boolean>() {
                     @Override
                     public void callback(Boolean value) {

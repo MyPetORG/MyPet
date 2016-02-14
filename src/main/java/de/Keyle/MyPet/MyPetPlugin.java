@@ -350,7 +350,7 @@ public class MyPetPlugin extends JavaPlugin {
                         if (joinedPlayer.hasMyPet()) {
                             MyPet myPet = joinedPlayer.getMyPet();
                             if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                                MyPetList.deactivateMyPet(joinedPlayer);
+                                MyPetList.deactivateMyPet(joinedPlayer, true);
                             }
                         }
 
