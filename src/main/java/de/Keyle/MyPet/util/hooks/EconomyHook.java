@@ -54,6 +54,7 @@ public class EconomyHook {
             try {
                 return economy.has(Bukkit.getOfflinePlayer(petOwner.getPlayerUUID()), costs);
             } catch (Exception e) {
+                e.printStackTrace();
                 DebugLogger.printThrowable(e);
                 MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
                 USE_ECONOMY = false;
@@ -75,6 +76,7 @@ public class EconomyHook {
                 try {
                     return economy.withdrawPlayer(player, costs).transactionSuccess();
                 } catch (Exception e) {
+                    e.printStackTrace();
                     DebugLogger.printThrowable(e);
                     MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
                     USE_ECONOMY = false;
