@@ -357,6 +357,7 @@ public class NbtRepository implements Repository, Scheduler {
                 TagCompound petNBT = inactiveMyPet.save();
                 petList.add(petNBT);
             } catch (Exception e) {
+                e.printStackTrace();
                 DebugLogger.printThrowable(e);
             }
         }
@@ -447,6 +448,7 @@ public class NbtRepository implements Repository, Scheduler {
                 try {
                     playerList.add(myPetPlayer.save());
                 } catch (Exception e) {
+                    e.printStackTrace();
                     DebugLogger.printThrowable(e);
                 }
             }

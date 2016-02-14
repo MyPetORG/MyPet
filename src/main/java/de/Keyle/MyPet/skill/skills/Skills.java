@@ -134,6 +134,7 @@ public class Skills {
             }
         } catch (Exception e) {
             MyPetLogger.write(ChatColor.RED + skillClass.getName() + " is not a valid skill!");
+            e.printStackTrace();
             DebugLogger.printThrowable(e);
             registeredSkillsNames.remove(skillClass);
         }
