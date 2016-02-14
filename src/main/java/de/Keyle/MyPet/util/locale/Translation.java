@@ -92,10 +92,17 @@ public class Translation {
 
         Language language = languages.get(languageCode);
 
+        String translatedPhrase = key;
         if (codes.length >= 2) {
-            return Colorizer.setColors(language.translate(key, codes[1]));
+            translatedPhrase = language.translate(key, codes[1]);
         }
-        return Colorizer.setColors(language.translate(key));
+        if (translatedPhrase.equals(key)) {
+            translatedPhrase = language.translate(key);
+        }
+        if (translatedPhrase.equals(key) && !languageCode.equals("en")) {
+            translatedPhrase = getText(key, "en");
+        }
+        return Colorizer.setColors(translatedPhrase);
     }
 
     public static ResourceBundle loadLocale(String localeString) {
