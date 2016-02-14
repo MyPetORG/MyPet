@@ -117,7 +117,9 @@ public class Util {
 
     public static String formatText(String text, Object... values) {
         for (int i = 0; i < values.length; i++) {
-            text = text.replaceAll("\\{" + i + "}", values[i].toString());
+            if (values[i] != null) {
+                text = text.replaceAll("\\{" + i + "}", values[i].toString());
+            }
         }
         return text;
     }
