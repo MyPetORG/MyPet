@@ -56,7 +56,7 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
 
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName(), null);
-                    MyPetList.deactivateMyPet(myPet.getOwner());
+                    MyPetList.deactivateMyPet(myPet.getOwner(), false);
                     MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID(), null);
                 }
             }

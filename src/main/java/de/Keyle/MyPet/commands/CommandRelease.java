@@ -225,7 +225,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()).getName(), null);
 
                     sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
-                    MyPetList.deactivateMyPet(myPet.getOwner());
+                    MyPetList.deactivateMyPet(myPet.getOwner(), false);
                     MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID(), new RepositoryCallback<Boolean>() {
                         @Override
                         public void callback(Boolean value) {

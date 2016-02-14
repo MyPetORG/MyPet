@@ -127,7 +127,7 @@ public class MyPetList {
         }
 
         if (inactiveMyPet.getOwner().hasMyPet()) {
-            if (!deactivateMyPet(inactiveMyPet.getOwner())) {
+            if (!deactivateMyPet(inactiveMyPet.getOwner(), true)) {
                 return null;
             }
         }
@@ -167,7 +167,7 @@ public class MyPetList {
         return null;
     }
 
-    public static boolean deactivateMyPet(MyPetPlayer owner) {
+    public static boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
         if (mActivePlayerPets.containsKey(owner)) {
             final MyPet activeMyPet = owner.getMyPet();
 
@@ -178,7 +178,9 @@ public class MyPetList {
             }
 
             activeMyPet.removePet();
-            MyPetPlugin.getPlugin().getRepository().updateMyPet(activeMyPet, null);
+            if (update) {
+                MyPetPlugin.getPlugin().getRepository().updateMyPet(activeMyPet, null);
+            }
             mActivePetsPlayer.remove(activeMyPet);
             return true;
         }
