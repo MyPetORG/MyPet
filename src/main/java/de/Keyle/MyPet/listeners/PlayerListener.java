@@ -202,7 +202,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDamage(EntityDamageEvent event) {
-        if(!event.isCancelled()) {
+        if (!event.isCancelled()) {
             if (event.getEntity() instanceof Player) {
                 Player victim = (Player) event.getEntity();
                 if (PlayerList.isMyPetPlayer(victim)) {

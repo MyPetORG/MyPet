@@ -94,7 +94,7 @@ public class Shield extends ShieldInfo implements ISkillInstance, ISkillActive {
 
     public double redirectDamage(double damage) {
         double redirectedDamage = getRedirectedDamage(damage);
-        if (myPet.getHealth() - redirectedDamage > 0) {
+        if (myPet.getStatus() == MyPet.PetState.Here && myPet.getHealth() - redirectedDamage > 0) {
             myPet.getCraftPet().damage(redirectedDamage);
             myPet.getCraftPet().getHandle().makeSound("mob.endermen.portal", 1F, 2F);
             BukkitUtil.playParticleEffect(myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), EnumParticle.CRIT_MAGIC, 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
