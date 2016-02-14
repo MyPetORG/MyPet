@@ -29,6 +29,7 @@ public enum SpawnerEggTypes {
     Chicken(MyPetType.Chicken, 93),
     Cow(MyPetType.Cow, 92),
     Creeper(MyPetType.Creeper, 50),
+    EnderDragon(MyPetType.EnderDragon, 59, true),
     Enderman(MyPetType.Enderman, 58),
     Endermite(MyPetType.Endermite, 67),
     Ghast(MyPetType.Ghast, 56),
