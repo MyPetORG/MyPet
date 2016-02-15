@@ -65,6 +65,7 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
@@ -288,6 +289,14 @@ public class MyPetPlugin extends JavaPlugin {
         // init repository
         if (REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
             repo = new MySqlRepository();
+            try {
+                repo.init();
+            } catch (RepositoryInitException e) {
+                e.printStackTrace();
+                repo = null;
+            }
+        } else if (REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
+            repo = new MongoDbRepository();
             try {
                 repo.init();
             } catch (RepositoryInitException e) {

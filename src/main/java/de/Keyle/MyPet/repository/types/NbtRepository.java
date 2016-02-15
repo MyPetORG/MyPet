@@ -183,7 +183,7 @@ public class NbtRepository implements Repository, Scheduler {
 
         DebugLogger.info("Loading Pets: -----------------------------");
         int petCount = loadPets(nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class));
-        MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
+        MyPetLogger.write("[NBT] " + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
         DebugLogger.info("-----------------------------------------");
     }
 

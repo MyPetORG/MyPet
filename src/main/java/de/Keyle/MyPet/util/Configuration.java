@@ -41,6 +41,7 @@ import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.repository.Converter;
+import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
@@ -132,6 +133,12 @@ public class Configuration {
         config.addDefault("MyPet.Repository.MySQL.Password", MySqlRepository.PASSWORD);
         config.addDefault("MyPet.Repository.MySQL.User", MySqlRepository.USER);
         config.addDefault("MyPet.Repository.MySQL.Port", MySqlRepository.PORT);
+
+        config.addDefault("MyPet.Repository.MongoDB.Database", MongoDbRepository.DATABASE);
+        config.addDefault("MyPet.Repository.MongoDB.Host", MongoDbRepository.HOST);
+        config.addDefault("MyPet.Repository.MongoDB.Password", MongoDbRepository.PASSWORD);
+        config.addDefault("MyPet.Repository.MongoDB.User", MongoDbRepository.USER);
+        config.addDefault("MyPet.Repository.MongoDB.Port", MongoDbRepository.PORT);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", RESPAWN_TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", RESPAWN_TIME_PLAYER_FACTOR);
@@ -360,6 +367,12 @@ public class Configuration {
         MySqlRepository.PASSWORD = config.getString("MyPet.Repository.MySQL.Password", MySqlRepository.PASSWORD);
         MySqlRepository.USER = config.getString("MyPet.Repository.MySQL.User", MySqlRepository.USER);
         MySqlRepository.PORT = config.getInt("MyPet.Repository.MySQL.Database", MySqlRepository.PORT);
+
+        MongoDbRepository.DATABASE = config.getString("MyPet.Repository.MongoDB.Database", MongoDbRepository.DATABASE);
+        MongoDbRepository.HOST = config.getString("MyPet.Repository.MongoDB.Host", MongoDbRepository.HOST);
+        MongoDbRepository.PASSWORD = config.getString("MyPet.Repository.MongoDB.Password", MongoDbRepository.PASSWORD);
+        MongoDbRepository.USER = config.getString("MyPet.Repository.MongoDB.User", MongoDbRepository.USER);
+        MongoDbRepository.PORT = config.getInt("MyPet.Repository.MongoDB.Database", MongoDbRepository.PORT);
 
         WIKI_URL = config.getString("MyPet.Info.Wiki-URL", WIKI_URL);
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);

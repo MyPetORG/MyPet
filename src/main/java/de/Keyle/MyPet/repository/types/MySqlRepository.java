@@ -103,7 +103,8 @@ public class MySqlRepository implements Repository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //loadData(NBTPetFile);
+
+        updateInfo();
     }
 
     private void updateStructure(ResultSet resultSet) {
@@ -121,8 +122,6 @@ public class MySqlRepository implements Repository {
                     case 3:
                         updateToV4();
                 }
-
-                updateInfo();
             } else {
                 DebugLogger.info("No database update required.");
             }
@@ -738,32 +737,6 @@ public class MySqlRepository implements Repository {
         }.runTaskAsynchronously(MyPetPlugin.getPlugin());
     }
 
-    /*
-    private TagList savePets() {
-        List<TagCompound> petList = new ArrayList<>();
-
-        for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
-            List<InactiveMyPet> pets = myPets.get(myPet.getOwner());
-            for (InactiveMyPet pet : pets) {
-                if (myPet.getUUID().equals(pet.getUUID())) {
-                    myPets.put(myPet.getOwner(), MyPetList.getInactiveMyPetFromMyPet(myPet));
-                    myPets.remove(myPet.getOwner(), pet);
-                    break;
-                }
-            }
-        }
-        for (InactiveMyPet inactiveMyPet : myPets.values()) {
-            try {
-                TagCompound petNBT = inactiveMyPet.save();
-                petList.add(petNBT);
-            } catch (Exception e) {
-                DebugLogger.printThrowable(e);
-            }
-        }
-        return new TagList(petList);
-    }
-    */
-
     // Players ---------------------------------------------------------------------------------------------------------
 
     private MyPetPlayer resultSetToMyPetPlayer(ResultSet resultSet) {
@@ -831,11 +804,7 @@ public class MySqlRepository implements Repository {
                                 e.printStackTrace();
                             }
                     }
-
-
-                    DebugLogger.info("   " + petPlayer);
                 }
-
                 return petPlayer;
             }
         } catch (SQLException | IOException e) {

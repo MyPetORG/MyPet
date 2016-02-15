@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
+import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -64,6 +65,8 @@ public class Converter {
                 toRepo.addMyPetPlayer(player, null);
             } else if (toRepo instanceof MySqlRepository) {
                 ((MySqlRepository) toRepo).addMyPetPlayer(player);
+            } else if (toRepo instanceof MongoDbRepository) {
+                ((MongoDbRepository) toRepo).addMyPetPlayer(player);
             }
         }
 
@@ -73,6 +76,8 @@ public class Converter {
                 toRepo.addMyPet(pet, null);
             } else if (toRepo instanceof MySqlRepository) {
                 ((MySqlRepository) toRepo).addMyPet(pet);
+            } else if (toRepo instanceof MongoDbRepository) {
+                ((MongoDbRepository) toRepo).addMyPet(pet);
             }
         }
 

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.repository;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -71,5 +72,35 @@ public abstract class RepositoryCallback<T> extends BukkitRunnable {
     public synchronized BukkitTask runTaskTimerAsynchronously(Plugin plugin, long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
         return super.runTaskTimerAsynchronously(plugin, delay, period);
+    }
+
+    public synchronized BukkitTask runTask(T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTask(MyPetPlugin.getPlugin());
+    }
+
+    public synchronized BukkitTask runTaskAsynchronously(T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskAsynchronously(MyPetPlugin.getPlugin());
+    }
+
+    public synchronized BukkitTask runTaskLater(long delay, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskLater(MyPetPlugin.getPlugin(), delay);
+    }
+
+    public synchronized BukkitTask runTaskLaterAsynchronously(long delay, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskLaterAsynchronously(MyPetPlugin.getPlugin(), delay);
+    }
+
+    public synchronized BukkitTask runTaskTimer(long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskTimer(MyPetPlugin.getPlugin(), delay, period);
+    }
+
+    public synchronized BukkitTask runTaskTimerAsynchronously(long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
+        this.setValue(value);
+        return super.runTaskTimerAsynchronously(MyPetPlugin.getPlugin(), delay, period);
     }
 }
