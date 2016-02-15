@@ -624,30 +624,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void removeMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                checkConnection();
-
-                try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE internal_uuid=?;");
-                    statement.setString(1, inactiveMyPet.getUUID().toString());
-
-                    int result = statement.executeUpdate();
-
-                    //MyPetLogger.write("DELETE pet: " + result);
-
-                    if (callback != null) {
-                        callback.runTask(MyPetPlugin.getPlugin(), result > 0);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    if (callback != null) {
-                        callback.runTask(MyPetPlugin.getPlugin(), false);
-                    }
-                }
-            }
-        }.runTaskAsynchronously(MyPetPlugin.getPlugin());
+        removeMyPet(inactiveMyPet.getUUID(), callback);
     }
 
     @Override
