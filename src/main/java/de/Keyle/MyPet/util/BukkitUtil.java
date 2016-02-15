@@ -38,8 +38,10 @@ import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_8_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
+import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
@@ -300,5 +302,25 @@ public class BukkitUtil {
 
     public static net.minecraft.server.v1_8_R3.World getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
+    }
+
+    public static boolean copyResource(Plugin plugin, String ressource, File destination) {
+        try {
+            InputStream template = plugin.getResource(ressource);
+            OutputStream out = new FileOutputStream(destination);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = template.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            template.close();
+            out.close();
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
