@@ -56,52 +56,56 @@ public class MyPetSelectionGui {
         MyPetList.getInactiveMyPets(player, new RepositoryCallback<List<InactiveMyPet>>() {
             @Override
             public void callback(List<InactiveMyPet> pets) {
-                if (pets.size() > 0) {
-                    final Map<Integer, InactiveMyPet> petSlotList = new HashMap<>();
-                    IconMenu menu = new IconMenu(title, 54, new IconMenu.OptionClickEventHandler() {
-                        @Override
-                        public void onOptionClick(IconMenu.OptionClickEvent event) {
-                            if (petSlotList.containsKey(event.getPosition())) {
-                                InactiveMyPet myPet = petSlotList.get(event.getPosition());
-                                if (myPet != null && callback != null) {
-                                    callback.callback(myPet);
-                                }
-                            }
-                            event.setWillClose(true);
-                            event.setWillDestroy(true);
-                        }
-                    }, MyPetPlugin.getPlugin());
-
-                    WorldGroup wg = WorldGroup.getGroupByWorld(player.getPlayer().getWorld().getName());
-                    for (int i = 0; i < pets.size() && i < 54; i++) {
-                        InactiveMyPet mypet = pets.get(i);
-
-                        if (!mypet.getWorldGroup().equals("") && !mypet.getWorldGroup().equals(wg.getName())) {
-                            continue;
-                        }
-
-                        if (player.hasMyPet() && player.getMyPet().getUUID().equals(mypet.getUUID())) {
-                            continue;
-                        }
-
-                        SpawnerEggTypes egg = SpawnerEggTypes.getEggType(mypet.getPetType());
-                        List<String> lore = new ArrayList<>();
-                        lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + mypet.getHungerValue());
-                        if (mypet.getRespawnTime() > 0) {
-                            lore.add(RESET + Translation.getString("Name.Respawntime", player) + ": " + GOLD + mypet.getRespawnTime() + "sec");
-                        } else {
-                            lore.add(RESET + Translation.getString("Name.HP", player) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
-                        }
-                        lore.add(RESET + Translation.getString("Name.Exp", player) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
-                        lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + mypet.getPetType().getTypeName());
-                        lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + (mypet.getSkillTree() != null ? mypet.getSkillTree().getDisplayName() : "-"));
-                        int pos = menu.addOption(new IconMenuItem().setMaterial(Material.MONSTER_EGG).setData(egg.getColor()).setTitle(RESET + mypet.getPetName()).addLore(lore).setGlowing(egg.isGlowing()));
-                        petSlotList.put(pos, mypet);
-                    }
-
-                    menu.open(player.getPlayer());
-                }
+                open(pets, callback);
             }
         });
+    }
+
+    public void open(List<InactiveMyPet> pets, final RepositoryCallback<InactiveMyPet> callback) {
+        if (pets.size() > 0) {
+            final Map<Integer, InactiveMyPet> petSlotList = new HashMap<>();
+            IconMenu menu = new IconMenu(title, 54, new IconMenu.OptionClickEventHandler() {
+                @Override
+                public void onOptionClick(IconMenu.OptionClickEvent event) {
+                    if (petSlotList.containsKey(event.getPosition())) {
+                        InactiveMyPet myPet = petSlotList.get(event.getPosition());
+                        if (myPet != null && callback != null) {
+                            callback.callback(myPet);
+                        }
+                    }
+                    event.setWillClose(true);
+                    event.setWillDestroy(true);
+                }
+            }, MyPetPlugin.getPlugin());
+
+            WorldGroup wg = WorldGroup.getGroupByWorld(player.getPlayer().getWorld().getName());
+            for (int i = 0; i < pets.size() && i < 54; i++) {
+                InactiveMyPet mypet = pets.get(i);
+
+                if (!mypet.getWorldGroup().equals("") && !mypet.getWorldGroup().equals(wg.getName())) {
+                    continue;
+                }
+
+                if (player.hasMyPet() && player.getMyPet().getUUID().equals(mypet.getUUID())) {
+                    continue;
+                }
+
+                SpawnerEggTypes egg = SpawnerEggTypes.getEggType(mypet.getPetType());
+                List<String> lore = new ArrayList<>();
+                lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + mypet.getHungerValue());
+                if (mypet.getRespawnTime() > 0) {
+                    lore.add(RESET + Translation.getString("Name.Respawntime", player) + ": " + GOLD + mypet.getRespawnTime() + "sec");
+                } else {
+                    lore.add(RESET + Translation.getString("Name.HP", player) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+                }
+                lore.add(RESET + Translation.getString("Name.Exp", player) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+                lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + mypet.getPetType().getTypeName());
+                lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + (mypet.getSkillTree() != null ? mypet.getSkillTree().getDisplayName() : "-"));
+                int pos = menu.addOption(new IconMenuItem().setMaterial(Material.MONSTER_EGG).setData(egg.getColor()).setTitle(RESET + mypet.getPetName()).addLore(lore).setGlowing(egg.isGlowing()));
+                petSlotList.put(pos, mypet);
+            }
+
+            menu.open(player.getPlayer());
+        }
     }
 }

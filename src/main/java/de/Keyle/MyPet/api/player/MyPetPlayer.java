@@ -290,6 +290,12 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
         return Bukkit.getPlayer(getPlayerUUID());
     }
 
+    public void sendMessage(String message) {
+        if (isOnline()) {
+            getPlayer().sendMessage(message);
+        }
+    }
+
     public EntityPlayer getEntityPlayer() {
         Player p = getPlayer();
         if (p != null) {

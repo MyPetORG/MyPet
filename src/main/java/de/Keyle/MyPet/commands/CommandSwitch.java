@@ -39,7 +39,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CommandSwitch implements CommandExecutor, TabCompleter {
     private List<String> storeList = new ArrayList<>();
@@ -64,74 +63,79 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             final MyPetPlayer owner = PlayerList.getMyPetPlayer(player);
 
             if (args.length > 0 && args[0].equalsIgnoreCase("store")) {
-                if (owner.hasMyPet()) {
+                if (owner.isOnline() && owner.hasMyPet()) {
                     MyPetList.getInactiveMyPets(owner, new RepositoryCallback<List<InactiveMyPet>>() {
                         @Override
                         public void callback(List<InactiveMyPet> pets) {
-                            WorldGroup wg = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
-                            int inactivePetCount = 0;
-                            UUID activePetUUID = owner.getMyPet().getUUID();
+                            MyPet myPet = owner.getMyPet();
+                            String worldGroup = myPet.getWorldGroup();
 
-                            for (InactiveMyPet mypet : pets) {
-                                if (activePetUUID.equals(mypet.getUUID()) || !mypet.getWorldGroup().equals("") || !mypet.getWorldGroup().equals(wg.getName())) {
-                                    continue;
-                                }
-                                inactivePetCount++;
-                            }
-                            int maxPetCount = 0;
-                            Player p = owner.getPlayer();
-                            if (!p.isOp()) {
-                                for (int i = 54; i > 0; i--) {
-                                    if (Permissions.has(p, "MyPet.user.command.switch.limit." + i)) {
-                                        maxPetCount = i;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                maxPetCount = 54;
-                            }
+                            int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
+                            int maxPetCount = getMaxPetCount(owner.getPlayer());
+
                             if (inactivePetCount >= maxPetCount) {
-                                p.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
+                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
                                 return;
                             }
-                            MyPet myPet = owner.getMyPet();
                             if (MyPetList.deactivateMyPet(owner, true)) {
-                                owner.setMyPetForWorldGroup(wg.getName(), null);
-                                myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Switch.Success", owner), myPet.getPetName()));
+                                owner.setMyPetForWorldGroup(worldGroup, null);
+                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Success", owner), myPet.getPetName()));
                             }
                         }
                     });
                 } else {
-                    sender.sendMessage(Translation.getString("Message.Command.Switch.NoPet", player));
+                    player.sendMessage(Translation.getString("Message.Command.Switch.NoPet", player));
                 }
                 return true;
             }
 
-            MyPetSelectionGui gui = new MyPetSelectionGui(owner);
-            gui.open(new RepositoryCallback<InactiveMyPet>() {
-                @Override
-                public void callback(InactiveMyPet myPet) {
-                    MyPet activePet = MyPetList.activateMyPet(myPet);
-                    if (activePet != null && owner.isOnline()) {
-                        Player player = owner.getPlayer();
-                        activePet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.getPetName()));
-                        WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                        owner.setMyPetForWorldGroup(wg.getName(), activePet.getUUID());
 
-                        switch (activePet.createPet()) {
-                            case Canceled:
-                                activePet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), activePet.getPetName()));
-                                break;
-                            case NoSpace:
-                                activePet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), activePet.getPetName()));
-                                break;
-                            case NotAllowed:
-                                activePet.sendMessageToOwner(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", activePet.getPetName()));
-                                break;
-                            case Dead:
-                                activePet.sendMessageToOwner(Translation.getString("Message.Spawn.Respawn.In", owner).replace("%petname%", activePet.getPetName()).replace("%time%", "" + activePet.getRespawnTime()));
-                                break;
+            MyPetList.getInactiveMyPets(owner, new RepositoryCallback<List<InactiveMyPet>>() {
+                @Override
+                public void callback(List<InactiveMyPet> pets) {
+                    if (owner.isOnline()) {
+                        String worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()).getName();
+                        int inactivePetCount = getInactivePetCount(pets, worldGroup);
+                        int maxPetCount = getMaxPetCount(owner.getPlayer());
+
+                        if (owner.hasMyPet()) {
+                            inactivePetCount--;
+                            if (inactivePetCount >= maxPetCount) {
+                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
+                                return;
+                            }
                         }
+
+                        String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
+
+                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, stats + " " + Translation.getString("Message.SelectMyPet", owner));
+                        gui.open(pets, new RepositoryCallback<InactiveMyPet>() {
+                            @Override
+                            public void callback(InactiveMyPet myPet) {
+                                MyPet activePet = MyPetList.activateMyPet(myPet);
+                                if (activePet != null && owner.isOnline()) {
+                                    Player player = owner.getPlayer();
+                                    activePet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.getPetName()));
+                                    WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
+                                    owner.setMyPetForWorldGroup(wg.getName(), activePet.getUUID());
+
+                                    switch (activePet.createPet()) {
+                                        case Canceled:
+                                            activePet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), activePet.getPetName()));
+                                            break;
+                                        case NoSpace:
+                                            activePet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), activePet.getPetName()));
+                                            break;
+                                        case NotAllowed:
+                                            activePet.sendMessageToOwner(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", activePet.getPetName()));
+                                            break;
+                                        case Dead:
+                                            activePet.sendMessageToOwner(Translation.getString("Message.Spawn.Respawn.In", owner).replace("%petname%", activePet.getPetName()).replace("%time%", "" + activePet.getRespawnTime()));
+                                            break;
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
             });
@@ -139,6 +143,34 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             sender.sendMessage(Translation.getString("Message.No.HasPet", player));
         }
         return true;
+    }
+
+    private int getMaxPetCount(Player p) {
+        int maxPetCount = 0;
+        if (p.isOp()) {
+            maxPetCount = 54;
+        } else {
+            for (int i = 54; i > 0; i--) {
+                if (Permissions.has(p, "MyPet.user.command.switch.limit." + i)) {
+                    maxPetCount = i;
+                    break;
+                }
+            }
+        }
+        return maxPetCount;
+    }
+
+    private int getInactivePetCount(List<InactiveMyPet> pets, String worldGroup) {
+        int inactivePetCount = 0;
+
+        for (InactiveMyPet pet : pets) {
+            if (!pet.getWorldGroup().equals(worldGroup)) {
+                continue;
+            }
+            inactivePetCount++;
+        }
+
+        return inactivePetCount;
     }
 
     @Override
