@@ -107,7 +107,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         this.petOwner = petOwner;
         skills = new Skills(this);
         experience = new Experience(this);
-        hungerTime = Configuration.HUNGER_SYSTEM_TIME;
+        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
         petName = Translation.getString("Name." + getPetType().getTypeName(), this.petOwner);
     }
 
@@ -191,7 +191,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public int getHungerValue() {
-        if (Configuration.USE_HUNGER_SYSTEM) {
+        if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             return hunger;
         } else {
             return 100;
@@ -206,7 +206,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         } else {
             hunger = value;
         }
-        hungerTime = Configuration.HUNGER_SYSTEM_TIME;
+        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
     }
 
     public String getPetName() {
@@ -219,9 +219,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
         this.petName = newName;
         if (status == PetState.Here) {
-            if (Configuration.PET_INFO_OVERHEAD_NAME) {
+            if (Configuration.Name.OVERHEAD_NAME) {
                 getCraftPet().getHandle().setCustomNameVisible(true);
-                getCraftPet().getHandle().setCustomName(Util.cutString(Configuration.PET_INFO_OVERHEAD_PREFIX + petName + Configuration.PET_INFO_OVERHEAD_SUFFIX, 64));
+                getCraftPet().getHandle().setCustomName(Util.cutString(Configuration.Name.OVERHEAD_PREFIX + petName + Configuration.Name.OVERHEAD_SUFFIX, 64));
             }
         }
     }
@@ -242,10 +242,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public boolean autoAssignSkilltree() {
         if (skillTree == null && this.petOwner.isOnline()) {
-            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
+            if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
                 if (SkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0) {
                     List<SkillTree> skilltrees = SkillTreeMobType.getSkillTrees(this.getPetType());
-                    if (Configuration.RANDOM_SKILLTREE_ASSIGNMENT) {
+                    if (Configuration.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT) {
                         Collections.shuffle(skilltrees);
                     }
                     for (SkillTree skillTree : skilltrees) {
@@ -383,15 +383,15 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.NoSpace;
                 }
 
-                if (Minigames.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner())) {
+                if (Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner())) {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
-                if (PvPArena.DISABLE_PETS_IN_ARENA && PvPArena.isInPvPArena(getOwner())) {
+                if (Configuration.Hooks.DISABLE_PETS_IN_ARENA && PvPArena.isInPvPArena(getOwner())) {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
-                if (MobArena.DISABLE_PETS_IN_ARENA && MobArena.isInMobArena(getOwner())) {
+                if (Configuration.Hooks.DISABLE_PETS_IN_MOB_ARENA && MobArena.isInMobArena(getOwner())) {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
@@ -399,11 +399,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
-                if (SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES && SurvivalGames.isInSurvivalGames(getOwner())) {
+                if (Configuration.Hooks.DISABLE_PETS_IN_SURVIVAL_GAMES && SurvivalGames.isInSurvivalGames(getOwner())) {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
-                if (SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES && UltimateSurvivalGames.isInSurvivalGames(getOwner())) {
+                if (Configuration.Hooks.DISABLE_PETS_IN_SURVIVAL_GAMES && UltimateSurvivalGames.isInSurvivalGames(getOwner())) {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
@@ -463,7 +463,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Flying", petOwner), petName));
                     break;
             }
-            if (Configuration.USE_HUNGER_SYSTEM) {
+            if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
                 setHealth((int) Math.ceil(getMaxHealth() / 100. * (hunger + 1 - (hunger % 10))));
             } else {
                 setHealth(getMaxHealth());
@@ -499,7 +499,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             if (status == PetState.Dead) {
                 respawnTime--;
                 if (EconomyHook.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
-                    double cost = respawnTime * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
+                    double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                     if (EconomyHook.canPay(getOwner(), cost)) {
                         EconomyHook.pay(getOwner(), cost);
                         sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + EconomyHook.getEconomy().currencyNameSingular()));
@@ -512,10 +512,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
             }
             if (status == PetState.Here) {
-                if (Configuration.USE_HUNGER_SYSTEM) {
+                if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
                     if (hunger > 1 && --hungerTime <= 0) {
                         hunger--;
-                        hungerTime = Configuration.HUNGER_SYSTEM_TIME;
+                        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
                         if (hunger == 66) {
                             sendMessageToOwner(Util.formatText(Translation.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
                         } else if (hunger == 33) {

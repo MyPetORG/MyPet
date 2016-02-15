@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
-import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Translation;
@@ -123,7 +122,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage("   " + Translation.getString("Name.RangedDamage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }
-                if (Configuration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, player, myPet)) {
+                if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, player, myPet)) {
                     player.sendMessage("   " + Translation.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
 
                     FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", player) + ": ");
@@ -174,7 +173,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage("   " + Translation.getString("Name.Level", player) + ": " + lvl);
                     infoShown = true;
                 }
-                int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : SkillTree.LEVEL_CAP;
+                int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Configuration.LevelSystem.Experience.LEVEL_CAP;
                 if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                     double exp = myPet.getExperience().getCurrentExp();
                     double reqEXP = myPet.getExperience().getRequiredExp();

@@ -71,7 +71,7 @@ public abstract class SkillTreeLoader {
             if (skillTreeMobType.hasSkillTree(skillTree.getInheritance())) {
                 SkillTree skillTreeInherit = skillTreeMobType.getSkillTree(skillTree.getInheritance());
                 if (!alreadyLoadedInheritance.contains(skillTreeInherit)) {
-                    if (skillTreeInherit.hasInheritance() && Configuration.INHERIT_ALREADY_INHERITED_SKILLS) {
+                    if (skillTreeInherit.hasInheritance() && Configuration.Skilltree.INHERIT_ALREADY_INHERITED_SKILLS) {
                         alreadyLoadedInheritance.add(skillTreeInherit);
                         manageInheritance(skillTreeMobType, startSkillTree, skillTreeInherit, clones, depth + 1);
                     } else {

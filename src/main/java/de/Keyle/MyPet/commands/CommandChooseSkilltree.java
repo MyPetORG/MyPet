@@ -56,10 +56,10 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
         if (MyPetList.hasActiveMyPet(player)) {
             final MyPet myPet = MyPetList.getMyPet(player);
             final MyPetPlayer myPetOwner = myPet.getOwner();
-            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
+            if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 myPet.autoAssignSkilltree();
                 sender.sendMessage(Translation.getString("Message.Command.ChoseSkilltree.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage()));
-            } else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
+            } else if (myPet.getSkillTree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner().getLanguage()), myPet.getPetName()));
             } else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName())) {
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
@@ -77,9 +77,9 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                                 myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
                             } else if (myPet.setSkilltree(skillTree)) {
                                 sender.sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", player), skillTree.getName()));
-                                if ((myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) || !myPet.getOwner().isMyPetAdmin()) {
-                                    double switchPenalty = Configuration.SKILLTREE_SWITCH_PENALTY_FIXED;
-                                    switchPenalty += myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.;
+                                if ((myPet.getOwner().isMyPetAdmin() && Configuration.Skilltree.SWITCH_PENALTY_ADMIN) || !myPet.getOwner().isMyPetAdmin()) {
+                                    double switchPenalty = Configuration.Skilltree.SWITCH_PENALTY_FIXED;
+                                    switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_PENALTY_PERCENT / 100.;
 
                                     if (requiredLevel > 1) {
                                         double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
@@ -126,9 +126,9 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                                         myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
                                     } else if (myPet.setSkilltree(selecedSkilltree)) {
                                         myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
-                                        if ((myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) || !myPet.getOwner().isMyPetAdmin()) {
-                                            double switchPenalty = Configuration.SKILLTREE_SWITCH_PENALTY_FIXED;
-                                            switchPenalty += myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.;
+                                        if ((myPet.getOwner().isMyPetAdmin() && Configuration.Skilltree.SWITCH_PENALTY_ADMIN) || !myPet.getOwner().isMyPetAdmin()) {
+                                            double switchPenalty = Configuration.Skilltree.SWITCH_PENALTY_FIXED;
+                                            switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_PENALTY_PERCENT / 100.;
 
                                             if (requiredLevel > 1) {
                                                 double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
@@ -191,9 +191,9 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
         Player player = (Player) commandSender;
         if (MyPetList.hasActiveMyPet(player)) {
             MyPet myPet = MyPetList.getMyPet(player);
-            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
+            if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 return CommandAdmin.EMPTY_LIST;
-            } else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
+            } else if (myPet.getSkillTree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
                 return CommandAdmin.EMPTY_LIST;
             } else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName())) {
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());

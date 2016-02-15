@@ -57,7 +57,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                double costs = myPet.getRespawnTime() * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
+                double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                 if (args.length == 0) {
                     String costsString;
                     if (myPet.getStatus() != PetState.Dead) {

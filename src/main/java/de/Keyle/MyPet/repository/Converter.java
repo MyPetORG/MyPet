@@ -28,24 +28,24 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 
 import java.util.List;
 
 public class Converter {
-    public static String CONVERT_FROM = "-";
 
     public static boolean convert() {
-        if (CONVERT_FROM.equalsIgnoreCase(MyPetPlugin.REPOSITORY_TYPE)) {
+        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase(Configuration.Repository.REPOSITORY_TYPE)) {
             return false;
         }
 
         Repository fromRepo;
         Repository toRepo;
 
-        if (CONVERT_FROM.equalsIgnoreCase("NBT")) {
+        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("NBT")) {
             fromRepo = new NbtRepository();
-        } else if (CONVERT_FROM.equalsIgnoreCase("MySQL")) {
+        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
             fromRepo = new MySqlRepository();
         } else {
             return false;
@@ -87,7 +87,7 @@ public class Converter {
         MyPetPlugin.getPlugin().getConfig().set("MyPet.Repository.ConvertFrom", "-");
         MyPetPlugin.getPlugin().saveConfig();
 
-        MyPetLogger.write("Conversion from " + CONVERT_FROM + " to " + MyPetPlugin.REPOSITORY_TYPE + " complete!");
+        MyPetLogger.write("Conversion from " + Configuration.Repository.CONVERT_FROM + " to " + Configuration.Repository.REPOSITORY_TYPE + " complete!");
 
         return true;
     }

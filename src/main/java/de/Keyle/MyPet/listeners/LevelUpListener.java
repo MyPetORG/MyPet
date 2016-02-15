@@ -23,7 +23,6 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeLevel;
@@ -85,9 +84,9 @@ public class LevelUpListener implements Listener {
                 myPet.setHealth(myPet.getMaxHealth());
                 myPet.setHungerValue(100);
 
-                if (Experience.FIREWORK_ON_LEVELUP) {
+                if (Configuration.LevelSystem.FIREWORK) {
                     Firework fw = (Firework) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), EntityType.FIREWORK);
-                    FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(Configuration.LEVELUP_FIREWORK_COLOR)).withTrail().withFlicker().build();
+                    FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(Configuration.LevelSystem.FIREWORK_COLOR)).withTrail().withFlicker().build();
                     FireworkMeta fwm = fw.getFireworkMeta();
                     fwm.addEffect(fwe);
                     fwm.addEffect(fwe);

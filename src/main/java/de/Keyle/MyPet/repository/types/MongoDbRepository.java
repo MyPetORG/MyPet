@@ -39,6 +39,7 @@ import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -59,16 +60,8 @@ import java.util.*;
 public class MongoDbRepository implements Repository {
     private MongoClient mongo;
     private MongoDatabase db;
-    // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
-
-    public static String USER = "";
-    public static String PASSWORD = "";
-    public static String DATABASE = "mypet";
-    public static String HOST = "localhost";
-    public static int PORT = 27017;
-
     private int version = 1;
-
+    // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
 
     @Override
     public void disable() {
@@ -141,16 +134,16 @@ public class MongoDbRepository implements Repository {
     private void connect() throws RepositoryInitException {
         try {
             MongoClientOptions.Builder o = MongoClientOptions.builder().connectTimeout(3000);
-            if (USER.equals("")) {
-                this.mongo = new MongoClient(new ServerAddress(HOST, PORT), o.build());
+            if (Configuration.Repository.MongoDB.USER.equals("")) {
+                this.mongo = new MongoClient(new ServerAddress(Configuration.Repository.MongoDB.HOST, Configuration.Repository.MongoDB.PORT), o.build());
             } else {
-                MongoCredential credentials = MongoCredential.createCredential(USER, DATABASE, PASSWORD.toCharArray());
-                this.mongo = new MongoClient(new ServerAddress(HOST, PORT), Lists.newArrayList(credentials), o.build());
+                MongoCredential credentials = MongoCredential.createCredential(Configuration.Repository.MongoDB.USER, Configuration.Repository.MongoDB.DATABASE, Configuration.Repository.MongoDB.PASSWORD.toCharArray());
+                this.mongo = new MongoClient(new ServerAddress(Configuration.Repository.MongoDB.HOST, Configuration.Repository.MongoDB.PORT), Lists.newArrayList(credentials), o.build());
             }
 
             this.mongo.getAddress();
 
-            this.db = this.mongo.getDatabase(DATABASE);
+            this.db = this.mongo.getDatabase(Configuration.Repository.MongoDB.DATABASE);
         } catch (Exception e) {
             throw new RepositoryInitException(e);
         }

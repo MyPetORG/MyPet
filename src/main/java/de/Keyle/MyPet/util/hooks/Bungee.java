@@ -20,11 +20,10 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.util.Configuration;
 import org.spigotmc.SpigotConfig;
 
 public class Bungee {
-
-    public static String BUNGEE_MODE = "online";
 
     private static BungeeMode mode = BungeeMode.None;
 
@@ -43,7 +42,7 @@ public class Bungee {
     public static void reset() {
         try {
             if (SpigotConfig.bungee) {
-                if (BUNGEE_MODE.equalsIgnoreCase("online")) {
+                if (Configuration.Hooks.BUNGEE_MODE.equalsIgnoreCase("online")) {
                     mode = BungeeMode.Online;
                 } else {
                     mode = BungeeMode.Offline;

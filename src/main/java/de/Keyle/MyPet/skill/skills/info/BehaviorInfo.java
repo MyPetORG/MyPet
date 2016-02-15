@@ -41,23 +41,7 @@ public class BehaviorInfo extends SkillTreeSkill implements ISkillInfo {
     protected Set<BehaviorState> activeBehaviors = new HashSet<>();
 
     public enum BehaviorState {
-        Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true), Duel(true);
-
-        boolean active;
-
-        BehaviorState(boolean active) {
-            this.active = active;
-        }
-
-        public void setActive(boolean active) {
-            if (this != Normal) {
-                this.active = active;
-            }
-        }
-
-        public boolean isActive() {
-            return this.active;
-        }
+        Normal, Friendly, Aggressive, Raid, Farm, Duel
     }
 
     public BehaviorInfo(boolean addedByInheritance) {

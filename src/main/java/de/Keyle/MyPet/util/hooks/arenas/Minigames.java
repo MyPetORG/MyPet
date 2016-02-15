@@ -26,6 +26,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -35,7 +36,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class Minigames implements Listener {
-    public static boolean DISABLE_PETS_IN_MINIGAMES = true;
 
     private static com.pauldavdesign.mineauz.minigames.Minigames plugin;
     private static boolean active = false;
@@ -65,7 +65,7 @@ public class Minigames implements Listener {
 
     @EventHandler
     public void onJoinMinigame(JoinMinigameEvent event) {
-        if (active && DISABLE_PETS_IN_MINIGAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
+        if (active && Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
@@ -76,7 +76,7 @@ public class Minigames implements Listener {
 
     @EventHandler
     public void onSpectateMinigame(SpectateMinigameEvent event) {
-        if (active && DISABLE_PETS_IN_MINIGAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
+        if (active && Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);

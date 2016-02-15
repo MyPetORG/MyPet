@@ -78,7 +78,7 @@ public class CommandName implements CommandExecutor, TabCompleter {
                 String nameWihtoutColors = Util.cutString(ChatColor.stripColor(name), 64);
                 name = Util.cutString(name, 64);
 
-                if (nameWihtoutColors.length() <= Configuration.MAX_PET_NAME_LENGTH) {
+                if (nameWihtoutColors.length() <= Configuration.Name.MAX_LENGTH) {
                     if (Permissions.has(petOwner, "MyPet.user.command.name.color")) {
                         myPet.setPetName(name);
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), name));
@@ -87,7 +87,7 @@ public class CommandName implements CommandExecutor, TabCompleter {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), nameWihtoutColors));
                     }
                 } else {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.ToLong", petOwner), name, Configuration.MAX_PET_NAME_LENGTH));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.ToLong", petOwner), name, Configuration.Name.MAX_LENGTH));
                 }
             } else {
                 sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));

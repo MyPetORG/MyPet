@@ -134,7 +134,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
         petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
         petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3, 20));
         petPathfinderSelector.addGoal("Control", new Control(myPet, 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
+        petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Misc.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
         petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new RandomLookaround(this));
         petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
@@ -187,8 +187,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
     public void setCustomName(String ignored) {
         try {
             if (getCustomNameVisible()) {
-                String prefix = Configuration.PET_INFO_OVERHEAD_PREFIX;
-                String suffix = Configuration.PET_INFO_OVERHEAD_SUFFIX;
+                String prefix = Configuration.Name.OVERHEAD_PREFIX;
+                String suffix = Configuration.Name.OVERHEAD_SUFFIX;
                 prefix = prefix.replace("<ownername>", getOwner().getName());
                 prefix = prefix.replace("<level>", "" + getMyPet().getExperience().getLevel());
                 suffix = suffix.replace("<ownername>", getOwner().getName());
@@ -214,12 +214,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
 
     @Override
     public boolean getCustomNameVisible() {
-        return Configuration.PET_INFO_OVERHEAD_NAME;
+        return Configuration.Name.OVERHEAD_NAME;
     }
 
     @Override
     public void setCustomNameVisible(boolean ignored) {
-        super.setCustomNameVisible(Configuration.PET_INFO_OVERHEAD_NAME);
+        super.setCustomNameVisible(Configuration.Name.OVERHEAD_NAME);
     }
 
     public boolean canMove() {
@@ -326,7 +326,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
         //applyLeash();
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
-            if (Ride.RIDE_ITEM.compare(itemStack)) {
+            if (Configuration.Skilltree.Skill.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
                     if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride")) {
                         ((CraftPlayer) owner).getHandle().mount(this);
@@ -336,7 +336,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                     }
                 }
             }
-            if (de.Keyle.MyPet.skill.skills.implementation.Control.CONTROL_ITEM.compare(itemStack)) {
+            if (Configuration.Skilltree.Skill.CONTROL_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Control.class)) {
                     return true;
                 }
@@ -372,7 +372,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                             return true;
                         }
                     }
-                    int addHunger = Configuration.HUNGER_SYSTEM_POINTS_PER_FEED;
+                    int addHunger = Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED;
                     if (getHealth() < getMaxHealth()) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             --itemStack.count;
@@ -396,7 +396,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                         myPet.setHungerValue(myPet.getHungerValue() + addHunger);
                         addHunger = 0;
                     }
-                    if (addHunger < Configuration.HUNGER_SYSTEM_POINTS_PER_FEED) {
+                    if (addHunger < Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED) {
                         return true;
                     }
                 }
@@ -451,7 +451,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
             if (getOwner().getPlayer().isSneaking() != isSneaking()) {
                 this.setSneaking(!isSneaking());
             }
-            if (Configuration.INVISIBLE_LIKE_OWNER) {
+            if (Configuration.Misc.INVISIBLE_LIKE_OWNER) {
                 if (!isInvisible && getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                     isInvisible = true;
                     getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
@@ -905,7 +905,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
             jumpHeight = rideSkill.getJumpHeight() * 0.18D;
         }
 
-        if (Configuration.USE_HUNGER_SYSTEM) {
+        if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             double factor = Math.log10(myPet.getHungerValue()) / 2;
             speed *= factor;
             jumpHeight *= factor;

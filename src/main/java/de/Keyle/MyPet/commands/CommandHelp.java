@@ -83,7 +83,7 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 }
             }
             player.sendMessage("");
-            player.sendMessage(Translation.getString("Message.Command.Help.MoreInfo", player) + ChatColor.GOLD + " " + Configuration.WIKI_URL);
+            player.sendMessage(Translation.getString("Message.Command.Help.MoreInfo", player) + ChatColor.GOLD + " " + Configuration.Misc.WIKI_URL);
             player.sendMessage("----------------------------------------------------");
             return true;
         }

@@ -30,6 +30,7 @@ import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.info.BeaconInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.PartyManager;
 import de.Keyle.MyPet.util.iconmenu.IconMenu;
@@ -53,8 +54,6 @@ import static org.bukkit.ChatColor.*;
 import static org.bukkit.Material.*;
 
 public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISkillStorage, ISkillActive {
-    public static int HUNGER_DECREASE_TIME = 100;
-    public static boolean PARTY_SUPPORT = true;
     private static Map<Integer, String> buffNames = new HashMap<>();
     private static BiMap<Integer, Integer> buffItemPositions = HashBiMap.create();
     private static BiMap<Integer, Integer> buffPositionItems = buffItemPositions.inverse();
@@ -104,7 +103,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISk
         super(addedByInheritance);
 
         reset();
-        hungerDecreaseTimer = HUNGER_DECREASE_TIME;
+        hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
     }
 
     public void setMyPet(MyPet myPet) {
@@ -246,7 +245,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISk
         menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Translation.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
         menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Owner));
-        if (PARTY_SUPPORT && PartyManager.isInParty(getMyPet().getOwner().getPlayer())) {
+        if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && PartyManager.isInParty(getMyPet().getOwner().getPlayer())) {
             menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(1).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Party));
         }
         menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(2).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Everyone));
@@ -499,7 +498,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISk
             BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), EnumParticle.SPELL_WITCH, 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
             List<Player> members = null;
-            if (PARTY_SUPPORT && reciever == BeaconReciever.Party) {
+            if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && reciever == BeaconReciever.Party) {
                 members = PartyManager.getPartyMembers(getMyPet().getOwner().getPlayer());
             }
 
@@ -531,7 +530,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISk
                         BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.SPELL_INSTANT, 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
                     case Party:
-                        if (PARTY_SUPPORT && members != null) {
+                        if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && members != null) {
                             if (entityHuman.getBukkitEntity() instanceof Player && members.contains(entityHuman.getBukkitEntity())) {
                                 for (int buff : selectedBuffs) {
                                     amplification = buffLevel.get(buff) - 1;
@@ -547,9 +546,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, Scheduler, ISk
                 }
             }
 
-            if (HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
+            if (Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
                 myPet.setHungerValue(myPet.getHungerValue() - 1);
-                hungerDecreaseTimer = HUNGER_DECREASE_TIME;
+                hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
             }
         }
     }

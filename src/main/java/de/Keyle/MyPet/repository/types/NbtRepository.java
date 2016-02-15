@@ -32,6 +32,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -55,14 +56,6 @@ public class NbtRepository implements Repository, Scheduler {
     private int autoSaveTimer = 0;
     private Backup backupManager;
 
-    public static boolean SAVE_ON_PET_ADD = true;
-    public static boolean SAVE_ON_PET_REMOVE = true;
-    public static boolean SAVE_ON_PET_UPDATE = true;
-    public static boolean SAVE_ON_PLAYER_ADD = true;
-    public static boolean SAVE_ON_PLAYER_REMOVE = true;
-    public static boolean SAVE_ON_PLAYER_UPDATE = true;
-    public static int AUTOSAVE_TIME = 60;
-
     @Override
     public void disable() {
         saveData(false);
@@ -78,7 +71,7 @@ public class NbtRepository implements Repository, Scheduler {
     public void init() {
         NBTPetFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
-        if (Backup.MAKE_BACKUPS) {
+        if (Configuration.Repository.NBT.MAKE_BACKUPS) {
             new File(MyPetPlugin.getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
             backupManager = new Backup(NBTPetFile, new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
         }
@@ -103,7 +96,7 @@ public class NbtRepository implements Repository, Scheduler {
         }
         int deletedPetCount = deletionList.size();
         if (deletedPetCount > 0) {
-            if (Backup.MAKE_BACKUPS) {
+            if (Configuration.Repository.NBT.MAKE_BACKUPS) {
                 backupManager.createAsyncBackup();
             }
 
@@ -135,7 +128,7 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     public void saveData(boolean async) {
-        autoSaveTimer = AUTOSAVE_TIME;
+        autoSaveTimer = Configuration.Repository.NBT.AUTOSAVE_TIME;
         final ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
 
         nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
@@ -193,9 +186,9 @@ public class NbtRepository implements Repository, Scheduler {
 
     @Override
     public void schedule() {
-        if (AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
+        if (Configuration.Repository.NBT.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
             saveData(true);
-            autoSaveTimer = AUTOSAVE_TIME;
+            autoSaveTimer = Configuration.Repository.NBT.AUTOSAVE_TIME;
         }
     }
 
@@ -237,7 +230,7 @@ public class NbtRepository implements Repository, Scheduler {
         for (InactiveMyPet pet : myPets.values()) {
             if (uuid.equals(pet.getUUID())) {
                 myPets.remove(pet.getOwner(), pet);
-                if (SAVE_ON_PET_REMOVE) {
+                if (Configuration.Repository.NBT.SAVE_ON_PET_REMOVE) {
                     saveData(true);
                 }
                 if (callback != null) {
@@ -251,7 +244,7 @@ public class NbtRepository implements Repository, Scheduler {
     @Override
     public void removeMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
         boolean result = myPets.remove(inactiveMyPet.getOwner(), inactiveMyPet);
-        if (SAVE_ON_PET_REMOVE) {
+        if (Configuration.Repository.NBT.SAVE_ON_PET_REMOVE) {
             saveData(true);
         }
         if (callback != null) {
@@ -263,7 +256,7 @@ public class NbtRepository implements Repository, Scheduler {
     public void addMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
         if (!myPets.containsEntry(inactiveMyPet.getOwner(), inactiveMyPet)) {
             myPets.put(inactiveMyPet.getOwner(), inactiveMyPet);
-            if (SAVE_ON_PET_ADD) {
+            if (Configuration.Repository.NBT.SAVE_ON_PET_ADD) {
                 saveData(true);
             }
             if (callback != null) {
@@ -284,7 +277,7 @@ public class NbtRepository implements Repository, Scheduler {
                 myPets.put(myPet.getOwner(), MyPetList.getInactiveMyPetFromMyPet(myPet));
                 myPets.remove(myPet.getOwner(), pet);
 
-                if (SAVE_ON_PET_UPDATE) {
+                if (Configuration.Repository.NBT.SAVE_ON_PET_UPDATE) {
                     saveData(true);
                 }
 
@@ -401,7 +394,7 @@ public class NbtRepository implements Repository, Scheduler {
     @Override
     public void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         // we work with live data so no update required
-        if (SAVE_ON_PLAYER_UPDATE) {
+        if (Configuration.Repository.NBT.SAVE_ON_PLAYER_UPDATE) {
             saveData(true);
         }
     }
@@ -410,7 +403,7 @@ public class NbtRepository implements Repository, Scheduler {
     public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         if (!players.containsKey(player.getInternalUUID())) {
             players.put(player.getInternalUUID(), player);
-            if (SAVE_ON_PLAYER_ADD) {
+            if (Configuration.Repository.NBT.SAVE_ON_PLAYER_ADD) {
                 saveData(true);
             }
             if (callback != null) {
@@ -427,7 +420,7 @@ public class NbtRepository implements Repository, Scheduler {
     public void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         boolean result = players.remove(player.getInternalUUID()) != null;
 
-        if (SAVE_ON_PLAYER_REMOVE) {
+        if (Configuration.Repository.NBT.SAVE_ON_PLAYER_REMOVE) {
             saveData(true);
         }
 

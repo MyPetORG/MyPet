@@ -30,9 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 public class Backup {
-    public static int SAVE_INTERVAL = 1440;
-    public static String DATE_FORMAT = "yyyy_MM_dd_HH.mm";
-    public static boolean MAKE_BACKUPS = true;
 
     File backupFile;
     File backupFolder;
@@ -48,7 +45,7 @@ public class Backup {
                 this.lastBackup = Long.parseLong(lastBackup);
                 long difference = System.currentTimeMillis() - this.lastBackup;
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(difference);
-                if (minutes >= SAVE_INTERVAL) {
+                if (minutes >= Configuration.Repository.NBT.SAVE_INTERVAL) {
                     createAsyncBackup();
                 }
             }
@@ -60,7 +57,7 @@ public class Backup {
             public void run() {
                 createBackup();
             }
-        }, 20L * 60L * (SAVE_INTERVAL - TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - this.lastBackup)), 20L * 60L * SAVE_INTERVAL);
+        }, 20L * 60L * (Configuration.Repository.NBT.SAVE_INTERVAL - TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - this.lastBackup)), 20L * 60L * Configuration.Repository.NBT.SAVE_INTERVAL);
     }
 
     public BukkitTask createAsyncBackup() {
@@ -86,7 +83,7 @@ public class Backup {
     }
 
     public String backupFile() {
-        SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat df = new SimpleDateFormat(Configuration.Repository.NBT.DATE_FORMAT);
         File destFile = new File(backupFolder, df.format(lastBackup) + "_My.Pets");
         DebugLogger.info("Creating database (My.Pets) backup -> " + df.format(lastBackup) + "_My.Pets");
         try {

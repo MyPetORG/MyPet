@@ -28,6 +28,7 @@ import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.PickupInfo;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Translation;
@@ -116,7 +117,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, Scheduler, ISk
             myPet.sendMessageToOwner(Util.formatText(Translation.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Translation.getString("Name.Disabled", myPet.getOwner())));
             return;
         }
-        if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Inventory.OPEN_IN_CREATIVEMODE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
+        if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Inventory.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
             myPet.sendMessageToOwner(Translation.getString("Message.Skill.Pickup.Creative", myPet.getOwner()));
             pickup = false;
             return;

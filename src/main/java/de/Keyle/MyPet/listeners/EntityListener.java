@@ -35,7 +35,6 @@ import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.rabbit.MyRabbit;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.implementation.Wither;
@@ -44,9 +43,11 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.skill.skills.implementation.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
-import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.hooks.*;
+import de.Keyle.MyPet.util.hooks.EconomyHook;
+import de.Keyle.MyPet.util.hooks.Permissions;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.fanciful.FancyMessage;
@@ -89,7 +90,7 @@ public class EntityListener implements Listener {
         if (event.getEntity() instanceof CraftMyPet) {
             event.setCancelled(false);
         }
-        if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
+        if (!Configuration.LevelSystem.Experience.FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
         if (!event.isCancelled() && event.getEntity() instanceof Zombie) {
@@ -167,7 +168,7 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   Behavior: " + Translation.getString("Name." + behavior.getBehavior().name(), damager));
                         infoShown = true;
                     }
-                    if (Configuration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
+                    if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
                         damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + myPet.getHungerValue());
 
                         FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", damager) + ": ");
@@ -211,7 +212,7 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Translation.getString("Name.Level", damager) + ": " + lvl);
                         infoShown = true;
                     }
-                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : SkillTree.LEVEL_CAP;
+                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Configuration.LevelSystem.Experience.LEVEL_CAP;
                     if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
@@ -228,7 +229,7 @@ public class EntityListener implements Listener {
                     }
 
                     event.setCancelled(true);
-                } else if (myPet.getOwner().equals(damager) && (!Configuration.OWNER_CAN_ATTACK_PET || !PvPChecker.canHurt(myPet.getOwner().getPlayer()))) {
+                } else if (myPet.getOwner().equals(damager) && (!Configuration.Misc.OWNER_CAN_ATTACK_PET || !PvPChecker.canHurt(myPet.getOwner().getPlayer()))) {
                     event.setCancelled(true);
                 } else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
@@ -454,7 +455,7 @@ public class EntityListener implements Listener {
                         if (leashTarget instanceof Ageable) {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(!((Ageable) leashTarget).isAdult()));
                         }
-                        if (leashTarget.getWorld().getGameRuleValue("doMobLoot").equalsIgnoreCase("true") && Configuration.RETAIN_EQUIPMENT_ON_TAME && (leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Skeleton)) {
+                        if (leashTarget.getWorld().getGameRuleValue("doMobLoot").equalsIgnoreCase("true") && Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME && (leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Skeleton)) {
                             List<TagCompound> equipmentList = new ArrayList<>();
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
@@ -494,7 +495,7 @@ public class EntityListener implements Listener {
 
                         event.getEntity().remove();
 
-                        if (Configuration.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null) {
+                        if (Configuration.Misc.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null) {
                             if (damager.getItemInHand().getAmount() > 1) {
                                 damager.getItemInHand().setAmount(damager.getItemInHand().getAmount() - 1);
                             } else {
@@ -572,7 +573,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamageByEntityDamageMonitor(final EntityDamageByEntityEvent event) {
-        if (!event.isCancelled() && Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player) && !(event.getEntity() instanceof CraftMyPet)) {
+        if (!event.isCancelled() && Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player) && !(event.getEntity() instanceof CraftMyPet)) {
             LivingEntity damager = null;
             if (event.getDamager() instanceof Projectile) {
                 Projectile projectile = (Projectile) event.getDamager();
@@ -583,7 +584,7 @@ public class EntityListener implements Listener {
                 damager = (LivingEntity) event.getDamager();
             }
             if (damager != null) {
-                Experience.addDamageToEntity(damager, (LivingEntity) event.getEntity(), event.getDamage());
+                de.Keyle.MyPet.skill.Experience.addDamageToEntity(damager, (LivingEntity) event.getEntity(), event.getDamage());
             }
         }
     }
@@ -709,7 +710,7 @@ public class EntityListener implements Listener {
 
             final MyPetPlayer owner = myPet.getOwner();
 
-            if (Configuration.RELEASE_PETS_ON_DEATH && !owner.isMyPetAdmin()) {
+            if (Configuration.Misc.RELEASE_PETS_ON_DEATH && !owner.isMyPetAdmin()) {
                 if (myPet.getSkills().isSkillActive(Inventory.class)) {
                     CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                     inv.dropContentAt(myPet.getLocation());
@@ -733,14 +734,14 @@ public class EntityListener implements Listener {
                 return;
             }
 
-            myPet.setRespawnTime((Configuration.RESPAWN_TIME_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (Configuration.RESPAWN_TIME_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
+            myPet.setRespawnTime((Configuration.Respawn.TIME_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
             myPet.setStatus(PetState.Dead);
 
             if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
 
                 if (e.getDamager() instanceof Player) {
-                    myPet.setRespawnTime((Configuration.RESPAWN_TIME_PLAYER_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (Configuration.RESPAWN_TIME_PLAYER_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
+                    myPet.setRespawnTime((Configuration.Respawn.TIME_PLAYER_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_PLAYER_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
                 } else if (e.getDamager() instanceof CraftMyPet) {
                     MyPet killerMyPet = ((CraftMyPet) e.getDamager()).getMyPet();
                     if (myPet.getSkills().isSkillActive(Behavior.class) && killerMyPet.getSkills().isSkillActive(Behavior.class)) {
@@ -761,9 +762,9 @@ public class EntityListener implements Listener {
             }
             event.setDroppedExp(0);
 
-            if (Experience.LOSS_FIXED > 0 || Experience.LOSS_PERCENT > 0) {
-                double lostExpirience = Experience.LOSS_FIXED;
-                lostExpirience += myPet.getExperience().getRequiredExp() * Experience.LOSS_PERCENT / 100;
+            if (Configuration.LevelSystem.Experience.LOSS_FIXED > 0 || Configuration.LevelSystem.Experience.LOSS_PERCENT > 0) {
+                double lostExpirience = Configuration.LevelSystem.Experience.LOSS_FIXED;
+                lostExpirience += myPet.getExperience().getRequiredExp() * Configuration.LevelSystem.Experience.LOSS_PERCENT / 100;
                 if (lostExpirience > myPet.getExperience().getCurrentExp()) {
                     lostExpirience = myPet.getExperience().getCurrentExp();
                 }
@@ -774,7 +775,7 @@ public class EntityListener implements Listener {
                         lostExpirience = myPet.getExp() - lostExpirience < minExp ? myPet.getExp() - minExp : lostExpirience;
                     }
                 }
-                if (Experience.DROP_LOST_EXP) {
+                if (Configuration.LevelSystem.Experience.DROP_LOST_EXP) {
                     event.setDroppedExp((int) (lostExpirience + 0.5));
                 }
                 myPet.getExperience().removeCurrentExp(lostExpirience);
@@ -790,7 +791,7 @@ public class EntityListener implements Listener {
             myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner.getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
             if (EconomyHook.canUseEconomy() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.user.respawn")) {
-                double costs = myPet.getRespawnTime() * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
+                double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                 if (EconomyHook.canPay(owner, costs)) {
                     EconomyHook.pay(owner, costs);
                     myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", owner.getPlayer()), myPet.getPetName(), costs + " " + EconomyHook.getEconomy().currencyNameSingular()));
@@ -809,10 +810,10 @@ public class EntityListener implements Listener {
         if (deadEntity instanceof CraftMyPet) {
             return;
         }
-        if (SkillApi.DISABLE_VANILLA_EXP) {
+        if (Configuration.Hooks.SkillAPI.DISABLE_VANILLA_EXP) {
             return;
         }
-        if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner")) {
+        if (!Configuration.LevelSystem.Experience.FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner")) {
             for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner")) {
                 if (value.getOwningPlugin().getName().equals(MyPetPlugin.getPlugin().getName())) {
                     if (value.asBoolean()) {
@@ -822,12 +823,12 @@ public class EntityListener implements Listener {
                 }
             }
         }
-        if (Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
-            Map<Entity, Double> damagePercentMap = Experience.getDamageToEntityPercent(deadEntity);
+        if (Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
+            Map<Entity, Double> damagePercentMap = de.Keyle.MyPet.skill.Experience.getDamageToEntityPercent(deadEntity);
             for (Entity entity : damagePercentMap.keySet()) {
                 if (entity instanceof CraftMyPet) {
                     MyPet myPet = ((CraftMyPet) entity).getMyPet();
-                    if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             continue;
                         }
@@ -840,15 +841,15 @@ public class EntityListener implements Listener {
                     Player owner = (Player) entity;
                     if (MyPetList.hasActiveMyPet(owner)) {
                         MyPet myPet = MyPetList.getMyPet(owner);
-                        if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                        if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
                             if (!myPet.autoAssignSkilltree()) {
                                 continue;
                             }
                         }
-                        if (myPet.isPassiv() || Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                        if (myPet.isPassiv() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
                             if (myPet.getStatus() == PetState.Here) {
                                 if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
-                                    myPet.getExperience().addExp(deadEntity.getType(), Experience.PASSIVE_PERCENT_PER_MONSTER);
+                                    myPet.getExperience().addExp(deadEntity.getType(), Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER);
                                 }
                             }
                         }
@@ -864,7 +865,7 @@ public class EntityListener implements Listener {
             }
             if (damager instanceof CraftMyPet) {
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
-                if (myPet.getSkillTree() == null && Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
+                if (myPet.getSkillTree() == null && Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
                     if (!myPet.autoAssignSkilltree()) {
                         return;
                     }
@@ -874,15 +875,15 @@ public class EntityListener implements Listener {
                 Player owner = (Player) damager;
                 if (MyPetList.hasActiveMyPet(owner)) {
                     MyPet myPet = MyPetList.getMyPet(owner);
-                    if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             return;
                         }
                     }
-                    if (myPet.isPassiv() || Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                    if (myPet.isPassiv() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
                         if (myPet.getStatus() == PetState.Here) {
                             if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
-                                myPet.getExperience().addExp(deadEntity.getType(), Experience.PASSIVE_PERCENT_PER_MONSTER);
+                                myPet.getExperience().addExp(deadEntity.getType(), Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER);
                             }
                         }
                     }

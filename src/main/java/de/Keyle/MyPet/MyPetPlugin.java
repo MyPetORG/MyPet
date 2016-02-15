@@ -105,7 +105,6 @@ public class MyPetPlugin extends JavaPlugin {
     private static MyPetPlugin plugin;
     private boolean isReady = false;
     private Repository repo;
-    public static String REPOSITORY_TYPE = "NBT";
 
     public static MyPetPlugin getPlugin() {
         return plugin;
@@ -287,7 +286,7 @@ public class MyPetPlugin extends JavaPlugin {
         Bungee.reset();
 
         // init repository
-        if (REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
             repo = new MySqlRepository();
             try {
                 repo.init();
@@ -295,7 +294,7 @@ public class MyPetPlugin extends JavaPlugin {
                 e.printStackTrace();
                 repo = null;
             }
-        } else if (REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
+        } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
             repo = new MongoDbRepository();
             try {
                 repo.init();

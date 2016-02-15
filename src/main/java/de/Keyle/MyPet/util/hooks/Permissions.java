@@ -21,13 +21,12 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.util.Configuration;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 
 public class Permissions {
-    public static boolean USE_EXTENDET_PERMISSIONS = false;
-    public static boolean ENABLED = true;
 
     public static boolean has(MyPetPlayer player, String node) {
         if (player != null && player.isOnline()) {
@@ -38,14 +37,14 @@ public class Permissions {
 
     public static boolean has(Player player, String node) {
         if (player != null) {
-            return !ENABLED || player.hasPermission(node);
+            return !Configuration.Permissions.ENABLED || player.hasPermission(node);
         }
         return false;
     }
 
     public static boolean has(Player player, String node, boolean defaultValue) {
         if (player != null) {
-            if (ENABLED) {
+            if (Configuration.Permissions.ENABLED) {
                 return player.isOp() || player.hasPermission(node);
             }
             return defaultValue || player.isOp();
@@ -54,11 +53,11 @@ public class Permissions {
     }
 
     public static boolean hasExtended(Player player, String node) {
-        return !USE_EXTENDET_PERMISSIONS || has(player, node);
+        return !Configuration.Permissions.EXTENDED || has(player, node);
     }
 
     public static boolean hasExtended(Player player, String node, boolean defaultValue) {
-        if (USE_EXTENDET_PERMISSIONS) {
+        if (Configuration.Permissions.EXTENDED) {
             return has(player, node, defaultValue);
         }
         return defaultValue;
@@ -66,7 +65,7 @@ public class Permissions {
 
     public static boolean has(OfflinePlayer player, String node) {
         if (player != null) {
-            if (!ENABLED || player.isOp()) {
+            if (!Configuration.Permissions.ENABLED || player.isOp()) {
                 return true;
             } else {
                 PermissibleBase pb = new PermissibleBase(player);
@@ -80,7 +79,7 @@ public class Permissions {
         if (player != null) {
             if (player.isOp()) {
                 return true;
-            } else if (ENABLED) {
+            } else if (Configuration.Permissions.ENABLED) {
                 PermissibleBase pb = new PermissibleBase(player);
                 return pb.hasPermission(node);
             } else {
@@ -91,11 +90,11 @@ public class Permissions {
     }
 
     public static boolean hasExtended(OfflinePlayer player, String node) {
-        return !USE_EXTENDET_PERMISSIONS || has(player, node);
+        return !Configuration.Permissions.EXTENDED || has(player, node);
     }
 
     public static boolean hasExtended(OfflinePlayer player, String node, boolean defaultValue) {
-        if (USE_EXTENDET_PERMISSIONS) {
+        if (Configuration.Permissions.EXTENDED) {
             return has(player, node, defaultValue);
         }
         return defaultValue;

@@ -32,9 +32,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class SkillApi implements Listener {
-    public static int EXP_PERCENT = 100;
-    public static boolean DISABLE_VANILLA_EXP = false;
-    public static boolean GRANT_EXP = true;
 
 
     private static boolean active = false;
@@ -48,18 +45,18 @@ public class SkillApi implements Listener {
 
     @EventHandler
     public void onPlayerExpGain(PlayerGainSkillPointsEvent event) {
-        if (GRANT_EXP) {
+        if (Configuration.Hooks.SkillAPI.GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
             if (PlayerList.isMyPetPlayer(player)) {
                 MyPetPlayer petPlayer = PlayerList.getMyPetPlayer(player);
                 if (petPlayer.hasMyPet()) {
                     MyPet myPet = petPlayer.getMyPet();
-                    if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             return;
                         }
                     }
-                    myPet.getExperience().addExp(event.getAmount() * EXP_PERCENT / 100);
+                    myPet.getExperience().addExp(event.getAmount() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
                 }
             }
         }

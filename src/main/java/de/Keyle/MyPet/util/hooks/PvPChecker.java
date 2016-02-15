@@ -63,20 +63,6 @@ import org.mcsg.survivalgames.GameManager;
 import java.util.UUID;
 
 public class PvPChecker {
-    public static boolean USE_Towny = true;
-    public static boolean USE_Factions = true;
-    public static boolean USE_WorldGuard = true;
-    public static boolean USE_Citizens = true;
-    public static boolean USE_Heroes = true;
-    public static boolean USE_Regios = true;
-    public static boolean USE_MobArena = true;
-    public static boolean USE_McMMO = true;
-    public static boolean USE_Residence = true;
-    public static boolean USE_AncientRPG = true;
-    public static boolean USE_GriefPrevention = true;
-    public static boolean USE_PvPArena = true;
-    public static boolean USE_PvPManager = true;
-    public static boolean USE_SurvivalGame = true;
 
     private static MobArenaHandler pluginMobArena = null;
 
@@ -88,7 +74,7 @@ public class PvPChecker {
     }
 
     public static boolean canHurt(Player attacker, Player defender) {
-        if (Configuration.DISABLE_PET_VS_PLAYER) {
+        if (Configuration.Misc.DISABLE_PET_VS_PLAYER) {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
@@ -118,7 +104,7 @@ public class PvPChecker {
     }
 
     public static boolean canHurt(Player defender) {
-        if (Configuration.DISABLE_PET_VS_PLAYER) {
+        if (Configuration.Misc.DISABLE_PET_VS_PLAYER) {
             return false;
         }
         if (defender != null) {
@@ -128,7 +114,7 @@ public class PvPChecker {
     }
 
     public static boolean canHurtCitizens(Entity defender) {
-        if (USE_Citizens && PluginHookManager.isPluginUsable("Citizens")) {
+        if (Configuration.Hooks.USE_Citizens && PluginHookManager.isPluginUsable("Citizens")) {
             try {
                 if (CitizensAPI.getNPCRegistry().isNPC(defender)) {
                     NPC npc = CitizensAPI.getNPCRegistry().getNPC(defender);
@@ -138,14 +124,14 @@ public class PvPChecker {
                     return !npc.data().get("protected", true);
                 }
             } catch (Throwable e) {
-                USE_Citizens = false;
+                Configuration.Hooks.USE_Citizens = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtWorldGuard(Location location) {
-        if (USE_WorldGuard && PluginHookManager.isPluginUsable("WorldGuard")) {
+        if (Configuration.Hooks.USE_WorldGuard && PluginHookManager.isPluginUsable("WorldGuard")) {
             try {
                 WorldGuardPlugin wgp = PluginHookManager.getPluginInstance(WorldGuardPlugin.class);
                 RegionManager mgr = wgp.getRegionManager(location.getWorld());
@@ -153,39 +139,39 @@ public class PvPChecker {
                 StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
                 return s == null || s == StateFlag.State.ALLOW;
             } catch (Throwable e) {
-                USE_WorldGuard = false;
+                Configuration.Hooks.USE_WorldGuard = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtFactions(Player attacker, Player defender) {
-        if (USE_Factions && PluginHookManager.isPluginUsable("Factions")) {
+        if (Configuration.Hooks.USE_Factions && PluginHookManager.isPluginUsable("Factions")) {
             try {
                 EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
                 return EngineMain.get().canCombatDamageHappen(sub, false);
             } catch (Throwable e) {
-                USE_Factions = false;
+                Configuration.Hooks.USE_Factions = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtTowny(Player attacker, Entity defender) {
-        if (USE_Towny && PluginHookManager.isPluginUsable("Towny")) {
+        if (Configuration.Hooks.USE_Towny && PluginHookManager.isPluginUsable("Towny")) {
             try {
                 if (CombatUtil.preventDamageCall(PluginHookManager.getPluginInstance(Towny.class), attacker, defender)) {
                     return false;
                 }
             } catch (Throwable e) {
-                USE_Towny = false;
+                Configuration.Hooks.USE_Towny = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtHeroes(Player attacker, Player defender) {
-        if (USE_Heroes && PluginHookManager.isPluginUsable("Heroes")) {
+        if (Configuration.Hooks.USE_Heroes && PluginHookManager.isPluginUsable("Heroes")) {
             try {
                 Heroes pluginHeroes = PluginHookManager.getPluginInstance(Heroes.class);
                 Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
@@ -204,14 +190,14 @@ public class PvPChecker {
                     return false;
                 }
             } catch (Throwable e) {
-                USE_Heroes = false;
+                Configuration.Hooks.USE_Heroes = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtRegios(Player defender) {
-        if (USE_Regios && PluginHookManager.isPluginUsable("Regios")) {
+        if (Configuration.Hooks.USE_Regios && PluginHookManager.isPluginUsable("Regios")) {
             try {
                 RegiosAPI pluginRegios = PluginHookManager.getPluginInstance(RegiosPlugin.class);
                 for (Region region : pluginRegios.getRegions(defender.getLocation())) {
@@ -221,26 +207,26 @@ public class PvPChecker {
                 }
                 return pluginRegios.getRegion(defender).isPvp();
             } catch (Throwable e) {
-                USE_Regios = false;
+                Configuration.Hooks.USE_Regios = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtResidence(Location location) {
-        if (USE_Residence && PluginHookManager.isPluginUsable("Residence")) {
+        if (Configuration.Hooks.USE_Residence && PluginHookManager.isPluginUsable("Residence")) {
             try {
                 FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
                 return flagPermissions.has("pvp", true);
             } catch (Throwable e) {
-                USE_Residence = false;
+                Configuration.Hooks.USE_Residence = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtMobArena(Player defender) {
-        if (USE_MobArena && PluginHookManager.isPluginUsable("MobArena")) {
+        if (Configuration.Hooks.USE_MobArena && PluginHookManager.isPluginUsable("MobArena")) {
             try {
                 if (pluginMobArena == null) {
                     pluginMobArena = new MobArenaHandler();
@@ -249,14 +235,14 @@ public class PvPChecker {
                     return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
                 }
             } catch (Throwable e) {
-                USE_MobArena = false;
+                Configuration.Hooks.USE_MobArena = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtSurvivalGame(Player defender) {
-        if (USE_SurvivalGame && PluginHookManager.isPluginUsable("SurvivalGames")) {
+        if (Configuration.Hooks.USE_SurvivalGame && PluginHookManager.isPluginUsable("SurvivalGames")) {
             try {
                 int gameid = GameManager.getInstance().getPlayerGameId(defender);
                 if (gameid == -1) {
@@ -273,14 +259,14 @@ public class PvPChecker {
                     return false;
                 }
             } catch (Throwable e) {
-                USE_SurvivalGame = false;
+                Configuration.Hooks.USE_SurvivalGame = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtPvPArena(Player attacker, Player defender) {
-        if (USE_PvPArena && PluginHookManager.isPluginUsable("pvparena")) {
+        if (Configuration.Hooks.USE_PvPArena && PluginHookManager.isPluginUsable("pvparena")) {
             try {
                 if (!PVPArenaAPI.getArenaName(defender).equals("")) {
                     if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender))) {
@@ -288,25 +274,25 @@ public class PvPChecker {
                     }
                 }
             } catch (Throwable e) {
-                USE_PvPArena = false;
+                Configuration.Hooks.USE_PvPArena = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtMcMMO(Player attacker, Player defender) {
-        if (USE_McMMO && PluginHookManager.isPluginUsable("mcMMO")) {
+        if (Configuration.Hooks.USE_McMMO && PluginHookManager.isPluginUsable("mcMMO")) {
             try {
                 return !PartyAPI.inSameParty(attacker, defender);
             } catch (Throwable e) {
-                USE_McMMO = false;
+                Configuration.Hooks.USE_McMMO = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtAncientRPG(Player attacker, Player defender) {
-        if (USE_AncientRPG && PluginHookManager.isPluginUsable("SurvivalGames")) {
+        if (Configuration.Hooks.USE_AncientRPG && PluginHookManager.isPluginUsable("SurvivalGames")) {
             try {
                 AncientRPGParty party = ApiManager.getApiManager().getPlayerParty(attacker.getUniqueId());
                 if (party != null) {
@@ -322,14 +308,14 @@ public class PvPChecker {
                     }
                 }
             } catch (Throwable e) {
-                USE_AncientRPG = false;
+                Configuration.Hooks.USE_AncientRPG = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtGriefPrevention(Player attacker, Player defender) {
-        if (USE_GriefPrevention && PluginHookManager.isPluginUsable("GriefPrevention")) {
+        if (Configuration.Hooks.USE_GriefPrevention && PluginHookManager.isPluginUsable("GriefPrevention")) {
             try {
                 if (GriefPrevention.instance.pvpRulesApply(attacker.getWorld())) {
                     if (attacker != defender) {
@@ -373,7 +359,7 @@ public class PvPChecker {
                     }
                 }
             } catch (Throwable e) {
-                USE_GriefPrevention = false;
+                Configuration.Hooks.USE_GriefPrevention = false;
             }
         }
         return true;
@@ -383,7 +369,7 @@ public class PvPChecker {
         if (defender instanceof Player) {
             return canHurtGriefPrevention(attacker, (Player) defender);
         }
-        if (USE_GriefPrevention && PluginHookManager.isPluginUsable("GriefPrevention")) {
+        if (Configuration.Hooks.USE_GriefPrevention && PluginHookManager.isPluginUsable("GriefPrevention")) {
             try {
                 if (!GriefPrevention.instance.claimsEnabledForWorld(defender.getWorld())) {
                     return true;
@@ -438,20 +424,20 @@ public class PvPChecker {
                     }
                 }
             } catch (Throwable e) {
-                USE_GriefPrevention = false;
+                Configuration.Hooks.USE_GriefPrevention = false;
             }
         }
         return true;
     }
 
     public static boolean canHurtPvPManager(Player attacker, Player defender) {
-        if (USE_PvPManager && PluginHookManager.isPluginUsable("PvPManager")) {
+        if (Configuration.Hooks.USE_PvPManager && PluginHookManager.isPluginUsable("PvPManager")) {
             try {
                 PvPManager plugin = PluginHookManager.getPluginInstance(PvPManager.class);
                 return plugin.getPlayerHandler().canAttack(attacker, defender);
             } catch (Throwable e) {
                 MyPetLogger.write("Please use PvPManager build 113+");
-                USE_PvPManager = false;
+                Configuration.Hooks.USE_PvPManager = false;
             }
         }
         return true;

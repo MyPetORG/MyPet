@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skilltree;
 
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -30,7 +31,6 @@ import de.keyle.knbt.TagShort;
 import java.util.*;
 
 public class SkillTree {
-    public static int LEVEL_CAP = 100;
 
     private String skillTreeName;
     private List<String> description = new ArrayList<>();
@@ -123,11 +123,11 @@ public class SkillTree {
     }
 
     public int getMaxLevel() {
-        return maxLevel == 0 ? LEVEL_CAP : maxLevel;
+        return maxLevel == 0 ? Configuration.LevelSystem.Experience.LEVEL_CAP : maxLevel;
     }
 
     public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, LEVEL_CAP);
+        this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, Configuration.LevelSystem.Experience.LEVEL_CAP);
     }
 
     public int getRequiredLevel() {

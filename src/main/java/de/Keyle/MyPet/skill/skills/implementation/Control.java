@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ControlInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.ConfigItem;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Translation;
 import org.apache.commons.lang.WordUtils;
@@ -31,7 +31,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 public class Control extends ControlInfo implements ISkillInstance {
-    public static ConfigItem CONTROL_ITEM;
     private Location moveTo;
     private Location prevMoveTo;
     private boolean active = false;
@@ -57,10 +56,10 @@ public class Control extends ControlInfo implements ISkillInstance {
         if (upgrade instanceof ControlInfo) {
             if (!quiet && !active) {
                 String controlItemName;
-                if (CONTROL_ITEM.getItem().getType() == Material.AIR) {
+                if (Configuration.Skilltree.Skill.CONTROL_ITEM.getItem().getType() == Material.AIR) {
                     controlItemName = Translation.getString("Name.EmptyHand", myPet.getOwner());
                 } else {
-                    controlItemName = WordUtils.capitalizeFully(CONTROL_ITEM.getItem().getType().name().replace("_", " "));
+                    controlItemName = WordUtils.capitalizeFully(Configuration.Skilltree.Skill.CONTROL_ITEM.getItem().getType().name().replace("_", " "));
                 }
                 myPet.sendMessageToOwner(Util.formatText(Translation.getString("Message.Skill.Control.Upgrade", myPet.getOwner()), myPet.getPetName(), controlItemName));
 

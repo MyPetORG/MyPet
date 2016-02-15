@@ -35,6 +35,7 @@ import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -58,15 +59,7 @@ import java.util.*;
 
 public class MySqlRepository implements Repository {
     private Connection connection;
-
-    public static String USER = "root";
-    public static String PASSWORD = "";
-    public static String DATABASE = "mypet";
-    public static String HOST = "localhost";
-    public static int PORT = 3306;
-
     private int version = 4;
-
 
     @Override
     public void disable() {
@@ -228,7 +221,7 @@ public class MySqlRepository implements Repository {
 
     private void connect() throws RepositoryInitException {
         try {
-            this.connection = DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE, USER, PASSWORD);
+            this.connection = DriverManager.getConnection("jdbc:mysql://" + Configuration.Repository.MySQL.HOST + ":" + Configuration.Repository.MySQL.PORT + "/" + Configuration.Repository.MySQL.DATABASE, Configuration.Repository.MySQL.USER, Configuration.Repository.MySQL.PASSWORD);
         } catch (SQLException e) {
             MyPetLogger.write("Could not connect Connection to MySQL Database.");
             throw new RepositoryInitException(e);
