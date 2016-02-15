@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.util.logger;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
@@ -54,11 +54,8 @@ public class DebugLogger {
             return false;
         }
         try {
-            String path = DebugLogger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-            path = path.replace("/", File.separator);
-            path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
-            File pluginDirFile = new File(path);
-            FileHandler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "logs" + File.separator + "MyPet.log", true) {
+            File logFile = new File(MyPetPlugin.getPlugin().getDataFolder(), "logs" + File.separator + "MyPet.log");
+            FileHandler fileHandler = new FileHandler(logFile.getAbsolutePath(), true) {
                 @Override
                 public String toString() {
                     return "MyPet-Debug-Logger-FileHandler";
@@ -70,10 +67,6 @@ public class DebugLogger {
             isEnabled = true;
             return true;
         } catch (IOException e) {
-            isEnabled = false;
-            e.printStackTrace();
-            return false;
-        } catch (URISyntaxException e) {
             isEnabled = false;
             e.printStackTrace();
             return false;
