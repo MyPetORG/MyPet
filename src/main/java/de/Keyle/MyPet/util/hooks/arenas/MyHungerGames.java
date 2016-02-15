@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -35,7 +36,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class MyHungerGames implements Listener {
-    public static boolean DISABLE_PETS_IN_HUNGER_GAMES = true;
 
     private static boolean active = false;
     private static GameManager gameManager;
@@ -62,7 +62,7 @@ public class MyHungerGames implements Listener {
 
     @EventHandler
     public void onJoinPvPArena(PlayerJoinGameEvent event) {
-        if (active && DISABLE_PETS_IN_HUNGER_GAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
+        if (active && Configuration.Hooks.DISABLE_PETS_IN_HUNGER_GAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);

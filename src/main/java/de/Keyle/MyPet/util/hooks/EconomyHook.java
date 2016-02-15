@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.milkbowl.vault.economy.Economy;
@@ -28,13 +29,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.util.UUID;
+
 public class EconomyHook {
-    public static boolean USE_ECONOMY = true;
     private static boolean searchedVaultEconomy = false;
     private static Economy economy = null;
 
     public static boolean canUseEconomy() {
-        if (!USE_ECONOMY) {
+        if (!Configuration.Hooks.USE_ECONOMY) {
             return false;
         }
         if (!searchedVaultEconomy) {
@@ -44,7 +46,15 @@ public class EconomyHook {
     }
 
     public static boolean canPay(MyPetPlayer petOwner, double costs) {
-        if (!USE_ECONOMY) {
+        return canPay(petOwner.getPlayer(), costs);
+    }
+
+    public static boolean canPay(UUID playerUUID, double costs) {
+        return canPay(Bukkit.getOfflinePlayer(playerUUID), costs);
+    }
+
+    public static boolean canPay(OfflinePlayer player, double costs) {
+        if (!Configuration.Hooks.USE_ECONOMY) {
             return true;
         }
         if (!searchedVaultEconomy) {
@@ -52,26 +62,64 @@ public class EconomyHook {
         }
         if (economy != null && economy.isEnabled()) {
             try {
-                return economy.has(Bukkit.getOfflinePlayer(petOwner.getPlayerUUID()), costs);
+                return economy.has(player, costs);
             } catch (Exception e) {
                 e.printStackTrace();
                 DebugLogger.printThrowable(e);
                 MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
-                USE_ECONOMY = false;
+                Configuration.Hooks.USE_ECONOMY = false;
             }
         }
         return true;
     }
 
-    public static boolean pay(MyPetPlayer petOwner, double costs) {
-        if (!USE_ECONOMY) {
+    public static boolean transfer(MyPetPlayer from, MyPetPlayer to, double costs) {
+        return transfer(from.getPlayer(), to.getPlayer(), costs);
+    }
+
+    public static boolean transfer(UUID from, UUID to, double costs) {
+        return transfer(Bukkit.getOfflinePlayer(from), Bukkit.getOfflinePlayer(to), costs);
+    }
+
+    public static boolean transfer(OfflinePlayer from, OfflinePlayer to, double costs) {
+        if (!Configuration.Hooks.USE_ECONOMY) {
             return true;
         }
         if (!searchedVaultEconomy) {
             setupEconomy();
         }
         if (economy != null && economy.isEnabled()) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(petOwner.getPlayerUUID());
+            if (economy.has(from, costs)) {
+                try {
+                    return economy.withdrawPlayer(from, costs).transactionSuccess() && economy.depositPlayer(to, costs).transactionSuccess();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    DebugLogger.printThrowable(e);
+                    MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
+                    Configuration.Hooks.USE_ECONOMY = false;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean pay(MyPetPlayer petOwner, double costs) {
+        return pay(petOwner.getPlayer(), costs);
+    }
+
+    public static boolean pay(UUID playerUUID, double costs) {
+        return pay(Bukkit.getOfflinePlayer(playerUUID), costs);
+    }
+
+    public static boolean pay(OfflinePlayer player, double costs) {
+        if (!Configuration.Hooks.USE_ECONOMY) {
+            return true;
+        }
+        if (!searchedVaultEconomy) {
+            setupEconomy();
+        }
+        if (economy != null && economy.isEnabled()) {
             if (economy.has(player, costs)) {
                 try {
                     return economy.withdrawPlayer(player, costs).transactionSuccess();
@@ -79,7 +127,7 @@ public class EconomyHook {
                     e.printStackTrace();
                     DebugLogger.printThrowable(e);
                     MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
-                    USE_ECONOMY = false;
+                    Configuration.Hooks.USE_ECONOMY = false;
                 }
             }
             return false;
@@ -88,7 +136,7 @@ public class EconomyHook {
     }
 
     public static void reset() {
-        USE_ECONOMY = false;
+        Configuration.Hooks.USE_ECONOMY = false;
         searchedVaultEconomy = false;
         economy = null;
     }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.logger;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.util.Configuration;
 import org.bukkit.ChatColor;
 
 import java.io.File;
@@ -32,16 +33,13 @@ import java.util.logging.Logger;
 public class DebugLogger {
     private static final Logger debugLogger = Logger.getLogger("MyPet");
     private static boolean isEnabled = false;
-    public static boolean INFO = true;
-    public static boolean ERROR = true;
-    public static boolean WARNING = true;
 
     public static boolean setup() {
 
         if (debugLogger.getHandlers().length > 0) {
             for (Handler h : debugLogger.getHandlers()) {
                 if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
-                    if (!INFO && !ERROR && !WARNING) {
+                    if (!Configuration.Log.INFO && !Configuration.Log.ERROR && !Configuration.Log.WARNING) {
                         debugLogger.removeHandler(h);
                         return false;
                     }
@@ -50,7 +48,7 @@ public class DebugLogger {
                 }
             }
         }
-        if (!INFO && !ERROR && !WARNING) {
+        if (!Configuration.Log.INFO && !Configuration.Log.ERROR && !Configuration.Log.WARNING) {
             return false;
         }
         try {
@@ -74,38 +72,38 @@ public class DebugLogger {
     }
 
     public static void info(String text) {
-        if (isEnabled && INFO) {
+        if (isEnabled && Configuration.Log.INFO) {
             debugLogger.info("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
     public static void warning(String text) {
-        if (isEnabled && WARNING) {
+        if (isEnabled && Configuration.Log.WARNING) {
             debugLogger.warning("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
     public static void severe(String text) {
-        if (isEnabled && ERROR) {
+        if (isEnabled && Configuration.Log.ERROR) {
             debugLogger.severe("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
 
     public static void info(String text, String source) {
-        if (isEnabled && INFO) {
+        if (isEnabled && Configuration.Log.INFO) {
             debugLogger.info("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
 
     public static void warning(String text, String source) {
-        if (isEnabled && WARNING) {
+        if (isEnabled && Configuration.Log.WARNING) {
             debugLogger.warning("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
 
     public static void severe(String text, String source) {
-        if (isEnabled && ERROR) {
+        if (isEnabled && Configuration.Log.ERROR) {
             debugLogger.severe("[" + source + "] " + ChatColor.stripColor(text));
         }
     }

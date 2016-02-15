@@ -39,6 +39,7 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.hooks.Permissions;
@@ -67,7 +68,7 @@ import java.util.UUID;
 public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Control.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasActiveMyPet(event.getPlayer())) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.getStatus() == PetState.Here && myPet.getCraftPet().canMove()) {
                 if (myPet.getSkills().isSkillActive(Control.class)) {
@@ -346,7 +347,7 @@ public class PlayerListener implements Listener {
             MyPetPlayer myPetPlayer = PlayerList.getMyPetPlayer(event.getEntity());
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (myPet.getStatus() == PetState.Here && Inventory.DROP_WHEN_OWNER_DIES) {
+                if (myPet.getStatus() == PetState.Here && Configuration.Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES) {
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
                         CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                         inv.dropContentAt(myPet.getLocation());

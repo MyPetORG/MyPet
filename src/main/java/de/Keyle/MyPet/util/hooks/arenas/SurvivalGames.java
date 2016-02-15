@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -34,7 +35,6 @@ import org.mcsg.survivalgames.GameManager;
 import org.mcsg.survivalgames.api.PlayerJoinArenaEvent;
 
 public class SurvivalGames implements Listener {
-    public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
 
     private static boolean active = false;
 
@@ -59,7 +59,7 @@ public class SurvivalGames implements Listener {
 
     @EventHandler
     public void onJoinPvPArena(PlayerJoinArenaEvent event) {
-        if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
+        if (active && Configuration.Hooks.DISABLE_PETS_IN_SURVIVAL_GAMES && PlayerList.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);

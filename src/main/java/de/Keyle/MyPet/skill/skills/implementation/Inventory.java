@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Translation;
@@ -40,8 +41,6 @@ import org.bukkit.entity.Player;
 
 public class Inventory extends InventoryInfo implements ISkillInstance, ISkillStorage, ISkillActive {
     public CustomInventory inv = new CustomInventory("Pet's Inventory", 0);
-    public static boolean OPEN_IN_CREATIVEMODE = true;
-    public static boolean DROP_WHEN_OWNER_DIES = true;
     private MyPet myPet;
 
     public Inventory(boolean addedByInheritance) {
@@ -87,7 +86,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
 
     public boolean activate() {
         if (rows > 0) {
-            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
+            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Inventory.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
                 myPet.sendMessageToOwner(Translation.getString("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }

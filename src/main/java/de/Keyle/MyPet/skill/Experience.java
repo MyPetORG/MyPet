@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
-import de.Keyle.MyPet.skill.skilltree.SkillTree;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -41,15 +41,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class Experience {
-    public static int LOSS_PERCENT = 0;
-    public static double LOSS_FIXED = 0;
-    public static boolean DROP_LOST_EXP = true;
-    public static boolean GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = true;
-    public static String CALCULATION_MODE = "Default";
-    public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = false;
-    public static boolean FIREWORK_ON_LEVELUP = true;
-    public static boolean ALWAYS_GRANT_PASSIVE_XP = true;
-    public static int PASSIVE_PERCENT_PER_MONSTER = 25;
 
     private static de.Keyle.MyPet.skill.experience.Experience expMode = null;
 
@@ -61,7 +52,7 @@ public class Experience {
         this.myPet = pet;
 
         if (expMode == null) {
-            if (CALCULATION_MODE.equalsIgnoreCase("JS") || CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
+            if (Configuration.LevelSystem.CALCULATION_MODE.equalsIgnoreCase("JS") || Configuration.LevelSystem.CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
                 if (!new File(MyPetPlugin.getPlugin().getDataFolder(), "rhino.jar").exists()) {
                     MyPetLogger.write("rhino.jar is missing. Please download it here (https://github.com/mozilla/rhino/releases) and put it into the MyPet folder.");
                 } else {
@@ -70,7 +61,7 @@ public class Experience {
             }
             if (expMode == null || !expMode.isUsable()) {
                 expMode = new Default(myPet);
-                CALCULATION_MODE = "Default";
+                Configuration.LevelSystem.CALCULATION_MODE = "Default";
             }
         }
 
@@ -85,7 +76,7 @@ public class Experience {
     }
 
     public void reset() {
-        levelCapExp = getExpByLevel(SkillTree.LEVEL_CAP);
+        levelCapExp = getExpByLevel(Configuration.LevelSystem.Experience.LEVEL_CAP);
         exp = 0;
         Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, getLevel(), 0, true));
     }

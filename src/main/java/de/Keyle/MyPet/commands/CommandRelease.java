@@ -112,7 +112,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                         inv.dropContentAt(myPet.getLocation());
                     }
 
-                    if (!Configuration.REMOVE_PETS_AFTER_RELEASE) {
+                    if (!Configuration.Misc.REMOVE_PETS_AFTER_RELEASE) {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
 
                         myPet.getCraftPet().getHandle().dropEquipment();

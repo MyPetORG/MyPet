@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -39,7 +40,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class MobArena implements Listener {
-    public static boolean DISABLE_PETS_IN_ARENA = true;
 
     private static MobArenaHandler arenaHandler;
     private static boolean active = false;
@@ -66,7 +66,7 @@ public class MobArena implements Listener {
 
     @EventHandler
     public void onJoinPvPArena(ArenaPlayerJoinEvent event) {
-        if (active && DISABLE_PETS_IN_ARENA && PlayerList.isMyPetPlayer(event.getPlayer())) {
+        if (active && Configuration.Hooks.DISABLE_PETS_IN_MOB_ARENA && PlayerList.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = PlayerList.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);

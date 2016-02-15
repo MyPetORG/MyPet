@@ -21,9 +21,15 @@
 package de.Keyle.MyPet.util;
 
 import com.google.common.base.Charsets;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -31,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -259,5 +267,80 @@ public class Util {
             DebugLogger.info("=====================================================================================================================================");
         }
         return false;
+    }
+
+    public static ItemTooltip myPetToItemTooltip(MyPet mypet, String lang) {
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.RESET + Translation.getString("Name.Hunger", lang) + ": " + ChatColor.GOLD + mypet.getHungerValue());
+        if (mypet.getRespawnTime() > 0) {
+            lore.add(ChatColor.RESET + Translation.getString("Name.Respawntime", lang) + ": " + ChatColor.GOLD + mypet.getRespawnTime() + "sec");
+        } else {
+            lore.add(ChatColor.RESET + Translation.getString("Name.HP", lang) + ": " + ChatColor.GOLD + String.format("%1.2f", mypet.getHealth()));
+        }
+        lore.add(ChatColor.RESET + Translation.getString("Name.Exp", lang) + ": " + ChatColor.GOLD + String.format("%1.2f", mypet.getExp()));
+        lore.add(ChatColor.RESET + Translation.getString("Name.Type", lang) + ": " + ChatColor.GOLD + mypet.getPetType().getTypeName());
+        lore.add(ChatColor.RESET + Translation.getString("Name.Skilltree", lang) + ": " + ChatColor.GOLD + (mypet.getSkillTree() != null ? mypet.getSkillTree().getDisplayName() : "-"));
+
+        return new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(mypet.getPetName());
+    }
+
+    public static List<Integer> linkFood(Material[] foodTypes) {
+        List<Integer> foodList = new ArrayList<>();
+        for (Material foodType : foodTypes) {
+            foodList.add(foodType.getId());
+        }
+        return foodList;
+    }
+
+    public static void seperateFood(Class<? extends de.Keyle.MyPet.entity.types.MyPet> myPetClass, String foodString) {
+        foodString = foodString.trim();
+        while (true) {
+            if (foodString.endsWith("\\;")) {
+                foodString = foodString.substring(0, foodString.length() - 2);
+                continue;
+            }
+            if (foodString.endsWith(";")) {
+                foodString = foodString.substring(0, foodString.length() - 1);
+                continue;
+            }
+            break;
+        }
+        if (foodString.contains(";")) {
+            for (String foodIDString : foodString.split("(?<!\\\\);")) {
+                de.Keyle.MyPet.entity.types.MyPet.setFood(myPetClass, ConfigItem.createConfigItem(foodIDString.replace("\\;", ";")));
+            }
+        } else {
+            de.Keyle.MyPet.entity.types.MyPet.setFood(myPetClass, ConfigItem.createConfigItem(foodString));
+        }
+    }
+
+    public static String linkLeashFlags(de.Keyle.MyPet.entity.types.MyPet.LeashFlag[] leashFlags) {
+        String linkedLeashFlags = "";
+        for (de.Keyle.MyPet.entity.types.MyPet.LeashFlag leashFlag : leashFlags) {
+            if (!linkedLeashFlags.equalsIgnoreCase("")) {
+                linkedLeashFlags += ",";
+            }
+            linkedLeashFlags += leashFlag.name();
+        }
+        return linkedLeashFlags;
+    }
+
+    public static void seperateLeashFlags(Class<? extends de.Keyle.MyPet.entity.types.MyPet> myPetClass, String leashFlagString) {
+        leashFlagString = leashFlagString.replaceAll("\\s", "");
+        if (leashFlagString.contains(",")) {
+            for (String leashFlagSplit : leashFlagString.split(",")) {
+                if (de.Keyle.MyPet.entity.types.MyPet.LeashFlag.getLeashFlagByName(leashFlagSplit) != null) {
+                    de.Keyle.MyPet.entity.types.MyPet.setLeashFlags(myPetClass, de.Keyle.MyPet.entity.types.MyPet.LeashFlag.getLeashFlagByName(leashFlagSplit));
+                } else {
+                    MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
+                }
+            }
+        } else {
+            if (de.Keyle.MyPet.entity.types.MyPet.LeashFlag.getLeashFlagByName(leashFlagString) != null) {
+                de.Keyle.MyPet.entity.types.MyPet.setLeashFlags(myPetClass, de.Keyle.MyPet.entity.types.MyPet.LeashFlag.getLeashFlagByName(leashFlagString));
+            } else {
+                MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
+            }
+        }
     }
 }

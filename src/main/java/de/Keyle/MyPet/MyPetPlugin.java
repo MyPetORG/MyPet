@@ -102,7 +102,6 @@ public class MyPetPlugin extends JavaPlugin {
     private static MyPetPlugin plugin;
     private boolean isReady = false;
     private Repository repo;
-    public static String REPOSITORY_TYPE = "NBT";
 
     public static MyPetPlugin getPlugin() {
         return plugin;

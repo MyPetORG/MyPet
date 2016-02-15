@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RideInfo;
-import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
@@ -32,7 +31,6 @@ import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 
 public class Ride extends RideInfo implements ISkillInstance {
-    public static ConfigItem RIDE_ITEM;
     private boolean active = false;
     private MyPet myPet;
 
