@@ -132,9 +132,10 @@ public class MyPetPlugin extends JavaPlugin {
         plugin = this;
         this.isReady = false;
         // create folders
-        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
-        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "locale" + File.separator).mkdirs();
-        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "logs" + File.separator).mkdirs();
+        getPlugin().getDataFolder().mkdirs();
+        new File(getPlugin().getDataFolder(), "skilltrees").mkdirs();
+        new File(getPlugin().getDataFolder(), "locale").mkdirs();
+        new File(getPlugin().getDataFolder(), "logs").mkdirs();
 
         // load version from manifest
         MyPetVersion.reset();
