@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class InactiveMyPet implements MyPet, NBTStorage {
-    private final MyPetPlayer petOwner;
+    private MyPetPlayer petOwner;
     private UUID uuid = null;
     private String petName = "";
     private String worldGroup = "";
@@ -96,6 +96,10 @@ public class InactiveMyPet implements MyPet, NBTStorage {
         NBTextendetInfo = info;
     }
 
+    public void setOwner(MyPetPlayer owner) {
+        petOwner = owner;
+    }
+
     public MyPetPlayer getOwner() {
         return petOwner;
     }
@@ -118,6 +122,14 @@ public class InactiveMyPet implements MyPet, NBTStorage {
             this.health = de.Keyle.MyPet.entity.types.MyPet.getStartHP(petType.getMyPetClass());
         }
 
+    }
+
+    public boolean wantsToRespawn() {
+        return wantsToRespawn;
+    }
+
+    public void setWantsToRespawn(boolean wantsToRespawn) {
+        this.wantsToRespawn = wantsToRespawn;
     }
 
     public int getRespawnTime() {

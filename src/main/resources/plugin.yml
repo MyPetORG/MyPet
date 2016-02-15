@@ -80,6 +80,10 @@ commands:
     description: Opens a MyPet selection GUI
     usage: '/<command>'
     permission: MyPet.user.command.switch
+  pettrade:
+    aliases: [pett, pt]
+    description: Trade MyPets with other players
+    usage: '/<command> [accept/deny/<playername>]'
 
 permissions:
   MyPet.user.leash.*:

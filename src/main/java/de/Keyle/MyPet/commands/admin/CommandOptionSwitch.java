@@ -33,19 +33,13 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Translation;
 import de.keyle.fanciful.FancyMessage;
-import de.keyle.fanciful.ItemTooltip;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RESET;
 
 public class CommandOptionSwitch implements CommandOptionTabCompleter {
     @Override
@@ -96,16 +90,6 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                     boolean doComma = false;
                     FancyMessage message = new FancyMessage("");
                     for (InactiveMyPet mypet : value) {
-                        List<String> lore = new ArrayList<>();
-                        lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + mypet.getHungerValue());
-                        if (mypet.getRespawnTime() > 0) {
-                            lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
-                        } else {
-                            lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
-                        }
-                        lore.add(RESET + Translation.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
-                        lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().getTypeName());
-                        lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkillTree() != null ? mypet.getSkillTree().getDisplayName() : "-"));
 
                         if (doComma) {
                             message.then(", ");
@@ -113,7 +97,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                         message.then(mypet.getPetName())
                                 .color(ChatColor.AQUA)
                                 .command("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID())
-                                .itemTooltip(new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(mypet.getPetName()));
+                                .itemTooltip(Util.myPetToItemTooltip(mypet, lang));
                         if (!doComma) {
                             doComma = true;
                         }

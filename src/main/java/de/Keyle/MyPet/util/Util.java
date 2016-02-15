@@ -21,9 +21,13 @@
 package de.Keyle.MyPet.util;
 
 import com.google.common.base.Charsets;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.util.locale.Translation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Material;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -31,8 +35,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RESET;
 
 public class Util {
     public static Field getField(Class<?> clazz, String field) {
@@ -259,5 +268,20 @@ public class Util {
             DebugLogger.info("=====================================================================================================================================");
         }
         return false;
+    }
+
+    public static ItemTooltip myPetToItemTooltip(MyPet mypet, String lang) {
+        List<String> lore = new ArrayList<>();
+        lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + mypet.getHungerValue());
+        if (mypet.getRespawnTime() > 0) {
+            lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
+        } else {
+            lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+        }
+        lore.add(RESET + Translation.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+        lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().getTypeName());
+        lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkillTree() != null ? mypet.getSkillTree().getDisplayName() : "-"));
+
+        return new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(mypet.getPetName());
     }
 }

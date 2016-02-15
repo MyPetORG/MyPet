@@ -343,16 +343,17 @@ public class MySqlRepository implements Repository {
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
             try {
-                PreparedStatement statement = connection.prepareStatement("UPDATE pets SET exp=? , health=?, respawn_time=?, name=?, last_used=?, hunger=?, world_group=?, wants_to_spawn=?, skilltree=?, skills=?, info=? WHERE uuid=?;");
-                statement.setDouble(1, myPet.getExp());
-                statement.setDouble(2, myPet.getHealth());
-                statement.setInt(3, myPet.getRespawnTime());
-                statement.setString(4, myPet.getPetName());
-                statement.setLong(5, myPet.getLastUsed());
-                statement.setInt(6, myPet.getHungerValue());
-                statement.setString(7, myPet.getWorldGroup());
-                statement.setBoolean(8, myPet.wantToRespawn());
-                statement.setString(9, myPet.getSkillTree() != null ? myPet.getSkillTree().getName() : null);
+                PreparedStatement statement = connection.prepareStatement("UPDATE pets SET owner_uuid=?, exp=? , health=?, respawn_time=?, name=?, last_used=?, hunger=?, world_group=?, wants_to_spawn=?, skilltree=?, skills=?, info=? WHERE uuid=?;");
+                statement.setString(1, myPet.getOwner().getInternalUUID().toString());
+                statement.setDouble(2, myPet.getExp());
+                statement.setDouble(3, myPet.getHealth());
+                statement.setInt(4, myPet.getRespawnTime());
+                statement.setString(5, myPet.getPetName());
+                statement.setLong(6, myPet.getLastUsed());
+                statement.setInt(7, myPet.getHungerValue());
+                statement.setString(8, myPet.getWorldGroup());
+                statement.setBoolean(9, myPet.wantToRespawn());
+                statement.setString(10, myPet.getSkillTree() != null ? myPet.getSkillTree().getName() : null);
 
                 TagCompound skillsNBT = new TagCompound();
                 Collection<ISkillInstance> skillList = myPet.getSkills().getSkills();
@@ -368,10 +369,10 @@ public class MySqlRepository implements Repository {
                     }
                 }
 
-                statement.setBlob(10, new ByteArrayInputStream(TagStream.writeTag(skillsNBT, true)));
-                statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(myPet.writeExtendedInfo(), true)));
+                statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(skillsNBT, true)));
+                statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.writeExtendedInfo(), true)));
 
-                statement.setString(12, myPet.getUUID().toString());
+                statement.setString(13, myPet.getUUID().toString());
 
                 int result = statement.executeUpdate();
 
@@ -715,16 +716,17 @@ public class MySqlRepository implements Repository {
                 checkConnection();
 
                 try {
-                    PreparedStatement statement = connection.prepareStatement("UPDATE pets SET exp=? , health=?, respawn_time=?, name=?, last_used=?, hunger=?, world_group=?, wants_to_spawn=?, skilltree=?, skills=?, info=? WHERE uuid=?;");
-                    statement.setDouble(1, myPet.getExp());
-                    statement.setDouble(2, myPet.getHealth());
-                    statement.setInt(3, myPet.getRespawnTime());
-                    statement.setString(4, myPet.getPetName());
-                    statement.setLong(5, myPet.getLastUsed());
-                    statement.setInt(6, myPet.getHungerValue());
-                    statement.setString(7, myPet.getWorldGroup());
-                    statement.setBoolean(8, myPet.wantToRespawn());
-                    statement.setString(9, myPet.getSkillTree() != null ? myPet.getSkillTree().getName() : null);
+                    PreparedStatement statement = connection.prepareStatement("UPDATE pets SET owner_uuid=?, exp=? , health=?, respawn_time=?, name=?, last_used=?, hunger=?, world_group=?, wants_to_spawn=?, skilltree=?, skills=?, info=? WHERE uuid=?;");
+                    statement.setString(1, myPet.getOwner().getInternalUUID().toString());
+                    statement.setDouble(2, myPet.getExp());
+                    statement.setDouble(3, myPet.getHealth());
+                    statement.setInt(4, myPet.getRespawnTime());
+                    statement.setString(5, myPet.getPetName());
+                    statement.setLong(6, myPet.getLastUsed());
+                    statement.setInt(7, myPet.getHungerValue());
+                    statement.setString(8, myPet.getWorldGroup());
+                    statement.setBoolean(9, myPet.wantToRespawn());
+                    statement.setString(10, myPet.getSkillTree() != null ? myPet.getSkillTree().getName() : null);
 
                     TagCompound skillsNBT = new TagCompound();
                     Collection<ISkillInstance> skillList = myPet.getSkills().getSkills();
@@ -740,10 +742,10 @@ public class MySqlRepository implements Repository {
                         }
                     }
 
-                    statement.setBlob(10, new ByteArrayInputStream(TagStream.writeTag(skillsNBT, true)));
-                    statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(myPet.writeExtendedInfo(), true)));
+                    statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(skillsNBT, true)));
+                    statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.writeExtendedInfo(), true)));
 
-                    statement.setString(12, myPet.getUUID().toString());
+                    statement.setString(13, myPet.getUUID().toString());
 
                     int result = statement.executeUpdate();
 

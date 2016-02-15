@@ -66,6 +66,9 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 if (Permissions.has(player, "MyPet.user.command.switch")) {
                     player.sendMessage(ChatColor.GOLD + "/petswitch" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Switch", player));
                 }
+                if (Permissions.has(player, "MyPet.user.command.trade.offer") || Permissions.has(player, "MyPet.user.command.trade.recieve")) {
+                    player.sendMessage(ChatColor.GOLD + "/pettrade" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Trade", player));
+                }
                 player.sendMessage(ChatColor.GOLD + "/petskill" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Skill", player));
                 player.sendMessage(ChatColor.GOLD + "/petchooseskilltree" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.ChooseSkilltree", player));
 

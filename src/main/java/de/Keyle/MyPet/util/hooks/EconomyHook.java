@@ -28,6 +28,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.util.UUID;
+
 public class EconomyHook {
     public static boolean USE_ECONOMY = true;
     private static boolean searchedVaultEconomy = false;
@@ -44,6 +46,14 @@ public class EconomyHook {
     }
 
     public static boolean canPay(MyPetPlayer petOwner, double costs) {
+        return canPay(petOwner.getPlayer(), costs);
+    }
+
+    public static boolean canPay(UUID playerUUID, double costs) {
+        return canPay(Bukkit.getOfflinePlayer(playerUUID), costs);
+    }
+
+    public static boolean canPay(OfflinePlayer player, double costs) {
         if (!USE_ECONOMY) {
             return true;
         }
@@ -52,7 +62,7 @@ public class EconomyHook {
         }
         if (economy != null && economy.isEnabled()) {
             try {
-                return economy.has(Bukkit.getOfflinePlayer(petOwner.getPlayerUUID()), costs);
+                return economy.has(player, costs);
             } catch (Exception e) {
                 e.printStackTrace();
                 DebugLogger.printThrowable(e);
@@ -63,7 +73,15 @@ public class EconomyHook {
         return true;
     }
 
-    public static boolean pay(MyPetPlayer petOwner, double costs) {
+    public static boolean transfer(MyPetPlayer from, MyPetPlayer to, double costs) {
+        return transfer(from.getPlayer(), to.getPlayer(), costs);
+    }
+
+    public static boolean transfer(UUID from, UUID to, double costs) {
+        return transfer(Bukkit.getOfflinePlayer(from), Bukkit.getOfflinePlayer(to), costs);
+    }
+
+    public static boolean transfer(OfflinePlayer from, OfflinePlayer to, double costs) {
         if (!USE_ECONOMY) {
             return true;
         }
@@ -71,7 +89,37 @@ public class EconomyHook {
             setupEconomy();
         }
         if (economy != null && economy.isEnabled()) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(petOwner.getPlayerUUID());
+            if (economy.has(from, costs)) {
+                try {
+                    return economy.withdrawPlayer(from, costs).transactionSuccess() && economy.depositPlayer(to, costs).transactionSuccess();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    DebugLogger.printThrowable(e);
+                    MyPetLogger.write("The economy plugin threw an exception, economy support disabled.");
+                    USE_ECONOMY = false;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean pay(MyPetPlayer petOwner, double costs) {
+        return pay(petOwner.getPlayer(), costs);
+    }
+
+    public static boolean pay(UUID playerUUID, double costs) {
+        return pay(Bukkit.getOfflinePlayer(playerUUID), costs);
+    }
+
+    public static boolean pay(OfflinePlayer player, double costs) {
+        if (!USE_ECONOMY) {
+            return true;
+        }
+        if (!searchedVaultEconomy) {
+            setupEconomy();
+        }
+        if (economy != null && economy.isEnabled()) {
             if (economy.has(player, costs)) {
                 try {
                     return economy.withdrawPlayer(player, costs).transactionSuccess();
