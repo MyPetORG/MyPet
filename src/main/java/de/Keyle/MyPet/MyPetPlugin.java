@@ -276,7 +276,12 @@ public class MyPetPlugin extends JavaPlugin {
         BukkitUtil.registerMyPetEntity(EntityMyRabbit.class, "Rabbit", 101);
         BukkitUtil.registerMyPetEntity(EntityMyVillager.class, "Villager", 120);
 
+        File translationReadme = new File(getDataFolder(), "locale" + File.separator + "readme.txt");
+        if (!translationReadme.exists()) {
+            BukkitUtil.copyResource(this, "locale-readme.txt", translationReadme);
+        }
         Translation.init();
+
         Bungee.reset();
 
         // init repository
