@@ -83,7 +83,7 @@ commands:
   pettrade:
     aliases: [pett, pt]
     description: Trade MyPets with other players
-    usage: '/<command> [accept/deny/<playername>]'
+    usage: '/<command> [accept/deny/<playername>] <price>'
 
 permissions:
   MyPet.user.leash.*:
