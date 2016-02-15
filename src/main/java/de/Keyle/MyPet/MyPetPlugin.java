@@ -96,7 +96,8 @@ import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class MyPetPlugin extends JavaPlugin {
@@ -210,23 +211,8 @@ public class MyPetPlugin extends JavaPlugin {
         File[] files = skilltreeFolder.listFiles();
 
         if (files == null || files.length == 0) {
-            try {
-                InputStream template = getPlugin().getResource("skilltrees/default.st");
-                OutputStream out = new FileOutputStream(new File(skilltreeFolder, "default.st"));
-
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = template.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                template.close();
-                out.close();
-                MyPetLogger.write("Default skilltree configfile created.");
-                DebugLogger.info("created default.st");
-            } catch (IOException ex) {
-                MyPetLogger.write(ChatColor.RED + "Unable" + ChatColor.RESET + " to create the default.st!");
-                DebugLogger.info("unable to create default.st");
-            }
+            BukkitUtil.copyResource(this, "skilltrees/default.st", new File(skilltreeFolder, "default.st"));
+            MyPetLogger.write("Default skilltree file created (default.st).");
         }
 
         // load skilltrees
