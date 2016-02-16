@@ -89,6 +89,7 @@ import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -124,7 +125,7 @@ public class MyPetPlugin extends JavaPlugin {
         PluginHookManager.reset();
         Hooks.disable();
 
-        MyPetLogger.setConsole(null);
+        MyPetLogger.setConsole((ConsoleCommandSender) null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
     }

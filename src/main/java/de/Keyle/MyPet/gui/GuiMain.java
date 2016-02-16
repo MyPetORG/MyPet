@@ -26,6 +26,7 @@ import de.Keyle.MyPet.gui.skilltreecreator.SkilltreeCreator;
 import de.Keyle.MyPet.skill.skills.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,6 +54,8 @@ public class GuiMain {
         path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
         File pluginDirFile = new File(path);
         configPath = pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator;
+
+        MyPetLogger.setConsole(System.out);
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
