@@ -43,6 +43,12 @@ public class ConfigurationNBT {
         return nbtTagCompound;
     }
 
+    public static boolean save(File file, TagCompound tag) {
+        ConfigurationNBT config = new ConfigurationNBT(file);
+        config.nbtTagCompound = tag;
+        return config.save();
+    }
+
     public boolean save() {
         try {
             OutputStream os = new FileOutputStream(NBTFile);
