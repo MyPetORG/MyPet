@@ -66,6 +66,7 @@
         <metrics.version>R7</metrics.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <json.version>1.1.1</json.version>
+        <gson.version>2.6.1</gson.version>
         <forms_rt.version>7.0.3</forms_rt.version>
         <fanciful-chat.version>0.0.2</fanciful-chat.version>
 
@@ -364,6 +365,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>fanciful-chat</artifactId>
             <version>${fanciful-chat.version}</version>
@@ -524,6 +531,7 @@
                                     <include>org.mcstats.bukkit:metrics:*</include>
                                     <include>com.intellij:forms_rt:*</include>
                                     <include>com.googlecode.json-simple:json-simple:*</include>
+                                    <include>com.google.code.gson:gson:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
@@ -546,6 +554,10 @@
                                 <relocation>
                                     <pattern>org.json.simple</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.json.simple</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.gson</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.gson</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>

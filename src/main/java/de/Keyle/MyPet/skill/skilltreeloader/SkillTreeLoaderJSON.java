@@ -37,7 +37,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SkillTreeLoaderJSON extends SkillTreeLoader {
     public static SkillTreeLoaderJSON getSkilltreeLoader() {
@@ -76,13 +78,19 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
     }
 
     protected void loadSkillTree(ConfigurationJSON jsonConfiguration, SkillTreeMobType skillTreeMobType) {
-        JSONArray skilltreeList = (JSONArray) jsonConfiguration.getJSONObject().get("Skilltrees");
-        for (Object st_object : skilltreeList) {
+        JSONObject skilltreeList = jsonConfiguration.getJSONObject();
+        for (Object o : skilltreeList.keySet()) {
             SkillTree skillTree;
             int place;
             try {
-                JSONObject skilltreeObject = (JSONObject) st_object;
-                skillTree = new SkillTree((String) skilltreeObject.get("Name"));
+                JSONObject skilltreeObject = (JSONObject) skilltreeList.get(o);
+                String skilltreeName = o.toString();
+
+                if (skillTreeMobType.hasSkillTree(skilltreeName)) {
+                    continue;
+                }
+
+                skillTree = new SkillTree(skilltreeName);
                 place = Integer.parseInt(String.valueOf(skilltreeObject.get("Place")));
 
                 if (skilltreeObject.containsKey("Inherits")) {
@@ -94,6 +102,15 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                 if (skilltreeObject.containsKey("Display")) {
                     skillTree.setDisplayName((String) skilltreeObject.get("Display"));
                 }
+                if (skilltreeObject.containsKey("MaxLevel")) {
+                    skillTree.setMaxLevel(((Number) skilltreeObject.get("MaxLevel")).intValue());
+                }
+                if (skilltreeObject.containsKey("RequiredLevel")) {
+                    skillTree.setRequiredLevel(((Number) skilltreeObject.get("RequiredLevel")).intValue());
+                }
+                if (skilltreeObject.containsKey("IconItem")) {
+                    skillTree.setIconItem(loadIcon((JSONObject) skilltreeObject.get("IconItem")));
+                }
                 if (skilltreeObject.containsKey("Description")) {
                     JSONArray descriptionArray = (JSONArray) skilltreeObject.get("Description");
                     for (Object lvl_object : descriptionArray) {
@@ -101,10 +118,10 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                     }
                 }
 
-                JSONArray levelList = (JSONArray) skilltreeObject.get("Level");
-                for (Object lvl_object : levelList) {
-                    JSONObject levelObject = (JSONObject) lvl_object;
-                    int thisLevel = Integer.parseInt(String.valueOf(levelObject.get("Level")));
+                JSONObject levelList = (JSONObject) skilltreeObject.get("Level");
+                for (Object oo : levelList.keySet()) {
+                    JSONObject levelObject = (JSONObject) levelList.get(oo);
+                    int thisLevel = Integer.parseInt(oo.toString());
 
                     SkillTreeLevel newLevel = skillTree.addLevel(thisLevel);
                     if (levelObject.containsKey("Message")) {
@@ -112,11 +129,10 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                         newLevel.setLevelupMessage(message);
                     }
 
-                    JSONArray skillList = (JSONArray) levelObject.get("Skills");
-                    for (Object skill_object : skillList) {
-                        JSONObject skillObject = (JSONObject) skill_object;
-                        String skillName = (String) skillObject.get("Name");
-                        JSONObject skillPropertyObject = (JSONObject) skillObject.get("Properties");
+                    JSONObject skillList = (JSONObject) levelObject.get("Skills");
+                    for (Object ooo : skillList.keySet()) {
+                        JSONObject skillObject = (JSONObject) skillList.get(ooo);
+                        String skillName = ooo.toString();
 
                         if (SkillsInfo.getSkillInfoClass(skillName) != null) {
                             ISkillInfo skill = SkillsInfo.getNewSkillInfoInstance(skillName);
@@ -128,8 +144,8 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                                     for (int i = 0; i < sp.parameterNames().length; i++) {
                                         String propertyName = sp.parameterNames()[i];
                                         NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                        if (!propertiesCompound.getCompoundData().containsKey(propertyName) && skillPropertyObject.containsKey(propertyName)) {
-                                            String value = String.valueOf(skillPropertyObject.get(propertyName));
+                                        if (!propertiesCompound.getCompoundData().containsKey(propertyName) && skillObject.containsKey(propertyName)) {
+                                            String value = String.valueOf(skillObject.get(propertyName));
                                             switch (propertyType) {
                                                 case Short:
                                                     if (Util.isShort(value)) {
@@ -192,5 +208,160 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                 MyPetLogger.write(ChatColor.RED + "Error in " + skillTreeMobType.getMobTypeName().toLowerCase() + ".json -> Skilltree not loaded.");
             }
         }
+    }
+
+    public List<String> saveSkillTrees(String configPath, String[] mobtypes) {
+        ConfigurationJSON jsonConfig;
+        File skillFile;
+        List<String> savedPetTypes = new ArrayList<>();
+
+        for (String petType : mobtypes) {
+            skillFile = new File(configPath + File.separator + petType.toLowerCase() + ".json");
+            jsonConfig = new ConfigurationJSON(skillFile);
+            if (saveSkillTree(jsonConfig, petType)) {
+                savedPetTypes.add(petType);
+            }
+        }
+        return savedPetTypes;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean saveSkillTree(ConfigurationJSON jsonConfiguration, String petTypeName) {
+        boolean saveMobType = false;
+
+        if (SkillTreeMobType.getMobTypeByName(petTypeName).getSkillTreeNames().size() != 0) {
+            SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByName(petTypeName);
+            mobType.cleanupPlaces();
+
+            JSONObject skilltreeList = jsonConfiguration.getJSONObject();
+            for (SkillTree skillTree : mobType.getSkillTrees()) {
+                JSONObject skilltreeObject = new JSONObject();
+                skilltreeObject.put("Place", mobType.getSkillTreePlace(skillTree));
+                if (skillTree.hasInheritance()) {
+                    skilltreeObject.put("Inherits", skillTree.getInheritance());
+                }
+                if (skillTree.hasCustomPermissions()) {
+                    skilltreeObject.put("Permission", skillTree.getPermission());
+                }
+                if (skillTree.hasDisplayName()) {
+                    skilltreeObject.put("Display", skillTree.getDisplayName());
+                }
+                if (skillTree.getMaxLevel() > 0) {
+                    skilltreeObject.put("MaxLevel", skillTree.getMaxLevel());
+                }
+                if (skillTree.getRequiredLevel() > 1) {
+                    skilltreeObject.put("RequiredLevel", skillTree.getRequiredLevel());
+                }
+                if (skillTree.getDescription().size() > 0) {
+                    JSONArray descriptionTagList = new JSONArray();
+                    for (String line : skillTree.getDescription()) {
+                        descriptionTagList.add(line);
+                    }
+                    skilltreeObject.put("Description", descriptionTagList);
+                }
+                skilltreeObject.put("IconItem", saveIcon(skillTree.getIconItem()));
+
+                JSONObject levelList = new JSONObject();
+                for (SkillTreeLevel level : skillTree.getLevelList()) {
+                    JSONObject levelObject = new JSONObject();
+                    if (level.hasLevelupMessage()) {
+                        levelObject.put("Message", level.getLevelupMessage());
+                    }
+
+                    JSONObject skillList = new JSONObject();
+                    for (ISkillInfo skill : skillTree.getLevel(level.getLevel()).getSkills()) {
+                        if (!skill.isAddedByInheritance()) {
+                            JSONObject skillObject = new JSONObject();
+                            SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
+                            if (sp != null) {
+                                for (int i = 0; i < sp.parameterNames().length; i++) {
+                                    String propertyName = sp.parameterNames()[i];
+                                    NBTdatatypes propertyType = sp.parameterTypes()[i];
+                                    TagCompound propertiesCompound = skill.getProperties();
+                                    if (propertiesCompound.getCompoundData().containsKey(propertyName)) {
+                                        switch (propertyType) {
+                                            case Short:
+                                                skillObject.put(propertyName, ((TagShort) propertiesCompound.getCompoundData().get(propertyName)).getShortData());
+                                                break;
+                                            case Int:
+                                                skillObject.put(propertyName, ((TagInt) propertiesCompound.getCompoundData().get(propertyName)).getIntData());
+                                                break;
+                                            case Long:
+                                                skillObject.put(propertyName, ((TagLong) propertiesCompound.getCompoundData().get(propertyName)).getLongData());
+                                                break;
+                                            case Float:
+                                                skillObject.put(propertyName, ((TagFloat) propertiesCompound.getCompoundData().get(propertyName)).getFloatData());
+                                                break;
+                                            case Double:
+                                                skillObject.put(propertyName, ((TagDouble) propertiesCompound.getCompoundData().get(propertyName)).getDoubleData());
+                                                break;
+                                            case Byte:
+                                                skillObject.put(propertyName, ((TagByte) propertiesCompound.getCompoundData().get(propertyName)).getByteData());
+                                                break;
+                                            case Boolean:
+                                                skillObject.put(propertyName, ((TagByte) propertiesCompound.getCompoundData().get(propertyName)).getBooleanData());
+                                                break;
+                                            case String:
+                                                skillObject.put(propertyName, ((TagString) propertiesCompound.getCompoundData().get(propertyName)).getStringData());
+                                                break;
+                                        }
+                                    } else {
+                                        skillObject.put(propertyName, sp.parameterDefaultValues()[i]);
+                                    }
+                                }
+                            }
+
+                            skillList.put(skill.getName(), skillObject);
+                        }
+                    }
+                    levelObject.put("Skills", skillList);
+                    levelList.put(level.getLevel(), levelObject);
+                }
+                skilltreeObject.put("Level", levelList);
+                skilltreeList.put(skillTree.getName(), skilltreeObject);
+            }
+
+            if (mobType.getSkillTreeNames().size() > 0) {
+                jsonConfiguration.save();
+                saveMobType = true;
+            }
+        }
+        return saveMobType;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject saveIcon(TagCompound itemTag) {
+        JSONObject itemObject = new JSONObject();
+        itemObject.put("Damage", itemTag.getAs("Damage", TagShort.class).getShortData());
+        itemObject.put("ID", itemTag.getAs("id", TagShort.class).getShortData());
+        if (itemTag.containsKeyAs("tag", TagCompound.class)) {
+            TagCompound tag = itemTag.getAs("tag", TagCompound.class);
+            if (tag.containsKey("ench")) {
+                itemObject.put("Glowing", true);
+            } else {
+                itemObject.put("Glowing", false);
+            }
+        } else {
+            itemObject.put("Glowing", false);
+        }
+        return itemObject;
+    }
+
+    private TagCompound loadIcon(JSONObject object) {
+        TagCompound itemTag = new TagCompound();
+
+        short itemID = object.containsKey("ID") ? ((Number) object.get("ID")).shortValue() : 6;
+        short damage = object.containsKey("Damage") ? ((Number) object.get("Damage")).shortValue() : 0;
+
+        itemTag.put("id", new TagShort(itemID));
+        itemTag.put("Damage", new TagShort(damage));
+        itemTag.put("Count", new TagByte(1));
+        if (object.containsKey("Glowing") && object.get("Glowing").toString().equals("true")) {
+            TagCompound tag = new TagCompound();
+            tag.put("ench", new TagList());
+            itemTag.put("tag", tag);
+        }
+
+        return itemTag;
     }
 }

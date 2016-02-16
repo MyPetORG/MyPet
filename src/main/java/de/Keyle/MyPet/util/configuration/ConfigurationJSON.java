@@ -20,6 +20,10 @@
 
 package de.Keyle.MyPet.util.configuration;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
@@ -76,10 +80,14 @@ public class ConfigurationJSON {
     }
 
     public boolean save() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(config.toJSONString());
+        String prettyJsonString = gson.toJson(je);
         try {
             // http://jsonformatter.curiousconcept.com/
             BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
-            writer.write(config.toJSONString());
+            writer.write(prettyJsonString);
             writer.close();
             return true;
         } catch (IOException e) {

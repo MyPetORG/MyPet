@@ -23,6 +23,7 @@ package de.Keyle.MyPet.gui.skilltreecreator;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.MyPetVersion;
 
@@ -51,6 +52,9 @@ public class SkilltreeCreator {
     JPopupMenu skilltreeListRightclickMenu;
     JMenuItem copyMenuItem;
     JMenuItem pasteMenuItem;
+    JPopupMenu saveRightclickMenu;
+    JMenuItem jsonMenuItem;
+    JMenuItem nbtMenuItem;
 
     DefaultTreeModel skilltreeTreeModel;
 
@@ -201,12 +205,30 @@ public class SkilltreeCreator {
         });
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                saveRightclickMenu.show(saveButton, -21, saveButton.getHeight());
+            }
+        });
+        nbtMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 String savedPetsString = "";
                 List<String> savedPetTypes;
 
                 savedPetTypes = SkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", GuiMain.petTypes);
                 for (String petType : savedPetTypes) {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".st";
+                }
+
+                JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + "skilltrees" + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        jsonMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String savedPetsString = "";
+                List<String> savedPetTypes;
+
+                savedPetTypes = SkillTreeLoaderJSON.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", GuiMain.petTypes);
+                for (String petType : savedPetTypes) {
+                    savedPetsString += "\n   " + petType.toLowerCase() + ".json";
                 }
 
                 JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + "skilltrees" + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
@@ -340,6 +362,14 @@ public class SkilltreeCreator {
 
         MouseListener popupListener = new PopupListener(skilltreeListRightclickMenu);
         skilltreeTree.addMouseListener(popupListener);
+
+        saveRightclickMenu = new JPopupMenu();
+
+        nbtMenuItem = new JMenuItem("NBT (.st)");
+        saveRightclickMenu.add(nbtMenuItem);
+
+        jsonMenuItem = new JMenuItem("JSON (.json)");
+        saveRightclickMenu.add(jsonMenuItem);
     }
 
     private class SkillTreeNode extends DefaultMutableTreeNode {
