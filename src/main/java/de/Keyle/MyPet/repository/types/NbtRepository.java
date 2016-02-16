@@ -339,6 +339,7 @@ public class NbtRepository implements Repository, Scheduler {
     public void addMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
         if (!petTags.containsKey(inactiveMyPet.getUUID())) {
             petTags.put(inactiveMyPet.getUUID(), inactiveMyPet.save());
+            petPlayerMultiMap.put(inactiveMyPet.getOwner().getInternalUUID(), inactiveMyPet.getUUID());
             if (Configuration.Repository.NBT.SAVE_ON_PET_ADD) {
                 saveData(true);
             }
