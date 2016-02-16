@@ -22,26 +22,37 @@ package de.Keyle.MyPet.util.logger;
 
 import org.bukkit.command.ConsoleCommandSender;
 
-import static org.bukkit.ChatColor.*;
+import java.io.PrintStream;
 
 public class MyPetLogger {
-    private static ConsoleCommandSender consoleCommandSender = null;
+    private static ConsoleCommandSender outBukkit = null;
+    private static PrintStream outConsole = null;
 
     public static void setConsole(ConsoleCommandSender console) {
-        consoleCommandSender = console;
+        outBukkit = console;
+    }
+
+    public static void setConsole(PrintStream out) {
+        outConsole = out;
     }
 
     public static void write(String msg) {
-        if (consoleCommandSender != null) {
-            consoleCommandSender.sendMessage("[" + GREEN + "M" + DARK_GREEN + "y" + GREEN + "P" + DARK_GREEN + "et" + RESET + "] " + msg);
+        if (outBukkit != null) {
+            outBukkit.sendMessage("[§aM§2y§aP§2et§r] " + msg);
             DebugLogger.info("(L) " + msg);
+        }
+        if (outConsole != null) {
+            outConsole.println("[MyPet] " + msg);
         }
     }
 
     public static void write(String msg, String source) {
-        if (consoleCommandSender != null) {
-            consoleCommandSender.sendMessage("[" + AQUA + source + RESET + "] " + msg);
+        if (outBukkit != null) {
+            outBukkit.sendMessage("[§b" + source + "§r] " + msg);
             DebugLogger.info("(L) " + msg, source);
+        }
+        if (outConsole != null) {
+            outConsole.println("[" + source + "] " + msg);
         }
     }
 }
