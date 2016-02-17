@@ -74,7 +74,7 @@ public class CustomInventory implements IInventory, Listener {
     }
 
     public ItemStack getItem(int i) {
-        if (i <= size) {
+        if (i < size) {
             return items.get(i);
         }
         return null;
@@ -150,7 +150,7 @@ public class CustomInventory implements IInventory, Listener {
     }
 
     public ItemStack splitStack(int slot, int subtract) {
-        if (slot <= size && items.get(slot) != null) {
+        if (slot < size && items.get(slot) != null) {
             if (items.get(slot).count <= subtract) {
                 ItemStack itemStack = items.get(slot);
                 items.set(slot, null);
