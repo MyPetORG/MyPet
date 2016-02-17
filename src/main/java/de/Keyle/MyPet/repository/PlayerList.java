@@ -72,7 +72,7 @@ public class PlayerList {
     public static void setOffline(MyPetPlayer player) {
         onlinePlayers.remove(player.getInternalUUID());
         uuidToInternalUUID.remove(player.getPlayerUUID());
-        MyPetPlugin.getPlugin().getRepository().updatePlayer(player, null);
+        MyPetPlugin.getPlugin().getRepository().updateMyPetPlayer(player, null);
     }
 
     public static MyPetPlayer createMyPetPlayer(Player player) {

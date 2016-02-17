@@ -471,15 +471,21 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     @Override
-    public void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        playerTags.put(player.getInternalUUID(), player.save());
+    public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
+        if (playerTags.containsKey(player.getInternalUUID())) {
+            playerTags.put(player.getInternalUUID(), player.save());
 
-        if (Configuration.Repository.NBT.SAVE_ON_PLAYER_UPDATE) {
-            saveData(true);
+            if (Configuration.Repository.NBT.SAVE_ON_PLAYER_UPDATE) {
+                saveData(true);
+            }
+
+            if (callback != null) {
+                callback.run(true);
+            }
+            return;
         }
-
         if (callback != null) {
-            callback.run(true);
+            callback.run(false);
         }
     }
 
