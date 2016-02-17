@@ -460,12 +460,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
                     isInvisible = false;
                 }
             }
-            // donate delete start
             if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
                 donatorParticleCounter = 20 + getRandom().nextInt(10);
                 BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.VILLAGER_HAPPY, 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
             }
-            // donate delete end
         }
     }
 
