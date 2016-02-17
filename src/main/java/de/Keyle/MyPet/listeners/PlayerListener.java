@@ -113,7 +113,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(final PlayerJoinEvent event) {
         long delay = MyPetPlugin.getPlugin().getRepository() instanceof NbtRepository ? 1L : 20L;
 
-        Bukkit.getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 MyPetPlugin.getPlugin().getRepository().getMyPetPlayer(event.getPlayer(), new RepositoryCallback<MyPetPlayer>() {
@@ -136,8 +136,8 @@ public class PlayerListener implements Listener {
                         }
 
                         if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
-                            final UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                            joinedPlayer.getInactiveMyPet(groupMyPetUUID, new RepositoryCallback<InactiveMyPet>() {
+                            final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
+                            joinedPlayer.getInactiveMyPet(petUUID, new RepositoryCallback<InactiveMyPet>() {
                                 @Override
                                 public void callback(InactiveMyPet inactiveMyPet) {
                                     MyPetList.activateMyPet(inactiveMyPet);
@@ -176,7 +176,7 @@ public class PlayerListener implements Listener {
                     }
                 });
             }
-        }, delay);
+        }.runTaskLater(MyPetPlugin.getPlugin(), delay);
     }
 
     @EventHandler

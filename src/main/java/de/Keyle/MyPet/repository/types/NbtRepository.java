@@ -527,6 +527,9 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     private TagList savePlayers() {
+        for (MyPetPlayer player : PlayerList.getMyPetPlayers()) {
+            playerTags.put(player.getInternalUUID(), player.save());
+        }
         return new TagList(Lists.newArrayList(playerTags.values()));
     }
 

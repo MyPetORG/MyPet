@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.commands.CommandAdmin;
@@ -273,6 +274,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
                 inactiveMyPet.setWorldGroup(wg.getName());
                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
+                MyPetPlugin.getPlugin().getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
 
                 MyPetList.addInactiveMyPet(inactiveMyPet);
                 MyPet myPet = MyPetList.activateMyPet(inactiveMyPet);
