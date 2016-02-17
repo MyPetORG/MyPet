@@ -72,7 +72,6 @@ import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.info.*;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoader;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Timer;
@@ -222,7 +221,6 @@ public class MyPetPlugin extends JavaPlugin {
 
         SkillTreeMobType.clearMobTypes();
         SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
-        SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
         Set<String> skilltreeNames = new LinkedHashSet<>();
         for (MyPetType mobType : MyPetType.values()) {

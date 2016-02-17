@@ -29,7 +29,6 @@ import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoader;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Translation;
@@ -58,7 +57,6 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
 
         SkillTreeMobType.clearMobTypes();
         SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
-        SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
         Set<String> skilltreeNames = new LinkedHashSet<>();
         for (MyPetType mobType : MyPetType.values()) {
