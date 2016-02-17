@@ -194,7 +194,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     }
 
                     if (offers.containsKey(reciever.getUniqueId())) {
-                        sender.sendMessage(Translation.getString("Message.Command.Trade.Owner.OpenOffer", player));
+                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.OpenOffer", player), reciever.getName()));
                         return true;
                     }
 
