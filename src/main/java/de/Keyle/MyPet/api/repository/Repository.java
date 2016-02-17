@@ -66,7 +66,7 @@ public interface Repository {
 
     void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback);
 
-    void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
+    void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
 
     void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
 

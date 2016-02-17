@@ -622,7 +622,7 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
+    public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         new BukkitRunnable() {
             @Override
             public void run() {
