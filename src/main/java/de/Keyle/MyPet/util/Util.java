@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.regex.Matcher;
 
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RESET;
@@ -129,7 +130,7 @@ public class Util {
     public static String formatText(String text, Object... values) {
         for (int i = 0; i < values.length; i++) {
             if (values[i] != null) {
-                text = text.replaceAll("\\{" + i + "}", values[i].toString());
+                text = text.replaceAll("\\{" + i + "}", Matcher.quoteReplacement(values[i].toString()));
             }
         }
         return text;
