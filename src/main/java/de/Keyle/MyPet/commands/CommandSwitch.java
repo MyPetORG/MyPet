@@ -93,6 +93,10 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             MyPetList.getInactiveMyPets(owner, new RepositoryCallback<List<InactiveMyPet>>() {
                 @Override
                 public void callback(List<InactiveMyPet> pets) {
+                    if (pets.size() == 0) {
+                        owner.sendMessage(Translation.getString("Message.No.HasPet", owner));
+                        return;
+                    }
                     if (owner.isOnline()) {
                         String worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()).getName();
                         int inactivePetCount = getInactivePetCount(pets, worldGroup);
