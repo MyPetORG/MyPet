@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -108,17 +109,24 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                         final MyPetPlayer newOwner = PlayerList.isMyPetPlayer(player) ? PlayerList.getMyPetPlayer(player) : PlayerList.registerMyPetPlayer(player);
                         final String worldGroup = offer.getPet().getWorldGroup();
 
-                        oldOwner.setMyPetForWorldGroup(worldGroup, null);
                         MyPetList.deactivateMyPet(oldOwner, false);
+                        final InactiveMyPet pet = MyPetList.getInactiveMyPetFromMyPet(offer.getPet());
 
-                        MyPetPlugin.getPlugin().getRepository().getMyPet(offer.getPet().getUUID(), new RepositoryCallback<InactiveMyPet>() {
+                        final Repository repo = MyPetPlugin.getPlugin().getRepository();
+                        repo.removeMyPet(pet, new RepositoryCallback<Boolean>() {
                             @Override
-                            public void callback(InactiveMyPet pet) {
+                            public void callback(Boolean value) {
                                 pet.setOwner(newOwner);
-                                newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
+                                repo.addMyPet(pet, null);
                                 MyPet myPet = MyPetList.activateMyPet(pet);
+
+                                oldOwner.setMyPetForWorldGroup(worldGroup, null);
+                                newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
+                                repo.updateMyPetPlayer(oldOwner, null);
+                                repo.updateMyPetPlayer(newOwner, null);
+
                                 if (myPet != null) {
-                                    MyPetPlugin.getPlugin().getRepository().updateMyPet(myPet, null);
+
                                     newOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Reciever.Success", newOwner), oldOwner.getName(), myPet.getPetName()));
                                     oldOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Success", oldOwner), newOwner.getName(), myPet.getPetName()));
 
