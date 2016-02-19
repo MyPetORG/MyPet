@@ -51,6 +51,8 @@ public class Converter {
             return false;
         }
 
+        MyPetLogger.write("Converting from " + Configuration.Repository.CONVERT_FROM + " to " + Configuration.Repository.REPOSITORY_TYPE + "...");
+
         try {
             fromRepo.init();
         } catch (RepositoryInitException e) {

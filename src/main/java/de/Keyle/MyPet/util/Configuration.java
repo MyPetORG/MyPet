@@ -90,6 +90,7 @@ public class Configuration {
 
         public static class MySQL {
             public static String DATABASE = "mypet";
+            public static String PREFIX = "";
             public static String HOST = "localhost";
             public static String PASSWORD = "";
             public static String USER = "root";
@@ -98,6 +99,7 @@ public class Configuration {
 
         public static class MongoDB {
             public static String DATABASE = "mypet";
+            public static String PREFIX = "";
             public static String HOST = "localhost";
             public static String PASSWORD = "";
             public static String USER = "";
@@ -236,12 +238,14 @@ public class Configuration {
         config.addDefault("MyPet.Repository.NBT.Backup.DateFormat", Repository.NBT.DATE_FORMAT);
 
         config.addDefault("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
+        config.addDefault("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);
         config.addDefault("MyPet.Repository.MySQL.Host", Repository.MySQL.HOST);
         config.addDefault("MyPet.Repository.MySQL.Password", Repository.MySQL.PASSWORD);
         config.addDefault("MyPet.Repository.MySQL.User", Repository.MySQL.USER);
         config.addDefault("MyPet.Repository.MySQL.Port", Repository.MySQL.PORT);
 
         config.addDefault("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
+        config.addDefault("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);
         config.addDefault("MyPet.Repository.MongoDB.Host", Repository.MongoDB.HOST);
         config.addDefault("MyPet.Repository.MongoDB.Password", Repository.MongoDB.PASSWORD);
         config.addDefault("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);
@@ -462,12 +466,14 @@ public class Configuration {
         Repository.NBT.DATE_FORMAT = config.getString("MyPet.Repository.NBT.Backup.DateFormat", Repository.NBT.DATE_FORMAT);
 
         Repository.MySQL.DATABASE = config.getString("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
+        Repository.MySQL.PREFIX = config.getString("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);
         Repository.MySQL.HOST = config.getString("MyPet.Repository.MySQL.Host", Repository.MySQL.HOST);
         Repository.MySQL.PASSWORD = config.getString("MyPet.Repository.MySQL.Password", Repository.MySQL.PASSWORD);
         Repository.MySQL.USER = config.getString("MyPet.Repository.MySQL.User", Repository.MySQL.USER);
         Repository.MySQL.PORT = config.getInt("MyPet.Repository.MySQL.Database", Repository.MySQL.PORT);
 
         Repository.MongoDB.DATABASE = config.getString("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
+        Repository.MongoDB.PREFIX = config.getString("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);
         Repository.MongoDB.HOST = config.getString("MyPet.Repository.MongoDB.Host", Repository.MongoDB.HOST);
         Repository.MongoDB.PASSWORD = config.getString("MyPet.Repository.MongoDB.Password", Repository.MongoDB.PASSWORD);
         Repository.MongoDB.USER = config.getString("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);

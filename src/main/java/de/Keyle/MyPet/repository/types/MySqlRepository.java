@@ -83,7 +83,7 @@ public class MySqlRepository implements Repository {
         connect();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM info;");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "info;");
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
@@ -127,7 +127,7 @@ public class MySqlRepository implements Repository {
         try {
             Statement create = connection.createStatement();
 
-            create.executeUpdate("CREATE TABLE pets (" +
+            create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "pets (" +
                     "uuid VARCHAR(36) NOT NULL UNIQUE, " +
                     "owner_uuid VARCHAR(36) NOT NULL, " +
                     "exp DOUBLE, " +
@@ -146,7 +146,7 @@ public class MySqlRepository implements Repository {
                     "PRIMARY KEY ( uuid )" +
                     ")");
 
-            create.executeUpdate("CREATE TABLE players (" +
+            create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "players (" +
                     "internal_uuid VARCHAR(36) NOT NULL UNIQUE, " +
                     "mojang_uuid VARCHAR(36) UNIQUE, " +
                     "offline_uuid VARCHAR(36) UNIQUE, " +
@@ -162,14 +162,14 @@ public class MySqlRepository implements Repository {
                     "PRIMARY KEY ( internal_uuid )" +
                     ")");
 
-            create.executeUpdate("CREATE TABLE info (" +
+            create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "info (" +
                     "version INTEGER UNIQUE, " +
                     "mypet_version VARCHAR(20), " +
                     "mypet_build VARCHAR(20), " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ")");
 
-            PreparedStatement insert = connection.prepareStatement("INSERT INTO info (version, mypet_version, mypet_build) VALUES (?,?,?);");
+            PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (version, mypet_version, mypet_build) VALUES (?,?,?);");
             insert.setInt(1, version);
             insert.setString(2, MyPetVersion.getVersion());
             insert.setString(3, MyPetVersion.getBuild());
@@ -183,9 +183,9 @@ public class MySqlRepository implements Repository {
         try {
             Statement update = connection.createStatement();
 
-            update.executeUpdate("ALTER TABLE pets ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-            update.executeUpdate("ALTER TABLE players ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-            update.executeUpdate("ALTER TABLE info ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "info ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -197,8 +197,8 @@ public class MySqlRepository implements Repository {
         try {
             Statement update = connection.createStatement();
 
-            update.executeUpdate("UPDATE players SET multi_world=NULL;");
-            update.executeUpdate("ALTER TABLE players MODIFY multi_world VARCHAR(2000) DEFAULT \"\";");
+            update.executeUpdate("UPDATE " + Configuration.Repository.MySQL.PREFIX + "players SET multi_world=NULL;");
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players MODIFY multi_world VARCHAR(2000) DEFAULT \"\";");
 
             for (MyPetPlayer player : players) {
                 updatePlayer(player);
@@ -212,8 +212,8 @@ public class MySqlRepository implements Repository {
         try {
             Statement update = connection.createStatement();
 
-            update.executeUpdate("ALTER TABLE players ADD COLUMN pet_idle_volume FLOAT DEFAULT 1 AFTER health_bar;");
-            update.executeUpdate("ALTER IGNORE TABLE info ADD UNIQUE (version);");
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN pet_idle_volume FLOAT DEFAULT 1 AFTER health_bar;");
+            update.executeUpdate("ALTER IGNORE TABLE " + Configuration.Repository.MySQL.PREFIX + "info ADD UNIQUE (version);");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -251,7 +251,7 @@ public class MySqlRepository implements Repository {
                 checkConnection();
 
                 try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE last_used<?;");
+                    PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE last_used<?;");
                     statement.setLong(1, timestamp);
 
                     int result = statement.executeUpdate();
@@ -279,7 +279,7 @@ public class MySqlRepository implements Repository {
                 checkConnection();
 
                 try {
-                    PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets;");
+                    PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets;");
                     ResultSet resultSet = statement.executeQuery();
                     resultSet.next();
                     callback.setValue(resultSet.getInt(1));
@@ -299,7 +299,7 @@ public class MySqlRepository implements Repository {
                 checkConnection();
 
                 try {
-                    PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE type=?;");
+                    PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE type=?;");
                     statement.setString(1, type.getTypeName());
                     ResultSet resultSet = statement.executeQuery();
                     resultSet.next();
@@ -320,7 +320,7 @@ public class MySqlRepository implements Repository {
 
     private void updateInfo() {
         try {
-            PreparedStatement update = connection.prepareStatement("UPDATE info SET version=?, mypet_version=?, mypet_build=?;");
+            PreparedStatement update = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "info SET version=?, mypet_version=?, mypet_build=?;");
             update.setInt(1, version);
             update.setString(2, MyPetVersion.getVersion());
             update.setString(3, MyPetVersion.getBuild());
@@ -335,7 +335,20 @@ public class MySqlRepository implements Repository {
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
             try {
-                PreparedStatement statement = connection.prepareStatement("UPDATE pets SET owner_uuid=?, exp=? , health=?, respawn_time=?, name=?, last_used=?, hunger=?, world_group=?, wants_to_spawn=?, skilltree=?, skills=?, info=? WHERE uuid=?;");
+                PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
+                        "owner_uuid=?, " +
+                        "exp=?, " +
+                        "health=?, " +
+                        "respawn_time=?, " +
+                        "name=?, " +
+                        "last_used=?, " +
+                        "hunger=?, " +
+                        "world_group=?, " +
+                        "wants_to_spawn=?, " +
+                        "skilltree=?, " +
+                        "skills=?, " +
+                        "info=? " +
+                        "WHERE uuid=?;");
                 statement.setString(1, myPet.getOwner().getInternalUUID().toString());
                 statement.setDouble(2, myPet.getExp());
                 statement.setDouble(3, myPet.getHealth());
@@ -380,8 +393,17 @@ public class MySqlRepository implements Repository {
         for (MyPetPlayer player : PlayerList.getMyPetPlayers()) {
             try {
                 PreparedStatement statement = connection.prepareStatement(
-                        "UPDATE players " +
-                                "SET mojang_uuid=?, offline_uuid=?, name=?, auto_respawn=?, auto_respawn_min=?, capture_mode=?, health_bar=?, pet_idle_volume=?, extended_info=?, multi_world=? " +
+                        "UPDATE " + Configuration.Repository.MySQL.PREFIX + "players SET " +
+                                "mojang_uuid=?, " +
+                                "offline_uuid=?, " +
+                                "name=?, " +
+                                "auto_respawn=?, " +
+                                "auto_respawn_min=?, " +
+                                "capture_mode=?, " +
+                                "health_bar=?, " +
+                                "pet_idle_volume=?, " +
+                                "extended_info=?, " +
+                                "multi_world=? " +
                                 "WHERE internal_uuid=?;");
                 statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
                 statement.setString(2, player.getOfflineUUID() != null ? player.getOfflineUUID().toString() : null);
@@ -515,7 +537,7 @@ public class MySqlRepository implements Repository {
                     checkConnection();
 
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE owner_uuid=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE owner_uuid=?;");
                         statement.setString(1, myPetPlayer.getInternalUUID().toString());
                         ResultSet resultSet = statement.executeQuery();
                         resultSet.next();
@@ -539,7 +561,7 @@ public class MySqlRepository implements Repository {
                     checkConnection();
 
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE owner_uuid=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE owner_uuid=?;");
                         statement.setString(1, owner.getInternalUUID().toString());
                         ResultSet resultSet = statement.executeQuery();
                         List<InactiveMyPet> pets = resultSetToMyPet(owner, resultSet);
@@ -562,7 +584,7 @@ public class MySqlRepository implements Repository {
                     checkConnection();
 
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE uuid=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;");
                         statement.setString(1, uuid.toString());
 
                         ResultSet resultSet = statement.executeQuery();
@@ -594,7 +616,7 @@ public class MySqlRepository implements Repository {
                 checkConnection();
 
                 try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE uuid=?;");
+                    PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;");
                     statement.setString(1, uuid.toString());
 
                     int result = statement.executeUpdate();
@@ -639,7 +661,7 @@ public class MySqlRepository implements Repository {
     public boolean addMyPet(InactiveMyPet myPet) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO pets (uuid, " +
+                    "INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "pets (uuid, " +
                             "owner_uuid, " +
                             "exp, " +
                             "health, " +
@@ -685,7 +707,20 @@ public class MySqlRepository implements Repository {
                 checkConnection();
 
                 try {
-                    PreparedStatement statement = connection.prepareStatement("UPDATE pets SET owner_uuid=?, exp=? , health=?, respawn_time=?, name=?, last_used=?, hunger=?, world_group=?, wants_to_spawn=?, skilltree=?, skills=?, info=? WHERE uuid=?;");
+                    PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
+                            "owner_uuid=?, " +
+                            "exp=?, " +
+                            "health=?, " +
+                            "respawn_time=?, " +
+                            "name=?, " +
+                            "last_used=?, " +
+                            "hunger=?, " +
+                            "world_group=?, " +
+                            "wants_to_spawn=?, " +
+                            "skilltree=?, " +
+                            "skills=?, " +
+                            "info=? " +
+                            "WHERE uuid=?;");
                     statement.setString(1, myPet.getOwner().getInternalUUID().toString());
                     statement.setDouble(2, myPet.getExp());
                     statement.setDouble(3, myPet.getHealth());
@@ -812,7 +847,7 @@ public class MySqlRepository implements Repository {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM players;");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "players;");
 
             List<MyPetPlayer> players = new ArrayList<>();
             MyPetPlayer player;
@@ -841,7 +876,7 @@ public class MySqlRepository implements Repository {
                     String uuidType = BukkitUtil.isInOnlineMode() ? "mojang" : "offline";
 
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(internal_uuid) FROM players WHERE " + uuidType + "_uuid=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(internal_uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE " + uuidType + "_uuid=?;");
                         statement.setString(1, player.getUniqueId().toString());
                         ResultSet resultSet = statement.executeQuery();
                         resultSet.next();
@@ -865,7 +900,7 @@ public class MySqlRepository implements Repository {
                     checkConnection();
 
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE internal_uuid=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE internal_uuid=?;");
                         statement.setString(1, uuid.toString());
                         ResultSet resultSet = statement.executeQuery();
                         MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
@@ -891,7 +926,7 @@ public class MySqlRepository implements Repository {
 
                     String uuidType = BukkitUtil.isInOnlineMode() ? "mojang" : "offline";
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE " + uuidType + "_uuid=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE " + uuidType + "_uuid=?;");
                         statement.setString(1, player.getUniqueId().toString());
                         ResultSet resultSet = statement.executeQuery();
 
@@ -929,8 +964,17 @@ public class MySqlRepository implements Repository {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE players " +
-                            "SET mojang_uuid=?, offline_uuid=?, name=?, auto_respawn=?, auto_respawn_min=?, capture_mode=?, health_bar=?, pet_idle_volume=?, extended_info=?, multi_world=? " +
+                    "UPDATE " + Configuration.Repository.MySQL.PREFIX + "players SET " +
+                            "mojang_uuid=?, " +
+                            "offline_uuid=?, " +
+                            "name=?, " +
+                            "auto_respawn=?, " +
+                            "auto_respawn_min=?, " +
+                            "capture_mode=?, " +
+                            "health_bar=?, " +
+                            "pet_idle_volume=?, " +
+                            "extended_info=?, " +
+                            "multi_world=? " +
                             "WHERE internal_uuid=?;");
             statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
             statement.setString(2, player.getOfflineUUID() != null ? player.getOfflineUUID().toString() : null);
@@ -982,7 +1026,7 @@ public class MySqlRepository implements Repository {
     public boolean addMyPetPlayer(MyPetPlayer player) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO players (" +
+                    "INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "players (" +
                             "internal_uuid, " +
                             "mojang_uuid, " +
                             "offline_uuid, " +
@@ -1027,7 +1071,7 @@ public class MySqlRepository implements Repository {
                 checkConnection();
 
                 try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM players WHERE internal_uuid=?;");
+                    PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE internal_uuid=?;");
                     statement.setString(1, player.getInternalUUID().toString());
 
                     int result = statement.executeUpdate();
