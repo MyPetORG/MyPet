@@ -428,8 +428,8 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
             }
 
             Player p = getPlayer();
-            List<Entity> entities = p.getNearbyEntities(10, 10, 10);
-
+            List<Entity> entities = p.getNearbyEntities(7, 7, 7);
+            int count = 0;
             for (Entity entity : entities) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetEntity)) {
                     if (MyPetType.isLeashableEntityType(entity.getType())) {
@@ -453,6 +453,9 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
                             BukkitUtil.playParticleEffect(p, l, EnumParticle.ITEM_CRACK, 0, 0, 0, 0.02f, 20, 16, 351, 10);
                         } else {
                             BukkitUtil.playParticleEffect(p, l, EnumParticle.ITEM_CRACK, 0, 0, 0, 0.02f, 20, 16, 351, +1);
+                        }
+                        if (count++ > 20) {
+                            break;
                         }
                     }
                 }
