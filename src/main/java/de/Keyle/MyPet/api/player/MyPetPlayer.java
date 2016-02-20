@@ -344,14 +344,6 @@ public abstract class MyPetPlayer implements Scheduler, NBTStorage {
 
     @Override
     public void load(TagCompound myplayerNBT) {
-        // ToDo remove --------------------------
-        if (myplayerNBT.getCompoundData().containsKey("Offline-UUID")) {
-            offlineUUID = UUID.fromString(myplayerNBT.getAs("Offline-UUID", TagString.class).getStringData());
-        }
-        if (myplayerNBT.getCompoundData().containsKey("Mojang-UUID")) {
-            mojangUUID = UUID.fromString(myplayerNBT.getAs("Mojang-UUID", TagString.class).getStringData());
-        }
-        // --------------------------------------
         if (myplayerNBT.containsKeyAs("UUID", TagCompound.class)) {
             TagCompound uuidTag = myplayerNBT.getAs("UUID", TagCompound.class);
 
