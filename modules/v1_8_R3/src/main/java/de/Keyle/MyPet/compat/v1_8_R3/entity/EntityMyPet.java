@@ -42,6 +42,7 @@ import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
@@ -120,7 +121,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         petPathfinderSelector.addGoal("Sprint", new Sprint(this, 0.25F));
         petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
         petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3, 20));
-        petPathfinderSelector.addGoal("Control", new Control(myPet, 0.1F));
+        petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Misc.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
         petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new RandomLookaround(this));
@@ -281,6 +282,20 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void showPotionParticles(Color color) {
+        getDataWatcher().watch(7, color.asRGB());
+    }
+
+    @Override
+    public void hidePotionParticles() {
+        int potionEffects = 0;
+        if (!effects.isEmpty()) {
+            potionEffects = PotionBrewer.a(effects.values());
+        }
+        getDataWatcher().watch(7, potionEffects);
     }
 
     public MyPetPlayer getOwner() {

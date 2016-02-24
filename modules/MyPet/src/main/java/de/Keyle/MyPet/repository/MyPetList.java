@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.MyPetClass;
 import de.keyle.knbt.TagCompound;
 
 import java.util.Collection;
@@ -74,7 +75,7 @@ public class MyPetList extends de.Keyle.MyPet.api.repository.MyPetList {
         getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
-            ActiveMyPet activeMyPet = null;//inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getOwner());
+            ActiveMyPet activeMyPet = MyPetClass.getByMyPetType(inactiveMyPet.getPetType()).getNewMyPetInstance(inactiveMyPet.getOwner());
             activeMyPet.setUUID(inactiveMyPet.getUUID());
             activeMyPet.setPetName(inactiveMyPet.getPetName());
             activeMyPet.setRespawnTime(inactiveMyPet.getRespawnTime());

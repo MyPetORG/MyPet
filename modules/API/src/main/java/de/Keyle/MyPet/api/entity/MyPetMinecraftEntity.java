@@ -23,13 +23,14 @@ package de.Keyle.MyPet.api.entity;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
 public interface MyPetMinecraftEntity {
     boolean isMyPet();
 
-    MyPet getMyPet();
+    ActiveMyPet getMyPet();
 
     AIGoalSelector getPathfinder();
 
@@ -58,4 +59,8 @@ public interface MyPetMinecraftEntity {
     boolean hasTarget();
 
     boolean hasRider();
+
+    void showPotionParticles(Color color);
+
+    void hidePotionParticles();
 }

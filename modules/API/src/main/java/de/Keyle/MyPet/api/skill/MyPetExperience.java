@@ -40,21 +40,16 @@ import java.util.WeakHashMap;
 
 public class MyPetExperience {
 
-    private static Experience expMode = null;
-
+    private Experience expMode = null;
     private final ActiveMyPet myPet;
     private double exp = 0;
     private double levelCapExp = 0;
 
     public MyPetExperience(ActiveMyPet pet, Experience expMode) {
         this.myPet = pet;
-
+        this.expMode = expMode;
 
         reset();
-    }
-
-    public static void resetMode() {
-        expMode = null;
     }
 
     public void reset() {

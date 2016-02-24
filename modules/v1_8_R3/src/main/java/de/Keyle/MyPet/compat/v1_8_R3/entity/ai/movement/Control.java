@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -37,11 +38,11 @@ public class Control extends AIGoal implements Scheduler {
     private de.Keyle.MyPet.skill.skills.Control controlSkill;
     private boolean isRunning = false;
 
-    public Control(ActiveMyPet myPet, float speedModifier) {
-        this.myPet = myPet;
+    public Control(MyPetMinecraftEntity entity, float speedModifier) {
+        this.myPet = entity.getMyPet();
         this.speedModifier = speedModifier;
-        nav = this.myPet.getEntity().getHandle().getPetNavigation();
-        controlSkill = myPet.getSkills().getSkill(de.Keyle.MyPet.skill.skills.Control.class);
+        nav = entity.getPetNavigation();
+        controlSkill = this.myPet.getSkills().getSkill(de.Keyle.MyPet.skill.skills.Control.class);
     }
 
     @Override
