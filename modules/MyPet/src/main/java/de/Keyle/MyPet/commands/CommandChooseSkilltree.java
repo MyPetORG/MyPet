@@ -38,7 +38,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,8 +148,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         SkillTree addedSkilltree = availableSkilltrees.get(i);
 
                         TagCompound tag = addedSkilltree.getIconItem();
-                        ItemStack item = MyPetApi.getBukkitHelper().compundToItemStack(tag);
-                        IconMenuItem option = IconMenuItem.fromItemStack(item);
+                        IconMenuItem option = IconMenuItem.fromTagCompund(tag);
                         option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰");
 
                         boolean selectable = false;
