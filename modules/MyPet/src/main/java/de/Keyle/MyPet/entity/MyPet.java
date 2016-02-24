@@ -40,7 +40,6 @@ import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.hooks.EconomyHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.Damage;
@@ -591,7 +590,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
         return "MyPet{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", worldgroup=" + worldGroup + "}";
     }
 
-    public static float[] getEntitySize(Class<? extends EntityMyPet> entityMyPetClass) {
+    public static float[] getEntitySize(Class<? extends MyPetMinecraftEntity> entityMyPetClass) {
         EntitySize es = entityMyPetClass.getAnnotation(EntitySize.class);
         if (es != null) {
             return new float[]{es.height(), es.width()};
