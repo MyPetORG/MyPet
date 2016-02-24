@@ -1,0 +1,133 @@
+<!--
+  ~ This file is part of mypet
+  ~
+  ~ Copyright (C) 2011-2016 Keyle
+  ~ mypet is licensed under the GNU Lesser General Public License.
+  ~
+  ~ mypet is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ mypet is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mypet-compat</artifactId>
+    <version>v1_8_R3</version>
+    <packaging>jar</packaging>
+    <name>MyPet-Premium-v1_8_R3</name>
+    <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
+
+    <parent>
+        <groupId>de.keyle</groupId>
+        <artifactId>mypet-parent</artifactId>
+        <version>1</version>
+        <relativePath>../../</relativePath>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <minecraft.version>1.8.8</minecraft.version>
+        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
+        <bukkit.packet>v1_8_R3</bukkit.packet>
+
+        <remove.donator>none</remove.donator>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>${minecraft.version}-${bukkit.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>sneaky-throw</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-api</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-core</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <plugins>
+            <!--
+            <plugin>
+                <groupId>com.wolvereness</groupId>
+                <artifactId>overmapped</artifactId>
+                <version>0.0.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>map</goal>
+                        </goals>
+                        <configuration>
+                            <maps>${basedir}/maps.yml</maps>
+                            <input>${basedir}/target/${project.name}.jar</input>
+                            <original>${basedir}/target/unmapped-${project.name}.jar</original>
+                            <missing>FAIL</missing>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

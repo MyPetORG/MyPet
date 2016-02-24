@@ -1,0 +1,261 @@
+<!--
+  ~ This file is part of mypet (1)
+  ~
+  ~ Copyright (C) 2011-2016 Keyle
+  ~ mypet (1) is licensed under the GNU Lesser General Public License.
+  ~
+  ~ mypet (1) is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ mypet (1) is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mypet</artifactId>
+    <version>1.3.2-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>MyPet-Premium</name>
+    <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
+
+    <parent>
+        <groupId>de.keyle</groupId>
+        <artifactId>mypet-parent</artifactId>
+        <version>1</version>
+        <relativePath>../../</relativePath>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <minecraft.version>1.8.8</minecraft.version>
+        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
+        <bukkit.packet>v1_8_R3</bukkit.packet>
+
+        <download.translations>prepare-package</download.translations>
+        <remove.donator>none</remove.donator>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-api</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-core</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-compat</artifactId>
+            <version>v1_8_R3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.14</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>1.11</version>
+        </dependency>
+    </dependencies>
+
+    <ciManagement>
+        <system>jenkins</system>
+        <url>http://build.keyle.de</url>
+    </ciManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:xXKeyleXx/MyPet.git</connection>
+        <developerConnection>scm:git:git@github.com:xXKeyleXx/MyPet.git</developerConnection>
+        <url>https://github.com/xXKeyleXx/MyPet/tree/master/</url>
+    </scm>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>../../src/main/resources/</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.9.4</version>
+                <executions>
+                    <execution>
+                        <phase>${download.translations}</phase>
+                        <configuration>
+                            <connectionUrl>scm:git:https://github.com/xXKeyleXx/MyPet-Translations.git</connectionUrl>
+                            <checkoutDirectory>target/classes/locale</checkoutDirectory>
+                            <excludes>exclude,.git,.gitignore</excludes>
+                        </configuration>
+                        <goals>
+                            <goal>checkout</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <outputDirectory>../../target</outputDirectory>
+                    <jarName>${project.name}-${project.version}</jarName>
+                    <archive>
+                        <manifestEntries>
+                            <Class-Path>MyPet/rhino.jar MyPet/mongo-java-driver-3.2.1.jar</Class-Path>
+                            <Main-Class>de.Keyle.MyPet.gui.GuiMain</Main-Class>
+                            <Premium>true</Premium>
+                            <Project-Author>Keyle</Project-Author>
+                            <Project-Name>${project.name}</Project-Name>
+                            <Project-Version>${project.version}</Project-Version>
+                            <Project-Build>${BUILD_NUMBER}</Project-Build>
+                            <Project-Minecraft-Version>${minecraft.version}</Project-Minecraft-Version>
+                            <Project-Bukkit-Packet>${bukkit.packet}</Project-Bukkit-Packet>
+                            <Git-Commit>${GIT_COMMIT}</Git-Commit>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>ideauidesigner-maven-plugin</artifactId>
+                <version>1.0-beta-2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>javac2</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <fork>true</fork>
+                    <debug>true</debug>
+                    <failOnError>true</failOnError>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <includes>
+                                    <include>de.keyle:mypet*</include>
+                                    <include>de.keyle:knbt:jar:*</include>
+                                    <include>de.keyle:fanciful-chat:*</include>
+                                    <include>org.mcstats.bukkit:metrics:*</include>
+                                    <include>com.intellij:forms_rt:*</include>
+                                    <include>com.googlecode.json-simple:json-simple:*</include>
+                                    <include>com.google.code.gson:gson:*</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.mcstats</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.keyle.knbt</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.nbt</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.intellij.uiDesigner.core</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.gui.uiDesigner</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.keyle.fanciful</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.chat.fanciful</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.json.simple</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.json.simple</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.gson</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.gson</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>com.intellij:forms_rt</artifact>
+                                    <includes>
+                                        <include>com/intellij/uiDesigner/core/**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
