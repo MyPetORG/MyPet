@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R3.EntityLiving;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Sprint extends AIGoal {
@@ -50,11 +51,12 @@ public class Sprint extends AIGoal {
         if (petEntity.getMyPet().getDamage() <= 0) {
             return false;
         }
-        EntityLiving targetEntity = this.petEntity.getGoalTarget();
-
-        if (targetEntity == null) {
+        if (this.petEntity.getTarget() != null) {
             return false;
         }
+
+        EntityLiving targetEntity = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+
         if (!targetEntity.isAlive()) {
             return false;
         }

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.attack;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.Skills;
@@ -29,6 +30,7 @@ import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R3.skill.skills.ranged.nms.*;
 import de.Keyle.MyPet.skill.skills.Ranged;
 import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 
 public class RangedAttack extends AIGoal {
     private ActiveMyPet myPet;
@@ -55,27 +57,35 @@ public class RangedAttack extends AIGoal {
         if (myPet.getRangedDamage() <= 0) {
             return false;
         }
-        EntityLiving goalTarget = this.entityMyPet.getGoalTarget();
-
-        if (goalTarget == null || !goalTarget.isAlive() || !entityMyPet.canMove()) {
+        if (!entityMyPet.canMove()) {
             return false;
         }
-        if (goalTarget instanceof EntityArmorStand) {
+        if (!entityMyPet.hasTarget()) {
+            return false;
+        }
+
+        EntityLiving target = ((CraftLivingEntity) this.entityMyPet.getTarget()).getHandle();
+
+        if (target instanceof EntityArmorStand) {
             return false;
         }
         double meleeDamage = myPet.getDamage();
-        if (meleeDamage > 0 && this.entityMyPet.f(goalTarget.locX, goalTarget.getBoundingBox().b, goalTarget.locZ) < 4) {
+        if (meleeDamage > 0 && this.entityMyPet.f(target.locX, target.getBoundingBox().b, target.locZ) < 4) {
             if (meleeDamage > rangedSkill.getDamage()) {
                 return false;
             }
         }
-        this.target = goalTarget;
+        this.target = target;
         return true;
     }
 
     @Override
     public boolean shouldFinish() {
-        if (entityMyPet.getGoalTarget() == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
+        if (entityMyPet.getTarget() == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
+            return true;
+        }
+        if (this.target.getBukkitEntity() != this.myPet.getEntity().getTarget()) {
+            MyPetApi.getLogger().info("stop 2");
             return true;
         }
         double meleeDamage = myPet.getDamage();

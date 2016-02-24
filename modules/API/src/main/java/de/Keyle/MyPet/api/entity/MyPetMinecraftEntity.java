@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -55,6 +56,12 @@ public interface MyPetMinecraftEntity {
     void updateVisuals();
 
     LivingEntity getTarget();
+
+    TargetPriority getTargetPriority();
+
+    void setTarget(LivingEntity entity, TargetPriority priority);
+
+    void forgetTarget();
 
     boolean hasTarget();
 

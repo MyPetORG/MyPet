@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import net.minecraft.server.v1_8_R3.EntityLiving;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 public class MeleeAttack extends AIGoal {
@@ -52,13 +53,11 @@ public class MeleeAttack extends AIGoal {
         if (myPet.getDamage() <= 0) {
             return false;
         }
-        EntityLiving targetEntity = this.petEntity.getGoalTarget();
-        if (targetEntity == null) {
+        if (!this.petEntity.hasTarget()) {
             return false;
         }
-        if (!targetEntity.isAlive()) {
-            return false;
-        }
+        EntityLiving targetEntity = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+
         if (targetEntity instanceof EntityArmorStand) {
             return false;
         }
@@ -71,9 +70,9 @@ public class MeleeAttack extends AIGoal {
 
     @Override
     public boolean shouldFinish() {
-        if (this.petEntity.getGoalTarget() == null || !this.targetEntity.isAlive()) {
+        if (this.petEntity.getTarget() == null || !this.targetEntity.isAlive() || !this.petEntity.canMove()) {
             return true;
-        } else if (this.targetEntity != this.petEntity.getGoalTarget()) {
+        } else if (this.targetEntity.getBukkitEntity() != this.petEntity.getTarget()) {
             return true;
         }
         if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.f(targetEntity.locX, targetEntity.getBoundingBox().b, targetEntity.locZ) >= 20) {

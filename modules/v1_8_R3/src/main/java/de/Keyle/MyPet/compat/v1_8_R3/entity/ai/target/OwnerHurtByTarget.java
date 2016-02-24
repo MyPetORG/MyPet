@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.target;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
@@ -30,9 +31,10 @@ import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.EntityTameableAnimal;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityTargetEvent;
 
 public class OwnerHurtByTarget extends AIGoal {
     private EntityMyPet petEntity;
@@ -117,17 +119,18 @@ public class OwnerHurtByTarget extends AIGoal {
 
     @Override
     public boolean shouldFinish() {
-        EntityLiving entityliving = petEntity.getGoalTarget();
-
         if (!petEntity.canMove()) {
             return true;
-        } else if (entityliving == null) {
+        }
+        if (!petEntity.hasTarget()) {
             return true;
-        } else if (!entityliving.isAlive()) {
+        }
+
+        EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+
+        if (target.world != petEntity.world) {
             return true;
-        } else if (petEntity.getGoalTarget().world != petEntity.world) {
-            return true;
-        } else if (petEntity.h(petEntity.getGoalTarget()) > 400) {
+        } else if (petEntity.h(target) > 400) {
             return true;
         } else if (petEntity.h(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600) {
             return true;
@@ -137,11 +140,11 @@ public class OwnerHurtByTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.lastDamager, EntityTargetEvent.TargetReason.TARGET_ATTACKED_OWNER, false);
+        petEntity.setTarget((LivingEntity) this.lastDamager.getBukkitEntity(), TargetPriority.OwnerGetsHurt);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
+        petEntity.forgetTarget();
     }
 }

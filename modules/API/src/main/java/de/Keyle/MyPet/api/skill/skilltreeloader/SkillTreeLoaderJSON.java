@@ -68,7 +68,7 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
             if (skilltreeConfig.load()) {
                 try {
                     loadSkillTree(skilltreeConfig, skillTreeMobType);
-                    MyPetApi.getLogger().info("Skilltree from " + mobType.toLowerCase() + ".json loaded.");
+                    MyPetApi.getLogger().info("Skilltrees from " + mobType.toLowerCase() + ".json loaded.");
                 } catch (Exception e) {
                     MyPetApi.getLogger().warning(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".json");
                     e.printStackTrace();

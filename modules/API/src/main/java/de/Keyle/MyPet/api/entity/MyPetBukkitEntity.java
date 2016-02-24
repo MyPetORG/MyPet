@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 
 public interface MyPetBukkitEntity extends Creature {
     ActiveMyPet getMyPet();
@@ -35,4 +37,11 @@ public interface MyPetBukkitEntity extends Creature {
     MyPetPlayer getOwner();
 
     void removeEntity();
+
+    void setTarget(LivingEntity target, TargetPriority priority);
+
+    @Deprecated
+    void setTarget(LivingEntity target);
+
+    void forgetTarget();
 }

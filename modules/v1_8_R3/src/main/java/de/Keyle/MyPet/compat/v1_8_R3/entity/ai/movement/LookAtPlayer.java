@@ -48,7 +48,7 @@ public class LookAtPlayer extends AIGoal {
         if (this.petEntity.getRandom().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
-        if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
+        if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
             return false;
         }
         if (this.petEntity.passenger != null) {

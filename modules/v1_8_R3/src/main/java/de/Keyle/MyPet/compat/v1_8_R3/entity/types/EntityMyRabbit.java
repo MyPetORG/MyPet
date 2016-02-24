@@ -109,7 +109,7 @@ public class EntityMyRabbit extends EntityMyPet {
         if (this.onGround && getNavigation().j() != null && jumpDelay-- <= 0) {
             getControllerJump().a();
             jumpDelay = (this.random.nextInt(10) + 10);
-            if (getGoalTarget() != null) {
+            if (getTarget() != null) {
                 jumpDelay /= 3;
             }
             this.world.broadcastEntityEffect(this, (byte) 1);

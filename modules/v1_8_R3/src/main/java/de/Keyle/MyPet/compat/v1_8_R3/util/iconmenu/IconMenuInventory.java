@@ -60,10 +60,13 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
 
             for (int slot = 0; slot < size; slot++) {
                 IconMenuItem menuItem = menu.getOption(slot);
-                org.bukkit.inventory.ItemStack item = createNmsItemStack(menuItem);
-                bukkitInventory.setItem(slot, item);
+                if(menuItem != null) {
+                    org.bukkit.inventory.ItemStack item = createNmsItemStack(menuItem);
+                    bukkitInventory.setItem(slot, item);
+                }
             }
         }
+        player.openInventory(bukkitInventory);
     }
 
     @Override

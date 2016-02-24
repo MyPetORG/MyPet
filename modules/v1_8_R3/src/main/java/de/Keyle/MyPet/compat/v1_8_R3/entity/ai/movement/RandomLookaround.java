@@ -35,7 +35,7 @@ public class RandomLookaround extends AIGoal {
 
     @Override
     public boolean shouldStart() {
-        if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
+        if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
             return false;
         }
         if (this.petEntity.passenger != null) {
