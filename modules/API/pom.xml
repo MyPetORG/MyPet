@@ -25,6 +25,7 @@
     <artifactId>mypet-api</artifactId>
     <version>1</version>
     <packaging>jar</packaging>
+    <name>MyPet-API</name>
 
     <parent>
         <groupId>de.keyle</groupId>
