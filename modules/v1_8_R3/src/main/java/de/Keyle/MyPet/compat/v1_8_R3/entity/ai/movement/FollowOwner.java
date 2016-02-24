@@ -50,13 +50,13 @@ public class FollowOwner extends AIGoal {
     @Override
     public boolean shouldStart() {
         if (controlPathfinderGoal == null) {
-            if (petEntity.petPathfinderSelector.hasGoal("Control")) {
-                controlPathfinderGoal = (Control) petEntity.petPathfinderSelector.getGoal("Control");
+            if (petEntity.getPathfinder().hasGoal("Control")) {
+                controlPathfinderGoal = (Control) petEntity.getPathfinder().getGoal("Control");
             }
         }
         if (!this.petEntity.canMove()) {
             return false;
-        } else if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
+        } else if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
             return false;
         } else if (this.petEntity.getOwner() == null) {
             return false;
@@ -78,7 +78,7 @@ public class FollowOwner extends AIGoal {
             return true;
         } else if (!this.petEntity.canMove()) {
             return true;
-        } else if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
+        } else if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
             return true;
         }
         return false;
@@ -110,7 +110,7 @@ public class FollowOwner extends AIGoal {
             if (--this.setPathTimer <= 0) {
                 this.setPathTimer = 10;
                 if (!this.nav.navigateTo(owner.getBukkitEntity())) {
-                    if (owner.onGround && this.petEntity.h(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetApi.getBukkitHelper().canSpawn(ownerLocation, this.petEntity)) {
+                    if (owner.onGround && this.petEntity.h(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && !petEntity.hasTarget() && MyPetApi.getBukkitHelper().canSpawn(ownerLocation, this.petEntity)) {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                         this.nav.navigateTo(owner.getBukkitEntity());
                     }

@@ -23,14 +23,16 @@ package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.target;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.EntityMonster;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.entity.LivingEntity;
 
 public class BehaviorFarmTarget extends AIGoal {
     private ActiveMyPet myPet;
@@ -61,7 +63,7 @@ public class BehaviorFarmTarget extends AIGoal {
         if (!myPet.getEntity().canMove()) {
             return false;
         }
-        if (petEntity.getGoalTarget() != null && petEntity.getGoalTarget().isAlive()) {
+        if (petEntity.hasTarget()) {
             return false;
         }
 
@@ -81,21 +83,23 @@ public class BehaviorFarmTarget extends AIGoal {
 
     @Override
     public boolean shouldFinish() {
-        EntityLiving entityliving = petEntity.getGoalTarget();
-
         if (!petEntity.canMove()) {
             return true;
-        } else if (entityliving == null) {
+        }
+        if (!this.petEntity.hasTarget()) {
             return true;
-        } else if (!entityliving.isAlive()) {
+        }
+        EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+
+        if (!target.isAlive()) {
             return true;
         } else if (behaviorSkill.getBehavior() != BehaviorState.Farm) {
             return true;
         } else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return true;
-        } else if (petEntity.getGoalTarget().world != petEntity.world) {
+        } else if (target.world != petEntity.world) {
             return true;
-        } else if (petEntity.h(petEntity.getGoalTarget()) > 400) {
+        } else if (petEntity.h(target) > 400) {
             return true;
         } else if (petEntity.h(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600) {
             return true;
@@ -105,12 +109,12 @@ public class BehaviorFarmTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.RANDOM_TARGET, false);
+        petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Farm);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
+        petEntity.forgetTarget();
         target = null;
     }
 }

@@ -23,11 +23,10 @@ package de.Keyle.MyPet.compat.v1_8_R3.entity;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.skill.skills.Behavior;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -131,26 +130,18 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
         super.setHealth(health);
     }
 
+    @Deprecated
     public void setTarget(LivingEntity target) {
-        EntityMyPet entity = getHandle();
-        if (target == null) {
-            entity.setGoalTarget(null);
-        } else if (target instanceof CraftLivingEntity) {
-            if (!entity.isMyPet) {
-                return;
-            }
-            if (entity.myPet.getSkills().isSkillActive(Behavior.class)) {
-                Behavior behaviorSkill = getMyPet().getSkills().getSkill(Behavior.class);
-                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
-                    return;
-                }
-            }
-            petEntity.setGoalTarget(((CraftLivingEntity) target).getHandle());
-        }
+        setTarget(target, TargetPriority.Bukkit);
     }
 
-    public void setGoalTarget(LivingEntity target) {
-        getHandle().goalTarget = ((CraftLivingEntity) target).getHandle();
+    @Override
+    public void forgetTarget() {
+        getHandle().forgetTarget();
+    }
+
+    public void setTarget(LivingEntity target, TargetPriority priority) {
+        getHandle().setTarget(target, priority);
     }
 
     @Override

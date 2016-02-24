@@ -47,7 +47,7 @@ public class EatGrass extends AIGoal {
             return false;
         } else if (entityMySheep.getRandom().nextDouble() > chanceToEat / 100.) {
             return false;
-        } else if (this.entityMySheep.getGoalTarget() != null && this.entityMySheep.getGoalTarget().isAlive()) {
+        } else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getTarget().isDead()) {
             return false;
         }
         int blockLocX = MathHelper.floor(this.entityMySheep.locX);

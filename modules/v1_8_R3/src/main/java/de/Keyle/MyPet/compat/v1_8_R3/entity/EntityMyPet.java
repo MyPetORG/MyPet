@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -44,7 +45,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -57,8 +60,9 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
-    public AIGoalSelector petPathfinderSelector, petTargetSelector;
-    public EntityLiving goalTarget = null;
+    protected AIGoalSelector petPathfinderSelector, petTargetSelector;
+    protected EntityLiving target = null;
+    protected TargetPriority targetPriority = TargetPriority.None;
     protected double walkSpeed = 0.3F;
     protected boolean hasRider = false;
     protected boolean isMyPet = false;
@@ -185,11 +189,44 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public boolean hasTarget() {
-        return goalTarget != null && goalTarget.isAlive();
+        if (target != null) {
+            if (target.isAlive()) {
+                return true;
+            }
+            target = null;
+        }
+        return false;
+    }
+
+    public TargetPriority getTargetPriority() {
+        return targetPriority;
     }
 
     public LivingEntity getTarget() {
-        return goalTarget != null ? (LivingEntity) goalTarget.getBukkitEntity() : null;
+        if (target != null) {
+            if (target.isAlive()) {
+                return (LivingEntity) target.getBukkitEntity();
+            }
+            target = null;
+        }
+        return null;
+    }
+
+    public void setTarget(LivingEntity entity, TargetPriority priority) {
+        if (entity == null || entity.isDead() || entity instanceof ArmorStand) {
+            forgetTarget();
+            return;
+        }
+        MyPetApi.getLogger().info("setTarget (" + priority.name() + "): " + target);
+        if (priority.getPriority() > getTargetPriority().getPriority()) {
+            target = ((CraftLivingEntity) entity).getHandle();
+        }
+    }
+
+    public void forgetTarget() {
+        MyPetApi.getLogger().info("forgetTarget");
+        target = null;
+        targetPriority = TargetPriority.None;
     }
 
     @Override

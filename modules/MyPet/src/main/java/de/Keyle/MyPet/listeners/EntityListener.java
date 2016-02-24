@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
@@ -624,7 +625,7 @@ public class EntityListener implements Listener {
                 if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
                     ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
                     if (myPet.getStatus() == PetState.Here && damagedEntity != myPet.getEntity()) {
-                        myPet.getEntity().setTarget((LivingEntity) damagedEntity);
+                        myPet.getEntity().setTarget((LivingEntity) damagedEntity, TargetPriority.OwnerHurts);
                     }
                 }
             } else if (damager instanceof MyPetBukkitEntity) {
@@ -753,15 +754,10 @@ public class EntityListener implements Listener {
                         Behavior deadBehaviorSkill = myPet.getSkills().getSkill(Behavior.class);
                         if (deadBehaviorSkill.getBehavior() == BehaviorState.Duel && killerBehaviorSkill.getBehavior() == BehaviorState.Duel) {
                             MyPetMinecraftEntity myPetEntity = ((MyPetBukkitEntity) deadEntity).getHandle();
-                            MyPetMinecraftEntity duelKiller = ((MyPetBukkitEntity) e.getDamager()).getHandle();
-                            /* TODO
-                            if (myPetEntity.getTargetSelector().hasGoal("DuelTarget")) {
-                                BehaviorDuelTarget duelTarget = (BehaviorDuelTarget) myPetEntity.getTargetSelector().getGoal("DuelTarget");
-                                if (duelTarget.getDuelOpponent() == duelKiller) {
-                                    myPet.setRespawnTime(10);
-                                }
+
+                            if (myPetEntity.getTarget().equals(e.getDamager())) {
+                                myPet.setRespawnTime(10);
                             }
-                            */
                         }
                     }
                 }

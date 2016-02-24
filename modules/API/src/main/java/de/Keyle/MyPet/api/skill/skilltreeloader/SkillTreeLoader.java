@@ -35,9 +35,6 @@ public abstract class SkillTreeLoader {
     protected static List<SkillTree> alreadyLoadedInheritance = new ArrayList<>();
 
     public static void addDefault(SkillTreeMobType skillTreeMobType) {
-        if (!SkillTreeMobType.hasMobType(null)) {
-            return;
-        }
         SkillTreeMobType defaultSkillTreeMobType = SkillTreeMobType.DEFAULT;
         for (String skillTreeName : defaultSkillTreeMobType.getSkillTreeNames()) {
             if (!skillTreeMobType.hasSkillTree(skillTreeName) && defaultSkillTreeMobType.hasSkillTree(skillTreeName)) {
