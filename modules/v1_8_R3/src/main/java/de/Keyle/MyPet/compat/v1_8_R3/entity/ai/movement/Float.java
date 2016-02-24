@@ -35,7 +35,7 @@ public class Float extends AIGoal {
 
     public Float(EntityMyPet entityMyPet) {
         this.entityMyPet = entityMyPet;
-        //entityMyPet.getNavigation().e(true);  //ToDo
+        //entityMyPet.getNavigation().e(true);
         this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
         ((Navigation) entityMyPet.getNavigation()).d(true);
     }

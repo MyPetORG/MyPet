@@ -22,9 +22,9 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.compat.v1_8_R3.util.ConfigItem;
 import de.Keyle.MyPet.entity.MyPet;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;

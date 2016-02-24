@@ -35,21 +35,23 @@ import java.util.List;
 public class CommandShowSkillTree implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof ConsoleCommandSender) {
-            if (args.length == 1) {
-                MyPetType type = MyPetType.byName(args[0]);
-                if (type != null) {
-                    MyPetApi.getLogger().info("----- MyPet Skilltrees for: " + ChatColor.GREEN + args[0]);
-                    for (String skillTreeName : SkillTreeMobType.getMobTypeByName(args[0]).getSkillTreeNames()) {
-                        MyPetApi.getLogger().info("   " + skillTreeName);
-                    }
+            SkillTreeMobType mobType;
+            if (args.length >= 1) {
+                if (args[0].equalsIgnoreCase("default")) {
+                    mobType = SkillTreeMobType.DEFAULT;
                 } else {
-                    MyPetApi.getLogger().info("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
+                    MyPetType type = MyPetType.byName(args[0]);
+                    if (type != null) {
+                        mobType = SkillTreeMobType.byPetType(type);
+                    } else {
+                        MyPetApi.getLogger().info("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
+                        return true;
+                    }
                 }
-            } else if (args.length == 2) {
-                MyPetType type = MyPetType.byName(args[0]);
-                if (SkillTreeMobType.hasMobType(type)) {
-                    if (SkillTreeMobType.byPetType(type).hasSkillTree(args[1])) {
-                        SkillTree skillTree = SkillTreeMobType.byPetType(type).getSkillTree(args[1]);
+
+                if (args.length >= 2) {
+                    if (mobType.hasSkillTree(args[1])) {
+                        SkillTree skillTree = mobType.getSkillTree(args[1]);
                         MyPetApi.getLogger().info("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : ChatColor.DARK_GRAY + "none" + ChatColor.RESET) + " -----");
                         for (SkillTreeLevel lvl : skillTree.getLevelList()) {
                             MyPetApi.getLogger().info(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ": (" + (lvl.hasLevelupMessage() ? Colorizer.setColors(lvl.getLevelupMessage()) + ChatColor.RESET : "-") + ")");
@@ -66,8 +68,13 @@ public class CommandShowSkillTree implements CommandExecutor, TabCompleter {
                         MyPetApi.getLogger().info("There is " + ChatColor.RED + "no" + ChatColor.RESET + " skilltree with the name: " + ChatColor.AQUA + args[1]);
                     }
                 } else {
-                    MyPetApi.getLogger().info("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
+                    MyPetApi.getLogger().info("----- MyPet Skilltrees for: " + ChatColor.GREEN + args[0]);
+                    for (String skillTreeName : mobType.getSkillTreeNames()) {
+                        MyPetApi.getLogger().info("   " + skillTreeName);
+                    }
                 }
+            } else {
+                return false;
             }
         } else {
             sender.sendMessage("Can only be used in server console");

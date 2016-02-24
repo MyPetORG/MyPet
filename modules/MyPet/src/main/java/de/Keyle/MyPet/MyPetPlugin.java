@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.*;
-import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.SkillsInfo;
 import de.Keyle.MyPet.api.skill.skills.*;
@@ -126,9 +125,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         playerList = new de.Keyle.MyPet.repository.PlayerList();
         hookManager = new Hooks();
 
+        entityRegistry.registerEntityTypes();
+
         PluginHookManager.reset();
 
-        MyPetExperience.resetMode();
         ConfigurationLoader.setDefault();
         ConfigurationLoader.loadConfiguration();
 

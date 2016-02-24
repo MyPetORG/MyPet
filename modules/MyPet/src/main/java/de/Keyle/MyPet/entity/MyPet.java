@@ -64,7 +64,7 @@ import static org.bukkit.Bukkit.getServer;
 
 public abstract class MyPet implements ActiveMyPet, NBTStorage {
     protected final MyPetPlayer petOwner;
-    protected MyPetBukkitEntity craftMyPet;
+    protected MyPetBukkitEntity bukkitEntity;
     protected String petName = "Pet";
     protected double health;
     protected int respawnTime = 0;
@@ -133,8 +133,10 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
     }
 
     public MyPetBukkitEntity getEntity() {
-        getStatus();
-        return craftMyPet;
+        if (getStatus() == PetState.Here) {
+            return bukkitEntity;
+        }
+        return null;
     }
 
     public double getYSpawnOffset() {
@@ -143,7 +145,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
 
     public Location getLocation() {
         if (status == PetState.Here) {
-            return craftMyPet.getLocation();
+            return bukkitEntity.getLocation();
         } else if (petOwner.isOnline()) {
             return petOwner.getPlayer().getLocation();
         } else {
@@ -152,8 +154,8 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
     }
 
     public void setLocation(Location loc) {
-        if (status == PetState.Here && MyPetApi.getBukkitHelper().canSpawn(loc, this.craftMyPet.getHandle())) {
-            craftMyPet.teleport(loc);
+        if (status == PetState.Here && MyPetApi.getBukkitHelper().canSpawn(loc, this.bukkitEntity.getHandle())) {
+            bukkitEntity.teleport(loc);
         }
     }
 
@@ -170,7 +172,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
     }
 
     public boolean hasTarget() {
-        return this.getStatus() == PetState.Here && craftMyPet.getHandle().hasTarget();
+        return this.getStatus() == PetState.Here && bukkitEntity.getHandle().hasTarget();
     }
 
     public double getExp() {
@@ -194,7 +196,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
 
     public double getHealth() {
         if (status == PetState.Here) {
-            return craftMyPet.getHealth();
+            return bukkitEntity.getHealth();
         } else {
             return health;
         }
@@ -207,7 +209,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
             health = d;
         }
         if (status == PetState.Here) {
-            craftMyPet.setHealth(health);
+            bukkitEntity.setHealth(health);
         }
     }
 
@@ -314,9 +316,9 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
 
     public PetState getStatus() {
         if (status == PetState.Here) {
-            if (craftMyPet == null || craftMyPet.getHandle() == null) {
+            if (bukkitEntity == null || bukkitEntity.getHandle() == null) {
                 status = PetState.Despawned;
-            } else if (craftMyPet.getHealth() <= 0 || craftMyPet.isDead()) {
+            } else if (bukkitEntity.getHealth() <= 0 || bukkitEntity.isDead()) {
                 status = PetState.Dead;
             }
         }
@@ -412,7 +414,8 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
                     status = PetState.Despawned;
                     return SpawnFlags.Canceled;
                 }
-                craftMyPet = minecraftEntity.getBukkitEntity();
+                bukkitEntity = minecraftEntity.getBukkitEntity();
+                MyPetApi.getLogger().info("bukkit entity: " + bukkitEntity);
 
                 if (getYSpawnOffset() > 0) {
                     loc = loc.add(0, getYSpawnOffset(), 0);
@@ -428,7 +431,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
 
                 MyPetApi.getEntityRegistry().spawnMinecraftEntity(minecraftEntity, loc.getWorld());
 
-                craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), this));
+                bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), this));
                 status = PetState.Here;
 
                 if (worldGroup == null || worldGroup.equals("")) {
@@ -450,10 +453,10 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
 
     public void removePet() {
         if (status == PetState.Here) {
-            health = craftMyPet.getHealth();
+            health = bukkitEntity.getHealth();
             status = PetState.Despawned;
-            craftMyPet.removeEntity();
-            craftMyPet = null;
+            bukkitEntity.removeEntity();
+            bukkitEntity = null;
         }
     }
 

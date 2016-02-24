@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_8_R3.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.compat.v1_8_R3.util.inventory.ItemStackComparator;
 import net.minecraft.server.v1_8_R3.Item;
 import net.minecraft.server.v1_8_R3.MojangsonParser;
 import net.minecraft.server.v1_8_R3.NBTBase;
@@ -38,6 +39,17 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     public ConfigItem(String data) {
         super(data);
+    }
+
+    @Override
+    public boolean compare(ItemStack compareItem) {
+        boolean result = super.compare(compareItem);
+        if(result && item.hasItemMeta()) {
+            if (!ItemStackComparator.compareTagData(item, compareItem)) {
+                return false;
+            }
+        }
+        return result;
     }
 
     public boolean compare(Object o) {

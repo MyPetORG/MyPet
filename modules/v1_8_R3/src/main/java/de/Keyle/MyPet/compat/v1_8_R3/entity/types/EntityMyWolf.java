@@ -202,6 +202,7 @@ public class EntityMyWolf extends EntityMyPet {
 
     public void setPathfinder() {
         super.setPathfinder();
+        sitPathfinder = new Sit(this);
         petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }
 }

@@ -70,14 +70,6 @@ public abstract class ConfigItem {
                 }
                 break;
         }
-        if (item.hasItemMeta()) {
-            //TODO
-            /*
-            if (!ItemStackComparator.compareTagData(item, compareItem)) {
-                return false;
-            }
-            */
-        }
         return true;
     }
 

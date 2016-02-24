@@ -20,11 +20,9 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.skills.HPregenerationInfo;
@@ -33,10 +31,12 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
+import org.bukkit.Color;
 
 public class HPregeneration extends HPregenerationInfo implements SkillInstance, Scheduler {
     private int timeCounter = 0;
     private ActiveMyPet myPet;
+    protected boolean particles = false;
 
     public HPregeneration(boolean addedByInheritance) {
         super(addedByInheritance);
@@ -100,14 +100,27 @@ public class HPregeneration extends HPregenerationInfo implements SkillInstance,
     }
 
     public void schedule() {
-        if (increaseHpBy > 0 && myPet.getStatus() == PetState.Here) {
-            if (timeCounter-- <= 0) {
-                if (myPet.getHealth() < myPet.getMaxHealth()) {
-                    addPotionGraphicalEffect(myPet.getEntity(), 0x00FF00); //Green Potion Effect
-                    myPet.getEntity().setHealth(myPet.getEntity().getHealth() + increaseHpBy);
+        if (myPet.getStatus() == PetState.Here) {
+            if (increaseHpBy > 0) {
+                if (timeCounter-- <= 0) {
+                    if (myPet.getHealth() < myPet.getMaxHealth()) {
+                        if (!particles) {
+                            particles = true;
+                            myPet.getEntity().getHandle().showPotionParticles(Color.LIME);
+                        }
+                        myPet.getEntity().setHealth(myPet.getEntity().getHealth() + increaseHpBy);
+                    }
+                    timeCounter = regenTime;
+                } else {
+                    particles = false;
                 }
-                timeCounter = regenTime;
             }
+            if (particles) {
+                particles = false;
+                myPet.getEntity().getHandle().hidePotionParticles();
+            }
+        } else if (particles) {
+            particles = false;
         }
     }
 
@@ -116,10 +129,5 @@ public class HPregeneration extends HPregenerationInfo implements SkillInstance,
         HPregeneration newSkill = new HPregeneration(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
-    }
-
-    public void addPotionGraphicalEffect(MyPetBukkitEntity entity, int color) {
-        //TODO check if particles are correct
-        MyPetApi.getBukkitHelper().playParticleEffect(entity.getLocation(), "SPELL_MOB", 0f, 0f, 0f, 1f, 10, 16, color);
     }
 }

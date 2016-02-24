@@ -29,6 +29,6 @@ public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
         if (type == EntityType.ENDER_DRAGON) {
             return PluginHookManager.isPluginUsable("ProtocolLib"); //ToDo & active
         }
-        return false;
+        return true;
     }
 }
