@@ -24,7 +24,6 @@ import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Configuration.*;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.LeashFlag;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -194,7 +193,7 @@ public class ConfigurationLoader {
 
             config.addDefault("MyPet.Pets." + petType.name() + ".HP", pi.hp());
             config.addDefault("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed());
-            config.addDefault("MyPet.Pets." + petType.name() + ".Food", Util.linkFood(pi.food()));
+            config.addDefault("MyPet.Pets." + petType.name() + ".Food", linkFood(pi.food()));
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0);
@@ -415,6 +414,14 @@ public class ConfigurationLoader {
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
             MyPetApi.getMyPetInfo().setLeashItem(petType, new ConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "" + Material.LEASH.getId())));
         }
+    }
+
+    public static List<Integer> linkFood(Material[] foodTypes) {
+        List<Integer> foodList = new ArrayList<>();
+        for (Material foodType : foodTypes) {
+            foodList.add(foodType.getId());
+        }
+        return foodList;
     }
 
     public static void seperateFood(MyPetType type, String foodString) {
