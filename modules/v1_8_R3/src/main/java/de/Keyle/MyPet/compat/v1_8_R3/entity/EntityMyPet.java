@@ -103,6 +103,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.updateNameTag();
             this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(walkSpeed);
             this.setPathfinder();
+            this.updateVisuals();
         } catch (Exception e) {
             e.printStackTrace();
         }
