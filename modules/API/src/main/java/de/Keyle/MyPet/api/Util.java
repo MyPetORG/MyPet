@@ -282,12 +282,4 @@ public class Util {
 
         return new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(mypet.getPetName());
     }
-
-    public static List<Integer> linkFood(Material[] foodTypes) {
-        List<Integer> foodList = new ArrayList<>();
-        for (Material foodType : foodTypes) {
-            foodList.add(foodType.getId());
-        }
-        return foodList;
-    }
 }
