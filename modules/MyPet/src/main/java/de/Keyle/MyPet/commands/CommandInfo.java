@@ -37,6 +37,7 @@ import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -89,7 +90,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
                     infoShown = true;
                 }
-                if (player != petOwner && canSee(!PetInfoDisplay.Owner.adminOnly, player, myPet)) {
+                if (!petOwner.equals(player) && canSee(!PetInfoDisplay.Owner.adminOnly, player, myPet)) {
                     player.sendMessage("   " + Translation.getString("Name.Owner", player) + ": " + myPet.getOwner().getName());
                     infoShown = true;
                 }
@@ -130,21 +131,21 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage("   " + Translation.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
 
                     FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", player) + ": ");
-                    boolean noComma = true;
+                    boolean comma = false;
                     for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPet.getPetType())) {
                         ItemStack is = material.getItem();
-                        if (is == null) {
+                        if (is == null || is.getType() == Material.AIR) {
                             continue;
                         }
-                        if (noComma) {
+                        if (comma) {
                             m.then(", ");
-                            noComma = false;
                         }
                         if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                             m.then(is.getItemMeta().getDisplayName());
                         } else {
                             m.then(WordUtils.capitalizeFully(MyPetApi.getBukkitHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
                         }
+                        m.color(ChatColor.GOLD);
                         ItemTooltip it = new ItemTooltip();
                         it.setMaterial(is.getType());
                         if (is.hasItemMeta()) {
@@ -156,6 +157,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                             }
                         }
                         m.itemTooltip(it);
+                        comma = true;
                     }
                     MyPetApi.getBukkitHelper().sendMessageRaw(player, m.toJSONString());
 
