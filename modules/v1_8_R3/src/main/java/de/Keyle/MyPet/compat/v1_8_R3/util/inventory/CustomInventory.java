@@ -52,6 +52,12 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
     }
 
+    public CustomInventory(int size, String name) {
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        setSize(size);
+        setName(name);
+    }
+
     public int getSize() {
         return size;
     }

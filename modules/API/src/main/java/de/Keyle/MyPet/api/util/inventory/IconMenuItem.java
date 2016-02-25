@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.util.inventory;
 
+import de.Keyle.MyPet.api.util.inventory.meta.IconMeta;
 import de.keyle.knbt.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -37,7 +38,8 @@ public class IconMenuItem {
     protected String title = "";
     protected List<String> lore = new ArrayList<>();
     protected boolean glowing = false;
-    protected ItemMeta meta;
+    protected ItemMeta bukkitMeta;
+    protected IconMeta meta = null;
 
     protected boolean hasChanged = true;
 
@@ -71,6 +73,8 @@ public class IconMenuItem {
     public IconMenuItem setMeta(ItemMeta meta, boolean useTitle, boolean useLore) {
         Validate.notNull(meta, "Name cannot be null");
 
+        this.meta = null;
+
         if (useTitle && meta.hasDisplayName()) {
             this.title = meta.getDisplayName();
             hasChanged = true;
@@ -80,11 +84,17 @@ public class IconMenuItem {
             this.lore.addAll(meta.getLore());
             hasChanged = true;
         }
-        if (this.meta != meta) {
-            this.meta = meta;
+        if (this.bukkitMeta != meta) {
+            this.bukkitMeta = meta;
             hasChanged = true;
         }
 
+        return this;
+    }
+
+    public IconMenuItem setMeta(IconMeta meta) {
+        this.meta = meta;
+        this.bukkitMeta = null;
         return this;
     }
 
@@ -137,6 +147,14 @@ public class IconMenuItem {
         return data;
     }
 
+    public IconMeta getMeta() {
+        return meta;
+    }
+
+    public boolean hasMeta() {
+        return meta != null;
+    }
+
     public int getAmount() {
         return amount;
     }
@@ -153,8 +171,8 @@ public class IconMenuItem {
         return glowing;
     }
 
-    public ItemMeta getMeta() {
-        return meta;
+    public ItemMeta getBukkitMeta() {
+        return bukkitMeta;
     }
 
     public static IconMenuItem fromItemStack(ItemStack itemStack) {

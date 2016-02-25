@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.attack;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.Skills;
@@ -85,7 +84,6 @@ public class RangedAttack extends AIGoal {
             return true;
         }
         if (this.target.getBukkitEntity() != this.myPet.getEntity().getTarget()) {
-            MyPetApi.getLogger().info("stop 2");
             return true;
         }
         double meleeDamage = myPet.getDamage();
