@@ -53,9 +53,12 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                if (myPet.getSkills().hasSkill(Beacon.class)) {
+                if (myPet.getSkills().isSkillActive(Beacon.class)) {
                     myPet.getSkills().getSkill(Beacon.class).activate();
+                } else {
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.Skill", player), myPet.getPetName(), Translation.getString("Name.Skill.Beacon", player)));
                 }
+                return true;
             } else {
                 sender.sendMessage(Translation.getString("Message.No.HasPet", player));
             }
