@@ -20,13 +20,18 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.util.iconmenu;
 
+import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
+import de.Keyle.MyPet.compat.v1_8_R3.util.inventory.CustomInventory;
+import de.Keyle.MyPet.compat.v1_8_R3.util.inventory.ItemStackNBTConverter;
+import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.NBTTagList;
 import net.minecraft.server.v1_8_R3.NBTTagString;
-import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
@@ -36,9 +41,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+@Compat("v1_8_R3")
 public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.IconMenuInventory {
     private static Method applyToItemMethhod = null;
-
     static {
         try {
             Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_8_R3.inventory.CraftMetaItem");
@@ -49,20 +54,30 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
         }
     }
 
-    Inventory bukkitInventory = null;
+    CustomInventory minecraftInventory;
+    CraftInventory bukkitInventory;
     int size = 0;
+
+    public CustomInventory getMinecraftInventory() {
+        return minecraftInventory;
+    }
+
+    public Inventory getCraftBukkitInventory() {
+        return bukkitInventory;
+    }
 
     @Override
     public void open(IconMenu menu, HumanEntity player) {
         if (bukkitInventory == null) {
             size = menu.getSize();
-            bukkitInventory = Bukkit.getServer().createInventory(null, size, menu.getTitle());
+            minecraftInventory = new CustomInventory(size, Util.cutString(menu.getTitle(), 32));
+            bukkitInventory = new CraftInventory(minecraftInventory);
 
             for (int slot = 0; slot < size; slot++) {
                 IconMenuItem menuItem = menu.getOption(slot);
                 if (menuItem != null) {
-                    org.bukkit.inventory.ItemStack item = createNmsItemStack(menuItem);
-                    bukkitInventory.setItem(slot, item);
+                    ItemStack item = createItemStack(menuItem);
+                    minecraftInventory.setItem(slot, item);
                 }
             }
         }
@@ -74,8 +89,12 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
         if (bukkitInventory != null) {
             for (int slot = 0; slot < size; slot++) {
                 IconMenuItem menuItem = menu.getOption(slot);
-                org.bukkit.inventory.ItemStack item = createNmsItemStack(menuItem);
-                bukkitInventory.setItem(slot, item);
+                if (menuItem != null) {
+                    ItemStack item = createItemStack(menuItem);
+                    minecraftInventory.setItem(slot, item);
+                } else {
+                    minecraftInventory.setItem(slot, null);
+                }
             }
         }
     }
@@ -83,15 +102,31 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
     @Override
     public void close() {
         if (bukkitInventory != null) {
-            for (HumanEntity viewer : bukkitInventory.getViewers()) {
+            List<HumanEntity> viewers = new ArrayList<>(bukkitInventory.getViewers());
+            for (HumanEntity viewer : viewers) {
                 viewer.closeInventory();
             }
             bukkitInventory = null;
+            minecraftInventory = null;
         }
     }
 
+    @Override
+    public boolean isMenuInventory(Inventory inv) {
+        return bukkitInventory != null && bukkitInventory.equals(inv);
+    }
 
-    protected org.bukkit.inventory.ItemStack createNmsItemStack(IconMenuItem icon) {
+    @Override
+    public List<HumanEntity> getViewers() {
+        return bukkitInventory != null ? bukkitInventory.getViewers() : new ArrayList<HumanEntity>();
+    }
+
+    @Override
+    public int getSize() {
+        return size;
+    }
+
+    protected ItemStack createItemStack(IconMenuItem icon) {
         ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData()));
 
         NBTTagList emptyList = new NBTTagList();
@@ -99,9 +134,9 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
             is.setTag(new NBTTagCompound());
         }
 
-        if (icon.getMeta() != null) {
+        if (icon.getBukkitMeta() != null) {
             try {
-                applyToItemMethhod.invoke(icon.getMeta(), is.getTag());
+                applyToItemMethhod.invoke(icon.getBukkitMeta(), is.getTag());
             } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -140,21 +175,15 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
             }
         }
 
-        return CraftItemStack.asCraftMirror(is);
-    }
+        if (icon.hasMeta()) {
+            TagCompound tag = new TagCompound();
+            icon.getMeta().applyTo(tag);
+            NBTTagCompound vanillaTag = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
+            for (String key : vanillaTag.c()) {
+                is.getTag().set(key, vanillaTag.get(key));
+            }
+        }
 
-    @Override
-    public boolean isMenuInventory(Inventory inv) {
-        return bukkitInventory != null && bukkitInventory.equals(inv);
-    }
-
-    @Override
-    public List<HumanEntity> getViewers() {
-        return bukkitInventory != null ? bukkitInventory.getViewers() : new ArrayList<HumanEntity>();
-    }
-
-    @Override
-    public int getSize() {
-        return size;
+        return is;
     }
 }

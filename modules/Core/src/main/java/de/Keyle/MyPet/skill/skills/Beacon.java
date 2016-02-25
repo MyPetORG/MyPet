@@ -34,12 +34,15 @@ import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
+import de.Keyle.MyPet.api.util.inventory.meta.SkullMeta;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -55,6 +58,10 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
     private static Map<Integer, String> buffNames = new HashMap<>();
     private static BiMap<Integer, Integer> buffItemPositions = HashBiMap.create();
     private static BiMap<Integer, Integer> buffPositionItems = buffItemPositions.inverse();
+    SkullMeta disabledMeta = new SkullMeta();
+    SkullMeta partyMeta = new SkullMeta();
+    SkullMeta everyoneMeta = new SkullMeta();
+    org.bukkit.inventory.meta.SkullMeta ownerMeta;
 
     static {
         buffNames.put(1, "Speed");
@@ -106,6 +113,18 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
 
     public void setMyPet(ActiveMyPet myPet) {
         this.myPet = myPet;
+        // stone
+        disabledMeta.setOwner("NeverUsed0000001");
+        disabledMeta.setTexture("http://textures.minecraft.net/texture/de9b8aae7f9cc76d625ccb8abc686f30d38f9e6c42533098b9ad577f91c333c");
+        // globe
+        everyoneMeta.setOwner("NeverUsed0000002");
+        everyoneMeta.setTexture("http://textures.minecraft.net/texture/b1dd4fe4a429abd665dfdb3e21321d6efa6a6b5e7b956db9c5d59c9efab25");
+        // beachball
+        partyMeta.setOwner("NeverUsed0000003");
+        partyMeta.setTexture("http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
+        // owner skin
+        ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(Material.SKULL_ITEM).getItemMeta();
+        ownerMeta.setOwner(myPet.getOwner().getName());
     }
 
     public ActiveMyPet getMyPet() {
@@ -125,7 +144,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
     }
 
     public boolean activate() {
-        Player owner = myPet.getOwner().getPlayer();
+        final Player owner = myPet.getOwner().getPlayer();
 
         final Beacon beacon = this;
 
@@ -166,31 +185,31 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                         break;
                     case 21:
                         if (reciever != BeaconReciever.Owner) {
-                            menu.getOption(21).setGlowing(true);
+                            menu.getOption(21).setMeta(ownerMeta, false, false);
                             if (menu.getOption(22) != null) {
-                                menu.getOption(22).setGlowing(false);
+                                menu.getOption(22).setMeta(partyMeta);
                             }
-                            menu.getOption(23).setGlowing(false);
+                            menu.getOption(23).setMeta(disabledMeta);
                             reciever = BeaconReciever.Owner;
                             menu.update();
                         }
                         break;
                     case 22:
                         if (reciever != BeaconReciever.Party) {
-                            menu.getOption(21).setGlowing(false);
-                            menu.getOption(22).setGlowing(true);
-                            menu.getOption(23).setGlowing(false);
+                            menu.getOption(21).setMeta(disabledMeta);
+                            menu.getOption(22).setMeta(partyMeta);
+                            menu.getOption(23).setMeta(disabledMeta);
                             reciever = BeaconReciever.Party;
                             menu.update();
                         }
                         break;
                     case 23:
                         if (reciever != BeaconReciever.Everyone) {
-                            menu.getOption(21).setGlowing(false);
+                            menu.getOption(21).setMeta(disabledMeta);
                             if (menu.getOption(22) != null) {
-                                menu.getOption(22).setGlowing(false);
+                                menu.getOption(22).setMeta(disabledMeta);
                             }
-                            menu.getOption(23).setGlowing(true);
+                            menu.getOption(23).setMeta(everyoneMeta);
                             reciever = BeaconReciever.Everyone;
                             menu.update();
                         }
@@ -242,11 +261,23 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         menu.setOption(3, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(5).setTitle(GREEN + Translation.getString("Name.Done", myPet.getOwner().getLanguage())));
         menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Translation.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
-        menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Owner));
-        if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookManager().isInParty(getMyPet().getOwner().getPlayer())) {
-            menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(1).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Party));
+        if (reciever == BeaconReciever.Owner) {
+            menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setMeta(ownerMeta, false, false));
+        } else {
+            menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
         }
-        menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(2).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Everyone));
+        if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookManager().isInParty(getMyPet().getOwner().getPlayer())) {
+            if (reciever != BeaconReciever.Party) {
+                menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setMeta(partyMeta));
+            } else {
+                menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
+            }
+        }
+        if (reciever == BeaconReciever.Everyone) {
+            menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setMeta(everyoneMeta));
+        } else {
+            menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
+        }
 
         if (buffLevel.get(1) > 0) {
             menu.setOption(0, new IconMenuItem().setMaterial(LEATHER_BOOTS).setAmount(buffLevel.get(1)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(1), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(1))));
