@@ -912,7 +912,7 @@ public class EntityListener implements Listener {
         } else if (event.getEntity() instanceof Tameable) {
             if (event.getTarget() instanceof MyPetBukkitEntity) {
                 Tameable tameable = ((Tameable) event.getEntity());
-                MyPet myPet = ((MyPetBukkitEntity) event.getTarget()).getMyPet();
+                ActiveMyPet myPet = ((MyPetBukkitEntity) event.getTarget()).getMyPet();
                 if (myPet.getOwner().equals(tameable.getOwner())) {
                     event.setCancelled(true);
                 }
@@ -928,7 +928,7 @@ public class EntityListener implements Listener {
 
     private void sendDeathMessage(final EntityDeathEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
-            MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
+            ActiveMyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
             String killer;
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();

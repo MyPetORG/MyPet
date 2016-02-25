@@ -70,7 +70,7 @@ public class MeleeAttack extends AIGoal {
 
     @Override
     public boolean shouldFinish() {
-        if (this.petEntity.getTarget() == null || !this.targetEntity.isAlive() || !this.petEntity.canMove()) {
+        if (!this.petEntity.hasTarget() || !this.petEntity.canMove()) {
             return true;
         } else if (this.targetEntity.getBukkitEntity() != this.petEntity.getTarget()) {
             return true;

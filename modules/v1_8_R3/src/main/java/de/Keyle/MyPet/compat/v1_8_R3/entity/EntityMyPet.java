@@ -218,14 +218,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             forgetTarget();
             return;
         }
-        MyPetApi.getLogger().info("setTarget (" + priority.name() + "): " + target);
         if(priority.getPriority() > getTargetPriority().getPriority()) {
             target = ((CraftLivingEntity) entity).getHandle();
         }
     }
 
     public void forgetTarget() {
-        MyPetApi.getLogger().info("forgetTarget");
         target = null;
         targetPriority = TargetPriority.None;
     }

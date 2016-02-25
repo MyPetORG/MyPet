@@ -414,7 +414,6 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
                     return SpawnFlags.Canceled;
                 }
                 bukkitEntity = minecraftEntity.getBukkitEntity();
-                MyPetApi.getLogger().info("bukkit entity: " + bukkitEntity);
 
                 if (getYSpawnOffset() > 0) {
                     loc = loc.add(0, getYSpawnOffset(), 0);

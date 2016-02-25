@@ -51,7 +51,7 @@ public class Sprint extends AIGoal {
         if (petEntity.getMyPet().getDamage() <= 0) {
             return false;
         }
-        if (this.petEntity.getTarget() != null) {
+        if (!this.petEntity.hasTarget()) {
             return false;
         }
 
