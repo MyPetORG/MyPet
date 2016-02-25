@@ -101,11 +101,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         replaceLogger();
 
         this.isReady = false;
-        // create folders
-        getDataFolder().mkdirs();
-        new File(getDataFolder(), "skilltrees").mkdirs();
-        new File(getDataFolder(), "locale").mkdirs();
-        new File(getDataFolder(), "logs").mkdirs();
 
         // load version from manifest
         MyPetVersion.reset();
@@ -173,11 +168,14 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         registerSkillsInfo();
         registerSkills();
 
-        // create default skilltrees
+        // create folders
         File skilltreeFolder = new File(getDataFolder().getPath(), "skilltrees");
-        File[] files = skilltreeFolder.listFiles();
+        getDataFolder().mkdirs();
+        boolean createDefaultSkilltree = skilltreeFolder.mkdirs();
+        new File(getDataFolder(), "locale").mkdirs();
+        new File(getDataFolder(), "logs").mkdirs();
 
-        if (files == null || files.length == 0) {
+        if (createDefaultSkilltree) {
             bukkitHelper.copyResource(this, "skilltrees/default.st", new File(skilltreeFolder, "default.st"));
             getLogger().info("Default skilltree file created (default.st).");
         }
