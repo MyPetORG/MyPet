@@ -359,6 +359,7 @@ public class ConfigurationLoader {
         Configuration.MyPet.Wolf.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "" + Material.POTION.getId()));
         Configuration.MyPet.Zombie.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
         Configuration.MyPet.PigZombie.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Rabbit.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "" + Material.POTION.getId()));
 
         for (MyPetType petType : MyPetType.values()) {
             DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
