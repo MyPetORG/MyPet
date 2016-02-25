@@ -213,18 +213,16 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public void setTarget(LivingEntity entity, TargetPriority priority) {
-        if (entity == null || entity.isDead() || entity instanceof ArmorStand) {
+        if(entity == null || entity.isDead() || entity instanceof ArmorStand) {
             forgetTarget();
             return;
         }
-        MyPetApi.getLogger().info("setTarget (" + priority.name() + "): " + target);
-        if (priority.getPriority() > getTargetPriority().getPriority()) {
+        if(priority.getPriority() > getTargetPriority().getPriority()) {
             target = ((CraftLivingEntity) entity).getHandle();
         }
     }
 
     public void forgetTarget() {
-        MyPetApi.getLogger().info("forgetTarget");
         target = null;
         targetPriority = TargetPriority.None;
     }
