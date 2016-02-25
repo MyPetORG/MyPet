@@ -173,21 +173,21 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + myPet.getHungerValue());
 
                         FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", damager) + ": ");
-                        boolean noComma = true;
+                        boolean comma = false;
                         for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPet.getPetType())) {
                             ItemStack is = material.getItem();
                             if (is == null) {
                                 continue;
                             }
-                            if (noComma) {
+                            if (comma) {
                                 m.then(", ");
-                                noComma = false;
                             }
                             if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                                 m.then(is.getItemMeta().getDisplayName());
                             } else {
                                 m.then(WordUtils.capitalizeFully(MyPetApi.getBukkitHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
                             }
+                            m.color(ChatColor.GOLD);
                             ItemTooltip it = new ItemTooltip();
                             it.setMaterial(is.getType());
                             if (is.hasItemMeta()) {
@@ -199,6 +199,7 @@ public class EntityListener implements Listener {
                                 }
                             }
                             m.itemTooltip(it);
+                            comma = true;
                         }
                         MyPetApi.getBukkitHelper().sendMessageRaw(damager, m.toJSONString());
 
