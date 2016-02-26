@@ -21,6 +21,7 @@
 package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.api.BukkitHelper;
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
@@ -44,7 +45,6 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ConfigurationLoader;
-import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Hooks;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -101,8 +101,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetVersion.reset();
 
         compatUtil = new CompatUtil();
-
-        if (compatUtil.getInternalVersion() == null) {
+        if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
+            getLogger().info(ChatColor.RED + "This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + "\". Is MyPet up to date?");
             setEnabled(false);
             return;
         }

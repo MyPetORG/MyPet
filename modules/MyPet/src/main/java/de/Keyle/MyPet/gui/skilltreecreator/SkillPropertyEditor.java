@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.gui.skilltreecreator;
 
 import com.intellij.uiDesigner.core.GridConstraints;
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.util.MyPetVersion;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator;
 
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.util.MyPetVersion;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;

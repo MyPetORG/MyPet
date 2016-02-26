@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator;
 
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillName;
@@ -30,7 +31,6 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.util.MyPetVersion;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;
