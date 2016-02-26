@@ -993,7 +993,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER > 0) {
             double dX = locX - lastX;
-            double dY = isFlying ? Math.max(0, locY - lastY) : 0;
+            double dY = Math.max(0, locY - lastY);
             double dZ = locZ - lastZ;
             if (dX != 0 || dY != 0 || dZ != 0) {
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
