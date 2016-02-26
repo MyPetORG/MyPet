@@ -44,7 +44,6 @@ public class Configuration {
 
     public static class Repository {
         public static String REPOSITORY_TYPE = "NBT";
-        public static String CONVERT_FROM = "-";
 
         public static class NBT {
             public static int AUTOSAVE_TIME = 60;
@@ -57,24 +56,6 @@ public class Configuration {
             public static boolean MAKE_BACKUPS = true;
             public static int SAVE_INTERVAL = 1440;
             public static String DATE_FORMAT = "yyyy_MM_dd_HH.mm";
-        }
-
-        public static class MySQL {
-            public static String DATABASE = "mypet";
-            public static String PREFIX = "";
-            public static String HOST = "localhost";
-            public static String PASSWORD = "";
-            public static String USER = "root";
-            public static int PORT = 3306;
-        }
-
-        public static class MongoDB {
-            public static String DATABASE = "mypet";
-            public static String PREFIX = "";
-            public static String HOST = "localhost";
-            public static String PASSWORD = "";
-            public static String USER = "";
-            public static int PORT = 27017;
         }
     }
 
