@@ -40,7 +40,7 @@
 
         <minecraft.version>1.8.8</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-        <bukkit.packet>v1_8_R3</bukkit.packet>
+        <bukkit.packets>v1_8_R3</bukkit.packets>
 
         <download.translations>prepare-package</download.translations>
         <remove.donator>none</remove.donator>
@@ -152,7 +152,7 @@
                             <Project-Version>${project.version}</Project-Version>
                             <Project-Build>${BUILD_NUMBER}</Project-Build>
                             <Project-Minecraft-Version>${minecraft.version}</Project-Minecraft-Version>
-                            <Project-Bukkit-Packet>${bukkit.packet}</Project-Bukkit-Packet>
+                            <Project-Bukkit-Packets>${bukkit.packets}</Project-Bukkit-Packets>
                             <Git-Commit>${GIT_COMMIT}</Git-Commit>
                         </manifestEntries>
                     </archive>

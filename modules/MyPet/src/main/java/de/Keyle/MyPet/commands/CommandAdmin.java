@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.commands;
 
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.commands.admin.*;
-import de.Keyle.MyPet.util.MyPetVersion;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
