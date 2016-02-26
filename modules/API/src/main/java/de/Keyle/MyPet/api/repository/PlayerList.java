@@ -76,11 +76,11 @@ public abstract class PlayerList {
 
     public boolean isMyPetPlayer(String name) {
         Player player = Bukkit.getPlayer(name);
-        return isMyPetPlayer(player);
+        return player != null && isMyPetPlayer(player);
     }
 
     public boolean isMyPetPlayer(Player player) {
-        return getInternalUUID(player.getUniqueId()) != null;
+        return uuidToInternalUUID.containsKey(player.getUniqueId());
     }
 
     public MyPetPlayer[] getMyPetPlayers() {
