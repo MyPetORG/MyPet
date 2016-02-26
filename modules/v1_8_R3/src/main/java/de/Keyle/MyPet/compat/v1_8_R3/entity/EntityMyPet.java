@@ -215,11 +215,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public void setTarget(LivingEntity entity, TargetPriority priority) {
-        if(entity == null || entity.isDead() || entity instanceof ArmorStand) {
+        if (entity == null || entity.isDead() || entity instanceof ArmorStand) {
             forgetTarget();
             return;
         }
-        if(priority.getPriority() > getTargetPriority().getPriority()) {
+        if (priority.getPriority() > getTargetPriority().getPriority()) {
             target = ((CraftLivingEntity) entity).getHandle();
         }
     }
@@ -394,7 +394,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         //applyLeash();
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
-            if (Configuration.Skilltree.Skill.RIDE_ITEM.compare(itemStack)) {
+            if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
                     if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride")) {
                         ((CraftPlayer) owner).getHandle().mount(this);
@@ -988,6 +988,16 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     this.fallDistance = 0;
                     this.isFlying = true;
                 }
+            }
+        }
+
+        if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER > 0) {
+            double dX = locX - lastX;
+            double dY = isFlying ? Math.max(0, locY - lastY) : 0;
+            double dZ = locZ - lastZ;
+            if (dX != 0 || dY != 0 || dZ != 0) {
+                double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
+                myPet.decreaseHunger(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
             }
         }
     }

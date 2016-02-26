@@ -159,6 +159,7 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
         config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
+        config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
         config.addDefault("MyPet.Skill.Inventory.Creative", Skilltree.Skill.Inventory.OPEN_IN_CREATIVE);
         config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES);
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME);
@@ -235,7 +236,8 @@ public class ConfigurationLoader {
         Misc.ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
 
         Skilltree.Skill.CONTROL_ITEM = new ConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
-        Skilltree.Skill.RIDE_ITEM = new ConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
+        Skilltree.Skill.Ride.RIDE_ITEM = new ConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
+        Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Skilltree.Skill.Beacon.PARTY_SUPPORT = config.getBoolean("MyPet.Skill.Beacon.Party-Support", true);
         Skilltree.Skill.Inventory.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);

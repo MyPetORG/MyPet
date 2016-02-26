@@ -63,4 +63,6 @@ public interface ActiveMyPet extends MyPet, Scheduler {
     boolean isPassiv();
 
     boolean hasTarget();
+
+    void decreaseHunger(double value);
 }
