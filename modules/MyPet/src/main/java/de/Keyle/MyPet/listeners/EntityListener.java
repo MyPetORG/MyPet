@@ -272,7 +272,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof MyPetBukkitEntity) && event.getDamager() instanceof Player) {
+        if (!event.getEntity().isDead() && !(event.getEntity() instanceof MyPetBukkitEntity) && event.getDamager() instanceof Player) {
             if (MyPetApi.getMyPetInfo().isLeashableEntityType(event.getEntity().getType())) {
                 Player damager = (Player) event.getDamager();
 
@@ -499,7 +499,7 @@ public class EntityListener implements Listener {
                         }
                         inactiveMyPet.setInfo(extendedInfo);
 
-                        event.getEntity().remove();
+                        leashTarget.remove();
 
                         if (Configuration.Misc.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null) {
                             if (damager.getItemInHand().getAmount() > 1) {
