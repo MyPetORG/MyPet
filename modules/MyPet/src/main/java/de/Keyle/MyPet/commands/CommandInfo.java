@@ -36,6 +36,7 @@ import de.Keyle.MyPet.skill.skills.Damage;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -71,6 +72,11 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     return true;
                 }
             } else if (Permissions.has(player, "MyPet.admin", false)) {
+                Player p = Bukkit.getServer().getPlayer(args[0]);
+                if (p == null || !p.isOnline()) {
+                    sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
+                    return true;
+                }
                 if (MyPetApi.getPlayerList().isMyPetPlayer(args[0])) {
                     petOwner = MyPetApi.getPlayerList().getMyPetPlayer(args[0]);
                 } else {
