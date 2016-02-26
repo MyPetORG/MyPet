@@ -99,6 +99,10 @@ public class MyPetVersion {
     }
 
     public static boolean isValidBukkitPacket(String p1) {
+        if (!updated) {
+            getManifestVersion();
+            updated = true;
+        }
         for (String p2 : bukkitPackets) {
             if (p1.equals(p2)) {
                 return true;
