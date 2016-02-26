@@ -225,6 +225,10 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
     }
 
+    public void decreaseHunger(double value) {
+        hunger = Math.max(1, Math.min(100, hunger - value));
+    }
+
     public String getPetName() {
         return this.petName;
     }

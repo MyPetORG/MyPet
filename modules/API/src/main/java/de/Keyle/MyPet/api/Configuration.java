@@ -115,7 +115,11 @@ public class Configuration {
 
         public static class Skill {
             public static ConfigItem CONTROL_ITEM;
-            public static ConfigItem RIDE_ITEM;
+
+            public static class Ride {
+                public static ConfigItem RIDE_ITEM;
+                public static double HUNGER_PER_METER = 0.01;
+            }
 
             public static class Beacon {
                 public static int HUNGER_DECREASE_TIME = 100;
