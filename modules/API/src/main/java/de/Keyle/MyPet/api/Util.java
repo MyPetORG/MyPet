@@ -270,7 +270,7 @@ public class Util {
 
     public static ItemTooltip myPetToItemTooltip(MyPet mypet, String lang) {
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.RESET + Translation.getString("Name.Hunger", lang) + ": " + ChatColor.GOLD + mypet.getHungerValue());
+        lore.add(ChatColor.RESET + Translation.getString("Name.Hunger", lang) + ": " + ChatColor.GOLD + Math.round(mypet.getHungerValue()));
         if (mypet.getRespawnTime() > 0) {
             lore.add(ChatColor.RESET + Translation.getString("Name.Respawntime", lang) + ": " + ChatColor.GOLD + mypet.getRespawnTime() + "sec");
         } else {
