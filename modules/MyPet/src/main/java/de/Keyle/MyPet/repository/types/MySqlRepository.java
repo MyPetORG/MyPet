@@ -53,7 +53,7 @@ import java.util.*;
 
 public class MySqlRepository implements Repository {
     private Connection connection;
-    private int version = 4;
+    private int version = 5;
 
     @Override
     public void disable() {
@@ -99,7 +99,7 @@ public class MySqlRepository implements Repository {
             int oldVersion = resultSet.getInt("version");
 
             if (oldVersion < version) {
-                MyPetApi.getLogger().info("Updating database from version " + oldVersion + " to version " + version + ".");
+                MyPetApi.getLogger().info("[MySQL] Updating database from version " + oldVersion + " to version " + version + ".");
 
                 switch (oldVersion) {
                     case 1:
@@ -108,6 +108,8 @@ public class MySqlRepository implements Repository {
                         updateToV3();
                     case 3:
                         updateToV4();
+                    case 4:
+                        updateToV5();
                 }
             }
         } catch (SQLException e) {
@@ -206,6 +208,16 @@ public class MySqlRepository implements Repository {
 
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN pet_idle_volume FLOAT DEFAULT 1 AFTER health_bar;");
             update.executeUpdate("ALTER IGNORE TABLE " + Configuration.Repository.MySQL.PREFIX + "info ADD UNIQUE (version);");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateToV5() {
+        try {
+            Statement update = connection.createStatement();
+
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY COLUMN hunger DOUBLE NOT NULL;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -347,7 +359,7 @@ public class MySqlRepository implements Repository {
                 statement.setInt(4, myPet.getRespawnTime());
                 statement.setString(5, myPet.getPetName());
                 statement.setLong(6, myPet.getLastUsed());
-                statement.setInt(7, myPet.getHungerValue());
+                statement.setDouble(7, myPet.getHungerValue());
                 statement.setString(8, myPet.getWorldGroup());
                 statement.setBoolean(9, myPet.wantsToRespawn());
                 statement.setString(10, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
@@ -422,7 +434,7 @@ public class MySqlRepository implements Repository {
                 pet.setPetName(resultSet.getString("name"));
                 pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
                 pet.setLastUsed(resultSet.getLong("last_used"));
-                pet.setHungerValue(resultSet.getInt("hunger"));
+                pet.setHungerValue(resultSet.getDouble("hunger"));
                 pet.setWorldGroup(resultSet.getString("world_group"));
                 pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
 
@@ -661,7 +673,7 @@ public class MySqlRepository implements Repository {
             statement.setString(6, myPet.getPetName());
             statement.setString(7, myPet.getPetType().name());
             statement.setLong(8, myPet.getLastUsed());
-            statement.setInt(9, myPet.getHungerValue());
+            statement.setDouble(9, myPet.getHungerValue());
             statement.setString(10, myPet.getWorldGroup());
             statement.setBoolean(11, myPet.wantsToRespawn());
             statement.setString(12, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
@@ -704,7 +716,7 @@ public class MySqlRepository implements Repository {
                     statement.setInt(4, myPet.getRespawnTime());
                     statement.setString(5, myPet.getPetName());
                     statement.setLong(6, myPet.getLastUsed());
-                    statement.setInt(7, myPet.getHungerValue());
+                    statement.setDouble(7, myPet.getHungerValue());
                     statement.setString(8, myPet.getWorldGroup());
                     statement.setBoolean(9, myPet.wantsToRespawn());
                     statement.setString(10, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);

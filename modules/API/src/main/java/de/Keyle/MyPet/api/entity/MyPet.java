@@ -35,9 +35,9 @@ public interface MyPet {
 
     void setHealth(double health);
 
-    int getHungerValue();
+    double getHungerValue();
 
-    void setHungerValue(int value);
+    void setHungerValue(double value);
 
     TagCompound getInfo();
 

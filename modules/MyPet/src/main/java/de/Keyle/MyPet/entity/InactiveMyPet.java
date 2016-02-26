@@ -38,7 +38,7 @@ public class InactiveMyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorag
     private String petName = "";
     private String worldGroup = "";
     private double health = -1;
-    private int hunger = 100;
+    private double hunger = 100;
     private int respawnTime = 0;
     private double exp = 0;
     protected long lastUsed = -1;
@@ -71,18 +71,12 @@ public class InactiveMyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorag
         this.health = health;
     }
 
-    public int getHungerValue() {
+    public double getHungerValue() {
         return hunger;
     }
 
-    public void setHungerValue(int value) {
-        if (value > 100) {
-            hunger = 100;
-        } else if (value < 1) {
-            hunger = 1;
-        } else {
-            hunger = value;
-        }
+    public void setHungerValue(double value) {
+        hunger = Math.max(1, Math.min(100, value));
     }
 
     public TagCompound getInfo() {
@@ -229,8 +223,10 @@ public class InactiveMyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorag
             }
         }
 
-        if (myPetNBT.getCompoundData().containsKey("Hunger")) {
+        if (myPetNBT.containsKeyAs("Hunger", TagInt.class)) {
             hunger = myPetNBT.getAs("Hunger", TagInt.class).getIntData();
+        } else if (myPetNBT.containsKeyAs("Hunger", TagDouble.class)) {
+            hunger = myPetNBT.getAs("Hunger", TagDouble.class).getDoubleData();
         }
 
         if (myPetNBT.getCompoundData().containsKey("WorldGroup")) {
@@ -253,7 +249,7 @@ public class InactiveMyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorag
         petNBT.getCompoundData().put("Type", new TagString(this.petType.name()));
         petNBT.getCompoundData().put("Health", new TagDouble(this.health));
         petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
-        petNBT.getCompoundData().put("Hunger", new TagInt(this.hunger));
+        petNBT.getCompoundData().put("Hunger", new TagDouble(this.hunger));
         petNBT.getCompoundData().put("Name", new TagString(this.petName));
         petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
         petNBT.getCompoundData().put("Exp", new TagDouble(this.exp));

@@ -68,7 +68,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
     protected double health;
     protected int respawnTime = 0;
     protected int hungerTime = 0;
-    protected int hunger = 100;
+    protected double hunger = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
 
@@ -212,7 +212,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
         }
     }
 
-    public int getHungerValue() {
+    public double getHungerValue() {
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             return hunger;
         } else {
@@ -220,14 +220,8 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
         }
     }
 
-    public void setHungerValue(int value) {
-        if (value > 100) {
-            hunger = 100;
-        } else if (value < 1) {
-            hunger = 1;
-        } else {
-            hunger = value;
-        }
+    public void setHungerValue(double value) {
+        hunger = Math.max(1, Math.min(100, value));
         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
     }
 
@@ -555,7 +549,7 @@ public abstract class MyPet implements ActiveMyPet, NBTStorage {
         petNBT.getCompoundData().put("Type", new TagString(this.getPetType().name()));
         petNBT.getCompoundData().put("Health", new TagDouble(this.health));
         petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
-        petNBT.getCompoundData().put("Hunger", new TagInt(this.hunger));
+        petNBT.getCompoundData().put("Hunger", new TagDouble(this.hunger));
         petNBT.getCompoundData().put("Name", new TagString(this.petName));
         petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
         petNBT.getCompoundData().put("Exp", new TagDouble(this.getExp()));

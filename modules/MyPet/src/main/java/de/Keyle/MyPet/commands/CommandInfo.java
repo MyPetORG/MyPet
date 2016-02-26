@@ -134,7 +134,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     infoShown = true;
                 }
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, player, myPet)) {
-                    player.sendMessage("   " + Translation.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
+                    player.sendMessage("   " + Translation.getString("Name.Hunger", player) + ": " + Math.round(myPet.getHungerValue()));
 
                     FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", player) + ": ");
                     boolean comma = false;
