@@ -393,23 +393,6 @@
         </resources>
         <plugins>
             <plugin>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9.4</version>
-                <executions>
-                    <execution>
-                        <phase>${download.translations}</phase>
-                        <configuration>
-                            <connectionUrl>scm:git:https://github.com/xXKeyleXx/MyPet-Translations.git</connectionUrl>
-                            <checkoutDirectory>target/classes/locale</checkoutDirectory>
-                            <excludes>exclude,.git,.gitignore</excludes>
-                        </configuration>
-                        <goals>
-                            <goal>checkout</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.10</version>

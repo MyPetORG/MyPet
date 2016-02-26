@@ -93,27 +93,6 @@
     <build>
         <finalName>${project.name}</finalName>
         <plugins>
-            <!--
-            <plugin>
-                <groupId>com.wolvereness</groupId>
-                <artifactId>overmapped</artifactId>
-                <version>0.0.2</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>map</goal>
-                        </goals>
-                        <configuration>
-                            <maps>${basedir}/maps.yml</maps>
-                            <input>${basedir}/target/${project.name}.jar</input>
-                            <original>${basedir}/target/unmapped-${project.name}.jar</original>
-                            <missing>FAIL</missing>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
