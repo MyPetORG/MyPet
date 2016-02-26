@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.sucy.skill.api.event.PlayerGainSkillPointsEvent;
+import com.sucy.skill.api.event.PlayerExperienceGainEvent;
+import com.sucy.skill.api.event.PlayerExperienceLostEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
@@ -44,7 +45,7 @@ public class SkillApi implements Listener {
     }
 
     @EventHandler
-    public void onPlayerExpGain(PlayerGainSkillPointsEvent event) {
+    public void on(PlayerExperienceGainEvent event) {
         if (Configuration.Hooks.SkillAPI.GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
             if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
@@ -56,7 +57,27 @@ public class SkillApi implements Listener {
                             return;
                         }
                     }
-                    myPet.getExperience().addExp(event.getAmount() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                    myPet.getExperience().addExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerExperienceLostEvent event) {
+        if (Configuration.Hooks.SkillAPI.GRANT_EXP) {
+            Player player = event.getPlayerData().getPlayer();
+            if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
+                MyPetPlayer petPlayer = MyPetApi.getPlayerList().getMyPetPlayer(player);
+                if (petPlayer.hasMyPet()) {
+                    ActiveMyPet myPet = petPlayer.getMyPet();
+                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
+                        if (!myPet.autoAssignSkilltree()) {
+                            return;
+                        }
+                    }
+                    //TODO -> removeExp
+                    myPet.getExperience().removeCurrentExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
                 }
             }
         }
