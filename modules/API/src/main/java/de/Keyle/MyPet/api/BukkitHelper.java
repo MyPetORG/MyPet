@@ -63,6 +63,10 @@ public abstract class BukkitHelper {
 
     public abstract String getPlayerLanguage(Player player);
 
+    public abstract TagCompound entityToTag(Entity entity);
+
+    public abstract void applyTagToEntity(TagCompound tag, Entity entity);
+
     public String getCommandSenderLanguage(CommandSender sender) {
         String lang = "en";
         if (sender instanceof Player) {

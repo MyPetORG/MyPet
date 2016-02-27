@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.compat.v1_8_R3.util.ConfigItem;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -34,10 +33,9 @@ import static org.bukkit.Material.APPLE;
 
 @DefaultInfo(food = {APPLE})
 public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVillager {
-    public static ConfigItem GROW_UP_ITEM;
-
     protected int profession = 0;
     protected boolean isBaby = false;
+    protected TagCompound originalData = null;
 
     public MyVillager(MyPetPlayer petOwner) {
         super(petOwner);
@@ -48,6 +46,9 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Profession", new TagInt(getProfession()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        if (originalData != null) {
+            info.getCompoundData().put("OriginalData", originalData);
+        }
         return info;
     }
 
@@ -58,6 +59,9 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
         }
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.getCompoundData().containsKey("OriginalData")) {
+            originalData = info.getAs("OriginalData", TagCompound.class);
         }
     }
 
@@ -86,6 +90,18 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
             getEntity().getHandle().updateVisuals();
         }
         this.isBaby = flag;
+    }
+
+    public void setOriginalData(TagCompound compound) {
+        this.originalData = compound;
+    }
+
+    public TagCompound getOriginalData() {
+        return this.originalData;
+    }
+
+    public boolean hasOriginalData() {
+        return this.originalData != null;
     }
 
     @Override

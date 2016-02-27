@@ -76,10 +76,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -405,6 +402,18 @@ public class EntityListener implements Listener {
                             extendedInfo.getCompoundData().put("Sheared", new TagByte(((Sheep) leashTarget).isSheared()));
                         } else if (leashTarget instanceof Villager) {
                             extendedInfo.getCompoundData().put("Profession", new TagInt(((Villager) leashTarget).getProfession().getId()));
+
+                            TagCompound villagerTag = MyPetApi.getBukkitHelper().entityToTag(leashTarget);
+                            String[] allowedTags = {"Riches", "Career", "CareerLevel", "Willing", "Inventory", "Offers"};
+                            Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
+                            for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
+                                String key = iterator.next();
+                                if (Arrays.binarySearch(allowedTags, key) > -1) {
+                                    continue;
+                                }
+                                villagerTag.remove(key);
+                            }
+                            extendedInfo.getCompoundData().put("OriginalData", villagerTag);
                         } else if (leashTarget instanceof Pig) {
                             extendedInfo.getCompoundData().put("Saddle", new TagByte(((Pig) leashTarget).hasSaddle()));
                         } else if (leashTarget instanceof Slime) {
