@@ -76,6 +76,12 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                         offers.remove(player.getUniqueId());
                         return true;
                     }
+                    if (!Permissions.has(player, "MyPet.user.command.trade.recieve.type." + offer.getPet().getPetType().name(), false)) {
+                        sender.sendMessage(Translation.getString("Message.Command.Trade.Reciever.NoPermission", player));
+                        owner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Reject", owner), player.getName(), offer.getPet().getPetName()));
+                        offers.remove(player.getUniqueId());
+                        return true;
+                    }
 
                     if (MyPetApi.getPlayerList().isMyPetPlayer(owner)) {
                         final MyPetPlayer oldOwner = MyPetApi.getPlayerList().getMyPetPlayer(owner);
@@ -191,6 +197,11 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                 }
                 if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
                     ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+
+                    if (!Permissions.has((Player) sender, "MyPet.user.command.trade.offer.type." + myPet.getPetType().name(), false)) {
+                        player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                        return true;
+                    }
 
                     Player reciever = Bukkit.getPlayer(args[0]);
                     if (reciever == null) {
