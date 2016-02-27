@@ -74,9 +74,8 @@ public class Beacon implements SkillPropertiesPanel {
     private JSpinner selectionCountSpinner;
     private JRadioButton setSelectionCount;
     private JRadioButton addSelectionCount;
-    private TagCompound tagCompound;
 
-    public Beacon(TagCompound tagCompound) {
+    public Beacon() {
         rangeInput.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
             }
@@ -219,10 +218,6 @@ public class Beacon implements SkillPropertiesPanel {
                 absorptionEnableCheckBox.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
             }
         });
-
-
-        this.tagCompound = tagCompound;
-        load(tagCompound);
     }
 
     @Override
@@ -257,7 +252,54 @@ public class Beacon implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        regenerationEnableCheckBox.setSelected(false);
+        regenerationChangeCheckBox.setSelected(false);
+        regenerationSpinner.setValue(1);
+        speedBostEnableCheckBox.setSelected(false);
+        speedBoostChangeCheckBox.setSelected(false);
+        speedBoostSpinner.setValue(1);
+        hasteEnableCheckBox.setSelected(false);
+        hasteChangeCheckBox.setSelected(false);
+        hasteSpinner.setValue(1);
+        strengthEnableCheckBox.setSelected(false);
+        strengthChangeCheckBox.setSelected(false);
+        strengthSpinner.setValue(1);
+        jumpBoostEnableCheckBox.setSelected(false);
+        jumpBoostChangeCheckBox.setSelected(false);
+        jumpBoostSpinner.setValue(1);
+        regenerationEnableCheckBox.setSelected(false);
+        regenerationChangeCheckBox.setSelected(false);
+        regenerationSpinner.setValue(1);
+        resistanceEnableCheckBox.setSelected(false);
+        resistanceChangeCheckBox.setSelected(false);
+        resistanceSpinner.setValue(1);
+        fireResistanceEnableCheckBox.setSelected(false);
+        fireResistanceChangeCheckBox.setSelected(false);
+        waterBreathingEnableCheckBox.setSelected(false);
+        waterBreathingChangeCheckBox.setSelected(false);
+        invisibilityEnableCheckBox.setSelected(false);
+        invisibilityChangeCheckBox.setSelected(false);
+        nightVisionEnableCheckBox.setSelected(false);
+        nightVisionChangeCheckBox.setSelected(false);
+        healthBoostEnableCheckBox.setSelected(false);
+        healthBoostChangeCheckBox.setSelected(false);
+        healthBoostSpinner.setValue(1);
+        absorptionEnableCheckBox.setSelected(false);
+        absorptionChangeCheckBox.setSelected(false);
+        absorptionSpinner.setValue(1);
+
+        addDurationRadioButton.setSelected(true);
+        addRangeRadioButton.setSelected(true);
+        setSelectionCount.setSelected(true);
+
+        durationInput.setText("0");
+        rangeInput.setText("0.0");
+        selectionCountSpinner.setValue(1);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
 
         if (speedBoostChangeCheckBox.isSelected()) {
             tagCompound.getCompoundData().put("buff_speed_boost_enable", new TagByte(speedBostEnableCheckBox.isSelected()));
@@ -360,8 +402,6 @@ public class Beacon implements SkillPropertiesPanel {
 
         tagCompound.getCompoundData().put("addset_selection_count", new TagString(addSelectionCount.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("selection_count", new TagInt(((Number) selectionCountSpinner.getValue()).intValue()));
-
-        return tagCompound;
     }
 
     @Override

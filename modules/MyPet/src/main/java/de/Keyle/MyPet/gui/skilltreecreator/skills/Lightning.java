@@ -39,13 +39,6 @@ public class Lightning implements SkillPropertiesPanel {
     private JRadioButton addDamageRadioButton;
     private JRadioButton setDamageRadioButton;
 
-    private TagCompound tagCompound;
-
-    public Lightning(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -78,14 +71,20 @@ public class Lightning implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        chanceInput.setText("0");
+        damageInput.setText("0.0");
+        addChanceRadioButton.setSelected(true);
+        addDamageRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_chance", new TagString(addChanceRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("chance", new TagInt(Integer.parseInt(chanceInput.getText())));
 
         tagCompound.getCompoundData().put("addset_damage", new TagString(addDamageRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("damage_double", new TagDouble(Double.parseDouble(damageInput.getText())));
-
-        return tagCompound;
     }
 
     @Override

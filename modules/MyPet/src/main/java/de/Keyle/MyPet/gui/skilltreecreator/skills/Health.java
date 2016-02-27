@@ -36,13 +36,6 @@ public class Health implements SkillPropertiesPanel {
     private JRadioButton setHealthRadioButton;
     private JPanel mainPanel;
 
-    private TagCompound tagCompound;
-
-    public Health(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -70,11 +63,15 @@ public class Health implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        healthInput.setText("0.0");
+        addHealthRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_hp", new TagString(addHealthRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("hp_double", new TagDouble(Double.parseDouble(healthInput.getText())));
-
-        return tagCompound;
     }
 
     @Override

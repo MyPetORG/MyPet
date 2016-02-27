@@ -32,13 +32,6 @@ public class Knockback implements SkillPropertiesPanel {
     private JRadioButton addChanceRadioButton;
     private JRadioButton setChanceRadioButton;
 
-    private TagCompound tagCompound;
-
-    public Knockback(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -53,11 +46,15 @@ public class Knockback implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        chanceInput.setText("0");
+        addChanceRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_chance", new TagString(addChanceRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("chance", new TagInt(Integer.parseInt(chanceInput.getText())));
-
-        return tagCompound;
     }
 
     @Override

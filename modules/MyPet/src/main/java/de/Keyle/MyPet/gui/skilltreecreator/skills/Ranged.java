@@ -44,12 +44,7 @@ public class Ranged implements SkillPropertiesPanel {
     private JRadioButton addRateOfFireRadioButton;
     private JTextField rateOfFireInput;
 
-    private TagCompound tagCompound;
-
-    public Ranged(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-
+    public Ranged() {
         rateOfFireInput.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
             }
@@ -100,7 +95,16 @@ public class Ranged implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        damageInput.setText("0.0");
+        rateOfFireInput.setText("0");
+        addDamageRadioButton.setSelected(true);
+        addRateOfFireRadioButton.setSelected(true);
+        projectileComboBox.setSelectedIndex(0);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("projectile", new TagString(((String) projectileComboBox.getSelectedItem()).replace(" ", "")));
 
         tagCompound.getCompoundData().put("addset_damage", new TagString(addDamageRadioButton.isSelected() ? "add" : "set"));
@@ -108,7 +112,6 @@ public class Ranged implements SkillPropertiesPanel {
 
         tagCompound.getCompoundData().put("addset_rateoffire", new TagString(addRateOfFireRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("rateoffire", new TagInt(Integer.parseInt(rateOfFireInput.getText())));
-        return tagCompound;
     }
 
     @Override

@@ -33,13 +33,6 @@ public class Behavior implements SkillPropertiesPanel {
     private JCheckBox friendlyCheckBox;
     private JPanel mainPanel;
 
-    private TagCompound tagCompound;
-
-    public Behavior(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -50,14 +43,21 @@ public class Behavior implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        friendlyCheckBox.setSelected(false);
+        aggressiveCheckBox.setSelected(false);
+        farmCheckBox.setSelected(false);
+        raidCheckBox.setSelected(false);
+        duelCheckBox.setSelected(false);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("friend", new TagByte(friendlyCheckBox.isSelected()));
         tagCompound.getCompoundData().put("aggro", new TagByte(aggressiveCheckBox.isSelected()));
         tagCompound.getCompoundData().put("farm", new TagByte(farmCheckBox.isSelected()));
         tagCompound.getCompoundData().put("raid", new TagByte(raidCheckBox.isSelected()));
         tagCompound.getCompoundData().put("duel", new TagByte(duelCheckBox.isSelected()));
-
-        return tagCompound;
     }
 
     @Override

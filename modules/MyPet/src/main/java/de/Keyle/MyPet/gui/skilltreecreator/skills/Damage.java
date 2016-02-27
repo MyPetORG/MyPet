@@ -38,13 +38,7 @@ public class Damage implements SkillPropertiesPanel {
     private JRadioButton addDamageRadioButton;
     private JRadioButton setdamageRadioButton;
 
-    private TagCompound tagCompound;
-
-    public Damage(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-
-
+    public Damage() {
         damageInput.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
             }
@@ -85,16 +79,20 @@ public class Damage implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        damageInput.setText("0.0");
+        addDamageRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_damage", new TagString(addDamageRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("damage_double", new TagDouble(Double.parseDouble(damageInput.getText())));
-
-        return tagCompound;
     }
 
     @Override
     public void load(TagCompound TagCompound) {
-        if (!TagCompound.getCompoundData().containsKey("addset_damage") || ((TagString) TagCompound.getAs("addset_damage", TagString.class)).getStringData().equals("add")) {
+        if (!TagCompound.getCompoundData().containsKey("addset_damage") || TagCompound.getAs("addset_damage", TagString.class).getStringData().equals("add")) {
             addDamageRadioButton.setSelected(true);
         } else {
             setdamageRadioButton.setSelected(true);
@@ -105,7 +103,7 @@ public class Damage implements SkillPropertiesPanel {
             TagCompound.getCompoundData().remove("damage");
         }
         if (TagCompound.getCompoundData().containsKey("damage_double")) {
-            damageInput.setText("" + ((TagDouble) TagCompound.getAs("damage_double", TagDouble.class)).getDoubleData());
+            damageInput.setText("" + TagCompound.getAs("damage_double", TagDouble.class).getDoubleData());
         }
     }
 }

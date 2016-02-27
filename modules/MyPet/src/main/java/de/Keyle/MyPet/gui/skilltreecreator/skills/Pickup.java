@@ -37,13 +37,6 @@ public class Pickup implements SkillPropertiesPanel {
     private JRadioButton setRangeRadioButton;
     private JCheckBox expPickupCheckBox;
 
-    private TagCompound tagCompound;
-
-    public Pickup(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -71,12 +64,17 @@ public class Pickup implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        rangeInput.setText("0.0");
+        addRangeRadioButton.setSelected(true);
+        expPickupCheckBox.setSelected(false);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_range", new TagString(addRangeRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("range", new TagDouble(Double.parseDouble(rangeInput.getText())));
         tagCompound.getCompoundData().put("exp_pickup", new TagByte(expPickupCheckBox.isSelected()));
-
-        return tagCompound;
     }
 
     @Override

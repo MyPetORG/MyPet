@@ -35,13 +35,6 @@ public class Slow implements SkillPropertiesPanel {
     private JRadioButton addTimeRadioButton;
     private JRadioButton setTimeRadioButton;
 
-    private TagCompound tagCompound;
-
-    public Slow(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -61,14 +54,20 @@ public class Slow implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        timeInput.setText("0");
+        chanceInput.setText("0");
+        addChanceRadioButton.setSelected(true);
+        addTimeRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_chance", new TagString(addChanceRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("chance", new TagInt(Integer.parseInt(chanceInput.getText())));
 
         tagCompound.getCompoundData().put("addset_duration", new TagString(addTimeRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("duration", new TagInt(Integer.parseInt(timeInput.getText())));
-
-        return tagCompound;
     }
 
     @Override

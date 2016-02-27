@@ -31,13 +31,6 @@ public class Inventory implements SkillPropertiesPanel {
     private JPanel mainPanel;
     private JCheckBox dropContentCheckBox;
 
-    private TagCompound tagCompound;
-
-    public Inventory(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -55,11 +48,15 @@ public class Inventory implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        rowsInput.setText("0");
+        dropContentCheckBox.setSelected(false);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("add", new TagInt(Integer.parseInt(rowsInput.getText())));
         tagCompound.getCompoundData().put("drop", new TagByte(dropContentCheckBox.isSelected()));
-
-        return tagCompound;
     }
 
     @Override

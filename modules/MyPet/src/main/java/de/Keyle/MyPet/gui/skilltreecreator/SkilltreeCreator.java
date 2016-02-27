@@ -61,7 +61,12 @@ public class SkilltreeCreator {
         mobTypeComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    selectedMobtype = SkillTreeMobType.getMobTypeByName(mobTypeComboBox.getSelectedItem().toString());
+                    String mobTypeName = mobTypeComboBox.getSelectedItem().toString();
+                    if (mobTypeName.equalsIgnoreCase("default")) {
+                        selectedMobtype = SkillTreeMobType.DEFAULT;
+                    } else {
+                        selectedMobtype = SkillTreeMobType.getMobTypeByName(mobTypeName);
+                    }
                     skilltreeTreeSetSkilltrees();
                 }
             }
@@ -265,23 +270,6 @@ public class SkilltreeCreator {
         return skilltreeCreatorFrame;
     }
 
-    public void selectSkilltree(String skilltreeName) {
-        DefaultMutableTreeNode root = ((DefaultMutableTreeNode) skilltreeTreeModel.getRoot());
-        DefaultMutableTreeNode[] path = new DefaultMutableTreeNode[2];
-        path[0] = root;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            if (root.getChildAt(i) instanceof SkillTreeNode) {
-                SkillTreeNode node = (SkillTreeNode) root.getChildAt(i);
-                if (node.getSkillTree().getName().equals(skilltreeName)) {
-                    path[1] = node;
-                    TreePath treePath = new TreePath(path);
-                    skilltreeTree.setSelectionPath(treePath);
-                    return;
-                }
-            }
-        }
-    }
-
     public void selectSkilltree(SkillTree skilltree) {
         DefaultMutableTreeNode root = ((DefaultMutableTreeNode) skilltreeTreeModel.getRoot());
         DefaultMutableTreeNode[] path = new DefaultMutableTreeNode[2];
@@ -300,7 +288,7 @@ public class SkilltreeCreator {
     }
 
     public void skilltreeTreeSetSkilltrees() {
-        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(selectedMobtype.getPetType());
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(mobTypeComboBox.getSelectedItem().toString());
         skilltreeTreeModel.setRoot(rootNode);
         for (SkillTree skillTree : selectedMobtype.getSkillTrees()) {
             SkillTreeNode skillTreeNode = new SkillTreeNode(skillTree);
@@ -324,7 +312,7 @@ public class SkilltreeCreator {
         createRightclickMenus();
 
         mobTypeComboBox = new JComboBox(GuiMain.petTypes);
-        selectedMobtype = SkillTreeMobType.getMobTypeByName("default");
+        selectedMobtype = SkillTreeMobType.DEFAULT;
         skilltreeTreeSetSkilltrees();
     }
 
