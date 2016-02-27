@@ -101,14 +101,11 @@ public enum MyPetType {
     }
 
     public static MyPetType byName(String name) {
-        MyPetType type = valueOf(name);
-        if (type == null) {
-            for (MyPetType t : values()) {
-                if (t.name().equalsIgnoreCase(name)) {
-                    return t;
-                }
+        for (MyPetType t : values()) {
+            if (t.name().equalsIgnoreCase(name)) {
+                return t;
             }
         }
-        return type;
+        return null;
     }
 }
