@@ -32,6 +32,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftZombie;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -159,6 +160,23 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
         } catch (Exception e) {
             return "en_US";
         }
+    }
+
+    @Override
+    public TagCompound entityToTag(Entity bukkitEntity) {
+        net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
+        NBTTagCompound vanillaNBT = new NBTTagCompound();
+
+        entity.e(vanillaNBT);
+
+        return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
+    }
+
+    @Override
+    public void applyTagToEntity(TagCompound tag, Entity bukkitEntity) {
+        net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
+        NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
+        entity.f(vanillaNBT);
     }
 
     public String getCommandSenderLanguage(CommandSender sender) {

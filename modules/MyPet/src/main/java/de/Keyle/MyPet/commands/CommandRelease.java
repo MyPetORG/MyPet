@@ -34,6 +34,7 @@ import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -146,11 +147,19 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                                 ((Sheep) normalEntity).setAdult();
                             }
                         } else if (myPet instanceof MyVillager) {
-                            ((Villager) normalEntity).setProfession(Profession.getProfession(((MyVillager) myPet).getProfession()));
-                            if (((MyVillager) myPet).isBaby()) {
+                            MyVillager villagerPet = (MyVillager) myPet;
+                            ((Villager) normalEntity).setProfession(Profession.getProfession(villagerPet.getProfession()));
+                            if (villagerPet.isBaby()) {
                                 ((Villager) normalEntity).setBaby();
                             } else {
                                 ((Villager) normalEntity).setAdult();
+                            }
+                            if (villagerPet.hasOriginalData()) {
+                                TagCompound villagerTag = MyPetApi.getBukkitHelper().entityToTag(normalEntity);
+                                for (String key : villagerPet.getOriginalData().getCompoundData().keySet()) {
+                                    villagerTag.put(key, villagerPet.getOriginalData().get(key));
+                                }
+                                MyPetApi.getBukkitHelper().applyTagToEntity(villagerTag, normalEntity);
                             }
                         } else if (myPet instanceof MyWolf) {
                             ((Wolf) normalEntity).setTamed(false);
