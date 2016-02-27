@@ -103,13 +103,15 @@ public class MeleeAttack extends AIGoal {
             this.petEntity.getPetNavigation().navigateTo((LivingEntity) targetEntity.getBukkitEntity());
         }
         if (this.petEntity.f(targetEntity.locX, targetEntity.getBoundingBox().b, targetEntity.locZ) - (targetEntity.length * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
-            this.ticksUntilNextHitLeft = ticksUntilNextHit;
-            if (this.petEntity instanceof MyPetEquipment) {
-                if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {
-                    this.petEntity.bv(); // -> swingItem()
+            if (this.petEntity.getEntitySenses().a(targetEntity)) {
+                this.ticksUntilNextHitLeft = ticksUntilNextHit;
+                if (this.petEntity instanceof MyPetEquipment) {
+                    if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {
+                        this.petEntity.bv(); // -> swingItem()
+                    }
                 }
+                this.petEntity.attack(targetEntity);
             }
-            this.petEntity.attack(targetEntity);
         }
     }
 }
