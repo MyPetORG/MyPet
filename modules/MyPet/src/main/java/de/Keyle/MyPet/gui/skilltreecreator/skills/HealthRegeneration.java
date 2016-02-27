@@ -39,13 +39,6 @@ public class HealthRegeneration implements SkillPropertiesPanel {
     private JRadioButton decreaseTimeRadioButton;
     private JRadioButton setTimeRadioButton;
 
-    private TagCompound tagCompound;
-
-    public HealthRegeneration(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -78,14 +71,21 @@ public class HealthRegeneration implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        timeInput.setText("0");
+        healthInput.setText("0.0");
+
+        addHealthRadioButton.setSelected(true);
+        decreaseTimeRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_time", new TagString(decreaseTimeRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("time", new TagInt(Integer.parseInt(timeInput.getText())));
 
         tagCompound.getCompoundData().put("addset_hp", new TagString(addHealthRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("hp_double", new TagDouble(Double.parseDouble(healthInput.getText())));
-
-        return tagCompound;
     }
 
     @Override

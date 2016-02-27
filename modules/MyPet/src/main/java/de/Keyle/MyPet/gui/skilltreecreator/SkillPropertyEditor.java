@@ -48,7 +48,7 @@ public class SkillPropertyEditor {
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 skillPropertiesPanel.verifyInput();
-                skillPropertiesPanel.save();
+                skillPropertiesPanel.save(skill.getProperties());
                 GuiMain.levelCreator.getFrame().setEnabled(true);
                 skillPropertyEditorFrame.setVisible(false);
             }
@@ -63,11 +63,13 @@ public class SkillPropertyEditor {
         });
     }
 
-    public void setSkill(SkillInfo skill) {
+    public void setSkill(SkillInfo skill, SkillPropertiesPanel panel) {
         this.skill = skill;
         propertyPanel.removeAll();
-        //skillPropertiesPanel = skill.getGuiPanel();
+        skillPropertiesPanel = panel;
         propertyPanel.add(skillPropertiesPanel.getMainPanel(), constraints);
+        skillPropertiesPanel.resetInput();
+        skillPropertiesPanel.load(skill.getProperties());
     }
 
     public JPanel getMainPanel() {

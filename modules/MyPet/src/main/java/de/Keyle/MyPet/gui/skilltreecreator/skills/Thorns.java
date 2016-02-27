@@ -35,13 +35,6 @@ public class Thorns implements SkillPropertiesPanel {
     private JRadioButton addReflectionRadioButton;
     private JRadioButton setReflectionRadioButton;
 
-    private TagCompound tagCompound;
-
-    public Thorns(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -61,14 +54,20 @@ public class Thorns implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        reflectionInput.setText("0");
+        chanceInput.setText("0");
+        addChanceRadioButton.setSelected(true);
+        addReflectionRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_chance", new TagString(addChanceRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("chance", new TagInt(Integer.parseInt(chanceInput.getText())));
 
         tagCompound.getCompoundData().put("addset_reflection", new TagString(addReflectionRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("reflection", new TagInt(Integer.parseInt(reflectionInput.getText())));
-
-        return tagCompound;
     }
 
     @Override

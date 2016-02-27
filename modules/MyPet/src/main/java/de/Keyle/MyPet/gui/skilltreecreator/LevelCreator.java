@@ -26,11 +26,13 @@ import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillProperties;
 import de.Keyle.MyPet.api.skill.SkillsInfo;
+import de.Keyle.MyPet.api.skill.skills.*;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
 import de.Keyle.MyPet.gui.GuiMain;
+import de.Keyle.MyPet.gui.skilltreecreator.skills.*;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;
@@ -46,10 +48,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 public class LevelCreator {
     JTree skillTreeTree;
@@ -86,10 +85,13 @@ public class LevelCreator {
     SkillTreeMobType skillTreeMobType;
 
     private static String[] skillNames = null;
+    private Map<Class<? extends SkillInfo>, SkillPropertiesPanel> skillPanels = new HashMap<>();
 
     int highestLevel = 0;
 
     public LevelCreator() {
+        registerSkillPanels();
+
         if (skillNames == null) {
             skillNames = new String[SkillsInfo.getRegisteredSkillsInfo().size()];
             int skillCounter = 0;
@@ -149,12 +151,14 @@ public class LevelCreator {
                 String choosenSkill = (String) JOptionPane.showInputDialog(null, "Please select the skill you want to add to level " + level + '.', "", JOptionPane.QUESTION_MESSAGE, null, skillNames, "");
                 if (choosenSkill != null) {
                     SkillInfo skill = SkillsInfo.getNewSkillInfoInstance(choosenSkill);
-                    skillTree.addSkillToLevel(level, skill);
-                    SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
-                    skill.setDefaultProperties();
-                    ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).add(skillNode);
-                    skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
-                    skillTreeTree.updateUI();
+                    if (skill != null) {
+                        skillTree.addSkillToLevel(level, skill);
+                        SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
+                        skill.setDefaultProperties();
+                        ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).add(skillNode);
+                        skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
+                        skillTreeTree.updateUI();
+                    }
                 }
             }
         });
@@ -331,17 +335,16 @@ public class LevelCreator {
                                 return;
                             }
                             if (SkillsInfo.getSkillInfoClass(skill.getName()) != null) {
-                                //if (skill.getGuiPanel() != null) {
-                                if (false) { //TODO
-                                    GuiMain.skillPropertyEditor.setSkill(skill);
+                                SkillPropertiesPanel panel = skillPanels.get(skill.getClass());
+                                if (panel != null) {
+                                    GuiMain.skillPropertyEditor.setSkill(skill, panel);
+                                    GuiMain.skillPropertyEditor.getFrame().setVisible(true);
+                                    getFrame().setEnabled(false);
+                                    GuiMain.skillPropertyEditor.getFrame().setSize(GuiMain.skillPropertyEditor.getFrame().getWidth(), panel.getMainPanel().getHeight() + 90);
                                 } else {
                                     JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
-                                    return;
                                 }
                             }
-                            GuiMain.skillPropertyEditor.getFrame().setVisible(true);
-                            getFrame().setEnabled(false);
-                            //GuiMain.skillPropertyEditor.getFrame().setSize(GuiMain.skillPropertyEditor.getFrame().getWidth(), skill.getGuiPanel().getMainPanel().getHeight() + 90);
                         }
                     }
                 }
@@ -558,6 +561,27 @@ public class LevelCreator {
         });
     }
 
+    public void registerSkillPanels() {
+        skillPanels.put(BeaconInfo.class, new Beacon());
+        skillPanels.put(BehaviorInfo.class, new Behavior());
+        skillPanels.put(DamageInfo.class, new Damage());
+        skillPanels.put(FireInfo.class, new Fire());
+        skillPanels.put(HPInfo.class, new Health());
+        skillPanels.put(HPregenerationInfo.class, new HealthRegeneration());
+        skillPanels.put(InventoryInfo.class, new Inventory());
+        skillPanels.put(KnockbackInfo.class, new Knockback());
+        skillPanels.put(LightningInfo.class, new Lightning());
+        skillPanels.put(PickupInfo.class, new Pickup());
+        skillPanels.put(PoisonInfo.class, new Poison());
+        skillPanels.put(RangedInfo.class, new Ranged());
+        skillPanels.put(RideInfo.class, new Ride());
+        skillPanels.put(ShieldInfo.class, new Shield());
+        skillPanels.put(SlowInfo.class, new Slow());
+        skillPanels.put(StompInfo.class, new Stomp());
+        skillPanels.put(ThornsInfo.class, new Thorns());
+        skillPanels.put(WitherInfo.class, new Wither());
+    }
+
     public JPanel getMainPanel() {
         return levelCreatorPanel;
     }
@@ -615,7 +639,7 @@ public class LevelCreator {
 
         inheritanceCheckBox.setSelected(false);
         inheritanceCheckBox.setEnabled(false);
-        if (skillTreeMobType.getSkillTreeNames().size() > 1 || (!skillTreeMobType.getPetType().equals("default") && SkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().size() > 0)) {
+        if (skillTreeMobType.getSkillTreeNames().size() > 1 || (skillTreeMobType != SkillTreeMobType.DEFAULT && SkillTreeMobType.DEFAULT.getSkillTreeNames().size() > 0)) {
             inheritanceCheckBox.setEnabled(true);
             ArrayList<String> skilltreeNames = new ArrayList<>();
             for (String skillTreeName : skillTreeMobType.getSkillTreeNames()) {
@@ -624,7 +648,7 @@ public class LevelCreator {
                     inheritanceComboBoxModel.addElement(skillTreeName);
                 }
             }
-            for (String skillTreeName : SkillTreeMobType.getMobTypeByName("default").getSkillTreeNames()) {
+            for (String skillTreeName : SkillTreeMobType.DEFAULT.getSkillTreeNames()) {
                 if (!skillTreeName.equals(skillTree.getName()) && !skilltreeNames.contains(skillTreeName)) {
                     skilltreeNames.add(skillTreeName);
                     inheritanceComboBoxModel.addElement(skillTreeName);

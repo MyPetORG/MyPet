@@ -20,12 +20,18 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
-import de.Keyle.MyPet.api.util.NBTStorage;
+import de.keyle.knbt.TagCompound;
 
 import javax.swing.*;
 
-public interface SkillPropertiesPanel extends NBTStorage {
+public interface SkillPropertiesPanel {
     JPanel getMainPanel();
 
     void verifyInput();
+
+    void resetInput();
+
+    void save(TagCompound compound);
+
+    void load(TagCompound compound);
 }

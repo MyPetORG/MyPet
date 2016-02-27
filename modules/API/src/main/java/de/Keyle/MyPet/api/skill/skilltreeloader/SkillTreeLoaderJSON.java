@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skilltreeloader;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillProperties;
 import de.Keyle.MyPet.api.skill.SkillProperties.NBTdatatypes;
@@ -227,8 +228,15 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
     protected boolean saveSkillTree(ConfigurationJSON jsonConfiguration, String petTypeName) {
         boolean saveMobType = false;
 
-        if (SkillTreeMobType.getMobTypeByName(petTypeName).getSkillTreeNames().size() != 0) {
-            SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByName(petTypeName);
+        SkillTreeMobType mobType;
+        if (petTypeName.equalsIgnoreCase("default")) {
+            mobType = SkillTreeMobType.DEFAULT;
+        } else if (SkillTreeMobType.hasMobType(MyPetType.byName(petTypeName))) {
+            mobType = SkillTreeMobType.getMobTypeByName(petTypeName);
+        } else {
+            return false;
+        }
+        if (mobType.getSkillTreeNames().size() != 0) {
             mobType.cleanupPlaces();
 
             JSONObject skilltreeList = jsonConfiguration.getJSONObject();

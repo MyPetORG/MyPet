@@ -57,7 +57,11 @@ public class MyPetApi {
     }
 
     public static Logger getLogger() {
-        return plugin.getLogger();
+        if (plugin != null) {
+            return plugin.getLogger();
+        } else {
+            return Logger.getLogger("MyPet");
+        }
     }
 
     public static BukkitHelper getBukkitHelper() {

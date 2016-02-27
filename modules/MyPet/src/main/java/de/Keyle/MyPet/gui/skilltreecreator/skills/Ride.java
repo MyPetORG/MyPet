@@ -37,13 +37,6 @@ public class Ride implements SkillPropertiesPanel {
     private JRadioButton setJumpHeightRadioButton;
     protected JCheckBox canFlyCheckBox;
 
-    private TagCompound tagCompound;
-
-    public Ride(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -76,7 +69,16 @@ public class Ride implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        speedInput.setText("0.0");
+        jumpHeightInput.setText("0.0");
+        addJumpHeightRadioButton.setSelected(true);
+        addSpeedRadioButton.setSelected(true);
+        canFlyCheckBox.setSelected(false);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_speed", new TagString(addSpeedRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("speed_percent", new TagInt(Integer.parseInt(speedInput.getText())));
 
@@ -84,8 +86,6 @@ public class Ride implements SkillPropertiesPanel {
         tagCompound.getCompoundData().put("jump_height", new TagDouble(Double.parseDouble(jumpHeightInput.getText())));
 
         tagCompound.getCompoundData().put("can_fly", new TagByte(canFlyCheckBox.isSelected()));
-
-        return tagCompound;
     }
 
     @Override

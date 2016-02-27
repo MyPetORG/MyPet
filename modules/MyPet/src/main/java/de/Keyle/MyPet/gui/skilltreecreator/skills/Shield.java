@@ -35,13 +35,6 @@ public class Shield implements SkillPropertiesPanel {
     private JRadioButton addRedirectionRadioButton;
     private JRadioButton setRedirectionRadioButton;
 
-    private TagCompound tagCompound;
-
-    public Shield(TagCompound tagCompound) {
-        this.tagCompound = tagCompound;
-        load(tagCompound);
-    }
-
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
@@ -61,14 +54,20 @@ public class Shield implements SkillPropertiesPanel {
     }
 
     @Override
-    public TagCompound save() {
+    public void resetInput() {
+        chanceInput.setText("0");
+        redirectionInput.setText("0");
+        addChanceRadioButton.setSelected(true);
+        addRedirectionRadioButton.setSelected(true);
+    }
+
+    @Override
+    public void save(TagCompound tagCompound) {
         tagCompound.getCompoundData().put("addset_chance", new TagString(addChanceRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("chance", new TagInt(Integer.parseInt(chanceInput.getText())));
 
         tagCompound.getCompoundData().put("addset_redirection", new TagString(addRedirectionRadioButton.isSelected() ? "add" : "set"));
         tagCompound.getCompoundData().put("redirection", new TagInt(Integer.parseInt(redirectionInput.getText())));
-
-        return tagCompound;
     }
 
     @Override
