@@ -91,7 +91,7 @@ public class IconMenu implements Listener {
 
     public void open(HumanEntity player) {
         if (inventory == null) {
-            inventory = MyPetApi.getCompatUtil().getComapatInstance(IconMenuInventory.class, "util.iconmenu");
+            inventory = MyPetApi.getCompatUtil().getComapatInstance(IconMenuInventory.class, "util.iconmenu", "IconMenuInventory");
         }
         inventory.open(this, player);
     }

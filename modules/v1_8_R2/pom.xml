@@ -1,15 +1,15 @@
 <!--
-  ~ This file is part of mypet
+  ~ This file is part of MyPet
   ~
   ~ Copyright (C) 2011-2016 Keyle
-  ~ mypet is licensed under the GNU Lesser General Public License.
+  ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
-  ~ mypet is free software: you can redistribute it and/or modify
+  ~ MyPet is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ mypet is distributed in the hope that it will be useful,
+  ~ MyPet is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   ~ GNU General Public License for more details.
@@ -22,10 +22,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mypet-compat-v1_8_R3</artifactId>
+    <artifactId>mypet-compat-v1_8_R2</artifactId>
     <version>1</version>
     <packaging>jar</packaging>
-    <name>MyPet-Premium-v1_8_R3</name>
+    <name>MyPet-Premium-v1_8_R2</name>
 
     <parent>
         <groupId>de.keyle</groupId>
@@ -37,7 +37,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.8.8</minecraft.version>
+        <minecraft.version>1.8.3</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
         <remove.donator>none</remove.donator>
@@ -47,14 +47,14 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>${minecraft.version}-${bukkit.version}</version>
+            <version>1.8.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>${spigot.version}</version>
+            <version>1.8.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
             <exclusions>
@@ -68,23 +68,11 @@
             <groupId>de.keyle</groupId>
             <artifactId>mypet-api</artifactId>
             <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-core</artifactId>
             <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 

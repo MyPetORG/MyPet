@@ -29,8 +29,8 @@ import de.Keyle.MyPet.api.entity.LeashFlag;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.NameFilter;
-import de.Keyle.MyPet.compat.v1_8_R3.util.ConfigItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -218,8 +218,8 @@ public class ConfigurationLoader {
         Misc.CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
         Misc.ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
 
-        Skilltree.Skill.CONTROL_ITEM = new ConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
-        Skilltree.Skill.Ride.RIDE_ITEM = new ConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
+        Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
+        Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
         Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Skilltree.Skill.Beacon.PARTY_SUPPORT = config.getBoolean("MyPet.Skill.Beacon.Party-Support", true);
@@ -349,19 +349,19 @@ public class ConfigurationLoader {
         Configuration.MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         Configuration.MyPet.IronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
         Configuration.MyPet.Snowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
-        Configuration.MyPet.Chicken.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Cow.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Horse.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + Material.BREAD.getId()));
-        Configuration.MyPet.Mooshroom.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Cow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + Material.BREAD.getId()));
+        Configuration.MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "" + Material.POTION.getId()));
         Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
-        Configuration.MyPet.Ocelot.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Pig.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Sheep.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Villager.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Wolf.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Zombie.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.PigZombie.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Rabbit.GROW_UP_ITEM = new ConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "" + Material.POTION.getId()));
+        Configuration.MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "" + Material.POTION.getId()));
 
         for (MyPetType petType : MyPetType.values()) {
             DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
@@ -371,7 +371,7 @@ public class ConfigurationLoader {
             if (config.get("MyPet.Pets." + petType.name() + ".Food") instanceof ArrayList) {
                 List<String> foodList = config.getStringList("MyPet.Pets." + petType.name() + ".Food");
                 for (String foodString : foodList) {
-                    ConfigItem ci = new ConfigItem(foodString);
+                    ConfigItem ci = ConfigItem.createConfigItem(foodString);
                     if (ci.getItem().getType() != Material.AIR) {
                         MyPetApi.getMyPetInfo().setFood(petType, ci);
                     }
@@ -382,7 +382,7 @@ public class ConfigurationLoader {
             seperateLeashFlags(petType, config.getString("MyPet.Pets." + petType + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
-            MyPetApi.getMyPetInfo().setLeashItem(petType, new ConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "" + Material.LEASH.getId())));
+            MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "" + Material.LEASH.getId())));
         }
     }
 
@@ -409,10 +409,10 @@ public class ConfigurationLoader {
         }
         if (foodString.contains(";")) {
             for (String foodIDString : foodString.split("(?<!\\\\);")) {
-                MyPetApi.getMyPetInfo().setFood(type, new ConfigItem(foodIDString.replace("\\;", ";")));
+                MyPetApi.getMyPetInfo().setFood(type, ConfigItem.createConfigItem(foodIDString.replace("\\;", ";")));
             }
         } else {
-            MyPetApi.getMyPetInfo().setFood(type, new ConfigItem(foodString));
+            MyPetApi.getMyPetInfo().setFood(type, ConfigItem.createConfigItem(foodString));
         }
     }
 
