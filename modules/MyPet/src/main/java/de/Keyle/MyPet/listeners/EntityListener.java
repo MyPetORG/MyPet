@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
+import de.Keyle.MyPet.api.event.ActiveSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -59,6 +60,7 @@ import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
 import net.citizensnpcs.api.CitizensAPI;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -658,52 +660,80 @@ public class EntityListener implements Listener {
                     if (myPet.getSkills().hasSkill(Poison.class)) {
                         Poison poisonSkill = myPet.getSkills().getSkill(Poison.class);
                         if (poisonSkill.activate()) {
-                            poisonSkill.poisonTarget((LivingEntity) damagedEntity);
-                            skillUsed = true;
+                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, poisonSkill);
+                            Bukkit.getPluginManager().callEvent(skillEvent);
+                            if (!skillEvent.isCancelled()) {
+                                poisonSkill.poisonTarget((LivingEntity) damagedEntity);
+                                skillUsed = true;
+                            }
                         }
                     }
                     if (!skillUsed && myPet.getSkills().hasSkill(Wither.class)) {
                         Wither witherSkill = myPet.getSkills().getSkill(Wither.class);
                         if (witherSkill.activate()) {
-                            witherSkill.witherTarget((LivingEntity) damagedEntity);
-                            skillUsed = true;
+                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, witherSkill);
+                            Bukkit.getPluginManager().callEvent(skillEvent);
+                            if (!skillEvent.isCancelled()) {
+                                witherSkill.witherTarget((LivingEntity) damagedEntity);
+                                skillUsed = true;
+                            }
                         }
                     }
                     if (!skillUsed && myPet.getSkills().hasSkill(Fire.class)) {
                         Fire fireSkill = myPet.getSkills().getSkill(Fire.class);
                         if (fireSkill.activate()) {
-                            fireSkill.igniteTarget((LivingEntity) damagedEntity);
-                            skillUsed = true;
+                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, fireSkill);
+                            Bukkit.getPluginManager().callEvent(skillEvent);
+                            if (!skillEvent.isCancelled()) {
+                                fireSkill.igniteTarget((LivingEntity) damagedEntity);
+                                skillUsed = true;
+                            }
                         }
                     }
                     if (!skillUsed && myPet.getSkills().hasSkill(Slow.class)) {
                         Slow slowSkill = myPet.getSkills().getSkill(Slow.class);
                         if (slowSkill.activate()) {
-                            slowSkill.slowTarget((LivingEntity) damagedEntity);
-                            skillUsed = true;
+                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, slowSkill);
+                            Bukkit.getPluginManager().callEvent(skillEvent);
+                            if (!skillEvent.isCancelled()) {
+                                slowSkill.slowTarget((LivingEntity) damagedEntity);
+                                skillUsed = true;
+                            }
                         }
                     }
                     if (!skillUsed && myPet.getSkills().hasSkill(Knockback.class)) {
                         Knockback knockbackSkill = myPet.getSkills().getSkill(Knockback.class);
                         if (knockbackSkill.activate()) {
-                            knockbackSkill.knockbackTarget((LivingEntity) damagedEntity);
-                            skillUsed = true;
+                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, knockbackSkill);
+                            Bukkit.getPluginManager().callEvent(skillEvent);
+                            if (!skillEvent.isCancelled()) {
+                                knockbackSkill.knockbackTarget((LivingEntity) damagedEntity);
+                                skillUsed = true;
+                            }
                         }
                     }
                     if (!skillUsed && myPet.getSkills().hasSkill(Lightning.class)) {
                         Lightning lightningSkill = myPet.getSkills().getSkill(Lightning.class);
                         if (lightningSkill.activate()) {
-                            isSkillActive = true;
-                            lightningSkill.strikeLightning(damagedEntity.getLocation());
-                            isSkillActive = false;
+                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, lightningSkill);
+                            Bukkit.getPluginManager().callEvent(skillEvent);
+                            if (!skillEvent.isCancelled()) {
+                                isSkillActive = true;
+                                lightningSkill.strikeLightning(damagedEntity.getLocation());
+                                isSkillActive = false;
+                            }
                         }
                     }
                     if (!skillUsed && myPet.getSkills().hasSkill(Stomp.class)) {
                         Stomp stompSkill = myPet.getSkills().getSkill(Stomp.class);
                         if (stompSkill.activate()) {
-                            isSkillActive = true;
-                            stompSkill.stomp(myPet.getLocation());
-                            isSkillActive = false;
+                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, stompSkill);
+                            Bukkit.getPluginManager().callEvent(skillEvent);
+                            if (!skillEvent.isCancelled()) {
+                                isSkillActive = true;
+                                stompSkill.stomp(myPet.getLocation());
+                                isSkillActive = false;
+                            }
                         }
                     }
                 }
