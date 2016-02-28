@@ -22,6 +22,8 @@ package de.Keyle.MyPet.api.util;
 
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +41,7 @@ public class CompatUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getComapatInstance(Class<? extends T> clazz, String path, String className) {
+    public <T> T getComapatInstance(Class<? extends T> clazz, String path, String className, Object... parameters) {
         if (internalVersion == null) {
             return null;
         }
@@ -59,30 +61,20 @@ public class CompatUtil {
                 return null;
             }
 
-            T instance = compatClass.newInstance();
+            Class[] paramterClasses = new Class[parameters.length];
+            for (int i = 0; i < parameters.length; i++) {
+                Object parameter = parameters[i];
+                paramterClasses[i] = parameter.getClass();
+            }
 
-            return instance;
+            Constructor<T> constructor = (Constructor<T>) compatClass.getConstructor(paramterClasses);
+            return constructor.newInstance(parameters);
 
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    public <T> T getComapatInstance(Class<? extends T> clazz, String path) {
-        String className = clazz.getCanonicalName();
-        className = className.substring(className.lastIndexOf(".") + 1);
-        return getComapatInstance(clazz, path, className);
-    }
-
-    public <T> T getComapatInstance(Class<? extends T> clazz) {
-        String classPath = clazz.getCanonicalName();
-        if (classPath.startsWith("de.Keyle.MyPet")) {
-            classPath = classPath.substring(15);
-        }
-        classPath = classPath.substring(0, classPath.lastIndexOf("."));
-        return getComapatInstance(clazz, classPath);
     }
 
     public String getInternalVersion() {

@@ -32,6 +32,7 @@
     <modules>
         <module>modules/API</module>
         <module>modules/Core</module>
+        <module>modules/v1_8_R2</module>
         <module>modules/v1_8_R3</module>
         <module>modules/MyPet</module>
     </modules>

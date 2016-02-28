@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.util;
 
+import de.Keyle.MyPet.MyPetApi;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class ConfigItem {
@@ -37,6 +38,14 @@ public abstract class ConfigItem {
 
     public ConfigItem(String data) {
         load(data);
+    }
+
+    public static ConfigItem createConfigItem(String data) {
+        return MyPetApi.getCompatUtil().getComapatInstance(ConfigItem.class, "util", "ConfigItem", data);
+    }
+
+    public static ConfigItem createConfigItem(ItemStack item, DurabilityMode durabilityMode) {
+        return MyPetApi.getCompatUtil().getComapatInstance(ConfigItem.class, "util", "ConfigItem", item, durabilityMode);
     }
 
     public boolean compare(ItemStack compareItem) {
