@@ -32,6 +32,7 @@
     <modules>
         <module>modules/API</module>
         <module>modules/Core</module>
+        <module>modules/v1_7_R4</module>
         <module>modules/v1_8_R2</module>
         <module>modules/v1_8_R3</module>
         <module>modules/MyPet</module>
@@ -135,13 +136,6 @@
     </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>${minecraft.version}-${bukkit.version}</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>

@@ -97,6 +97,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.petPathfinderSelector = new AIGoalSelector();
             this.petTargetSelector = new AIGoalSelector();
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
+            this.getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
             this.getAttributeInstance(GenericAttributes.b).setValue(32.0f);
             this.petNavigation = new VanillaNavigation(this);
             this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
@@ -309,7 +310,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public boolean canUseItem() {
         MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Use);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        return event.isCancelled();
+        return !event.isCancelled();
     }
 
     public boolean playIdleSound() {

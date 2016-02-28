@@ -309,7 +309,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public boolean canUseItem() {
         MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Use);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        return event.isCancelled();
+        return !event.isCancelled();
     }
 
     public boolean playIdleSound() {

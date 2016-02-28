@@ -150,9 +150,11 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
-        for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
-            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
-            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
+        for (EntityType entityType : EntityType.values()) {
+            if(MonsterExperience.mobExp.containsKey(entityType.name())) {
+                config.addDefault("MyPet.Exp.Active." + entityType.name() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
+                config.addDefault("MyPet.Exp.Active." + entityType.name() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
+            }
         }
 
         config.options().copyDefaults(true);
@@ -321,14 +323,16 @@ public class ConfigurationLoader {
         if (config.getStringList("MyPet.exp.active") != null) {
             double min;
             double max;
-            for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
-                max = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Max", 0.);
-                min = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Min", 0.);
-                if (min == max) {
-                    MonsterExperience.getMonsterExperience(entityType).setExp(max);
-                } else {
-                    MonsterExperience.getMonsterExperience(entityType).setMin(min);
-                    MonsterExperience.getMonsterExperience(entityType).setMax(max);
+            for (EntityType entityType : EntityType.values()) {
+                if(MonsterExperience.mobExp.containsKey(entityType.name())) {
+                    max = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Max", 0.);
+                    min = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Min", 0.);
+                    if (min == max) {
+                        MonsterExperience.getMonsterExperience(entityType).setExp(max);
+                    } else {
+                        MonsterExperience.getMonsterExperience(entityType).setMin(min);
+                        MonsterExperience.getMonsterExperience(entityType).setMax(max);
+                    }
                 }
             }
         }
