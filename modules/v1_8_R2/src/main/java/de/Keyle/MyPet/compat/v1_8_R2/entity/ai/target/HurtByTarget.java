@@ -33,7 +33,6 @@ import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityTargetEvent;
 
 public class HurtByTarget extends AIGoal {
     EntityMyPet petEntity;
@@ -116,6 +115,6 @@ public class HurtByTarget extends AIGoal {
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
+        petEntity.forgetTarget();
     }
 }

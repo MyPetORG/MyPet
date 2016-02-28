@@ -26,49 +26,49 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MonsterExperience {
-    public static final Map<EntityType, MonsterExperience> mobExp = new HashMap<>();
-    private static MonsterExperience unknown = new MonsterExperience(0., EntityType.UNKNOWN);
+    public static final Map<String, MonsterExperience> mobExp = new HashMap<>();
+    private static MonsterExperience unknown = new MonsterExperience(0., "UNKNOWN");
 
     static {
-        mobExp.put(EntityType.SKELETON, new MonsterExperience(5., EntityType.SKELETON));
-        mobExp.put(EntityType.ZOMBIE, new MonsterExperience(5., EntityType.ZOMBIE));
-        mobExp.put(EntityType.SPIDER, new MonsterExperience(5., EntityType.SPIDER));
-        mobExp.put(EntityType.WOLF, new MonsterExperience(1., 3., EntityType.WOLF));
-        mobExp.put(EntityType.CREEPER, new MonsterExperience(5., EntityType.CREEPER));
-        mobExp.put(EntityType.GHAST, new MonsterExperience(5., EntityType.GHAST));
-        mobExp.put(EntityType.PIG_ZOMBIE, new MonsterExperience(5., EntityType.PIG_ZOMBIE));
-        mobExp.put(EntityType.ENDERMAN, new MonsterExperience(5., EntityType.ENDERMAN));
-        mobExp.put(EntityType.ENDERMITE, new MonsterExperience(3., EntityType.ENDERMITE));
-        mobExp.put(EntityType.CAVE_SPIDER, new MonsterExperience(5., EntityType.CAVE_SPIDER));
-        mobExp.put(EntityType.MAGMA_CUBE, new MonsterExperience(1., 4., EntityType.MAGMA_CUBE));
-        mobExp.put(EntityType.SLIME, new MonsterExperience(1., 4., EntityType.SLIME));
-        mobExp.put(EntityType.SILVERFISH, new MonsterExperience(5., EntityType.SILVERFISH));
-        mobExp.put(EntityType.BLAZE, new MonsterExperience(10., EntityType.BLAZE));
-        mobExp.put(EntityType.GIANT, new MonsterExperience(25., EntityType.GIANT));
-        mobExp.put(EntityType.GUARDIAN, new MonsterExperience(10., EntityType.GUARDIAN));
-        mobExp.put(EntityType.COW, new MonsterExperience(1., 3., EntityType.COW));
-        mobExp.put(EntityType.PIG, new MonsterExperience(1., 3., EntityType.PIG));
-        mobExp.put(EntityType.CHICKEN, new MonsterExperience(1., 3., EntityType.CHICKEN));
-        mobExp.put(EntityType.SQUID, new MonsterExperience(1., 3., EntityType.SQUID));
-        mobExp.put(EntityType.SHEEP, new MonsterExperience(1., 3., EntityType.SHEEP));
-        mobExp.put(EntityType.OCELOT, new MonsterExperience(1., 3., EntityType.OCELOT));
-        mobExp.put(EntityType.MUSHROOM_COW, new MonsterExperience(1., 3., EntityType.MUSHROOM_COW));
-        mobExp.put(EntityType.VILLAGER, new MonsterExperience(0., EntityType.VILLAGER));
-        mobExp.put(EntityType.SNOWMAN, new MonsterExperience(0., EntityType.SNOWMAN));
-        mobExp.put(EntityType.IRON_GOLEM, new MonsterExperience(0., EntityType.IRON_GOLEM));
-        mobExp.put(EntityType.ENDER_DRAGON, new MonsterExperience(20000., EntityType.ENDER_DRAGON));
-        mobExp.put(EntityType.WITCH, new MonsterExperience(10., EntityType.WITCH));
-        mobExp.put(EntityType.BAT, new MonsterExperience(1., EntityType.BAT));
-        mobExp.put(EntityType.ENDER_CRYSTAL, new MonsterExperience(10., EntityType.ENDER_CRYSTAL));
-        mobExp.put(EntityType.WITHER, new MonsterExperience(100., EntityType.WITHER));
-        mobExp.put(EntityType.RABBIT, new MonsterExperience(1., EntityType.RABBIT));
+        mobExp.put("SKELETON", new MonsterExperience(5., "SKELETON"));
+        mobExp.put("ZOMBIE", new MonsterExperience(5., "ZOMBIE"));
+        mobExp.put("SPIDER", new MonsterExperience(5., "SPIDER"));
+        mobExp.put("WOLF", new MonsterExperience(1., 3., "WOLF"));
+        mobExp.put("CREEPER", new MonsterExperience(5., "CREEPER"));
+        mobExp.put("GHAST", new MonsterExperience(5., "GHAST"));
+        mobExp.put("PIG_ZOMBIE", new MonsterExperience(5., "PIG_ZOMBIE"));
+        mobExp.put("ENDERMAN", new MonsterExperience(5., "ENDERMAN"));
+        mobExp.put("ENDERMITE", new MonsterExperience(3., "ENDERMITE"));
+        mobExp.put("CAVE_SPIDER", new MonsterExperience(5., "CAVE_SPIDER"));
+        mobExp.put("MAGMA_CUBE", new MonsterExperience(1., 4., "MAGMA_CUBE"));
+        mobExp.put("SLIME", new MonsterExperience(1., 4., "SLIME"));
+        mobExp.put("SILVERFISH", new MonsterExperience(5., "SILVERFISH"));
+        mobExp.put("BLAZE", new MonsterExperience(10., "BLAZE"));
+        mobExp.put("GIANT", new MonsterExperience(25., "GIANT"));
+        mobExp.put("GUARDIAN", new MonsterExperience(10., "GUARDIAN"));
+        mobExp.put("COW", new MonsterExperience(1., 3., "COW"));
+        mobExp.put("PIG", new MonsterExperience(1., 3., "PIG"));
+        mobExp.put("CHICKEN", new MonsterExperience(1., 3., "CHICKEN"));
+        mobExp.put("SQUID", new MonsterExperience(1., 3., "SQUID"));
+        mobExp.put("SHEEP", new MonsterExperience(1., 3., "SHEEP"));
+        mobExp.put("OCELOT", new MonsterExperience(1., 3., "OCELOT"));
+        mobExp.put("MUSHROOM_COW", new MonsterExperience(1., 3., "MUSHROOM_COW"));
+        mobExp.put("VILLAGER", new MonsterExperience(0., "VILLAGER"));
+        mobExp.put("SNOWMAN", new MonsterExperience(0., "SNOWMAN"));
+        mobExp.put("IRON_GOLEM", new MonsterExperience(0., "IRON_GOLEM"));
+        mobExp.put("ENDER_DRAGON", new MonsterExperience(20000., "ENDER_DRAGON"));
+        mobExp.put("WITCH", new MonsterExperience(10., "WITCH"));
+        mobExp.put("BAT", new MonsterExperience(1., "BAT"));
+        mobExp.put("ENDER_CRYSTAL", new MonsterExperience(10., "ENDER_CRYSTAL"));
+        mobExp.put("WITHER", new MonsterExperience(100., "WITHER"));
+        mobExp.put("RABBIT", new MonsterExperience(1., "RABBIT"));
     }
-
+    
     private double min;
     private double max;
-    private EntityType entityType;
+    private String entityType;
 
-    public MonsterExperience(double min, double max, EntityType entityType) {
+    public MonsterExperience(double min, double max, String entityType) {
         if (max >= min) {
             this.max = max;
             this.min = min;
@@ -79,7 +79,7 @@ public class MonsterExperience {
         this.entityType = entityType;
     }
 
-    public MonsterExperience(double exp, EntityType entityType) {
+    public MonsterExperience(double exp, String entityType) {
         this.max = exp;
         this.min = exp;
         this.entityType = entityType;
@@ -98,7 +98,7 @@ public class MonsterExperience {
     }
 
     public EntityType getEntityType() {
-        return entityType;
+        return EntityType.valueOf(entityType);
     }
 
     public void setMin(double min) {
@@ -125,12 +125,12 @@ public class MonsterExperience {
 
     @Override
     public String toString() {
-        return entityType.name() + "{min=" + min + ", max=" + max + "}";
+        return entityType + "{min=" + min + ", max=" + max + "}";
     }
 
     public static MonsterExperience getMonsterExperience(EntityType type) {
-        if (mobExp.containsKey(type)) {
-            return mobExp.get(type);
+        if (mobExp.containsKey(type.name())) {
+            return mobExp.get(type.name());
         }
         return unknown;
     }
