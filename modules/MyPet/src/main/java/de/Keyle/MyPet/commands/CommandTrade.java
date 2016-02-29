@@ -169,7 +169,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     if (owner != null && owner.isOnline()) {
                         owner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Reject", owner), player.getName(), offer.getPet().getPetName()));
                     }
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Reciever.Reject", player), offer.getRecieverName()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Reciever.Reject", player), offer.getOwnerName()));
                     offers.remove(player.getUniqueId());
                 } else {
                     sender.sendMessage(Translation.getString("Message.Command.Trade.Reciever.NoOffer", player));
@@ -235,7 +235,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                         }
                     }
 
-                    Offer offer = new Offer(price, myPet, player.getUniqueId(), reciever.getUniqueId(), reciever.getName());
+                    Offer offer = new Offer(price, myPet, player.getUniqueId(), reciever.getUniqueId(), reciever.getName(), player.getName());
                     offers.put(reciever.getUniqueId(), offer);
                     if (price > 0) {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Offer.Price", player), myPet.getPetName(), reciever.getName(), EconomyHook.getEconomy().format(price)));
@@ -278,13 +278,15 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
         UUID owner;
         UUID reciever;
         String recieverName;
+        String ownerName;
 
-        public Offer(double price, ActiveMyPet pet, UUID owner, UUID reciever, String recieverName) {
+        public Offer(double price, ActiveMyPet pet, UUID owner, UUID reciever, String recieverName, String ownerName) {
             this.price = price;
             this.pet = pet;
             this.owner = owner;
             this.reciever = reciever;
             this.recieverName = recieverName;
+            this.ownerName = ownerName;
         }
 
         public double getPrice() {
@@ -305,6 +307,10 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
 
         public String getRecieverName() {
             return recieverName;
+        }
+
+        public String getOwnerName() {
+            return ownerName;
         }
     }
 }
