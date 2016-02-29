@@ -61,6 +61,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Log.INFO", Log.INFO);
         config.addDefault("MyPet.Log.ERROR", Log.ERROR);
         config.addDefault("MyPet.Log.WARNING", Log.WARNING);
+        config.addDefault("MyPet.Update-Check", true);
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
