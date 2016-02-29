@@ -45,10 +45,12 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ConfigurationLoader;
+import de.Keyle.MyPet.util.UpdateCheck;
 import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Hooks;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -101,6 +103,17 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetVersion.reset();
 
         compatUtil = new CompatUtil();
+
+        if (getConfig().getBoolean("MyPet.Update-Check", true)) {
+            String message = UpdateCheck.checkForUpdate("MyPet");
+            if (message != null) {
+                message = "#  A new version is available: " + message + "  #";
+                MyPetApi.getLogger().info(StringUtils.repeat("#", message.length()));
+                MyPetApi.getLogger().info(message);
+                MyPetApi.getLogger().info(StringUtils.repeat("#", message.length()));
+            }
+        }
+
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
             getLogger().info(ChatColor.RED + "This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + "\". Is MyPet up to date?");
             setEnabled(false);
