@@ -68,6 +68,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected boolean isMyPet = false;
     protected boolean isInvisible = false;
     protected ActiveMyPet myPet;
+    protected int jumpDelay = 0;
     protected int idleSoundTimer = 0;
     protected AbstractNavigation petNavigation;
     Ride rideSkill = null;
@@ -800,12 +801,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         return super.bC();
     }
 
-
-    private int bn;
-
     public void m() {
-        if (this.bn > 0) {
-            --this.bn;
+        if (this.jumpDelay > 0) {
+            --this.jumpDelay;
         }
 
         if (this.bc > 0) {
@@ -846,12 +844,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 this.bG();
             } else if (this.ab()) {
                 this.bH();
-            } else if (this.onGround && this.bn == 0) {
+            } else if (this.onGround && this.jumpDelay == 0) {
                 this.bF();
-                this.bn = 10;
+                this.jumpDelay = 10;
             }
         } else {
-            this.bn = 0;
+            this.jumpDelay = 0;
         }
 
         this.world.methodProfiler.b();

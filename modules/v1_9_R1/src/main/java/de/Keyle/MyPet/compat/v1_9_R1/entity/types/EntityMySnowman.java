@@ -20,97 +20,33 @@
 
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_9_R1.*;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
-    Map<Location, Integer> snowMap = new HashMap<>();
-
     public EntityMySnowman(World world, ActiveMyPet myPet) {
         super(world, myPet);
     }
 
-    private void addAirBlocksInBB(org.bukkit.World bukkitWorld, AxisAlignedBB axisalignedbb) {
-        int minX = MathHelper.floor(axisalignedbb.a - 0.1);
-        int maxX = MathHelper.floor(axisalignedbb.d + 1.1D);
-        int minY = MathHelper.floor(axisalignedbb.b - 0.1);
-        int maxY = MathHelper.floor(axisalignedbb.e + 1.1D);
-        int minZ = MathHelper.floor(axisalignedbb.c - 0.1);
-        int maxZ = MathHelper.floor(axisalignedbb.f + 1.1D);
-
-        WorldServer world = ((CraftWorld) bukkitWorld).getHandle();
-
-        for (int x = minX; x < maxX; x++) {
-            for (int z = minZ; z < maxZ; z++) {
-                if (bukkitWorld.isChunkLoaded(x, z)) {
-                    for (int y = minY - 1; y < maxY; y++) {
-                        Block block = world.getType(new BlockPosition(x, y, z)).getBlock();
-
-                        if (block == Blocks.AIR) {
-                            snowMap.put(new Location(bukkitWorld, x, y, z), 10);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     protected String getDeathSound() {
-        return "step.snow";
+        return "entity.snowman.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "step.snow";
+        return "entity.snowman.hurt";
     }
 
     protected String getLivingSound() {
-        return "step.snow";
-    }
-
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-
-        if (Configuration.MyPet.Snowman.FIX_SNOW_TRACK) {
-            if (this.motX != 0D || this.motZ != 0D) {
-                addAirBlocksInBB(this.world.getWorld(), this.getBoundingBox());
-            }
-            if (snowMap.size() > 0) {
-                Iterator<Map.Entry<Location, Integer>> iter = snowMap.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<Location, Integer> entry = iter.next();
-
-                    int oldCounter = entry.getValue();
-                    Location loc = entry.getKey();
-
-                    if (oldCounter - 1 == 0) {
-                        iter.remove();
-                        if (loc.getBlock().getTypeId() == 0) {
-                            byte data = loc.getBlock().getData();
-                            loc.getBlock().setData((byte) 1);
-                            loc.getBlock().setData(data);
-                        }
-                    } else {
-                        snowMap.put(loc, oldCounter - 1);
-                    }
-                }
-            }
-        }
+        return "entity.snowman.ambient";
     }
 
     @Override
     public void playStepSound2() {
-        makeSound("step.snow", 0.15F, 1.0F);
+        makeSound("block.snow.step", 0.15F, 1.0F);
     }
 }

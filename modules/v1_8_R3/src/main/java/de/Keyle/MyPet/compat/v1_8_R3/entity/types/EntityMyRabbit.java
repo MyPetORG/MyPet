@@ -71,7 +71,7 @@ public class EntityMyRabbit extends EntityMyPet {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
-                this.setBaby(false);
+                this.getMyPet().setBaby(false);
                 return true;
             }
         }
@@ -93,14 +93,6 @@ public class EntityMyRabbit extends EntityMyPet {
             this.datawatcher.watch(12, new Byte((byte) 0));
         }
         this.datawatcher.watch(18, getMyPet().getVariant().getId());
-    }
-
-    public void setBaby(boolean flag) {
-        if (flag) {
-            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
-        } else {
-            this.datawatcher.watch(12, new Byte((byte) 0));
-        }
     }
 
     public void onLivingUpdate() {

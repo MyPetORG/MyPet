@@ -59,15 +59,15 @@ public class EntityMyOcelot extends EntityMyPet {
     }
 
     protected String getDeathSound() {
-        return "entity.cat.hitt";
+        return "entity.cat.death";
     }
 
     protected String getHurtSound() {
-        return "entity.cat.hitt";
+        return "entity.cat.hurt";
     }
 
     protected String getLivingSound() {
-        return this.random.nextInt(4) == 0 ? "entity.cat.purreow" : "entity.cat.meow";
+        return this.random.nextInt(4) == 0 ? "entity.cat.purr" : "entity.cat.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
@@ -136,6 +136,7 @@ public class EntityMyOcelot extends EntityMyPet {
 
     public void setPathfinder() {
         super.setPathfinder();
+        sitPathfinder = new Sit(this);
         petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }
 }
