@@ -33,7 +33,6 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftZombie;
 import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_9_R1.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_9_R1.util.UnsafeList;
@@ -47,18 +46,6 @@ import java.util.List;
 
 @Compat("v1_9_R1")
 public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
-    private static Field goalSelectorField = null;
-
-    static {
-        try {
-            goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
-            goalSelectorField.setAccessible(true);
-
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * @param location   the {@link Location} around which players must be to see the effect
      * @param effectName list of effects: https://gist.github.com/riking/5759002
@@ -203,15 +190,6 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
     }
 
     public void addZombieTargetGoal(Zombie zombie) {
-        EntityZombie ez = ((CraftZombie) zombie).getHandle();
-        if (goalSelectorField != null) {
-            try {
-                PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelectorField.get(ez);
-                //pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
