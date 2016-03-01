@@ -46,6 +46,7 @@ import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ConfigurationLoader;
+import de.Keyle.MyPet.util.Metrics;
 import de.Keyle.MyPet.util.UpdateCheck;
 import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Hooks;
@@ -58,9 +59,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
-import org.mcstats.Metrics.Plotter;
 
 import java.io.File;
 import java.io.IOException;
@@ -265,9 +263,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             Metrics metrics = new Metrics(this);
             if (!metrics.isOptOut()) {
 
-                Graph graphTotalCount = metrics.createGraph("MyPets");
+                Metrics.Graph graphTotalCount = metrics.createGraph("MyPets");
 
-                Plotter plotter = new Metrics.Plotter("Active MyPets") {
+                Metrics.Plotter plotter = new Metrics.Plotter("Active MyPets") {
                     @Override
                     public int getValue() {
                         return myPetList.countActiveMyPets();

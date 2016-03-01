@@ -18,38 +18,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity;
+package de.Keyle.MyPet.compat.v1_9_R1.skill.skills.ranged.bukkit;
 
-public enum EquipmentSlot {
-    MainHand(0, 0),
-    OffHand(5, 1),
-    Boots(1, 2),
-    Leggins(2, 3),
-    Chestplate(3, 4),
-    Helmet(4, 5);
+import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
+import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import net.minecraft.server.v1_9_R1.EntityWitherSkull;
+import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftWitherSkull;
 
-    int slot;
-    int slot_19;
+public class CraftMyPetWitherSkull extends CraftWitherSkull implements CraftMyPetProjectile {
 
-    EquipmentSlot(int slot, int slot_19) {
-        this.slot = slot;
-        this.slot_19 = slot_19;
+    public CraftMyPetWitherSkull(CraftServer server, EntityWitherSkull entity) {
+        super(server, entity);
     }
 
-    public static EquipmentSlot getSlotById(int id) {
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot.slot == id) {
-                return slot;
-            }
-        }
-        return EquipmentSlot.MainHand;
-    }
-
-    public int get19Slot() {
-        return slot_19;
-    }
-
-    public int getSlotId() {
-        return this.slot;
+    public EntityMyPetProjectile getMyPetProjectile() {
+        return ((EntityMyPetProjectile) this.getHandle());
     }
 }

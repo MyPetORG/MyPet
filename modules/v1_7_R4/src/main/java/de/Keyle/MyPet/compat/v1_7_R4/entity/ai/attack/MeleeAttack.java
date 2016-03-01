@@ -102,7 +102,7 @@ public class MeleeAttack extends AIGoal {
             if (this.petEntity.getEntitySenses().canSee(targetEntity)) {
                 this.ticksUntilNextHitLeft = ticksUntilNextHit;
                 if (this.petEntity instanceof MyPetEquipment) {
-                    if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {
+                    if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.MainHand) != null) {
                         this.petEntity.ba(); // -> swingItem()
                     }
                 }

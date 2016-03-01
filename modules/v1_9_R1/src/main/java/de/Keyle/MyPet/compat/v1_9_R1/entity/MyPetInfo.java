@@ -18,38 +18,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity;
+package de.Keyle.MyPet.compat.v1_9_R1.entity;
 
-public enum EquipmentSlot {
-    MainHand(0, 0),
-    OffHand(5, 1),
-    Boots(1, 2),
-    Leggins(2, 3),
-    Chestplate(3, 4),
-    Helmet(4, 5);
+import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import org.bukkit.entity.EntityType;
 
-    int slot;
-    int slot_19;
-
-    EquipmentSlot(int slot, int slot_19) {
-        this.slot = slot;
-        this.slot_19 = slot_19;
-    }
-
-    public static EquipmentSlot getSlotById(int id) {
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot.slot == id) {
-                return slot;
-            }
+@Compat("v1_9_R1")
+public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
+    @Override
+    public boolean isLeashableEntityType(EntityType type) {
+        if (type == EntityType.ENDER_DRAGON) {
+            return PluginHookManager.isPluginUsable("ProtocolLib"); //ToDo & active
         }
-        return EquipmentSlot.MainHand;
-    }
-
-    public int get19Slot() {
-        return slot_19;
-    }
-
-    public int getSlotId() {
-        return this.slot;
+        return true;
     }
 }

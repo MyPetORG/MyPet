@@ -40,7 +40,7 @@
 
         <minecraft.version>1.8.8</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-        <bukkit.packets>v1_7_R4;v1_8_R2;v1_8_R3</bukkit.packets>
+        <bukkit.packets>v1_7_R4;v1_8_R2;v1_8_R3;v1_9_R1</bukkit.packets>
 
         <download.translations>prepare-package</download.translations>
         <remove.donator>none</remove.donator>
@@ -101,6 +101,17 @@
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_8_R3</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-compat-v1_9_R1</artifactId>
             <version>1</version>
             <exclusions>
                 <exclusion>
@@ -231,7 +242,6 @@
                                     <include>de.keyle:mypet-compat:v1_8_R2</include>
                                     <include>de.keyle:knbt:jar:*</include>
                                     <include>de.keyle:fanciful-chat:*</include>
-                                    <include>org.mcstats.bukkit:metrics:*</include>
                                     <include>com.intellij:forms_rt:*</include>
                                     <include>com.googlecode.json-simple:json-simple:*</include>
                                     <include>com.google.code.gson:gson:*</include>
