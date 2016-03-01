@@ -35,13 +35,14 @@
         <module>modules/v1_7_R4</module>
         <module>modules/v1_8_R2</module>
         <module>modules/v1_8_R3</module>
+        <module>modules/v1_9_R1</module>
         <module>modules/MyPet</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.8.8</minecraft.version>
+        <minecraft.version>1.9</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
         <citizensapi.version>2.0.12-SNAPSHOT</citizensapi.version>
@@ -70,7 +71,6 @@
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
 
-        <metrics.version>R7</metrics.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
         <fanciful-chat.version>0.0.2</fanciful-chat.version>
@@ -335,13 +335,6 @@
             <artifactId>fanciful-chat</artifactId>
             <version>${fanciful-chat.version}</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mcstats.bukkit</groupId>
-            <artifactId>metrics</artifactId>
-            <version>${metrics.version}</version>
-            <scope>compile</scope>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 

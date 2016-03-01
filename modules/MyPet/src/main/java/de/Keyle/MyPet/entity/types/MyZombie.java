@@ -45,6 +45,7 @@ import static org.bukkit.Material.ROTTEN_FLESH;
 public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombie {
     protected boolean isBaby = false;
     protected boolean isVillager = false;
+    protected int profession = 0;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyZombie(MyPetPlayer petOwner) {
@@ -125,6 +126,11 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
             getEntity().getHandle().updateVisuals();
         }
         this.isVillager = flag;
+    }
+
+    @Override
+    public int getProfession() {
+        return profession;
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
