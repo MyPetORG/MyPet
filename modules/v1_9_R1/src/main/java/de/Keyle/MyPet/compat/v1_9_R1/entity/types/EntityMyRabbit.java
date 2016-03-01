@@ -29,8 +29,8 @@ import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityRabbit.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.b);
 
     int jumpDelay;
 
@@ -54,7 +54,7 @@ public class EntityMyRabbit extends EntityMyPet {
     }
 
     @Override
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.rabbit.hop", 1.0F, 1.0F);
     }
 

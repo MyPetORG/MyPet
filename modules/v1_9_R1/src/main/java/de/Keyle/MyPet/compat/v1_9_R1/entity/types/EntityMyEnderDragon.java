@@ -34,16 +34,16 @@ public class EntityMyEnderDragon extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.enderdragon.growl";
+        return "entity.enderdragon.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.enderdragon.growl";
+        return "entity.enderdragon.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.enderdragon.hit";
+        return "entity.enderdragon.ambient";
     }
 
     public void setPathfinder() {

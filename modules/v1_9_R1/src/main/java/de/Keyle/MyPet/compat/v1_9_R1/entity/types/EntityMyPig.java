@@ -30,8 +30,8 @@ import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Boolean> saddleWatcher = DataWatcher.a(EntityPig.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPig.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> saddleWatcher = DataWatcher.a(EntityMyPig.class, DataWatcherRegistry.h);
 
     public EntityMyPig(World world, ActiveMyPet myPet) {
         super(world, myPet);
@@ -103,7 +103,7 @@ public class EntityMyPig extends EntityMyPet {
         this.datawatcher.set(saddleWatcher, getMyPet().hasSaddle());
     }
 
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.pig.step", 0.15F, 1.0F);
     }
 

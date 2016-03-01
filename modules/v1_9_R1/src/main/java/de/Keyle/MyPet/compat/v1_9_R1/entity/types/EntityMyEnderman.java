@@ -34,8 +34,8 @@ import org.bukkit.craftbukkit.v1_9_R1.util.CraftMagicNumbers;
 
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
-    private static final DataWatcherObject<Optional<IBlockData>> blockWatcher = DataWatcher.a(EntityEnderman.class, DataWatcherRegistry.g);
-    private static final DataWatcherObject<Boolean> screamingWatcher = DataWatcher.a(EntityEnderman.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Optional<IBlockData>> blockWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.g);
+    private static final DataWatcherObject<Boolean> screamingWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.h);
 
     public EntityMyEnderman(World world, ActiveMyPet myPet) {
         super(world, myPet);
@@ -61,7 +61,7 @@ public class EntityMyEnderman extends EntityMyPet {
 
     @Override
     protected String getLivingSound() {
-        return getMyPet().isScreaming() ? "entity.endermen.scream" : "entity.endermen.idle";
+        return getMyPet().isScreaming() ? "entity.endermen.scream" : "entity.endermen.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

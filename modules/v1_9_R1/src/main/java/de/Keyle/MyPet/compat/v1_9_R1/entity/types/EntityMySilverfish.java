@@ -33,12 +33,12 @@ public class EntityMySilverfish extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.silverfish.kill";
+        return "entity.silverfish.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.silverfish.hit";
+        return "entity.silverfish.hurt";
     }
 
     protected String getLivingSound() {
@@ -46,7 +46,7 @@ public class EntityMySilverfish extends EntityMyPet {
     }
 
     @Override
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.silverfish.step", 1.0F, 1.0F);
     }
 }

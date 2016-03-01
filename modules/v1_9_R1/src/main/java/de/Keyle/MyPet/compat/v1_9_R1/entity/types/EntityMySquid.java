@@ -34,16 +34,16 @@ public class EntityMySquid extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return null;
+        return "entity.squid.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return null;
+        return "entity.squid.hurt";
     }
 
     protected String getLivingSound() {
-        return null;
+        return "entity.squid.ambient";
     }
 
     @Override

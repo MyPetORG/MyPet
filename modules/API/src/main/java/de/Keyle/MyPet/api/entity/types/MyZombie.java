@@ -33,5 +33,7 @@ public interface MyZombie extends ActiveMyPet, MyPetEquipment, MyPetBaby {
 
     void setVillager(boolean flag);
 
+    void setProfession(int type);
+
     int getProfession();
 }

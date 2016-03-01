@@ -46,7 +46,7 @@ public class EntityMyGiant extends EntityMyPet {
         return "entity.zombie.ambient";
     }
 
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.zombie.step", 0.15F, 1.0F);
     }
 

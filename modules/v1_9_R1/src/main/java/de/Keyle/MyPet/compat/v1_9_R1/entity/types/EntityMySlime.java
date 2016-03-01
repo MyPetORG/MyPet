@@ -25,11 +25,14 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.types.MySlime;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.DataWatcher;
+import net.minecraft.server.v1_9_R1.DataWatcherObject;
+import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 0.5100001F, height = 0.5100001F)
 public class EntityMySlime extends EntityMyPet {
-    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntitySlime.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntityMySlime.class, DataWatcherRegistry.b);
 
     int jumpDelay;
 
@@ -80,11 +83,8 @@ public class EntityMySlime extends EntityMyPet {
 
         if (this.onGround && jumpDelay-- <= 0) {
             getControllerJump().a();
-            jumpDelay = (this.random.nextInt(20) + 10);
-            if (getTarget() != null) {
-                jumpDelay /= 3;
-            }
-            makeSound(getDeathSound(), 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+            jumpDelay = (this.random.nextInt(20) + 50);
+            makeSound("entity.slime.jump", 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }
     }
 

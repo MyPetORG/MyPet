@@ -46,7 +46,7 @@ public class EntityMySnowman extends EntityMyPet {
     }
 
     @Override
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("block.snow.step", 0.15F, 1.0F);
     }
 }

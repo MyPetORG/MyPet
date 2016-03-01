@@ -44,7 +44,6 @@ import static org.bukkit.Material.ROTTEN_FLESH;
 @DefaultInfo(food = {ROTTEN_FLESH})
 public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombie {
     protected boolean isBaby = false;
-    protected boolean isVillager = false;
     protected int profession = 0;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
@@ -68,7 +67,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
-        info.getCompoundData().put("Villager", new TagByte(isVillager()));
+        info.getCompoundData().put("Profession", new TagInt(getProfession()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -89,6 +88,9 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         }
         if (info.getCompoundData().containsKey("Villager")) {
             setVillager(info.getAs("Villager", TagByte.class).getBooleanData());
+        }
+        if (info.getCompoundData().containsKey("Profession")) {
+            setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
@@ -118,14 +120,21 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     public boolean isVillager() {
-        return isVillager;
+        return profession > 0;
     }
 
     public void setVillager(boolean flag) {
+        this.profession = 1;
         if (status == PetState.Here) {
             getEntity().getHandle().updateVisuals();
         }
-        this.isVillager = flag;
+    }
+
+    public void setProfession(int type) {
+        this.profession = type;
+        if (status == PetState.Here) {
+            getEntity().getHandle().updateVisuals();
+        }
     }
 
     @Override

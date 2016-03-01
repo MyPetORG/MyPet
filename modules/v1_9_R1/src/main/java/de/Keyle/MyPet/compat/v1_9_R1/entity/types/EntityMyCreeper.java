@@ -24,13 +24,16 @@ import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.types.MyCreeper;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.DataWatcher;
+import net.minecraft.server.v1_9_R1.DataWatcherObject;
+import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreeper extends EntityMyPet {
-    private static final DataWatcherObject<Integer> fuseWatcher = DataWatcher.a(EntityCreeper.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> poweredWatcher = DataWatcher.a(EntityCreeper.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityCreeper.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> fuseWatcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> poweredWatcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
 
     public EntityMyCreeper(World world, ActiveMyPet myPet) {
         super(world, myPet);

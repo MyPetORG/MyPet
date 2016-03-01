@@ -30,7 +30,7 @@ import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 1.4F, height = 2.9F)
 public class EntityMyIronGolem extends EntityMyPet {
-    protected static final DataWatcherObject<Byte> watcher = DataWatcher.a(EntityIronGolem.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Byte> watcher = DataWatcher.a(EntityMyIronGolem.class, DataWatcherRegistry.a);
 
     int flowerCounter = 0;
     boolean flower = false;
@@ -116,7 +116,7 @@ public class EntityMyIronGolem extends EntityMyPet {
     }
 
     @Override
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.irongolem.walk", 1.0F, 1.0F);
     }
 

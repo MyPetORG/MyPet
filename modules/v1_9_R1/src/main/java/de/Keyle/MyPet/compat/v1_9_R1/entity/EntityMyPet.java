@@ -603,34 +603,36 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     protected abstract String getDeathSound();
 
-    public void playStepSound2() {
+    public void playPetStepSound() {
     }
 
     public void playStepSound(BlockPosition blockposition, Block block) {
-        playStepSound(); //TODO play sound again
+        playPetStepSound();
     }
 
     private void makeLivingSound() {
-        SoundEffect se = SoundEffect.a.get(new MinecraftKey(getLivingSound()));
-        if (se != null) {
-            for (int j = 0; j < this.world.players.size(); ++j) {
-                EntityPlayer entityplayer = (EntityPlayer) this.world.players.get(j);
+        if (getLivingSound() != null) {
+            SoundEffect se = SoundEffect.a.get(new MinecraftKey(getLivingSound()));
+            if (se != null) {
+                for (int j = 0; j < this.world.players.size(); ++j) {
+                    EntityPlayer entityplayer = (EntityPlayer) this.world.players.get(j);
 
-                float volume = 1f;
-                if (MyPetApi.getPlayerList().isMyPetPlayer(entityplayer.getBukkitEntity())) {
-                    volume = MyPetApi.getPlayerList().getMyPetPlayer(entityplayer.getBukkitEntity()).getPetLivingSoundVolume();
-                }
+                    float volume = 1f;
+                    if (MyPetApi.getPlayerList().isMyPetPlayer(entityplayer.getBukkitEntity())) {
+                        volume = MyPetApi.getPlayerList().getMyPetPlayer(entityplayer.getBukkitEntity()).getPetLivingSoundVolume();
+                    }
 
-                double deltaX = locX - entityplayer.locX;
-                double deltaY = locY - entityplayer.locY;
-                double deltaZ = locZ - entityplayer.locZ;
-                double maxDistance = volume > 1.0F ? (double) (16.0F * volume) : 16.0D;
-                if (deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ < maxDistance * maxDistance) {
-                    entityplayer.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(se, SoundCategory.HOSTILE, locX, locY, locZ, volume, getSoundSpeed()));
+                    double deltaX = locX - entityplayer.locX;
+                    double deltaY = locY - entityplayer.locY;
+                    double deltaZ = locZ - entityplayer.locZ;
+                    double maxDistance = volume > 1.0F ? (double) (16.0F * volume) : 16.0D;
+                    if (deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ < maxDistance * maxDistance) {
+                        entityplayer.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(se, SoundCategory.HOSTILE, locX, locY, locZ, volume, getSoundSpeed()));
+                    }
                 }
+            } else {
+                MyPetApi.getLogger().warning("Sound \"" + getLivingSound() + "\" not found. Please report this to the developer.");
             }
-        } else {
-            MyPetApi.getLogger().warning("Sound \"" + getLivingSound() + "\" not found. Please report this to the developer.");
         }
     }
 
@@ -727,8 +729,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public void makeSound(String sound, float volume, float pitch) {
-        SoundEffect se = SoundEffect.a.get(new MinecraftKey(getLivingSound()));
-        this.a(se, volume, pitch);
+        if (sound != null) {
+            SoundEffect se = SoundEffect.a.get(new MinecraftKey(sound));
+            if (se != null) {
+                this.a(se, volume, pitch);
+            } else {
+                MyPetApi.getLogger().warning("Sound \"" + getLivingSound() + "\" not found. Please report this to the developer.");
+            }
+        }
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -985,7 +993,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         float speed = 0.22222F;
         double jumpHeight = 0.3D;
-        float ascenSpeed = 0.2f;
 
         if (rideSkill != null) {
             speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
@@ -996,26 +1003,17 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double factor = Math.log10(myPet.getHungerValue()) / 2;
             speed *= factor;
             jumpHeight *= factor;
-            ascenSpeed *= factor;
         }
 
         ride(motionSideways, motionForward, speed); // apply motion
 
         // jump when the player jumps
-        if (jump != null) {
-            boolean doJump = false;
+        if (jump != null && onGround) {
             try {
-                doJump = jump.getBoolean(passenger);
-            } catch (IllegalAccessException ignored) {
-            }
-            if (doJump) {
-                if (onGround) {
+                if (jump.getBoolean(passenger)) {
                     this.motY = Math.sqrt(jumpHeight);
-                } else if (rideSkill != null && rideSkill.canFly()) {
-                    this.motY = ascenSpeed;
-                    this.fallDistance = 0;
-                    this.isFlying = true;
                 }
+            } catch (IllegalAccessException ignored) {
             }
         }
 

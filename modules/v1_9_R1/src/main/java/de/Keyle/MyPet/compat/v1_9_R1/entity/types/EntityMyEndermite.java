@@ -33,20 +33,20 @@ public class EntityMyEndermite extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.silverfish.kill";
+        return "entity.endermite.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.silverfish.hit";
+        return "entity.endermite.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.silverfish.ambient";
+        return "entity.endermite.ambient";
     }
 
     @Override
-    public void playStepSound2() {
-        makeSound("entity.silverfish.step", 1.0F, 1.0F);
+    public void playPetStepSound() {
+        makeSound("entity.endermite.step", 1.0F, 1.0F);
     }
 }
