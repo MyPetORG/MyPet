@@ -34,10 +34,10 @@ import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> villagerWatcher = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> villagerWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
 
     public EntityMyZombie(World world, ActiveMyPet myPet) {
         super(world, myPet);
@@ -153,7 +153,7 @@ public class EntityMyZombie extends EntityMyPet {
         }, 5L);
     }
 
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.zombie.step", 0.15F, 1.0F);
     }
 

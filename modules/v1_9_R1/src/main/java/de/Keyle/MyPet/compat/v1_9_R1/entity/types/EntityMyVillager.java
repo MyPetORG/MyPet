@@ -29,8 +29,8 @@ import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityVillager.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
 
     public EntityMyVillager(World world, ActiveMyPet myPet) {
         super(world, myPet);

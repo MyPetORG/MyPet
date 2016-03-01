@@ -31,8 +31,8 @@ import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Byte> colorWatcher = DataWatcher.a(EntitySheep.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Byte> colorWatcher = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.a);
 
     public EntityMySheep(World world, ActiveMyPet myPet) {
         super(world, myPet);
@@ -118,7 +118,7 @@ public class EntityMySheep extends EntityMyPet {
         this.datawatcher.set(colorWatcher, (byte) (b0 & 0xF0 | color.getColorIndex() & 0xF));
     }
 
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.sheep.step", 0.15F, 1.0F);
     }
 

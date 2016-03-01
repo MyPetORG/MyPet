@@ -31,7 +31,7 @@ import org.bukkit.Bukkit;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.h);
 
     public EntityMyMooshroom(World world, ActiveMyPet myPet) {
         super(world, myPet);
@@ -106,7 +106,7 @@ public class EntityMyMooshroom extends EntityMyPet {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
     }
 
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.cow.step", 0.15F, 1.0F);
     }
 

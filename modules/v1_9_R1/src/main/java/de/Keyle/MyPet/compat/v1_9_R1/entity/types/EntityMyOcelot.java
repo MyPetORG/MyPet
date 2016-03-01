@@ -34,10 +34,10 @@ import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityOcelot.class, DataWatcherRegistry.b);
-    protected static final DataWatcherObject<Byte> sitWatcher = DataWatcher.a(EntityTameableAnimal.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityTameableAnimal.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.h);
+    protected static final DataWatcherObject<Byte> sitWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.b);
 
     private Sit sitPathfinder;
 
@@ -119,7 +119,7 @@ public class EntityMyOcelot extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(sitWatcher, (byte) 0);            // tamed/sitting
+        this.datawatcher.register(sitWatcher, (byte) 0);          // tamed/sitting
         this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
         this.datawatcher.register(typeWatcher, 0);                  // cat type
     }

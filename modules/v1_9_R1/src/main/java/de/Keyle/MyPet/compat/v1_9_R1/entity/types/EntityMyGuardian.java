@@ -24,12 +24,14 @@ import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.types.MyGuardian;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.DataWatcher;
+import net.minecraft.server.v1_9_R1.DataWatcherObject;
+import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 0.7F, height = 0.85F)
 public class EntityMyGuardian extends EntityMyPet {
-    private static final DataWatcherObject<Byte> elderWatcher = DataWatcher.a(EntityGuardian.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Integer> watcher = DataWatcher.a(EntityGuardian.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Byte> elderWatcher = DataWatcher.a(EntityMyGuardian.class, DataWatcherRegistry.a);
 
     public EntityMyGuardian(World world, ActiveMyPet myPet) {
         super(world, myPet);
@@ -38,7 +40,7 @@ public class EntityMyGuardian extends EntityMyPet {
     @Override
     protected String getDeathSound() {
         if (getMyPet().isElder()) {
-            return "entity.guardian.elder.death";
+            return "entity.elder_guardian.death";
         }
         return "entity.guardian.death";
     }
@@ -46,32 +48,31 @@ public class EntityMyGuardian extends EntityMyPet {
     @Override
     protected String getHurtSound() {
         if (getMyPet().isElder()) {
-            return "entity.guardian.elder.hit";
+            return "entity.elder_guardian.hurt";
         }
-        return "entity.guardian.hit";
+        return "entity.guardian.hurt";
     }
 
     protected String getLivingSound() {
         if (getMyPet().isElder()) {
-            return "entity.guardian.elder.idle";
+            return "entity.elder_guardian.ambient";
         }
-        return "entity.guardian.idle";
+        return "entity.guardian.ambient";
     }
 
     @Override
     public void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(elderWatcher, 0); // elder
-        this.datawatcher.register(watcher, 0);      // N/A
+        this.datawatcher.register(elderWatcher, (byte) 0); // elder
     }
 
     @Override
     public void updateVisuals() {
-        int old = this.datawatcher.get(elderWatcher).byteValue();
+        byte old = this.datawatcher.get(elderWatcher);
         if (getMyPet().isElder()) {
-            this.datawatcher.set(elderWatcher, Byte.valueOf((byte) (old | 4)));
+            this.datawatcher.set(elderWatcher, (byte) (old | 4));
         } else {
-            this.datawatcher.set(elderWatcher, Byte.valueOf((byte) (old & ~4)));
+            this.datawatcher.set(elderWatcher, (byte) (old & ~4));
         }
     }
 

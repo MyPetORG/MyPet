@@ -28,7 +28,7 @@ import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
-    private static final DataWatcherObject<Byte> onFireWatcher = DataWatcher.a(EntityBlaze.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Byte> onFireWatcher = DataWatcher.a(EntityMyBlaze.class, DataWatcherRegistry.a);
 
     public EntityMyBlaze(World world, ActiveMyPet myPet) {
         super(world, myPet);

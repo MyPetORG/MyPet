@@ -34,12 +34,12 @@ import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
-    private static final DataWatcherObject<Byte> ageWatcher = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Optional<UUID>> watcher = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.m);
-    private static final DataWatcherObject<Integer> armorWatcher = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Integer> armorWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.b);
 
     int soundCounter = 0;
     int rearCounter = -1;
@@ -77,7 +77,7 @@ public class EntityMyHorse extends EntityMyPet {
                 if (getMyPet().getHorseType() == 0) {
                     this.makeSound("entity.horse.angry", 1.0F, 1.0F);
                 } else if (getMyPet().getHorseType() == 2 || getMyPet().getHorseType() == 1) {
-                    this.makeSound("entity.horse.donkey.angry", 1.0F, 1.0F);
+                    this.makeSound("entity.donkey.angry", 1.0F, 1.0F);
                 }
             }
         } catch (Exception e) {
@@ -90,13 +90,13 @@ public class EntityMyHorse extends EntityMyPet {
     protected String getDeathSound() {
         int horseType = getMyPet().getHorseType();
         if (horseType == 3) {
-            return "entity.horse.zombie.death";
+            return "entity.zombie_horse.death";
         }
         if (horseType == 4) {
-            return "entity.horse.skeleton.death";
+            return "entity.skeleton_horse.death";
         }
         if ((horseType == 1) || (horseType == 2)) {
-            return "entity.horse.donkey.death";
+            return "entity.donkey.death";
         }
         return "entity.horse.death";
     }
@@ -105,32 +105,29 @@ public class EntityMyHorse extends EntityMyPet {
     protected String getHurtSound() {
         int horseType = ((MyHorse) myPet).getHorseType();
         if (horseType == 3) {
-            return "entity.horse.zombie.hit";
+            return "entity.zombie_horse.hurt";
         }
         if (horseType == 4) {
-            return "entity.horse.skeleton.hit";
+            return "entity.skeleton_horse.hurt";
         }
         if ((horseType == 1) || (horseType == 2)) {
-            return "entity.horse.donkey.hit";
+            return "entity.donkey.hurt";
         }
-        return "entity.horse.hit";
+        return "entity.horse.hurt";
     }
 
     protected String getLivingSound() {
-        if (playIdleSound()) {
-            int horseType = ((MyHorse) myPet).getHorseType();
-            if (horseType == 3) {
-                return "entity.horse.zombie.idle";
-            }
-            if (horseType == 4) {
-                return "entity.horse.skeleton.idle";
-            }
-            if ((horseType == 1) || (horseType == 2)) {
-                return "entity.horse.donkey.idle";
-            }
-            return "entity.horse.idle";
+        int horseType = ((MyHorse) myPet).getHorseType();
+        if (horseType == 3) {
+            return "entity.zombie_horse.ambient";
         }
-        return null;
+        if (horseType == 4) {
+            return "entity.skeleton_horse.ambient";
+        }
+        if ((horseType == 1) || (horseType == 2)) {
+            return "entity.donkey.ambient";
+        }
+        return "entity.horse.ambient";
     }
 
 
@@ -226,24 +223,17 @@ public class EntityMyHorse extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, 0);              // age
-        this.datawatcher.register(saddleChestWatcher, 0);      // saddle & chest
-        this.datawatcher.register(typeWatcher, 0);             // horse type
-        this.datawatcher.register(variantWatcher, 0);          // variant
-        this.datawatcher.register(watcher, Optional.absent()); // N/A
-        this.datawatcher.register(armorWatcher, 0);            // armor
+        this.datawatcher.register(ageWatcher, false);               // age
+        this.datawatcher.register(saddleChestWatcher, (byte) 0);    // saddle & chest
+        this.datawatcher.register(typeWatcher, 0);                  // horse type
+        this.datawatcher.register(variantWatcher, 0);               // variant
+        this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
+        this.datawatcher.register(armorWatcher, 0);                 // armor
     }
 
     @Override
     public void updateVisuals() {
-        /*  TODO
-        if (getMyPet().isBaby()) {
-            this.datawatcher.set(12, Byte.valueOf((byte) MathHelper.clamp(-24000, -1, 1)));
-        } else {
-            this.datawatcher.set(12, new Byte((byte) 0));
-        }
-        this.datawatcher.set(12, Byte.valueOf((byte) MathHelper.clamp(getMyPet().getAge(), -1, 1)));
-        */
+        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
         this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
         this.datawatcher.set(typeWatcher, (int) getMyPet().getHorseType());
         this.datawatcher.set(variantWatcher, getMyPet().getVariant());

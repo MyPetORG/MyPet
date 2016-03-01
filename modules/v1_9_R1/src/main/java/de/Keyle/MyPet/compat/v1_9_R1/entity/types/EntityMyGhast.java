@@ -39,11 +39,11 @@ public class EntityMyGhast extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-        return "entity.ghast.scream";
+        return "entity.ghast.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.ghast.moan";
+        return "entity.ghast.ambient";
     }
 
     public void setPathfinder() {

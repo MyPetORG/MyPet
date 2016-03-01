@@ -23,12 +23,10 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 1.4F, height = 0.9F)
 public class EntityMySpider extends EntityMyPet {
-    private static final DataWatcherObject<Byte> watcher = DataWatcher.a(EntitySpider.class, DataWatcherRegistry.a);
-
     public EntityMySpider(World world, ActiveMyPet myPet) {
         super(world, myPet);
     }
@@ -40,20 +38,15 @@ public class EntityMySpider extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-        return "entity.spider.ambient";
+        return "entity.spider.hurt";
     }
 
     protected String getLivingSound() {
         return "entity.spider.ambient";
     }
 
-    protected void initDatawatcher() {
-        super.initDatawatcher();
-        this.datawatcher.register(watcher, (byte) 0); // N/A
-    }
-
     @Override
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.spider.step", 0.15F, 1.0F);
     }
 }

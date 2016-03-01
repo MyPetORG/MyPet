@@ -29,7 +29,7 @@ import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyChicken.class, DataWatcherRegistry.h);
 
     private int nextEggTimer;
 
@@ -95,7 +95,7 @@ public class EntityMyChicken extends EntityMyPet {
         }
     }
 
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.chicken.step", 0.15F, 1.0F);
     }
 

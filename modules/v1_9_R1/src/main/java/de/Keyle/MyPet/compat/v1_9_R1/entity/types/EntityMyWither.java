@@ -23,14 +23,17 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.DataWatcher;
+import net.minecraft.server.v1_9_R1.DataWatcherObject;
+import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 1.9F, height = 3.5F)
 public class EntityMyWither extends EntityMyPet {
-    private static final DataWatcherObject<Integer> targetWatcher = DataWatcher.a(EntityWither.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> watcher_1 = DataWatcher.a(EntityWither.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> watcher_2 = DataWatcher.a(EntityWither.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> blueWatcher = DataWatcher.a(EntityWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> targetWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> watcher_1 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> watcher_2 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> blueWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
 
     public EntityMyWither(World world, ActiveMyPet myPet) {
         super(world, myPet);

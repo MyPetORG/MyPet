@@ -35,7 +35,7 @@ import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPigZombie extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.h);
 
     public EntityMyPigZombie(World world, ActiveMyPet myPet) {
         super(world, myPet);
@@ -43,16 +43,16 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.zombiepig.zpigdeath";
+        return "entity.zombie_pig.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.zombiepig.zpighurt";
+        return "entity.zombie_pig.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.zombiepig.zpig";
+        return "entity.zombie_pig.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetSlimeSize;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -32,7 +31,7 @@ import org.bukkit.ChatColor;
 import static org.bukkit.Material.SUGAR;
 
 @DefaultInfo(food = {SUGAR})
-public class MySlime extends MyPet implements MyPetSlimeSize {
+public class MySlime extends MyPet implements de.Keyle.MyPet.api.entity.types.MySlime {
     protected int size = 1;
 
     public MySlime(MyPetPlayer petOwner) {

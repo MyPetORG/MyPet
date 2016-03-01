@@ -34,12 +34,12 @@ import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-    protected static final DataWatcherObject<Byte> sitWatcher = DataWatcher.a(EntityTameableAnimal.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityTameableAnimal.class, DataWatcherRegistry.m);
-    private static final DataWatcherObject<Float> tailWatcher = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.c);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> collarWatcher = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.h);
+    protected static final DataWatcherObject<Byte> sitWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Float> tailWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.c);
+    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> collarWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.b);
 
     protected boolean shaking;
     protected boolean isWet;
@@ -193,7 +193,7 @@ public class EntityMyWolf extends EntityMyPet {
     }
 
     @Override
-    public void playStepSound2() {
+    public void playPetStepSound() {
         makeSound("entity.wolf.step", 0.15F, 1.0F);
     }
 
