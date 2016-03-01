@@ -74,7 +74,7 @@ public class EntityMyWolf extends EntityMyPet {
     }
 
     protected String getLivingSound() {
-        return this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "entity.wolf.whine" : "entity.wolf.panting") : "entity.wolf.bark";
+        return this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "entity.wolf.whine" : "entity.wolf.pant") : "entity.wolf.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
@@ -122,7 +122,7 @@ public class EntityMyWolf extends EntityMyPet {
         this.datawatcher.register(ageWatcher, false);               // age
         this.datawatcher.register(sitWatcher, (byte) 0);            // tamed/angry/sitting
         this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        this.datawatcher.register(tailWatcher, 20);                 // tail height
+        this.datawatcher.register(tailWatcher, 20F);                 // tail height
         this.datawatcher.register(watcher, false);                  // N/A
         this.datawatcher.register(collarWatcher, 14);               // collar color
     }
@@ -186,7 +186,7 @@ public class EntityMyWolf extends EntityMyPet {
             }
         }
 
-        float tailHeight = 25.F * getHealth() / getMaxHealth();
+        float tailHeight = 20F * (getHealth() / getMaxHealth());
         if (this.datawatcher.get(tailWatcher) != tailHeight) {
             this.datawatcher.set(tailWatcher, tailHeight); // update tail height
         }
@@ -200,10 +200,7 @@ public class EntityMyWolf extends EntityMyPet {
     public void setHealth(float i) {
         super.setHealth(i);
 
-        float tailHeight = 25.F * i / getMaxHealth();
-        if (this.datawatcher.get(tailWatcher) != tailHeight) {
-            this.datawatcher.set(tailWatcher, tailHeight); // update tail height
-        }
+        float tailHeight = 20F * (i / getMaxHealth());
         this.datawatcher.set(tailWatcher, tailHeight);
     }
 

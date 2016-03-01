@@ -120,11 +120,6 @@ public class EntityMyIronGolem extends EntityMyPet {
         makeSound("mob.irongolem.walk", 1.0F, 1.0F);
     }
 
-    public void setFlower(boolean flag) {
-        this.flower = flag;
-        flowerCounter = 0;
-    }
-
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (this.flower && this.flowerCounter-- <= 0) {

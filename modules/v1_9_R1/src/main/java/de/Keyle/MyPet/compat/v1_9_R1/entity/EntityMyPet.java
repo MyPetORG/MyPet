@@ -905,43 +905,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * Entity AI tick method
      * -> updateAITasks()
      */
-    protected void doMyPetTick2() {
-        this.world.methodProfiler.a("checkDespawn");
-        this.L();
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.a("sensing");
-        this.bu.a();
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.a("targetSelector");
-        this.targetSelector.a();
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.a("goalSelector");
-        this.goalSelector.a();
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.a("navigation");
-        this.navigation.l();
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.a("mob tick");
-        this.M();
-        this.world.methodProfiler.b();
-        if (this.isPassenger() && this.by() instanceof EntityInsentient) {
-            EntityInsentient entityinsentient = (EntityInsentient) this.by();
-            entityinsentient.getNavigation().a(this.getNavigation().k(), 1.5D);
-            entityinsentient.getControllerMove().a(this.getControllerMove());
-        }
-
-        this.world.methodProfiler.a("controls");
-        this.world.methodProfiler.a("move");
-        this.moveController.c();
-        this.world.methodProfiler.c("look");
-        this.getControllerLook().a();
-        this.world.methodProfiler.c("jump");
-        this.g.b();
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.b();
-
-    }
-
     protected void doMyPetTick() {
         try {
             ++this.ticksFarFromPlayer;
