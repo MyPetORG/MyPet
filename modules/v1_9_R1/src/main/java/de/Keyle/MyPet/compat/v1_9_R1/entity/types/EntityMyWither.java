@@ -50,7 +50,7 @@ public class EntityMyWither extends EntityMyPet {
     }
 
     protected String getLivingSound() {
-        return "entity.wither.idle";
+        return "entity.wither.ambient";
     }
 
     protected void initDatawatcher() {

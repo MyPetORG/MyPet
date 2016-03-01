@@ -50,7 +50,7 @@ public class EntityMyRabbit extends EntityMyPet {
     }
 
     protected String getLivingSound() {
-        return "entity.rabbit.idle";
+        return "entity.rabbit.ambient";
     }
 
     @Override
