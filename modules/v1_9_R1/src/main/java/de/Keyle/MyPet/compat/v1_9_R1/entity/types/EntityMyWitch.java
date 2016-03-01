@@ -42,6 +42,6 @@ public class EntityMyWitch extends EntityMyPet {
     }
 
     protected String getLivingSound() {
-        return "entity.witch.idle";
+        return "entity.witch.ambient";
     }
 }
