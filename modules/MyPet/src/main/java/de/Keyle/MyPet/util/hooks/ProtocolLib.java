@@ -129,4 +129,10 @@ public class ProtocolLib {
                     }
                 });
     }
+
+    public static void disable() {
+        if (active) {
+            ProtocolLibrary.getProtocolManager().removePacketListeners(MyPetApi.getPlugin());
+        }
+    }
 }
