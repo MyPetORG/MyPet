@@ -40,13 +40,11 @@ public class IconMenu implements Listener {
     private IconMenuInventory inventory;
     private String title;
     private OptionClickEventHandler handler;
-    private Plugin plugin;
     protected Map<Integer, IconMenuItem> options = new HashMap<>(54);
 
     public IconMenu(String title, OptionClickEventHandler handler, Plugin plugin) {
         this.title = title;
         this.handler = handler;
-        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -61,7 +59,7 @@ public class IconMenu implements Listener {
     public int getSize() {
         int size = 0;
         for (int i : options.keySet()) {
-            if (i > size) {
+            if (++i > size) {
                 size = i;
             }
         }
@@ -114,7 +112,6 @@ public class IconMenu implements Listener {
         if (inventory != null) {
             inventory.close();
             handler = null;
-            plugin = null;
             inventory = null;
         }
         HandlerList.unregisterAll(this);
@@ -169,7 +166,7 @@ public class IconMenu implements Listener {
             this.position = position;
             this.menu = menu;
             this.close = true;
-            this.destroy = false;
+            this.destroy = true;
             this.option = option;
         }
 
