@@ -23,7 +23,10 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -112,14 +115,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             e.printStackTrace();
         }
     }
-
-    /*
-    public void applyLeash() {
-        if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER) {
-            ((EntityPlayer) this.bI()).playerConnection.sendPacket(new PacketPlayOutAttachEntity(1, this, this.bI()));
-        }
-    }
-    */
 
     public boolean isMyPet() {
         return isMyPet;
@@ -293,21 +288,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public boolean canEquip() {
         return Permissions.hasExtended(getOwner().getPlayer(), "MyPet.user.extended.Equip") && canUseItem();
-    }
-
-    public void dropEquipment() {
-        if (myPet instanceof MyPetEquipment) {
-            org.bukkit.World world = getBukkitEntity().getWorld();
-            Location loc = getBukkitEntity().getLocation();
-            for (org.bukkit.inventory.ItemStack is : ((MyPetEquipment) myPet).getEquipment()) {
-                if (is != null) {
-                    org.bukkit.entity.Item i = world.dropItem(loc, is);
-                    if (i != null) {
-                        i.setPickupDelay(10);
-                    }
-                }
-            }
-        }
     }
 
     public boolean canUseItem() {
@@ -757,6 +737,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
+    /**
+     * Allows handlePlayerInteraction() to
+     * be fired when a lead is used
+     */
     public boolean a(EntityHuman entityhuman) {
         return false;
     }
@@ -910,14 +894,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     /**
-     * Allows handlePlayerInteraction() to
-     * be fired when a lead is used
-     */
-    public boolean cb() {
-        return false;
-    }
-
-    /**
      * Entity AI tick method
      * -> updateAITasks()
      */
@@ -946,19 +922,17 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
-    /*
-    public Entity bI() {
-        if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER) {
-            return ((CraftPlayer) getOwner().getPlayer()).getHandle();
-        }
-        return null;
-    }
-    */
 
+    /**
+     * returns the first passenger
+     */
     public Entity bt() {
         return this.bu().isEmpty() ? null : this.bu().get(0);
     }
 
+    /**
+     * MyPets are not persistant so no data needs to be saved
+     */
     @Override
     public boolean d(NBTTagCompound nbttagcompound) {
         return false;
@@ -1050,6 +1024,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
+    /**
+     * -> onLivingUpdate()
+     */
     public void m() {
         super.m();
         try {
