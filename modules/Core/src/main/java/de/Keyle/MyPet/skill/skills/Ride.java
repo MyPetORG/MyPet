@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.skills.RideInfo;
@@ -34,17 +34,17 @@ import org.bukkit.ChatColor;
 
 public class Ride extends RideInfo implements SkillInstance {
     private boolean active = false;
-    private ActiveMyPet myPet;
+    private MyPet myPet;
 
     public Ride(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

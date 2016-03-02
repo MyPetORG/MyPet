@@ -26,9 +26,9 @@ import com.google.common.collect.Multimap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.UUIDFetcher;
 import de.Keyle.MyPet.api.repository.Repository;
@@ -169,7 +169,7 @@ public class NbtRepository implements Repository, Scheduler {
             for (TagCompound petTag : deletionList) {
                 UUID petUUID = getPetUUID(petTag);
 
-                for (ActiveMyPet pet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+                for (MyPet pet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
                     if (pet.getUUID().equals(petUUID)) {
                         continue TagLoop;
                     }
@@ -214,7 +214,7 @@ public class NbtRepository implements Repository, Scheduler {
     // Pets ------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<MyPet> getAllMyPets() {
+    public List<StoredMyPet> getAllMyPets() {
         List<MyPetPlayer> playerList = getAllMyPetPlayers();
         Map<UUID, MyPetPlayer> owners = new HashMap<>();
 
@@ -222,7 +222,7 @@ public class NbtRepository implements Repository, Scheduler {
             owners.put(player.getInternalUUID(), player);
         }
 
-        List<MyPet> pets = new ArrayList<>();
+        List<StoredMyPet> pets = new ArrayList<>();
         for (UUID petUUID : petTags.keySet()) {
             TagCompound petTag = petTags.get(petUUID);
             if (petTag.containsKeyAs("Internal-Owner-UUID", TagString.class)) {
@@ -255,9 +255,9 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     @Override
-    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<MyPet>> callback) {
+    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
         if (callback != null) {
-            List<MyPet> petList = new ArrayList<>();
+            List<StoredMyPet> petList = new ArrayList<>();
 
             for (UUID petUUID : petPlayerMultiMap.get(owner.getInternalUUID())) {
                 if (petTags.containsKey(petUUID)) {
@@ -271,7 +271,7 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     @Override
-    public void getMyPet(final UUID uuid, final RepositoryCallback<MyPet> callback) {
+    public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
             if (petTags.containsKey(uuid)) {
                 TagCompound petTag = petTags.get(uuid);
@@ -314,19 +314,19 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     @Override
-    public void removeMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
-        UUID ownerUUID = inactiveMyPet.getOwner().getInternalUUID();
+    public void removeMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+        UUID ownerUUID = storedMyPet.getOwner().getInternalUUID();
         if (petPlayerMultiMap.containsKey(ownerUUID)) {
-            petPlayerMultiMap.remove(ownerUUID, inactiveMyPet.getUUID());
+            petPlayerMultiMap.remove(ownerUUID, storedMyPet.getUUID());
         }
-        removeMyPet(inactiveMyPet.getUUID(), callback);
+        removeMyPet(storedMyPet.getUUID(), callback);
     }
 
     @Override
-    public void addMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
-        if (!petTags.containsKey(inactiveMyPet.getUUID())) {
-            petTags.put(inactiveMyPet.getUUID(), savePet(inactiveMyPet));
-            petPlayerMultiMap.put(inactiveMyPet.getOwner().getInternalUUID(), inactiveMyPet.getUUID());
+    public void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+        if (!petTags.containsKey(storedMyPet.getUUID())) {
+            petTags.put(storedMyPet.getUUID(), savePet(storedMyPet));
+            petPlayerMultiMap.put(storedMyPet.getOwner().getInternalUUID(), storedMyPet.getUUID());
             if (Configuration.Repository.NBT.SAVE_ON_PET_ADD) {
                 saveData(true);
             }
@@ -341,9 +341,9 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     @Override
-    public void updateMyPet(final MyPet myPet, final RepositoryCallback<Boolean> callback) {
-        if (petTags.containsKey(myPet.getUUID())) {
-            petTags.put(myPet.getUUID(), savePet(myPet));
+    public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+        if (petTags.containsKey(storedMyPet.getUUID())) {
+            petTags.put(storedMyPet.getUUID(), savePet(storedMyPet));
 
             if (Configuration.Repository.NBT.SAVE_ON_PET_UPDATE) {
                 saveData(true);
@@ -390,31 +390,31 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     private TagList savePets() {
-        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
-            petTags.put(myPet.getUUID(), savePet(myPet));
+        for (StoredMyPet storedMyPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+            petTags.put(storedMyPet.getUUID(), savePet(storedMyPet));
         }
         return new TagList(Lists.newArrayList(petTags.values()));
     }
 
-    public TagCompound savePet(MyPet myPet) {
+    public TagCompound savePet(StoredMyPet storedMyPet) {
         TagCompound petNBT = new TagCompound();
 
-        petNBT.getCompoundData().put("UUID", new TagString(myPet.getUUID().toString()));
-        petNBT.getCompoundData().put("Type", new TagString(myPet.getPetType().name()));
-        petNBT.getCompoundData().put("Health", new TagDouble(myPet.getHealth()));
-        petNBT.getCompoundData().put("Respawntime", new TagInt(myPet.getRespawnTime()));
-        petNBT.getCompoundData().put("Hunger", new TagDouble(myPet.getHungerValue()));
-        petNBT.getCompoundData().put("Name", new TagString(myPet.getPetName()));
-        petNBT.getCompoundData().put("WorldGroup", new TagString(myPet.getWorldGroup()));
-        petNBT.getCompoundData().put("Exp", new TagDouble(myPet.getExp()));
-        petNBT.getCompoundData().put("LastUsed", new TagLong(myPet.getLastUsed()));
-        petNBT.getCompoundData().put("Info", myPet.getInfo());
-        petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(myPet.getOwner().getInternalUUID().toString()));
-        petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(myPet.wantsToRespawn()));
-        if (myPet.getSkilltree() != null) {
-            petNBT.getCompoundData().put("Skilltree", new TagString(myPet.getSkilltree().getName()));
+        petNBT.getCompoundData().put("UUID", new TagString(storedMyPet.getUUID().toString()));
+        petNBT.getCompoundData().put("Type", new TagString(storedMyPet.getPetType().name()));
+        petNBT.getCompoundData().put("Health", new TagDouble(storedMyPet.getHealth()));
+        petNBT.getCompoundData().put("Respawntime", new TagInt(storedMyPet.getRespawnTime()));
+        petNBT.getCompoundData().put("Hunger", new TagDouble(storedMyPet.getHungerValue()));
+        petNBT.getCompoundData().put("Name", new TagString(storedMyPet.getPetName()));
+        petNBT.getCompoundData().put("WorldGroup", new TagString(storedMyPet.getWorldGroup()));
+        petNBT.getCompoundData().put("Exp", new TagDouble(storedMyPet.getExp()));
+        petNBT.getCompoundData().put("LastUsed", new TagLong(storedMyPet.getLastUsed()));
+        petNBT.getCompoundData().put("Info", storedMyPet.getInfo());
+        petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(storedMyPet.getOwner().getInternalUUID().toString()));
+        petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(storedMyPet.wantsToRespawn()));
+        if (storedMyPet.getSkilltree() != null) {
+            petNBT.getCompoundData().put("Skilltree", new TagString(storedMyPet.getSkilltree().getName()));
         }
-        petNBT.getCompoundData().put("Skills", myPet.getSkillInfo());
+        petNBT.getCompoundData().put("Skills", storedMyPet.getSkillInfo());
 
         return petNBT;
     }

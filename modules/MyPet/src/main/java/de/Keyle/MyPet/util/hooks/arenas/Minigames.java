@@ -24,7 +24,7 @@ import com.pauldavdesign.mineauz.minigames.events.JoinMinigameEvent;
 import com.pauldavdesign.mineauz.minigames.events.SpectateMinigameEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -66,7 +66,7 @@ public class Minigames implements Listener {
     public void onJoinMinigame(JoinMinigameEvent event) {
         if (active && Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES && MyPetApi.getPlayerList().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerList().getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == ActiveMyPet.PetState.Here) {
+            if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
             }
@@ -77,7 +77,7 @@ public class Minigames implements Listener {
     public void onSpectateMinigame(SpectateMinigameEvent event) {
         if (active && Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES && MyPetApi.getPlayerList().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerList().getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == ActiveMyPet.PetState.Here) {
+            if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
             }

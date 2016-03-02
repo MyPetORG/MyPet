@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySlime;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.attack.MeleeAttack;
@@ -31,7 +31,7 @@ import net.minecraft.server.v1_8_R2.World;
 public class EntityMySlime extends EntityMyPet {
     int jumpDelay;
 
-    public EntityMySlime(World world, ActiveMyPet myPet) {
+    public EntityMySlime(World world, MyPet myPet) {
         super(world, myPet);
         this.jumpDelay = (this.random.nextInt(20) + 10);
     }

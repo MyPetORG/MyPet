@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.skills.HPregenerationInfo;
@@ -35,18 +35,18 @@ import org.bukkit.Color;
 
 public class HPregeneration extends HPregenerationInfo implements SkillInstance, Scheduler {
     private int timeCounter = 0;
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     protected boolean particles = false;
 
     public HPregeneration(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

@@ -31,7 +31,7 @@ import org.bukkit.entity.LivingEntity;
 public interface MyPetMinecraftEntity {
     boolean isMyPet();
 
-    ActiveMyPet getMyPet();
+    MyPet getMyPet();
 
     AIGoalSelector getPathfinder();
 

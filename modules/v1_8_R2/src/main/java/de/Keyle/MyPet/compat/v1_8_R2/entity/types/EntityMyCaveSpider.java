@@ -20,14 +20,14 @@
 
 package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R2.World;
 
 @EntitySize(width = 0.7F, height = 0.45F)
 public class EntityMyCaveSpider extends EntityMyPet {
-    public EntityMyCaveSpider(World world, ActiveMyPet myPet) {
+    public EntityMyCaveSpider(World world, MyPet myPet) {
         super(world, myPet);
     }
 

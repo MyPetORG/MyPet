@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.skills.SprintInfo;
@@ -29,17 +29,17 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 
 public class Sprint extends SprintInfo implements SkillInstance {
     private boolean active = false;
-    private ActiveMyPet myPet;
+    private MyPet myPet;
 
     public Sprint(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

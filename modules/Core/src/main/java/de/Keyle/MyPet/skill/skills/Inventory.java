@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
@@ -42,14 +42,14 @@ import org.bukkit.entity.Player;
 
 public class Inventory extends InventoryInfo implements SkillInstance, NBTStorage, ActiveSkill {
     protected CustomInventory inv;
-    protected ActiveMyPet myPet;
+    protected MyPet myPet;
 
     public Inventory(boolean addedByInheritance) {
         super(addedByInheritance);
         inv = MyPetApi.getCompatUtil().getComapatInstance(CustomInventory.class, "util.inventory", "CustomInventory");
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
         inv.setName(myPet.getPetName());
     }
@@ -58,7 +58,7 @@ public class Inventory extends InventoryInfo implements SkillInstance, NBTStorag
         return inv;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

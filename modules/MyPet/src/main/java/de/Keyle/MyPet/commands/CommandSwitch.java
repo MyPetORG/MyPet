@@ -23,8 +23,8 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
@@ -63,10 +63,10 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
 
             if (args.length > 0 && args[0].equalsIgnoreCase("store")) {
                 if (owner.isOnline() && owner.hasMyPet()) {
-                    MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<MyPet>>() {
+                    MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                         @Override
-                        public void callback(List<MyPet> pets) {
-                            ActiveMyPet myPet = owner.getMyPet();
+                        public void callback(List<StoredMyPet> pets) {
+                            MyPet myPet = owner.getMyPet();
                             String worldGroup = myPet.getWorldGroup();
 
                             int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
@@ -89,9 +89,9 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             }
 
 
-            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<MyPet>>() {
+            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                 @Override
-                public void callback(List<MyPet> pets) {
+                public void callback(List<StoredMyPet> pets) {
                     if (pets.size() == 0) {
                         owner.sendMessage(Translation.getString("Message.No.HasPet", owner));
                         return;
@@ -114,10 +114,10 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                         String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
                         final MyPetSelectionGui gui = new MyPetSelectionGui(owner, stats + " " + Translation.getString("Message.SelectMyPet", owner));
-                        gui.open(pets, new RepositoryCallback<MyPet>() {
+                        gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                             @Override
-                            public void callback(MyPet myPet) {
-                                ActiveMyPet activePet = MyPetApi.getMyPetList().activateMyPet(myPet);
+                            public void callback(StoredMyPet storedMyPet) {
+                                MyPet activePet = MyPetApi.getMyPetList().activateMyPet(storedMyPet);
                                 if (activePet != null && owner.isOnline()) {
                                     Player player = owner.getPlayer();
                                     activePet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.getPetName()));
@@ -165,10 +165,10 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
         return maxPetCount;
     }
 
-    private int getInactivePetCount(List<MyPet> pets, String worldGroup) {
+    private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
         int inactivePetCount = 0;
 
-        for (MyPet pet : pets) {
+        for (StoredMyPet pet : pets) {
             if (!pet.getWorldGroup().equals(worldGroup)) {
                 continue;
             }

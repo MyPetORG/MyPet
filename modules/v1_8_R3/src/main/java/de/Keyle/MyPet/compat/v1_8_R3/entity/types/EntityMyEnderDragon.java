@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.ai.attack.MeleeAttack;
 import net.minecraft.server.v1_8_R3.World;
 
 @EntitySize(width = 8.F, height = 8.F)
 public class EntityMyEnderDragon extends EntityMyPet {
-    public EntityMyEnderDragon(World world, ActiveMyPet myPet) {
+    public EntityMyEnderDragon(World world, MyPet myPet) {
         super(world, myPet);
     }
 

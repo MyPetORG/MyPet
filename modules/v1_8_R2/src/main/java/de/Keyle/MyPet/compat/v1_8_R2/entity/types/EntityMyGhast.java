@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.attack.MeleeAttack;
 import net.minecraft.server.v1_8_R2.World;
 
 @EntitySize(width = 4.F, height = 4.F)
 public class EntityMyGhast extends EntityMyPet {
-    public EntityMyGhast(World world, ActiveMyPet myPet) {
+    public EntityMyGhast(World world, MyPet myPet) {
         super(world, myPet);
     }
 

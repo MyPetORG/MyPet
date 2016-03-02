@@ -25,14 +25,13 @@ import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.entity.MyPet;
 import de.Keyle.MyPet.util.CaptureHelper;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.keyle.knbt.*;
@@ -248,7 +247,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
         return MyPetApi.getMyPetList().hasActiveMyPet(this);
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return MyPetApi.getMyPetList().getMyPet(this);
     }
 
@@ -356,8 +355,8 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
             return;
         }
         if (hasMyPet()) {
-            ActiveMyPet myPet = getMyPet();
-            if (myPet.getStatus() == MyPet.PetState.Here) {
+            MyPet myPet = getMyPet();
+            if (myPet.getStatus() == de.Keyle.MyPet.entity.MyPet.PetState.Here) {
                 if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 40) {
                     myPet.removePet(true);
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));

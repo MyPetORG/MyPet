@@ -24,9 +24,9 @@ import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.UUIDFetcher;
 import de.Keyle.MyPet.api.repository.Repository;
@@ -337,7 +337,7 @@ public class MySqlRepository implements Repository {
     private void savePets() {
         checkConnection();
 
-        for (ActiveMyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
             try {
                 PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
                         "owner_uuid=?, " +
@@ -422,8 +422,8 @@ public class MySqlRepository implements Repository {
 
     // Pets ------------------------------------------------------------------------------------------------------------
 
-    private List<MyPet> resultSetToMyPet(MyPetPlayer owner, ResultSet resultSet) {
-        List<MyPet> pets = new ArrayList<>();
+    private List<StoredMyPet> resultSetToMyPet(MyPetPlayer owner, ResultSet resultSet) {
+        List<StoredMyPet> pets = new ArrayList<>();
         try {
             while (resultSet.next()) {
                 InactiveMyPet pet = new InactiveMyPet(owner);
@@ -461,7 +461,7 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public List<MyPet> getAllMyPets() {
+    public List<StoredMyPet> getAllMyPets() {
         try {
             checkConnection();
 
@@ -474,7 +474,7 @@ public class MySqlRepository implements Repository {
 
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM pets;");
-            List<MyPet> pets = new ArrayList<>();
+            List<StoredMyPet> pets = new ArrayList<>();
             while (resultSet.next()) {
                 if (!owners.containsKey(UUID.fromString(resultSet.getString("owner_uuid")))) {
                     continue;
@@ -542,7 +542,7 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<MyPet>> callback) {
+    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
         if (callback != null) {
             new BukkitRunnable() {
                 @Override
@@ -553,7 +553,7 @@ public class MySqlRepository implements Repository {
                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE owner_uuid=?;");
                         statement.setString(1, owner.getInternalUUID().toString());
                         ResultSet resultSet = statement.executeQuery();
-                        List<MyPet> pets = resultSetToMyPet(owner, resultSet);
+                        List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
                         //MyPetLogger.write("LOAD pets: " + pets);
                         callback.runTask(MyPetApi.getPlugin(), pets);
                     } catch (SQLException e) {
@@ -565,7 +565,7 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void getMyPet(final UUID uuid, final RepositoryCallback<MyPet> callback) {
+    public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
             new BukkitRunnable() {
                 @Override
@@ -582,7 +582,7 @@ public class MySqlRepository implements Repository {
                             MyPetPlayer owner = MyPetApi.getPlayerList().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
                             if (owner != null) {
                                 resultSet.beforeFirst();
-                                List<MyPet> pets = resultSetToMyPet(owner, resultSet);
+                                List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
                                 if (pets.size() > 0) {
                                     //MyPetLogger.write("LOAD pet: " + pets.get(0));
                                     callback.runTask(MyPetApi.getPlugin(), pets.get(0));
@@ -626,18 +626,18 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void removeMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
-        removeMyPet(inactiveMyPet.getUUID(), callback);
+    public void removeMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+        removeMyPet(storedMyPet.getUUID(), callback);
     }
 
     @Override
-    public void addMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
+    public void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
         new BukkitRunnable() {
             @Override
             public void run() {
                 checkConnection();
 
-                boolean result = addMyPet(inactiveMyPet);
+                boolean result = addMyPet(storedMyPet);
                 //MyPetLogger.write("INSERT pet: " + result);
 
                 if (callback != null) {
@@ -647,7 +647,7 @@ public class MySqlRepository implements Repository {
         }.runTaskAsynchronously(MyPetApi.getPlugin());
     }
 
-    public boolean addMyPet(MyPet myPet) {
+    public boolean addMyPet(StoredMyPet storedMyPet) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "pets (uuid, " +
@@ -665,21 +665,21 @@ public class MySqlRepository implements Repository {
                             "skills, " +
                             "info) " +
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-            statement.setString(1, myPet.getUUID().toString());
-            statement.setString(2, myPet.getOwner().getInternalUUID().toString());
-            statement.setDouble(3, myPet.getExp());
-            statement.setDouble(4, myPet.getHealth());
-            statement.setInt(5, myPet.getRespawnTime());
-            statement.setString(6, myPet.getPetName());
-            statement.setString(7, myPet.getPetType().name());
-            statement.setLong(8, myPet.getLastUsed());
-            statement.setDouble(9, myPet.getHungerValue());
-            statement.setString(10, myPet.getWorldGroup());
-            statement.setBoolean(11, myPet.wantsToRespawn());
-            statement.setString(12, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
+            statement.setString(1, storedMyPet.getUUID().toString());
+            statement.setString(2, storedMyPet.getOwner().getInternalUUID().toString());
+            statement.setDouble(3, storedMyPet.getExp());
+            statement.setDouble(4, storedMyPet.getHealth());
+            statement.setInt(5, storedMyPet.getRespawnTime());
+            statement.setString(6, storedMyPet.getPetName());
+            statement.setString(7, storedMyPet.getPetType().name());
+            statement.setLong(8, storedMyPet.getLastUsed());
+            statement.setDouble(9, storedMyPet.getHungerValue());
+            statement.setString(10, storedMyPet.getWorldGroup());
+            statement.setBoolean(11, storedMyPet.wantsToRespawn());
+            statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
-            statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkillInfo(), true)));
-            statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
+            statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
+            statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
 
             return statement.executeUpdate() > 0;
         } catch (SQLException | IOException e) {
@@ -689,7 +689,7 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void updateMyPet(final MyPet myPet, final RepositoryCallback<Boolean> callback) {
+    public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -710,20 +710,20 @@ public class MySqlRepository implements Repository {
                             "skills=?, " +
                             "info=? " +
                             "WHERE uuid=?;");
-                    statement.setString(1, myPet.getOwner().getInternalUUID().toString());
-                    statement.setDouble(2, myPet.getExp());
-                    statement.setDouble(3, myPet.getHealth());
-                    statement.setInt(4, myPet.getRespawnTime());
-                    statement.setString(5, myPet.getPetName());
-                    statement.setLong(6, myPet.getLastUsed());
-                    statement.setDouble(7, myPet.getHungerValue());
-                    statement.setString(8, myPet.getWorldGroup());
-                    statement.setBoolean(9, myPet.wantsToRespawn());
-                    statement.setString(10, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-                    statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkillInfo(), true)));
-                    statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
+                    statement.setString(1, storedMyPet.getOwner().getInternalUUID().toString());
+                    statement.setDouble(2, storedMyPet.getExp());
+                    statement.setDouble(3, storedMyPet.getHealth());
+                    statement.setInt(4, storedMyPet.getRespawnTime());
+                    statement.setString(5, storedMyPet.getPetName());
+                    statement.setLong(6, storedMyPet.getLastUsed());
+                    statement.setDouble(7, storedMyPet.getHungerValue());
+                    statement.setString(8, storedMyPet.getWorldGroup());
+                    statement.setBoolean(9, storedMyPet.wantsToRespawn());
+                    statement.setString(10, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
+                    statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
+                    statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
 
-                    statement.setString(13, myPet.getUUID().toString());
+                    statement.setString(13, storedMyPet.getUUID().toString());
 
                     int result = statement.executeUpdate();
 

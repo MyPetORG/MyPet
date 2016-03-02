@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.target;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
@@ -33,7 +33,7 @@ public class OwnerHurtTarget extends AIGoal {
 
     EntityMyPet petEntity;
     EntityLiving target;
-    ActiveMyPet myPet;
+    MyPet myPet;
 
     public OwnerHurtTarget(EntityMyPet petEntity) {
         this.petEntity = petEntity;

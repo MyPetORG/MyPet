@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.entity.ai.attack;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
@@ -30,7 +30,7 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 public class MeleeAttack extends AIGoal {
-    ActiveMyPet myPet;
+    MyPet myPet;
     EntityMyPet petEntity;
     EntityLiving targetEntity;
     double range;

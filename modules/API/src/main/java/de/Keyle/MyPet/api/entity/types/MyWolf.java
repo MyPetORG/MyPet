@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.DyeColor;
 
@@ -30,7 +30,7 @@ import static org.bukkit.Material.RAW_BEEF;
 import static org.bukkit.Material.RAW_CHICKEN;
 
 @DefaultInfo(food = {RAW_BEEF, RAW_CHICKEN}, leashFlags = {Tamed})
-public interface MyWolf extends ActiveMyPet, MyPetBaby {
+public interface MyWolf extends MyPet, MyPetBaby {
     DyeColor getCollarColor();
 
     void setCollarColor(DyeColor value);

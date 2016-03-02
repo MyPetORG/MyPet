@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCreeper;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.DataWatcher;
@@ -35,7 +35,7 @@ public class EntityMyCreeper extends EntityMyPet {
     private static final DataWatcherObject<Boolean> poweredWatcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
 
-    public EntityMyCreeper(World world, ActiveMyPet myPet) {
+    public EntityMyCreeper(World world, MyPet myPet) {
         super(world, myPet);
     }
 

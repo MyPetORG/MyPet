@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.NameFilter;
@@ -48,7 +48,7 @@ public class CommandName implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+                MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
                 if (!Permissions.has(petOwner, "MyPet.user.command.name")) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
                     return true;

@@ -22,8 +22,8 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.Inventory;
@@ -42,7 +42,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
             Player player = (Player) sender;
             if (args.length == 0) {
                 if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                    ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned) {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", player), myPet.getPetName()));
                         return true;
@@ -67,7 +67,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
                 if (petOwner == null || !petOwner.isOnline()) {
                     sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
                 } else if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
-                    ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
                         myPet.getSkills().getSkill(Inventory.class).openInventory(player);
                     }

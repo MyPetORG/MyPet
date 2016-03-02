@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.selectionmenu;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
@@ -51,25 +51,25 @@ public class MyPetSelectionGui {
         this.title = title;
     }
 
-    public void open(final RepositoryCallback<MyPet> callback) {
-        MyPetApi.getRepository().getMyPets(player, new RepositoryCallback<List<MyPet>>() {
+    public void open(final RepositoryCallback<StoredMyPet> callback) {
+        MyPetApi.getRepository().getMyPets(player, new RepositoryCallback<List<StoredMyPet>>() {
             @Override
-            public void callback(List<MyPet> pets) {
+            public void callback(List<StoredMyPet> pets) {
                 open(pets, callback);
             }
         });
     }
 
-    public void open(List<MyPet> pets, final RepositoryCallback<MyPet> callback) {
+    public void open(List<StoredMyPet> pets, final RepositoryCallback<StoredMyPet> callback) {
         if (pets.size() > 0) {
-            final Map<Integer, MyPet> petSlotList = new HashMap<>();
+            final Map<Integer, StoredMyPet> petSlotList = new HashMap<>();
             IconMenu menu = new IconMenu(title, new IconMenu.OptionClickEventHandler() {
                 @Override
                 public void onOptionClick(IconMenu.OptionClickEvent event) {
                     if (petSlotList.containsKey(event.getPosition())) {
-                        MyPet myPet = petSlotList.get(event.getPosition());
-                        if (myPet != null && callback != null) {
-                            callback.callback(myPet);
+                        StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
+                        if (storedMyPet != null && callback != null) {
+                            callback.callback(storedMyPet);
                         }
                     }
                     event.setWillClose(true);
@@ -79,7 +79,7 @@ public class MyPetSelectionGui {
 
             WorldGroup wg = WorldGroup.getGroupByWorld(player.getPlayer().getWorld().getName());
             for (int i = 0; i < pets.size() && i < 54; i++) {
-                MyPet mypet = pets.get(i);
+                StoredMyPet mypet = pets.get(i);
 
                 if (!mypet.getWorldGroup().equals("") && !mypet.getWorldGroup().equals(wg.getName())) {
                     continue;

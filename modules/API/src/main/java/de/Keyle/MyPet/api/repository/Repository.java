@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.api.repository;
 
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.entity.Player;
 
@@ -35,7 +35,7 @@ public interface Repository {
 
     void init() throws RepositoryInitException;
 
-    List<MyPet> getAllMyPets();
+    List<StoredMyPet> getAllMyPets();
 
     List<MyPetPlayer> getAllMyPetPlayers();
 
@@ -47,17 +47,17 @@ public interface Repository {
 
     void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback);
 
-    void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<MyPet>> callback);
+    void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback);
 
-    void getMyPet(final UUID uuid, final RepositoryCallback<MyPet> callback);
+    void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback);
 
     void removeMyPet(final UUID uuid, final RepositoryCallback<Boolean> callback);
 
-    void removeMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback);
+    void removeMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
 
-    void addMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback);
+    void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
 
-    void updateMyPet(final MyPet myPet, final RepositoryCallback<Boolean> callback);
+    void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
 
     void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback);
 

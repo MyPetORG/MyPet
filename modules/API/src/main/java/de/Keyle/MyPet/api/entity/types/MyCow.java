@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 
 import static org.bukkit.Material.WHEAT;
 
 @DefaultInfo(food = {WHEAT})
-public interface MyCow extends ActiveMyPet, MyPetBaby {
+public interface MyCow extends MyPet, MyPetBaby {
 }

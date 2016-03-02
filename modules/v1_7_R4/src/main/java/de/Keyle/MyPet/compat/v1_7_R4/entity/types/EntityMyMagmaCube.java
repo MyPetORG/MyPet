@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMagmaCube;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.ai.attack.MeleeAttack;
@@ -31,7 +31,7 @@ import net.minecraft.server.v1_7_R4.World;
 public class EntityMyMagmaCube extends EntityMyPet {
     int jumpDelay;
 
-    public EntityMyMagmaCube(World world, ActiveMyPet myPet) {
+    public EntityMyMagmaCube(World world, MyPet myPet) {
         super(world, myPet);
     }
 

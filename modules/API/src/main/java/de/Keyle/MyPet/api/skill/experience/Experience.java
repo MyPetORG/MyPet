@@ -20,16 +20,16 @@
 
 package de.Keyle.MyPet.api.skill.experience;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 public abstract class Experience {
-    private ActiveMyPet myPet;
+    private MyPet myPet;
 
-    public Experience(ActiveMyPet myPet) {
+    public Experience(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

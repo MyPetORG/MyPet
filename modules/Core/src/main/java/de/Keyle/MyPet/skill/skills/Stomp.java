@@ -22,7 +22,7 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillInfo;
@@ -43,17 +43,17 @@ import java.util.Random;
 
 public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
     private static Random random = new Random();
-    private ActiveMyPet myPet;
+    private MyPet myPet;
 
     public Stomp(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 
@@ -129,7 +129,7 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
                         }
                     }
                 } else if (livingEntity instanceof MyPetBukkitEntity) {
-                    ActiveMyPet targetMyPet = ((MyPetBukkitEntity) livingEntity).getMyPet();
+                    MyPet targetMyPet = ((MyPetBukkitEntity) livingEntity).getMyPet();
                     if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                         continue;
                     }

@@ -25,11 +25,11 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
-import de.Keyle.MyPet.api.event.ActiveSkillEvent;
+import de.Keyle.MyPet.api.event.MyPetActiveSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -117,7 +117,7 @@ public class EntityListener implements Listener {
     public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPetBukkitEntity craftMyPet = (MyPetBukkitEntity) event.getEntity();
-            ActiveMyPet myPet = craftMyPet.getMyPet();
+            MyPet myPet = craftMyPet.getMyPet();
             if (event.getDamager() instanceof Player || (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)) {
                 Player damager;
                 if (event.getDamager() instanceof Projectile) {
@@ -515,7 +515,7 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        final ActiveMyPet myPet = MyPetApi.getMyPetList().activateMyPet(inactiveMyPet);
+                        final MyPet myPet = MyPetApi.getMyPetList().activateMyPet(inactiveMyPet);
                         if (myPet != null) {
                             MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
                                 @Override
@@ -545,7 +545,7 @@ public class EntityListener implements Listener {
             MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
             if (event.getCause() == DamageCause.SUFFOCATION) {
-                final ActiveMyPet myPet = bukkitEntity.getMyPet();
+                final MyPet myPet = bukkitEntity.getMyPet();
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 
                 myPet.removePet(true);
@@ -554,7 +554,7 @@ public class EntityListener implements Listener {
                 MyPetApi.getPlugin().getServer().getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
                     public void run() {
                         if (myPetPlayer.hasMyPet()) {
-                            ActiveMyPet runMyPet = myPetPlayer.getMyPet();
+                            MyPet runMyPet = myPetPlayer.getMyPet();
                             switch (runMyPet.createEntity()) {
                                 case Canceled:
                                     runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
@@ -630,13 +630,13 @@ public class EntityListener implements Listener {
                     }
                 }
                 if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                    ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
                     if (myPet.getStatus() == PetState.Here && damagedEntity != myPet.getEntity()) {
                         myPet.getEntity().setTarget((LivingEntity) damagedEntity, TargetPriority.OwnerHurts);
                     }
                 }
             } else if (damager instanceof MyPetBukkitEntity) {
-                ActiveMyPet myPet = ((MyPetBukkitEntity) damager).getMyPet();
+                MyPet myPet = ((MyPetBukkitEntity) damager).getMyPet();
 
                 // fix influence of other plugins
                 if (event.getDamager() instanceof Projectile) {
@@ -655,7 +655,7 @@ public class EntityListener implements Listener {
                     if (myPet.getSkills().hasSkill(Poison.class)) {
                         Poison poisonSkill = myPet.getSkills().getSkill(Poison.class);
                         if (poisonSkill.activate()) {
-                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, poisonSkill);
+                            MyPetActiveSkillEvent skillEvent = new MyPetActiveSkillEvent(myPet, poisonSkill);
                             Bukkit.getPluginManager().callEvent(skillEvent);
                             if (!skillEvent.isCancelled()) {
                                 poisonSkill.poisonTarget((LivingEntity) damagedEntity);
@@ -666,7 +666,7 @@ public class EntityListener implements Listener {
                     if (!skillUsed && myPet.getSkills().hasSkill(Wither.class)) {
                         Wither witherSkill = myPet.getSkills().getSkill(Wither.class);
                         if (witherSkill.activate()) {
-                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, witherSkill);
+                            MyPetActiveSkillEvent skillEvent = new MyPetActiveSkillEvent(myPet, witherSkill);
                             Bukkit.getPluginManager().callEvent(skillEvent);
                             if (!skillEvent.isCancelled()) {
                                 witherSkill.witherTarget((LivingEntity) damagedEntity);
@@ -677,7 +677,7 @@ public class EntityListener implements Listener {
                     if (!skillUsed && myPet.getSkills().hasSkill(Fire.class)) {
                         Fire fireSkill = myPet.getSkills().getSkill(Fire.class);
                         if (fireSkill.activate()) {
-                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, fireSkill);
+                            MyPetActiveSkillEvent skillEvent = new MyPetActiveSkillEvent(myPet, fireSkill);
                             Bukkit.getPluginManager().callEvent(skillEvent);
                             if (!skillEvent.isCancelled()) {
                                 fireSkill.igniteTarget((LivingEntity) damagedEntity);
@@ -688,7 +688,7 @@ public class EntityListener implements Listener {
                     if (!skillUsed && myPet.getSkills().hasSkill(Slow.class)) {
                         Slow slowSkill = myPet.getSkills().getSkill(Slow.class);
                         if (slowSkill.activate()) {
-                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, slowSkill);
+                            MyPetActiveSkillEvent skillEvent = new MyPetActiveSkillEvent(myPet, slowSkill);
                             Bukkit.getPluginManager().callEvent(skillEvent);
                             if (!skillEvent.isCancelled()) {
                                 slowSkill.slowTarget((LivingEntity) damagedEntity);
@@ -699,7 +699,7 @@ public class EntityListener implements Listener {
                     if (!skillUsed && myPet.getSkills().hasSkill(Knockback.class)) {
                         Knockback knockbackSkill = myPet.getSkills().getSkill(Knockback.class);
                         if (knockbackSkill.activate()) {
-                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, knockbackSkill);
+                            MyPetActiveSkillEvent skillEvent = new MyPetActiveSkillEvent(myPet, knockbackSkill);
                             Bukkit.getPluginManager().callEvent(skillEvent);
                             if (!skillEvent.isCancelled()) {
                                 knockbackSkill.knockbackTarget((LivingEntity) damagedEntity);
@@ -710,7 +710,7 @@ public class EntityListener implements Listener {
                     if (!skillUsed && myPet.getSkills().hasSkill(Lightning.class)) {
                         Lightning lightningSkill = myPet.getSkills().getSkill(Lightning.class);
                         if (lightningSkill.activate()) {
-                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, lightningSkill);
+                            MyPetActiveSkillEvent skillEvent = new MyPetActiveSkillEvent(myPet, lightningSkill);
                             Bukkit.getPluginManager().callEvent(skillEvent);
                             if (!skillEvent.isCancelled()) {
                                 isSkillActive = true;
@@ -722,7 +722,7 @@ public class EntityListener implements Listener {
                     if (!skillUsed && myPet.getSkills().hasSkill(Stomp.class)) {
                         Stomp stompSkill = myPet.getSkills().getSkill(Stomp.class);
                         if (stompSkill.activate()) {
-                            ActiveSkillEvent skillEvent = new ActiveSkillEvent(myPet, stompSkill);
+                            MyPetActiveSkillEvent skillEvent = new MyPetActiveSkillEvent(myPet, stompSkill);
                             Bukkit.getPluginManager().callEvent(skillEvent);
                             if (!skillEvent.isCancelled()) {
                                 isSkillActive = true;
@@ -740,7 +740,7 @@ public class EntityListener implements Listener {
     public void onMyPetEntityDeath(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
         if (deadEntity instanceof MyPetBukkitEntity) {
-            ActiveMyPet myPet = ((MyPetBukkitEntity) deadEntity).getMyPet();
+            MyPet myPet = ((MyPetBukkitEntity) deadEntity).getMyPet();
             if (myPet == null || myPet.getHealth() > 0) // check health for death events where the pet isn't really dead (/killall)
             {
                 return;
@@ -783,7 +783,7 @@ public class EntityListener implements Listener {
                 if (e.getDamager() instanceof Player) {
                     myPet.setRespawnTime((Configuration.Respawn.TIME_PLAYER_FIXED + MyPetApi.getMyPetInfo().getCustomRespawnTimeFixed(myPet.getPetType())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_PLAYER_FACTOR + MyPetApi.getMyPetInfo().getCustomRespawnTimeFactor(myPet.getPetType()))));
                 } else if (e.getDamager() instanceof MyPetBukkitEntity) {
-                    ActiveMyPet killerMyPet = ((MyPetBukkitEntity) e.getDamager()).getMyPet();
+                    MyPet killerMyPet = ((MyPetBukkitEntity) e.getDamager()).getMyPet();
                     if (myPet.getSkills().isSkillActive(Behavior.class) && killerMyPet.getSkills().isSkillActive(Behavior.class)) {
                         Behavior killerBehaviorSkill = killerMyPet.getSkills().getSkill(Behavior.class);
                         Behavior deadBehaviorSkill = myPet.getSkills().getSkill(Behavior.class);
@@ -864,7 +864,7 @@ public class EntityListener implements Listener {
             Map<Entity, Double> damagePercentMap = MyPetExperience.getDamageToEntityPercent(deadEntity);
             for (Entity entity : damagePercentMap.keySet()) {
                 if (entity instanceof MyPetBukkitEntity) {
-                    ActiveMyPet myPet = ((MyPetBukkitEntity) entity).getMyPet();
+                    MyPet myPet = ((MyPetBukkitEntity) entity).getMyPet();
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             continue;
@@ -877,7 +877,7 @@ public class EntityListener implements Listener {
                 } else if (entity instanceof Player) {
                     Player owner = (Player) entity;
                     if (MyPetApi.getMyPetList().hasActiveMyPet(owner)) {
-                        ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
+                        MyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
                         if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
                             if (!myPet.autoAssignSkilltree()) {
                                 continue;
@@ -901,7 +901,7 @@ public class EntityListener implements Listener {
                 damager = (Entity) ((Projectile) damager).getShooter();
             }
             if (damager instanceof MyPetBukkitEntity) {
-                ActiveMyPet myPet = ((MyPetBukkitEntity) damager).getMyPet();
+                MyPet myPet = ((MyPetBukkitEntity) damager).getMyPet();
                 if (myPet.getSkilltree() == null && Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
                     if (!myPet.autoAssignSkilltree()) {
                         return;
@@ -911,7 +911,7 @@ public class EntityListener implements Listener {
             } else if (damager instanceof Player) {
                 Player owner = (Player) damager;
                 if (MyPetApi.getMyPetList().hasActiveMyPet(owner)) {
-                    ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
+                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             return;
@@ -932,7 +932,7 @@ public class EntityListener implements Listener {
     @EventHandler
     public void onEntityTarget(final EntityTargetEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
-            ActiveMyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
+            MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
             if (myPet.getSkills().isSkillActive(Behavior.class)) {
                 Behavior behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
                 if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
@@ -952,7 +952,7 @@ public class EntityListener implements Listener {
         } else if (event.getEntity() instanceof Tameable) {
             if (event.getTarget() instanceof MyPetBukkitEntity) {
                 Tameable tameable = ((Tameable) event.getEntity());
-                ActiveMyPet myPet = ((MyPetBukkitEntity) event.getTarget()).getMyPet();
+                MyPet myPet = ((MyPetBukkitEntity) event.getTarget()).getMyPet();
                 if (myPet.getOwner().equals(tameable.getOwner())) {
                     event.setCancelled(true);
                 }
@@ -968,7 +968,7 @@ public class EntityListener implements Listener {
 
     private void sendDeathMessage(final EntityDeathEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
-            ActiveMyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
+            MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
             String killer;
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();

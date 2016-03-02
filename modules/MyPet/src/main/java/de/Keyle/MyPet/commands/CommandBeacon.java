@@ -22,8 +22,8 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.Beacon;
@@ -40,7 +40,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
                 if (!Permissions.hasExtended(player, "MyPet.user.extended.Beacon", true)) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", player));
                     return true;

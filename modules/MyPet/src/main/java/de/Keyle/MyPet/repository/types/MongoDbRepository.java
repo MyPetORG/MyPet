@@ -28,8 +28,8 @@ import com.mongodb.client.MongoDatabase;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.UUIDFetcher;
 import de.Keyle.MyPet.api.repository.Repository;
@@ -204,8 +204,8 @@ public class MongoDbRepository implements Repository {
     }
 
     private void savePets() {
-        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
-            updateMyPet(myPet);
+        for (StoredMyPet storedMyPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+            updateMyPet(storedMyPet);
         }
     }
 
@@ -218,7 +218,7 @@ public class MongoDbRepository implements Repository {
 
     // Pets ------------------------------------------------------------------------------------------------------------
 
-    private MyPet documentToMyPet(MyPetPlayer owner, Document document) {
+    private StoredMyPet documentToMyPet(MyPetPlayer owner, Document document) {
         try {
             InactiveMyPet pet = new InactiveMyPet(owner);
             pet.setUUID(UUID.fromString(document.getString("uuid")));
@@ -256,7 +256,7 @@ public class MongoDbRepository implements Repository {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<de.Keyle.MyPet.api.entity.MyPet> getAllMyPets() {
+    public List<StoredMyPet> getAllMyPets() {
 
         List<MyPetPlayer> playerList = getAllMyPetPlayers();
         final Map<UUID, MyPetPlayer> owners = new HashMap<>();
@@ -267,16 +267,16 @@ public class MongoDbRepository implements Repository {
 
         MongoCollection petCollection = this.db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
 
-        final List<MyPet> myPetList = new ArrayList<>();
+        final List<StoredMyPet> myPetList = new ArrayList<>();
 
         petCollection.find().forEach(new Block<Document>() {
             @Override
             public void apply(final Document document) {
                 UUID ownerUUID = UUID.fromString(document.getString("owner_uuid"));
                 if (owners.containsKey(ownerUUID)) {
-                    MyPet myPet = documentToMyPet(owners.get(ownerUUID), document);
-                    if (myPet != null) {
-                        myPetList.add(myPet);
+                    StoredMyPet storedMyPet = documentToMyPet(owners.get(ownerUUID), document);
+                    if (storedMyPet != null) {
+                        myPetList.add(storedMyPet);
                     }
                 }
             }
@@ -304,21 +304,21 @@ public class MongoDbRepository implements Repository {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<MyPet>> callback) {
+    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
         if (callback != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     if (callback != null) {
-                        final List<MyPet> pets = new ArrayList<>();
+                        final List<StoredMyPet> pets = new ArrayList<>();
                         MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                         FindIterable petDocuments = petCollection.find(new Document("owner_uuid", owner.getInternalUUID()));
                         petDocuments.forEach(new Block<Document>() {
                             @Override
                             public void apply(final Document document) {
-                                MyPet myPet = documentToMyPet(owner, document);
-                                if (myPet != null) {
-                                    pets.add(myPet);
+                                StoredMyPet storedMyPet = documentToMyPet(owner, document);
+                                if (storedMyPet != null) {
+                                    pets.add(storedMyPet);
                                 }
                             }
                         });
@@ -331,7 +331,7 @@ public class MongoDbRepository implements Repository {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getMyPet(final UUID uuid, final RepositoryCallback<MyPet> callback) {
+    public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
             new BukkitRunnable() {
                 @Override
@@ -341,7 +341,7 @@ public class MongoDbRepository implements Repository {
                         Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
                         if (petDocument != null) {
                             MyPetPlayer owner = MyPetApi.getPlayerList().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
-                            MyPet pet = documentToMyPet(owner, petDocument);
+                            StoredMyPet pet = documentToMyPet(owner, petDocument);
 
                             if (pet != null) {
                                 callback.runTask(pet);
@@ -368,16 +368,16 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void removeMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
-        removeMyPet(inactiveMyPet.getUUID(), callback);
+    public void removeMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+        removeMyPet(storedMyPet.getUUID(), callback);
     }
 
     @Override
-    public void addMyPet(final MyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
+    public void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                addMyPet(inactiveMyPet);
+                addMyPet(storedMyPet);
 
                 if (callback != null) {
                     callback.runTask(true);
@@ -387,26 +387,26 @@ public class MongoDbRepository implements Repository {
     }
 
     @SuppressWarnings("unchecked")
-    public void addMyPet(MyPet inactiveMyPet) {
+    public void addMyPet(StoredMyPet storedMyPet) {
         MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
 
         Document petDocument = new Document();
-        petDocument.append("uuid", inactiveMyPet.getUUID().toString());
-        petDocument.append("owner_uuid", inactiveMyPet.getOwner().getInternalUUID().toString());
-        petDocument.append("exp", inactiveMyPet.getExp());
-        petDocument.append("health", inactiveMyPet.getHealth());
-        petDocument.append("respawn_time", inactiveMyPet.getRespawnTime());
-        petDocument.append("name", inactiveMyPet.getPetName());
-        petDocument.append("type", inactiveMyPet.getPetType().name());
-        petDocument.append("last_used", inactiveMyPet.getLastUsed());
-        petDocument.append("hunger", inactiveMyPet.getHungerValue());
-        petDocument.append("world_group", inactiveMyPet.getWorldGroup());
-        petDocument.append("wants_to_spawn", inactiveMyPet.wantsToRespawn());
-        petDocument.append("skilltree", inactiveMyPet.getSkilltree() != null ? inactiveMyPet.getSkilltree().getName() : null);
+        petDocument.append("uuid", storedMyPet.getUUID().toString());
+        petDocument.append("owner_uuid", storedMyPet.getOwner().getInternalUUID().toString());
+        petDocument.append("exp", storedMyPet.getExp());
+        petDocument.append("health", storedMyPet.getHealth());
+        petDocument.append("respawn_time", storedMyPet.getRespawnTime());
+        petDocument.append("name", storedMyPet.getPetName());
+        petDocument.append("type", storedMyPet.getPetType().name());
+        petDocument.append("last_used", storedMyPet.getLastUsed());
+        petDocument.append("hunger", storedMyPet.getHungerValue());
+        petDocument.append("world_group", storedMyPet.getWorldGroup());
+        petDocument.append("wants_to_spawn", storedMyPet.wantsToRespawn());
+        petDocument.append("skilltree", storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
         try {
-            petDocument.append("skills", TagStream.writeTag(inactiveMyPet.getSkillInfo(), true));
-            petDocument.append("info", TagStream.writeTag(inactiveMyPet.getInfo(), true));
+            petDocument.append("skills", TagStream.writeTag(storedMyPet.getSkillInfo(), true));
+            petDocument.append("info", TagStream.writeTag(storedMyPet.getInfo(), true));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -415,11 +415,11 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void updateMyPet(final MyPet myPet, final RepositoryCallback<Boolean> callback) {
+    public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                boolean result = updateMyPet(myPet);
+                boolean result = updateMyPet(storedMyPet);
 
                 if (callback != null) {
                     callback.runTask(result);
@@ -429,31 +429,31 @@ public class MongoDbRepository implements Repository {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean updateMyPet(MyPet myPet) {
+    private boolean updateMyPet(StoredMyPet storedMyPet) {
         MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-        Document filter = new Document("uuid", myPet.getUUID().toString());
+        Document filter = new Document("uuid", storedMyPet.getUUID().toString());
         Document petDocument = (Document) petCollection.find(filter).first();
 
         if (petDocument == null) {
             return false;
         }
 
-        petDocument.append("uuid", myPet.getUUID().toString());
-        petDocument.append("owner_uuid", myPet.getOwner().getInternalUUID().toString());
-        petDocument.append("exp", myPet.getExp());
-        petDocument.append("health", myPet.getHealth());
-        petDocument.append("respawn_time", myPet.getRespawnTime());
-        petDocument.append("name", myPet.getPetName());
-        petDocument.append("type", myPet.getPetType().name());
-        petDocument.append("last_used", myPet.getLastUsed());
-        petDocument.append("hunger", myPet.getHungerValue());
-        petDocument.append("world_group", myPet.getWorldGroup());
-        petDocument.append("wants_to_spawn", myPet.wantsToRespawn());
-        petDocument.append("skilltree", myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
+        petDocument.append("uuid", storedMyPet.getUUID().toString());
+        petDocument.append("owner_uuid", storedMyPet.getOwner().getInternalUUID().toString());
+        petDocument.append("exp", storedMyPet.getExp());
+        petDocument.append("health", storedMyPet.getHealth());
+        petDocument.append("respawn_time", storedMyPet.getRespawnTime());
+        petDocument.append("name", storedMyPet.getPetName());
+        petDocument.append("type", storedMyPet.getPetType().name());
+        petDocument.append("last_used", storedMyPet.getLastUsed());
+        petDocument.append("hunger", storedMyPet.getHungerValue());
+        petDocument.append("world_group", storedMyPet.getWorldGroup());
+        petDocument.append("wants_to_spawn", storedMyPet.wantsToRespawn());
+        petDocument.append("skilltree", storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
         try {
-            petDocument.append("skills", TagStream.writeTag(myPet.getSkillInfo(), true));
-            petDocument.append("info", TagStream.writeTag(myPet.getInfo(), true));
+            petDocument.append("skills", TagStream.writeTag(storedMyPet.getSkillInfo(), true));
+            petDocument.append("info", TagStream.writeTag(storedMyPet.getInfo(), true));
         } catch (IOException e) {
             e.printStackTrace();
         }

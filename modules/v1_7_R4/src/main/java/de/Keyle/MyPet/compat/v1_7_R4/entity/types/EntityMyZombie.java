@@ -23,9 +23,9 @@ package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyZombie;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import net.minecraft.server.v1_7_R4.*;
@@ -34,7 +34,7 @@ import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet {
-    public EntityMyZombie(World world, ActiveMyPet myPet) {
+    public EntityMyZombie(World world, MyPet myPet) {
         super(world, myPet);
     }
 
@@ -138,7 +138,7 @@ public class EntityMyZombie extends EntityMyPet {
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
             public void run() {
-                if (getMyPet().getStatus() == ActiveMyPet.PetState.Here) {
+                if (getMyPet().getStatus() == MyPet.PetState.Here) {
                     for (EquipmentSlot slot : EquipmentSlot.values()) {
                         if (getMyPet().getEquipment(slot) != null) {
                             setPetEquipment(slot.getSlotId(), CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));

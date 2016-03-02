@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.entity.Rabbit;
 
@@ -29,7 +29,7 @@ import static org.bukkit.Material.CARROT_ITEM;
 import static org.bukkit.Material.RED_ROSE;
 
 @DefaultInfo(food = {CARROT_ITEM, RED_ROSE})
-public interface MyRabbit extends ActiveMyPet, MyPetBaby {
+public interface MyRabbit extends MyPet, MyPetBaby {
     enum RabbitType {
         BROWN(Rabbit.Type.BROWN, (byte) 0),
         WHITE(Rabbit.Type.WHITE, (byte) 1),

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.entity.ai.target;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -33,7 +33,7 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
 public class BehaviorDuelTarget extends AIGoal {
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityPlayer petOwnerEntity;
     private MyPetMinecraftEntity target;
@@ -72,7 +72,7 @@ public class BehaviorDuelTarget extends AIGoal {
 
         for (Object entityObj : this.petEntity.world.a(EntityMyPet.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range))) {
             EntityMyPet entityMyPet = (EntityMyPet) entityObj;
-            ActiveMyPet targetMyPet = entityMyPet.getMyPet();
+            MyPet targetMyPet = entityMyPet.getMyPet();
 
             if (entityMyPet != petEntity && entityMyPet.isAlive()) {
                 if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !targetMyPet.getEntity().canMove()) {

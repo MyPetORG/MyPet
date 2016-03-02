@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
@@ -40,18 +40,18 @@ import java.util.Random;
 
 public class Lightning extends LightningInfo implements SkillInstance, ActiveSkill {
     private static Random random = new Random();
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     private boolean isStriking = false;
 
     public Lightning(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

@@ -26,7 +26,7 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 
 public interface MyPetBukkitEntity extends Creature {
-    ActiveMyPet getMyPet();
+    MyPet getMyPet();
 
     MyPetMinecraftEntity getHandle();
 

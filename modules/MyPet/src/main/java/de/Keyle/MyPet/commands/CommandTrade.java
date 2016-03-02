@@ -22,8 +22,8 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
@@ -113,7 +113,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                         final String worldGroup = offer.getPet().getWorldGroup();
 
                         MyPetApi.getMyPetList().deactivateMyPet(oldOwner, false);
-                        final MyPet pet = MyPetApi.getMyPetList().getInactiveMyPetFromMyPet(offer.getPet());
+                        final StoredMyPet pet = MyPetApi.getMyPetList().getInactiveMyPetFromMyPet(offer.getPet());
 
                         final Repository repo = MyPetApi.getRepository();
                         repo.removeMyPet(pet, new RepositoryCallback<Boolean>() {
@@ -121,7 +121,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                             public void callback(Boolean value) {
                                 pet.setOwner(newOwner);
                                 repo.addMyPet(pet, null);
-                                ActiveMyPet myPet = MyPetApi.getMyPetList().activateMyPet(pet);
+                                MyPet myPet = MyPetApi.getMyPetList().activateMyPet(pet);
 
                                 oldOwner.setMyPetForWorldGroup(worldGroup, null);
                                 newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
@@ -196,7 +196,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                    ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
 
                     if (!Permissions.has((Player) sender, "MyPet.user.command.trade.offer.type." + myPet.getPetType().name(), false)) {
                         player.sendMessage(Translation.getString("Message.No.Allowed", player));
@@ -274,13 +274,13 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
 
     private class Offer {
         double price = 0;
-        ActiveMyPet pet;
+        MyPet pet;
         UUID owner;
         UUID reciever;
         String recieverName;
         String ownerName;
 
-        public Offer(double price, ActiveMyPet pet, UUID owner, UUID reciever, String recieverName, String ownerName) {
+        public Offer(double price, MyPet pet, UUID owner, UUID reciever, String recieverName, String ownerName) {
             this.price = price;
             this.pet = pet;
             this.owner = owner;
@@ -293,7 +293,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
             return price;
         }
 
-        public ActiveMyPet getPet() {
+        public MyPet getPet() {
             return pet;
         }
 

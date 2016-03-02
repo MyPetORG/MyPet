@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.*;
@@ -34,7 +34,7 @@ public class EntityMyRabbit extends EntityMyPet {
 
     int jumpDelay;
 
-    public EntityMyRabbit(World world, ActiveMyPet myPet) {
+    public EntityMyRabbit(World world, MyPet myPet) {
         super(world, myPet);
         this.jumpDelay = (this.random.nextInt(20) + 10);
     }

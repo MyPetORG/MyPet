@@ -78,7 +78,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     public void onDisable() {
         if (isReady) {
-            for (ActiveMyPet myPet : myPetList.getAllActiveMyPets()) {
+            for (MyPet myPet : myPetList.getAllActiveMyPets()) {
                 myPet.removePet();
             }
             repo.disable();
@@ -301,7 +301,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
                         final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
                         if (joinedPlayer.hasMyPet()) {
-                            ActiveMyPet myPet = joinedPlayer.getMyPet();
+                            MyPet myPet = joinedPlayer.getMyPet();
                             if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
                                 myPetList.deactivateMyPet(joinedPlayer, true);
                             }
@@ -310,17 +310,17 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                         if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                             final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
 
-                            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<MyPet>() {
+                            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
                                 @Override
-                                public void callback(MyPet inactiveMyPet) {
-                                    myPetList.activateMyPet(inactiveMyPet);
+                                public void callback(StoredMyPet storedMyPet) {
+                                    myPetList.activateMyPet(storedMyPet);
 
                                     if (joinedPlayer.hasMyPet()) {
-                                        final ActiveMyPet myPet = joinedPlayer.getMyPet();
+                                        final MyPet myPet = joinedPlayer.getMyPet();
                                         final MyPetPlayer myPetPlayer = myPet.getOwner();
                                         if (myPet.wantsToRespawn()) {
                                             if (myPetPlayer.hasMyPet()) {
-                                                ActiveMyPet runMyPet = myPetPlayer.getMyPet();
+                                                MyPet runMyPet = myPetPlayer.getMyPet();
                                                 switch (runMyPet.createEntity()) {
                                                     case Canceled:
                                                         runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));

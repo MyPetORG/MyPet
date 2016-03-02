@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -29,12 +29,12 @@ import org.bukkit.event.HandlerList;
 public class MyPetExpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private final ActiveMyPet myPet;
+    private final MyPet myPet;
     private boolean isCancelled = false;
     private double oldExp;
     private double newExp;
 
-    public MyPetExpEvent(ActiveMyPet myPet, double oldExp, double newExp) {
+    public MyPetExpEvent(MyPet myPet, double oldExp, double newExp) {
         this.myPet = myPet;
         this.oldExp = oldExp;
         this.newExp = newExp;
@@ -44,7 +44,7 @@ public class MyPetExpEvent extends Event implements Cancellable {
         return myPet.getOwner();
     }
 
-    public ActiveMyPet getPet() {
+    public MyPet getPet() {
         return myPet;
     }
 

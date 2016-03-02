@@ -22,8 +22,8 @@ package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMooshroom;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R2.EntityHuman;
@@ -34,7 +34,7 @@ import org.bukkit.Bukkit;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
-    public EntityMyMooshroom(World world, ActiveMyPet myPet) {
+    public EntityMyMooshroom(World world, MyPet myPet) {
         super(world, myPet);
     }
 

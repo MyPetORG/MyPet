@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.keyle.knbt.TagCompound;
 
 import static org.bukkit.Material.APPLE;
 
 @DefaultInfo(food = {APPLE})
-public interface MyVillager extends ActiveMyPet, MyPetBaby {
+public interface MyVillager extends MyPet, MyPetBaby {
     int getProfession();
 
     void setProfession(int value);

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import org.bukkit.Bukkit;
@@ -60,7 +60,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
-        ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
 
         String value = args[1];
         boolean level = false;

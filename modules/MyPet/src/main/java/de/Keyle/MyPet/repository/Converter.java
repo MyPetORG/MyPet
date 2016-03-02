@@ -22,7 +22,7 @@ package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
@@ -71,8 +71,8 @@ public class Converter {
             }
         }
 
-        List<MyPet> pets = fromRepo.getAllMyPets();
-        for (MyPet pet : pets) {
+        List<StoredMyPet> pets = fromRepo.getAllMyPets();
+        for (StoredMyPet pet : pets) {
             if (toRepo instanceof NbtRepository) {
                 toRepo.addMyPet(pet, null);
             } else if (toRepo instanceof MySqlRepository) {

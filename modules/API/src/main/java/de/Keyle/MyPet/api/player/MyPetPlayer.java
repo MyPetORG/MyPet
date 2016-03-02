@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.player;
 
 import com.google.common.collect.BiMap;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.keyle.knbt.TagBase;
@@ -98,7 +98,7 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     boolean hasMyPet();
 
-    ActiveMyPet getMyPet();
+    MyPet getMyPet();
 
     Player getPlayer();
 

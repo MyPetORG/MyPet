@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandAdmin;
@@ -48,7 +48,7 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
             if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
                 MyPetPlayer petOwner = MyPetApi.getPlayerList().getMyPetPlayer(player);
                 if (petOwner.hasMyPet()) {
-                    ActiveMyPet myPet = petOwner.getMyPet();
+                    MyPet myPet = petOwner.getMyPet();
 
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
 

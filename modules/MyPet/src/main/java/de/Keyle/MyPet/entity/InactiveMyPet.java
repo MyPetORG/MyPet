@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
@@ -32,7 +33,7 @@ import de.keyle.knbt.*;
 import java.util.Collection;
 import java.util.UUID;
 
-public class InactiveMyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
+public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private MyPetPlayer petOwner;
     private UUID uuid = null;
     private String petName = "";

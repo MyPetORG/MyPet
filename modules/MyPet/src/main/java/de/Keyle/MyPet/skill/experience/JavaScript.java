@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.experience;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.experience.Experience;
 import org.bukkit.ChatColor;
 import org.mozilla.javascript.*;
@@ -43,7 +43,7 @@ public class JavaScript extends Experience {
 
     private MyPetScriptInfo scriptInfo;
 
-    public JavaScript(ActiveMyPet myPet) {
+    public JavaScript(MyPet myPet) {
         super(myPet);
 
         scriptInfo = new MyPetScriptInfo();

@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 import static de.Keyle.MyPet.api.entity.LeashFlag.Impossible;
 import static org.bukkit.Material.ENDER_STONE;
 
 @DefaultInfo(food = {ENDER_STONE}, leashFlags = {Impossible})
-public interface MyEnderDragon extends ActiveMyPet {
+public interface MyEnderDragon extends MyPet {
 }

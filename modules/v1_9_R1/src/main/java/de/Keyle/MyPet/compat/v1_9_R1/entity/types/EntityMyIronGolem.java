@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.*;
@@ -35,7 +35,7 @@ public class EntityMyIronGolem extends EntityMyPet {
     int flowerCounter = 0;
     boolean flower = false;
 
-    public EntityMyIronGolem(World world, ActiveMyPet myPet) {
+    public EntityMyIronGolem(World world, MyPet myPet) {
         super(world, myPet);
     }
 

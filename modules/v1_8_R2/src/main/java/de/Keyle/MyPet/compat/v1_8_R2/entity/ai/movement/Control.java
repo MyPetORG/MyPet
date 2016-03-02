@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R2.entity.ai.movement;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.util.Timer;
 import org.bukkit.Location;
 
 public class Control extends AIGoal implements Scheduler {
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     private float speedModifier;
     public Location moveTo = null;
     private int timeToMove = 0;

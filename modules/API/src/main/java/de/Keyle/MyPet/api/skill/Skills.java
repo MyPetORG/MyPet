@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.skill;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
 import org.bukkit.ChatColor;
 
@@ -34,7 +34,7 @@ public class Skills {
     private static BiMap<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = HashBiMap.create();
     private static BiMap<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = registeredSkillsNames.inverse();
 
-    private ActiveMyPet myPet;
+    private MyPet myPet;
 
     private BiMap<String, SkillInstance> skillsNamesClass = HashBiMap.create();
     private BiMap<SkillInstance, String> skillsClassNames = skillsNamesClass.inverse();
@@ -104,7 +104,7 @@ public class Skills {
         return null;
     }
 
-    public Skills(ActiveMyPet myPet) {
+    public Skills(MyPet myPet) {
         this.myPet = myPet;
         try {
             for (Class<? extends SkillTreeSkill> clazz : registeredSkillsNames.keySet()) {

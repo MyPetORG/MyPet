@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -53,7 +53,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
-        ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
 
         SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
         if (skillTreeMobType.hasSkillTree(args[1])) {
@@ -80,7 +80,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
                 return CommandAdmin.EMPTY_LIST;
             }
             if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
 
                 List<String> skilltreeList = new ArrayList<>();

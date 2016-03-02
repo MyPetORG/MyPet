@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_8_R3.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCow;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R3.EntityHuman;
@@ -32,7 +32,7 @@ import net.minecraft.server.v1_8_R3.World;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
-    public EntityMyCow(World world, ActiveMyPet myPet) {
+    public EntityMyCow(World world, MyPet myPet) {
         super(world, myPet);
     }
 
