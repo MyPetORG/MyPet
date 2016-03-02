@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.inventory.ItemStack;
 
 import static de.Keyle.MyPet.api.entity.LeashFlag.UserCreated;
 import static org.bukkit.Material.IRON_INGOT;
 
 @DefaultInfo(food = {IRON_INGOT}, leashFlags = {UserCreated})
-public interface MyIronGolem extends ActiveMyPet {
+public interface MyIronGolem extends MyPet {
     ItemStack getFlower();
 
     boolean hasFlower();

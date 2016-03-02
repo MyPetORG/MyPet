@@ -22,8 +22,8 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -68,7 +68,7 @@ public class CommandSendAway implements CommandExecutor, TabCompleter {
             return true;
         }
         if (petOwner != null && petOwner.hasMyPet()) {
-            ActiveMyPet myPet = petOwner.getMyPet();
+            MyPet myPet = petOwner.getMyPet();
             if (myPet.getStatus() == PetState.Here) {
                 myPet.removePet(false);
                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.SendAway.Success", petOwner), myPet.getPetName()));

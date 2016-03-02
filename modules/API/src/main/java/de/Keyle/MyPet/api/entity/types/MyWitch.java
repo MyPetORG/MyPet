@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 import static org.bukkit.Material.MUSHROOM_SOUP;
 
 @DefaultInfo(food = {MUSHROOM_SOUP})
-public interface MyWitch extends ActiveMyPet {
+public interface MyWitch extends MyPet {
 }

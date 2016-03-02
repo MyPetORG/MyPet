@@ -23,8 +23,8 @@ package de.Keyle.MyPet.api.repository;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -33,23 +33,23 @@ import org.bukkit.entity.Player;
 import static org.bukkit.Bukkit.getServer;
 
 public abstract class MyPetList {
-    protected final BiMap<MyPetPlayer, ActiveMyPet> mActivePlayerPets = HashBiMap.create();
-    protected final BiMap<ActiveMyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
+    protected final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
+    protected final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
 
     // Active -------------------------------------------------------------------
 
-    public ActiveMyPet getMyPet(MyPetPlayer owner) {
+    public MyPet getMyPet(MyPetPlayer owner) {
         return mActivePlayerPets.get(owner);
     }
 
-    public ActiveMyPet getMyPet(Player owner) {
+    public MyPet getMyPet(Player owner) {
         return mActivePlayerPets.get(MyPetApi.getPlayerList().getMyPetPlayer(owner));
     }
 
-    public ActiveMyPet[] getAllActiveMyPets() {
-        ActiveMyPet[] allActiveMyPets = new ActiveMyPet[mActivePetsPlayer.keySet().size()];
+    public MyPet[] getAllActiveMyPets() {
+        MyPet[] allActiveMyPets = new MyPet[mActivePetsPlayer.keySet().size()];
         int i = 0;
-        for (ActiveMyPet myPet : mActivePetsPlayer.keySet()) {
+        for (MyPet myPet : mActivePetsPlayer.keySet()) {
             allActiveMyPets[i++] = myPet;
         }
         return allActiveMyPets;
@@ -77,27 +77,27 @@ public abstract class MyPetList {
 
     // Inactive -----------------------------------------------------------------
 
-    public abstract MyPet getInactiveMyPetFromMyPet(MyPet activeMyPet);
+    public abstract StoredMyPet getInactiveMyPetFromMyPet(StoredMyPet storedMyPet);
 
     // All ----------------------------------------------------------------------
 
-    public abstract ActiveMyPet activateMyPet(MyPet inactiveMyPet);
+    public abstract MyPet activateMyPet(StoredMyPet storedMyPet);
 
     public boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
         if (mActivePlayerPets.containsKey(owner)) {
-            final ActiveMyPet activeMyPet = owner.getMyPet();
+            final MyPet myPet = owner.getMyPet();
 
-            MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
+            MyPetSelectEvent event = new MyPetSelectEvent(myPet, NewStatus.Inactive);
             getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 return false;
             }
 
-            activeMyPet.removePet();
+            myPet.removePet();
             if (update) {
-                MyPetApi.getRepository().updateMyPet(activeMyPet, null);
+                MyPetApi.getRepository().updateMyPet(myPet, null);
             }
-            mActivePetsPlayer.remove(activeMyPet);
+            mActivePetsPlayer.remove(myPet);
             return true;
         }
         return false;

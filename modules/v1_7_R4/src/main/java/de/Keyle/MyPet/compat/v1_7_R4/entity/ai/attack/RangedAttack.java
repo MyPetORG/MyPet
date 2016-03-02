@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.entity.ai.attack;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skills.RangedInfo;
@@ -35,7 +35,7 @@ import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 
 public class RangedAttack extends AIGoal {
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     private final EntityMyPet entityMyPet;
     private EntityLiving target;
     private int shootTimer;

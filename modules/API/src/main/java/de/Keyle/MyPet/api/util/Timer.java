@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 
@@ -49,7 +49,7 @@ public class Timer {
 
         timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
             public void run() {
-                for (ActiveMyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+                for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
                     myPet.schedule();
                 }
             }

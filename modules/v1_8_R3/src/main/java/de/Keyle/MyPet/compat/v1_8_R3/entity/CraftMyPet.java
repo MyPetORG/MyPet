@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -88,7 +88,7 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
         return petEntity;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return petEntity.getMyPet();
     }
 

@@ -24,7 +24,7 @@ import com.sucy.skill.api.event.PlayerExperienceGainEvent;
 import com.sucy.skill.api.event.PlayerExperienceLostEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import org.bukkit.Bukkit;
@@ -51,7 +51,7 @@ public class SkillApi implements Listener {
             if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
                 MyPetPlayer petPlayer = MyPetApi.getPlayerList().getMyPetPlayer(player);
                 if (petPlayer.hasMyPet()) {
-                    ActiveMyPet myPet = petPlayer.getMyPet();
+                    MyPet myPet = petPlayer.getMyPet();
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             return;
@@ -70,7 +70,7 @@ public class SkillApi implements Listener {
             if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
                 MyPetPlayer petPlayer = MyPetApi.getPlayerList().getMyPetPlayer(player);
                 if (petPlayer.hasMyPet()) {
-                    ActiveMyPet myPet = petPlayer.getMyPet();
+                    MyPet myPet = petPlayer.getMyPet();
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             return;

@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @DefaultInfo(food = {ROTTEN_FLESH})
-public interface MyZombie extends ActiveMyPet, MyPetEquipment, MyPetBaby {
+public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
     boolean isVillager();
 
     void setVillager(boolean flag);

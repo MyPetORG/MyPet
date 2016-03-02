@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -33,11 +33,11 @@ public class MyPetInventoryActionEvent extends Event implements Cancellable {
         Open, Pickup, Use
     }
 
-    protected final ActiveMyPet myPet;
+    protected final MyPet myPet;
     protected boolean isCancelled = false;
     protected Action action;
 
-    public MyPetInventoryActionEvent(ActiveMyPet myPet, Action action) {
+    public MyPetInventoryActionEvent(MyPet myPet, Action action) {
         this.myPet = myPet;
         this.action = action;
     }
@@ -46,7 +46,7 @@ public class MyPetInventoryActionEvent extends Event implements Cancellable {
         return myPet.getOwner();
     }
 
-    public ActiveMyPet getPet() {
+    public MyPet getPet() {
         return myPet;
     }
 

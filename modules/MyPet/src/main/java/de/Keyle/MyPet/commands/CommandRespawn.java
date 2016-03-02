@@ -23,8 +23,8 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.hooks.EconomyHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -51,7 +51,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
             if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
-                ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+                MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
                 if (!EconomyHook.canUseEconomy() || !Permissions.has(petOwner, "MyPet.user.command.respawn")) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
                     return true;

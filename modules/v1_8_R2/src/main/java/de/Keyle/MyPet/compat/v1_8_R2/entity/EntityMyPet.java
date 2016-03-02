@@ -67,7 +67,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected boolean hasRider = false;
     protected boolean isMyPet = false;
     protected boolean isInvisible = false;
-    protected ActiveMyPet myPet;
+    protected MyPet myPet;
     protected int jumpDelay = 0;
     protected int idleSoundTimer = 0;
     protected AbstractNavigation petNavigation;
@@ -86,7 +86,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
-    public EntityMyPet(World world, ActiveMyPet myPet) {
+    public EntityMyPet(World world, MyPet myPet) {
         super(world);
 
         try {
@@ -146,7 +146,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         return petNavigation;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

@@ -25,7 +25,7 @@ import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
@@ -95,7 +95,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         Owner, Party, Everyone
     }
 
-    private ActiveMyPet myPet;
+    private MyPet myPet;
 
     private boolean active = false;
     private int hungerDecreaseTimer;
@@ -111,7 +111,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
         // stone
         disabledMeta.setOwner("NeverUsed0000001");
@@ -127,7 +127,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         ownerMeta.setOwner(myPet.getOwner().getName());
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 
@@ -511,7 +511,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
     }
 
     public void schedule() {
-        if (myPet.getStatus() == ActiveMyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
+        if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;
 
             double range = 100. * (Math.log10(myPet.getHungerValue()) / 2);

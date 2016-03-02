@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -28,9 +28,9 @@ import org.bukkit.event.HandlerList;
 public class MyPetLeashEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private final ActiveMyPet myPet;
+    private final MyPet myPet;
 
-    public MyPetLeashEvent(ActiveMyPet myPet) {
+    public MyPetLeashEvent(MyPet myPet) {
         this.myPet = myPet;
     }
 
@@ -38,7 +38,7 @@ public class MyPetLeashEvent extends Event {
         return myPet.getOwner();
     }
 
-    public ActiveMyPet getPet() {
+    public MyPet getPet() {
         return myPet;
     }
 

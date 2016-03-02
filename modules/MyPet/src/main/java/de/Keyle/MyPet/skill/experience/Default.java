@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.experience;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.experience.Experience;
 
 public class Default extends Experience {
@@ -31,7 +31,7 @@ public class Default extends Experience {
     private double lastCurrentExp = 0.0;
     private double lastRequiredExp = 0.0;
 
-    public Default(ActiveMyPet myPet) {
+    public Default(MyPet myPet) {
         super(myPet);
     }
 

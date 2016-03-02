@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetExpEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.experience.Experience;
@@ -41,11 +41,11 @@ import java.util.WeakHashMap;
 public class MyPetExperience {
 
     private Experience expMode = null;
-    private final ActiveMyPet myPet;
+    private final MyPet myPet;
     private double exp = 0;
     private double levelCapExp = 0;
 
-    public MyPetExperience(ActiveMyPet pet, Experience expMode) {
+    public MyPetExperience(MyPet pet, Experience expMode) {
         this.myPet = pet;
         this.expMode = expMode;
 

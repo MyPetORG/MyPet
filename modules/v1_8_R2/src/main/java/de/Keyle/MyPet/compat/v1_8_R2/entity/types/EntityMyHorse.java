@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R2.*;
@@ -36,7 +36,7 @@ public class EntityMyHorse extends EntityMyPet {
     int ageCounter = -1;
     int ageFailCounter = 1;
 
-    public EntityMyHorse(World world, ActiveMyPet myPet) {
+    public EntityMyHorse(World world, MyPet myPet) {
         super(world, myPet);
     }
 

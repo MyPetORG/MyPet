@@ -22,7 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +37,7 @@ public class CommandCall implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
             if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
-                ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+                MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
 
                 myPet.removePet(true);
 

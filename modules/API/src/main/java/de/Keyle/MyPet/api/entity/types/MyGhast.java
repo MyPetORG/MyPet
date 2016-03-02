@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 import static de.Keyle.MyPet.api.entity.LeashFlag.Impossible;
 import static org.bukkit.Material.SULPHUR;
 
 @DefaultInfo(food = {SULPHUR}, leashFlags = {Impossible})
-public interface MyGhast extends ActiveMyPet {
+public interface MyGhast extends MyPet {
 }

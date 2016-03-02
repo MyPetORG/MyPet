@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R3.EntityHuman;
@@ -31,7 +31,7 @@ import net.minecraft.server.v1_8_R3.World;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
-    public EntityMyBlaze(World world, ActiveMyPet myPet) {
+    public EntityMyBlaze(World world, MyPet myPet) {
         super(world, myPet);
     }
 

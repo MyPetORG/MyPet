@@ -22,8 +22,8 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.Pickup;
@@ -40,7 +40,7 @@ public class CommandPickup implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player owner = (Player) sender;
             if (MyPetApi.getMyPetList().hasActiveMyPet(owner)) {
-                ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
+                MyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
 
                 if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup")) {
                     sender.sendMessage(Translation.getString("Message.No.Allowed", owner));

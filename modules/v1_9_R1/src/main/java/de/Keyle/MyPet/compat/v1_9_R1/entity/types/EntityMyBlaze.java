@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.*;
@@ -30,7 +30,7 @@ import net.minecraft.server.v1_9_R1.*;
 public class EntityMyBlaze extends EntityMyPet {
     private static final DataWatcherObject<Byte> onFireWatcher = DataWatcher.a(EntityMyBlaze.class, DataWatcherRegistry.a);
 
-    public EntityMyBlaze(World world, ActiveMyPet myPet) {
+    public EntityMyBlaze(World world, MyPet myPet) {
         super(world, myPet);
     }
 

@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.Material.CARROT_ITEM;
 
 @DefaultInfo(food = {CARROT_ITEM})
-public interface MyPig extends ActiveMyPet, MyPetBaby {
+public interface MyPig extends MyPet, MyPetBaby {
     ItemStack getSaddle();
 
     boolean hasSaddle();

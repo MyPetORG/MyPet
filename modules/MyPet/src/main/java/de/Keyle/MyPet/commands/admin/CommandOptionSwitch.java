@@ -24,8 +24,8 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -81,13 +81,13 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         final MyPetPlayer owner = o;
 
         if (show && owner != null) {
-            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<MyPet>>() {
+            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                 @Override
-                public void callback(List<MyPet> value) {
+                public void callback(List<StoredMyPet> value) {
                     sender.sendMessage("Select the MyPet you want the player to switch to:");
                     boolean doComma = false;
                     FancyMessage message = new FancyMessage("");
-                    for (MyPet mypet : value) {
+                    for (StoredMyPet mypet : value) {
 
                         if (doComma) {
                             message.then(", ");
@@ -105,15 +105,15 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
             });
 
         } else if (!show && owner != null && petUUID != null) {
-            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<MyPet>() {
+            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
                 @Override
-                public void callback(MyPet newPet) {
+                public void callback(StoredMyPet newPet) {
                     if (newPet != null) {
                         if (owner.hasMyPet()) {
                             MyPetApi.getMyPetList().deactivateMyPet(owner, true);
                         }
 
-                        ActiveMyPet myPet = MyPetApi.getMyPetList().activateMyPet(newPet);
+                        MyPet myPet = MyPetApi.getMyPetList().activateMyPet(newPet);
                         sender.sendMessage(Translation.getString("Message.Command.Success", sender));
                         if (myPet != null) {
 

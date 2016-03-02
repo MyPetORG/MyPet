@@ -22,7 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
@@ -43,7 +43,7 @@ import java.util.List;
 public class LevelUpListener implements Listener {
     @EventHandler
     public void onLevelUp(MyPetLevelUpEvent event) {
-        ActiveMyPet myPet = event.getPet();
+        MyPet myPet = event.getPet();
         int lvl = event.getLevel();
         int lastLvl = event.getLastLevel();
 
@@ -77,7 +77,7 @@ public class LevelUpListener implements Listener {
             }
         }
 
-        if (myPet.getStatus() == ActiveMyPet.PetState.Here) {
+        if (myPet.getStatus() == MyPet.PetState.Here) {
             myPet.getEntity().getHandle().updateNameTag();
             if (!event.isQuiet()) {
                 myPet.setHealth(myPet.getMaxHealth());

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
@@ -52,7 +52,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
         }
         Player player = (Player) sender;
         if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-            final ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+            final MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
             final MyPetPlayer myPetOwner = myPet.getOwner();
             if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 myPet.autoAssignSkilltree();
@@ -187,7 +187,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
         if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-            ActiveMyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+            MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
             if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 return CommandAdmin.EMPTY_LIST;
             } else if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {

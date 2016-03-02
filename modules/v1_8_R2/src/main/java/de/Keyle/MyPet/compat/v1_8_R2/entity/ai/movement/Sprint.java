@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.compat.v1_8_R2.entity.ai.movement;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
@@ -30,7 +30,7 @@ import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Sprint extends AIGoal {
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     private final EntityMyPet petEntity;
     private float walkSpeedModifier;
     private AbstractNavigation nav;

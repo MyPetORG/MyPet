@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api;
 
 import com.google.common.base.Charsets;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.Validate;
@@ -268,7 +268,7 @@ public class Util {
         return false;
     }
 
-    public static ItemTooltip myPetToItemTooltip(MyPet mypet, String lang) {
+    public static ItemTooltip myPetToItemTooltip(StoredMyPet mypet, String lang) {
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.RESET + Translation.getString("Name.Hunger", lang) + ": " + ChatColor.GOLD + Math.round(mypet.getHungerValue()));
         if (mypet.getRespawnTime() > 0) {

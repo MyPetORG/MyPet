@@ -23,8 +23,8 @@ package de.Keyle.MyPet.compat.v1_7_R4.entity;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
@@ -69,7 +69,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected boolean hasRider = false;
     protected boolean isMyPet = false;
     protected boolean isInvisible = false;
-    protected ActiveMyPet myPet;
+    protected MyPet myPet;
     protected int idleSoundTimer = 0;
     protected int jumpDelay = 0;
     protected AbstractNavigation petNavigation;
@@ -88,7 +88,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
-    public EntityMyPet(World world, ActiveMyPet myPet) {
+    public EntityMyPet(World world, MyPet myPet) {
         super(world);
 
         try {
@@ -148,7 +148,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         return petNavigation;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

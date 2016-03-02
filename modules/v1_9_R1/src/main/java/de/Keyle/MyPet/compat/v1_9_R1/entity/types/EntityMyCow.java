@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCow;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.*;
@@ -31,7 +31,7 @@ import net.minecraft.server.v1_9_R1.*;
 public class EntityMyCow extends EntityMyPet {
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyCow.class, DataWatcherRegistry.h);
 
-    public EntityMyCow(World world, ActiveMyPet myPet) {
+    public EntityMyCow(World world, MyPet myPet) {
         super(world, myPet);
     }
 

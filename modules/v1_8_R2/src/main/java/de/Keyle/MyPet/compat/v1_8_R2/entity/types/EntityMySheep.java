@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySheep;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.movement.EatGrass;
@@ -31,7 +31,7 @@ import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
-    public EntityMySheep(World world, ActiveMyPet myPet) {
+    public EntityMySheep(World world, MyPet myPet) {
         super(world, myPet);
     }
 

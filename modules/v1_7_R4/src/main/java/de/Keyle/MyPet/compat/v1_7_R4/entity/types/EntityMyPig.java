@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPig;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import net.minecraft.server.v1_7_R4.*;
@@ -30,7 +30,7 @@ import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
-    public EntityMyPig(World world, ActiveMyPet myPet) {
+    public EntityMyPig(World world, MyPet myPet) {
         super(world, myPet);
     }
 

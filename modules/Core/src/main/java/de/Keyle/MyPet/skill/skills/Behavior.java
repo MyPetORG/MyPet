@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import com.google.common.collect.Iterables;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillInfo;
@@ -45,7 +45,7 @@ public class Behavior extends BehaviorInfo implements SkillInstance, Scheduler, 
 
     private BehaviorState behavior = BehaviorState.Normal;
     private boolean active = false;
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     Iterator<BehaviorState> behaviorCycler;
 
     public Behavior(boolean addedByInheritance) {
@@ -54,11 +54,11 @@ public class Behavior extends BehaviorInfo implements SkillInstance, Scheduler, 
         behaviorCycler = Iterables.cycle(activeBehaviors).iterator();
     }
 
-    public void setMyPet(ActiveMyPet myPet) {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public ActiveMyPet getMyPet() {
+    public MyPet getMyPet() {
         return myPet;
     }
 

@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 import static org.bukkit.Material.SUGAR;
 
 @DefaultInfo(food = {SUGAR})
-public interface MyGuardian extends ActiveMyPet {
+public interface MyGuardian extends MyPet {
     boolean isElder();
 
     void setElder(boolean flag);

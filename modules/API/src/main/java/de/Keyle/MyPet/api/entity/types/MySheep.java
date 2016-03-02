@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.DyeColor;
 
 import static org.bukkit.Material.WHEAT;
 
 @DefaultInfo(food = {WHEAT})
-public interface MySheep extends ActiveMyPet, MyPetBaby {
+public interface MySheep extends MyPet, MyPetBaby {
     DyeColor getColor();
 
     void setColor(DyeColor color);

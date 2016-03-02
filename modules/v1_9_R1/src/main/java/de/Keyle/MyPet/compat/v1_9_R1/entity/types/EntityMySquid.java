@@ -21,14 +21,14 @@
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 0.7F, height = 0.475f)
 public class EntityMySquid extends EntityMyPet {
-    public EntityMySquid(World world, ActiveMyPet myPet) {
+    public EntityMySquid(World world, MyPet myPet) {
         super(world, myPet);
     }
 

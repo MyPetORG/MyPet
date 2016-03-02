@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_8_R3.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyChicken;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R3.EntityHuman;
@@ -34,7 +34,7 @@ import net.minecraft.server.v1_8_R3.World;
 public class EntityMyChicken extends EntityMyPet {
     private int nextEggTimer;
 
-    public EntityMyChicken(World world, ActiveMyPet myPet) {
+    public EntityMyChicken(World world, MyPet myPet) {
         super(world, myPet);
         nextEggTimer = (random.nextInt(6000) + 6000);
     }

@@ -24,7 +24,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
+import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -61,7 +64,7 @@ import java.util.UUID;
 
 import static org.bukkit.Bukkit.getServer;
 
-public abstract class MyPet implements ActiveMyPet, NBTStorage {
+public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
     protected final MyPetPlayer petOwner;
     protected MyPetBukkitEntity bukkitEntity;
     protected String petName = "Pet";

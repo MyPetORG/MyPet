@@ -22,8 +22,8 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyOcelot;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.ai.movement.Sit;
@@ -41,7 +41,7 @@ public class EntityMyOcelot extends EntityMyPet {
 
     private Sit sitPathfinder;
 
-    public EntityMyOcelot(World world, ActiveMyPet myPet) {
+    public EntityMyOcelot(World world, MyPet myPet) {
         super(world, myPet);
     }
 

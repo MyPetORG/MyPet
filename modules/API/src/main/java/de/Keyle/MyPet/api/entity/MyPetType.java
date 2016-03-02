@@ -59,16 +59,16 @@ public enum MyPetType {
     private String bukkitName;
     private String minecraftName;
     private int typeID;
-    private Class<? extends ActiveMyPet> mypetClass;
+    private Class<? extends MyPet> mypetClass;
 
-    MyPetType(String typeName, int typeID, Class<? extends ActiveMyPet> mypetClass) {
+    MyPetType(String typeName, int typeID, Class<? extends MyPet> mypetClass) {
         this.bukkitName = typeName;
         this.typeID = typeID;
         this.minecraftName = name();
         this.mypetClass = mypetClass;
     }
 
-    MyPetType(String bukkitName, int typeID, Class<? extends ActiveMyPet> mypetClass, String minecraftName) {
+    MyPetType(String bukkitName, int typeID, Class<? extends MyPet> mypetClass, String minecraftName) {
         this.bukkitName = bukkitName;
         this.minecraftName = minecraftName;
         this.typeID = typeID;
@@ -87,7 +87,7 @@ public enum MyPetType {
         return typeID;
     }
 
-    public Class<? extends ActiveMyPet> getMyPetClass() {
+    public Class<? extends MyPet> getMyPetClass() {
         return mypetClass;
     }
 

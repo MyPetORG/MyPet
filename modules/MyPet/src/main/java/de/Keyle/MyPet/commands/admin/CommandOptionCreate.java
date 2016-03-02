@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
@@ -281,7 +281,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
                             MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
 
-                            ActiveMyPet myPet = MyPetApi.getMyPetList().activateMyPet(inactiveMyPet);
+                            MyPet myPet = MyPetApi.getMyPetList().activateMyPet(inactiveMyPet);
                             if (myPet != null) {
                                 myPet.createEntity();
                                 sender.sendMessage(Translation.getString("Message.Command.Success", sender));

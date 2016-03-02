@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.repository;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.api.skill.SkillInstance;
@@ -39,69 +39,69 @@ public class MyPetList extends de.Keyle.MyPet.api.repository.MyPetList {
 
     // Inactive -----------------------------------------------------------------
 
-    public MyPet getInactiveMyPetFromMyPet(MyPet activeMyPet) {
-        InactiveMyPet inactiveMyPet = new InactiveMyPet(activeMyPet.getOwner());
-        inactiveMyPet.setUUID(activeMyPet.getUUID());
-        inactiveMyPet.setPetName(activeMyPet.getPetName());
-        inactiveMyPet.setExp(activeMyPet.getExp());
-        inactiveMyPet.setHealth(activeMyPet.getHealth());
-        inactiveMyPet.setHungerValue(activeMyPet.getHungerValue());
-        inactiveMyPet.setRespawnTime(activeMyPet.getRespawnTime());
-        inactiveMyPet.setSkills(activeMyPet.getSkillInfo());
-        inactiveMyPet.setInfo(activeMyPet.getInfo());
-        inactiveMyPet.setPetType(activeMyPet.getPetType());
-        inactiveMyPet.setSkilltree(activeMyPet.getSkilltree());
-        inactiveMyPet.setWorldGroup(activeMyPet.getWorldGroup());
-        inactiveMyPet.setLastUsed(activeMyPet.getLastUsed());
-        inactiveMyPet.wantsToRespawn = activeMyPet.wantsToRespawn();
+    public StoredMyPet getInactiveMyPetFromMyPet(StoredMyPet myPet) {
+        InactiveMyPet inactiveMyPet = new InactiveMyPet(myPet.getOwner());
+        inactiveMyPet.setUUID(myPet.getUUID());
+        inactiveMyPet.setPetName(myPet.getPetName());
+        inactiveMyPet.setExp(myPet.getExp());
+        inactiveMyPet.setHealth(myPet.getHealth());
+        inactiveMyPet.setHungerValue(myPet.getHungerValue());
+        inactiveMyPet.setRespawnTime(myPet.getRespawnTime());
+        inactiveMyPet.setSkills(myPet.getSkillInfo());
+        inactiveMyPet.setInfo(myPet.getInfo());
+        inactiveMyPet.setPetType(myPet.getPetType());
+        inactiveMyPet.setSkilltree(myPet.getSkilltree());
+        inactiveMyPet.setWorldGroup(myPet.getWorldGroup());
+        inactiveMyPet.setLastUsed(myPet.getLastUsed());
+        inactiveMyPet.wantsToRespawn = myPet.wantsToRespawn();
 
         return inactiveMyPet;
     }
 
     // All ----------------------------------------------------------------------
 
-    public ActiveMyPet activateMyPet(MyPet inactiveMyPet) {
-        if (!inactiveMyPet.getOwner().isOnline()) {
+    public MyPet activateMyPet(StoredMyPet storedMyPet) {
+        if (!storedMyPet.getOwner().isOnline()) {
             return null;
         }
 
-        if (inactiveMyPet.getOwner().hasMyPet()) {
-            if (!deactivateMyPet(inactiveMyPet.getOwner(), true)) {
+        if (storedMyPet.getOwner().hasMyPet()) {
+            if (!deactivateMyPet(storedMyPet.getOwner(), true)) {
                 return null;
             }
         }
 
-        MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
+        MyPetSelectEvent event = new MyPetSelectEvent(storedMyPet, NewStatus.Active);
         getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
-            ActiveMyPet activeMyPet = MyPetClass.getByMyPetType(inactiveMyPet.getPetType()).getNewMyPetInstance(inactiveMyPet.getOwner());
-            activeMyPet.setUUID(inactiveMyPet.getUUID());
-            activeMyPet.setPetName(inactiveMyPet.getPetName());
-            activeMyPet.setRespawnTime(inactiveMyPet.getRespawnTime());
-            activeMyPet.setWorldGroup(inactiveMyPet.getWorldGroup());
-            activeMyPet.setInfo(inactiveMyPet.getInfo());
-            activeMyPet.setLastUsed(inactiveMyPet.getLastUsed());
-            activeMyPet.setWantsToRespawn(inactiveMyPet.wantsToRespawn());
+            MyPet myPet = MyPetClass.getByMyPetType(storedMyPet.getPetType()).getNewMyPetInstance(storedMyPet.getOwner());
+            myPet.setUUID(storedMyPet.getUUID());
+            myPet.setPetName(storedMyPet.getPetName());
+            myPet.setRespawnTime(storedMyPet.getRespawnTime());
+            myPet.setWorldGroup(storedMyPet.getWorldGroup());
+            myPet.setInfo(storedMyPet.getInfo());
+            myPet.setLastUsed(storedMyPet.getLastUsed());
+            myPet.setWantsToRespawn(storedMyPet.wantsToRespawn());
 
-            activeMyPet.getExperience().setExp(inactiveMyPet.getExp());
-            activeMyPet.setSkilltree(inactiveMyPet.getSkilltree());
-            Collection<SkillInstance> skills = activeMyPet.getSkills().getSkills();
+            myPet.getExperience().setExp(storedMyPet.getExp());
+            myPet.setSkilltree(storedMyPet.getSkilltree());
+            Collection<SkillInstance> skills = myPet.getSkills().getSkills();
             if (skills.size() > 0) {
                 for (SkillInstance skill : skills) {
                     if (skill instanceof NBTStorage) {
                         NBTStorage storageSkill = (NBTStorage) skill;
-                        if (inactiveMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {
-                            storageSkill.load(inactiveMyPet.getSkillInfo().getAs(skill.getName(), TagCompound.class));
+                        if (storedMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {
+                            storageSkill.load(storedMyPet.getSkillInfo().getAs(skill.getName(), TagCompound.class));
                         }
                     }
                 }
             }
-            activeMyPet.setHealth(inactiveMyPet.getHealth());
-            activeMyPet.setHungerValue(inactiveMyPet.getHungerValue());
+            myPet.setHealth(storedMyPet.getHealth());
+            myPet.setHungerValue(storedMyPet.getHungerValue());
 
-            mActivePetsPlayer.put(activeMyPet, activeMyPet.getOwner());
-            return activeMyPet;
+            mActivePetsPlayer.put(myPet, myPet.getOwner());
+            return myPet;
         }
         return null;
     }

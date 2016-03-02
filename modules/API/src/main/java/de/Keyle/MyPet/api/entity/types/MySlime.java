@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetSlimeSize;
 
 import static org.bukkit.Material.SUGAR;
 
 @DefaultInfo(food = {SUGAR})
-public interface MySlime extends ActiveMyPet, MyPetSlimeSize {
+public interface MySlime extends MyPet, MyPetSlimeSize {
 }

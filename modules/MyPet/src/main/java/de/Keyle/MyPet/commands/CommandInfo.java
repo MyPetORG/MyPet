@@ -23,9 +23,9 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -90,7 +90,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
 
             if (petOwner.hasMyPet()) {
                 boolean infoShown = false;
-                ActiveMyPet myPet = petOwner.getMyPet();
+                MyPet myPet = petOwner.getMyPet();
 
                 if (canSee(PetInfoDisplay.Name.adminOnly, player, myPet)) {
                     player.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
@@ -221,7 +221,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
         return CommandAdmin.EMPTY_LIST;
     }
 
-    public static boolean canSee(boolean adminOnly, Player player, MyPet myPet) {
-        return !adminOnly || myPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin", false);
+    public static boolean canSee(boolean adminOnly, Player player, StoredMyPet storedMyPet) {
+        return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin", false);
     }
 }

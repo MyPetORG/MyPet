@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @DefaultInfo(food = {ROTTEN_FLESH})
-public interface MySpider extends ActiveMyPet {
+public interface MySpider extends MyPet {
 }

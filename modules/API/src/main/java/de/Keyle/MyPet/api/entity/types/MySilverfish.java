@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 import static org.bukkit.Material.SUGAR;
 
 @DefaultInfo(food = {SUGAR})
-public interface MySilverfish extends ActiveMyPet {
+public interface MySilverfish extends MyPet {
 }

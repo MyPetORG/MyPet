@@ -20,14 +20,14 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 import static org.bukkit.Material.BONE;
 
 @DefaultInfo(food = {BONE})
-public interface MySkeleton extends ActiveMyPet, MyPetEquipment {
+public interface MySkeleton extends MyPet, MyPetEquipment {
     boolean isWither();
 
     public void setWither(boolean flag);

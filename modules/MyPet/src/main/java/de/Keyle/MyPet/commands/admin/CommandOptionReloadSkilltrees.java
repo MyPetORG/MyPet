@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
@@ -49,7 +49,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
         for (int i = 1; i <= MyPetType.values().length; i++) {
             petTypes[i] = MyPetType.values()[i - 1].name();
         }
-        for (ActiveMyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
             myPet.getSkills().reset();
         }
 
@@ -70,7 +70,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
             }
         }
 
-        for (ActiveMyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
             myPet.getSkills().reset();
 
             SkillTree skillTree = myPet.getSkilltree();

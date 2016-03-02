@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.compat.v1_8_R2.entity.ai.target;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
@@ -39,7 +39,7 @@ import org.bukkit.entity.Player;
 public class OwnerHurtByTarget extends AIGoal {
     private EntityMyPet petEntity;
     private EntityLiving lastDamager;
-    private ActiveMyPet myPet;
+    private MyPet myPet;
     private Behavior behaviorSkill = null;
     private EntityPlayer owner;
 
@@ -82,7 +82,7 @@ public class OwnerHurtByTarget extends AIGoal {
                 return false;
             }
         } else if (lastDamager instanceof EntityMyPet) {
-            ActiveMyPet targetMyPet = ((EntityMyPet) lastDamager).getMyPet();
+            MyPet targetMyPet = ((EntityMyPet) lastDamager).getMyPet();
             if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                 return false;
             }

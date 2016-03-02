@@ -22,8 +22,8 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
@@ -37,7 +37,7 @@ public class EntityMyEnderman extends EntityMyPet {
     private static final DataWatcherObject<Optional<IBlockData>> blockWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.g);
     private static final DataWatcherObject<Boolean> screamingWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.h);
 
-    public EntityMyEnderman(World world, ActiveMyPet myPet) {
+    public EntityMyEnderman(World world, MyPet myPet) {
         super(world, myPet);
     }
 

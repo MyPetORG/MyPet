@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -34,15 +34,15 @@ public class MyPetSelectEvent extends Event implements Cancellable {
         Active, Inactive
     }
 
-    private final MyPet myPet;
+    private final StoredMyPet myPet;
     private final NewStatus newStatus;
 
-    public MyPetSelectEvent(MyPet myPet, NewStatus newStatus) {
-        this.myPet = myPet;
+    public MyPetSelectEvent(StoredMyPet mypet, NewStatus newStatus) {
+        this.myPet = mypet;
         this.newStatus = newStatus;
     }
 
-    public MyPet getMyPet() {
+    public StoredMyPet getMyPet() {
         return myPet;
     }
 

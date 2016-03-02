@@ -23,10 +23,10 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
-import de.Keyle.MyPet.api.entity.ActiveMyPet.PetState;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.types.MyPigZombie;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.*;
@@ -37,7 +37,7 @@ import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 public class EntityMyPigZombie extends EntityMyPet {
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.h);
 
-    public EntityMyPigZombie(World world, ActiveMyPet myPet) {
+    public EntityMyPigZombie(World world, MyPet myPet) {
         super(world, myPet);
     }
 

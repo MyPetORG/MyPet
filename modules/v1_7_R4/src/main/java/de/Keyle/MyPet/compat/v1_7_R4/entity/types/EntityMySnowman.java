@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Location;
@@ -36,7 +36,7 @@ import java.util.Map;
 public class EntityMySnowman extends EntityMyPet {
     Map<Location, Integer> snowMap = new HashMap<>();
 
-    public EntityMySnowman(World world, ActiveMyPet myPet) {
+    public EntityMySnowman(World world, MyPet myPet) {
         super(world, myPet);
     }
 

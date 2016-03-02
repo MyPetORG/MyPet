@@ -20,14 +20,14 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.Material.SOUL_SAND;
 
 @DefaultInfo(food = {SOUL_SAND})
-public interface MyEnderman extends ActiveMyPet {
+public interface MyEnderman extends MyPet {
 
     boolean isScreaming();
 

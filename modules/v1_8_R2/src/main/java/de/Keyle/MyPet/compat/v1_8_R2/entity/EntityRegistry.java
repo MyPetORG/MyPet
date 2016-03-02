@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.compat.v1_8_R2.entity;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
@@ -81,14 +81,14 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     }
 
     @Override
-    public MyPetMinecraftEntity createMinecraftEntity(ActiveMyPet pet, org.bukkit.World bukkitWorld) {
+    public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
         EntityMyPet petEntity = null;
 
         Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
         World world = ((CraftWorld) bukkitWorld).getHandle();
 
         try {
-            Constructor<?> ctor = entityClass.getConstructor(World.class, ActiveMyPet.class);
+            Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
             Object obj = ctor.newInstance(world, pet);
             if (obj instanceof EntityMyPet) {
                 petEntity = (EntityMyPet) obj;

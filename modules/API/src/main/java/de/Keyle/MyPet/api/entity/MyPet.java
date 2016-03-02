@@ -20,66 +20,49 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.keyle.knbt.TagCompound;
+import de.Keyle.MyPet.api.skill.MyPetExperience;
+import de.Keyle.MyPet.api.skill.Skills;
+import de.Keyle.MyPet.api.util.Scheduler;
+import org.bukkit.Location;
 
-import java.util.UUID;
+public interface MyPet extends StoredMyPet, Scheduler {
+    MyPetExperience getExperience();
 
-public interface MyPet {
-    double getExp();
+    enum PetState {
+        Dead, Despawned, PetState, Here
+    }
 
-    void setExp(double exp);
+    enum SpawnFlags {
+        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, NotAllowed
+    }
 
-    double getHealth();
+    void removePet();
 
-    void setHealth(double health);
+    void removePet(boolean wantsToRespawn);
 
-    double getHungerValue();
+    PetState getStatus();
 
-    void setHungerValue(double value);
+    void setStatus(PetState status);
 
-    TagCompound getInfo();
+    Location getLocation();
 
-    void setInfo(TagCompound info);
+    double getMaxHealth();
 
-    void setOwner(MyPetPlayer owner);
+    Skills getSkills();
 
-    MyPetPlayer getOwner();
+    boolean autoAssignSkilltree();
 
-    String getPetName();
+    SpawnFlags createEntity();
 
-    void setPetName(String petName);
+    MyPetBukkitEntity getEntity();
 
-    MyPetType getPetType();
+    double getDamage();
 
-    void setPetType(MyPetType petType);
+    double getRangedDamage();
 
-    boolean wantsToRespawn();
+    boolean isPassiv();
 
-    void setWantsToRespawn(boolean wantsToRespawn);
+    boolean hasTarget();
 
-    int getRespawnTime();
-
-    void setRespawnTime(int respawnTime);
-
-    SkillTree getSkilltree();
-
-    boolean setSkilltree(SkillTree skillTree);
-
-    TagCompound getSkillInfo();
-
-    void setSkills(TagCompound skills);
-
-    UUID getUUID();
-
-    void setUUID(UUID uuid);
-
-    String getWorldGroup();
-
-    void setWorldGroup(String worldGroup);
-
-    long getLastUsed();
-
-    void setLastUsed(long lastUsed);
+    void decreaseHunger(double value);
 }

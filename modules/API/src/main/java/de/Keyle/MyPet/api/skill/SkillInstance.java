@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.api.skill;
 
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
+import de.Keyle.MyPet.api.entity.MyPet;
 
 public interface SkillInstance extends SkillInfo {
-    void setMyPet(ActiveMyPet myPet);
+    void setMyPet(MyPet myPet);
 
-    ActiveMyPet getMyPet();
+    MyPet getMyPet();
 
     boolean isActive();
 

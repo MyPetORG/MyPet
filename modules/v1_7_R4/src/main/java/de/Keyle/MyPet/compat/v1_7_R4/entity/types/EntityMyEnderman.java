@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.ActiveMyPet;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
@@ -33,7 +33,7 @@ import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
 
-    public EntityMyEnderman(World world, ActiveMyPet myPet) {
+    public EntityMyEnderman(World world, MyPet myPet) {
         super(world, myPet);
     }
 
