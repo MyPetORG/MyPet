@@ -28,6 +28,8 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagString;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -100,6 +102,9 @@ public class MyPetSelectionGui {
                 lore.add(RESET + Translation.getString("Name.Exp", player) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
                 lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + mypet.getPetType().name());
                 lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
+
+                TagCompound entityTag = new TagCompound();
+                entityTag.put("id", new TagString(mypet.getPetType().getMinecraftName()));
                 int pos = menu.addOption(
                         new IconMenuItem()
                                 .setMaterial(Material.MONSTER_EGG)
@@ -107,6 +112,7 @@ public class MyPetSelectionGui {
                                 .setTitle(RESET + mypet.getPetName())
                                 .addLore(lore)
                                 .setGlowing(egg.isGlowing())
+                                .addTag("EntityTag", entityTag)
                 );
                 petSlotList.put(pos, mypet);
             }
