@@ -718,7 +718,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             if (se != null) {
                 this.a(se, volume, pitch);
             } else {
-                MyPetApi.getLogger().warning("Sound \"" + getLivingSound() + "\" not found. Please report this to the developer.");
+                MyPetApi.getLogger().warning("Sound \"" + sound + "\" not found. Please report this to the developer.");
             }
         }
     }
