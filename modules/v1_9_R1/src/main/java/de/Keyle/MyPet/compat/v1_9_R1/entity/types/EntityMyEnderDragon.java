@@ -26,7 +26,7 @@ import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.ai.attack.MeleeAttack;
 import net.minecraft.server.v1_9_R1.World;
 
-@EntitySize(width = 8.F, height = 8.F)
+@EntitySize(width = 4.F, height = 4.F)
 public class EntityMyEnderDragon extends EntityMyPet {
     public EntityMyEnderDragon(World world, MyPet myPet) {
         super(world, myPet);
