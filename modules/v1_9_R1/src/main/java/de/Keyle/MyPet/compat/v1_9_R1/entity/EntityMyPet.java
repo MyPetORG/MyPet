@@ -82,7 +82,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     static {
         try {
-            jump = EntityLiving.class.getDeclaredField("aY");
+            jump = EntityLiving.class.getDeclaredField("bc");
             jump.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
@@ -393,6 +393,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * false: no reaction on rightclick
      */
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (enumhand == EnumHand.OFF_HAND) {
+            return true;
+        }
+
         Player owner = this.getOwner().getPlayer();
 
         //applyLeash();
@@ -753,6 +757,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
+    public boolean a(EntityHuman entityhuman) {
+        return false;
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -947,6 +955,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
     */
 
+    public Entity bt() {
+        return this.bu().isEmpty() ? null : this.bu().get(0);
+    }
+
     @Override
     public boolean d(NBTTagCompound nbttagcompound) {
         return false;
@@ -962,7 +974,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public void g(float motionSideways, float motionForward) {
-        if (!hasRider || !isVehicle()) {
+        if (!hasRider || !this.isVehicle()) {
             super.g(motionSideways, motionForward);
             return;
         }
