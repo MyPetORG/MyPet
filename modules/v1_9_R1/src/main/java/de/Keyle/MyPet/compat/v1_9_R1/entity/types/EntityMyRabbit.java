@@ -55,7 +55,7 @@ public class EntityMyRabbit extends EntityMyPet {
 
     @Override
     public void playPetStepSound() {
-        makeSound("entity.rabbit.hop", 1.0F, 1.0F);
+        makeSound("entity.rabbit.jump", 1.0F, 1.0F);
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
