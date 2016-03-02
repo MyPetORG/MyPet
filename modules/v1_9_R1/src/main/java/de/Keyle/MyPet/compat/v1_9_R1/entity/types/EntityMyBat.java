@@ -23,11 +23,14 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.DataWatcher;
+import net.minecraft.server.v1_9_R1.DataWatcherObject;
+import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_9_R1.World;
 
 @EntitySize(width = 0.5F, height = 0.45f)
 public class EntityMyBat extends EntityMyPet {
-    private static final DataWatcherObject<Byte> hangingWatcher = DataWatcher.a(EntityBat.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Byte> hangingWatcher = DataWatcher.a(EntityMyBat.class, DataWatcherRegistry.a);
 
     public EntityMyBat(World world, MyPet myPet) {
         super(world, myPet);
@@ -60,7 +63,7 @@ public class EntityMyBat extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(hangingWatcher, (byte) 0); // hanging
+        this.datawatcher.register(hangingWatcher, (byte) 0xFFFFFFFE); // hanging
     }
 
     public void onLivingUpdate() {
