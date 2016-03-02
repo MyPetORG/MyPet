@@ -51,6 +51,9 @@ public class LogFormat extends Formatter {
             thrown.printStackTrace(new PrintWriter(stringWriter));
             text += stringWriter;
         }
+
+        text = text.replaceAll("(\\u001b\\[\\d{1,3}(?:;\\d+)*m|(?:\\u001b\\[m)*)", "");
+
         return text;
     }
 }
