@@ -40,6 +40,7 @@ public class IconMenuItem {
     protected boolean glowing = false;
     protected ItemMeta bukkitMeta;
     protected IconMeta meta = null;
+    protected TagCompound tag;
 
     protected boolean hasChanged = true;
 
@@ -173,6 +174,18 @@ public class IconMenuItem {
 
     public ItemMeta getBukkitMeta() {
         return bukkitMeta;
+    }
+
+    public IconMenuItem addTag(String key, TagBase tag) {
+        if (this.tag == null) {
+            this.tag = new TagCompound();
+        }
+        this.tag.put(key, tag);
+        return this;
+    }
+
+    public TagCompound getTags() {
+        return tag;
     }
 
     public static IconMenuItem fromItemStack(ItemStack itemStack) {

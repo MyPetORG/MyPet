@@ -185,6 +185,13 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
             }
         }
 
+        if (icon.getTags() != null) {
+            NBTTagCompound vanillaTag = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(icon.getTags());
+            for (String key : vanillaTag.c()) {
+                is.getTag().set(key, vanillaTag.get(key));
+            }
+        }
+
         return is;
     }
 }
