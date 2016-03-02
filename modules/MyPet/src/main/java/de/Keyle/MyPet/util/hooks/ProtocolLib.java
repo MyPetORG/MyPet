@@ -29,6 +29,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 
 public class ProtocolLib {
@@ -38,7 +39,11 @@ public class ProtocolLib {
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
             try {
                 // reverse dragon facing direction
-                registerEnderDragonFix();
+                if (Bukkit.getVersion().contains("1.9")) {
+                    registerEnderDragonFix_1_9();
+                } else {
+                    registerEnderDragonFix();
+                }
 
                 MyPetApi.getLogger().info("ProtocolLib hook activated.");
 
@@ -51,6 +56,42 @@ public class ProtocolLib {
 
     public static boolean isActive() {
         return active;
+    }
+
+    private static void registerEnderDragonFix_1_9() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(
+                new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
+                    @Override
+                    public void onPacketSending(PacketEvent event) {
+                        PacketContainer packet = event.getPacket();
+
+                        final Entity entity = packet.getEntityModifier(event).readSafely(0);
+
+                        // Now - are we dealing with an invisible slime?
+                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
+
+                            if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {
+                                //MyPetLogger.write("ENTITY_LOOK: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(0);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(0, angle);
+                            } else if (packet.getType() == PacketType.Play.Server.ENTITY_MOVE_LOOK) {
+                                //MyPetLogger.write("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(0);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(0, angle);
+                            } else if (packet.getType() == PacketType.Play.Server.ENTITY_TELEPORT) {
+                                //MyPetLogger.write("ENTITY_TELEPORT: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(1);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(1, angle);
+                            }
+                        }
+                    }
+                });
     }
 
     private static void registerEnderDragonFix() {
