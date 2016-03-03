@@ -58,11 +58,12 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
 
         Set<String> skilltreeNames = new LinkedHashSet<>();
         for (MyPetType mobType : MyPetType.values()) {
-            SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.name());
+            SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(mobType);
             SkillTreeLoader.addDefault(skillTreeMobType);
             SkillTreeLoader.manageInheritance(skillTreeMobType);
             skilltreeNames.addAll(skillTreeMobType.getSkillTreeNames());
         }
+        // register skilltree permissions
         for (String skilltreeName : skilltreeNames) {
             try {
                 Bukkit.getPluginManager().addPermission(new Permission("MyPet.custom.skilltree." + skilltreeName));
@@ -98,7 +99,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
                 }
             }
         }
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!");
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Skilltrees reloaded!");
 
         return true;
     }

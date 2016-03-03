@@ -194,6 +194,8 @@ public class SkillTreeMobType {
 
     public static void clearMobTypes() {
         mobTypes.clear();
+        DEFAULT.skillTreeList.clear();
+        DEFAULT.skillTrees.clear();
     }
 
     public static boolean containsSkillTree(MyPetType type, String name) {

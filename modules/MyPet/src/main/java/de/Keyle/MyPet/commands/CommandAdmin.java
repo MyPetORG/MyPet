@@ -81,6 +81,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
         if (option != null) {
             return option.onCommandOption(sender, parameter);
         }
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] \"" + ChatColor.ITALIC + args[0].toLowerCase() + ChatColor.RESET + "\" is not a valid option!");
         return false;
     }
 
