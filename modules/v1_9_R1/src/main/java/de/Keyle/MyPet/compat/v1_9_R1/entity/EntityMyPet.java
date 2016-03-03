@@ -372,8 +372,25 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+    public boolean handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, final ItemStack itemStack) {
         if (enumhand == EnumHand.OFF_HAND) {
+            if (itemStack != null) {
+                if (itemStack.getItem() == Items.LEAD) {
+                    ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
+                    entityhuman.a(EnumHand.OFF_HAND, null);
+                    new BukkitRunnable() {
+                        public void run() {
+                            if (entityhuman instanceof EntityPlayer) {
+                                entityhuman.a(EnumHand.OFF_HAND, itemStack);
+                                Player p = (Player) entityhuman.getBukkitEntity();
+                                if (!p.isOnline()) {
+                                    p.saveData();
+                                }
+                            }
+                        }
+                    }.runTaskLater(MyPetApi.getPlugin(), 5);
+                }
+            }
             return true;
         }
 
@@ -384,6 +401,21 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
+                    if (itemStack.getItem() == Items.LEAD) {
+                        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
+                        entityhuman.a(EnumHand.MAIN_HAND, null);
+                        new BukkitRunnable() {
+                            public void run() {
+                                if (entityhuman instanceof EntityPlayer) {
+                                    entityhuman.a(EnumHand.MAIN_HAND, itemStack);
+                                    Player p = (Player) entityhuman.getBukkitEntity();
+                                    if (!p.isOnline()) {
+                                        p.saveData();
+                                    }
+                                }
+                            }
+                        }.runTaskLater(MyPetApi.getPlugin(), 5);
+                    }
                     if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride")) {
                         ((CraftPlayer) owner).getHandle().startRiding(this);
                         return true;
@@ -417,8 +449,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         }.runTaskLater(MyPetApi.getPlugin(), 1L);
                         return true;
                     }
-                }
-                if (canEat(itemStack) && canUseItem()) {
+                } else if (canEat(itemStack) && canUseItem()) {
                     if (owner != null && !Permissions.hasExtended(owner, "MyPet.user.extended.CanFeed")) {
                         return false;
                     }
@@ -455,6 +486,21 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     if (addHunger < Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED) {
                         return true;
                     }
+                }
+                if (itemStack.getItem() == Items.LEAD) {
+                    ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
+                    entityhuman.a(EnumHand.MAIN_HAND, null);
+                    new BukkitRunnable() {
+                        public void run() {
+                            if (entityhuman instanceof EntityPlayer) {
+                                entityhuman.a(EnumHand.MAIN_HAND, itemStack);
+                                Player p = (Player) entityhuman.getBukkitEntity();
+                                if (!p.isOnline()) {
+                                    p.saveData();
+                                }
+                            }
+                        }
+                    }.runTaskLater(MyPetApi.getPlugin(), 5);
                 }
             }
         } else {
