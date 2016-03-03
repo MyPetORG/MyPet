@@ -44,7 +44,7 @@ public class EntityMyPig extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-        return "entity.pig.ambient";
+        return "entity.pig.hurt";
     }
 
     protected String getLivingSound() {
