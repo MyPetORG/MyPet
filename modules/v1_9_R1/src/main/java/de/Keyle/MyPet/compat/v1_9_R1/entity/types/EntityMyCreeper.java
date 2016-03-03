@@ -56,7 +56,7 @@ public class EntityMyCreeper extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fuseWatcher, (byte) -1); // fuse
+        this.datawatcher.register(fuseWatcher, -1);        // fuse
         this.datawatcher.register(poweredWatcher, false);  // powered
         this.datawatcher.register(watcher, false);         // N/A
     }
