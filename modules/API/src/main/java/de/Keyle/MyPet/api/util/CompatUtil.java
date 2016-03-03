@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.util;
 
+import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Constructor;
@@ -30,13 +31,23 @@ import java.util.regex.Pattern;
 
 public class CompatUtil {
     private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_R\\d+)(?:.+)?");
+    private static final Pattern MINECRAFT_VERSION_MATCHER = Pattern.compile("\\(MC: (\\d\\.\\d)(?:\\.\\d+)?\\)");
 
     private String internalVersion = null;
+    private int minecraftVersion = 0;
 
     public CompatUtil() {
         Matcher regexMatcher = PACKAGE_VERSION_MATCHER.matcher(Bukkit.getServer().getClass().getCanonicalName());
         if (regexMatcher.find()) {
             internalVersion = regexMatcher.group(1);
+        }
+        //TODO find better way to represent the version because 2.0 < 1.10 = 20 < 110
+        regexMatcher = MINECRAFT_VERSION_MATCHER.matcher(Bukkit.getVersion());
+        if (regexMatcher.find()) {
+            String version = regexMatcher.group(1).replace(".", "");
+            if (Util.isInt(version)) {
+                minecraftVersion = Integer.parseInt(version);
+            }
         }
     }
 
@@ -79,5 +90,9 @@ public class CompatUtil {
 
     public String getInternalVersion() {
         return internalVersion;
+    }
+
+    public int getMinecraftVersion() {
+        return minecraftVersion;
     }
 }

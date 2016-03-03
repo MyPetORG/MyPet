@@ -74,6 +74,8 @@ public class Beacon implements SkillPropertiesPanel {
     private JSpinner selectionCountSpinner;
     private JRadioButton setSelectionCount;
     private JRadioButton addSelectionCount;
+    protected JCheckBox luckChangeCheckBox;
+    protected JCheckBox luckEnableCheckBox;
 
     public Beacon() {
         rangeInput.addKeyListener(new KeyListener() {
@@ -206,6 +208,12 @@ public class Beacon implements SkillPropertiesPanel {
                 nightVisionEnableCheckBox.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
             }
         });
+        luckChangeCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                luckEnableCheckBox.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+            }
+        });
         healthBoostChangeCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -282,6 +290,8 @@ public class Beacon implements SkillPropertiesPanel {
         invisibilityChangeCheckBox.setSelected(false);
         nightVisionEnableCheckBox.setSelected(false);
         nightVisionChangeCheckBox.setSelected(false);
+        luckEnableCheckBox.setSelected(false);
+        luckChangeCheckBox.setSelected(false);
         healthBoostEnableCheckBox.setSelected(false);
         healthBoostChangeCheckBox.setSelected(false);
         healthBoostSpinner.setValue(1);
@@ -374,6 +384,11 @@ public class Beacon implements SkillPropertiesPanel {
             tagCompound.getCompoundData().put("buff_night_vision_enable", new TagByte(nightVisionEnableCheckBox.isSelected()));
         } else {
             tagCompound.getCompoundData().remove("buff_night_vision_enable");
+        }
+        if (luckChangeCheckBox.isSelected()) {
+            tagCompound.getCompoundData().put("buff_luck_enable", new TagByte(luckEnableCheckBox.isSelected()));
+        } else {
+            tagCompound.getCompoundData().remove("buff_luck_enable");
         }
         if (healthBoostChangeCheckBox.isSelected()) {
             tagCompound.getCompoundData().put("buff_health_boost_enable", new TagByte(healthBoostEnableCheckBox.isSelected()));
@@ -483,6 +498,12 @@ public class Beacon implements SkillPropertiesPanel {
             nightVisionChangeCheckBox.setSelected(true);
             if (tagCompound.getAs("buff_night_vision_enable", TagByte.class).getBooleanData()) {
                 nightVisionEnableCheckBox.setSelected(true);
+            }
+        }
+        if (tagCompound.getCompoundData().containsKey("buff_luck_enable")) {
+            luckChangeCheckBox.setSelected(true);
+            if (tagCompound.getAs("buff_luck_enable", TagByte.class).getBooleanData()) {
+                luckEnableCheckBox.setSelected(true);
             }
         }
         if (tagCompound.getCompoundData().containsKey("buff_health_boost_enable")) {

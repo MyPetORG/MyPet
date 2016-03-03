@@ -76,6 +76,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         buffNames.put(16, "NightVision");
         //buffNames.put(21, "HealthBoost");
         buffNames.put(22, "Absorption");
+        buffNames.put(26, "Luck");
 
         buffItemPositions.put(1, 0);
         buffItemPositions.put(3, 9);
@@ -87,6 +88,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         buffItemPositions.put(13, 16);
         buffItemPositions.put(14, 25);
         buffItemPositions.put(16, 8);
+        buffItemPositions.put(26, 17);
         //buffItemPositions.put(21, 17);
         buffItemPositions.put(22, 26);
     }
@@ -323,6 +325,11 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         if (buffLevel.get(16) > 0) {
             menu.setOption(8, new IconMenuItem().setMaterial(TORCH).setAmount(buffLevel.get(16)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(16), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(16))));
         }
+        if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+            if (buffLevel.get(26) > 0) {
+                menu.setOption(17, new IconMenuItem().setMaterial(DIAMOND).setAmount(buffLevel.get(26)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(26), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(26))));
+            }
+        }
         /*
         if (buffLevel.get(21) > 0) {
             menu.setOption(17, new IconMenuItem().setMaterial(GOLDEN_APPLE).setAmount(buffLevel.get(21)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(21), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(21))));
@@ -424,6 +431,9 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             if (TagCompound.getCompoundData().containsKey("buff_night_vision_enable")) {
                 buffLevel.put(16, (int) TagCompound.getAs("buff_night_vision_enable", TagByte.class).getByteData());
             }
+            if (TagCompound.getCompoundData().containsKey("buff_luck_enable")) {
+                buffLevel.put(26, (int) TagCompound.getAs("buff_luck_enable", TagByte.class).getByteData());
+            }
             /*
             if (TagCompound.getCompoundData().containsKey("buff_health_boost_enable")) {
                 if (TagCompound.getAs("buff_health_boost_enable", TagByte.class).getBooleanData()) {
@@ -508,6 +518,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         buffLevel.put(16, 0);
         //buffLevel.put(21, 0);
         buffLevel.put(22, 0);
+        buffLevel.put(26, 0);
     }
 
     public void schedule() {
@@ -544,6 +555,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && reciever == BeaconReciever.Party) {
                 members = MyPetApi.getHookManager().getPartyMembers(getMyPet().getOwner().getPlayer());
             }
+            int duration = this.duration * 20;
 
             List<PotionEffect> potionEffects = new ArrayList<>();
             for (int buff : selectedBuffs) {

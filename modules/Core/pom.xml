@@ -36,11 +36,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <minecraft.version>1.8.8</minecraft.version>
-        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-        <bukkit.packet>v1_8_R3</bukkit.packet>
-
         <remove.donator>none</remove.donator>
     </properties>
 
