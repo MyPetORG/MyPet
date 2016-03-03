@@ -53,7 +53,9 @@ public class Hooks extends HookManager {
     public static void disable() {
         PvPChecker.reset();
         EconomyHook.reset();
-        ProtocolLib.disable();
+        if (PluginHookManager.isPluginUsable("ProtocolLib")) {
+            ProtocolLib.disable();
+        }
     }
 
     @Override
