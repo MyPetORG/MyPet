@@ -107,7 +107,7 @@ public class Configuration {
         public static boolean SWITCH_PENALTY_ADMIN = false;
         public static boolean AUTOMATIC_SKILLTREE_ASSIGNMENT = false;
         public static boolean RANDOM_SKILLTREE_ASSIGNMENT = false;
-        public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = true;
+        public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = false;
         public static boolean PREVENT_LEVELLING_WITHOUT_SKILLTREE = true;
         public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
 
