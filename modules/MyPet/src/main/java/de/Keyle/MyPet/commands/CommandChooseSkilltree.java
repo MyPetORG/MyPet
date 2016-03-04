@@ -103,7 +103,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     }
 
                     if (availableSkilltrees.size() == 0) {
-                        sender.sendMessage(Translation.getString("Message.Command.ChooseSkilltree.NoneAvailable", player));
+                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.ChooseSkilltree.NoneAvailable", player), myPet.getPetName()));
                         return true;
                     }
 
