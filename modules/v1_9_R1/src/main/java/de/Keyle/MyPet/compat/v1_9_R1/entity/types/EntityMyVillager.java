@@ -37,15 +37,15 @@ public class EntityMyVillager extends EntityMyPet {
     }
 
     protected String getDeathSound() {
-        return "entity.villager.defaultdeath";
+        return "entity.villager.death";
     }
 
     protected String getHurtSound() {
-        return "entity.villager.defaulthurt";
+        return "entity.villager.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.villager.default";
+        return "entity.villager.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

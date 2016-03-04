@@ -40,7 +40,7 @@ public class EntityMyChicken extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.chicken.hurt";
+        return "entity.chicken.death";
     }
 
     @Override
@@ -89,7 +89,7 @@ public class EntityMyChicken extends EntityMyPet {
         }
 
         if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
-            this.makeSound("entity.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+            this.makeSound("entity.chicken.egg", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
             a(Items.EGG, 1);
             nextEggTimer = random.nextInt(6000) + 6000;
         }

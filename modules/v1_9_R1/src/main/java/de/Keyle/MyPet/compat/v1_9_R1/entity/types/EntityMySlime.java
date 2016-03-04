@@ -43,13 +43,13 @@ public class EntityMySlime extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.slime." + (getMyPet().getSize() > 1 ? "big" : "small");
+        return "entity.slime.death";
 
     }
 
     @Override
     protected String getHurtSound() {
-        return getDeathSound();
+        return "entity.slime.hurt";
     }
 
     protected String getLivingSound() {

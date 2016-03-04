@@ -43,7 +43,7 @@ public class EntityMyCaveSpider extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-        return "entity.spider.ambient";
+        return "entity.spider.hurt";
     }
 
     protected String getLivingSound() {

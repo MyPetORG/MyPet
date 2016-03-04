@@ -39,7 +39,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.cow.hurt";
+        return "entity.cow.death";
     }
 
     @Override

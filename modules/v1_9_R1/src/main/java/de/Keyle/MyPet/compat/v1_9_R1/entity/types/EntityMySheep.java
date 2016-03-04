@@ -40,12 +40,12 @@ public class EntityMySheep extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.sheep.ambient";
+        return "entity.sheep.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.sheep.ambient";
+        return "entity.sheep.hurt";
     }
 
     protected String getLivingSound() {
