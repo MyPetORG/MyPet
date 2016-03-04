@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.util.ConfigurationLoader;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -31,6 +32,11 @@ public class CommandOptionReload implements CommandOption {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         MyPetApi.getPlugin().reloadConfig();
         ConfigurationLoader.loadConfiguration();
+
+        if (MyPetApi.getLogger() instanceof MyPetLogger) {
+            ((MyPetLogger) MyPetApi.getLogger()).updateDebugLoggerLogLevel();
+        }
+
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!");
 
         return true;
