@@ -58,9 +58,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.ReleasePetsOnDeath", Misc.RELEASE_PETS_ON_DEATH);
         config.addDefault("MyPet.RetainEquipmentOnTame", Misc.RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
-        config.addDefault("MyPet.Log.INFO", Log.INFO);
-        config.addDefault("MyPet.Log.ERROR", Log.ERROR);
-        config.addDefault("MyPet.Log.WARNING", Log.WARNING);
+        config.addDefault("MyPet.Log.Level", Log.LEVEL);
         config.addDefault("MyPet.Update-Check", true);
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
@@ -274,9 +272,7 @@ public class ConfigurationLoader {
         LevelSystem.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         LevelSystem.FIREWORK = config.getBoolean("MyPet.LevelSystem.Firework", true);
 
-        Log.INFO = config.getBoolean("MyPet.Log.INFO", Log.INFO);
-        Log.ERROR = config.getBoolean("MyPet.Log.ERROR", Log.ERROR);
-        Log.WARNING = config.getBoolean("MyPet.Log.WARNING", Log.WARNING);
+        Log.LEVEL = config.getString("MyPet.Log.Level", Log.LEVEL);
 
         NameFilter.NAME_FILTER = new ArrayList<>();
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {

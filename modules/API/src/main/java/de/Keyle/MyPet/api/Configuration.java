@@ -37,9 +37,7 @@ public class Configuration {
     }
 
     public static class Log {
-        public static boolean INFO = true;
-        public static boolean ERROR = true;
-        public static boolean WARNING = true;
+        public static String LEVEL = "INFO";
     }
 
     public static class Repository {

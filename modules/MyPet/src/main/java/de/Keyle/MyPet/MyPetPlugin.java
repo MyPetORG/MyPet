@@ -90,6 +90,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Hooks.disable();
 
         Bukkit.getServer().getScheduler().cancelTasks(this);
+
+        if (getLogger() instanceof MyPetLogger) {
+            ((MyPetLogger) getLogger()).disableDebugLogger();
+        }
     }
 
     public void onEnable() {
@@ -114,11 +118,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
 
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
-            getLogger().info(ChatColor.RED + "This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + "\". Is MyPet up to date?");
+            getLogger().warning(ChatColor.RED + "This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + "\". Is MyPet up to date?");
             setEnabled(false);
             return;
         }
-        getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
+
 
         petInfo = compatUtil.getComapatInstance(MyPetInfo.class, "entity", "MyPetInfo");
         bukkitHelper = compatUtil.getComapatInstance(BukkitHelper.class, "", "BukkitHelper");
@@ -133,6 +137,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         ConfigurationLoader.setDefault();
         ConfigurationLoader.loadConfiguration();
+
+        if (getLogger() instanceof MyPetLogger) {
+            ((MyPetLogger) getLogger()).updateDebugLoggerLogLevel();
+        }
+
+        getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
 
         // register event listener
         PlayerListener playerListener = new PlayerListener();

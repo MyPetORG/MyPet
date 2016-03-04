@@ -35,11 +35,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 public class MyPetLogger extends PluginLogger {
     protected boolean debugSetup = false;
     private final Map<ChatColor, String> replacements = new HashMap<>();
+    private static FileHandler debugLogFileHandler = null;
 
     public MyPetLogger(Plugin context) {
         super(context);
@@ -64,6 +66,7 @@ public class MyPetLogger extends PluginLogger {
     public void log(LogRecord logRecord) {
         if (!debugSetup) {
             setupDebugLogger();
+            debugSetup = true;
         }
 
         String message = logRecord.getMessage();
@@ -84,31 +87,73 @@ public class MyPetLogger extends PluginLogger {
         return message + Ansi.ansi().reset().toString();
     }
 
-    public boolean setupDebugLogger() {
+    public void updateDebugLoggerLogLevel() {
+        if (debugLogFileHandler != null) {
+            Level level;
+            try {
+                level = Level.parse(Configuration.Log.LEVEL);
+            } catch (IllegalArgumentException e) {
+                level = Level.OFF;
+                this.warning(e.getMessage());
+            }
+            debugLogFileHandler.setLevel(level);
+        }
+    }
+
+    public void disableDebugLogger() {
+        for (Handler h : getHandlers()) {
+            if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
+                removeHandler(h);
+                h.close();
+            }
+        }
+    }
+
+    protected boolean setupDebugLogger() {
         if (getHandlers().length > 0) {
             for (Handler h : getHandlers()) {
                 if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
-                    if (!Configuration.Log.INFO && !Configuration.Log.ERROR && !Configuration.Log.WARNING) {
+                    if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
                         removeHandler(h);
+                        h.close();
                         return false;
                     }
+                    debugLogFileHandler = (FileHandler) h;
                     return true;
                 }
             }
         }
-        if (!Configuration.Log.INFO && !Configuration.Log.ERROR && !Configuration.Log.WARNING) {
+        if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
             return false;
         }
+        if (debugLogFileHandler != null) {
+            addHandler(debugLogFileHandler);
+            return true;
+        }
         try {
-            File logFile = new File(MyPetApi.getPlugin().getDataFolder(), "logs" + File.separator + "MyPet.log");
+            File logsFolder = new File(MyPetApi.getPlugin().getDataFolder(), "logs");
+            logsFolder.mkdirs();
+            File logFile = new File(logsFolder, File.separator + "MyPet.log");
             FileHandler fileHandler = new FileHandler(logFile.getAbsolutePath(), true) {
                 @Override
                 public String toString() {
                     return "MyPet-Debug-Logger-FileHandler";
                 }
             };
+
+            Level level;
+            try {
+                level = Level.parse(Configuration.Log.LEVEL);
+            } catch (IllegalArgumentException e) {
+                level = Level.OFF;
+                this.warning(e.getMessage());
+            }
+            fileHandler.setLevel(level);
+            System.out.println("Level: " + level);
+
             fileHandler.setFormatter(new LogFormat());
             addHandler(fileHandler);
+            debugLogFileHandler = fileHandler;
             return true;
         } catch (IOException e) {
             e.printStackTrace();
