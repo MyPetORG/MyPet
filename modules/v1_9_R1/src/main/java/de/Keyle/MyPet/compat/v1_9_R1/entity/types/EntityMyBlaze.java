@@ -41,11 +41,11 @@ public class EntityMyBlaze extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-        return "entity.blaze.hit";
+        return "entity.blaze.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.blaze.breathe";
+        return "entity.blaze.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
@@ -56,7 +56,7 @@ public class EntityMyBlaze extends EntityMyPet {
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (getMyPet().isOnFire() && itemStack.getItem() == Items.GLASS_BOTTLE && itemStack.getData() == 0 && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setOnFire(false);
-                makeSound("random.fizz", 1.0F, 1.0F);
+                makeSound("block.fire.extinguish", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.GLASS_BOTTLE));
@@ -69,7 +69,7 @@ public class EntityMyBlaze extends EntityMyPet {
                 return true;
             } else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setOnFire(true);
-                makeSound("fire.ignite", 1.0F, 1.0F);
+                makeSound("item.flintandsteel.use", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.damage(1, entityhuman);
                 }
@@ -81,7 +81,7 @@ public class EntityMyBlaze extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(onFireWatcher, new Byte((byte) 0)); // burning
+        getDataWatcher().register(onFireWatcher, (byte) 0); // burning
     }
 
     @Override
