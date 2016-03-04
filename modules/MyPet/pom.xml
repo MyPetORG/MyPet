@@ -135,6 +135,17 @@
                 <targetPath>.</targetPath>
                 <filtering>true</filtering>
                 <directory>../../src/main/resources/</directory>
+                <includes>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>false</filtering>
+                <directory>../../src/main/resources/</directory>
+                <excludes>
+                    <exclude>*.yml</exclude>
+                </excludes>
             </resource>
         </resources>
         <plugins>
