@@ -56,7 +56,7 @@ public class EntityMyEnderman extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-        return "entity.endermen.hit";
+        return "entity.endermen.hurt";
     }
 
     @Override

@@ -46,7 +46,7 @@ public class EntityMyCreeper extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-        return "entity.creeper.ambient";
+        return "entity.creeper.hurt";
     }
 
     @Override
