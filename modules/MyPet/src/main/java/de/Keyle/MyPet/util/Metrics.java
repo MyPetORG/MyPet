@@ -108,12 +108,22 @@ public class Metrics {
      */
     private volatile BukkitTask task = null;
 
+    /**
+     * used when data should be posted to a different metrics site
+     */
+    private final String pluginNameOverwrite;
+
     public Metrics(final Plugin plugin) throws IOException {
+        this(plugin, null);
+    }
+
+    public Metrics(final Plugin plugin, String pluginNameOverwrite) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
         this.plugin = plugin;
+        this.pluginNameOverwrite = pluginNameOverwrite;
 
         // load the config
         configurationFile = getConfigFile();
@@ -342,7 +352,7 @@ public class Metrics {
     private void postPlugin(final boolean isPing) throws IOException {
         // Server software specific section
         PluginDescriptionFile description = plugin.getDescription();
-        String pluginName = description.getName();
+        String pluginName = pluginNameOverwrite == null ? description.getName() : pluginNameOverwrite;
         boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
         String pluginVersion = description.getVersion();
         String serverVersion = Bukkit.getVersion();

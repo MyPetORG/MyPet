@@ -286,6 +286,21 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
                 metrics.start();
             }
+            metrics = new Metrics(this, "MyPet-Premium");
+            if (!metrics.isOptOut()) {
+
+                Metrics.Graph graphTotalCount = metrics.createGraph("MyPets");
+
+                Metrics.Plotter plotter = new Metrics.Plotter("Active MyPets") {
+                    @Override
+                    public int getValue() {
+                        return myPetList.countActiveMyPets();
+                    }
+                };
+                graphTotalCount.addPlotter(plotter);
+
+                metrics.start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
