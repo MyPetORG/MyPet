@@ -797,6 +797,7 @@ public class EntityListener implements Listener {
 
                             if (myPetEntity.getTarget().equals(e.getDamager())) {
                                 myPet.setRespawnTime(10);
+                                killerMyPet.setHealth(killerMyPet.getMaxHealth());
                             }
                         }
                     }
