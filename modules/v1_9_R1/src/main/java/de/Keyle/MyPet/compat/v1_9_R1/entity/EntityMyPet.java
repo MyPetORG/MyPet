@@ -60,7 +60,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Random;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
     protected static final DataWatcherObject<Byte> potionParticleWatcher = as;
@@ -610,10 +609,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected void initDatawatcher() {
     }
 
-    public Random getRandom() {
-        return this.random;
-    }
-
     /**
      * Returns the speed of played sounds
      * The faster the higher the sound will be
@@ -914,10 +909,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.world.methodProfiler.b();
         this.world.methodProfiler.a("jump");
         if (this.bc) {
-            if (this.isInWater()) {
+            if (this.isInWater() || this.an()) {
                 this.ci();
-            } else if (this.an()) {
-                this.cj();
             } else if (this.onGround && this.jumpDelay == 0) {
                 this.ch();
                 this.jumpDelay = 10;

@@ -51,7 +51,7 @@ public class EntityMyWolf extends EntityMyPet {
     }
 
     public void applySitting(boolean sitting) {
-        int i = this.datawatcher.get(sitWatcher).byteValue();
+        int i = this.datawatcher.get(sitWatcher);
         if (sitting) {
             this.datawatcher.set(sitWatcher, (byte) (i | 0x1));
         } else {
@@ -122,7 +122,7 @@ public class EntityMyWolf extends EntityMyPet {
         this.datawatcher.register(ageWatcher, false);               // age
         this.datawatcher.register(sitWatcher, (byte) 0);            // tamed/angry/sitting
         this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        this.datawatcher.register(tailWatcher, 20F);                 // tail height
+        this.datawatcher.register(tailWatcher, 20F);                // tail height
         this.datawatcher.register(watcher, false);                  // N/A
         this.datawatcher.register(collarWatcher, 14);               // collar color
     }
@@ -131,14 +131,14 @@ public class EntityMyWolf extends EntityMyPet {
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
 
-        byte b0 = this.datawatcher.get(sitWatcher).byteValue();
+        byte b0 = this.datawatcher.get(sitWatcher);
         if (getMyPet().isTamed()) {
             this.datawatcher.set(sitWatcher, (byte) (b0 | 0x4));
         } else {
             this.datawatcher.set(sitWatcher, (byte) (b0 & 0xFFFFFFFB));
         }
 
-        b0 = this.datawatcher.get(sitWatcher).byteValue();
+        b0 = this.datawatcher.get(sitWatcher);
         if (getMyPet().isAngry()) {
             this.datawatcher.set(sitWatcher, (byte) (b0 | 0x2));
         } else {
