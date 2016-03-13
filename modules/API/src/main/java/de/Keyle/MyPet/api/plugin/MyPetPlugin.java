@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.api.plugin;
 
-import de.Keyle.MyPet.api.BukkitHelper;
+import de.Keyle.MyPet.api.PlatformHelper;
 import de.Keyle.MyPet.api.entity.EntityRegistry;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
-import de.Keyle.MyPet.api.repository.MyPetList;
-import de.Keyle.MyPet.api.repository.PlayerList;
+import de.Keyle.MyPet.api.repository.MyPetManager;
+import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.hooks.HookManager;
@@ -35,7 +35,7 @@ import java.io.File;
 public interface MyPetPlugin extends Plugin {
     Repository getRepository();
 
-    BukkitHelper getBukkitHelper();
+    PlatformHelper getPlatformHelper();
 
     File getFile();
 
@@ -45,9 +45,9 @@ public interface MyPetPlugin extends Plugin {
 
     CompatUtil getCompatUtil();
 
-    PlayerList getPlayerList();
+    PlayerManager getPlayerManager();
 
-    MyPetList getMyPetList();
+    MyPetManager getMyPetManager();
 
     HookManager getHookManager();
 

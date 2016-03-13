@@ -152,7 +152,7 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
                             CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).getInventory();
                             int itemAmount = inv.addItem(itemStack);
                             if (itemAmount == 0) {
-                                MyPetApi.getBukkitHelper().doPickupAnimation(myPet.getEntity(), itemEntity);
+                                MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity(), itemEntity);
                                 if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
                                     myPet.getEntity().getHandle().makeSound("entity.item.pickup", 0.2F, 1.0F);
                                 } else {
@@ -169,7 +169,7 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
                     if (expPickup && entity instanceof ExperienceOrb) {
                         ExperienceOrb expEntity = (ExperienceOrb) entity;
                         myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
-                        MyPetApi.getBukkitHelper().doPickupAnimation(myPet.getEntity(), expEntity);
+                        MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity(), expEntity);
                         expEntity.setExperience(0);
                         expEntity.remove();
                     }

@@ -169,7 +169,7 @@ public class NbtRepository implements Repository, Scheduler {
             for (TagCompound petTag : deletionList) {
                 UUID petUUID = getPetUUID(petTag);
 
-                for (MyPet pet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+                for (MyPet pet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
                     if (pet.getUUID().equals(petUUID)) {
                         continue TagLoop;
                     }
@@ -284,7 +284,7 @@ public class NbtRepository implements Repository, Scheduler {
                 if (!playerTags.containsKey(ownerUUID)) {
                     return;
                 }
-                MyPetPlayer owner = MyPetApi.getPlayerList().getMyPetPlayer(ownerUUID);
+                MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(ownerUUID);
                 if (owner != null) {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTag);
@@ -390,7 +390,7 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     private TagList savePets() {
-        for (StoredMyPet storedMyPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (StoredMyPet storedMyPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             petTags.put(storedMyPet.getUUID(), savePet(storedMyPet));
         }
         return new TagList(Lists.newArrayList(petTags.values()));
@@ -537,7 +537,7 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     private TagList savePlayers() {
-        for (MyPetPlayer player : MyPetApi.getPlayerList().getMyPetPlayers()) {
+        for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             playerTags.put(player.getInternalUUID(), player.save());
         }
         return new TagList(Lists.newArrayList(playerTags.values()));

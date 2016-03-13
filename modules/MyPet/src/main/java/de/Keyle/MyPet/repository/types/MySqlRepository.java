@@ -312,7 +312,7 @@ public class MySqlRepository implements Repository {
     }
 
     private void savePets() {
-        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             try {
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
@@ -355,7 +355,7 @@ public class MySqlRepository implements Repository {
 
     @SuppressWarnings("unchecked")
     private void savePlayers() {
-        for (MyPetPlayer player : MyPetApi.getPlayerList().getMyPetPlayers()) {
+        for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             try {
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
@@ -552,7 +552,7 @@ public class MySqlRepository implements Repository {
                         ResultSet resultSet = statement.executeQuery();
 
                         if (resultSet.first()) {
-                            MyPetPlayer owner = MyPetApi.getPlayerList().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
+                            MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
                             if (owner != null) {
                                 resultSet.beforeFirst();
                                 List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);

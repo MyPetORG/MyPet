@@ -156,7 +156,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void setLocation(Location loc) {
-        if (status == PetState.Here && MyPetApi.getBukkitHelper().canSpawn(loc, this.bukkitEntity.getHandle())) {
+        if (status == PetState.Here && MyPetApi.getPlatformHelper().canSpawn(loc, this.bukkitEntity.getHandle())) {
             bukkitEntity.teleport(loc);
         }
     }
@@ -423,7 +423,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 loc.setYaw(0);
                 minecraftEntity.setLocation(loc);
 
-                if (!MyPetApi.getBukkitHelper().canSpawn(loc, minecraftEntity)) {
+                if (!MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
                 }

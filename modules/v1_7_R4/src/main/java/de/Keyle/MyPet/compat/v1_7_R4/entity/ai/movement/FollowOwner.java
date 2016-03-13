@@ -114,7 +114,7 @@ public class FollowOwner extends AIGoal {
             if (--this.setPathTimer <= 0) {
                 this.setPathTimer = 10;
                 if (!this.nav.navigateTo(this.owner.getBukkitEntity())) {
-                    if (owner.onGround && this.petEntity.f(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && !petEntity.hasTarget() && MyPetApi.getBukkitHelper().canSpawn(ownerLocation, this.petEntity)) {
+                    if (owner.onGround && this.petEntity.f(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && !petEntity.hasTarget() && MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                         this.nav.navigateTo(owner.getBukkitEntity());
                     }

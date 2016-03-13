@@ -102,8 +102,8 @@ public class Shield extends ShieldInfo implements SkillInstance, ActiveSkill {
             } else {
                 myPet.getEntity().getHandle().makeSound("mob.endermen.portal", 1F, 2F);
             }
-            MyPetApi.getBukkitHelper().playParticleEffect(myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), "CRIT_MAGIC", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
-            MyPetApi.getBukkitHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "CRIT", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), "CRIT_MAGIC", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "CRIT", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
             return redirectedDamage;
         } else {
             return 0;

@@ -549,7 +549,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                 return;
             }
 
-            MyPetApi.getBukkitHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "SPELL_WITCH", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "SPELL_WITCH", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
             List<Player> members = null;
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && reciever == BeaconReciever.Party) {
@@ -578,18 +578,18 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                             continue targetLoop;
                         } else {
                             player.addPotionEffects(potionEffects);
-                            MyPetApi.getBukkitHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                            MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             break targetLoop;
                         }
                     case Everyone:
                         player.addPotionEffects(potionEffects);
-                        MyPetApi.getBukkitHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                        MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
                     case Party:
                         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && members != null) {
                             if (members.contains(player)) {
                                 player.addPotionEffects(potionEffects);
-                                MyPetApi.getBukkitHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                                MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             }
                             break;
                         } else {

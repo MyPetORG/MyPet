@@ -60,8 +60,8 @@ public class UltimateSurvivalGames implements Listener {
 
     @EventHandler
     public void onJoinPvPArena(UserLobbyJoinedEvent event) {
-        if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetApi.getPlayerList().isMyPetPlayer(event.getUser().getPlayer())) {
-            MyPetPlayer player = MyPetApi.getPlayerList().getMyPetPlayer(event.getUser().getPlayer());
+        if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetApi.getPlayerManager().isMyPetPlayer(event.getUser().getPlayer())) {
+            MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getUser().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));

@@ -101,8 +101,8 @@ public class Thorns extends ThornsInfo implements SkillInstance, ActiveSkill {
             myPet.getEntity().getHandle().makeSound("damage.thorns", 0.5F, 1.0F);
         }
 
-        MyPetApi.getBukkitHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "CRIT_MAGIC", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
-        MyPetApi.getBukkitHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "CRIT", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "CRIT_MAGIC", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
+        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "CRIT", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
     }
 
     @Override

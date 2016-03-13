@@ -58,8 +58,8 @@ public class BattleArena implements Listener {
 
     @EventHandler
     public void onJoinBattleArena(ArenaPlayerEnterEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_ARENA && MyPetApi.getPlayerList().isMyPetPlayer(event.getPlayer().getName())) {
-            MyPetPlayer player = MyPetApi.getPlayerList().getMyPetPlayer(event.getPlayer().getPlayer());
+        if (active && Configuration.Hooks.DISABLE_PETS_IN_ARENA && MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer().getName())) {
+            MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));

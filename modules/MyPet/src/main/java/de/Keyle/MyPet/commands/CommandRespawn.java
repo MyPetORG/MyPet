@@ -50,8 +50,8 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
-                MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                 if (!EconomyHook.canUseEconomy() || !Permissions.has(petOwner, "MyPet.user.command.respawn")) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
                     return true;

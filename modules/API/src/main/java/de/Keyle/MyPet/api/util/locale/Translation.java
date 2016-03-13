@@ -50,7 +50,7 @@ public class Translation {
             return key;
         }
 
-        return getString(key, MyPetApi.getBukkitHelper().getPlayerLanguage(player));
+        return getString(key, MyPetApi.getPlatformHelper().getPlayerLanguage(player));
     }
 
     public static String getString(String key, CommandSender sender) {

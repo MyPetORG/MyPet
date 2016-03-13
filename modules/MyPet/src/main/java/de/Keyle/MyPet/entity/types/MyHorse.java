@@ -132,14 +132,14 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         info.getCompoundData().put("Type", new TagByte(getHorseType()));
         info.getCompoundData().put("Variant", new TagInt(getVariant()));
         if (hasArmor()) {
-            info.getCompoundData().put("Armor", MyPetApi.getBukkitHelper().itemStackToCompund(getArmor()));
+            info.getCompoundData().put("Armor", MyPetApi.getPlatformHelper().itemStackToCompund(getArmor()));
         }
         info.getCompoundData().put("Age", new TagInt(getAge()));
         if (hasChest()) {
-            info.getCompoundData().put("Chest", MyPetApi.getBukkitHelper().itemStackToCompund(getChest()));
+            info.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(getChest()));
         }
         if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", MyPetApi.getBukkitHelper().itemStackToCompund(getSaddle()));
+            info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
         }
         return info;
     }
@@ -163,7 +163,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             }
         } else if (info.containsKeyAs("Armor", TagCompound.class)) {
             TagCompound itemTag = info.get("Armor");
-            ItemStack item = MyPetApi.getBukkitHelper().compundToItemStack(itemTag);
+            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
             setArmor(item);
         }
         if (info.getCompoundData().containsKey("Age")) {
@@ -177,7 +177,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             }
         } else if (info.containsKeyAs("Chest", TagCompound.class)) {
             TagCompound itemTag = info.get("Chest");
-            ItemStack item = MyPetApi.getBukkitHelper().compundToItemStack(itemTag);
+            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
             setChest(item);
         }
         if (info.containsKeyAs("Saddle", TagByte.class)) {
@@ -188,7 +188,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = MyPetApi.getBukkitHelper().compundToItemStack(itemTag);
+            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
             setSaddle(item);
         }
     }

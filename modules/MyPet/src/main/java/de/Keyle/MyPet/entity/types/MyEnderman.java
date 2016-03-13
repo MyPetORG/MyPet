@@ -53,7 +53,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         if (block != null && block.getType() != AIR) {
-            info.getCompoundData().put("Block", MyPetApi.getBukkitHelper().itemStackToCompund(block));
+            info.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
         }
         //info.getValue().put("Screaming", new TagByte("Screaming", isScreaming()));
         return info;
@@ -78,7 +78,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
             setBlock(new ItemStack(Material.getMaterial(id), 1, (short) data));
         } else if (info.getCompoundData().containsKey("Block")) {
             TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
-            ItemStack block = MyPetApi.getBukkitHelper().compundToItemStack(itemStackCompund);
+            ItemStack block = MyPetApi.getPlatformHelper().compundToItemStack(itemStackCompund);
             setBlock(block);
         }
 

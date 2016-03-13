@@ -44,7 +44,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
             return false;
         }
 
-        String lang = MyPetApi.getBukkitHelper().getCommandSenderLanguage(sender);
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
         Player oldOwner = Bukkit.getPlayer(args[0]);
         if (oldOwner == null || !oldOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
@@ -56,12 +56,12 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
             return true;
         }
 
-        if (!MyPetApi.getPlayerList().isMyPetPlayer(oldOwner)) {
+        if (!MyPetApi.getPlayerManager().isMyPetPlayer(oldOwner)) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), oldOwner.getName()));
             return true;
         }
 
-        MyPetPlayer oldPetOwner = MyPetApi.getPlayerList().getMyPetPlayer(oldOwner);
+        MyPetPlayer oldPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(oldOwner);
 
         if (!oldPetOwner.hasMyPet()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), oldOwner.getName()));
@@ -69,10 +69,10 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         }
 
         final MyPetPlayer newPetOwner;
-        if (MyPetApi.getPlayerList().isMyPetPlayer(newOwner)) {
-            newPetOwner = MyPetApi.getPlayerList().getMyPetPlayer(newOwner);
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(newOwner)) {
+            newPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(newOwner);
         } else {
-            newPetOwner = MyPetApi.getPlayerList().registerMyPetPlayer(newOwner);
+            newPetOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(newOwner);
         }
 
         if (newPetOwner.hasMyPet()) {
@@ -96,7 +96,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         MyPetApi.getRepository().addMyPet(newPet, new RepositoryCallback<Boolean>() {
             @Override
             public void callback(Boolean value) {
-                MyPet myPet = MyPetApi.getMyPetList().activateMyPet(newPet);
+                MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
 
                 if (myPet != null) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());

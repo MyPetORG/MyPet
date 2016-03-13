@@ -34,7 +34,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.*;
 
-public abstract class BukkitHelper {
+public abstract class PlatformHelper {
     /**
      * @param location the {@link Location} around which players must be to see the effect
      * @param effect   list of effects: https://gist.github.com/riking/5759002

@@ -65,8 +65,8 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
             MyPetPlayer petOwner;
 
             if (args.length == 0) {
-                if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
-                    petOwner = MyPetApi.getPlayerList().getMyPetPlayer(player);
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                    petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                 } else {
                     sender.sendMessage(Translation.getString("Message.No.HasPet", player));
                     return true;
@@ -77,8 +77,8 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
                     return true;
                 }
-                if (MyPetApi.getPlayerList().isMyPetPlayer(args[0])) {
-                    petOwner = MyPetApi.getPlayerList().getMyPetPlayer(args[0]);
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(args[0])) {
+                    petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(args[0]);
                 } else {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", player), args[0]));
                     return true;
@@ -149,7 +149,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                             m.then(is.getItemMeta().getDisplayName());
                         } else {
-                            m.then(WordUtils.capitalizeFully(MyPetApi.getBukkitHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
+                            m.then(WordUtils.capitalizeFully(MyPetApi.getPlatformHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
                         }
                         m.color(ChatColor.GOLD);
                         ItemTooltip it = new ItemTooltip();
@@ -165,7 +165,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         m.itemTooltip(it);
                         comma = true;
                     }
-                    MyPetApi.getBukkitHelper().sendMessageRaw(player, m.toJSONString());
+                    MyPetApi.getPlatformHelper().sendMessageRaw(player, m.toJSONString());
 
                     infoShown = true;
                 }

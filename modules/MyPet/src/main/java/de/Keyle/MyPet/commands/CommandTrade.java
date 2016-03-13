@@ -83,14 +83,14 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                         return true;
                     }
 
-                    if (MyPetApi.getPlayerList().isMyPetPlayer(owner)) {
-                        final MyPetPlayer oldOwner = MyPetApi.getPlayerList().getMyPetPlayer(owner);
+                    if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
+                        final MyPetPlayer oldOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
                         if (!oldOwner.hasMyPet() || oldOwner.getMyPet() != offer.getPet()) {
                             sender.sendMessage(Translation.getString("Message.Command.Trade.Reciever.PetUnavailable", player));
                             offers.remove(player.getUniqueId());
                             return true;
                         }
-                        if (MyPetApi.getPlayerList().isMyPetPlayer(player) && MyPetApi.getMyPetList().hasActiveMyPet(player)) {
+                        if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                             sender.sendMessage(Translation.getString("Message.Command.Trade.Reciever.HasPet", player));
                             return true;
                         }
@@ -109,11 +109,11 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
 
                         offers.remove(player.getUniqueId());
 
-                        final MyPetPlayer newOwner = MyPetApi.getPlayerList().isMyPetPlayer(player) ? MyPetApi.getPlayerList().getMyPetPlayer(player) : MyPetApi.getPlayerList().registerMyPetPlayer(player);
+                        final MyPetPlayer newOwner = MyPetApi.getPlayerManager().isMyPetPlayer(player) ? MyPetApi.getPlayerManager().getMyPetPlayer(player) : MyPetApi.getPlayerManager().registerMyPetPlayer(player);
                         final String worldGroup = offer.getPet().getWorldGroup();
 
-                        MyPetApi.getMyPetList().deactivateMyPet(oldOwner, false);
-                        final StoredMyPet pet = MyPetApi.getMyPetList().getInactiveMyPetFromMyPet(offer.getPet());
+                        MyPetApi.getMyPetManager().deactivateMyPet(oldOwner, false);
+                        final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.getPet());
 
                         final Repository repo = MyPetApi.getRepository();
                         repo.removeMyPet(pet, new RepositoryCallback<Boolean>() {
@@ -121,7 +121,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                             public void callback(Boolean value) {
                                 pet.setOwner(newOwner);
                                 repo.addMyPet(pet, null);
-                                MyPet myPet = MyPetApi.getMyPetList().activateMyPet(pet);
+                                MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(pet);
 
                                 oldOwner.setMyPetForWorldGroup(worldGroup, null);
                                 newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
@@ -195,8 +195,8 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     player.sendMessage(Translation.getString("Message.No.Allowed", player));
                     return true;
                 }
-                if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                    MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
 
                     if (!Permissions.has((Player) sender, "MyPet.user.command.trade.offer.type." + myPet.getPetType().name(), false)) {
                         player.sendMessage(Translation.getString("Message.No.Allowed", player));
@@ -246,9 +246,9 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     }
                     FancyMessage petMessage = new FancyMessage(" »» ")
                             .then(myPet.getPetName())
-                            .itemTooltip(Util.myPetToItemTooltip(myPet, MyPetApi.getBukkitHelper().getPlayerLanguage(reciever)))
+                            .itemTooltip(Util.myPetToItemTooltip(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(reciever)))
                             .command("/pettrade accept");
-                    MyPetApi.getBukkitHelper().sendMessageRaw(reciever, petMessage.toJSONString());
+                    MyPetApi.getPlatformHelper().sendMessageRaw(reciever, petMessage.toJSONString());
                     return true;
                 } else {
                     sender.sendMessage(Translation.getString("Message.No.HasPet", player));

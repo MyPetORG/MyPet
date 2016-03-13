@@ -39,8 +39,8 @@ public class CommandPickup implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player owner = (Player) sender;
-            if (MyPetApi.getMyPetList().hasActiveMyPet(owner)) {
-                MyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
 
                 if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup")) {
                     sender.sendMessage(Translation.getString("Message.No.Allowed", owner));

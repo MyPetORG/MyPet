@@ -45,13 +45,13 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         boolean show = true;
         MyPetPlayer o = null;
         UUID petUUID = null;
-        final String lang = MyPetApi.getBukkitHelper().getCommandSenderLanguage(sender);
+        final String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
 
         if (parameter.length == 0) {
             if (sender instanceof Player) {
                 Player petOwner = (Player) sender;
-                if (MyPetApi.getPlayerList().isMyPetPlayer(petOwner)) {
-                    o = MyPetApi.getPlayerList().getMyPetPlayer(petOwner);
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(petOwner)) {
+                    o = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
                 }
             } else {
                 sender.sendMessage("You can't use this command from server console!");
@@ -63,8 +63,8 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
-            if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
-                o = MyPetApi.getPlayerList().getMyPetPlayer(player);
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                o = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             }
             if (o == null) {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), o.getName()));
@@ -72,7 +72,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         } else if (parameter.length == 2) {
             show = false;
             try {
-                o = MyPetApi.getPlayerList().getMyPetPlayer(UUID.fromString(parameter[0]));
+                o = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(parameter[0]));
                 petUUID = UUID.fromString(parameter[1]);
             } catch (IllegalArgumentException ignored) {
             }
@@ -100,7 +100,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                             doComma = true;
                         }
                     }
-                    MyPetApi.getBukkitHelper().sendMessageRaw((Player) sender, message.toJSONString());
+                    MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
                 }
             });
 
@@ -110,10 +110,10 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                 public void callback(StoredMyPet newPet) {
                     if (newPet != null) {
                         if (owner.hasMyPet()) {
-                            MyPetApi.getMyPetList().deactivateMyPet(owner, true);
+                            MyPetApi.getMyPetManager().deactivateMyPet(owner, true);
                         }
 
-                        MyPet myPet = MyPetApi.getMyPetList().activateMyPet(newPet);
+                        MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
                         sender.sendMessage(Translation.getString("Message.Command.Success", sender));
                         if (myPet != null) {
 

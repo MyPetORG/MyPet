@@ -61,8 +61,8 @@ public class MyHungerGames implements Listener {
 
     @EventHandler
     public void onJoinPvPArena(PlayerJoinGameEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_HUNGER_GAMES && MyPetApi.getPlayerList().isMyPetPlayer(event.getPlayer())) {
-            MyPetPlayer player = MyPetApi.getPlayerList().getMyPetPlayer(event.getPlayer());
+        if (active && Configuration.Hooks.DISABLE_PETS_IN_HUNGER_GAMES && MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+            MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));

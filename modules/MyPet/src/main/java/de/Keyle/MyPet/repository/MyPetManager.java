@@ -34,7 +34,7 @@ import java.util.Collection;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class MyPetList extends de.Keyle.MyPet.api.repository.MyPetList {
+public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
 
     // Inactive -----------------------------------------------------------------

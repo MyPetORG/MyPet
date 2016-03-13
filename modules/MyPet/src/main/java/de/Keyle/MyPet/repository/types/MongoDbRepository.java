@@ -204,14 +204,14 @@ public class MongoDbRepository implements Repository {
     }
 
     private void savePets() {
-        for (StoredMyPet storedMyPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (StoredMyPet storedMyPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             updateMyPet(storedMyPet);
         }
     }
 
     @SuppressWarnings("unchecked")
     private void savePlayers() {
-        for (MyPetPlayer player : MyPetApi.getPlayerList().getMyPetPlayers()) {
+        for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             updatePlayer(player);
         }
     }
@@ -340,7 +340,7 @@ public class MongoDbRepository implements Repository {
                         MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                         Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
                         if (petDocument != null) {
-                            MyPetPlayer owner = MyPetApi.getPlayerList().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
+                            MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
                             StoredMyPet pet = documentToMyPet(owner, petDocument);
 
                             if (pet != null) {

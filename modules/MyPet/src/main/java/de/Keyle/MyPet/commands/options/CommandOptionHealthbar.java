@@ -30,8 +30,8 @@ import org.bukkit.entity.Player;
 public class CommandOptionHealthbar implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (sender instanceof Player && MyPetApi.getPlayerList().isMyPetPlayer((Player) sender)) {
-            MyPetPlayer myPetPlayer = MyPetApi.getPlayerList().getMyPetPlayer((Player) sender);
+        if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
+            MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
             myPetPlayer.setHealthBarActive(!myPetPlayer.isHealthBarActive());
             sender.sendMessage(Translation.getString("Message.Command.Success", sender));
             return true;

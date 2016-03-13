@@ -18,26 +18,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_8_R2;
+package de.Keyle.MyPet.compat.v1_8_R3;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_8_R2.util.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_8_R3.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import net.minecraft.server.v1_8_R2.*;
+import net.minecraft.server.v1_8_R3.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftZombie;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_8_R2.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_8_R3.util.UnsafeList;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -46,8 +46,8 @@ import org.json.simple.JSONObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-@Compat("v1_8_R2")
-public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
+@Compat("v1_8_R3")
+public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     private static Field goalSelectorField = null;
 
     static {
@@ -119,7 +119,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
     }
 
     public Boolean canSpawn(Location loc, AxisAlignedBB bb) {
-        net.minecraft.server.v1_8_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_8_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         return getBlockBBsInBB(loc.getWorld(), bb).isEmpty() && !mcWorld.containsLiquid(bb);
     }
 
@@ -165,7 +165,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
 
     @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
-        net.minecraft.server.v1_8_R2.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
+        net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = new NBTTagCompound();
 
         entity.e(vanillaNBT);
@@ -175,7 +175,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
 
     @Override
     public void applyTagToEntity(TagCompound tag, Entity bukkitEntity) {
-        net.minecraft.server.v1_8_R2.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
+        net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
         entity.f(vanillaNBT);
     }
@@ -267,7 +267,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
         return CraftItemStack.asNMSCopy(itemStack);
     }
 
-    public net.minecraft.server.v1_8_R2.World getWorldNMS(World world) {
+    public net.minecraft.server.v1_8_R3.World getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
     }
 }

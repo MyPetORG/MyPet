@@ -44,11 +44,11 @@ public class CommandOptionPetLivingSound implements CommandOptionTabCompleter {
 
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (sender instanceof Player && MyPetApi.getPlayerList().isMyPetPlayer((Player) sender)) {
+        if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             if (args.length > 0 && Util.isInt(args[0])) {
                 float volume = Math.min(Math.max(Integer.parseInt(args[0]), 0f), 100f) / 100f;
 
-                MyPetPlayer myPetPlayer = MyPetApi.getPlayerList().getMyPetPlayer((Player) sender);
+                MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
                 myPetPlayer.setPetLivingSoundVolume(volume);
 
                 sender.sendMessage(Translation.getString("Message.Command.Success", sender));

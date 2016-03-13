@@ -234,7 +234,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
 
     public String getLanguage() {
         if (isOnline()) {
-            lastLanguage = MyPetApi.getBukkitHelper().getPlayerLanguage(getPlayer());
+            lastLanguage = MyPetApi.getPlatformHelper().getPlayerLanguage(getPlayer());
         }
         return lastLanguage;
     }
@@ -244,11 +244,11 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
     }
 
     public boolean hasMyPet() {
-        return MyPetApi.getMyPetList().hasActiveMyPet(this);
+        return MyPetApi.getMyPetManager().hasActiveMyPet(this);
     }
 
     public MyPet getMyPet() {
-        return MyPetApi.getMyPetList().getMyPet(this);
+        return MyPetApi.getMyPetManager().getMyPet(this);
     }
 
     public Player getPlayer() {
@@ -372,7 +372,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
                         msg += org.bukkit.ChatColor.RED;
                     }
                     msg += String.format("%1.2f", myPet.getHealth()) + org.bukkit.ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
-                    MyPetApi.getBukkitHelper().sendMessageActionBar(getPlayer(), msg);
+                    MyPetApi.getPlatformHelper().sendMessageActionBar(getPlayer(), msg);
                 }
             }
         }
@@ -407,9 +407,9 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
                         if (CaptureHelper.checkTamable((LivingEntity) entity)) {
-                            MyPetApi.getBukkitHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, 10);
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, 10);
                         } else {
-                            MyPetApi.getBukkitHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, +1);
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, +1);
                         }
                         if (count++ > 20) {
                             break;
@@ -444,7 +444,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
         } else if (obj instanceof MyPetPlayer) {
             return this == obj;
         }
-        return MyPetApi.getBukkitHelper().comparePlayerWithEntity(this, obj);
+        return MyPetApi.getPlatformHelper().comparePlayerWithEntity(this, obj);
     }
 
     @Override

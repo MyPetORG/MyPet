@@ -49,7 +49,7 @@ public class Timer {
 
         timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
             public void run() {
-                for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+                for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
                     myPet.schedule();
                 }
             }
@@ -63,7 +63,7 @@ public class Timer {
         }, 5L, 20L));
         timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
             public void run() {
-                for (MyPetPlayer player : MyPetApi.getPlayerList().getMyPetPlayers()) {
+                for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
                     player.schedule();
                 }
             }
