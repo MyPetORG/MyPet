@@ -774,6 +774,25 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
+    /**
+     * do NOT drop anything
+     */
+    protected boolean isDropExperience() {
+        return false;
+    }
+
+    /**
+     * do NOT drop anything
+     */
+    protected void dropDeathLoot(boolean flag, int i) {
+    }
+
+    /**
+     * do NOT drop anything
+     */
+    protected void dropEquipment(boolean flag, int i) {
+    }
+
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     /**
