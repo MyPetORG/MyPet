@@ -153,7 +153,11 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
                             int itemAmount = inv.addItem(itemStack);
                             if (itemAmount == 0) {
                                 MyPetApi.getBukkitHelper().doPickupAnimation(myPet.getEntity(), itemEntity);
-                                myPet.getEntity().getHandle().makeSound("random.pop", 0.2F, 1.0F);
+                                if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+                                    myPet.getEntity().getHandle().makeSound("entity.item.pickup", 0.2F, 1.0F);
+                                } else {
+                                    myPet.getEntity().getHandle().makeSound("random.pop", 0.2F, 1.0F);
+                                }
                                 itemStack.setAmount(0);
                                 itemEntity.remove();
                             } else {
