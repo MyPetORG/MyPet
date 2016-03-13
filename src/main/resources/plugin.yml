@@ -125,6 +125,7 @@ permissions:
     description: Gives access to ALL (not includes admin) MyPet features.
     children:
       MyPet.user.*: true
+      MyPet.user.command.info.other: true
   MyPet.admin:
     description: Gives access to the MyPet admin features.
     default: op
@@ -159,3 +160,6 @@ permissions:
   MyPet.user.command.switch:
     default: op
     description: Allows to switch between MyPets
+  MyPet.user.command.info.other:
+    default: op
+    description: Allows to view info about pets from other players with "/petinfo <playername>"
