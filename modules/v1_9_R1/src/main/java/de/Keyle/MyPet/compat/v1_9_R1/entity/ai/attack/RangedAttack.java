@@ -80,10 +80,10 @@ public class RangedAttack extends AIGoal {
 
     @Override
     public boolean shouldFinish() {
-        if (entityMyPet.getTarget() == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
+        if (!entityMyPet.hasTarget() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
             return true;
         }
-        if (this.target.getBukkitEntity() != this.myPet.getEntity().getTarget()) {
+        if (this.target.getBukkitEntity() != entityMyPet.getTarget()) {
             return true;
         }
         double meleeDamage = myPet.getDamage();
@@ -106,7 +106,7 @@ public class RangedAttack extends AIGoal {
 
     @Override
     public void tick() {
-        double distanceToTarget = this.entityMyPet.f(this.target.locX, this.target.getBoundingBox().b, this.target.locZ);
+        double distanceToTarget = this.entityMyPet.e(this.target.locX, this.target.getBoundingBox().b, this.target.locZ);
         boolean canSee = this.entityMyPet.getEntitySenses().a(this.target); // a -> canSee
 
         if (canSee) {
