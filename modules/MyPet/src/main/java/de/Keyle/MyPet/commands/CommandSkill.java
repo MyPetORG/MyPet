@@ -46,20 +46,20 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                 if (petOwner == null || !petOwner.isOnline()) {
                     sender.sendMessage(Translation.getString("Message.No.PlayerOnline", petOwner));
                     return true;
-                } else if (!MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
+                } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
                     return true;
                 }
             }
 
-            if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
-                MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
 
                 for (SkillInstance skill : myPet.getSkills().getSkills()) {
                     if (skill.isActive()) {
-                        sender.sendMessage("  " + ChatColor.GREEN + skill.getName(MyPetApi.getBukkitHelper().getPlayerLanguage(petOwner)) + ChatColor.RESET + " " + skill.getFormattedValue());
+                        sender.sendMessage("  " + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getPlayerLanguage(petOwner)) + ChatColor.RESET + " " + skill.getFormattedValue());
                     }
                 }
                 return true;

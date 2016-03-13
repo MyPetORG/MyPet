@@ -94,7 +94,7 @@ public class EntityListener implements Listener {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetApi.getPlugin(), true));
         }
         if (!event.isCancelled() && event.getEntity() instanceof Zombie) {
-            MyPetApi.getBukkitHelper().addZombieTargetGoal((Zombie) event.getEntity());
+            MyPetApi.getPlatformHelper().addZombieTargetGoal((Zombie) event.getEntity());
         }
     }
 
@@ -184,7 +184,7 @@ public class EntityListener implements Listener {
                             if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                                 m.then(is.getItemMeta().getDisplayName());
                             } else {
-                                m.then(WordUtils.capitalizeFully(MyPetApi.getBukkitHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
+                                m.then(WordUtils.capitalizeFully(MyPetApi.getPlatformHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
                             }
                             m.color(ChatColor.GOLD);
                             ItemTooltip it = new ItemTooltip();
@@ -200,7 +200,7 @@ public class EntityListener implements Listener {
                             m.itemTooltip(it);
                             comma = true;
                         }
-                        MyPetApi.getBukkitHelper().sendMessageRaw(damager, m.toJSONString());
+                        MyPetApi.getPlatformHelper().sendMessageRaw(damager, m.toJSONString());
 
                         infoShown = true;
                     }
@@ -275,7 +275,7 @@ public class EntityListener implements Listener {
             if (MyPetApi.getMyPetInfo().isLeashableEntityType(event.getEntity().getType())) {
                 Player damager = (Player) event.getDamager();
 
-                if (!MyPetApi.getMyPetList().hasActiveMyPet(damager)) {
+                if (!MyPetApi.getMyPetManager().hasActiveMyPet(damager)) {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
                     MyPetType petType = MyPetType.byEntityTypeName(leashTarget.getType().name());
@@ -284,7 +284,7 @@ public class EntityListener implements Listener {
                     if (!leashItem.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + petType.name())) {
                         return;
                     }
-                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetApi.getPlayerList().isMyPetPlayer(damager) && MyPetApi.getPlayerList().getMyPetPlayer(damager).isCaptureHelperActive()) {
+                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetApi.getPlayerManager().isMyPetPlayer(damager) && MyPetApi.getPlayerManager().getMyPetPlayer(damager).isCaptureHelperActive()) {
                         CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
                     if (PluginHookManager.isPluginUsable("Citizens")) {
@@ -369,10 +369,10 @@ public class EntityListener implements Listener {
                         event.setCancelled(true);
 
                         MyPetPlayer owner;
-                        if (MyPetApi.getPlayerList().isMyPetPlayer(damager)) {
-                            owner = MyPetApi.getPlayerList().getMyPetPlayer(damager);
+                        if (MyPetApi.getPlayerManager().isMyPetPlayer(damager)) {
+                            owner = MyPetApi.getPlayerManager().getMyPetPlayer(damager);
                         } else {
-                            owner = MyPetApi.getPlayerList().registerMyPetPlayer(damager);
+                            owner = MyPetApi.getPlayerManager().registerMyPetPlayer(damager);
                         }
 
 
@@ -405,7 +405,7 @@ public class EntityListener implements Listener {
                         } else if (leashTarget instanceof Villager) {
                             extendedInfo.getCompoundData().put("Profession", new TagInt(((Villager) leashTarget).getProfession().getId()));
 
-                            TagCompound villagerTag = MyPetApi.getBukkitHelper().entityToTag(leashTarget);
+                            TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(leashTarget);
                             String[] allowedTags = {"Riches", "Career", "CareerLevel", "Willing", "Inventory", "Offers"};
                             Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
                             for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
@@ -431,11 +431,11 @@ public class EntityListener implements Listener {
                             int variant = color & 255 | style << 8;
 
                             if (horse.getInventory().getArmor() != null) {
-                                TagCompound armor = MyPetApi.getBukkitHelper().itemStackToCompund(horse.getInventory().getArmor());
+                                TagCompound armor = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getArmor());
                                 extendedInfo.getCompoundData().put("Armor", armor);
                             }
                             if (horse.getInventory().getSaddle() != null) {
-                                TagCompound saddle = MyPetApi.getBukkitHelper().itemStackToCompund(horse.getInventory().getSaddle());
+                                TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
                                 extendedInfo.getCompoundData().put("Saddle", saddle);
                             }
 
@@ -460,7 +460,7 @@ public class EntityListener implements Listener {
                             Enderman enderman = (Enderman) leashTarget;
                             if (enderman.getCarriedMaterial().getItemType() != Material.AIR) {
                                 ItemStack block = enderman.getCarriedMaterial().toItemStack(1);
-                                extendedInfo.getCompoundData().put("Block", MyPetApi.getBukkitHelper().itemStackToCompund(block));
+                                extendedInfo.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
                             }
                         } else if (leashTarget instanceof Skeleton) {
                             extendedInfo.getCompoundData().put("Wither", new TagByte(((Skeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
@@ -477,7 +477,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    TagCompound item = MyPetApi.getBukkitHelper().itemStackToCompund(itemStack);
+                                    TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -485,7 +485,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    TagCompound item = MyPetApi.getBukkitHelper().itemStackToCompund(itemStack);
+                                    TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -493,7 +493,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    TagCompound item = MyPetApi.getBukkitHelper().itemStackToCompund(itemStack);
+                                    TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -501,7 +501,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    TagCompound item = MyPetApi.getBukkitHelper().itemStackToCompund(itemStack);
+                                    TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -520,7 +520,7 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        final MyPet myPet = MyPetApi.getMyPetList().activateMyPet(inactiveMyPet);
+                        final MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                         if (myPet != null) {
                             MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
                                 @Override
@@ -634,8 +634,8 @@ public class EntityListener implements Listener {
                         return;
                     }
                 }
-                if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                    MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                     if (myPet.getStatus() == PetState.Here && damagedEntity != myPet.getEntity()) {
                         myPet.getEntity().setTarget((LivingEntity) damagedEntity, TargetPriority.OwnerHurts);
                     }
@@ -768,7 +768,7 @@ public class EntityListener implements Listener {
 
                 myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Dead", owner), myPet.getPetName()));
 
-                MyPetApi.getMyPetList().deactivateMyPet(owner, false);
+                MyPetApi.getMyPetManager().deactivateMyPet(owner, false);
                 MyPetApi.getRepository().removeMyPet(myPet.getUUID(), new RepositoryCallback<Boolean>() {
                     @Override
                     public void callback(Boolean value) {
@@ -882,8 +882,8 @@ public class EntityListener implements Listener {
                     }
                 } else if (entity instanceof Player) {
                     Player owner = (Player) entity;
-                    if (MyPetApi.getMyPetList().hasActiveMyPet(owner)) {
-                        MyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
+                    if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
+                        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
                         if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
                             if (!myPet.autoAssignSkilltree()) {
                                 continue;
@@ -916,8 +916,8 @@ public class EntityListener implements Listener {
                 myPet.getExperience().addExp(edbee.getEntity().getType());
             } else if (damager instanceof Player) {
                 Player owner = (Player) damager;
-                if (MyPetApi.getMyPetList().hasActiveMyPet(owner)) {
-                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(owner);
+                if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
+                    MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             return;

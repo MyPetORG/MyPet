@@ -48,8 +48,8 @@ public class SkillApi implements Listener {
     public void on(PlayerExperienceGainEvent event) {
         if (Configuration.Hooks.SkillAPI.GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
-            if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
-                MyPetPlayer petPlayer = MyPetApi.getPlayerList().getMyPetPlayer(player);
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                 if (petPlayer.hasMyPet()) {
                     MyPet myPet = petPlayer.getMyPet();
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
@@ -67,8 +67,8 @@ public class SkillApi implements Listener {
     public void on(PlayerExperienceLostEvent event) {
         if (Configuration.Hooks.SkillAPI.GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
-            if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
-                MyPetPlayer petPlayer = MyPetApi.getPlayerList().getMyPetPlayer(player);
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                 if (petPlayer.hasMyPet()) {
                     MyPet myPet = petPlayer.getMyPet();
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {

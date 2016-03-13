@@ -45,7 +45,7 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         if (hasFlower()) {
-            info.getCompoundData().put("Flower", MyPetApi.getBukkitHelper().itemStackToCompund(getFlower()));
+            info.getCompoundData().put("Flower", MyPetApi.getPlatformHelper().itemStackToCompund(getFlower()));
         }
         return info;
     }
@@ -54,7 +54,7 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Flower", TagCompound.class)) {
             TagCompound itemTag = info.get("Flower");
-            ItemStack item = MyPetApi.getBukkitHelper().compundToItemStack(itemTag);
+            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
             setFlower(item);
         }
     }

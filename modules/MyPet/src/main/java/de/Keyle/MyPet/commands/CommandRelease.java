@@ -58,8 +58,8 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
-                MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
                 if (!Permissions.has(petOwner, "MyPet.user.command.release")) {
                     return true;
@@ -155,11 +155,11 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                                 ((Villager) normalEntity).setAdult();
                             }
                             if (villagerPet.hasOriginalData()) {
-                                TagCompound villagerTag = MyPetApi.getBukkitHelper().entityToTag(normalEntity);
+                                TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
                                 for (String key : villagerPet.getOriginalData().getCompoundData().keySet()) {
                                     villagerTag.put(key, villagerPet.getOriginalData().get(key));
                                 }
-                                MyPetApi.getBukkitHelper().applyTagToEntity(villagerTag, normalEntity);
+                                MyPetApi.getPlatformHelper().applyTagToEntity(villagerTag, normalEntity);
                             }
                         } else if (myPet instanceof MyWolf) {
                             ((Wolf) normalEntity).setTamed(false);
@@ -215,7 +215,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()).getName(), null);
 
                     sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
-                    MyPetApi.getMyPetList().deactivateMyPet(myPet.getOwner(), false);
+                    MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
                     MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
 
                     return true;
@@ -237,7 +237,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             .color(ChatColor.AQUA)
                             .command("/petrelease " + ChatColor.stripColor(myPet.getPetName()))
                             .itemTooltip(new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(myPet.getPetName()));
-                    MyPetApi.getBukkitHelper().sendMessageRaw((Player) sender, message.toJSONString());
+                    MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
                     return true;
                 }
             } else {
@@ -251,9 +251,9 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings) {
-        if (MyPetApi.getMyPetList().hasActiveMyPet((Player) commandSender)) {
+        if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) commandSender)) {
             List<String> petnameList = new ArrayList<>();
-            petnameList.add(MyPetApi.getMyPetList().getMyPet((MyPetPlayer) commandSender).getPetName());
+            petnameList.add(MyPetApi.getMyPetManager().getMyPet((MyPetPlayer) commandSender).getPetName());
             return petnameList;
         }
         return CommandAdmin.EMPTY_LIST;

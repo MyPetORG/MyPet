@@ -37,7 +37,7 @@ import java.util.List;
 public class CommandOptionRemove implements CommandOptionTabCompleter {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        String lang = MyPetApi.getBukkitHelper().getCommandSenderLanguage(sender);
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
 
         if (args.length >= 1) {
             Player player = Bukkit.getPlayer(args[0]);
@@ -45,15 +45,15 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
-            if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
-                MyPetPlayer petOwner = MyPetApi.getPlayerList().getMyPetPlayer(player);
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                 if (petOwner.hasMyPet()) {
                     MyPet myPet = petOwner.getMyPet();
 
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
 
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName(), null);
-                    MyPetApi.getMyPetList().deactivateMyPet(myPet.getOwner(), false);
+                    MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
                     MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
                 }
             }

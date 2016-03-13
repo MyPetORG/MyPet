@@ -438,7 +438,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         if (itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
-                        MyPetApi.getBukkitHelper().playParticleEffect(myPet.getLocation().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
                     } else if (myPet.getHungerValue() < 100) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             --itemStack.count;
@@ -446,7 +446,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         if (itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
-                        MyPetApi.getBukkitHelper().playParticleEffect(myPet.getLocation().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
                     }
                     if (addHunger > 0 && myPet.getHungerValue() < 100) {
                         myPet.setHungerValue(myPet.getHungerValue() + addHunger);
@@ -518,7 +518,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
             if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
                 donatorParticleCounter = 20 + getRandom().nextInt(10);
-                MyPetApi.getBukkitHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "VILLAGER_HAPPY", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+                MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "VILLAGER_HAPPY", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
             }
         }
     }
@@ -550,7 +550,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             msg += Translation.getString("Name.Dead", getOwner());
         }
 
-        MyPetApi.getBukkitHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
+        MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
     }
 
     protected void initDatawatcher() {
@@ -601,8 +601,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             EntityPlayer entityplayer = (EntityPlayer) this.world.players.get(j);
 
             float volume = 1f;
-            if (MyPetApi.getPlayerList().isMyPetPlayer(entityplayer.getBukkitEntity())) {
-                volume = MyPetApi.getPlayerList().getMyPetPlayer(entityplayer.getBukkitEntity()).getPetLivingSoundVolume();
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(entityplayer.getBukkitEntity())) {
+                volume = MyPetApi.getPlayerManager().getMyPetPlayer(entityplayer.getBukkitEntity()).getPetLivingSoundVolume();
             }
 
             double deltaX = locX - entityplayer.locX;

@@ -70,7 +70,7 @@ public class MyPigZombie extends MyPet implements de.Keyle.MyPet.api.entity.type
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (getEquipment(slot) != null) {
-                TagCompound item = MyPetApi.getBukkitHelper().itemStackToCompund(getEquipment(slot));
+                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(slot));
                 item.getCompoundData().put("Slot", new TagInt(slot.getSlotId()));
                 itemList.add(item);
             }
@@ -89,7 +89,7 @@ public class MyPigZombie extends MyPet implements de.Keyle.MyPet.api.entity.type
             for (int i = 0; i < equipment.getReadOnlyList().size(); i++) {
                 TagCompound item = equipment.getTagAs(i, TagCompound.class);
 
-                ItemStack itemStack = MyPetApi.getBukkitHelper().compundToItemStack(item);
+                ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
                 setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
             }
         }

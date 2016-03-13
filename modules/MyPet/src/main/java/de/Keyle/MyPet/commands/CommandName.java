@@ -43,12 +43,12 @@ public class CommandName implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 if (args.length < 1) {
                     return false;
                 }
 
-                MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                 if (!Permissions.has(petOwner, "MyPet.user.command.name")) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
                     return true;

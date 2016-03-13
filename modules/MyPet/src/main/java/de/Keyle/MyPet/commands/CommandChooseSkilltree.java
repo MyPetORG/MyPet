@@ -51,8 +51,8 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
-        if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-            final MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+            final MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
             final MyPetPlayer myPetOwner = myPet.getOwner();
             if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 myPet.autoAssignSkilltree();
@@ -186,8 +186,8 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
-        if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
             if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 return CommandAdmin.EMPTY_LIST;
             } else if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {

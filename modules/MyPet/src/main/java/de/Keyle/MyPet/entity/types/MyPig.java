@@ -46,7 +46,7 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", MyPetApi.getBukkitHelper().itemStackToCompund(getSaddle()));
+            info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
         }
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
@@ -62,7 +62,7 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = MyPetApi.getBukkitHelper().compundToItemStack(itemTag);
+            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
             setSaddle(item);
         }
         if (info.getCompoundData().containsKey("Baby")) {

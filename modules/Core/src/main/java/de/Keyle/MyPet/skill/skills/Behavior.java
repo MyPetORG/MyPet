@@ -246,7 +246,7 @@ public class Behavior extends BehaviorInfo implements SkillInstance, Scheduler, 
 
     public void schedule() {
         if (behavior == Aggressive && random.nextBoolean() && myPet.getStatus() == MyPet.PetState.Here) {
-            MyPetApi.getBukkitHelper().playParticleEffect(myPet.getLocation().add(0, myPet.getEntity().getEyeHeight(), 0), "VILLAGER_ANGRY", 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, myPet.getEntity().getEyeHeight(), 0), "VILLAGER_ANGRY", 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
         }
     }
 

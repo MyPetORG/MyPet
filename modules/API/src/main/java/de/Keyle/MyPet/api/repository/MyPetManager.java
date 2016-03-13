@@ -32,7 +32,7 @@ import org.bukkit.entity.Player;
 
 import static org.bukkit.Bukkit.getServer;
 
-public abstract class MyPetList {
+public abstract class MyPetManager {
     protected final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
     protected final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
 
@@ -43,7 +43,7 @@ public abstract class MyPetList {
     }
 
     public MyPet getMyPet(Player owner) {
-        return mActivePlayerPets.get(MyPetApi.getPlayerList().getMyPetPlayer(owner));
+        return mActivePlayerPets.get(MyPetApi.getPlayerManager().getMyPetPlayer(owner));
     }
 
     public MyPet[] getAllActiveMyPets() {
@@ -60,16 +60,16 @@ public abstract class MyPetList {
     }
 
     public boolean hasActiveMyPet(Player player) {
-        if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
-            MyPetPlayer petPlayer = MyPetApi.getPlayerList().getMyPetPlayer(player);
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             return hasActiveMyPet(petPlayer);
         }
         return false;
     }
 
     public boolean hasActiveMyPet(String name) {
-        if (MyPetApi.getPlayerList().isMyPetPlayer(name)) {
-            MyPetPlayer petPlayer = MyPetApi.getPlayerList().getMyPetPlayer(name);
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(name)) {
+            MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(name);
             return hasActiveMyPet(petPlayer);
         }
         return false;

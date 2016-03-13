@@ -58,8 +58,8 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (MyPetApi.getPlayerList().isMyPetPlayer(player)) {
-            final MyPetPlayer owner = MyPetApi.getPlayerList().getMyPetPlayer(player);
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
             if (args.length > 0 && args[0].equalsIgnoreCase("store")) {
                 if (owner.isOnline() && owner.hasMyPet()) {
@@ -76,7 +76,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
                                 return;
                             }
-                            if (MyPetApi.getMyPetList().deactivateMyPet(owner, true)) {
+                            if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
                                 owner.setMyPetForWorldGroup(worldGroup, null);
                                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Success", owner), myPet.getPetName()));
                             }
@@ -117,7 +117,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                         gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
-                                MyPet activePet = MyPetApi.getMyPetList().activateMyPet(storedMyPet);
+                                MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                 if (activePet != null && owner.isOnline()) {
                                     Player player = owner.getPlayer();
                                     activePet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.getPetName()));
@@ -180,7 +180,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (MyPetApi.getMyPetList().hasActiveMyPet((Player) commandSender)) {
+        if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) commandSender)) {
             return storeList;
         }
         return CommandAdmin.EMPTY_LIST;

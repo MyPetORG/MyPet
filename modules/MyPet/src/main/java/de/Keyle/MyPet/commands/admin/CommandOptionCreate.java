@@ -143,7 +143,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             return false;
         }
 
-        String lang = MyPetApi.getBukkitHelper().getCommandSenderLanguage(sender);
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
 
         int forceOffset = 0;
         if (args[0].equalsIgnoreCase("-f")) {
@@ -159,14 +159,14 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             }
 
             final MyPetPlayer newOwner;
-            if (MyPetApi.getPlayerList().isMyPetPlayer(owner)) {
-                newOwner = MyPetApi.getPlayerList().getMyPetPlayer(owner);
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
+                newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
 
                 if (newOwner.hasMyPet() && forceOffset == 1) {
-                    MyPetApi.getMyPetList().deactivateMyPet(newOwner, true);
+                    MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
                 }
             } else {
-                newOwner = MyPetApi.getPlayerList().registerMyPetPlayer(owner);
+                newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
             }
 
             if (!newOwner.hasMyPet()) {
@@ -256,7 +256,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         } else if (args[i].startsWith("block:")) {
                             String blocks = args[i].replace("block:", "");
                             String[] blockInfo = blocks.split(":");
-                            if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && MyPetApi.getBukkitHelper().isValidMaterial(Integer.parseInt(blockInfo[0]))) {
+                            if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && MyPetApi.getPlatformHelper().isValidMaterial(Integer.parseInt(blockInfo[0]))) {
                                 TagCompound.getCompoundData().put("BlockID", new TagInt(Integer.parseInt(blockInfo[0])));
                             }
                             if (blockInfo.length >= 2 && Util.isInt(blockInfo[1])) {
@@ -281,7 +281,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
                             MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
 
-                            MyPet myPet = MyPetApi.getMyPetList().activateMyPet(inactiveMyPet);
+                            MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                             if (myPet != null) {
                                 myPet.createEntity();
                                 sender.sendMessage(Translation.getString("Message.Command.Success", sender));

@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet;
 
-import de.Keyle.MyPet.api.BukkitHelper;
 import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.api.PlatformHelper;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
@@ -68,16 +68,16 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private boolean isReady = false;
     private Repository repo;
     private MyPetInfo petInfo;
-    private BukkitHelper bukkitHelper;
+    private PlatformHelper platformHelper;
     private EntityRegistry entityRegistry;
     private CompatUtil compatUtil;
-    private PlayerList playerList;
-    private MyPetList myPetList;
+    private PlayerManager playerManager;
+    private MyPetManager myPetManager;
     private HookManager hookManager;
 
     public void onDisable() {
         if (isReady) {
-            for (MyPet myPet : myPetList.getAllActiveMyPets()) {
+            for (MyPet myPet : myPetManager.getAllActiveMyPets()) {
                 myPet.removePet();
             }
             repo.disable();
@@ -125,10 +125,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
 
         petInfo = compatUtil.getComapatInstance(MyPetInfo.class, "entity", "MyPetInfo");
-        bukkitHelper = compatUtil.getComapatInstance(BukkitHelper.class, "", "BukkitHelper");
+        platformHelper = compatUtil.getComapatInstance(PlatformHelper.class, "", "PlatformHelper");
         entityRegistry = compatUtil.getComapatInstance(EntityRegistry.class, "entity", "EntityRegistry");
-        myPetList = new de.Keyle.MyPet.repository.MyPetList();
-        playerList = new de.Keyle.MyPet.repository.PlayerList();
+        myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
+        playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookManager = new Hooks();
 
         entityRegistry.registerEntityTypes();
@@ -192,7 +192,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         new File(getDataFolder(), "logs").mkdirs();
 
         if (createDefaultSkilltree) {
-            bukkitHelper.copyResource(this, "skilltrees/default.st", new File(skilltreeFolder, "default.st"));
+            platformHelper.copyResource(this, "skilltrees/default.st", new File(skilltreeFolder, "default.st"));
             getLogger().info("Default skilltree file created (default.st).");
         }
 
@@ -223,7 +223,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         File translationReadme = new File(getDataFolder(), "locale" + File.separator + "readme.txt");
         if (!translationReadme.exists()) {
-            bukkitHelper.copyResource(this, "locale-readme.txt", translationReadme);
+            platformHelper.copyResource(this, "locale-readme.txt", translationReadme);
         }
         Translation.init();
 
@@ -255,7 +255,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 Metrics.Plotter plotter = new Metrics.Plotter("Active MyPets") {
                     @Override
                     public int getValue() {
-                        return myPetList.countActiveMyPets();
+                        return myPetManager.countActiveMyPets();
                     }
                 };
                 graphTotalCount.addPlotter(plotter);
@@ -275,7 +275,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 @Override
                 public void callback(final MyPetPlayer joinedPlayer) {
                     if (joinedPlayer != null) {
-                        playerList.setOnline(joinedPlayer);
+                        playerManager.setOnline(joinedPlayer);
 
                         if (isInOnlineMode()) {
                             if (joinedPlayer instanceof OnlineMyPetPlayer) {
@@ -287,7 +287,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                         if (joinedPlayer.hasMyPet()) {
                             MyPet myPet = joinedPlayer.getMyPet();
                             if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                                myPetList.deactivateMyPet(joinedPlayer, true);
+                                myPetManager.deactivateMyPet(joinedPlayer, true);
                             }
                         }
 
@@ -297,7 +297,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                             MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
-                                    myPetList.activateMyPet(storedMyPet);
+                                    myPetManager.activateMyPet(storedMyPet);
 
                                     if (joinedPlayer.hasMyPet()) {
                                         final MyPet myPet = joinedPlayer.getMyPet();
@@ -478,13 +478,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     }
 
     @Override
-    public PlayerList getPlayerList() {
-        return playerList;
+    public PlayerManager getPlayerManager() {
+        return playerManager;
     }
 
-    @Override
-    public MyPetList getMyPetList() {
-        return myPetList;
+    public MyPetManager getMyPetManager() {
+        return myPetManager;
     }
 
     @Override
@@ -496,9 +495,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         return repo;
     }
 
-    @Override
-    public BukkitHelper getBukkitHelper() {
-        return bukkitHelper;
+    public PlatformHelper getPlatformHelper() {
+        return platformHelper;
     }
 
     private void replaceLogger() {

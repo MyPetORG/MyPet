@@ -57,6 +57,7 @@ public class NbtRepository implements Repository, Scheduler {
     protected Multimap<UUID, UUID> petPlayerMultiMap = HashMultimap.create();
 
     private File NBTPetFile;
+    private File NBTPetTempFile;
     private int autoSaveTimer = 0;
     private Backup backupManager;
 
@@ -77,6 +78,7 @@ public class NbtRepository implements Repository, Scheduler {
     @Override
     public void init() {
         NBTPetFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
+        NBTPetTempFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + ".temp");
 
         if (Configuration.Repository.NBT.MAKE_BACKUPS) {
             new File(MyPetApi.getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
@@ -103,9 +105,11 @@ public class NbtRepository implements Repository, Scheduler {
                 Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
                     public void run() {
                         try {
-                            OutputStream os = new GZIPOutputStream(new FileOutputStream(NBTPetFile));
+                            OutputStream os = new GZIPOutputStream(new FileOutputStream(NBTPetTempFile));
                             os.write(data);
                             os.close();
+                            NBTPetFile.delete();
+                            NBTPetTempFile.renameTo(NBTPetFile);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -169,7 +173,7 @@ public class NbtRepository implements Repository, Scheduler {
             for (TagCompound petTag : deletionList) {
                 UUID petUUID = getPetUUID(petTag);
 
-                for (MyPet pet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+                for (MyPet pet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
                     if (pet.getUUID().equals(petUUID)) {
                         continue TagLoop;
                     }
@@ -284,7 +288,7 @@ public class NbtRepository implements Repository, Scheduler {
                 if (!playerTags.containsKey(ownerUUID)) {
                     return;
                 }
-                MyPetPlayer owner = MyPetApi.getPlayerList().getMyPetPlayer(ownerUUID);
+                MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(ownerUUID);
                 if (owner != null) {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTag);
@@ -390,7 +394,7 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     private TagList savePets() {
-        for (StoredMyPet storedMyPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (StoredMyPet storedMyPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             petTags.put(storedMyPet.getUUID(), savePet(storedMyPet));
         }
         return new TagList(Lists.newArrayList(petTags.values()));
@@ -537,7 +541,7 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     private TagList savePlayers() {
-        for (MyPetPlayer player : MyPetApi.getPlayerList().getMyPetPlayers()) {
+        for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             playerTags.put(player.getInternalUUID(), player.save());
         }
         return new TagList(Lists.newArrayList(playerTags.values()));

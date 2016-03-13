@@ -78,7 +78,7 @@ public class EntityMySkeleton extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (MyPetApi.getBukkitHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(d(itemStack).c());
                 ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {

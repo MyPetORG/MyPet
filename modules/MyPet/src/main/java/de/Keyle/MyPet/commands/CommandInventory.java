@@ -41,8 +41,8 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+                if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                    MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned) {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", player), myPet.getPetName()));
                         return true;
@@ -66,8 +66,8 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
 
                 if (petOwner == null || !petOwner.isOnline()) {
                     sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
-                } else if (MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
-                    MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+                } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+                    MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
                         myPet.getSkills().getSkill(Inventory.class).openInventory(player);
                     }

@@ -49,17 +49,17 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
             return false;
         }
 
-        String lang = MyPetApi.getBukkitHelper().getCommandSenderLanguage(sender);
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
         if (petOwner == null || !petOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
             return true;
-        } else if (!MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
+        } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
-        MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
         if (args.length >= 2 && args[1].equalsIgnoreCase("show")) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.getRespawnTime() + "sec.");
         } else if (myPet.getStatus() == PetState.Dead) {

@@ -48,13 +48,13 @@ public class CommandSendAway implements CommandExecutor, TabCompleter {
             if (sender instanceof Player) {
                 if (Permissions.has((Player) sender, "MyPet.admin", false)) {
                     playerName = args[0];
-                    lang = MyPetApi.getBukkitHelper().getPlayerLanguage((Player) sender);
+                    lang = MyPetApi.getPlatformHelper().getPlayerLanguage((Player) sender);
                 }
             } else {
                 playerName = args[0];
             }
         }
-        if (!MyPetApi.getPlayerList().isMyPetPlayer(playerName)) {
+        if (!MyPetApi.getPlayerManager().isMyPetPlayer(playerName)) {
             if (args.length == 0) {
                 sender.sendMessage(Translation.getString("Message.No.HasPet", (Player) sender));
             } else {
@@ -62,7 +62,7 @@ public class CommandSendAway implements CommandExecutor, TabCompleter {
             }
             return true;
         }
-        MyPetPlayer petOwner = MyPetApi.getPlayerList().getMyPetPlayer(playerName);
+        MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(playerName);
         if (petOwner != null && !petOwner.isOnline()) {
             sender.sendMessage(Translation.getString("Message.No.PlayerOnline", lang));
             return true;

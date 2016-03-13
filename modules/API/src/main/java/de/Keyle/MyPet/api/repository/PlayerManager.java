@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class PlayerList {
+public abstract class PlayerManager {
     protected final Map<UUID, UUID> uuidToInternalUUID = new ConcurrentHashMap<>();
     protected final Map<UUID, MyPetPlayer> onlinePlayers = new ConcurrentHashMap<>();
 

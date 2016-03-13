@@ -49,7 +49,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
         for (int i = 1; i <= MyPetType.values().length; i++) {
             petTypes[i] = MyPetType.values()[i - 1].name();
         }
-        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             myPet.getSkills().reset();
         }
 
@@ -71,7 +71,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
             }
         }
 
-        for (MyPet myPet : MyPetApi.getMyPetList().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             myPet.getSkills().reset();
 
             SkillTree skillTree = myPet.getSkilltree();

@@ -18,34 +18,47 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_9_R1;
+package de.Keyle.MyPet.compat.v1_7_R4;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_9_R1.util.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_7_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_9_R1.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.v1_9_R1.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
-import org.json.simple.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-@Compat("v1_9_R1")
-public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
+@Compat("v1_7_R4")
+public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
+    private static Field goalSelectorField = null;
+
+    static {
+        try {
+            goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
+            goalSelectorField.setAccessible(true);
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @param location   the {@link Location} around which players must be to see the effect
      * @param effectName list of effects: https://gist.github.com/riking/5759002
@@ -57,13 +70,12 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
      * @param radius     the radius around the location
      */
     public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
-        EnumParticle effect = EnumParticle.valueOf(effectName);
 
         Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
+        Validate.notNull(effectName, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, data);
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effectName, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
 
         for (Player player : location.getWorld().getPlayers()) {
             if (player.getLocation().getWorld() == location.getWorld()) {
@@ -85,13 +97,11 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
      * @param radius     the radius around the location
      */
     public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
-        EnumParticle effect = EnumParticle.valueOf(effectName);
-
         Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
+        Validate.notNull(effectName, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, data);
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effectName, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
 
         if (player.getLocation().getWorld() == location.getWorld()) {
             if ((int) player.getLocation().distance(location) <= radius) {
@@ -101,11 +111,11 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
     }
 
     public boolean canSpawn(Location loc, MyPetMinecraftEntity entity) {
-        return canSpawn(loc, ((EntityLiving) entity).getBoundingBox());
+        return canSpawn(loc, ((EntityLiving) entity).boundingBox);
     }
 
     public Boolean canSpawn(Location loc, AxisAlignedBB bb) {
-        net.minecraft.server.v1_9_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_7_R4.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         return getBlockBBsInBB(loc.getWorld(), bb).isEmpty() && !mcWorld.containsLiquid(bb);
     }
 
@@ -124,8 +134,8 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
                 if (world.isChunkLoaded(x >> 4, z >> 4)) {
                     for (int y = minY - 1; y < maxY; y++) {
                         Block block = CraftMagicNumbers.getBlock(world.getBlockAt(x, y, z));
-                        if (block != null && block.getBlockData().getMaterial().isSolid()) {
-                            block.a(block.getBlockData(), ((CraftWorld) world).getHandle(), new BlockPosition(x, y, z), axisalignedbb, unsafeList, null);
+                        if (block != null && block.getMaterial().isSolid()) {
+                            block.a(((CraftWorld) world).getHandle(), x, y, z, axisalignedbb, unsafeList, null);
                         }
                     }
                 }
@@ -151,7 +161,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
 
     @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
-        net.minecraft.server.v1_9_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
+        net.minecraft.server.v1_7_R4.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = new NBTTagCompound();
 
         entity.e(vanillaNBT);
@@ -161,7 +171,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
 
     @Override
     public void applyTagToEntity(TagCompound tag, Entity bukkitEntity) {
-        net.minecraft.server.v1_9_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
+        net.minecraft.server.v1_7_R4.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
         entity.f(vanillaNBT);
     }
@@ -178,18 +188,23 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
 
     public void sendMessageRaw(Player player, String message) {
         if (player instanceof CraftPlayer) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(message)));
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
         }
     }
 
     public void sendMessageActionBar(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + JSONObject.escape(message) + "\"}");
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, (byte) 2));
-        }
     }
 
     public void addZombieTargetGoal(Zombie zombie) {
+        EntityZombie ez = ((CraftZombie) zombie).getHandle();
+        if (goalSelectorField != null) {
+            try {
+                PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelectorField.get(ez);
+                pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -206,7 +221,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
         {
             ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            int slot = EntityInsentient.d(itemstack).c();
+            int slot = EntityInsentient.b(itemstack);
             if (slot == 0) {
                 if (itemstack.getItem() instanceof ItemSword) {
                     return true;
@@ -244,7 +259,7 @@ public class BukkitHelper extends de.Keyle.MyPet.api.BukkitHelper {
         return CraftItemStack.asNMSCopy(itemStack);
     }
 
-    public net.minecraft.server.v1_9_R1.World getWorldNMS(World world) {
+    public net.minecraft.server.v1_7_R4.World getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
     }
 }

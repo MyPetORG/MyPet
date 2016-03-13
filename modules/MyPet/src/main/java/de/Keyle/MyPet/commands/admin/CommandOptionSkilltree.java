@@ -43,17 +43,17 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
             return false;
         }
 
-        String lang = MyPetApi.getBukkitHelper().getCommandSenderLanguage(sender);
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
         if (petOwner == null || !petOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
             return true;
-        } else if (!MyPetApi.getMyPetList().hasActiveMyPet(petOwner)) {
+        } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
-        MyPet myPet = MyPetApi.getMyPetList().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
         SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
         if (skillTreeMobType.hasSkillTree(args[1])) {
@@ -79,8 +79,8 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
             if (player == null || !player.isOnline()) {
                 return CommandAdmin.EMPTY_LIST;
             }
-            if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
-                MyPet myPet = MyPetApi.getMyPetList().getMyPet(player);
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
 
                 List<String> skilltreeList = new ArrayList<>();

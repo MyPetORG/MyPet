@@ -26,7 +26,7 @@ import de.Keyle.MyPet.util.player.OfflineMyPetPlayer;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import org.bukkit.entity.Player;
 
-public class PlayerList extends de.Keyle.MyPet.api.repository.PlayerList {
+public class PlayerManager extends de.Keyle.MyPet.api.repository.PlayerManager {
     public MyPetPlayer createMyPetPlayer(Player player) {
         MyPetPlayer petPlayer = getMyPetPlayer(player);
         if (petPlayer == null) {

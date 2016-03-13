@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet;
 
-import de.Keyle.MyPet.api.BukkitHelper;
+import de.Keyle.MyPet.api.PlatformHelper;
 import de.Keyle.MyPet.api.entity.EntityRegistry;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.plugin.MyPetPlugin;
-import de.Keyle.MyPet.api.repository.MyPetList;
-import de.Keyle.MyPet.api.repository.PlayerList;
+import de.Keyle.MyPet.api.repository.MyPetManager;
+import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.hooks.HookManager;
@@ -64,8 +64,8 @@ public class MyPetApi {
         }
     }
 
-    public static BukkitHelper getBukkitHelper() {
-        return plugin.getBukkitHelper();
+    public static PlatformHelper getPlatformHelper() {
+        return plugin.getPlatformHelper();
     }
 
     public static MyPetInfo getMyPetInfo() {
@@ -80,12 +80,12 @@ public class MyPetApi {
         return plugin.getCompatUtil();
     }
 
-    public static PlayerList getPlayerList() {
-        return plugin.getPlayerList();
+    public static PlayerManager getPlayerManager() {
+        return plugin.getPlayerManager();
     }
 
-    public static MyPetList getMyPetList() {
-        return plugin.getMyPetList();
+    public static MyPetManager getMyPetManager() {
+        return plugin.getMyPetManager();
     }
 
     public static HookManager getHookManager() {

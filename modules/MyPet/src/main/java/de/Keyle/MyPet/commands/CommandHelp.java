@@ -50,7 +50,7 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
             if (Permissions.has(player, "MyPet.admin", false)) {
                 player.sendMessage(ChatColor.GOLD + "/petadmin" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Admin", player));
             }
-            if (MyPetApi.getMyPetList().hasActiveMyPet(player)) {
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 if (Permissions.has(player, "MyPet.user.command.name")) {
                     player.sendMessage(ChatColor.GOLD + "/petname" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Name", player));
                 }
@@ -69,13 +69,13 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 player.sendMessage(ChatColor.GOLD + "/petskill" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Skill", player));
                 player.sendMessage(ChatColor.GOLD + "/petchooseskilltree" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.ChooseSkilltree", player));
 
-                if (MyPetApi.getMyPetList().getMyPet(player).getSkills().isSkillActive(Inventory.class)) {
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Inventory.class)) {
                     player.sendMessage(ChatColor.GOLD + "/petinventory" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Inventory", player));
                 }
-                if (MyPetApi.getMyPetList().getMyPet(player).getSkills().isSkillActive(Pickup.class)) {
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Pickup.class)) {
                     player.sendMessage(ChatColor.GOLD + "/petpickup" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Pickup", player));
                 }
-                if (MyPetApi.getMyPetList().getMyPet(player).getSkills().isSkillActive(Behavior.class)) {
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Behavior.class)) {
                     player.sendMessage(ChatColor.GOLD + "/petbehavior" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Behavior", player));
                 }
             }

@@ -55,7 +55,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter {
 
         String lang = "en";
         if (commandSender instanceof Player) {
-            lang = MyPetApi.getBukkitHelper().getPlayerLanguage((Player) commandSender);
+            lang = MyPetApi.getPlatformHelper().getPlayerLanguage((Player) commandSender);
         }
 
         if (myPetType != null) {
@@ -68,7 +68,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter {
 
             String foodString = "";
             for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPetType)) {
-                foodString += WordUtils.capitalizeFully(MyPetApi.getBukkitHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")) + ", ";
+                foodString += WordUtils.capitalizeFully(MyPetApi.getPlatformHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")) + ", ";
             }
             foodString = foodString.substring(0, foodString.lastIndexOf(","));
             commandSender.sendMessage(Translation.getString("Name.Food", lang) + ": " + foodString);
