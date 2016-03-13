@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.gui;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.skill.SkillsInfo;
 import de.Keyle.MyPet.api.skill.skills.*;
 import de.Keyle.MyPet.gui.skilltreecreator.LevelCreator;
@@ -62,6 +63,8 @@ public class GuiMain {
         Image logoImage = new ImageIcon(ClassLoader.getSystemResource("images/logo.png")).getImage();
 
         registerSkillsInfo();
+
+        Configuration.LevelSystem.Experience.LEVEL_CAP = Integer.MAX_VALUE;
 
         new File(configPath + "skilltrees" + File.separator).mkdirs();
 
