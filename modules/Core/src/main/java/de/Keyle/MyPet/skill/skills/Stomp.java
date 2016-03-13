@@ -101,7 +101,11 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
 
     public void stomp(Location location) {
         location.getWorld().playEffect(location, Effect.STEP_SOUND, Material.BEDROCK);
-        location.getWorld().playSound(location, Sound.FALL_BIG, 0.9F, 0.7F);
+        if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+            location.getWorld().playSound(location, Sound.ENTITY_HOSTILE_BIG_FALL, 0.9F, 0.7F);
+        } else {
+            location.getWorld().playSound(location, Sound.valueOf("FALL_BIG"), 0.9F, 0.7F);
+        }
 
         double posX = location.getX();
         double posY = location.getY();
