@@ -60,6 +60,9 @@ public class CommandCall implements CommandExecutor, TabCompleter {
                     case Flying:
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", petOwner), myPet.getPetName()));
                         break;
+                    case Spectator:
+                        sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", petOwner), myPet.getPetName()));
+                        break;
                 }
                 return true;
             } else {

@@ -137,6 +137,9 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                                         case Dead:
                                             activePet.getOwner().sendMessage(Translation.getString("Message.Spawn.Respawn.In", owner).replace("%petname%", activePet.getPetName()).replace("%time%", "" + activePet.getRespawnTime()));
                                             break;
+                                        case Spectator:
+                                            sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", owner), activePet.getPetName()));
+                                            break;
                                     }
                                 }
                             }

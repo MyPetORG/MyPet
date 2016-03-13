@@ -146,6 +146,9 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                                         case Dead:
                                             newOwner.sendMessage(Translation.getString("Message.Spawn.Respawn.In", newOwner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
                                             break;
+                                        case Spectator:
+                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", newOwner), myPet.getPetName()));
+                                            break;
                                     }
                                 } else {
                                     myPet.getOwner().sendMessage(Translation.getString("Message.Command.Trade.Reciever.Error", newOwner));
