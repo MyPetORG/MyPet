@@ -455,7 +455,13 @@ public class EntityListener implements Listener {
                             }
                         } else if (leashTarget instanceof Zombie) {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(((Zombie) leashTarget).isBaby()));
-                            extendedInfo.getCompoundData().put("Villager", new TagByte(((Zombie) leashTarget).isVillager()));
+                            if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+                                if (((Zombie) leashTarget).isVillager()) {
+                                    extendedInfo.getCompoundData().put("Profession", new TagInt(((Zombie) leashTarget).getVillagerProfession().ordinal() + 1));
+                                }
+                            } else {
+                                extendedInfo.getCompoundData().put("Villager", new TagByte(((Zombie) leashTarget).isVillager()));
+                            }
                         } else if (leashTarget instanceof Enderman) {
                             Enderman enderman = (Enderman) leashTarget;
                             if (enderman.getCarriedMaterial().getItemType() != Material.AIR) {
