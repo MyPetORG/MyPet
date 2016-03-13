@@ -126,7 +126,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
 
         petInfo = compatUtil.getComapatInstance(MyPetInfo.class, "entity", "MyPetInfo");
-        platformHelper = compatUtil.getComapatInstance(PlatformHelper.class, "", "BukkitHelper");
+        platformHelper = compatUtil.getComapatInstance(PlatformHelper.class, "", "PlatformHelper");
         entityRegistry = compatUtil.getComapatInstance(EntityRegistry.class, "entity", "EntityRegistry");
         myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
