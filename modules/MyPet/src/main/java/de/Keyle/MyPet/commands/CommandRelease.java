@@ -172,6 +172,13 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
                         } else if (myPet instanceof MyZombie) {
                             ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
+                            if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+                                if (((MyZombie) myPet).isVillager()) {
+                                    ((Zombie) normalEntity).setVillagerProfession(Profession.values()[((MyZombie) myPet).getProfession() - 1]);
+                                }
+                            } else {
+                                ((Zombie) normalEntity).setVillager(((MyZombie) myPet).isVillager());
+                            }
                         } else if (myPet instanceof MySkeleton) {
                             if (((MySkeleton) myPet).isWither()) {
                                 ((Skeleton) normalEntity).setSkeletonType(SkeletonType.WITHER);
