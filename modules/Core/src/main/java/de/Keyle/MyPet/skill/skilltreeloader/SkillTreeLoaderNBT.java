@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.skilltreeloader;
+package de.Keyle.MyPet.skill.skilltreeloader;
 
 
 import de.Keyle.MyPet.MyPetApi;
@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.skill.SkillsInfo;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoader;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationNBT;
 import de.keyle.knbt.*;
 
