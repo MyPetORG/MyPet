@@ -57,6 +57,7 @@ public class NbtRepository implements Repository, Scheduler {
     protected Multimap<UUID, UUID> petPlayerMultiMap = HashMultimap.create();
 
     private File NBTPetFile;
+    private File NBTPetTempFile;
     private int autoSaveTimer = 0;
     private Backup backupManager;
 
@@ -77,6 +78,7 @@ public class NbtRepository implements Repository, Scheduler {
     @Override
     public void init() {
         NBTPetFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
+        NBTPetTempFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + ".temp");
 
         if (Configuration.Repository.NBT.MAKE_BACKUPS) {
             new File(MyPetApi.getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
@@ -103,9 +105,11 @@ public class NbtRepository implements Repository, Scheduler {
                 Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
                     public void run() {
                         try {
-                            OutputStream os = new GZIPOutputStream(new FileOutputStream(NBTPetFile));
+                            OutputStream os = new GZIPOutputStream(new FileOutputStream(NBTPetTempFile));
                             os.write(data);
                             os.close();
+                            NBTPetFile.delete();
+                            NBTPetTempFile.renameTo(NBTPetFile);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
