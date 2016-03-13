@@ -24,6 +24,8 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
 import static org.bukkit.Material.CARROT;
@@ -31,6 +33,8 @@ import static org.bukkit.Material.SNOW_BALL;
 
 @DefaultInfo(food = {CARROT, SNOW_BALL})
 public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.MySnowman {
+    boolean sheared = false;
+
     public MySnowman(MyPetPlayer petOwner) {
         super(petOwner);
     }
@@ -38,6 +42,33 @@ public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.
     @Override
     public MyPetType getPetType() {
         return MyPetType.Snowman;
+    }
+
+    @Override
+    public boolean isSheared() {
+        return sheared;
+    }
+
+    @Override
+    public void setSheared(boolean flag) {
+        sheared = flag;
+        if (status == PetState.Here) {
+            getEntity().getHandle().updateVisuals();
+        }
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("Sheared", new TagByte(isSheared()));
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Sheared")) {
+            setSheared(info.getAs("Sheared", TagByte.class).getBooleanData());
+        }
     }
 
     @Override

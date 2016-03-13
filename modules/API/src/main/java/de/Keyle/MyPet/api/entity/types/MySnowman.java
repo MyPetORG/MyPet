@@ -28,4 +28,7 @@ import static org.bukkit.Material.SNOW_BALL;
 
 @DefaultInfo(food = {CARROT, SNOW_BALL})
 public interface MySnowman extends MyPet {
+    boolean isSheared();
+
+    void setSheared(boolean flag);
 }
