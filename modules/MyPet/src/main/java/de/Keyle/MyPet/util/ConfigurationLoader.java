@@ -81,6 +81,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Repository.MySQL.Password", Repository.MySQL.PASSWORD);
         config.addDefault("MyPet.Repository.MySQL.User", Repository.MySQL.USER);
         config.addDefault("MyPet.Repository.MySQL.Port", Repository.MySQL.PORT);
+        config.addDefault("MyPet.Repository.MySQL.MaxConnections", Repository.MySQL.POOL_SIZE);
 
         config.addDefault("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
         config.addDefault("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);
@@ -303,6 +304,7 @@ public class ConfigurationLoader {
         Repository.MySQL.PASSWORD = config.getString("MyPet.Repository.MySQL.Password", Repository.MySQL.PASSWORD);
         Repository.MySQL.USER = config.getString("MyPet.Repository.MySQL.User", Repository.MySQL.USER);
         Repository.MySQL.PORT = config.getInt("MyPet.Repository.MySQL.Database", Repository.MySQL.PORT);
+        Repository.MySQL.POOL_SIZE = config.getInt("MyPet.Repository.MySQL.MaxConnections", Repository.MySQL.POOL_SIZE);
 
         Repository.MongoDB.DATABASE = config.getString("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
         Repository.MongoDB.PREFIX = config.getString("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);

@@ -64,6 +64,7 @@ public class Configuration {
             public static String PASSWORD = "";
             public static String USER = "root";
             public static int PORT = 3306;
+            public static int POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
         }
 
         public static class MongoDB {

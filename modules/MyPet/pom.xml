@@ -129,6 +129,21 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.18</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.18</version>
+        </dependency>
+        <dependency>
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>1.11</version>
@@ -256,6 +271,9 @@
                                     <include>com.intellij:forms_rt:*</include>
                                     <include>com.googlecode.json-simple:json-simple:*</include>
                                     <include>com.google.code.gson:gson:*</include>
+                                    <include>com.zaxxer:HikariCP:*</include>
+                                    <include>org.slf4j:slf4j-api:*</include>
+                                    <include>org.slf4j:slf4j-nop:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
@@ -282,6 +300,14 @@
                                 <relocation>
                                     <pattern>com.google.gson</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.gson</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.hikari</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.logger.slf4j</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>

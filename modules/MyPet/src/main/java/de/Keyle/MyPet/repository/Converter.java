@@ -61,23 +61,28 @@ public class Converter {
         toRepo = MyPetApi.getRepository();
 
         List<MyPetPlayer> playerList = fromRepo.getAllMyPetPlayers();
-        for (MyPetPlayer player : playerList) {
-            if (toRepo instanceof NbtRepository) {
+        if (toRepo instanceof NbtRepository) {
+            for (MyPetPlayer player : playerList) {
                 toRepo.addMyPetPlayer(player, null);
-            } else if (toRepo instanceof MySqlRepository) {
-                ((MySqlRepository) toRepo).addMyPetPlayer(player);
-            } else if (toRepo instanceof MongoDbRepository) {
+            }
+        } else if (toRepo instanceof MySqlRepository) {
+            ((MySqlRepository) toRepo).addMyPetPlayers(playerList);
+        } else if (toRepo instanceof MongoDbRepository) {
+            for (MyPetPlayer player : playerList) {
                 ((MongoDbRepository) toRepo).addMyPetPlayer(player);
             }
         }
 
         List<StoredMyPet> pets = fromRepo.getAllMyPets();
-        for (StoredMyPet pet : pets) {
-            if (toRepo instanceof NbtRepository) {
+
+        if (toRepo instanceof NbtRepository) {
+            for (StoredMyPet pet : pets) {
                 toRepo.addMyPet(pet, null);
-            } else if (toRepo instanceof MySqlRepository) {
-                ((MySqlRepository) toRepo).addMyPet(pet);
-            } else if (toRepo instanceof MongoDbRepository) {
+            }
+        } else if (toRepo instanceof MySqlRepository) {
+            ((MySqlRepository) toRepo).addMyPets(pets);
+        } else if (toRepo instanceof MongoDbRepository) {
+            for (StoredMyPet pet : pets) {
                 ((MongoDbRepository) toRepo).addMyPet(pet);
             }
         }
