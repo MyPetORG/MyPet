@@ -22,11 +22,11 @@ package de.Keyle.MyPet.gui;
 
 import de.Keyle.MyPet.api.skill.SkillsInfo;
 import de.Keyle.MyPet.api.skill.skills.*;
-import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoaderJSON;
-import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.gui.skilltreecreator.LevelCreator;
 import de.Keyle.MyPet.gui.skilltreecreator.SkillPropertyEditor;
 import de.Keyle.MyPet.gui.skilltreecreator.SkilltreeCreator;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 
 import javax.swing.*;
 import java.awt.*;
