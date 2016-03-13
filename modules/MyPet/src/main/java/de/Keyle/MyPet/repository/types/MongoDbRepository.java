@@ -52,7 +52,7 @@ import java.util.*;
 public class MongoDbRepository implements Repository {
     private MongoClient mongo;
     private MongoDatabase db;
-    private int version = 1;
+    private int version = 2;
     // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
 
     @Override
@@ -93,6 +93,14 @@ public class MongoDbRepository implements Repository {
         db.createCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
         db.createCollection(Configuration.Repository.MongoDB.PREFIX + "players");
 
+        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+        petCollection.createIndex(new BasicDBObject("uuid", 1));
+        petCollection.createIndex(new BasicDBObject("owner_uuid", 1));
+        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        playerCollection.createIndex(new BasicDBObject("internal_uuid", 1));
+        playerCollection.createIndex(new BasicDBObject("offline_uuid", 1));
+        playerCollection.createIndex(new BasicDBObject("mojang_uuid", 1));
+
         Document info = new Document();
 
         updateInfoDocument(info);
@@ -107,9 +115,19 @@ public class MongoDbRepository implements Repository {
 
             switch (oldVersion) {
                 case 1:
-                    //updateToV2();
+                    updateToV2();
             }
         }
+    }
+
+    private void updateToV2() {
+        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+        petCollection.createIndex(new BasicDBObject("uuid", 1));
+        petCollection.createIndex(new BasicDBObject("owner_uuid", 1));
+        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        playerCollection.createIndex(new BasicDBObject("internal_uuid", 1));
+        playerCollection.createIndex(new BasicDBObject("offline_uuid", 1));
+        playerCollection.createIndex(new BasicDBObject("mojang_uuid", 1));
     }
 
     public boolean collectionExists(final String collectionName) {
