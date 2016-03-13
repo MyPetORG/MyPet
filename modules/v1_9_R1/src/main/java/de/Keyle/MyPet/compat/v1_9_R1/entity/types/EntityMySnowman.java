@@ -22,13 +22,59 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MySnowman;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
+    private static final DataWatcherObject<Byte> shearedWatcher = DataWatcher.a(EntityMySnowman.class, DataWatcherRegistry.a);
+
     public EntityMySnowman(World world, MyPet myPet) {
         super(world, myPet);
+    }
+
+    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
+            return true;
+        }
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Item.getItemOf(Blocks.PUMPKIN) && getMyPet().isSheared() && entityhuman.isSneaking()) {
+                getMyPet().setSheared(false);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
+                }
+                return true;
+            } else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isSneaking()) {
+                getMyPet().setSheared(true);
+                makeSound("entity.sheep.shear", 1.0F, 1.0F);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemStack.damage(1, entityhuman);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void updateVisuals() {
+        byte oldValue = this.datawatcher.get(shearedWatcher);
+        if (getMyPet().isSheared()) {
+            this.datawatcher.set(shearedWatcher, (byte) (oldValue | 0x10));
+        } else {
+            this.datawatcher.set(shearedWatcher, (byte) (oldValue & 0xFFFFFFEF));
+        }
+    }
+
+    @Override
+    protected void initDatawatcher() {
+        super.initDatawatcher();
+
+        this.datawatcher.register(shearedWatcher, (byte) 0);
     }
 
     @Override
@@ -48,5 +94,9 @@ public class EntityMySnowman extends EntityMyPet {
     @Override
     public void playPetStepSound() {
         makeSound("block.snow.step", 0.15F, 1.0F);
+    }
+
+    public MySnowman getMyPet() {
+        return (MySnowman) myPet;
     }
 }
