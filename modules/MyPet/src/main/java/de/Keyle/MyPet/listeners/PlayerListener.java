@@ -43,6 +43,7 @@ import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -91,6 +92,32 @@ public class PlayerListener implements Listener {
                             block = block.getRelative(BlockFace.DOWN);
                         }
                         myPet.getSkills().getSkill(Control.class).setMoveTo(block.getLocation());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerGameModeChangeEvent event) {
+        if (event.getNewGameMode() == GameMode.SPECTATOR) {
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+                MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
+                if (myPetPlayerDamagee.hasMyPet()) {
+                    myPetPlayerDamagee.getMyPet().removePet();
+                }
+            }
+        } else {
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+                MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
+                if (myPetPlayerDamagee.hasMyPet()) {
+                    MyPet myPet = myPetPlayerDamagee.getMyPet();
+                    if (myPet.wantsToRespawn()) {
+                        switch (myPet.createEntity()) {
+                            case Success:
+                                myPetPlayerDamagee.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", myPetPlayerDamagee), myPet.getPetName()));
+                                break;
+                        }
                     }
                 }
             }

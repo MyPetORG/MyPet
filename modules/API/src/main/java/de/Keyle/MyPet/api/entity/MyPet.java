@@ -33,7 +33,7 @@ public interface MyPet extends StoredMyPet, Scheduler {
     }
 
     enum SpawnFlags {
-        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, NotAllowed
+        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, NotAllowed
     }
 
     void removePet();
