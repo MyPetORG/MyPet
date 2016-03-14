@@ -22,32 +22,20 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetSelectEvent extends Event implements Cancellable {
+public class MyPetLoadEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    boolean isCancelled = false;
-
-    public enum NewStatus {
-        Active, Inactive
-    }
 
     private final StoredMyPet myPet;
-    private final NewStatus newStatus;
 
-    public MyPetSelectEvent(StoredMyPet mypet, NewStatus newStatus) {
+    public MyPetLoadEvent(StoredMyPet mypet) {
         this.myPet = mypet;
-        this.newStatus = newStatus;
     }
 
     public StoredMyPet getMyPet() {
         return myPet;
-    }
-
-    public NewStatus getNewStatus() {
-        return newStatus;
     }
 
     public MyPetPlayer getOwner() {
@@ -55,16 +43,6 @@ public class MyPetSelectEvent extends Event implements Cancellable {
             return myPet.getOwner();
         }
         return null;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return isCancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        isCancelled = cancelled;
     }
 
     public HandlerList getHandlers() {

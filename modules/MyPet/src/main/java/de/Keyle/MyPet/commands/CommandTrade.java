@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
@@ -120,6 +121,8 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                             @Override
                             public void callback(Boolean value) {
                                 pet.setOwner(newOwner);
+                                MyPetSaveEvent event = new MyPetSaveEvent(pet);
+                                Bukkit.getServer().getPluginManager().callEvent(event);
                                 repo.addMyPet(pet, null);
                                 MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(pet);
 

@@ -22,17 +22,15 @@ package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.event.MyPetSelectEvent;
-import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
+import de.Keyle.MyPet.api.event.MyPetLoadEvent;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.entity.MyPetClass;
 import de.keyle.knbt.TagCompound;
+import org.bukkit.Bukkit;
 
 import java.util.Collection;
-
-import static org.bukkit.Bukkit.getServer;
 
 public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
@@ -71,38 +69,36 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
             }
         }
 
-        MyPetSelectEvent event = new MyPetSelectEvent(storedMyPet, NewStatus.Active);
-        getServer().getPluginManager().callEvent(event);
+        MyPetLoadEvent event = new MyPetLoadEvent(storedMyPet);
+        Bukkit.getServer().getPluginManager().callEvent(event);
 
-        if (!event.isCancelled()) {
-            MyPet myPet = MyPetClass.getByMyPetType(storedMyPet.getPetType()).getNewMyPetInstance(storedMyPet.getOwner());
-            myPet.setUUID(storedMyPet.getUUID());
-            myPet.setPetName(storedMyPet.getPetName());
-            myPet.setRespawnTime(storedMyPet.getRespawnTime());
-            myPet.setWorldGroup(storedMyPet.getWorldGroup());
-            myPet.setInfo(storedMyPet.getInfo());
-            myPet.setLastUsed(storedMyPet.getLastUsed());
-            myPet.setWantsToRespawn(storedMyPet.wantsToRespawn());
+        MyPet myPet = MyPetClass.getByMyPetType(storedMyPet.getPetType()).getNewMyPetInstance(storedMyPet.getOwner());
+        myPet.setUUID(storedMyPet.getUUID());
+        myPet.setPetName(storedMyPet.getPetName());
+        myPet.setRespawnTime(storedMyPet.getRespawnTime());
+        myPet.setWorldGroup(storedMyPet.getWorldGroup());
+        myPet.setInfo(storedMyPet.getInfo());
+        myPet.setLastUsed(storedMyPet.getLastUsed());
+        myPet.setWantsToRespawn(storedMyPet.wantsToRespawn());
 
-            myPet.getExperience().setExp(storedMyPet.getExp());
-            myPet.setSkilltree(storedMyPet.getSkilltree());
-            Collection<SkillInstance> skills = myPet.getSkills().getSkills();
-            if (skills.size() > 0) {
-                for (SkillInstance skill : skills) {
-                    if (skill instanceof NBTStorage) {
-                        NBTStorage storageSkill = (NBTStorage) skill;
-                        if (storedMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {
-                            storageSkill.load(storedMyPet.getSkillInfo().getAs(skill.getName(), TagCompound.class));
-                        }
+        myPet.getExperience().setExp(storedMyPet.getExp());
+        myPet.setSkilltree(storedMyPet.getSkilltree());
+        Collection<SkillInstance> skills = myPet.getSkills().getSkills();
+        if (skills.size() > 0) {
+            for (SkillInstance skill : skills) {
+                if (skill instanceof NBTStorage) {
+                    NBTStorage storageSkill = (NBTStorage) skill;
+                    if (storedMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {
+                        storageSkill.load(storedMyPet.getSkillInfo().getAs(skill.getName(), TagCompound.class));
                     }
                 }
             }
-            myPet.setHealth(storedMyPet.getHealth());
-            myPet.setHungerValue(storedMyPet.getHungerValue());
-
-            mActivePetsPlayer.put(myPet, myPet.getOwner());
-            return myPet;
         }
-        return null;
+        myPet.setHealth(storedMyPet.getHealth());
+        myPet.setHungerValue(storedMyPet.getHungerValue());
+
+        mActivePetsPlayer.put(myPet, myPet.getOwner());
+        return myPet;
+
     }
 }
