@@ -779,12 +779,7 @@ public class EntityListener implements Listener {
                 myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Dead", owner), myPet.getPetName()));
 
                 MyPetApi.getMyPetManager().deactivateMyPet(owner, false);
-                MyPetApi.getRepository().removeMyPet(myPet.getUUID(), new RepositoryCallback<Boolean>() {
-                    @Override
-                    public void callback(Boolean value) {
-                    }
-                });
-
+                MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
 
                 return;
             }
