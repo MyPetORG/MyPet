@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.repository;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetLoadEvent;
@@ -58,14 +59,14 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
     // All ----------------------------------------------------------------------
 
-    public MyPet activateMyPet(StoredMyPet storedMyPet) {
+    public Optional<MyPet> activateMyPet(StoredMyPet storedMyPet) {
         if (!storedMyPet.getOwner().isOnline()) {
-            return null;
+            return Optional.absent();
         }
 
         if (storedMyPet.getOwner().hasMyPet()) {
             if (!deactivateMyPet(storedMyPet.getOwner(), true)) {
-                return null;
+                return Optional.absent();
             }
         }
 
@@ -98,7 +99,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         myPet.setHungerValue(storedMyPet.getHungerValue());
 
         mActivePetsPlayer.put(myPet, myPet.getOwner());
-        return myPet;
+        return Optional.of(myPet);
 
     }
 }

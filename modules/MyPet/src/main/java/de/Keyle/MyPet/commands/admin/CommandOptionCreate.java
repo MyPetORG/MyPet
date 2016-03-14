@@ -20,12 +20,14 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -274,6 +276,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
                 inactiveMyPet.setWorldGroup(wg.getName());
 
+                MyPetSaveEvent event = new MyPetSaveEvent(inactiveMyPet);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+
                 MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
                     @Override
                     public void callback(Boolean value) {
@@ -281,9 +286,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
                             MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
 
-                            MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
-                            if (myPet != null) {
-                                myPet.createEntity();
+                            Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
+                            if (myPet.isPresent()) {
+                                myPet.get().createEntity();
                                 sender.sendMessage(Translation.getString("Message.Command.Success", sender));
                             } else {
                                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");

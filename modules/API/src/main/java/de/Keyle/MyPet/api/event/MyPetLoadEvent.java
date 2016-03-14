@@ -39,10 +39,7 @@ public class MyPetLoadEvent extends Event {
     }
 
     public MyPetPlayer getOwner() {
-        if (myPet != null) {
-            return myPet.getOwner();
-        }
-        return null;
+        return myPet.getOwner();
     }
 
     public HandlerList getHandlers() {

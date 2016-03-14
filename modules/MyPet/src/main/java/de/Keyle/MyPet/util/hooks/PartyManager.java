@@ -43,7 +43,7 @@ public class PartyManager {
 
         if (PluginHookManager.isPluginUsable("Heroes")) {
             try {
-                Heroes heroes = PluginHookManager.getPluginInstance(Heroes.class);
+                Heroes heroes = PluginHookManager.getPluginInstance(Heroes.class).get();
                 Hero heroPlayer = heroes.getCharacterManager().getHero(player);
                 if (heroPlayer.getParty() != null) {
                     List<Player> members = new ArrayList<>();

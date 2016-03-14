@@ -56,7 +56,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (myPet.getSkills().hasSkill(Inventory.class)) {
-                        myPet.getSkills().getSkill(Inventory.class).activate();
+                        myPet.getSkills().getSkill(Inventory.class).get().activate();
                     }
                 } else {
                     sender.sendMessage(Translation.getString("Message.No.HasPet", player));
@@ -69,7 +69,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
                 } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
-                        myPet.getSkills().getSkill(Inventory.class).openInventory(player);
+                        myPet.getSkills().getSkill(Inventory.class).get().openInventory(player);
                     }
                 }
             }

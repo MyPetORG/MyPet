@@ -102,7 +102,7 @@ public class Inventory extends InventoryInfo implements SkillInstance, NBTStorag
                 myPet.getOwner().sendMessage(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                 return false;
             }
-            if (!myPet.getLocation().getBlock().isLiquid()) {
+            if (!myPet.getLocation().get().getBlock().isLiquid()) {
                 inv.setName(myPet.getPetName());
                 openInventory(myPet.getOwner().getPlayer());
                 return true;

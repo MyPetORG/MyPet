@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.skill;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
@@ -141,19 +142,19 @@ public class Skills {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends SkillInstance> T getSkill(Class<T> clazz) {
+    public <T extends SkillInstance> Optional<T> getSkill(Class<T> clazz) {
         SkillName sn = clazz.getAnnotation(SkillName.class);
         if (sn == null) {
-            return null;
+            return Optional.absent();
         }
         if (!skillsNamesClass.containsKey(sn.value())) {
-            return null;
+            return Optional.absent();
         }
         SkillInstance skill = skillsNamesClass.get(sn.value());
         if (!clazz.isInstance(skill)) {
             return null;
         }
-        return (T) skill;
+        return Optional.of((T) skill);
     }
 
     public Set<SkillInstance> getSkills() {
@@ -190,7 +191,7 @@ public class Skills {
     */
 
     public boolean isSkillActive(Class<? extends SkillInstance> clazz) {
-        return hasSkill(clazz) && getSkill(clazz).isActive();
+        return hasSkill(clazz) && getSkill(clazz).get().isActive();
     }
 
     public void reset() {

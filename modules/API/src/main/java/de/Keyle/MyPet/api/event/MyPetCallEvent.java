@@ -42,10 +42,7 @@ public class MyPetCallEvent extends Event implements Cancellable {
     }
 
     public MyPetPlayer getOwner() {
-        if (myPet != null) {
-            return myPet.getOwner();
-        }
-        return null;
+        return myPet.getOwner();
     }
 
     @Override

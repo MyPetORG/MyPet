@@ -50,7 +50,7 @@ public class EntityMySquid extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (this.random.nextBoolean()) {
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, 0.7, 0), "WATER_SPLASH", 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), "WATER_SPLASH", 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
         }
     }
 }

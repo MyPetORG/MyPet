@@ -96,14 +96,14 @@ public class Shield extends ShieldInfo implements SkillInstance, ActiveSkill {
     public double redirectDamage(double damage) {
         double redirectedDamage = getRedirectedDamage(damage);
         if (myPet.getStatus() == PetState.Here && myPet.getHealth() - redirectedDamage > 0) {
-            myPet.getEntity().damage(redirectedDamage);
+            myPet.getEntity().get().damage(redirectedDamage);
             if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
-                myPet.getEntity().getHandle().makeSound("entity.endermen.teleport", 0.2F, 1.0F);
+                myPet.getEntity().get().getHandle().makeSound("entity.endermen.teleport", 0.2F, 1.0F);
             } else {
-                myPet.getEntity().getHandle().makeSound("mob.endermen.portal", 1F, 2F);
+                myPet.getEntity().get().getHandle().makeSound("mob.endermen.portal", 1F, 2F);
             }
             MyPetApi.getPlatformHelper().playParticleEffect(myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), "CRIT_MAGIC", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "CRIT", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), "CRIT", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
             return redirectedDamage;
         } else {
             return 0;

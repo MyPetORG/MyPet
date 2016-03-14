@@ -78,13 +78,13 @@ public class LevelUpListener implements Listener {
         }
 
         if (myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().getHandle().updateNameTag();
+            myPet.getEntity().get().getHandle().updateNameTag();
             if (!event.isQuiet()) {
                 myPet.setHealth(myPet.getMaxHealth());
                 myPet.setHungerValue(100);
 
                 if (Configuration.LevelSystem.FIREWORK) {
-                    Firework fw = (Firework) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), EntityType.FIREWORK);
+                    Firework fw = (Firework) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.FIREWORK);
                     FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(Configuration.LevelSystem.FIREWORK_COLOR)).withTrail().withFlicker().build();
                     FireworkMeta fwm = fw.getFireworkMeta();
                     fwm.addEffect(fwe);

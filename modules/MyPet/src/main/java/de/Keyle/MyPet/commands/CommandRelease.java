@@ -83,7 +83,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                 }
                 if (ChatColor.stripColor(myPet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
-                        myPet.getSkills().getSkill(Inventory.class).getInventory().dropContentAt(myPet.getLocation());
+                        myPet.getSkills().getSkill(Inventory.class).get().getInventory().dropContentAt(myPet.getLocation().get());
                     }
 
                     if (myPet instanceof MyPetEquipment) {
@@ -92,7 +92,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
 
 
                     if (!Configuration.Misc.REMOVE_PETS_AFTER_RELEASE) {
-                        LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
+                        LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
 
                         if (myPet instanceof MyChicken) {
                             if (((MyChicken) myPet).isBaby()) {

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -44,7 +45,7 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     void setStatus(PetState status);
 
-    Location getLocation();
+    Optional<Location> getLocation();
 
     double getMaxHealth();
 
@@ -54,7 +55,7 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     SpawnFlags createEntity();
 
-    MyPetBukkitEntity getEntity();
+    Optional<MyPetBukkitEntity> getEntity();
 
     double getDamage();
 

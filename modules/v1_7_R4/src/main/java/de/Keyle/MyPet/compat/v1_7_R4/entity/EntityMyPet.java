@@ -96,7 +96,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             setSize();
 
             this.myPet = myPet;
-            this.rideSkill = myPet.getSkills().getSkill(Ride.class);
+            this.rideSkill = myPet.getSkills().getSkill(Ride.class).get();
             this.petPathfinderSelector = new AIGoalSelector();
             this.petTargetSelector = new AIGoalSelector();
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
@@ -439,7 +439,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         if (itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
-                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
                     } else if (myPet.getHungerValue() < 100) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             --itemStack.count;
@@ -447,7 +447,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         if (itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
-                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getHeadHeight(), 0), "hearts", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
                     }
                     if (addHunger > 0 && myPet.getHungerValue() < 100) {
                         myPet.setHungerValue(myPet.getHungerValue() + addHunger);

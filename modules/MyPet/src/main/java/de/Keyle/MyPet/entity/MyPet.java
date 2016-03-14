@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -135,24 +136,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petName = Translation.getString("Name." + getPetType().name(), this.petOwner);
     }
 
-    public MyPetBukkitEntity getEntity() {
+    public Optional<MyPetBukkitEntity> getEntity() {
         if (getStatus() == PetState.Here) {
-            return bukkitEntity;
+            return Optional.of(bukkitEntity);
         }
-        return null;
+        return Optional.absent();
     }
 
     public double getYSpawnOffset() {
         return 0;
     }
 
-    public Location getLocation() {
+    public Optional<Location> getLocation() {
         if (status == PetState.Here) {
-            return bukkitEntity.getLocation();
+            return Optional.of(bukkitEntity.getLocation());
         } else if (petOwner.isOnline()) {
-            return petOwner.getPlayer().getLocation();
+            return Optional.of(petOwner.getPlayer().getLocation());
         } else {
-            return null;
+            return Optional.absent();
         }
     }
 
@@ -163,11 +164,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getDamage() {
-        return getSkills().hasSkill(Damage.class) ? getSkills().getSkill(Damage.class).getDamage() : 0;
+        return getSkills().hasSkill(Damage.class) ? getSkills().getSkill(Damage.class).get().getDamage() : 0;
     }
 
     public double getRangedDamage() {
-        return getSkills().hasSkill(Ranged.class) ? getSkills().getSkill(Ranged.class).getDamage() : 0;
+        return getSkills().hasSkill(Ranged.class) ? getSkills().getSkill(Ranged.class).get().getDamage() : 0;
     }
 
     public boolean isPassiv() {
@@ -194,7 +195,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getMaxHealth() {
-        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isSkillActive(HP.class) ? skills.getSkill(HP.class).getHpIncrease() : 0);
+        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isSkillActive(HP.class) ? skills.getSkill(HP.class).get().getHpIncrease() : 0);
     }
 
     public double getHealth() {
@@ -244,7 +245,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         this.petName = newName;
         if (status == PetState.Here) {
             if (Configuration.Name.OVERHEAD_NAME) {
-                getEntity().getHandle().updateNameTag();
+                getEntity().get().getHandle().updateNameTag();
             }
         }
     }
@@ -541,7 +542,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         }
                     }
                     if (hunger == 1 && getHealth() >= 2) {
-                        getEntity().damage(1.);
+                        getEntity().get().damage(1.);
                     }
                 }
             }

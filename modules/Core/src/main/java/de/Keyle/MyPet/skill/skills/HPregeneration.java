@@ -106,9 +106,9 @@ public class HPregeneration extends HPregenerationInfo implements SkillInstance,
                     if (myPet.getHealth() < myPet.getMaxHealth()) {
                         if (!particles) {
                             particles = true;
-                            myPet.getEntity().getHandle().showPotionParticles(Color.LIME);
+                            myPet.getEntity().get().getHandle().showPotionParticles(Color.LIME);
                         }
-                        myPet.getEntity().setHealth(myPet.getEntity().getHealth() + increaseHpBy);
+                        myPet.getEntity().get().setHealth(myPet.getHealth() + increaseHpBy);
                     }
                     timeCounter = regenTime;
                 } else {
@@ -117,7 +117,7 @@ public class HPregeneration extends HPregenerationInfo implements SkillInstance,
             }
             if (particles) {
                 particles = false;
-                myPet.getEntity().getHandle().hidePotionParticles();
+                myPet.getEntity().get().getHandle().hidePotionParticles();
             }
         } else if (particles) {
             particles = false;

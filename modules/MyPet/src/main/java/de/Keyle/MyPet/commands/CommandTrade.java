@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -124,37 +125,37 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                                 MyPetSaveEvent event = new MyPetSaveEvent(pet);
                                 Bukkit.getServer().getPluginManager().callEvent(event);
                                 repo.addMyPet(pet, null);
-                                MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(pet);
+                                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(pet);
 
                                 oldOwner.setMyPetForWorldGroup(worldGroup, null);
                                 newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
                                 repo.updateMyPetPlayer(oldOwner, null);
                                 repo.updateMyPetPlayer(newOwner, null);
 
-                                if (myPet != null) {
+                                if (myPet.isPresent()) {
 
-                                    newOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Reciever.Success", newOwner), oldOwner.getName(), myPet.getPetName()));
-                                    oldOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Success", oldOwner), newOwner.getName(), myPet.getPetName()));
+                                    newOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Reciever.Success", newOwner), oldOwner.getName(), myPet.get().getPetName()));
+                                    oldOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Success", oldOwner), newOwner.getName(), myPet.get().getPetName()));
 
-                                    switch (myPet.createEntity()) {
+                                    switch (myPet.get().createEntity()) {
                                         case Canceled:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", newOwner), myPet.getPetName()));
+                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", newOwner), myPet.get().getPetName()));
                                             break;
                                         case NoSpace:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", newOwner), myPet.getPetName()));
+                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", newOwner), myPet.get().getPetName()));
                                             break;
                                         case NotAllowed:
-                                            newOwner.sendMessage(Translation.getString("Message.No.AllowedHere", newOwner).replace("%petname%", myPet.getPetName()));
+                                            newOwner.sendMessage(Translation.getString("Message.No.AllowedHere", newOwner).replace("%petname%", myPet.get().getPetName()));
                                             break;
                                         case Dead:
-                                            newOwner.sendMessage(Translation.getString("Message.Spawn.Respawn.In", newOwner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                                            newOwner.sendMessage(Translation.getString("Message.Spawn.Respawn.In", newOwner).replace("%petname%", myPet.get().getPetName()).replace("%time%", "" + myPet.get().getRespawnTime()));
                                             break;
                                         case Spectator:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", newOwner), myPet.getPetName()));
+                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", newOwner), myPet.get().getPetName()));
                                             break;
                                     }
                                 } else {
-                                    myPet.getOwner().sendMessage(Translation.getString("Message.Command.Trade.Reciever.Error", newOwner));
+                                    newOwner.sendMessage(Translation.getString("Message.Command.Trade.Reciever.Error", newOwner));
                                 }
                             }
                         });

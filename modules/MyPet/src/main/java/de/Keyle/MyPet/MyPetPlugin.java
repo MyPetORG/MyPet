@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.*;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -109,12 +110,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         compatUtil = new CompatUtil();
 
         if (getConfig().getBoolean("MyPet.Update-Check", true)) {
-            String message = UpdateCheck.checkForUpdate("MyPet");
-            if (message != null) {
-                message = "#  A new version is available: " + message + "  #";
-                MyPetApi.getLogger().info(StringUtils.repeat("#", message.length()));
-                MyPetApi.getLogger().info(message);
-                MyPetApi.getLogger().info(StringUtils.repeat("#", message.length()));
+            Optional<String> message = UpdateCheck.checkForUpdate("MyPet");
+            if (message.isPresent()) {
+                String m = "#  A new version is available: " + message.get() + "  #";
+                MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
+                MyPetApi.getLogger().info(m);
+                MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
             }
         }
 

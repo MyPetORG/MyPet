@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.repository;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
@@ -79,7 +80,7 @@ public abstract class MyPetManager {
 
     // All ----------------------------------------------------------------------
 
-    public abstract MyPet activateMyPet(StoredMyPet storedMyPet);
+    public abstract Optional<MyPet> activateMyPet(StoredMyPet storedMyPet);
 
     public boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
         if (mActivePlayerPets.containsKey(owner)) {

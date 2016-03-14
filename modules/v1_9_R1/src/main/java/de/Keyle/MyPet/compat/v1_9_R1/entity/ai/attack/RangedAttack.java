@@ -48,7 +48,7 @@ public class RangedAttack extends AIGoal {
         this.lastSeenTimer = 0;
         this.walkSpeedModifier = walkSpeedModifier;
         this.range = range;
-        rangedSkill = entityMyPet.getMyPet().getSkills().getSkill(Ranged.class);
+        rangedSkill = entityMyPet.getMyPet().getSkills().getSkill(Ranged.class).get();
     }
 
     @Override
@@ -136,7 +136,7 @@ public class RangedAttack extends AIGoal {
     private Projectiles getProjectile() {
         Skills skills = entityMyPet.getMyPet().getSkills();
         if (skills.isSkillActive(Ranged.class)) {
-            return skills.getSkill(Ranged.class).getProjectile();
+            return skills.getSkill(Ranged.class).get().getProjectile();
         }
         return Projectiles.Arrow;
     }

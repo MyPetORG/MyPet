@@ -66,7 +66,7 @@ public class ControlTarget extends AIGoal {
         if (controlPathfinderGoal.moveTo != null && petEntity.canMove()) {
             Behavior behaviorSkill = null;
             if (myPet.getSkills().isSkillActive(Behavior.class)) {
-                behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
+                behaviorSkill = myPet.getSkills().getSkill(Behavior.class).get();
                 if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
                     return false;
                 }

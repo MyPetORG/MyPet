@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.player;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -76,7 +77,7 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     void addExtendedInfo(String key, TagBase tag);
 
-    TagBase getExtendedInfo(String key);
+    Optional<TagBase> getExtendedInfo(String key);
 
     TagCompound getExtendedInfo();
 

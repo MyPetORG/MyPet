@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.util.UpdateCheck;
 import org.bukkit.ChatColor;
@@ -28,9 +29,9 @@ import org.bukkit.command.CommandSender;
 public class CommandOptionUpdate implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        String message = UpdateCheck.checkForUpdate("MyPet");
-        if (message != null) {
-            sender.sendMessage("A new version is available: " + ChatColor.GOLD + message);
+        Optional<String> message = UpdateCheck.checkForUpdate("MyPet");
+        if (message.isPresent()) {
+            sender.sendMessage("A new version is available: " + ChatColor.GOLD + message.get());
         } else {
             sender.sendMessage("Your version of MyPet is up to date.");
         }

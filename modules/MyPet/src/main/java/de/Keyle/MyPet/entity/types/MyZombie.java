@@ -114,7 +114,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     public void setBaby(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.isBaby = flag;
     }
@@ -126,14 +126,14 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setVillager(boolean flag) {
         this.profession = 1;
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
     public void setProfession(int type) {
         this.profession = type;
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
@@ -145,7 +145,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
         if (item == null) {
             equipment.remove(slot);
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
             return;
         }
 
@@ -153,14 +153,14 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         item.setAmount(1);
         equipment.put(slot, item);
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
     @Override
     public void dropEquipment() {
         if (getStatus() == PetState.Here) {
-            Location dropLocation = getLocation();
+            Location dropLocation = getLocation().get();
             for (ItemStack itemStack : equipment.values()) {
                 if (itemStack != null) {
                     dropLocation.getWorld().dropItem(dropLocation, itemStack);

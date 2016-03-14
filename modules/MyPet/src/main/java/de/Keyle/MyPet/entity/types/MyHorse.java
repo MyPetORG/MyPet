@@ -56,7 +56,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         value = Math.min(0, (Math.max(-24000, value)));
         value = value - (value % 1000);
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.age = value;
     }
@@ -80,7 +80,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
 
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
@@ -97,7 +97,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             return;
         }
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.chest = item;
         if (this.chest != null) {
@@ -118,7 +118,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             return;
         }
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.saddle = item;
         if (this.saddle != null) {
@@ -201,7 +201,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         horseType = (byte) Math.min(Math.max(0, horseType), 4);
         this.horseType = horseType;
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
 
         if (horseType != 0) {
@@ -235,7 +235,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             this.variant = 0;
         }
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
@@ -246,7 +246,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     public void setBaby(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         if (flag) {
             this.age = -24000;

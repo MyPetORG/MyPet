@@ -66,7 +66,7 @@ public class HP extends HPInfo implements SkillInstance {
                 }
 
                 if (getMyPet().getStatus() == PetState.Here) {
-                    getMyPet().getEntity().setMaxHealth(getMyPet().getMaxHealth());
+                    getMyPet().getEntity().get().setMaxHealth(getMyPet().getMaxHealth());
                 }
 
                 if (!quiet) {
