@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
 import de.Keyle.MyPet.api.event.MyPetActiveSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
+import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -375,8 +376,7 @@ public class EntityListener implements Listener {
                             owner = MyPetApi.getPlayerManager().registerMyPetPlayer(damager);
                         }
 
-
-                        InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
+                        final InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
                         inactiveMyPet.setPetType(petType);
                         inactiveMyPet.setPetName(Translation.getString("Name." + petType.name(), inactiveMyPet.getOwner().getLanguage()));
 
@@ -526,11 +526,14 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        final MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
-                        if (myPet != null) {
-                            MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
-                                @Override
-                                public void callback(Boolean value) {
+                        MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+                        Bukkit.getServer().getPluginManager().callEvent(saveEvent);
+
+                        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
+                            @Override
+                            public void callback(Boolean value) {
+                                MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
+                                if (myPet != null) {
                                     myPet.createEntity();
 
                                     getPluginManager().callEvent(new MyPetLeashEvent(myPet));
@@ -542,8 +545,8 @@ public class EntityListener implements Listener {
                                         myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", myPet.getOwner()), Translation.getString("Name.Disabled", myPet.getOwner())));
                                     }
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
                 }
             }

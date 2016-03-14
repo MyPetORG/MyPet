@@ -25,12 +25,10 @@ import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.event.MyPetSelectEvent;
-import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
+import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import static org.bukkit.Bukkit.getServer;
 
 public abstract class MyPetManager {
     protected final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
@@ -87,11 +85,8 @@ public abstract class MyPetManager {
         if (mActivePlayerPets.containsKey(owner)) {
             final MyPet myPet = owner.getMyPet();
 
-            MyPetSelectEvent event = new MyPetSelectEvent(myPet, NewStatus.Inactive);
-            getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                return false;
-            }
+            MyPetSaveEvent event = new MyPetSaveEvent(myPet);
+            Bukkit.getServer().getPluginManager().callEvent(event);
 
             myPet.removePet();
             if (update) {
