@@ -87,8 +87,8 @@ public class MySqlRepository implements Repository {
             }
         } catch (SQLSyntaxErrorException e) {
             initStructure();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RepositoryInitException(e);
         } finally {
             if (connection != null) {
                 try {
