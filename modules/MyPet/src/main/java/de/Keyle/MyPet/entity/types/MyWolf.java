@@ -50,7 +50,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
 
     public void setCollarColor(DyeColor value) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.collarColor = value;
     }
@@ -92,7 +92,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
 
     public void setAngry(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.isAngry = flag;
     }
@@ -103,7 +103,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
 
     public void setBaby(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.isBaby = flag;
     }
@@ -114,7 +114,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
 
     public void setTamed(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.isTamed = flag;
     }

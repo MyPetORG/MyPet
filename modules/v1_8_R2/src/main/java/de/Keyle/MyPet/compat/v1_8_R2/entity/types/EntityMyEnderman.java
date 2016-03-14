@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -110,9 +111,9 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void doMyPetTick() {
         super.doMyPetTick();
-        Behavior skill = getMyPet().getSkills().getSkill(Behavior.class);
-        if (skill != null) {
-            BehaviorInfo.BehaviorState behavior = skill.getBehavior();
+        Optional<Behavior> skill = getMyPet().getSkills().getSkill(Behavior.class);
+        if (skill.isPresent()) {
+            BehaviorInfo.BehaviorState behavior = skill.get().getBehavior();
             if (behavior == BehaviorInfo.BehaviorState.Aggressive) {
                 if (!getMyPet().isScreaming()) {
                     getMyPet().setScreaming(true);

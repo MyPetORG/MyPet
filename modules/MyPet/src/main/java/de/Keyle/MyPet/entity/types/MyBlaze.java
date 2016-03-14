@@ -63,7 +63,7 @@ public class MyBlaze extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     public void setOnFire(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         isOnFire = flag;
     }

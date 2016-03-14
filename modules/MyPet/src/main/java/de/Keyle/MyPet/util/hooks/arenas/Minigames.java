@@ -41,7 +41,7 @@ public class Minigames implements Listener {
 
     public static void findPlugin() {
         if (PluginHookManager.isPluginUsable("Minigames", "com.pauldavdesign.mineauz.minigames.Minigames")) {
-            plugin = PluginHookManager.getPluginInstance(com.pauldavdesign.mineauz.minigames.Minigames.class);
+            plugin = PluginHookManager.getPluginInstance(com.pauldavdesign.mineauz.minigames.Minigames.class).get();
             Bukkit.getPluginManager().registerEvents(new Minigames(), MyPetApi.getPlugin());
             MyPetApi.getLogger().info("Minigames hook activated.");
             active = true;

@@ -63,7 +63,7 @@ public class MyChicken extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     public void setBaby(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.isBaby = flag;
     }

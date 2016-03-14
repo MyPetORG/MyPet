@@ -549,7 +549,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                 return;
             }
 
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().add(0, 1, 0), "SPELL_WITCH", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), "SPELL_WITCH", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
             List<Player> members = null;
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && reciever == BeaconReciever.Party) {
@@ -566,7 +566,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
 
 
             targetLoop:
-            for (Entity e : this.myPet.getEntity().getNearbyEntities(range, range, range)) {
+            for (Entity e : this.myPet.getEntity().get().getNearbyEntities(range, range, range)) {
                 if (!(e instanceof Player)) {
                     continue;
                 }

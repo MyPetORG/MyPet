@@ -111,7 +111,7 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
         double posY = location.getY();
         double posZ = location.getZ();
 
-        for (Entity e : myPet.getEntity().getNearbyEntities(2.5, 2.5, 2.5)) {
+        for (Entity e : myPet.getEntity().get().getNearbyEntities(2.5, 2.5, 2.5)) {
             if (e instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) e;
 
@@ -142,7 +142,7 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
                     continue;
                 }
 
-                ((LivingEntity) e).damage(this.damage, myPet.getEntity());
+                ((LivingEntity) e).damage(this.damage, myPet.getEntity().get());
 
                 double distancePercent = livingEntity.getLocation().distance(new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
                 if (distancePercent <= 1.0D) {

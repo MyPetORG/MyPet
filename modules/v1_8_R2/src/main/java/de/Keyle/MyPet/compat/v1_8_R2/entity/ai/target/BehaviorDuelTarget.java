@@ -47,7 +47,7 @@ public class BehaviorDuelTarget extends AIGoal {
         this.myPet = petEntity.getMyPet();
         this.range = range;
         if (myPet.getSkills().hasSkill(Behavior.class)) {
-            behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
+            behaviorSkill = myPet.getSkills().getSkill(Behavior.class).get();
         }
     }
 
@@ -59,10 +59,10 @@ public class BehaviorDuelTarget extends AIGoal {
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!myPet.getEntity().canMove()) {
+        if (!petEntity.canMove()) {
             return false;
         }
-        if (petEntity.getTarget() != null && !petEntity.getTarget().isDead()) {
+        if (petEntity.hasTarget()) {
             return false;
         }
         if (duelOpponent != null) {
@@ -75,10 +75,10 @@ public class BehaviorDuelTarget extends AIGoal {
             MyPet targetMyPet = entityMyPet.getMyPet();
 
             if (entityMyPet != petEntity && entityMyPet.isAlive()) {
-                if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !targetMyPet.getEntity().canMove()) {
+                if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !entityMyPet.canMove()) {
                     continue;
                 }
-                Behavior targetbehavior = targetMyPet.getSkills().getSkill(Behavior.class);
+                Behavior targetbehavior = targetMyPet.getSkills().getSkill(Behavior.class).get();
                 if (targetbehavior.getBehavior() != BehaviorState.Duel) {
                     continue;
                 }

@@ -108,9 +108,9 @@ public class Lightning extends LightningInfo implements SkillInstance, ActiveSki
         Player owner = myPet.getOwner().getPlayer();
         isStriking = true;
         loc.getWorld().strikeLightningEffect(loc);
-        for (Entity entity : myPet.getEntity().getNearbyEntities(1.5, 1.5, 1.5)) {
+        for (Entity entity : myPet.getEntity().get().getNearbyEntities(1.5, 1.5, 1.5)) {
             if (entity instanceof LivingEntity && entity != owner) {
-                ((LivingEntity) entity).damage(damage, myPet.getEntity());
+                ((LivingEntity) entity).damage(damage, myPet.getEntity().get());
             }
         }
         isStriking = false;

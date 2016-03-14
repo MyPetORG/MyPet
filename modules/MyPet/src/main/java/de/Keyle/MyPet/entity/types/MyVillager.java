@@ -76,7 +76,7 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     public void setProfession(int value) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.profession = value;
     }
@@ -87,7 +87,7 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     public void setBaby(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.isBaby = flag;
     }

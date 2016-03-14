@@ -20,11 +20,13 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -99,9 +101,8 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         MyPetApi.getRepository().addMyPet(newPet, new RepositoryCallback<Boolean>() {
             @Override
             public void callback(Boolean value) {
-                MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
-
-                if (myPet != null) {
+                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
+                if (myPet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());
                     newPet.setWorldGroup(worldGroup.getName());
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), newPet.getUUID());

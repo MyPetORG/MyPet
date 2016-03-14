@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
@@ -27,7 +28,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class UpdateCheck {
-    public static String checkForUpdate(String plugin) {
+    public static Optional<String> checkForUpdate(String plugin) {
         try {
             String parameter = "";
             parameter += "plugin=" + plugin;
@@ -40,10 +41,10 @@ public class UpdateCheck {
             JSONObject result = (JSONObject) parser.parse(content);
 
             if (result.containsKey("latest")) {
-                return result.get("latest").toString();
+                return Optional.of(result.get("latest").toString());
             }
         } catch (Exception ignored) {
         }
-        return null;
+        return Optional.absent();
     }
 }

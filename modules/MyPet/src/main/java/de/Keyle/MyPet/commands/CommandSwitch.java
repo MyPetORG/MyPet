@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -117,28 +118,28 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                         gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
-                                MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
-                                if (activePet != null && owner.isOnline()) {
+                                Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+                                if (activePet.isPresent() && owner.isOnline()) {
                                     Player player = owner.getPlayer();
-                                    activePet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.getPetName()));
+                                    activePet.get().getOwner().sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.get().getPetName()));
                                     WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                                    owner.setMyPetForWorldGroup(wg.getName(), activePet.getUUID());
+                                    owner.setMyPetForWorldGroup(wg.getName(), activePet.get().getUUID());
 
-                                    switch (activePet.createEntity()) {
+                                    switch (activePet.get().createEntity()) {
                                         case Canceled:
-                                            activePet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), activePet.getPetName()));
+                                            owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), activePet.get().getPetName()));
                                             break;
                                         case NoSpace:
-                                            activePet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), activePet.getPetName()));
+                                            owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), activePet.get().getPetName()));
                                             break;
                                         case NotAllowed:
-                                            activePet.getOwner().sendMessage(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", activePet.getPetName()));
+                                            owner.sendMessage(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", activePet.get().getPetName()));
                                             break;
                                         case Dead:
-                                            activePet.getOwner().sendMessage(Translation.getString("Message.Spawn.Respawn.In", owner).replace("%petname%", activePet.getPetName()).replace("%time%", "" + activePet.getRespawnTime()));
+                                            owner.sendMessage(Translation.getString("Message.Spawn.Respawn.In", owner).replace("%petname%", activePet.get().getPetName()).replace("%time%", "" + activePet.get().getRespawnTime()));
                                             break;
                                         case Spectator:
-                                            sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", owner), activePet.getPetName()));
+                                            sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", owner), activePet.get().getPetName()));
                                             break;
                                     }
                                 }

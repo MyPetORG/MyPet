@@ -84,9 +84,9 @@ public class Knockback extends KnockbackInfo implements SkillInstance, ActiveSki
 
     public void knockbackTarget(LivingEntity target) {
         target.setVelocity(new Vector(
-                -Math.sin(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F,
+                -Math.sin(myPet.getLocation().get().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F,
                 0.1D,
-                Math.cos(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F
+                Math.cos(myPet.getLocation().get().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F
         ));
     }
 

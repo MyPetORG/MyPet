@@ -135,7 +135,7 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
             return;
         }
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive(Inventory.class)) {
-            for (Entity entity : myPet.getEntity().getNearbyEntities(range, range, range)) {
+            for (Entity entity : myPet.getEntity().get().getNearbyEntities(range, range, range)) {
                 if (!entity.isDead()) {
                     if (entity instanceof Item) {
                         Item itemEntity = (Item) entity;
@@ -149,14 +149,14 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
                                 continue;
                             }
 
-                            CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).getInventory();
+                            CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).get().getInventory();
                             int itemAmount = inv.addItem(itemStack);
                             if (itemAmount == 0) {
-                                MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity(), itemEntity);
+                                MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity().get(), itemEntity);
                                 if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
-                                    myPet.getEntity().getHandle().makeSound("entity.item.pickup", 0.2F, 1.0F);
+                                    myPet.getEntity().get().getHandle().makeSound("entity.item.pickup", 0.2F, 1.0F);
                                 } else {
-                                    myPet.getEntity().getHandle().makeSound("random.pop", 0.2F, 1.0F);
+                                    myPet.getEntity().get().getHandle().makeSound("random.pop", 0.2F, 1.0F);
                                 }
                                 itemStack.setAmount(0);
                                 itemEntity.remove();
@@ -169,7 +169,7 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
                     if (expPickup && entity instanceof ExperienceOrb) {
                         ExperienceOrb expEntity = (ExperienceOrb) entity;
                         myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
-                        MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity(), expEntity);
+                        MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity().get(), expEntity);
                         expEntity.setExperience(0);
                         expEntity.remove();
                     }

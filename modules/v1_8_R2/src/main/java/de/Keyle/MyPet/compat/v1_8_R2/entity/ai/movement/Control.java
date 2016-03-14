@@ -42,12 +42,12 @@ public class Control extends AIGoal implements Scheduler {
         this.myPet = entity.getMyPet();
         this.speedModifier = speedModifier;
         nav = entity.getPetNavigation();
-        controlSkill = this.myPet.getSkills().getSkill(de.Keyle.MyPet.skill.skills.Control.class);
+        controlSkill = this.myPet.getSkills().getSkill(de.Keyle.MyPet.skill.skills.Control.class).get();
     }
 
     @Override
     public boolean shouldStart() {
-        if (!this.myPet.getEntity().canMove()) {
+        if (!this.myPet.getEntity().get().canMove()) {
             return false;
         } else if (controlSkill == null || !controlSkill.isActive()) {
             return false;
@@ -57,7 +57,7 @@ public class Control extends AIGoal implements Scheduler {
 
     @Override
     public boolean shouldFinish() {
-        if (!this.myPet.getEntity().canMove()) {
+        if (!this.myPet.getEntity().get().canMove()) {
             return true;
         }
         if (!controlSkill.isActive()) {
@@ -66,7 +66,7 @@ public class Control extends AIGoal implements Scheduler {
         if (moveTo == null) {
             return true;
         }
-        if (myPet.getLocation().distance(moveTo) < 1) {
+        if (myPet.getLocation().get().distance(moveTo) < 1) {
             return true;
         }
         if (timeToMove <= 0) {
@@ -82,12 +82,12 @@ public class Control extends AIGoal implements Scheduler {
     public void start() {
         nav.getParameters().addSpeedModifier("Control", speedModifier);
         moveTo = controlSkill.getLocation();
-        if (moveTo.getWorld() != myPet.getLocation().getWorld()) {
+        if (moveTo.getWorld() != myPet.getLocation().get().getWorld()) {
             stopControl = true;
             moveTo = null;
             return;
         }
-        timeToMove = (int) myPet.getLocation().distance(moveTo) / 3;
+        timeToMove = (int) myPet.getLocation().get().distance(moveTo) / 3;
         timeToMove = timeToMove < 3 ? 3 : timeToMove;
         if (!isRunning) {
             Timer.addTask(this);

@@ -69,7 +69,7 @@ public class MyRabbit extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     public void setBaby(boolean flag) {
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
         this.isBaby = flag;
     }
@@ -82,7 +82,7 @@ public class MyRabbit extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         this.variant = variant;
 
         if (status == PetState.Here) {
-            getEntity().getHandle().updateVisuals();
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 

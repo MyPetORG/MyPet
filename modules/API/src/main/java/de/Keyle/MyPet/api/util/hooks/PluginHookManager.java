@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.util.hooks;
 
+import com.google.common.base.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,12 +40,12 @@ public class PluginHookManager implements Listener {
     private static Map<String, Boolean> pluginFound = new HashMap<>();
 
 
-    public static <T extends JavaPlugin> T getPluginInstance(Class<T> clazz) {
+    public static <T extends JavaPlugin> Optional<T> getPluginInstance(Class<T> clazz) {
         if (pluginManager == null) {
             pluginManager = Bukkit.getPluginManager();
         }
         if (pluginInstances.containsKey(clazz.getName())) {
-            return clazz.cast(pluginInstances.get(clazz.getName()));
+            return Optional.of(clazz.cast(pluginInstances.get(clazz.getName())));
         }
         try {
             T plugin = JavaPlugin.getPlugin(clazz);
@@ -53,7 +54,7 @@ public class PluginHookManager implements Listener {
                 pluginFound.put(clazz.getName(), true);
                 pluginNames.put(plugin.getName(), clazz.getName());
                 //DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
-                return plugin;
+                return Optional.of(plugin);
             }
         } catch (NoSuchMethodError e) {
             for (Plugin p : pluginManager.getPlugins()) {
@@ -63,12 +64,12 @@ public class PluginHookManager implements Listener {
                     pluginFound.put(clazz.getName(), true);
                     pluginNames.put(plugin.getName(), clazz.getName());
                     //DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
-                    return plugin;
+                    return Optional.of(plugin);
                 }
             }
         }
         pluginFound.put(clazz.getName(), false);
-        return null;
+        return Optional.absent();
     }
 
     public static boolean isPluginUsable(String pluginName) {
@@ -81,7 +82,7 @@ public class PluginHookManager implements Listener {
         if (!pluginNames.containsKey(pluginName)) {
             JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
             if (plugin != null && plugin.isEnabled()) {
-                return getPluginInstance(plugin.getClass()) != null;
+                return getPluginInstance(plugin.getClass()).isPresent();
             } else {
                 pluginFound.put(pluginName, false);
             }
@@ -101,7 +102,7 @@ public class PluginHookManager implements Listener {
         if (!pluginNames.containsKey(pluginName)) {
             JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
             if (plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className)) {
-                return getPluginInstance(plugin.getClass()) != null;
+                return getPluginInstance(plugin.getClass()).isPresent();
             } else {
                 pluginFound.put(className, false);
             }

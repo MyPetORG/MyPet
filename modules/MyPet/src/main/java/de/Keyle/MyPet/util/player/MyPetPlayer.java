@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.player;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
@@ -177,11 +178,11 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
         extendedInfo.getCompoundData().put(key, tag);
     }
 
-    public TagBase getExtendedInfo(String key) {
+    public Optional<TagBase> getExtendedInfo(String key) {
         if (extendedInfo.getCompoundData().containsKey(key)) {
-            return extendedInfo.getCompoundData().get(key);
+            return Optional.fromNullable(extendedInfo.getCompoundData().get(key));
         }
-        return null;
+        return Optional.absent();
     }
 
     public TagCompound getExtendedInfo() {
@@ -345,7 +346,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
         if (hasMyPet()) {
             MyPet myPet = getMyPet();
             if (myPet.getStatus() == de.Keyle.MyPet.entity.MyPet.PetState.Here) {
-                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 40) {
+                if (myPet.getLocation().get().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().get().distance(this.getPlayer().getLocation()) > 40) {
                     myPet.removePet(true);
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
                 }

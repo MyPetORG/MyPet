@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -113,33 +114,33 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                             MyPetApi.getMyPetManager().deactivateMyPet(owner, true);
                         }
 
-                        MyPet myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
+                        Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
                         sender.sendMessage(Translation.getString("Message.Command.Success", sender));
-                        if (myPet != null) {
+                        if (myPet.isPresent()) {
 
                             WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
                             newPet.setWorldGroup(worldGroup.getName());
                             newPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), newPet.getUUID());
 
-                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.MultiWorld.NowActivePet", owner), myPet.getPetName()));
-                            switch (myPet.createEntity()) {
+                            owner.sendMessage(Util.formatText(Translation.getString("Message.MultiWorld.NowActivePet", owner), myPet.get().getPetName()));
+                            switch (myPet.get().createEntity()) {
                                 case Success:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", owner), myPet.get().getPetName()));
                                     break;
                                 case Canceled:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), myPet.get().getPetName()));
                                     break;
                                 case NoSpace:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), myPet.get().getPetName()));
                                     break;
                                 case NotAllowed:
-                                    sender.sendMessage(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", myPet.getPetName()));
+                                    sender.sendMessage(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", myPet.get().getPetName()));
                                     break;
                                 case Dead:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
                                     break;
                                 case Flying:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", owner), myPet.getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", owner), myPet.get().getPetName()));
                                     break;
                             }
                         }

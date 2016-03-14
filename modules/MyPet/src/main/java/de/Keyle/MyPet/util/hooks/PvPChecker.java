@@ -134,7 +134,7 @@ public class PvPChecker {
     public static boolean canHurtWorldGuard(Location location) {
         if (Configuration.Hooks.USE_WorldGuard && PluginHookManager.isPluginUsable("WorldGuard")) {
             try {
-                WorldGuardPlugin wgp = PluginHookManager.getPluginInstance(WorldGuardPlugin.class);
+                WorldGuardPlugin wgp = PluginHookManager.getPluginInstance(WorldGuardPlugin.class).get();
                 RegionManager mgr = wgp.getRegionManager(location.getWorld());
                 ApplicableRegionSet set = mgr.getApplicableRegions(location);
                 StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
@@ -161,7 +161,7 @@ public class PvPChecker {
     public static boolean canHurtTowny(Player attacker, Entity defender) {
         if (Configuration.Hooks.USE_Towny && PluginHookManager.isPluginUsable("Towny")) {
             try {
-                if (CombatUtil.preventDamageCall(PluginHookManager.getPluginInstance(Towny.class), attacker, defender)) {
+                if (CombatUtil.preventDamageCall(PluginHookManager.getPluginInstance(Towny.class).get(), attacker, defender)) {
                     return false;
                 }
             } catch (Throwable e) {
@@ -174,7 +174,7 @@ public class PvPChecker {
     public static boolean canHurtHeroes(Player attacker, Player defender) {
         if (Configuration.Hooks.USE_Heroes && PluginHookManager.isPluginUsable("Heroes")) {
             try {
-                Heroes pluginHeroes = PluginHookManager.getPluginInstance(Heroes.class);
+                Heroes pluginHeroes = PluginHookManager.getPluginInstance(Heroes.class).get();
                 Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
                 Hero heroDefender = pluginHeroes.getCharacterManager().getHero(defender);
                 int attackerLevel = heroAttacker.getTieredLevel(false);
@@ -200,7 +200,7 @@ public class PvPChecker {
     public static boolean canHurtRegios(Player defender) {
         if (Configuration.Hooks.USE_Regios && PluginHookManager.isPluginUsable("Regios")) {
             try {
-                RegiosAPI pluginRegios = PluginHookManager.getPluginInstance(RegiosPlugin.class);
+                RegiosAPI pluginRegios = PluginHookManager.getPluginInstance(RegiosPlugin.class).get();
                 for (Region region : pluginRegios.getRegions(defender.getLocation())) {
                     if (!region.isPvp()) {
                         return false;
@@ -434,7 +434,7 @@ public class PvPChecker {
     public static boolean canHurtPvPManager(Player attacker, Player defender) {
         if (Configuration.Hooks.USE_PvPManager && PluginHookManager.isPluginUsable("PvPManager")) {
             try {
-                PvPManager plugin = PluginHookManager.getPluginInstance(PvPManager.class);
+                PvPManager plugin = PluginHookManager.getPluginInstance(PvPManager.class).get();
                 return plugin.getPlayerHandler().canAttack(attacker, defender);
             } catch (Throwable e) {
                 MyPetApi.getLogger().warning("Please use PvPManager build 113+");

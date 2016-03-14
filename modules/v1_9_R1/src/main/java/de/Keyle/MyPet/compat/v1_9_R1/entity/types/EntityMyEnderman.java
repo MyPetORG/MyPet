@@ -111,9 +111,9 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void doMyPetTick() {
         super.doMyPetTick();
-        Behavior skill = getMyPet().getSkills().getSkill(Behavior.class);
-        if (skill != null) {
-            BehaviorInfo.BehaviorState behavior = skill.getBehavior();
+        Optional<Behavior> skill = getMyPet().getSkills().getSkill(Behavior.class);
+        if (skill.isPresent()) {
+            BehaviorInfo.BehaviorState behavior = skill.get().getBehavior();
             if (behavior == BehaviorInfo.BehaviorState.Aggressive) {
                 if (!getMyPet().isScreaming()) {
                     getMyPet().setScreaming(true);

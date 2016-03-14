@@ -67,17 +67,17 @@ public class PlayerListener implements Listener {
     public void onPlayerInteract(final PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
-            if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().canMove()) {
+            if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().get().canMove()) {
                 if (myPet.getSkills().isSkillActive(Control.class)) {
                     if (myPet.getSkills().isSkillActive(Behavior.class)) {
-                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
+                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class).get();
                         if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm) {
                             event.getPlayer().sendMessage(Util.formatText(Translation.getString("Message.Skill.Control.AggroFarm", event.getPlayer()), myPet.getPetName(), behavior.getBehavior().name()));
                             return;
                         }
                     }
                     if (myPet.getSkills().isSkillActive(Ride.class)) {
-                        if (myPet.getEntity().getHandle().hasRider()) {
+                        if (myPet.getEntity().get().getHandle().hasRider()) {
                             event.getPlayer().sendMessage(Util.formatText(Translation.getString("Message.Skill.Control.Ride", event.getPlayer()), myPet.getPetName()));
                             return;
                         }
@@ -91,7 +91,7 @@ public class PlayerListener implements Listener {
                         if (!block.getType().isSolid()) {
                             block = block.getRelative(BlockFace.DOWN);
                         }
-                        myPet.getSkills().getSkill(Control.class).setMoveTo(block.getLocation());
+                        myPet.getSkills().getSkill(Control.class).get().setMoveTo(block.getLocation());
                     }
                 }
             }
@@ -328,8 +328,8 @@ public class PlayerListener implements Listener {
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here) {
-                    if (myPet.getLocation().getWorld() != event.getTo().getWorld() || myPet.getLocation().distance(event.getTo()) > 10) {
-                        final boolean sameWorld = myPet.getLocation().getWorld() == event.getTo().getWorld();
+                    if (myPet.getLocation().get().getWorld() != event.getTo().getWorld() || myPet.getLocation().get().distance(event.getTo()) > 10) {
+                        final boolean sameWorld = myPet.getLocation().get().getWorld() == event.getTo().getWorld();
                         myPet.removePet(true);
                         new BukkitRunnable() {
                             public void run() {
@@ -370,8 +370,8 @@ public class PlayerListener implements Listener {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here && Configuration.Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES) {
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
-                        CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).getInventory();
-                        inv.dropContentAt(myPet.getLocation());
+                        CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).get().getInventory();
+                        inv.dropContentAt(myPet.getLocation().get());
                     }
                 }
                 myPet.removePet(true);

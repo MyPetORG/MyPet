@@ -124,7 +124,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     }
                 }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, player, myPet)) {
-                    double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).getDamage() : 0);
+                    double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).get().getDamage() : 0);
                     player.sendMessage("   " + Translation.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }
@@ -171,7 +171,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 }
                 if (canSee(PetInfoDisplay.Behavior.adminOnly, player, myPet)) {
                     if (myPet.getSkills().hasSkill(Behavior.class)) {
-                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
+                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class).get();
                         player.sendMessage("   Behavior: " + Translation.getString("Name." + behavior.getBehavior().name(), player));
                         infoShown = true;
                     }

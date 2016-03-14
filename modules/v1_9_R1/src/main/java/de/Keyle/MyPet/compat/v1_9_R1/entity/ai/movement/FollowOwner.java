@@ -98,8 +98,8 @@ public class FollowOwner extends AIGoal {
 
     @Override
     public void tick() {
-        Location ownerLocation = this.petEntity.getMyPet().getOwner().getPlayer().getLocation();
-        Location petLocation = this.petEntity.getMyPet().getLocation();
+        Location ownerLocation = this.petEntity.getOwner().getPlayer().getLocation();
+        Location petLocation = this.petEntity.getBukkitEntity().getLocation();
         if (ownerLocation.getWorld() != petLocation.getWorld()) {
             return;
         }

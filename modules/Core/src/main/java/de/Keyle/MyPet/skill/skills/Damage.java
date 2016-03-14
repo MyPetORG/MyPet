@@ -72,11 +72,11 @@ public class Damage extends DamageInfo implements SkillInstance {
             }
             if (isPassive != (damage <= 0)) {
                 if (myPet.getStatus() == PetState.Here) {
-                    getMyPet().getEntity().getHandle().getPathfinder().clearGoals();
-                    getMyPet().getEntity().getHandle().getTargetSelector().clearGoals();
-                    getMyPet().getEntity().getHandle().setPathfinder();
+                    getMyPet().getEntity().get().getHandle().getPathfinder().clearGoals();
+                    getMyPet().getEntity().get().getHandle().getTargetSelector().clearGoals();
+                    getMyPet().getEntity().get().getHandle().setPathfinder();
                     if (damage == 0) {
-                        getMyPet().getEntity().setTarget(null);
+                        getMyPet().getEntity().get().setTarget(null);
                     }
                 }
             }
@@ -90,10 +90,10 @@ public class Damage extends DamageInfo implements SkillInstance {
     public void reset() {
         damage = 0;
         if (myPet.getStatus() == PetState.Here) {
-            getMyPet().getEntity().getHandle().getPathfinder().clearGoals();
-            getMyPet().getEntity().getHandle().getTargetSelector().clearGoals();
-            getMyPet().getEntity().getHandle().setPathfinder();
-            getMyPet().getEntity().setTarget(null);
+            getMyPet().getEntity().get().getHandle().getPathfinder().clearGoals();
+            getMyPet().getEntity().get().getHandle().getTargetSelector().clearGoals();
+            getMyPet().getEntity().get().getHandle().setPathfinder();
+            getMyPet().getEntity().get().setTarget(null);
         }
     }
 
