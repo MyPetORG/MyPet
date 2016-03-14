@@ -148,7 +148,7 @@ public class RangedAttack extends AIGoal {
             EntityArrow arrow = new MyPetArrow(world, entityMyPet);
             arrow.c(damage);
             arrow.setCritical(false);
-            entityMyPet.makeSound("random.bow", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+            entityMyPet.makeSound("entity.arrow.shoot", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
 
             double d0 = target.locX - entityMyPet.locX;
             double d1 = target.getBoundingBox().b + target.length / 3.0F - target.locY;
@@ -166,7 +166,7 @@ public class RangedAttack extends AIGoal {
             float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
             snowball.setDamage(damage);
             snowball.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
-            entityMyPet.makeSound("random.bow", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+            entityMyPet.makeSound("entity.arrow.shoot", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
             world.addEntity(snowball);
         } else if (projectile == Projectiles.Egg) {
             MyPetEgg egg = new MyPetEgg(world, entityMyPet);
@@ -176,7 +176,7 @@ public class RangedAttack extends AIGoal {
             float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
             egg.setDamage(damage);
             egg.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
-            entityMyPet.makeSound("random.bow", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+            entityMyPet.makeSound("entity.arrow.shoot", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
             world.addEntity(egg);
         } else if (projectile == Projectiles.LargeFireball) {
             double distanceX = this.target.locX - entityMyPet.locX;
@@ -186,7 +186,7 @@ public class RangedAttack extends AIGoal {
             largeFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
             largeFireball.setDamage(damage);
             world.addEntity(largeFireball);
-            entityMyPet.makeSound("mob.ghast.fireball", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
+            entityMyPet.makeSound("entity.ghast.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
         } else if (projectile == Projectiles.SmallFireball) {
             double distanceX = this.target.locX - entityMyPet.locX;
             double distanceY = this.target.getBoundingBox().b + (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (entityMyPet.length / 2.0F));
@@ -195,7 +195,7 @@ public class RangedAttack extends AIGoal {
             smallFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
             smallFireball.setDamage(damage);
             world.addEntity(smallFireball);
-            entityMyPet.makeSound("mob.ghast.fireball", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
+            entityMyPet.makeSound("entity.ghast.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
         } else if (projectile == Projectiles.WitherSkull) {
             double distanceX = this.target.locX - entityMyPet.locX;
             double distanceY = this.target.getBoundingBox().b + (double) (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double) (entityMyPet.length / 2.0F));
@@ -204,7 +204,7 @@ public class RangedAttack extends AIGoal {
             witherSkull.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
             witherSkull.setDamage(damage);
             world.addEntity(witherSkull);
-            entityMyPet.makeSound("mob.wither.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
+            entityMyPet.makeSound("entity.wither.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
         }
     }
 }
