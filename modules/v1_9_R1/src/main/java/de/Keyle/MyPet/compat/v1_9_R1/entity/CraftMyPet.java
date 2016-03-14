@@ -27,16 +27,22 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftEntityEquipment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
 
 public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
     protected MyPetPlayer petOwner;
     protected EntityMyPet petEntity;
+    protected CraftEntityEquipment fakeEquipment;
 
     public CraftMyPet(CraftServer server, EntityMyPet entityMyPet) {
         super(server, entityMyPet);
         petEntity = entityMyPet;
+        fakeEquipment = new FakeEquipment(this);
     }
 
     public boolean canMove() {
@@ -90,6 +96,11 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
         super.setHealth(health);
     }
 
+    @Override
+    public EntityEquipment getEquipment() {
+        return fakeEquipment;
+    }
+
     @Deprecated
     public void setTarget(LivingEntity target) {
         setTarget(target, TargetPriority.Bukkit);
@@ -107,5 +118,52 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
     @Override
     public String toString() {
         return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",type=" + getPetType() + "}";
+    }
+
+    private class FakeEquipment extends CraftEntityEquipment {
+
+        public FakeEquipment(CraftLivingEntity entity) {
+            super(entity);
+        }
+
+        @Override
+        public ItemStack getItemInMainHand() {
+            return null;
+        }
+
+        @Override
+        public ItemStack getItemInOffHand() {
+            return null;
+        }
+
+        @Override
+        public ItemStack getItemInHand() {
+            return null;
+        }
+
+        @Override
+        public ItemStack getHelmet() {
+            return null;
+        }
+
+        @Override
+        public ItemStack getChestplate() {
+            return null;
+        }
+
+        @Override
+        public ItemStack getLeggings() {
+            return null;
+        }
+
+        @Override
+        public ItemStack getBoots() {
+            return null;
+        }
+
+        @Override
+        public ItemStack[] getArmorContents() {
+            return new ItemStack[]{null, null, null, null};
+        }
     }
 }
