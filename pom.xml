@@ -44,32 +44,67 @@
 
         <minecraft.version>1.9</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-
-        <citizensapi.version>2.0.12-SNAPSHOT</citizensapi.version>
-        <mcmmo.version>1.5.00</mcmmo.version>
-        <vaultapi.version>1.4</vaultapi.version>
-        <minigames.version>1.6.3</minigames.version>
-        <worldguard.version>6.1</worldguard.version>
-        <ancientrpg.version>0.9.9-40</ancientrpg.version>
-        <factions.version>2.7.5</factions.version>
-        <massivecore.version>2.7.5</massivecore.version>
-        <mobarena.version>0.96.6</mobarena.version>
-        <battlearena.version>3.9.7.8</battlearena.version>
-        <pvparena.version>1.2.2.425</pvparena.version>
-        <survivalgames.version>0.5.8.54</survivalgames.version>
-        <ultimatesurvivalgames.version>1.9.4</ultimatesurvivalgames.version>
-        <myhungergames.version>1.1</myhungergames.version>
-        <regiosapi.version>5.9.9</regiosapi.version>
-        <residence.version>2.6.6.6</residence.version>
-        <towny.version>0.89.2.0</towny.version>
-        <griefprevention.version>13.0</griefprevention.version>
-        <pvpmanager.version>3.0</pvpmanager.version>
-        <heroes.version>1.5.5.3</heroes.version>
-        <skill-api.version>3.37</skill-api.version>
-        <magicspells.version>3.4.2</magicspells.version>
-        <protocol-lib.version>3.7.0-SNAPSHOT</protocol-lib.version>
-        <!-- http://spoutcraft.org/resources/heroes.2/updates -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
+
+        <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
+        <citizensapi.version>2.0.17-SNAPSHOT</citizensapi.version>
+
+        <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
+        <mcmmo.version>1.5.00</mcmmo.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/vault/ -->
+        <vaultapi.version>1.5</vaultapi.version>
+
+        <!-- https://www.spigotmc.org/resources/minigames.19687/ -->
+        <minigames.version>1.8.0</minigames.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/worldguard/ -->
+        <worldguard.version>6.1</worldguard.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/ancient-rpg/ -->
+        <ancient.version>1.1.0</ancient.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/factions/ -->
+        <factions.version>2.8.5</factions.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/mcore/ -->
+        <massivecore.version>2.8.6</massivecore.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/mobarena/ -->
+        <mobarena.version>0.97.1</mobarena.version>
+
+        <!-- https://www.spigotmc.org/resources/battle-arena.2164/ -->
+        <battlearena.version>3.9.9.10.5</battlearena.version>
+
+        <!-- https://www.spigotmc.org/resources/pvp-arena.16584/ -->
+        <pvparena.version>1.3.2.59</pvparena.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/ -->
+        <ultimatesurvivalgames.version>1.9.4</ultimatesurvivalgames.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/residence/ -->
+        <residence.version>2.6.6.6</residence.version>
+
+        <!-- http://towny.palmergames.com/ -->
+        <towny.version>0.91.0.0</towny.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
+        <griefprevention.version>13.9.1</griefprevention.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/pvpmanager/ -->
+        <pvpmanager.version>3.0</pvpmanager.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/heroes/ -->
+        <heroes.version>1.5.5.7</heroes.version>
+
+        <!-- https://www.spigotmc.org/resources/skillapi.4824/ -->
+        <skill-api.version>3.52</skill-api.version>
+
+        <!-- http://dev.bukkit.org/bukkit-plugins/magicspells/ -->
+        <magicspells.version>3.4.2</magicspells.version>
+
+        <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
+        <protocol-lib.version>3.7.0-SNAPSHOT</protocol-lib.version>
 
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
@@ -192,8 +227,8 @@
         </dependency>
         <dependency>
             <groupId>com.ancientshores</groupId>
-            <artifactId>ancient-rpg</artifactId>
-            <version>${ancientrpg.version}</version>
+            <artifactId>ancient</artifactId>
+            <version>${ancient.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -233,30 +268,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.mcsg</groupId>
-            <artifactId>survivalgames</artifactId>
-            <version>${survivalgames.version}</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>me.maker56.survivalgames</groupId>
             <artifactId>SurvivalGames</artifactId>
             <version>${ultimatesurvivalgames.version}</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.randude14.hungergames</groupId>
-            <artifactId>MyHungerGames</artifactId>
-            <version>${myhungergames.version}</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>net.jzx7</groupId>
-            <artifactId>regiosapi</artifactId>
-            <version>${regiosapi.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

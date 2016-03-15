@@ -20,8 +20,7 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.ancientshores.AncientRPG.API.ApiManager;
-import com.ancientshores.AncientRPG.Party.AncientRPGParty;
+import com.ancientshores.Ancient.Party.AncientParty;
 import com.gmail.nossr50.api.PartyAPI;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
@@ -72,8 +71,7 @@ public class PartyManager {
         }
         if (PluginHookManager.isPluginUsable("AncientRPG")) {
             try {
-                ApiManager api = ApiManager.getApiManager();
-                AncientRPGParty party = api.getPlayerParty(player);
+                AncientParty party = AncientParty.getPlayersParty(player.getUniqueId());
                 if (party != null) {
                     List<Player> members = new ArrayList<>();
                     for (UUID memberUUID : party.getMembers()) {

@@ -20,9 +20,8 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.ancientshores.AncientRPG.API.ApiManager;
-import com.ancientshores.AncientRPG.Guild.AncientRPGGuild;
-import com.ancientshores.AncientRPG.Party.AncientRPGParty;
+import com.ancientshores.Ancient.Guild.AncientGuild;
+import com.ancientshores.Ancient.Party.AncientParty;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.garbagemule.MobArena.MobArenaHandler;
@@ -48,9 +47,6 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.jzx7.regios.RegiosPlugin;
-import net.jzx7.regiosapi.RegiosAPI;
-import net.jzx7.regiosapi.regions.Region;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -58,8 +54,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.mcsg.survivalgames.Game;
-import org.mcsg.survivalgames.GameManager;
 
 import java.util.UUID;
 
@@ -109,7 +103,7 @@ public class PvPChecker {
             return false;
         }
         if (defender != null) {
-            return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && canHurtSurvivalGame(defender) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
+            return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
         }
         return false;
     }
@@ -197,23 +191,6 @@ public class PvPChecker {
         return true;
     }
 
-    public static boolean canHurtRegios(Player defender) {
-        if (Configuration.Hooks.USE_Regios && PluginHookManager.isPluginUsable("Regios")) {
-            try {
-                RegiosAPI pluginRegios = PluginHookManager.getPluginInstance(RegiosPlugin.class).get();
-                for (Region region : pluginRegios.getRegions(defender.getLocation())) {
-                    if (!region.isPvp()) {
-                        return false;
-                    }
-                }
-                return pluginRegios.getRegion(defender).isPvp();
-            } catch (Throwable e) {
-                Configuration.Hooks.USE_Regios = false;
-            }
-        }
-        return true;
-    }
-
     public static boolean canHurtResidence(Location location) {
         if (Configuration.Hooks.USE_Residence && PluginHookManager.isPluginUsable("Residence")) {
             try {
@@ -237,30 +214,6 @@ public class PvPChecker {
                 }
             } catch (Throwable e) {
                 Configuration.Hooks.USE_MobArena = false;
-            }
-        }
-        return true;
-    }
-
-    public static boolean canHurtSurvivalGame(Player defender) {
-        if (Configuration.Hooks.USE_SurvivalGame && PluginHookManager.isPluginUsable("SurvivalGames")) {
-            try {
-                int gameid = GameManager.getInstance().getPlayerGameId(defender);
-                if (gameid == -1) {
-                    return true;
-                }
-                if (!GameManager.getInstance().isPlayerActive(defender)) {
-                    return true;
-                }
-                Game game = GameManager.getInstance().getGame(gameid);
-                if (game.getMode() != Game.GameMode.INGAME) {
-                    return false;
-                }
-                if (game.isProtectionOn()) {
-                    return false;
-                }
-            } catch (Throwable e) {
-                Configuration.Hooks.USE_SurvivalGame = false;
             }
         }
         return true;
@@ -293,18 +246,18 @@ public class PvPChecker {
     }
 
     public static boolean canHurtAncientRPG(Player attacker, Player defender) {
-        if (Configuration.Hooks.USE_AncientRPG && PluginHookManager.isPluginUsable("SurvivalGames")) {
+        if (Configuration.Hooks.USE_AncientRPG && PluginHookManager.isPluginUsable("Ancient")) {
             try {
-                AncientRPGParty party = ApiManager.getApiManager().getPlayerParty(attacker.getUniqueId());
+                AncientParty party = AncientParty.getPlayersParty(attacker.getUniqueId());
                 if (party != null) {
                     if (!party.isFriendlyFireEnabled() && party.containsUUID(defender.getUniqueId())) {
                         return false;
                     }
                 }
 
-                AncientRPGGuild guild = ApiManager.getApiManager().getPlayerGuild(attacker.getUniqueId());
+                AncientGuild guild = AncientGuild.getPlayersGuild(attacker.getUniqueId());
                 if (guild != null) {
-                    if (!guild.friendlyFire && guild == ApiManager.getApiManager().getPlayerGuild(defender.getUniqueId())) {
+                    if (!guild.friendlyFire && guild == AncientGuild.getPlayersGuild(defender.getUniqueId())) {
                         return false;
                     }
                 }

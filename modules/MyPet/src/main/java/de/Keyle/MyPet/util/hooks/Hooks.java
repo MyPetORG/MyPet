@@ -42,9 +42,7 @@ public class Hooks extends HookManager {
         Minigames.findPlugin();
         PvPArena.findPlugin();
         BattleArena.findPlugin();
-        SurvivalGames.findPlugin();
         UltimateSurvivalGames.findPlugin();
-        MyHungerGames.findPlugin();
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
             ProtocolLib.findPlugin();
         }
@@ -87,13 +85,7 @@ public class Hooks extends HookManager {
         if (PvPArena.isInPvPArena(player)) {
             return false;
         }
-        if (MyHungerGames.isInHungerGames(player)) {
-            return false;
-        }
         if (UltimateSurvivalGames.isInSurvivalGames(player)) {
-            return false;
-        }
-        if (SurvivalGames.isInSurvivalGames(player)) {
             return false;
         }
         return true;

@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.util.hooks.arenas;
 
-import com.pauldavdesign.mineauz.minigames.events.JoinMinigameEvent;
-import com.pauldavdesign.mineauz.minigames.events.SpectateMinigameEvent;
+import au.com.mineauz.minigames.events.JoinMinigameEvent;
+import au.com.mineauz.minigames.events.SpectateMinigameEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -36,12 +36,12 @@ import org.bukkit.event.Listener;
 
 public class Minigames implements Listener {
 
-    private static com.pauldavdesign.mineauz.minigames.Minigames plugin;
+    private static au.com.mineauz.minigames.Minigames plugin;
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("Minigames", "com.pauldavdesign.mineauz.minigames.Minigames")) {
-            plugin = PluginHookManager.getPluginInstance(com.pauldavdesign.mineauz.minigames.Minigames.class).get();
+        if (PluginHookManager.isPluginUsable("Minigames", "au.com.mineauz.minigames.Minigames")) {
+            plugin = PluginHookManager.getPluginInstance(au.com.mineauz.minigames.Minigames.class).get();
             Bukkit.getPluginManager().registerEvents(new Minigames(), MyPetApi.getPlugin());
             MyPetApi.getLogger().info("Minigames hook activated.");
             active = true;
