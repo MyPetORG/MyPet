@@ -116,9 +116,7 @@ public class EntityMySkeleton extends EntityMyPet {
             public void run() {
                 if (getMyPet().getStatus() == PetState.Here) {
                     for (EquipmentSlot slot : EquipmentSlot.values()) {
-                        if (getMyPet().getEquipment(slot) != null) {
                             setPetEquipment(slot.getSlotId(), CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
-                        }
                     }
                 }
             }

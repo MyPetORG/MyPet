@@ -143,9 +143,7 @@ public class EntityMyZombie extends EntityMyPet {
             public void run() {
                 if (getMyPet().getStatus() == MyPet.PetState.Here) {
                     for (EquipmentSlot slot : EquipmentSlot.values()) {
-                        if (getMyPet().getEquipment(slot) != null) {
-                            setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
-                        }
+                        setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
                     }
                 }
             }
