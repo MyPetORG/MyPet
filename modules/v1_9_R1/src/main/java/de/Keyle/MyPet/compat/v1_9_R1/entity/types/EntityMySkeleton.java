@@ -143,8 +143,4 @@ public class EntityMySkeleton extends EntityMyPet {
         }
         return super.getEquipment(vanillaSlot);
     }
-
-    public float getHeadHeight() {
-        return this.datawatcher.get(typeWatcher) == 1 ? super.getHeadHeight() : 1.74F;
-    }
 }

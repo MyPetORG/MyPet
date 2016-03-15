@@ -152,22 +152,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public void setSize() {
         EntitySize es = this.getClass().getAnnotation(EntitySize.class);
         if (es != null) {
-            this.setSize(es.width(), es.width());
+            float width = es.width();
+            float height = es.height() == java.lang.Float.NaN ? width : es.height();
+            this.setSize(width, height);
         }
     }
 
     public float getHeadHeight() {
-        float height;
-        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
-        if (es != null) {
-            if (es.height() != java.lang.Float.NaN) {
-                height = es.height();
-            } else {
-                height = es.width();
-            }
-        } else {
-            height = length;
-        }
+        float height = super.getHeadHeight();
         if (hasRider()) {
             height += 1;
         }

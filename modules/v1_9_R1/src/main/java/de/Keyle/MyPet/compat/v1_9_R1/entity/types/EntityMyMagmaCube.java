@@ -54,10 +54,6 @@ public class EntityMyMagmaCube extends EntityMyPet {
         return null;
     }
 
-    public float getHeadHeight() {
-        return length;
-    }
-
     protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.register(sizeWatcher, 1); //size
