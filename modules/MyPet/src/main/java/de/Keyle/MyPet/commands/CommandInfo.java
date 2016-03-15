@@ -172,7 +172,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 if (canSee(PetInfoDisplay.Behavior.adminOnly, player, myPet)) {
                     if (myPet.getSkills().hasSkill(Behavior.class)) {
                         Behavior behavior = myPet.getSkills().getSkill(Behavior.class).get();
-                        player.sendMessage("   Behavior: " + Translation.getString("Name." + behavior.getBehavior().name(), player));
+                        player.sendMessage("   " + Translation.getString("Name.Skill.Behavior", player) + ": " + Translation.getString("Name." + behavior.getBehavior().name(), player));
                         infoShown = true;
                     }
                 }
