@@ -533,13 +533,13 @@ public class EntityListener implements Listener {
                         MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
                             @Override
                             public void callback(Boolean value) {
+                                owner.sendMessage(Translation.getString("Message.Leash.Add", owner));
+
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                                 if (myPet.isPresent()) {
                                     myPet.get().createEntity();
 
                                     getPluginManager().callEvent(new MyPetLeashEvent(myPet.get()));
-
-                                    owner.sendMessage(Translation.getString("Message.Leash.Add", owner));
 
                                     if (owner.isCaptureHelperActive()) {
                                         owner.setCaptureHelperActive(false);
