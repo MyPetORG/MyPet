@@ -63,7 +63,6 @@ public class EntityMySkeleton extends EntityMyPet {
                 boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-                    MyPetApi.getLogger().info(slot.name() + ": " + itemInSlot);
                     if (itemInSlot != null) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
