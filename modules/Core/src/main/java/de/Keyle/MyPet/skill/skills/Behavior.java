@@ -217,7 +217,7 @@ public class Behavior extends BehaviorInfo implements SkillInstance, Scheduler, 
             while (true) {
                 behavior = behaviorCycler.next();
                 if (behavior != Normal) {
-                    if (Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior." + behavior.name())) {
+                    if (Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.behavior." + behavior.name().toLowerCase())) {
                         break;
                     }
                 } else {

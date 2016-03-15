@@ -41,7 +41,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
             Player player = (Player) sender;
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
-                if (!Permissions.hasExtended(player, "MyPet.user.extended.Beacon", true)) {
+                if (!Permissions.hasExtended(player, "MyPet.user.extended.beacon", true)) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", player));
                     return true;
                 }

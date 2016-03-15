@@ -10,7 +10,7 @@ commands:
   petname:
     description: Changes the name of your MyPet
     usage: '/<command> <PetName>'
-    permission: MyPet.user.command.name
+    permission: MyPet.command.name
   petcall:
     aliases: [petc, pc]
     description: Calls your MyPet.
@@ -20,7 +20,7 @@ commands:
   petrelease:
     description: Releases your MyPet.
     usage: '/<command> <PetName>'
-    permission: MyPet.user.command.release
+    permission: MyPet.command.release
   petstop:
     aliases: [pets, ps]
     description: Stops your MyPet from attacking.
@@ -61,7 +61,7 @@ commands:
     aliases: [pr, petr]
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
-    permission: MyPet.user.command.respawn
+    permission: MyPet.command.respawn
   pettype:
     description: Shows info about the MyPet-types.
     usage: '/<command> <Pettype>'
@@ -69,93 +69,88 @@ commands:
     aliases: [pch]
     description: Toogles CaptureHelper on/off
     usage: '/<command>'
-    permission: MyPet.user.command.capturehelper
+    permission: MyPet.command.capturehelper
   petoptions:
     aliases: [po, peto, petoption]
     description: MyPet player options
     usage: '/<command>'
-    permission: MyPet.user.command.options
+    permission: MyPet.command.options
   petswitch:
     aliases: [pswitch, psw]
     description: Opens a MyPet selection GUI
     usage: '/<command>'
-    permission: MyPet.user.command.switch
+    permission: MyPet.command.switch
 
 permissions:
-  MyPet.user.leash.*:
+  MyPet.leash.*:
     description: Player can leash all MyPet-Types.
     children:
-      MyPet.user.leash.Bat: true
-      MyPet.user.leash.Blaze: true
-      MyPet.user.leash.CaveSpider: true
-      MyPet.user.leash.Chicken: true
-      MyPet.user.leash.Cow: true
-      MyPet.user.leash.Creeper: true
-      MyPet.user.leash.Enderdragon: true
-      MyPet.user.leash.Enderman: true
-      MyPet.user.leash.Endermite: true
-      MyPet.user.leash.Giant: true
-      MyPet.user.leash.Ghast: true
-      MyPet.user.leash.Guardian: true
-      MyPet.user.leash.Horse: true
-      MyPet.user.leash.IronGolem: true
-      MyPet.user.leash.MagmaCube: true
-      MyPet.user.leash.Mooshroom: true
-      MyPet.user.leash.Ocelot: true
-      MyPet.user.leash.Pig: true
-      MyPet.user.leash.PigZombie: true
-      MyPet.user.leash.Rabbit: true
-      MyPet.user.leash.Sheep: true
-      MyPet.user.leash.Silverfish: true
-      MyPet.user.leash.Skeleton: true
-      MyPet.user.leash.Slime: true
-      MyPet.user.leash.Snowman: true
-      MyPet.user.leash.Spider: true
-      MyPet.user.leash.Squid: true
-      MyPet.user.leash.Villager: true
-      MyPet.user.leash.Witch: true
-      MyPet.user.leash.Wither: true
-      MyPet.user.leash.Wolf: true
-      MyPet.user.leash.Zombie: true
-  MyPet.*:
-    description: Gives access to ALL (not includes admin) MyPet features.
-    children:
-      MyPet.user.*: true
-      MyPet.user.command.info.other: true
+      MyPet.leash.Bat: true
+      MyPet.leash.Blaze: true
+      MyPet.leash.CaveSpider: true
+      MyPet.leash.Chicken: true
+      MyPet.leash.Cow: true
+      MyPet.leash.Creeper: true
+      MyPet.leash.Enderdragon: true
+      MyPet.leash.Enderman: true
+      MyPet.leash.Endermite: true
+      MyPet.leash.Giant: true
+      MyPet.leash.Ghast: true
+      MyPet.leash.Guardian: true
+      MyPet.leash.Horse: true
+      MyPet.leash.IronGolem: true
+      MyPet.leash.MagmaCube: true
+      MyPet.leash.Mooshroom: true
+      MyPet.leash.Ocelot: true
+      MyPet.leash.Pig: true
+      MyPet.leash.PigZombie: true
+      MyPet.leash.Rabbit: true
+      MyPet.leash.Sheep: true
+      MyPet.leash.Silverfish: true
+      MyPet.leash.Skeleton: true
+      MyPet.leash.Slime: true
+      MyPet.leash.Snowman: true
+      MyPet.leash.Spider: true
+      MyPet.leash.Squid: true
+      MyPet.leash.Villager: true
+      MyPet.leash.Witch: true
+      MyPet.leash.Wither: true
+      MyPet.leash.Wolf: true
+      MyPet.leash.Zombie: true
   MyPet.admin:
     description: Gives access to the MyPet admin features.
     default: op
-  MyPet.user.*:
+  MyPet.*:
     description: Gives access to MyPet features for normal user.
     children:
-      MyPet.user.leash.*: true
-      MyPet.user.command.respawn: true
-      MyPet.user.command.release: true
-      MyPet.user.command.capturehelper: true
-      MyPet.user.command.name: true
-      MyPet.user.command.name.color: true
-      MyPet.user.command.options: true
-  MyPet.user.command.release:
+      MyPet.leash.*: true
+      MyPet.command.respawn: true
+      MyPet.command.release: true
+      MyPet.command.capturehelper: true
+      MyPet.command.name: true
+      MyPet.command.name.color: true
+      MyPet.command.options: true
+  MyPet.command.release:
     default: true
     description: Allows usage of /petrelease
-  MyPet.user.command.capturehelper:
+  MyPet.command.capturehelper:
     default: true
     description: Gives access to the CaptureHelper
-  MyPet.user.command.respawn:
+  MyPet.command.respawn:
     default: true
     description: Allows usage of /petrespawn
-  MyPet.user.command.name:
+  MyPet.command.name:
     default: true
     description: Allows usage of /petname
-  MyPet.user.command.name.color:
+  MyPet.command.name.color:
     default: true
     description: Allows to use colors in petnames
-  MyPet.user.command.options:
+  MyPet.command.options:
     default: true
     description: Allows to use the MyPet options command
-  MyPet.user.command.switch:
+  MyPet.command.switch:
     default: op
     description: Allows to switch between MyPets
-  MyPet.user.command.info.other:
+  MyPet.command.info.other:
     default: op
     description: Allows to view info about pets from other players with "/petinfo <playername>"

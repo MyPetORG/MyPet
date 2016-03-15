@@ -44,26 +44,26 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
             player.sendMessage(ChatColor.GOLD + "/petinfo" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Info", player));
             player.sendMessage(ChatColor.GOLD + "/pettype" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Type", player));
             player.sendMessage(ChatColor.GOLD + "/petoptions" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Options", player));
-            if (Permissions.has(player, "MyPet.user.command.capturehelper")) {
+            if (Permissions.has(player, "MyPet.command.capturehelper")) {
                 player.sendMessage(ChatColor.GOLD + "/petcapturehelper" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.CaptureHelper", player));
             }
             if (Permissions.has(player, "MyPet.admin", false)) {
                 player.sendMessage(ChatColor.GOLD + "/petadmin" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Admin", player));
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                if (Permissions.has(player, "MyPet.user.command.name")) {
+                if (Permissions.has(player, "MyPet.command.name")) {
                     player.sendMessage(ChatColor.GOLD + "/petname" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Name", player));
                 }
-                if (Permissions.has(player, "MyPet.user.command.release")) {
+                if (Permissions.has(player, "MyPet.command.release")) {
                     player.sendMessage(ChatColor.GOLD + "/petrelease" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Release", player));
                 }
                 player.sendMessage(ChatColor.GOLD + "/petstop" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Stop", player));
                 player.sendMessage(ChatColor.GOLD + "/petcall" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Call", player));
                 player.sendMessage(ChatColor.GOLD + "/petsendaway" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.SendAway", player));
-                if (Permissions.has(player, "MyPet.user.command.respawn")) {
+                if (Permissions.has(player, "MyPet.command.respawn")) {
                     player.sendMessage(ChatColor.GOLD + "/petrespawn" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Respawn", player));
                 }
-                if (Permissions.has(player, "MyPet.user.command.switch")) {
+                if (Permissions.has(player, "MyPet.command.switch")) {
                     player.sendMessage(ChatColor.GOLD + "/petswitch" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Switch", player));
                 }
                 player.sendMessage(ChatColor.GOLD + "/petskill" + ChatColor.RESET + ": " + Translation.getString("Message.Command.Help.Skill", player));

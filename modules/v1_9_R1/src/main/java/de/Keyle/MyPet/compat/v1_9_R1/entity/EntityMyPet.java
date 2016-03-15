@@ -290,7 +290,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public boolean canEquip() {
-        return Permissions.hasExtended(getOwner().getPlayer(), "MyPet.user.extended.Equip") && canUseItem();
+        return Permissions.hasExtended(getOwner().getPlayer(), "MyPet.extended.equip") && canUseItem();
     }
 
     public boolean canUseItem() {
@@ -417,7 +417,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                             }
                         }.runTaskLater(MyPetApi.getPlugin(), 5);
                     }
-                    if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride")) {
+                    if (Permissions.hasExtended(owner, "MyPet.extended.ride")) {
                         ((CraftPlayer) owner).getHandle().startRiding(this);
                         return true;
                     } else {
@@ -451,7 +451,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         return true;
                     }
                 } else if (canEat(itemStack) && canUseItem()) {
-                    if (owner != null && !Permissions.hasExtended(owner, "MyPet.user.extended.CanFeed")) {
+                    if (owner != null && !Permissions.hasExtended(owner, "MyPet.extended.feed")) {
                         return false;
                     }
                     if (this.petTargetSelector.hasGoal("DuelTarget")) {

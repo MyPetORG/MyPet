@@ -54,7 +54,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
-        if (!Permissions.has(player, "MyPet.user.command.switch")) {
+        if (!Permissions.has(player, "MyPet.command.switch")) {
             player.sendMessage(Translation.getString("Message.No.Allowed", player));
             return true;
         }
@@ -104,7 +104,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
 
                         if (owner.hasMyPet()) {
                             inactivePetCount--;
-                            if (!Permissions.has(owner, "MyPet.user.command.switch.bypass")) {
+                            if (!Permissions.has(owner, "MyPet.command.switch.bypass")) {
                                 if (inactivePetCount >= maxPetCount) {
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
                                     return;
@@ -160,7 +160,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             maxPetCount = 54;
         } else {
             for (int i = 54; i > 0; i--) {
-                if (Permissions.has(p, "MyPet.user.command.switch.limit." + i)) {
+                if (Permissions.has(p, "MyPet.command.switch.limit." + i)) {
                     maxPetCount = i;
                     break;
                 }

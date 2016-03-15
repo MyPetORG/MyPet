@@ -273,14 +273,14 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         Collections.shuffle(skilltrees);
                     }
                     for (SkillTree skillTree : skilltrees) {
-                        if (Permissions.has(this.petOwner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission())) {
+                        if (Permissions.has(this.petOwner.getPlayer(), "MyPet.skilltree." + skillTree.getPermission())) {
                             return setSkilltree(skillTree);
                         }
                     }
                 }
             } else {
                 for (SkillTree skillTree : SkillTreeMobType.getSkillTrees(this.getPetType())) {
-                    if (Permissions.has(this.petOwner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission())) {
+                    if (Permissions.has(this.petOwner.getPlayer(), "MyPet.skilltree." + skillTree.getPermission())) {
                         getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
                         break;
                     }
