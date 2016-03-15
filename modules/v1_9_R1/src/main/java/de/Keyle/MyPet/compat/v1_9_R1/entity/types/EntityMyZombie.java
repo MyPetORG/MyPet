@@ -83,10 +83,10 @@ public class EntityMyZombie extends EntityMyPet {
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                     if (itemInSlot != null) {
-                        EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
+                        EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
+                        entityitem.pickupDelay = 10;
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        this.world.addEntity(entityitem);
                         getMyPet().setEquipment(slot, null);
                         hadEquipment = true;
                     }
@@ -101,10 +101,10 @@ public class EntityMyZombie extends EntityMyPet {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(d(itemStack).c());
                 ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
+                    entityitem.pickupDelay = 10;
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    this.world.addEntity(entityitem);
                 }
                 getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {

@@ -71,10 +71,9 @@ public class EntityMyEnderman extends EntityMyPet {
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Items.SHEARS && getMyPet().hasBlock() && getOwner().getPlayer().isSneaking()) {
-                EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getBlock()), 1.0F);
+                EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getBlock()));
+                entityitem.pickupDelay = 10;
                 entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setBlock(null);

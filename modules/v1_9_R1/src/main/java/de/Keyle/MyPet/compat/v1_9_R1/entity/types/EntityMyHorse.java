@@ -212,22 +212,22 @@ public class EntityMyHorse extends EntityMyPet {
                 return true;
             } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                 if (getMyPet().hasArmor()) {
-                    EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getArmor()), 1F);
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getArmor()));
+                    entityitem.pickupDelay = 10;
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    this.world.addEntity(entityitem);
                 }
                 if (getMyPet().hasChest()) {
-                    EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getChest()), 1F);
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getChest()));
+                    entityitem.pickupDelay = 10;
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    this.world.addEntity(entityitem);
                 }
                 if (getMyPet().hasSaddle()) {
-                    EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getSaddle()), 1F);
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+                    entityitem.pickupDelay = 10;
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    this.world.addEntity(entityitem);
                 }
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
