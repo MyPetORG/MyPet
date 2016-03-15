@@ -47,7 +47,7 @@ public class CommandStop implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                sender.sendMessage(Translation.getString("Message.Command.Stop.Attack", petOwner).replace("%petname%", myPet.getPetName()));
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Stop.Attack", petOwner), myPet.getPetName()));
                 myPet.getEntity().get().forgetTarget();
             } else {
                 sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
