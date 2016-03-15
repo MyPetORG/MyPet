@@ -51,10 +51,6 @@ public class EntityMySlime extends EntityMyPet {
         return null;
     }
 
-    public float getHeadHeight() {
-        return length;
-    }
-
     protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 1)); //size

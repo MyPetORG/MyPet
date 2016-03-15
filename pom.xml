@@ -67,7 +67,7 @@
         <heroes.version>1.5.5.3</heroes.version>
         <skill-api.version>3.37</skill-api.version>
         <magicspells.version>3.4.2</magicspells.version>
-        <protocol-lib.version>3.6.4</protocol-lib.version>
+        <protocol-lib.version>3.7.0-SNAPSHOT</protocol-lib.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
         <mongodb.version>3.2.1</mongodb.version>

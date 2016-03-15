@@ -133,10 +133,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         int minZ = MathHelper.floor(axisalignedbb.c);
         int maxZ = MathHelper.floor(axisalignedbb.f + 1.0D);
 
-        for (int x = minX; x < maxX; x++) {
-            for (int z = minZ; z < maxZ; z++) {
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
                 if (world.isChunkLoaded(x >> 4, z >> 4)) {
-                    for (int y = minY - 1; y < maxY; y++) {
+                    for (int y = minY - 1; y <= maxY; y++) {
                         Block block = CraftMagicNumbers.getBlock(world.getBlockAt(x, y, z));
                         if (block != null && block.getMaterial().isSolid()) {
                             block.a(((CraftWorld) world).getHandle(), new BlockPosition(x, y, z), block.getBlockData(), axisalignedbb, unsafeList, null);
