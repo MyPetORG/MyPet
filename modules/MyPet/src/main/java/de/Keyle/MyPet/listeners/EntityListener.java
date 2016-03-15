@@ -167,7 +167,7 @@ public class EntityListener implements Listener {
                     }
                     if (myPet.getSkills().hasSkill(Behavior.class) && CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {
                         Behavior behavior = myPet.getSkills().getSkill(Behavior.class).get();
-                        damager.sendMessage("   Behavior: " + Translation.getString("Name." + behavior.getBehavior().name(), damager));
+                        damager.sendMessage("   " + Translation.getString("Name.Skill.Behavior", damager) + ": " + Translation.getString("Name." + behavior.getBehavior().name(), damager));
                         infoShown = true;
                     }
                     if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
