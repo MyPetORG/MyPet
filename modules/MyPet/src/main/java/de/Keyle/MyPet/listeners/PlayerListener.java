@@ -79,7 +79,7 @@ public class PlayerListener implements Listener {
                             return;
                         }
                     }
-                    if (!Permissions.hasExtended(event.getPlayer(), "MyPet.user.extended.Control")) {
+                    if (!Permissions.hasExtended(event.getPlayer(), "MyPet.extended.control")) {
                         myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                         return;
                     }

@@ -42,7 +42,7 @@ public class Configuration {
 
     public static class Repository {
         public static String REPOSITORY_TYPE = "NBT";
-        public static String CONVERT_FROM = "-";
+        public static String CONVERT_FROM = "";
 
         public static class NBT {
             public static int AUTOSAVE_TIME = 60;

@@ -402,7 +402,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
                         if (!PvPChecker.canHurt(p, entity)) {
                             continue;
                         }
-                        if (!Permissions.has(this, "MyPet.user.leash." + MyPetType.byEntityTypeName(entity.getType().name()))) {
+                        if (!Permissions.has(this, "MyPet.leash." + MyPetType.byEntityTypeName(entity.getType().name()))) {
                             continue;
                         }
                         Location l = entity.getLocation();

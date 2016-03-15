@@ -71,7 +71,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Translation.getString("Message.No.HasPet", player));
                     return true;
                 }
-            } else if (Permissions.has(player, "MyPet.user.command.info.other", false)) {
+            } else if (Permissions.has(player, "MyPet.command.info.other", false)) {
                 Player p = Bukkit.getServer().getPlayer(args[0]);
                 if (p == null || !p.isOnline()) {
                     sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));

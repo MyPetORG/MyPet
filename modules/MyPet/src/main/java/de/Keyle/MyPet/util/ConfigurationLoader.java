@@ -50,7 +50,6 @@ public class ConfigurationLoader {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
         config.addDefault("MyPet.Leash.Consume", Misc.CONSUME_LEASH_ITEM);
-        config.addDefault("MyPet.Leash.ShowAlwaysForOwner", Misc.ALWAYS_SHOW_LEASH_FOR_OWNER);
         config.addDefault("MyPet.OwnerCanAttackPet", Misc.OWNER_CAN_ATTACK_PET);
         config.addDefault("MyPet.DisablePetVersusPlayer", Misc.DISABLE_PET_VS_PLAYER);
         config.addDefault("MyPet.RemovePetsAfterRelease", Misc.REMOVE_PETS_AFTER_RELEASE);
@@ -98,7 +97,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Respawn.EconomyCost.Factor", Respawn.COSTS_FACTOR);
 
         config.addDefault("MyPet.Permissions.Enabled", Permissions.ENABLED);
-        config.addDefault("MyPet.Permissions.UseExtendedPermissions", Permissions.EXTENDED);
+        config.addDefault("MyPet.Permissions.Extended", Permissions.EXTENDED);
 
         config.addDefault("MyPet.LevelSystem.CalculationMode", LevelSystem.CALCULATION_MODE);
         config.addDefault("MyPet.LevelSystem.Firework.Enabled", LevelSystem.FIREWORK);
@@ -113,9 +112,9 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skilltree.InheritAlreadyInheritedSkills", Skilltree.INHERIT_ALREADY_INHERITED_SKILLS);
         config.addDefault("MyPet.Skilltree.ChooseOnce", Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE);
         config.addDefault("MyPet.Skilltree.PreventLevellingWithout", Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE);
-        config.addDefault("MyPet.Skilltree.SwitchPenaltyFixed", Skilltree.SWITCH_PENALTY_FIXED);
-        config.addDefault("MyPet.Skilltree.SwitchPenaltyPercent", Skilltree.SWITCH_PENALTY_PERCENT);
-        config.addDefault("MyPet.Skilltree.SwitchPenaltyAdmin", Skilltree.SWITCH_PENALTY_ADMIN);
+        config.addDefault("MyPet.Skilltree.SwitchPenalty.Fixed", Skilltree.SWITCH_PENALTY_FIXED);
+        config.addDefault("MyPet.Skilltree.SwitchPenalty.Percent", Skilltree.SWITCH_PENALTY_PERCENT);
+        config.addDefault("MyPet.Skilltree.SwitchPenalty.Admin", Skilltree.SWITCH_PENALTY_ADMIN);
 
         config.addDefault("MyPet.Hooks.BungeeCord.UUID-Mode", Hooks.BUNGEE_MODE);
         config.addDefault("MyPet.Hooks.Towny", Hooks.USE_Towny);
@@ -235,7 +234,6 @@ public class ConfigurationLoader {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
         Misc.CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
-        Misc.ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
 
         Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
         Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));

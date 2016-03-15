@@ -124,7 +124,7 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
     public void schedule() {
         MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Use);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if (pickup && (event.isCancelled() || !Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))) {
+        if (pickup && (event.isCancelled() || !Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
             pickup = false;
             myPet.getOwner().sendMessage(Util.formatText(Translation.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Translation.getString("Name.Disabled", myPet.getOwner())));
             return;
