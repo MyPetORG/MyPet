@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.types.*;
@@ -260,7 +259,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings) {
         if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) commandSender)) {
             List<String> petnameList = new ArrayList<>();
-            petnameList.add(MyPetApi.getMyPetManager().getMyPet((MyPetPlayer) commandSender).getPetName());
+            petnameList.add(MyPetApi.getMyPetManager().getMyPet((Player) commandSender).getPetName());
             return petnameList;
         }
         return CommandAdmin.EMPTY_LIST;
