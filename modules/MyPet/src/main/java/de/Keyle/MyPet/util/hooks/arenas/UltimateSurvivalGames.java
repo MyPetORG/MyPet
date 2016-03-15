@@ -63,7 +63,7 @@ public class UltimateSurvivalGames implements Listener {
         if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetApi.getPlayerManager().isMyPetPlayer(event.getUser().getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getUser().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
-                player.getMyPet().removePet(true);
+                player.getMyPet().removePet();
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
             }
         }

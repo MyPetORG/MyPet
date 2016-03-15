@@ -34,7 +34,7 @@ public class VehicleListener implements Listener {
         if (event.getEntered() instanceof Player && !(event.getVehicle() instanceof Horse)) {
             Player player = (Player) event.getEntered();
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                MyPetApi.getMyPetManager().getMyPet(player).removePet(true);
+                MyPetApi.getMyPetManager().getMyPet(player).removePet();
             }
         }
         if (event.getEntered() instanceof MyPetBukkitEntity) {

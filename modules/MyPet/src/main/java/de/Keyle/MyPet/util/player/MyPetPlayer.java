@@ -347,7 +347,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
             MyPet myPet = getMyPet();
             if (myPet.getStatus() == de.Keyle.MyPet.entity.MyPet.PetState.Here) {
                 if (myPet.getLocation().get().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().get().distance(this.getPlayer().getLocation()) > 40) {
-                    myPet.removePet(true);
+                    myPet.removePet();
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
                 }
 

@@ -563,7 +563,7 @@ public class EntityListener implements Listener {
                 final MyPet myPet = bukkitEntity.getMyPet();
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 
-                myPet.removePet(true);
+                myPet.removePet();
                 myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPetPlayer.getLanguage()), myPet.getPetName()));
 
                 MyPetApi.getPlugin().getServer().getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {

@@ -330,7 +330,7 @@ public class PlayerListener implements Listener {
                 if (myPet.getStatus() == MyPet.PetState.Here) {
                     if (myPet.getLocation().get().getWorld() != event.getTo().getWorld() || myPet.getLocation().get().distance(event.getTo()) > 10) {
                         final boolean sameWorld = myPet.getLocation().get().getWorld() == event.getTo().getWorld();
-                        myPet.removePet(true);
+                        myPet.removePet();
                         new BukkitRunnable() {
                             public void run() {
                                 if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet()) {
@@ -374,7 +374,7 @@ public class PlayerListener implements Listener {
                         inv.dropContentAt(myPet.getLocation().get());
                     }
                 }
-                myPet.removePet(true);
+                myPet.removePet();
             }
         }
     }
