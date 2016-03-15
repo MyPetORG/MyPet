@@ -515,17 +515,16 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
             if (status == PetState.Dead) {
                 respawnTime--;
-                if (EconomyHook.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
+                if (respawnTime <= 0) {
+                    status = PetState.Despawned;
+                    respawnPet();
+                } else if (EconomyHook.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
                     double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                     if (EconomyHook.canPay(getOwner().getPlayer(), cost)) {
                         EconomyHook.pay(getOwner().getPlayer(), cost);
                         getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + EconomyHook.getEconomy().currencyNameSingular()));
                         respawnTime = 1;
                     }
-                }
-                if (respawnTime <= 0) {
-                    status = PetState.Despawned;
-                    respawnPet();
                 }
             }
             if (status == PetState.Here) {
