@@ -71,11 +71,10 @@ public class EntityMySheep extends EntityMyPet {
                 int woolDropCount = 1 + this.random.nextInt(3);
 
                 for (int j = 0; j < woolDropCount; ++j) {
-                    EntityItem entityitem = this.a(new ItemStack(Blocks.WOOL, 1, getMyPet().getColor().getDyeData()), 1.0F);
-
-                    entityitem.motY += (double) this.random.nextFloat() * 0.05F;
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, new ItemStack(Blocks.WOOL, 1, getMyPet().getColor().getDyeData()));
+                    entityitem.pickupDelay = 10;
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    this.world.addEntity(entityitem);
                 }
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {
