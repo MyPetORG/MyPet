@@ -47,7 +47,7 @@ public class RangedAttack extends AIGoal {
         this.shootTimer = -1;
         this.lastSeenTimer = 0;
         this.walkSpeedModifier = walkSpeedModifier;
-        this.range = range;
+        this.range = range * range;
         rangedSkill = entityMyPet.getMyPet().getSkills().getSkill(Ranged.class).get();
     }
 
