@@ -49,4 +49,10 @@ public class EntityMyEndermite extends EntityMyPet {
     public void playPetStepSound() {
         makeSound("entity.endermite.step", 1.0F, 1.0F);
     }
+
+    public void setPathfinder() {
+        super.setPathfinder();
+        petPathfinderSelector.removeGoal("LookAtPlayer");
+        petPathfinderSelector.removeGoal("RandomLockaround");
+    }
 }
