@@ -63,6 +63,7 @@ public class EntityMySkeleton extends EntityMyPet {
                 boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                    MyPetApi.getLogger().info(slot.name() + ": " + itemInSlot);
                     if (itemInSlot != null) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
@@ -118,9 +119,7 @@ public class EntityMySkeleton extends EntityMyPet {
             public void run() {
                 if (getMyPet().getStatus() == PetState.Here) {
                     for (EquipmentSlot slot : EquipmentSlot.values()) {
-                        if (getMyPet().getEquipment(slot) != null) {
-                            setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
-                        }
+                        setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
                     }
                 }
             }
