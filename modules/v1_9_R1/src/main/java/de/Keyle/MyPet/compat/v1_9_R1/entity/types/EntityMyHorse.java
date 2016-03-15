@@ -21,18 +21,14 @@
 package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import com.google.common.base.Optional;
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
@@ -136,51 +132,6 @@ public class EntityMyHorse extends EntityMyPet {
 
 
     public boolean handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, final ItemStack itemStack) {
-        if (enumhand == EnumHand.OFF_HAND) {
-            if (itemStack != null) {
-                if (itemStack.getItem() == Items.LEAD) {
-                    ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
-                    entityhuman.a(EnumHand.OFF_HAND, null);
-                    new BukkitRunnable() {
-                        public void run() {
-                            if (entityhuman instanceof EntityPlayer) {
-                                entityhuman.a(EnumHand.OFF_HAND, itemStack);
-                                Player p = (Player) entityhuman.getBukkitEntity();
-                                if (!p.isOnline()) {
-                                    p.saveData();
-                                }
-                            }
-                        }
-                    }.runTaskLater(MyPetApi.getPlugin(), 5);
-                }
-            }
-            return true;
-        }
-
-        if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
-            if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
-                if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
-                    if (itemStack.getItem() == Items.LEAD) {
-                        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
-                        entityhuman.a(EnumHand.MAIN_HAND, null);
-                        new BukkitRunnable() {
-                            public void run() {
-                                if (entityhuman instanceof EntityPlayer) {
-                                    entityhuman.a(EnumHand.MAIN_HAND, itemStack);
-                                    Player p = (Player) entityhuman.getBukkitEntity();
-                                    if (!p.isOnline()) {
-                                        p.saveData();
-                                    }
-                                }
-                            }
-                        }.runTaskLater(MyPetApi.getPlugin(), 5);
-                    }
-                    getMyPet().getOwner().sendMessage("Ironically horses can not be ridden right now (Minecraft 1.9 problem)");
-                    return true;
-                }
-            }
-        }
-
         if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
             return true;
         }
@@ -291,10 +242,18 @@ public class EntityMyHorse extends EntityMyPet {
     }
 
     public void onLivingUpdate() {
+        boolean oldRiding = hasRider;
         super.onLivingUpdate();
         if (rearCounter > -1 && rearCounter-- == 0) {
             applyVisual(64, false);
             rearCounter = -1;
+        }
+        if (oldRiding != hasRider) {
+            if (hasRider) {
+                applyVisual(4, true);
+            } else {
+                applyVisual(4, getMyPet().hasSaddle());
+            }
         }
 
         if (ageCounter > -1 && ageCounter-- == 0) {
