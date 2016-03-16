@@ -402,7 +402,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
-                    if (itemStack.getItem() == Items.LEAD) {
+                    if (itemStack != null && itemStack.getItem() == Items.LEAD) {
                         ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
                         entityhuman.a(EnumHand.MAIN_HAND, null);
                         new BukkitRunnable() {
