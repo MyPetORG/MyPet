@@ -33,6 +33,7 @@ public class Colorizer {
             text = text.replaceAll("(?i)<" + color + ">", ChatColor.COLOR_CHAR + colorCodes.get(color));
         }
         text = text.replaceAll("(?i)<([0-9a-fk-or])>", ChatColor.COLOR_CHAR + "$1");
+        text = text.replaceAll("(?i)&([0-9a-fk-or])", ChatColor.COLOR_CHAR + "$1");
         return text;
     }
 
