@@ -41,6 +41,7 @@ public class SkillApi implements Listener {
         if (PluginHookManager.isPluginUsable("SkillAPI")) {
             active = true;
             Bukkit.getPluginManager().registerEvents(new SkillApi(), MyPetApi.getPlugin());
+            MyPetApi.getLogger().info("SkillAPI hook activated.");
         }
     }
 

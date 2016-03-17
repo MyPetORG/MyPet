@@ -40,7 +40,7 @@ public class BattleArena implements Listener {
         if (PluginHookManager.isPluginUsable("BattleArena")) {
             Bukkit.getPluginManager().registerEvents(new BattleArena(), MyPetApi.getPlugin());
             active = true;
-            MyPetApi.getLogger().warning("BattleArena hook activated.");
+            MyPetApi.getLogger().info("BattleArena hook activated.");
         }
     }
 

@@ -35,6 +35,7 @@ public class MagicSpellsHook implements Listener {
         if (PluginHookManager.isPluginUsable("MagicSpells")) {
             active = true;
             Bukkit.getPluginManager().registerEvents(new MagicSpellsHook(), MyPetApi.getPlugin());
+            MyPetApi.getLogger().info("MagicSpells hook activated.");
         }
     }
 
