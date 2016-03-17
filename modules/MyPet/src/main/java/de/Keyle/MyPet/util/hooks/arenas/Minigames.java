@@ -53,7 +53,7 @@ public class Minigames implements Listener {
             try {
                 if (plugin != null) {
                     Player p = owner.getPlayer();
-                    return plugin.pdata.playersInMinigame().contains(p);
+                    return plugin.pdata.getMinigamePlayer(p).isInMinigame();
                 }
             } catch (Exception e) {
                 active = false;
