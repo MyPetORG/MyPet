@@ -46,6 +46,13 @@
         <remove.donator>none</remove.donator>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>comphenix-releases</id>
+            <url>http://repo.comphenix.net/content/repositories/public/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -125,7 +132,6 @@
             <artifactId>mypet-gui</artifactId>
             <version>1</version>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -152,6 +158,11 @@
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>1.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>3.4.0</version>
         </dependency>
     </dependencies>
 
