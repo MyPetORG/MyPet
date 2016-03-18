@@ -35,6 +35,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,16 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 
 public class Util {
+    public static Method getMethod(Class<?> clazz, String method, Class<?>... parameterTypes) {
+        try {
+            Method m = clazz.getDeclaredMethod(method, parameterTypes);
+            m.setAccessible(true);
+            return m;
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
     public static Field getField(Class<?> clazz, String field) {
         try {
             Field f = clazz.getDeclaredField(field);
