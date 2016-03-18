@@ -425,7 +425,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                         newGroup.addWorld(world);
                     }
                     if (newGroup.getWorlds().size() > 0) {
-                        getLogger().info(" registered '" + newGroup.getName() + "' group");
                         newGroup.registerGroup();
                     }
                 }
@@ -435,7 +434,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             if (defaultGroup == null) {
                 defaultGroup = new WorldGroup("default");
                 defaultGroup.registerGroup();
-                getLogger().info(" registered 'default' group");
             }
 
             boolean saveConfig = false;
