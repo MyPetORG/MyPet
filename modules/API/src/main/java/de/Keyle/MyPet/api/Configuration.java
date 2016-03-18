@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 public class Configuration {
     public static class Misc {
         public static boolean CONSUME_LEASH_ITEM = false;
-        public static boolean ALWAYS_SHOW_LEASH_FOR_OWNER = false;
         public static boolean OWNER_CAN_ATTACK_PET = false;
         public static boolean DISABLE_PET_VS_PLAYER = false;
         public static boolean REMOVE_PETS_AFTER_RELEASE = false;
@@ -34,6 +33,7 @@ public class Configuration {
         public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
         public static boolean INVISIBLE_LIKE_OWNER = true;
         public static String WIKI_URL = "http://mypet.keyle.de";
+        public static int MAX_STORED_PET_COUNT = 45;
     }
 
     public static class Log {
