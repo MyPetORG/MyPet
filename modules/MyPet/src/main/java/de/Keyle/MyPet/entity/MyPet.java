@@ -52,7 +52,6 @@ import de.Keyle.MyPet.skill.skills.Ranged;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -385,7 +384,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 status = PetState.Despawned;
                 return SpawnFlags.OwnerDead;
             }
-            if (getOwner().getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            if (getOwner().getPlayer().getGameMode().name().equals("SPECTATOR")) {
                 return SpawnFlags.Spectator;
             }
 
