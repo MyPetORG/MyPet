@@ -94,8 +94,8 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                 @Override
                 public void callback(List<StoredMyPet> pets) {
-                    if (pets.size() == 0) {
-                        owner.sendMessage(Translation.getString("Message.No.HasPet", owner));
+                    if (pets.size() - (owner.hasMyPet() ? 1 : 0) == 0) {
+                        owner.sendMessage(Translation.getString("Message.Command.Switch.NoStoredPets", owner));
                         return;
                     }
                     if (owner.isOnline()) {
