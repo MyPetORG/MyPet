@@ -121,6 +121,76 @@ permissions:
       MyPet.leash.Wither: true
       MyPet.leash.Wolf: true
       MyPet.leash.Zombie: true
+  MyPet.command.trade.offer.type.*:
+    description: Player offer all MyPet-Types.
+    children:
+      MyPet.command.trade.offer.type.Bat: true
+      MyPet.command.trade.offer.type.Blaze: true
+      MyPet.command.trade.offer.type.CaveSpider: true
+      MyPet.command.trade.offer.type.Chicken: true
+      MyPet.command.trade.offer.type.Cow: true
+      MyPet.command.trade.offer.type.Creeper: true
+      MyPet.command.trade.offer.type.Enderdragon: true
+      MyPet.command.trade.offer.type.Enderman: true
+      MyPet.command.trade.offer.type.Endermite: true
+      MyPet.command.trade.offer.type.Giant: true
+      MyPet.command.trade.offer.type.Ghast: true
+      MyPet.command.trade.offer.type.Guardian: true
+      MyPet.command.trade.offer.type.Horse: true
+      MyPet.command.trade.offer.type.IronGolem: true
+      MyPet.command.trade.offer.type.MagmaCube: true
+      MyPet.command.trade.offer.type.Mooshroom: true
+      MyPet.command.trade.offer.type.Ocelot: true
+      MyPet.command.trade.offer.type.Pig: true
+      MyPet.command.trade.offer.type.PigZombie: true
+      MyPet.command.trade.offer.type.Rabbit: true
+      MyPet.command.trade.offer.type.Sheep: true
+      MyPet.command.trade.offer.type.Silverfish: true
+      MyPet.command.trade.offer.type.Skeleton: true
+      MyPet.command.trade.offer.type.Slime: true
+      MyPet.command.trade.offer.type.Snowman: true
+      MyPet.command.trade.offer.type.Spider: true
+      MyPet.command.trade.offer.type.Squid: true
+      MyPet.command.trade.offer.type.Villager: true
+      MyPet.command.trade.offer.type.Witch: true
+      MyPet.command.trade.offer.type.Wither: true
+      MyPet.command.trade.offer.type.Wolf: true
+      MyPet.command.trade.offer.type.Zombie: true
+  MyPet.command.trade.receive.type.*:
+    description: Player receive all MyPet-Types.
+    children:
+      MyPet.command.trade.receive.type.Bat: true
+      MyPet.command.trade.receive.type.Blaze: true
+      MyPet.command.trade.receive.type.CaveSpider: true
+      MyPet.command.trade.receive.type.Chicken: true
+      MyPet.command.trade.receive.type.Cow: true
+      MyPet.command.trade.receive.type.Creeper: true
+      MyPet.command.trade.receive.type.Enderdragon: true
+      MyPet.command.trade.receive.type.Enderman: true
+      MyPet.command.trade.receive.type.Endermite: true
+      MyPet.command.trade.receive.type.Giant: true
+      MyPet.command.trade.receive.type.Ghast: true
+      MyPet.command.trade.receive.type.Guardian: true
+      MyPet.command.trade.receive.type.Horse: true
+      MyPet.command.trade.receive.type.IronGolem: true
+      MyPet.command.trade.receive.type.MagmaCube: true
+      MyPet.command.trade.receive.type.Mooshroom: true
+      MyPet.command.trade.receive.type.Ocelot: true
+      MyPet.command.trade.receive.type.Pig: true
+      MyPet.command.trade.receive.type.PigZombie: true
+      MyPet.command.trade.receive.type.Rabbit: true
+      MyPet.command.trade.receive.type.Sheep: true
+      MyPet.command.trade.receive.type.Silverfish: true
+      MyPet.command.trade.receive.type.Skeleton: true
+      MyPet.command.trade.receive.type.Slime: true
+      MyPet.command.trade.receive.type.Snowman: true
+      MyPet.command.trade.receive.type.Spider: true
+      MyPet.command.trade.receive.type.Squid: true
+      MyPet.command.trade.receive.type.Villager: true
+      MyPet.command.trade.receive.type.Witch: true
+      MyPet.command.trade.receive.type.Wither: true
+      MyPet.command.trade.receive.type.Wolf: true
+      MyPet.command.trade.receive.type.Zombie: true
   MyPet.admin:
     description: Gives access to the MyPet admin features.
     default: op
@@ -134,6 +204,10 @@ permissions:
       MyPet.command.name: true
       MyPet.command.name.color: true
       MyPet.command.options: true
+      MyPet.command.trade.offer: true
+      MyPet.command.trade.offer.type.*: true
+      MyPet.command.trade.receive: true
+      MyPet.command.trade.receive.type.*: true
   MyPet.command.release:
     default: true
     description: Allows usage of /petrelease
