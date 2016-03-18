@@ -40,7 +40,6 @@ import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -97,7 +96,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(PlayerGameModeChangeEvent event) {
-        if (event.getNewGameMode() == GameMode.SPECTATOR) {
+        if (event.getNewGameMode().name().equals("SPECTATOR")) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
                 if (myPetPlayerDamagee.hasMyPet()) {
