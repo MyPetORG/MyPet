@@ -58,6 +58,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.RetainEquipmentOnTame", Misc.RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
+        config.addDefault("MyPet.Max-Stored-Pet-Count", Configuration.Misc.MAX_STORED_PET_COUNT);
         config.addDefault("MyPet.Update-Check", true);
 
         config.addDefault("MyPet.Repository.NBT.AutoSaveTime", Repository.NBT.AUTOSAVE_TIME);
@@ -216,6 +217,7 @@ public class ConfigurationLoader {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
         Misc.CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
+        Configuration.Misc.MAX_STORED_PET_COUNT = config.getInt("MyPet.Max-Stored-Pet-Count", Configuration.Misc.MAX_STORED_PET_COUNT);
 
         Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
         Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));

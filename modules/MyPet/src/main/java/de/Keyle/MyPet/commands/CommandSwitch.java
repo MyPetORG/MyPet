@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -157,9 +158,9 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
     private int getMaxPetCount(Player p) {
         int maxPetCount = 0;
         if (p.isOp()) {
-            maxPetCount = 54;
+            maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         } else {
-            for (int i = 54; i > 0; i--) {
+            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
                 if (Permissions.has(p, "MyPet.command.switch.limit." + i)) {
                     maxPetCount = i;
                     break;
