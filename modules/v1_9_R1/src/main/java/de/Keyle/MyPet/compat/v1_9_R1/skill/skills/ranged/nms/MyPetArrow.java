@@ -26,7 +26,7 @@ import de.Keyle.MyPet.compat.v1_9_R1.skill.skills.ranged.bukkit.CraftMyPetArrow;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 
-public class MyPetArrow extends EntityArrow implements EntityMyPetProjectile {
+public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjectile {
     public MyPetArrow(World world, EntityMyPet entityMyPet) {
         super(world, entityMyPet);
     }
