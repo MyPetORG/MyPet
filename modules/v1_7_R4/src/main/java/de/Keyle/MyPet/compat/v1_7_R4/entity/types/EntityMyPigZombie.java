@@ -111,7 +111,7 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().a(12, new Integer(0)); // is baby
+        getDataWatcher().a(12, (byte) 0); // is baby
     }
 
     /**
@@ -130,7 +130,10 @@ public class EntityMyPigZombie extends EntityMyPet {
             public void run() {
                 if (getMyPet().getStatus() == PetState.Here) {
                     for (EquipmentSlot slot : EquipmentSlot.values()) {
-                            setPetEquipment(slot.getSlotId(), CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
+                        if (slot == EquipmentSlot.OffHand) {
+                            continue;
+                        }
+                        setPetEquipment(slot.getSlotId(), CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
                     }
                 }
             }
