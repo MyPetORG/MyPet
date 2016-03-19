@@ -92,7 +92,7 @@ public class Permissions {
                     }
                 }
             }
-            return player.hasPermission(node);
+            return player.hasPermission(node + parameter);
         }
         return false;
     }
@@ -130,7 +130,7 @@ public class Permissions {
                         }
                     }
                 }
-                return player.hasPermission(node);
+                return player.hasPermission(node + parameter);
             }
             return defaultValue || player.isOp();
         }
