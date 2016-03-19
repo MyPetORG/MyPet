@@ -282,7 +282,7 @@ public class EntityListener implements Listener {
                     MyPetType petType = MyPetType.byEntityTypeName(leashTarget.getType().name());
                     ConfigItem leashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
 
-                    if (!leashItem.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.leash." + petType.name())) {
+                    if (!leashItem.compare(damager.getItemInHand()) || !Permissions.hasLegacy(damager, "MyPet.leash.", petType.name())) {
                         return;
                     }
                     if (PluginHookManager.isPluginUsable("Citizens")) {
@@ -834,7 +834,7 @@ public class EntityListener implements Listener {
             sendDeathMessage(event);
             myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner.getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
-            if (EconomyHook.canUseEconomy() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
+            if (EconomyHook.canUseEconomy() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.hasLegacy(owner.getPlayer(), "MyPet.command.respawn")) {
                 double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                 if (EconomyHook.canPay(owner, costs)) {
                     EconomyHook.pay(owner, costs);

@@ -69,7 +69,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     skilltreeName = skilltreeName.substring(0, skilltreeName.length() - 1);
                     if (skillTreeMobType.hasSkillTree(skilltreeName)) {
                         SkillTree skillTree = skillTreeMobType.getSkillTree(skilltreeName);
-                        if (Permissions.has(player, "MyPet.skilltree." + skillTree.getPermission())) {
+                        if (Permissions.hasLegacy(player, "MyPet.skilltree.", skillTree.getPermission())) {
                             int requiredLevel = skillTree.getRequiredLevel();
                             if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                 myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
@@ -97,7 +97,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                 } else {
                     List<SkillTree> availableSkilltrees = new ArrayList<>();
                     for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
-                        if (Permissions.has(player, "MyPet.skilltree." + skillTree.getPermission())) {
+                        if (Permissions.hasLegacy(player, "MyPet.skilltree.", skillTree.getPermission())) {
                             availableSkilltrees.add(skillTree);
                         }
                     }
@@ -197,7 +197,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
 
                 List<String> skilltreeList = new ArrayList<>();
                 for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
-                    if (Permissions.has(player, "MyPet.skilltree." + skillTree.getPermission())) {
+                    if (Permissions.hasLegacy(player, "MyPet.skilltree.", skillTree.getPermission())) {
                         skilltreeList.add(skillTree.getName());
                     }
                 }
