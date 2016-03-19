@@ -83,8 +83,8 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public void setName(String name) {
-        if (name != null && name.length() > 16) {
-            name = name.substring(0, 16);
+        if (name != null && name.length() > 64) {
+            name = name.substring(0, 64);
         }
         this.inventroyName = name;
     }

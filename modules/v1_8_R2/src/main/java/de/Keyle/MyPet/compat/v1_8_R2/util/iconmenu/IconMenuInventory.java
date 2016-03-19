@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_8_R2.util.iconmenu;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
@@ -71,7 +70,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
     public void open(IconMenu menu, HumanEntity player) {
         if (bukkitInventory == null) {
             size = menu.getSize();
-            minecraftInventory = new CustomInventory(size, Util.cutString(menu.getTitle(), 32));
+            minecraftInventory = new CustomInventory(size, menu.getTitle());
             bukkitInventory = new CraftInventory(minecraftInventory);
 
             for (int slot = 0; slot < size; slot++) {
