@@ -99,6 +99,7 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Permissions.Enabled", Permissions.ENABLED);
         config.addDefault("MyPet.Permissions.Extended", Permissions.EXTENDED);
+        config.addDefault("MyPet.Permissions.Legacy", Permissions.LEGACY);
 
         config.addDefault("MyPet.LevelSystem.CalculationMode", LevelSystem.CALCULATION_MODE);
         config.addDefault("MyPet.LevelSystem.Firework.Enabled", LevelSystem.FIREWORK);
@@ -317,6 +318,7 @@ public class ConfigurationLoader {
 
         Permissions.EXTENDED = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
+        Permissions.LEGACY = config.getBoolean("MyPet.Permissions.Legacy", Permissions.LEGACY);
 
         Hooks.BUNGEE_MODE = config.getString("MyPet.Hooks.BungeeCord.UUID-Mode", "online");
         Hooks.USE_ECONOMY = config.getBoolean("MyPet.Hooks.Vault.Economy", true);

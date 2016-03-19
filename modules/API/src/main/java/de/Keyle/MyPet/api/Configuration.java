@@ -96,6 +96,7 @@ public class Configuration {
     public static class Permissions {
         public static boolean ENABLED = true;
         public static boolean EXTENDED = false;
+        public static boolean LEGACY = false;
     }
 
     public static class LevelSystem {
