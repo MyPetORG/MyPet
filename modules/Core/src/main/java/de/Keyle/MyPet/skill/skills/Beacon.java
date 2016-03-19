@@ -46,10 +46,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.bukkit.ChatColor.*;
 import static org.bukkit.Material.*;
@@ -339,11 +336,13 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             menu.setOption(26, new IconMenuItem().setMaterial(SPONGE).setAmount(buffLevel.get(22)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(22), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(22))));
         }
 
-        for (int buff : selectedBuffs) {
-            if (buffLevel.get(buff) > 0) {
+        Iterator<Integer> iterator = selectedBuffs.iterator();
+        while (iterator.hasNext()) {
+            int buff = iterator.next();
+            if (buffLevel.containsKey(buff) && buffLevel.get(buff) > 0) {
                 menu.getOption(buffItemPositions.get(buff)).setGlowing(true);
             } else {
-                selectedBuffs.remove(buff);
+                iterator.remove();
             }
         }
 
