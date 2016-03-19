@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.player;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import de.Keyle.MyPet.api.Configuration;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -27,9 +29,121 @@ import org.bukkit.permissions.PermissibleBase;
 
 public class Permissions {
 
+    private static Multimap<String, String> legacy = ArrayListMultimap.create();
+
+    static {
+        legacy.put("MyPet.command.info.other", "MyPet.user.command.info.other");
+        legacy.put("MyPet.command.capturehelper", "MyPet.user.command.capturehelper");
+        legacy.put("MyPet.command.release", "MyPet.user.command.release");
+        legacy.put("MyPet.command.respawn", "MyPet.user.command.respawn");
+        legacy.put("MyPet.command.name", "MyPet.user.command.name");
+        legacy.put("MyPet.command.name.color", "MyPet.user.command.name.color");
+        legacy.put("MyPet.command.switch", "MyPet.user.command.switch");
+        legacy.put("MyPet.command.switch.bypass", "MyPet.user.command.switch.bypass");
+        legacy.put("MyPet.command.switch.limit.", "MyPet.user.command.switch.limit.");
+        legacy.put("MyPet.leash.", "MyPet.user.leash.");
+        legacy.put("MyPet.skilltree.", "MyPet.custom.skilltree.");
+        legacy.put("MyPet.extended.feed", "MyPet.user.extended.CanFeed");
+        legacy.put("MyPet.extended.beacon", "MyPet.user.extended.Beacon");
+        legacy.put("MyPet.extended.behavior.", "MyPet.user.extended.Behavior.");
+        legacy.put("MyPet.extended.inventory", "MyPet.user.extended.Inventory");
+        legacy.put("MyPet.extended.ride", "MyPet.user.extended.Ride");
+        legacy.put("MyPet.extended.control", "MyPet.user.extended.Control");
+        legacy.put("MyPet.extended.pickup", "MyPet.user.extended.Pickup");
+        legacy.put("MyPet.extended.equip", "MyPet.user.extended.Equip");
+    }
+
+    public static boolean hasLegacy(MyPetPlayer player, String node, Object parameter) {
+        if (player != null && player.isOnline()) {
+            return hasLegacy(player.getPlayer(), node, parameter);
+        }
+        return false;
+    }
+
+    public static boolean hasLegacy(MyPetPlayer player, String node) {
+        if (player != null && player.isOnline()) {
+            return hasLegacy(player.getPlayer(), node);
+        }
+        return false;
+    }
+
     public static boolean has(MyPetPlayer player, String node) {
         if (player != null && player.isOnline()) {
             return has(player.getPlayer(), node);
+        }
+        return false;
+    }
+
+    public static boolean hasLegacy(Player player, String node, Object parameter) {
+        if (player != null) {
+            if (!Configuration.Permissions.ENABLED || player.isOp()) {
+                return true;
+            }
+            if (legacy.containsKey(node)) {
+                for (String permission : legacy.get(node)) {
+                    if (player.hasPermission(permission + parameter)) {
+                        return true;
+                    }
+                }
+            }
+            return player.hasPermission(node);
+        }
+        return false;
+    }
+
+    public static boolean hasLegacy(Player player, String node, boolean defaultValue) {
+        if (player != null) {
+            if (Configuration.Permissions.ENABLED) {
+                if (player.isOp()) {
+                    return true;
+                }
+                if (legacy.containsKey(node)) {
+                    for (String permission : legacy.get(node)) {
+                        if (player.hasPermission(permission)) {
+                            return true;
+                        }
+                    }
+                }
+                player.hasPermission(node);
+            }
+            return defaultValue || player.isOp();
+        }
+        return false;
+    }
+
+    public static boolean hasLegacy(Player player, String node, Object parameter, boolean defaultValue) {
+        if (player != null) {
+            if (Configuration.Permissions.ENABLED) {
+                if (player.isOp()) {
+                    return true;
+                }
+                if (legacy.containsKey(node)) {
+                    for (String permission : legacy.get(node)) {
+                        if (player.hasPermission(permission + parameter)) {
+                            return true;
+                        }
+                    }
+                }
+                return player.hasPermission(node);
+            }
+            return defaultValue || player.isOp();
+        }
+        return false;
+    }
+
+    public static boolean hasLegacy(Player player, String node) {
+        if (player != null) {
+            if (!Configuration.Permissions.ENABLED || player.isOp()) {
+                return true;
+            }
+            if (legacy.containsKey(node)) {
+                for (String permission : legacy.get(node)) {
+                    if (player.hasPermission(permission)) {
+                        return true;
+                    }
+                }
+            }
+            return player.hasPermission(node);
         }
         return false;
     }
@@ -53,6 +167,14 @@ public class Permissions {
 
     public static boolean hasExtended(Player player, String node) {
         return !Configuration.Permissions.EXTENDED || has(player, node);
+    }
+
+    public static boolean hasExtendedLegacy(Player player, String node) {
+        return !Configuration.Permissions.EXTENDED || hasLegacy(player, node);
+    }
+
+    public static boolean hasExtendedLegacy(Player player, String node, Object parameter) {
+        return !Configuration.Permissions.EXTENDED || hasLegacy(player, node, parameter);
     }
 
     public static boolean hasExtended(Player player, String node, boolean defaultValue) {
