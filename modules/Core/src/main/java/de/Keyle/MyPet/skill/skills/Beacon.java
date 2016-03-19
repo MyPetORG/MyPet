@@ -93,7 +93,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         buffItemPositions.put(22, 26);
     }
 
-    public enum BeaconReciever {
+    public enum BeaconReceiver {
         Owner, Party, Everyone
     }
 
@@ -101,7 +101,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
 
     private boolean active = false;
     private int hungerDecreaseTimer;
-    private BeaconReciever reciever = BeaconReciever.Owner;
+    private BeaconReceiver receiver = BeaconReceiver.Owner;
     private Map<Integer, Integer> buffLevel = new HashMap<>();
     private int beaconTimer = 0;
     private List<Integer> selectedBuffs = new ArrayList<>();
@@ -153,7 +153,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         IconMenu menu = new IconMenu(title, new IconMenu.OptionClickEventHandler() {
             List<Integer> selectedBuffs = new ArrayList<>(beacon.selectedBuffs);
             boolean active = beacon.active;
-            private BeaconReciever reciever = beacon.reciever;
+            private BeaconReceiver receiver = beacon.receiver;
 
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
@@ -187,38 +187,38 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                         beacon.active = active;
                         beacon.selectedBuffs.clear();
                         beacon.selectedBuffs.addAll(selectedBuffs);
-                        beacon.reciever = reciever;
+                        beacon.receiver = receiver;
                         event.setWillClose(true);
                         event.setWillDestroy(true);
                         break;
                     case 21:
-                        if (reciever != BeaconReciever.Owner) {
+                        if (receiver != BeaconReceiver.Owner) {
                             menu.getOption(21).setMeta(ownerMeta, false, false);
                             if (menu.getOption(22) != null) {
                                 menu.getOption(22).setMeta(partyMeta);
                             }
                             menu.getOption(23).setMeta(disabledMeta);
-                            reciever = BeaconReciever.Owner;
+                            receiver = BeaconReceiver.Owner;
                             menu.update();
                         }
                         break;
                     case 22:
-                        if (reciever != BeaconReciever.Party) {
+                        if (receiver != BeaconReceiver.Party) {
                             menu.getOption(21).setMeta(disabledMeta);
                             menu.getOption(22).setMeta(partyMeta);
                             menu.getOption(23).setMeta(disabledMeta);
-                            reciever = BeaconReciever.Party;
+                            receiver = BeaconReceiver.Party;
                             menu.update();
                         }
                         break;
                     case 23:
-                        if (reciever != BeaconReciever.Everyone) {
+                        if (receiver != BeaconReceiver.Everyone) {
                             menu.getOption(21).setMeta(disabledMeta);
                             if (menu.getOption(22) != null) {
                                 menu.getOption(22).setMeta(disabledMeta);
                             }
                             menu.getOption(23).setMeta(everyoneMeta);
-                            reciever = BeaconReciever.Everyone;
+                            receiver = BeaconReceiver.Everyone;
                             menu.update();
                         }
                         break;
@@ -277,19 +277,19 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         menu.setOption(3, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(5).setTitle(GREEN + Translation.getString("Name.Done", myPet.getOwner().getLanguage())));
         menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Translation.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
-        if (reciever == BeaconReciever.Owner) {
+        if (receiver == BeaconReceiver.Owner) {
             menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setMeta(ownerMeta, false, false));
         } else {
             menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
         }
         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookManager().isInParty(getMyPet().getOwner().getPlayer())) {
-            if (reciever != BeaconReciever.Party) {
+            if (receiver != BeaconReceiver.Party) {
                 menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setMeta(partyMeta));
             } else {
                 menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
             }
         }
-        if (reciever == BeaconReciever.Everyone) {
+        if (receiver == BeaconReceiver.Everyone) {
             menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setMeta(everyoneMeta));
         } else {
             menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
@@ -552,7 +552,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), "SPELL_WITCH", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
             List<Player> members = null;
-            if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && reciever == BeaconReciever.Party) {
+            if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BeaconReceiver.Party) {
                 members = MyPetApi.getHookManager().getPartyMembers(getMyPet().getOwner().getPlayer());
             }
             int duration = this.duration * 20;
@@ -572,7 +572,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                 }
                 Player player = (Player) e;
 
-                switch (reciever) {
+                switch (receiver) {
                     case Owner:
                         if (!myPet.getOwner().equals(player)) {
                             continue targetLoop;
@@ -593,7 +593,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                             }
                             break;
                         } else {
-                            reciever = BeaconReciever.Owner;
+                            receiver = BeaconReceiver.Owner;
                             break targetLoop;
                         }
                 }
@@ -622,7 +622,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         TagCompound nbtTagCompound = new TagCompound();
         nbtTagCompound.getCompoundData().put("Buffs", new TagIntArray(ArrayUtils.toPrimitive(selectedBuffs.toArray(new Integer[selectedBuffs.size()]))));
         nbtTagCompound.getCompoundData().put("Active", new TagByte(this.active));
-        nbtTagCompound.getCompoundData().put("Reciever", new TagString(this.reciever.name()));
+        nbtTagCompound.getCompoundData().put("Reciever", new TagString(this.receiver.name()));
         return nbtTagCompound;
     }
 
@@ -648,7 +648,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             this.active = compound.getAs("Active", TagByte.class).getBooleanData();
         }
         if (compound.getCompoundData().containsKey("Reciever")) {
-            this.reciever = BeaconReciever.valueOf(compound.getAs("Reciever", TagString.class).getStringData());
+            this.receiver = BeaconReceiver.valueOf(compound.getAs("Reciever", TagString.class).getStringData());
         }
     }
 }
