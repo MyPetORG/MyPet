@@ -72,13 +72,13 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                         return true;
                     }
 
-                    if (!Permissions.hasLegacy(player, "MyPet.command.trade.receive", false)) {
+                    if (!Permissions.hasLegacy(player, "MyPet.command.trade.receive")) {
                         sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.NoPermission", player));
                         owner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Reject", owner), player.getName(), offer.getPet().getPetName()));
                         offers.remove(player.getUniqueId());
                         return true;
                     }
-                    if (!Permissions.hasLegacy(player, "MyPet.command.trade.receive.type.", offer.getPet().getPetType().name(), false)) {
+                    if (!Permissions.hasLegacy(player, "MyPet.command.trade.receive.type.", offer.getPet().getPetType().name())) {
                         sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.NoPermission", player));
                         owner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Reject", owner), player.getName(), offer.getPet().getPetName()));
                         offers.remove(player.getUniqueId());
@@ -198,14 +198,14 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                 sender.sendMessage(Translation.getString("Message.Command.Trade.Owner.NoOffer", player));
                 return true;
             } else {
-                if (!Permissions.hasLegacy((Player) sender, "MyPet.command.trade.offer", false)) {
+                if (!Permissions.hasLegacy((Player) sender, "MyPet.command.trade.offer")) {
                     player.sendMessage(Translation.getString("Message.No.Allowed", player));
                     return true;
                 }
                 if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
 
-                    if (!Permissions.hasLegacy((Player) sender, "MyPet.command.trade.offer.type.", myPet.getPetType().name(), false)) {
+                    if (!Permissions.hasLegacy((Player) sender, "MyPet.command.trade.offer.type.", myPet.getPetType().name())) {
                         player.sendMessage(Translation.getString("Message.No.Allowed", player));
                         return true;
                     }
