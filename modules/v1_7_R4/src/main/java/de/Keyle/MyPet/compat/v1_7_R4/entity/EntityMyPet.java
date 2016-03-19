@@ -235,9 +235,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             if (getCustomNameVisible()) {
                 String prefix = Configuration.Name.OVERHEAD_PREFIX;
                 String suffix = Configuration.Name.OVERHEAD_SUFFIX;
-                prefix = prefix.replace("<ownername>", getOwner().getName());
+                prefix = prefix.replace("<owner>", getOwner().getName());
                 prefix = prefix.replace("<level>", "" + getMyPet().getExperience().getLevel());
-                suffix = suffix.replace("<ownername>", getOwner().getName());
+                suffix = suffix.replace("<owner>", getOwner().getName());
                 suffix = suffix.replace("<level>", "" + getMyPet().getExperience().getLevel());
                 this.setCustomNameVisible(getCustomNameVisible());
                 super.setCustomName(Util.cutString(prefix + myPet.getPetName() + suffix, 64));
