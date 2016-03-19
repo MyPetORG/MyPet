@@ -83,6 +83,9 @@
         <!-- http://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/ -->
         <ultimatesurvivalgames.version>1.9.4</ultimatesurvivalgames.version>
 
+        <!-- https://www.spigotmc.org/resources/survival-games.17740/ -->
+        <survivalgames.version>0.6.0</survivalgames.version>
+
         <!-- http://dev.bukkit.org/bukkit-plugins/residence/ -->
         <residence.version>2.6.6.6</residence.version>
 
@@ -272,6 +275,13 @@
             <groupId>me.maker56.survivalgames</groupId>
             <artifactId>SurvivalGames</artifactId>
             <version>${ultimatesurvivalgames.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mcsg</groupId>
+            <artifactId>survivalgames</artifactId>
+            <version>${survivalgames.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
