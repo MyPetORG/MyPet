@@ -79,7 +79,7 @@ public class Permissions {
             if (!Configuration.Permissions.ENABLED || player.isOp()) {
                 return true;
             }
-            if (legacy.containsKey(node)) {
+            if (Configuration.Permissions.LEGACY && legacy.containsKey(node)) {
                 for (String permission : legacy.get(node)) {
                     if (player.hasPermission(permission + parameter)) {
                         return true;
@@ -97,7 +97,7 @@ public class Permissions {
                 if (player.isOp()) {
                     return true;
                 }
-                if (legacy.containsKey(node)) {
+                if (Configuration.Permissions.LEGACY && legacy.containsKey(node)) {
                     for (String permission : legacy.get(node)) {
                         if (player.hasPermission(permission)) {
                             return true;
@@ -117,7 +117,7 @@ public class Permissions {
                 if (player.isOp()) {
                     return true;
                 }
-                if (legacy.containsKey(node)) {
+                if (Configuration.Permissions.LEGACY && legacy.containsKey(node)) {
                     for (String permission : legacy.get(node)) {
                         if (player.hasPermission(permission + parameter)) {
                             return true;
@@ -136,7 +136,7 @@ public class Permissions {
             if (!Configuration.Permissions.ENABLED || player.isOp()) {
                 return true;
             }
-            if (legacy.containsKey(node)) {
+            if (Configuration.Permissions.LEGACY && legacy.containsKey(node)) {
                 for (String permission : legacy.get(node)) {
                     if (player.hasPermission(permission)) {
                         return true;
