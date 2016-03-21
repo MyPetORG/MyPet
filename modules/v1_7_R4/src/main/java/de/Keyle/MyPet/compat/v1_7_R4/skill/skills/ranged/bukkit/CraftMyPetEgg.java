@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.skill.skills.ranged.bukkit;
 
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
 import net.minecraft.server.v1_7_R4.EntityEgg;
@@ -45,5 +46,10 @@ public class CraftMyPetEgg extends CraftEgg implements CraftMyPetProjectile {
 
     public EntityMyPetProjectile getMyPetProjectile() {
         return ((EntityMyPetProjectile) this.getHandle());
+    }
+
+    @Override
+    public MyPetBukkitEntity getShootingMyPet() {
+        return getMyPetProjectile().getShooter().getBukkitEntity();
     }
 }
