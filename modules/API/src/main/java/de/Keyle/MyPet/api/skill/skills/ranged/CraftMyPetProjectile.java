@@ -20,8 +20,11 @@
 
 package de.Keyle.MyPet.api.skill.skills.ranged;
 
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import org.bukkit.entity.Projectile;
 
 public interface CraftMyPetProjectile extends Projectile {
     EntityMyPetProjectile getMyPetProjectile();
+
+    MyPetBukkitEntity getShooter();
 }
