@@ -26,5 +26,5 @@ import org.bukkit.entity.Projectile;
 public interface CraftMyPetProjectile extends Projectile {
     EntityMyPetProjectile getMyPetProjectile();
 
-    MyPetBukkitEntity getShooter();
+    MyPetBukkitEntity getShootingMyPet();
 }
