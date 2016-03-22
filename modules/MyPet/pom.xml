@@ -209,7 +209,7 @@
                         <configuration>
                             <connectionUrl>scm:git:https://github.com/xXKeyleXx/MyPet-Translations.git</connectionUrl>
                             <checkoutDirectory>target/classes/locale</checkoutDirectory>
-                            <excludes>exclude,.git,.gitignore</excludes>
+                            <excludes>exclude,.git,.gitignore,README.md</excludes>
                         </configuration>
                         <goals>
                             <goal>checkout</goal>
