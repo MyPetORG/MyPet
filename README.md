@@ -35,7 +35,7 @@ Download the latest builds from our [Jenkins-Server][Builds].
 [MCStatsImage]: http://dl.keyle.de/images/metrics.png
 [Builds]: https://build.keyle.de/job/MyPet/
 [BuildsImage]: http://dl.keyle.de/images/devbuilds.png
-[Wiki]: https://mypet.keyle.de/
+[Wiki]: https://wiki.mypet-plugin.de/
 [WikiImage]: http://dl.keyle.de/images/wiki.png
 [BukkitDev]: http://dev.bukkit.org/server-mods/mypet/
 [BukkitDevImage]: http://dl.keyle.de/images/bukkitdev.png 
