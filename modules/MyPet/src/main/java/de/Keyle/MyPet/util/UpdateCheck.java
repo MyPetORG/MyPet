@@ -36,7 +36,7 @@ public class UpdateCheck {
             parameter += "&build=" + MyPetVersion.getBuild();
 
             // no data will be saved on the server
-            String content = Util.readUrlContent("http://update.mypet.keyle.de/check.php?" + parameter);
+            String content = Util.readUrlContent("http://update.mypet-plugin.de/check.php?" + parameter);
             JSONParser parser = new JSONParser();
             JSONObject result = (JSONObject) parser.parse(content);
 

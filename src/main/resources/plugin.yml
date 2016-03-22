@@ -44,7 +44,7 @@ commands:
     usage: '/<command> <Playername>'
   mypetadmin:
     aliases: [petadmin]
-    description: §6MyPet-Admin-Command §r-> §3http://mypet.keyle.de/doku.php?id=en:commands
+    description: §6MyPet-Admin-Command §r-> §3https://wiki.mypet-plugin.de/doku.php?id=en:commands
     permission: MyPet.admin
   petskilltree:
     aliases: [pst, petst]

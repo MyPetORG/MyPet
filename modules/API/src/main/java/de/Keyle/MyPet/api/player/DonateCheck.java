@@ -64,7 +64,7 @@ public class DonateCheck {
             } else {
                 mode = "username=" + player.getName();
             }
-            String donation = Util.readUrlContent("http://donation.keyle.de/donated.php?" + mode);
+            String donation = Util.readUrlContent("http://donation.mypet-plugin.de/donated.php?" + mode);
             switch (donation) {
                 case "1":
                     return DonationRank.Donator;

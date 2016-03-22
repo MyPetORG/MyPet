@@ -32,7 +32,7 @@ public class Configuration {
         public static boolean RELEASE_PETS_ON_DEATH = false;
         public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
         public static boolean INVISIBLE_LIKE_OWNER = true;
-        public static String WIKI_URL = "http://mypet.keyle.de";
+        public static String WIKI_URL = "https://wiki.mypet-plugin.de";
         public static int MAX_STORED_PET_COUNT = 45;
     }
 
