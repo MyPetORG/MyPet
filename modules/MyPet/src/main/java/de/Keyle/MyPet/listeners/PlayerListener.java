@@ -120,7 +120,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
         if (event.isCancelled()) {
             if (event.getRightClicked() instanceof MyPetBukkitEntity) {
