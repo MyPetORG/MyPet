@@ -99,7 +99,7 @@ public class PluginHookManager implements Listener {
         if (pluginFound.containsKey(className)) {
             return pluginFound.get(className);
         }
-        if (!pluginNames.containsKey(pluginName)) {
+        if (!pluginNames.containsKey(pluginName) || !pluginFound.containsKey(className)) {
             JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
             if (plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className)) {
                 return getPluginInstance(plugin.getClass()).isPresent();
