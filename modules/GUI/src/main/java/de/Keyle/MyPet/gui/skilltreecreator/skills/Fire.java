@@ -87,7 +87,7 @@ public class Fire implements SkillPropertiesPanel {
             setTimeRadioButton.setSelected(true);
         }
         if (TagCompound.getCompoundData().containsKey("duration")) {
-            chanceInput.setText("" + TagCompound.getAs("duration", TagInt.class).getIntData());
+            timeInput.setText("" + TagCompound.getAs("duration", TagInt.class).getIntData());
         }
     }
 }
