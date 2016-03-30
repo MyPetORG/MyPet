@@ -508,7 +508,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
         }
-        if (!myPet.getOwner().getPlayer().isDead()) {
+        if (myPet.getOwner().isOnline() && !myPet.getOwner().getPlayer().isDead()) {
             if (getOwner().getPlayer().isSneaking() != isSneaking()) {
                 this.setSneaking(!isSneaking());
             }
