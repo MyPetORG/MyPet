@@ -569,7 +569,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             List<PotionEffect> potionEffects = new ArrayList<>();
             for (int buff : selectedBuffs) {
                 int amplification = buffLevel.get(buff) - 1;
-                PotionEffect effect = new PotionEffect(PotionEffectType.getById(buff), duration, amplification, true, false);
+                PotionEffect effect = new PotionEffect(PotionEffectType.getById(buff), duration, amplification, true, true);
                 potionEffects.add(effect);
             }
 
@@ -586,18 +586,24 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                         if (!myPet.getOwner().equals(player)) {
                             continue targetLoop;
                         } else {
-                            player.addPotionEffects(potionEffects);
+                            for (PotionEffect effect : potionEffects) {
+                                player.addPotionEffect(effect, true);
+                            }
                             MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             break targetLoop;
                         }
                     case Everyone:
-                        player.addPotionEffects(potionEffects);
+                        for (PotionEffect effect : potionEffects) {
+                            player.addPotionEffect(effect, true);
+                        }
                         MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
                     case Party:
                         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && members != null) {
                             if (members.contains(player)) {
-                                player.addPotionEffects(potionEffects);
+                                for (PotionEffect effect : potionEffects) {
+                                    player.addPotionEffect(effect, true);
+                                }
                                 MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             }
                             break;
