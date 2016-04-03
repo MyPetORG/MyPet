@@ -87,10 +87,10 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setBaby(boolean flag) {
+        this.isBaby = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isBaby = flag;
     }
 
     public boolean isSheared() {

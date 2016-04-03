@@ -105,10 +105,10 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     }
 
     public void setWither(boolean flag) {
+        this.isWither = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isWither = flag;
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {

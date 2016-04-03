@@ -51,7 +51,7 @@ public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     @Override
     public void setSheared(boolean flag) {
-        sheared = flag;
+        this.sheared = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }

@@ -113,10 +113,10 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     public void setBaby(boolean flag) {
+        this.isBaby = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isBaby = flag;
     }
 
     public boolean isVillager() {
