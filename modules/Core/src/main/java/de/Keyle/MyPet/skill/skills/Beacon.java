@@ -227,10 +227,20 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                                 if (selectedBuffs.indexOf(selectedBuff) != -1) {
                                     selectedBuffs.remove(selectedBuffs.indexOf(selectedBuff));
                                     menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(false);
+                                    if (selectableBuffs > selectedBuffs.size()) {
+                                        menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                                    } else {
+                                        menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                                    }
                                     menu.update();
                                 } else if (selectableBuffs > selectedBuffs.size()) {
                                     selectedBuffs.add(selectedBuff);
                                     menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(true);
+                                    if (selectableBuffs > selectedBuffs.size()) {
+                                        menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                                    } else {
+                                        menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                                    }
                                     menu.update();
                                 } else {
                                     break;
