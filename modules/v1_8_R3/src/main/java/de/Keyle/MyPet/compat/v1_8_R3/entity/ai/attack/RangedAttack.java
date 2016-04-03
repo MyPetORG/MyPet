@@ -80,10 +80,10 @@ public class RangedAttack extends AIGoal {
 
     @Override
     public boolean shouldFinish() {
-        if (entityMyPet.getTarget() == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
+        if (!entityMyPet.hasTarget() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
             return true;
         }
-        if (this.target.getBukkitEntity() != this.myPet.getEntity().get().getTarget()) {
+        if (this.target.getBukkitEntity() != this.entityMyPet.getTarget()) {
             return true;
         }
         double meleeDamage = myPet.getDamage();
