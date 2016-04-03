@@ -96,12 +96,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         if (item != null && item.getType() != Material.CHEST && item.getType() != Material.TRAPPED_CHEST) {
             return;
         }
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-        }
         this.chest = item;
         if (this.chest != null) {
             this.chest.setAmount(1);
+        }
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
@@ -117,12 +117,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         if (item != null && item.getType() != Material.SADDLE) {
             return;
         }
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-        }
         this.saddle = item;
         if (this.saddle != null) {
             this.saddle.setAmount(1);
+        }
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
@@ -200,12 +200,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     public void setHorseType(byte horseType) {
         horseType = (byte) Math.min(Math.max(0, horseType), 4);
         this.horseType = horseType;
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-        }
 
         if (horseType != 0) {
             setVariant(0);
+        }
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 
@@ -245,13 +245,13 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setBaby(boolean flag) {
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-        }
         if (flag) {
             this.age = -24000;
         } else {
             this.age = 0;
+        }
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 

@@ -62,11 +62,10 @@ public class MyMagmaCube extends MyPet implements de.Keyle.MyPet.api.entity.type
     }
 
     public void setSize(int value) {
-        value = Math.max(1, value);
+        this.size = Math.max(1, value);
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.size = value;
     }
 
     @Override

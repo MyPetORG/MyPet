@@ -91,10 +91,10 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     }
 
     public void setAngry(boolean flag) {
+        this.isAngry = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isAngry = flag;
     }
 
     public boolean isBaby() {
@@ -102,10 +102,10 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     }
 
     public void setBaby(boolean flag) {
+        this.isBaby = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isBaby = flag;
     }
 
     public boolean isTamed() {
@@ -113,10 +113,10 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     }
 
     public void setTamed(boolean flag) {
+        this.isTamed = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isTamed = flag;
     }
 
     @Override

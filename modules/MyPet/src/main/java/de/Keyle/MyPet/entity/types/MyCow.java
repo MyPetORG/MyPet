@@ -62,10 +62,10 @@ public class MyCow extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCo
     }
 
     public void setBaby(boolean flag) {
+        this.isBaby = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isBaby = flag;
     }
 
     @Override

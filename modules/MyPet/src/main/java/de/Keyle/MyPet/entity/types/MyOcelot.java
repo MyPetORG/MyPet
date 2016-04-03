@@ -47,10 +47,10 @@ public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     public void setCatType(Type value) {
+        this.catType = value;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.catType = value;
     }
 
     @Override
@@ -81,10 +81,10 @@ public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     public void setBaby(boolean flag) {
+        this.isBaby = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isBaby = flag;
     }
 
     @Override

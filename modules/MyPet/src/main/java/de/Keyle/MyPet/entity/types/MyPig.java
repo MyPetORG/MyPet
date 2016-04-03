@@ -80,10 +80,10 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
     }
 
     public void setBaby(boolean flag) {
+        this.isBaby = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isBaby = flag;
     }
 
     public ItemStack getSaddle() {
