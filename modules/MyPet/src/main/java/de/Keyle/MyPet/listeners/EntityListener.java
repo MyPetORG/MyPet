@@ -340,8 +340,7 @@ public class EntityListener implements Listener {
                             case Tamed:
                                 if (leashTarget instanceof Tameable) {
                                     willBeLeashed = ((Tameable) leashTarget).isTamed() && ((Tameable) leashTarget).getOwner() == damager;
-                                }
-                                if (leashTarget instanceof Horse) {
+                                } else if (leashTarget instanceof Horse) {
                                     willBeLeashed = ((Horse) leashTarget).isTamed() && ((Horse) leashTarget).getOwner() == damager;
                                 }
                                 break;
@@ -409,8 +408,7 @@ public class EntityListener implements Listener {
                             TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(leashTarget);
                             String[] allowedTags = {"Riches", "Career", "CareerLevel", "Willing", "Inventory", "Offers"};
                             Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
-                            for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
-                                String key = iterator.next();
+                            for (String key : keys) {
                                 if (Arrays.binarySearch(allowedTags, key) > -1) {
                                     continue;
                                 }
