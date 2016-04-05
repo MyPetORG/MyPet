@@ -49,17 +49,13 @@ public class EntityMyCreeper extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(16, new Byte((byte) -1)); // fuse
-        this.datawatcher.a(17, new Byte((byte) 0));  // powered
+        this.datawatcher.a(16, (byte) -1); // fuse
+        this.datawatcher.a(17, (byte) 0);  // powered
     }
 
     @Override
     public void updateVisuals() {
-        if (getMyPet().isPowered()) {
-            this.datawatcher.watch(17, (byte) 0);
-        } else {
-            this.datawatcher.watch(17, (byte) 1);
-        }
+        this.datawatcher.watch(17, (byte) (getMyPet().isPowered() ? 1 : 0));
     }
 
     public MyCreeper getMyPet() {
