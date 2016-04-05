@@ -407,10 +407,10 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
                         }
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
-                        if (CaptureHelper.checkTamable((LivingEntity) entity)) {
+                        if (CaptureHelper.checkTamable((LivingEntity) entity, p)) {
                             MyPetApi.getPlatformHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, 10);
                         } else {
-                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, +1);
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, 1);
                         }
                         if (count++ > 20) {
                             break;

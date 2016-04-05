@@ -29,7 +29,7 @@ import org.bukkit.entity.*;
 import java.util.List;
 
 public class CaptureHelper {
-    public static boolean checkTamable(LivingEntity leashTarget) {
+    public static boolean checkTamable(LivingEntity leashTarget, Player p) {
         List<LeashFlag> leashFlags = MyPetApi.getMyPetInfo().getLeashFlags(MyPetType.byEntityTypeName(leashTarget.getType().name()));
 
         boolean tamable = true;
@@ -65,8 +65,10 @@ public class CaptureHelper {
                     }
                     break;
                 case Tamed:
-                    if (leashTarget instanceof Tameable && !((Tameable) leashTarget).isTamed()) {
-                        tamable = false;
+                    if (leashTarget instanceof Tameable) {
+                        if (!((Tameable) leashTarget).isTamed() || ((Tameable) leashTarget).getOwner() != p) {
+                            tamable = false;
+                        }
                     }
                     break;
                 case UserCreated:
