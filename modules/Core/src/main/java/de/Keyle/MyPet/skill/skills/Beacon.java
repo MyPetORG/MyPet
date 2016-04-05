@@ -39,8 +39,8 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -541,6 +541,8 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                 selectedBuffs.clear();
             }
 
+            range = range * range;
+
             if (selectedBuffs.size() > selectableBuffs) {
                 int usableBuff = 0;
                 for (int buff : selectedBuffs) {
@@ -573,13 +575,12 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                 potionEffects.add(effect);
             }
 
-
+            Location myPetLocation = this.myPet.getLocation().get();
             targetLoop:
-            for (Entity e : this.myPet.getEntity().get().getNearbyEntities(range, range, range)) {
-                if (!(e instanceof Player)) {
+            for (Player player : myPetLocation.getWorld().getPlayers()) {
+                if(player.getLocation().distanceSquared(myPetLocation) > range) {
                     continue;
                 }
-                Player player = (Player) e;
 
                 switch (receiver) {
                     case Owner:
