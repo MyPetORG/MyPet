@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_9_R1.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MyWither;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.DataWatcher;
 import net.minecraft.server.v1_9_R1.DataWatcherObject;
@@ -33,7 +34,7 @@ public class EntityMyWither extends EntityMyPet {
     private static final DataWatcherObject<Integer> targetWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Integer> watcher_1 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Integer> watcher_2 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> blueWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> invulnerabilityWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
 
     public EntityMyWither(World world, MyPet myPet) {
         super(world, myPet);
@@ -55,10 +56,10 @@ public class EntityMyWither extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(targetWatcher, 0); // target entityID
-        this.datawatcher.register(watcher_1, 0);     // N/A
-        this.datawatcher.register(watcher_2, 0);     // N/A
-        this.datawatcher.register(blueWatcher, 0);   // blue (1/0)
+        this.datawatcher.register(targetWatcher, 0);          // target entityID
+        this.datawatcher.register(watcher_1, 0);              // N/A
+        this.datawatcher.register(watcher_2, 0);              // N/A
+        this.datawatcher.register(invulnerabilityWatcher, 0); // invulnerability (blue, size)
     }
 
     public void onLivingUpdate() {
@@ -69,9 +70,18 @@ public class EntityMyWither extends EntityMyPet {
         }
     }
 
+    @Override
+    public void updateVisuals() {
+        this.datawatcher.set(invulnerabilityWatcher, getMyPet().isBaby() ? 600 : 0);
+    }
+
     /**
      * -> disable falldamage
      */
     public void e(float f, float f1) {
+    }
+
+    public MyWither getMyPet() {
+        return (MyWither) myPet;
     }
 }

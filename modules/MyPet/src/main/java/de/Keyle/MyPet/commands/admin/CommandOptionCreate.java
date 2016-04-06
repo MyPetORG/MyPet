@@ -134,6 +134,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("elder");
         petTypeOptionMap.put("guardian", petTypeOptionList);
 
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("baby");
+        petTypeOptionMap.put("wither", petTypeOptionList);
+
         for (MyPetType petType : MyPetType.values()) {
             petTypeList.add(petType.name());
         }

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_8_R2.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MyWither;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R2.World;
 
@@ -47,10 +48,15 @@ public class EntityMyWither extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(17, new Integer(0));  // target entityID
-        this.datawatcher.a(18, new Integer(0));  // N/A
-        this.datawatcher.a(19, new Integer(0));  // N/A
-        this.datawatcher.a(20, new Integer(0));  // blue (1/0)
+        this.datawatcher.a(17, 0);  // target entityID
+        this.datawatcher.a(18, 0);  // N/A
+        this.datawatcher.a(19, 0);  // N/A
+        this.datawatcher.a(20, 0);  // invulnerability (blue, size)
+    }
+
+    @Override
+    public void updateVisuals() {
+        this.datawatcher.watch(20, getMyPet().isBaby() ? 600 : 0);
     }
 
     public void onLivingUpdate() {
@@ -65,5 +71,9 @@ public class EntityMyWither extends EntityMyPet {
      * -> disable falldamage
      */
     public void e(float f, float f1) {
+    }
+
+    public MyWither getMyPet() {
+        return (MyWither) myPet;
     }
 }

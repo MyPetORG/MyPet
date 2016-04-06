@@ -22,10 +22,11 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
 
 import static de.Keyle.MyPet.api.entity.LeashFlag.Impossible;
 import static org.bukkit.Material.BONE;
 
 @DefaultInfo(food = {BONE}, leashFlags = {Impossible})
-public interface MyWither extends MyPet {
+public interface MyWither extends MyPet, MyPetBaby {
 }
