@@ -24,6 +24,8 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
 import static de.Keyle.MyPet.api.entity.LeashFlag.Impossible;
@@ -31,6 +33,7 @@ import static org.bukkit.Material.BONE;
 
 @DefaultInfo(food = {BONE}, leashFlags = {Impossible})
 public class MyWither extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWither {
+    protected boolean isBaby = false;
 
     public MyWither(MyPetPlayer petOwner) {
         super(petOwner);
@@ -44,5 +47,32 @@ public class MyWither extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     @Override
     public String toString() {
         return "MyWither{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+    }
+
+    @Override
+    public boolean isBaby() {
+        return isBaby;
+    }
+
+    @Override
+    public void setBaby(boolean flag) {
+        this.isBaby = flag;
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
+        }
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
     }
 }
