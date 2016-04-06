@@ -149,14 +149,11 @@ public class RangedAttack extends AIGoal {
             arrow.c(damage);
             arrow.setCritical(false);
             entityMyPet.makeSound("entity.arrow.shoot", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
-
-            double d0 = target.locX - entityMyPet.locX;
-            double d1 = target.getBoundingBox().b + target.length / 3.0F - target.locY;
-            double d2 = target.locZ - entityMyPet.locZ;
-            double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-
-            arrow.shoot(d0, d1 + d3 * 0.2000000029802322D, d2, 1.6F, 14);
-
+            double distanceX = target.locX - entityMyPet.locX;
+            double distanceY = target.locY + target.getHeadHeight() - 1.100000023841858D - arrow.locY;
+            double distanceZ = target.locZ - entityMyPet.locZ;
+            float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
+            arrow.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
             world.addEntity(arrow);
         } else if (projectile == Projectiles.Snowball) {
             MyPetSnowball snowball = new MyPetSnowball(world, entityMyPet);
