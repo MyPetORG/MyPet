@@ -62,6 +62,11 @@ public class EntityMyWither extends EntityMyPet {
         }
     }
 
+    @Override
+    public void updateVisuals() {
+        this.datawatcher.watch(20, getMyPet().isBaby() ? 600 : 0);
+    }
+
     /**
      * -> disable falldamage
      */
