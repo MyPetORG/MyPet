@@ -116,7 +116,7 @@
         <json.version>1.1.1</json.version>
         <gson.version>2.6.1</gson.version>
         <forms_rt.version>7.0.3</forms_rt.version>
-        <fanciful-chat.version>0.0.4</fanciful-chat.version>
+        <fanciful-chat.version>0.0.3</fanciful-chat.version>
 
         <download.translations>prepare-package</download.translations>
         <remove.donator>none</remove.donator>
