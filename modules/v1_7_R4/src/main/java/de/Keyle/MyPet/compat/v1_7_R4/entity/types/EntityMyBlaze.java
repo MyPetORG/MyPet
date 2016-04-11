@@ -107,6 +107,6 @@ public class EntityMyBlaze extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void e(float f, float f1) {
+    public void b(float f) {
     }
 }
