@@ -113,7 +113,7 @@
 
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
-        <fanciful-chat.version>0.0.2</fanciful-chat.version>
+        <fanciful-chat.version>0.0.3</fanciful-chat.version>
 
         <download.translations>prepare-package</download.translations>
         <remove.donator>none</remove.donator>
