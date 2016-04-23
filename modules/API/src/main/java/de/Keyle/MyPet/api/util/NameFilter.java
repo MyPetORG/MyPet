@@ -20,20 +20,25 @@
 
 package de.Keyle.MyPet.api.util;
 
-import com.google.common.collect.Lists;
+import de.Keyle.MyPet.MyPetApi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NameFilter {
-    public static List<String> NAME_FILTER = Lists.newArrayList();
+    public static List<String> NAME_FILTER = new ArrayList<>();
 
     public static boolean isClean(String text) {
         text = Colorizer.stripColors(text);
         for (String pattern : NAME_FILTER) {
-            if (findRegEx(pattern, text)) {
-                return false;
+            try {
+                if (findRegEx(pattern, text)) {
+                    return false;
+                }
+            } catch (Exception ignored) {
+                MyPetApi.getLogger().info("This name filter pattern caused a problem: " + pattern);
             }
         }
         return true;
