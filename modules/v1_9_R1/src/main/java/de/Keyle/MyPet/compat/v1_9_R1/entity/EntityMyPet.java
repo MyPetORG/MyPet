@@ -431,7 +431,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
             if (itemStack != null) {
-                if (itemStack.getItem() == Items.NAME_TAG) {
+                if (itemStack.getItem() == Items.NAME_TAG && Permissions.hasLegacy(getOwner(), "MyPet.command.name")) {
                     if (itemStack.hasName()) {
                         final String name = itemStack.getName();
                         getMyPet().setPetName(name);
