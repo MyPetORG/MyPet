@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_9_R1.entity;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import org.bukkit.entity.EntityType;
@@ -33,8 +34,11 @@ public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
             return PluginHookManager.isPluginUsable("ProtocolLib"); //ToDo & active
         }
 
-        MyPetType type = MyPetType.byEntityTypeName(bukkitType.name());
-
-        return type != null;
+        try {
+            MyPetType type = MyPetType.byEntityTypeName(bukkitType.name());
+            return type != null;
+        } catch (MyPetTypeNotFoundException e) {
+            return false;
+        }
     }
 }

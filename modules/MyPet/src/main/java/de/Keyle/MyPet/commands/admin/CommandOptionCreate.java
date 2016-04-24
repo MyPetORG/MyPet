@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -156,153 +157,157 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             forceOffset = 1;
         }
 
-        MyPetType myPetType = MyPetType.byName(args[1 + forceOffset]);
-        if (myPetType != null && MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
-            Player owner = Bukkit.getPlayer(args[forceOffset]);
-            if (owner == null || !owner.isOnline()) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
-                return true;
-            }
-
-            final MyPetPlayer newOwner;
-            if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
-                newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
-
-                if (newOwner.hasMyPet() && forceOffset == 1) {
-                    MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
+        try {
+            MyPetType myPetType = MyPetType.byName(args[1 + forceOffset]);
+            if (MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
+                Player owner = Bukkit.getPlayer(args[forceOffset]);
+                if (owner == null || !owner.isOnline()) {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+                    return true;
                 }
-            } else {
-                newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
-            }
 
-            if (!newOwner.hasMyPet()) {
-                final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
-                inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner().getLanguage()));
+                final MyPetPlayer newOwner;
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
+                    newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
 
-                TagCompound TagCompound = inactiveMyPet.getInfo();
-                if (args.length > 2 + forceOffset) {
-                    for (int i = 2 + forceOffset; i < args.length; i++) {
-                        if (args[i].equalsIgnoreCase("baby")) {
-                            TagCompound.getCompoundData().put("Baby", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("fire")) {
-                            TagCompound.getCompoundData().put("Fire", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("powered")) {
-                            TagCompound.getCompoundData().put("Powered", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("saddle")) {
-                            TagCompound.getCompoundData().put("Saddle", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("sheared")) {
-                            TagCompound.getCompoundData().put("Sheared", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("wither")) {
-                            TagCompound.getCompoundData().put("Wither", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("tamed")) {
-                            TagCompound.getCompoundData().put("Tamed", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("angry")) {
-                            TagCompound.getCompoundData().put("Angry", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("villager")) {
-                            TagCompound.getCompoundData().put("Villager", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("chest")) {
-                            TagCompound.getCompoundData().put("Chest", new TagByte(true));
-                        } else if (args[i].equalsIgnoreCase("elder")) {
-                            TagCompound.getCompoundData().put("Elder", new TagByte(true));
-                        } else if (args[i].startsWith("size:")) {
-                            String size = args[i].replace("size:", "");
-                            if (Util.isInt(size)) {
-                                TagCompound.getCompoundData().put("Size", new TagInt(Integer.parseInt(size)));
-                            }
-                        } else if (args[i].startsWith("horse:")) {
-                            String horseTypeString = args[i].replace("horse:", "");
-                            if (Util.isByte(horseTypeString)) {
-                                int horseType = Integer.parseInt(horseTypeString);
-                                horseType = Math.min(Math.max(0, horseType), 4);
-                                TagCompound.getCompoundData().put("Type", new TagByte((byte) horseType));
-                            }
-                        } else if (args[i].startsWith("variant:")) {
-                            String variantString = args[i].replace("variant:", "");
-                            if (Util.isInt(variantString)) {
-                                int variant = Integer.parseInt(variantString);
-                                if (myPetType == MyPetType.Horse) {
-                                    variant = Math.min(Math.max(0, variant), 1030);
-                                    TagCompound.getCompoundData().put("Variant", new TagInt(variant));
-                                } else if (myPetType == MyPetType.Rabbit) {
-                                    if (variant != 99 && (variant > 5 || variant < 0)) {
-                                        variant = 0;
+                    if (newOwner.hasMyPet() && forceOffset == 1) {
+                        MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
+                    }
+                } else {
+                    newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
+                }
+
+                if (!newOwner.hasMyPet()) {
+                    final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
+                    inactiveMyPet.setPetType(myPetType);
+                    inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner().getLanguage()));
+
+                    TagCompound TagCompound = inactiveMyPet.getInfo();
+                    if (args.length > 2 + forceOffset) {
+                        for (int i = 2 + forceOffset; i < args.length; i++) {
+                            if (args[i].equalsIgnoreCase("baby")) {
+                                TagCompound.getCompoundData().put("Baby", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("fire")) {
+                                TagCompound.getCompoundData().put("Fire", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("powered")) {
+                                TagCompound.getCompoundData().put("Powered", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("saddle")) {
+                                TagCompound.getCompoundData().put("Saddle", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("sheared")) {
+                                TagCompound.getCompoundData().put("Sheared", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("wither")) {
+                                TagCompound.getCompoundData().put("Wither", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("tamed")) {
+                                TagCompound.getCompoundData().put("Tamed", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("angry")) {
+                                TagCompound.getCompoundData().put("Angry", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("villager")) {
+                                TagCompound.getCompoundData().put("Villager", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("chest")) {
+                                TagCompound.getCompoundData().put("Chest", new TagByte(true));
+                            } else if (args[i].equalsIgnoreCase("elder")) {
+                                TagCompound.getCompoundData().put("Elder", new TagByte(true));
+                            } else if (args[i].startsWith("size:")) {
+                                String size = args[i].replace("size:", "");
+                                if (Util.isInt(size)) {
+                                    TagCompound.getCompoundData().put("Size", new TagInt(Integer.parseInt(size)));
+                                }
+                            } else if (args[i].startsWith("horse:")) {
+                                String horseTypeString = args[i].replace("horse:", "");
+                                if (Util.isByte(horseTypeString)) {
+                                    int horseType = Integer.parseInt(horseTypeString);
+                                    horseType = Math.min(Math.max(0, horseType), 4);
+                                    TagCompound.getCompoundData().put("Type", new TagByte((byte) horseType));
+                                }
+                            } else if (args[i].startsWith("variant:")) {
+                                String variantString = args[i].replace("variant:", "");
+                                if (Util.isInt(variantString)) {
+                                    int variant = Integer.parseInt(variantString);
+                                    if (myPetType == MyPetType.Horse) {
+                                        variant = Math.min(Math.max(0, variant), 1030);
+                                        TagCompound.getCompoundData().put("Variant", new TagInt(variant));
+                                    } else if (myPetType == MyPetType.Rabbit) {
+                                        if (variant != 99 && (variant > 5 || variant < 0)) {
+                                            variant = 0;
+                                        }
+                                        TagCompound.getCompoundData().put("Variant", new TagByte(variant));
                                     }
-                                    TagCompound.getCompoundData().put("Variant", new TagByte(variant));
+                                }
+                            } else if (args[i].startsWith("cat:")) {
+                                String catTypeString = args[i].replace("cat:", "");
+                                if (Util.isInt(catTypeString)) {
+                                    int catType = Integer.parseInt(catTypeString);
+                                    catType = Math.min(Math.max(0, catType), 3);
+                                    TagCompound.getCompoundData().put("CatType", new TagInt(catType));
+                                }
+                            } else if (args[i].startsWith("profession:")) {
+                                String professionString = args[i].replace("profession:", "");
+                                if (Util.isInt(professionString)) {
+                                    int profession = Integer.parseInt(professionString);
+                                    profession = Math.min(Math.max(0, profession), 5);
+                                    TagCompound.getCompoundData().put("Profession", new TagInt(profession));
+                                }
+                            } else if (args[i].startsWith("color:")) {
+                                String colorString = args[i].replace("color:", "");
+                                if (Util.isByte(colorString)) {
+                                    byte color = Byte.parseByte(colorString);
+                                    color = color > 15 ? 15 : color < 0 ? 0 : color;
+                                    TagCompound.getCompoundData().put("Color", new TagByte(color));
+                                }
+                            } else if (args[i].startsWith("collar:")) {
+                                String colorString = args[i].replace("collar:", "");
+                                if (Util.isByte(colorString)) {
+                                    byte color = Byte.parseByte(colorString);
+                                    color = color > 15 ? 15 : color < 0 ? 0 : color;
+                                    TagCompound.getCompoundData().put("CollarColor", new TagByte(color));
+                                }
+                            } else if (args[i].startsWith("block:")) {
+                                String blocks = args[i].replace("block:", "");
+                                String[] blockInfo = blocks.split(":");
+                                if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && MyPetApi.getPlatformHelper().isValidMaterial(Integer.parseInt(blockInfo[0]))) {
+                                    TagCompound.getCompoundData().put("BlockID", new TagInt(Integer.parseInt(blockInfo[0])));
+                                }
+                                if (blockInfo.length >= 2 && Util.isInt(blockInfo[1])) {
+                                    int blockData = Integer.parseInt(blockInfo[1]);
+                                    blockData = Math.min(Math.max(0, blockData), 15);
+                                    TagCompound.getCompoundData().put("BlockData", new TagInt(blockData));
+                                }
+                            } else {
+                                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] \"" + ChatColor.RED + args[i] + "\" is not a valid option!");
+                            }
+                        }
+                    }
+
+                    final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
+
+                    inactiveMyPet.setWorldGroup(wg.getName());
+
+                    MyPetSaveEvent event = new MyPetSaveEvent(inactiveMyPet);
+                    Bukkit.getServer().getPluginManager().callEvent(event);
+
+                    MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
+                        @Override
+                        public void callback(Boolean value) {
+                            if (value) {
+                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
+                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
+
+                                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
+                                if (myPet.isPresent()) {
+                                    myPet.get().createEntity();
+                                    sender.sendMessage(Translation.getString("Message.Command.Success", sender));
+                                } else {
+                                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
                                 }
                             }
-                        } else if (args[i].startsWith("cat:")) {
-                            String catTypeString = args[i].replace("cat:", "");
-                            if (Util.isInt(catTypeString)) {
-                                int catType = Integer.parseInt(catTypeString);
-                                catType = Math.min(Math.max(0, catType), 3);
-                                TagCompound.getCompoundData().put("CatType", new TagInt(catType));
-                            }
-                        } else if (args[i].startsWith("profession:")) {
-                            String professionString = args[i].replace("profession:", "");
-                            if (Util.isInt(professionString)) {
-                                int profession = Integer.parseInt(professionString);
-                                profession = Math.min(Math.max(0, profession), 5);
-                                TagCompound.getCompoundData().put("Profession", new TagInt(profession));
-                            }
-                        } else if (args[i].startsWith("color:")) {
-                            String colorString = args[i].replace("color:", "");
-                            if (Util.isByte(colorString)) {
-                                byte color = Byte.parseByte(colorString);
-                                color = color > 15 ? 15 : color < 0 ? 0 : color;
-                                TagCompound.getCompoundData().put("Color", new TagByte(color));
-                            }
-                        } else if (args[i].startsWith("collar:")) {
-                            String colorString = args[i].replace("collar:", "");
-                            if (Util.isByte(colorString)) {
-                                byte color = Byte.parseByte(colorString);
-                                color = color > 15 ? 15 : color < 0 ? 0 : color;
-                                TagCompound.getCompoundData().put("CollarColor", new TagByte(color));
-                            }
-                        } else if (args[i].startsWith("block:")) {
-                            String blocks = args[i].replace("block:", "");
-                            String[] blockInfo = blocks.split(":");
-                            if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && MyPetApi.getPlatformHelper().isValidMaterial(Integer.parseInt(blockInfo[0]))) {
-                                TagCompound.getCompoundData().put("BlockID", new TagInt(Integer.parseInt(blockInfo[0])));
-                            }
-                            if (blockInfo.length >= 2 && Util.isInt(blockInfo[1])) {
-                                int blockData = Integer.parseInt(blockInfo[1]);
-                                blockData = Math.min(Math.max(0, blockData), 15);
-                                TagCompound.getCompoundData().put("BlockData", new TagInt(blockData));
-                            }
-                        } else {
-                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] \"" + ChatColor.RED + args[i] + "\" is not a valid option!");
                         }
-                    }
+                    });
+                } else {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
                 }
-
-                final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
-
-                inactiveMyPet.setWorldGroup(wg.getName());
-
-                MyPetSaveEvent event = new MyPetSaveEvent(inactiveMyPet);
-                Bukkit.getServer().getPluginManager().callEvent(event);
-
-                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
-                    @Override
-                    public void callback(Boolean value) {
-                        if (value) {
-                            inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
-                            MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
-
-                            Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
-                            if (myPet.isPresent()) {
-                                myPet.get().createEntity();
-                                sender.sendMessage(Translation.getString("Message.Command.Success", sender));
-                            } else {
-                                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
-                            }
-                        }
-                    }
-                });
-            } else {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
             }
+        } catch (MyPetTypeNotFoundException e) {
+            sender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", lang));
         }
         return true;
     }
