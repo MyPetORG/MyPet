@@ -30,11 +30,11 @@ import java.util.Map;
 
 public class ItemStackComparator {
     public static boolean compareItem(ItemStack i1, ItemStack i2) {
-        return compareItemType(i1, i2) && compareEnchantments(i1, i2) && compareMetaData(i1, i2);
+        return compareItemType(i1, i2) && compareTagData(i1, i2);
     }
 
     public static boolean compareItemType(ItemStack i1, ItemStack i2) {
-        if (i1.getTypeId() != i2.getTypeId()) {
+        if (i1.getData().getItemType() != i2.getData().getItemType()) {
             //MyPetLogger.write("TypID: " + i1.getTypeId() + "<->" + i2.getTypeId());
             return false;
         }
