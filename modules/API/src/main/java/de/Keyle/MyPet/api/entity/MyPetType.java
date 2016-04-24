@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.api.entity.types.*;
+import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 
 public enum MyPetType {
     Bat("BAT", 65, MyBat.class),
@@ -97,7 +98,7 @@ public enum MyPetType {
                 return t;
             }
         }
-        return null;
+        throw new MyPetTypeNotFoundException(name);
     }
 
     public static MyPetType byName(String name) {
@@ -106,6 +107,6 @@ public enum MyPetType {
                 return t;
             }
         }
-        return null;
+        throw new MyPetTypeNotFoundException(name);
     }
 }
