@@ -29,7 +29,7 @@ import net.minecraft.server.v1_9_R1.DataWatcherObject;
 import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_9_R1.World;
 
-@EntitySize(width = 1.9F, height = 3.5F)
+@EntitySize(width = 0.9999F, height = 3.5F)
 public class EntityMyWither extends EntityMyPet {
     private static final DataWatcherObject<Integer> targetWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Integer> watcher_1 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);

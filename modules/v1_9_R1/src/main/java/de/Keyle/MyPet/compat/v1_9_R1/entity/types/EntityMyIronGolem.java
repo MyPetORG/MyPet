@@ -28,7 +28,7 @@ import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 
-@EntitySize(width = 1.4F, height = 2.9F)
+@EntitySize(width = 0.9999F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
     protected static final DataWatcherObject<Byte> watcher = DataWatcher.a(EntityMyIronGolem.class, DataWatcherRegistry.a);
 
