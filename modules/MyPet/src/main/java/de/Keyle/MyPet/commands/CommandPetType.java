@@ -24,6 +24,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.LeashFlag;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.apache.commons.lang.WordUtils;
@@ -51,14 +52,14 @@ public class CommandPetType implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        MyPetType myPetType = MyPetType.byName(args[0]);
-
         String lang = "en";
         if (commandSender instanceof Player) {
             lang = MyPetApi.getPlatformHelper().getPlayerLanguage((Player) commandSender);
         }
 
-        if (myPetType != null) {
+        try {
+            MyPetType myPetType = MyPetType.byName(args[0]);
+
             String leashFlagString = "";
             for (LeashFlag leashFlag : MyPetApi.getMyPetInfo().getLeashFlags(myPetType)) {
                 leashFlagString += leashFlag.name() + ", ";
@@ -74,10 +75,9 @@ public class CommandPetType implements CommandExecutor, TabCompleter {
             commandSender.sendMessage(Translation.getString("Name.Food", lang) + ": " + foodString);
 
             commandSender.sendMessage(Translation.getString("Name.HP", lang) + ": " + MyPetApi.getMyPetInfo().getStartHP(myPetType));
-            return true;
+        } catch (MyPetTypeNotFoundException e) {
+            commandSender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", lang));
         }
-        commandSender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", lang));
-
         return true;
     }
 
