@@ -32,7 +32,7 @@ import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 
 import java.util.UUID;
 
-@EntitySize(width = 1.4F, height = 1.6F)
+@EntitySize(width = 0.9999F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
