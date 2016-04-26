@@ -151,9 +151,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         try {
             Field field = entityPlayer.getClass().getDeclaredField("locale");
-            field.setAccessible(true);
-
-            return (String) field.get(entityPlayer);
+            String lang = field.get(entityPlayer).toString();
+            if(lang == null) {
+                return "en_US";
+            }
+            return lang;
         } catch (Exception e) {
             return "en_US";
         }

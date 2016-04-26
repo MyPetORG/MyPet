@@ -192,7 +192,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
     // -----------------------------------------------------------------------------
 
     public boolean isOnline() {
-        Player p = Bukkit.getPlayer(getPlayerUUID());
+        Player p = getPlayer();
         return p != null && p.isOnline();
     }
 
