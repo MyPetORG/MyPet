@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.util.inventory;
 
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -30,10 +31,16 @@ import java.util.Map;
 
 public class ItemStackComparator {
     public static boolean compareItem(ItemStack i1, ItemStack i2) {
+        if (i1 == null || i2 == null) {
+            return false;
+        }
         return compareItemType(i1, i2) && compareTagData(i1, i2);
     }
 
     public static boolean compareItemType(ItemStack i1, ItemStack i2) {
+        if (i1 == null || i2 == null) {
+            return false;
+        }
         if (i1.getData().getItemType() != i2.getData().getItemType()) {
             //MyPetLogger.write("TypID: " + i1.getTypeId() + "<->" + i2.getTypeId());
             return false;
@@ -46,6 +53,9 @@ public class ItemStackComparator {
     }
 
     public static boolean compareEnchantments(ItemStack i1, ItemStack i2) {
+        if (i1 == null || i2 == null) {
+            return false;
+        }
         if (i1.getEnchantments().size() == i2.getEnchantments().size()) {
             Map<Enchantment, Integer> e1 = i1.getEnchantments();
             Map<Enchantment, Integer> e2 = i2.getEnchantments();
@@ -73,6 +83,9 @@ public class ItemStackComparator {
     }
 
     public static boolean compareMetaData(ItemStack i1, ItemStack i2) {
+        if (i1 == null || i2 == null) {
+            return false;
+        }
         if (i1.hasItemMeta() == i2.hasItemMeta()) {
             ItemMeta m1 = i1.getItemMeta();
             ItemMeta m2 = i2.getItemMeta();
@@ -112,7 +125,9 @@ public class ItemStackComparator {
 
     public static boolean compareTagData(ItemStack i1, ItemStack i2) {
         if (i1.hasItemMeta() == i2.hasItemMeta()) {
-            return CraftItemStack.asNMSCopy(i1).getTag().equals(CraftItemStack.asNMSCopy(i2).getTag());
+            NBTTagCompound tag1 = CraftItemStack.asNMSCopy(i1).getTag();
+            NBTTagCompound tag2 = CraftItemStack.asNMSCopy(i2).getTag();
+            return tag1 != null && tag2 != null && tag1.equals(tag2);
         }
         return false;
     }
