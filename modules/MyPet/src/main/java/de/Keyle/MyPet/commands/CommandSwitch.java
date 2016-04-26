@@ -106,7 +106,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                         if (owner.hasMyPet()) {
                             inactivePetCount--;
                             if (!Permissions.hasLegacy(owner, "MyPet.command.switch.bypass")) {
-                                if (inactivePetCount >= maxPetCount) {
+                                if (inactivePetCount > maxPetCount) {
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
                                     return;
                                 }
