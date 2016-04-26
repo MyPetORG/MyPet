@@ -84,6 +84,11 @@ commands:
     aliases: [pett, pt]
     description: Trade MyPets with other players
     usage: '/<command> [accept/reject/cancel/<playername>] <price>'
+  petlist:
+    aliases: [plist, pl]
+    description: Lists all your MyPets
+    usage: '/<command> <player>'
+    permission: MyPet.command.list
 
 permissions:
   MyPet.leash.*:
@@ -208,6 +213,7 @@ permissions:
       MyPet.command.trade.offer.type.*: true
       MyPet.command.trade.receive: true
       MyPet.command.trade.receive.type.*: true
+      MyPet.command.list: true
   MyPet.command.release:
     default: true
     description: Allows usage of /petrelease
