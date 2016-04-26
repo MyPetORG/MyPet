@@ -80,6 +80,11 @@ commands:
     description: Opens a MyPet selection GUI
     usage: '/<command>'
     permission: MyPet.command.switch
+  petlist:
+    aliases: [plist, pl]
+    description: Lists all your MyPets
+    usage: '/<command> <player>'
+    permission: MyPet.command.list
 
 permissions:
   MyPet.leash.*:
@@ -130,6 +135,7 @@ permissions:
       MyPet.command.name: true
       MyPet.command.name.color: true
       MyPet.command.options: true
+      MyPet.command.list: true
   MyPet.command.release:
     default: true
     description: Allows usage of /petrelease
