@@ -39,49 +39,51 @@ public class PropertyConverter {
     public static TagCompound convertEntity(LivingEntity entity) {
         TagCompound properties = new TagCompound();
         switch (entity.getType().name()) {
-            case "Ocelot":
+            case "OCELOT":
                 convertOcelot((Ocelot) entity, properties);
                 break;
-            case "Wolf":
+            case "WOLF":
                 convertWolf((Wolf) entity, properties);
                 break;
-            case "Sheep":
+            case "SHEEP":
                 convertSheep((Sheep) entity, properties);
                 break;
-            case "Villager":
+            case "VILLAGER":
                 convertVillager((Villager) entity, properties);
                 break;
-            case "Pig":
+            case "PIG":
                 convertPig((Pig) entity, properties);
                 break;
-            case "Slime":
+            case "MAGMA_CUBE":
+            case "SLIME":
                 convertSlime((Slime) entity, properties);
                 break;
-            case "Creeper":
+            case "CREEPER":
                 convertCreeper((Creeper) entity, properties);
                 break;
-            case "Horse":
+            case "HORSE":
                 convertHorse((Horse) entity, properties);
                 break;
-            case "Zombie":
+            case "ZOMBIE":
+            case "PIG_ZOMBIE":
                 convertZombie((Zombie) entity, properties);
                 if(Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
                     convertEquipable(entity, properties);
                 }
                 break;
-            case "Enderman":
+            case "ENDERMAN":
                 convertEnderman((Enderman) entity, properties);
                 break;
-            case "Skeleton":
+            case "SKELETON":
                 convertSkeleton((Skeleton) entity, properties);
                 if(Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
                     convertEquipable(entity, properties);    
                 }
                 break;
-            case "Guardian":
+            case "GUARDIAN":
                 convertGuardian((Guardian) entity, properties);
                 break;
-            case "Rabbit":
+            case "RABBIT":
                 convertRabbit((Rabbit) entity, properties);
                 break;
         }
