@@ -141,7 +141,7 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
                         Item itemEntity = (Item) entity;
                         ItemStack itemStack = itemEntity.getItemStack();
 
-                        if (itemStack.getAmount() > 0) {
+                        if (itemEntity.getPickupDelay() <= 0 && itemStack.getAmount() > 0) {
                             PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemStack.getAmount());
                             Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
 
