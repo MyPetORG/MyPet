@@ -93,7 +93,6 @@ public class ProtocolLib {
 
                         final Entity entity = packet.getEntityModifier(event).readSafely(0);
 
-                        // Now - are we dealing with an invisible slime?
                         if (entity != null && entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
 
                             if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {

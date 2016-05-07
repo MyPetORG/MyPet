@@ -135,4 +135,18 @@ public abstract class PlatformHelper {
     public abstract boolean isEquipment(ItemStack itemStack);
 
     public abstract void doPickupAnimation(Entity entity, Entity target);
+
+    public double distanceSquared(Location a, Location b) {
+        if (!a.getWorld().equals(b.getWorld())) {
+            return Double.MAX_VALUE;
+        }
+        return a.distanceSquared(b);
+    }
+
+    public double distance(Location a, Location b) {
+        if (!a.getWorld().equals(b.getWorld())) {
+            return Double.MAX_VALUE;
+        }
+        return Math.sqrt(distanceSquared(a, b));
+    }
 }

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -92,7 +93,7 @@ public class Control extends ControlInfo implements SkillInstance {
             return;
         }
         if (prevMoveTo != null) {
-            if (loc.distance(prevMoveTo) > 1) {
+            if (MyPetApi.getPlatformHelper().distanceSquared(loc,prevMoveTo) > 1) {
                 moveTo = loc;
                 prevMoveTo = loc;
             }
