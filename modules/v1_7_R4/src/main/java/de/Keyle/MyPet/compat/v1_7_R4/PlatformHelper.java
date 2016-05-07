@@ -76,12 +76,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         Validate.notNull(location.getWorld(), "World cannot be null");
 
         PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effectName, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
+        radius = radius * radius;
 
         for (Player player : location.getWorld().getPlayers()) {
-            if (player.getLocation().getWorld() == location.getWorld()) {
-                if ((int) player.getLocation().distance(location) <= radius) {
-                    ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-                }
+            if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), location) <= radius) {
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
         }
     }
@@ -102,11 +101,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         Validate.notNull(location.getWorld(), "World cannot be null");
 
         PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effectName, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
+        radius = radius * radius;
 
-        if (player.getLocation().getWorld() == location.getWorld()) {
-            if ((int) player.getLocation().distance(location) <= radius) {
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-            }
+        if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), location) <= radius) {
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
     }
 
@@ -152,7 +150,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         try {
             Field field = entityPlayer.getClass().getDeclaredField("locale");
             String lang = field.get(entityPlayer).toString();
-            if(lang == null) {
+            if (lang == null) {
                 return "en_US";
             }
             return lang;

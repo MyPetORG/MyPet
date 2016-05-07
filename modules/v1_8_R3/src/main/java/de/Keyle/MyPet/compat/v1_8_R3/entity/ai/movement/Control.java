@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.movement;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
@@ -66,7 +67,7 @@ public class Control extends AIGoal implements Scheduler {
         if (moveTo == null) {
             return true;
         }
-        if (myPet.getLocation().get().distance(moveTo) < 1) {
+        if (MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(),moveTo) < 1) {
             return true;
         }
         if (timeToMove <= 0) {
@@ -87,7 +88,7 @@ public class Control extends AIGoal implements Scheduler {
             moveTo = null;
             return;
         }
-        timeToMove = (int) myPet.getLocation().get().distance(moveTo) / 3;
+        timeToMove = (int) MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(),moveTo) / 3;
         timeToMove = timeToMove < 3 ? 3 : timeToMove;
         if (!isRunning) {
             Timer.addTask(this);

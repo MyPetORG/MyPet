@@ -346,7 +346,7 @@ public class PlayerListener implements Listener {
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here) {
-                    if (myPet.getLocation().get().getWorld() != event.getTo().getWorld() || myPet.getLocation().get().distance(event.getTo()) > 10) {
+                    if (myPet.getLocation().get().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), event.getTo()) > 10) {
                         final boolean sameWorld = myPet.getLocation().get().getWorld() == event.getTo().getWorld();
                         myPet.removePet();
                         new BukkitRunnable() {

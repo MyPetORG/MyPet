@@ -578,7 +578,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             Location myPetLocation = this.myPet.getLocation().get();
             targetLoop:
             for (Player player : myPetLocation.getWorld().getPlayers()) {
-                if(player.getLocation().distanceSquared(myPetLocation) > range) {
+                if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), myPetLocation) > range) {
                     continue;
                 }
 

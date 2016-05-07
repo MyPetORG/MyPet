@@ -97,7 +97,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                             return true;
                         }
 
-                        if (!player.getWorld().equals(owner.getWorld()) || player.getLocation().distanceSquared(owner.getLocation()) > 100) {
+                        if (!player.getWorld().equals(owner.getWorld()) || MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(),owner.getLocation()) > 100) {
                             sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Distance", player), owner.getName()));
                             return true;
                         }

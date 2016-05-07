@@ -144,7 +144,7 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
 
                 ((LivingEntity) e).damage(this.damage, myPet.getEntity().get());
 
-                double distancePercent = livingEntity.getLocation().distance(new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
+                double distancePercent = MyPetApi.getPlatformHelper().distance(livingEntity.getLocation(),new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
                 if (distancePercent <= 1.0D) {
                     double distanceX = livingEntity.getLocation().getX() - posX;
                     double distanceY = livingEntity.getLocation().getX() + livingEntity.getEyeHeight() - posY;
