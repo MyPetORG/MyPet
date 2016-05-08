@@ -526,7 +526,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (hasRider) {
             if (!isVehicle()) {
                 hasRider = false;
-                //applyLeash();
                 this.P = 0.5F; // climb height -> halfslab
                 Location playerLoc = getOwner().getPlayer().getLocation();
                 Location petLoc = getBukkitEntity().getLocation();
@@ -548,15 +547,16 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
         }
-        if (!myPet.getOwner().getPlayer().isDead()) {
-            if (getOwner().getPlayer().isSneaking() != isSneaking()) {
+        Player p = myPet.getOwner().getPlayer();
+        if (p != null && p.isOnline() && !p.isDead()) {
+            if (p.isSneaking() != isSneaking()) {
                 this.setSneaking(!isSneaking());
             }
             if (Configuration.Misc.INVISIBLE_LIKE_OWNER) {
-                if (!isInvisible && getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                if (!isInvisible && p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                     isInvisible = true;
                     getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
-                } else if (isInvisible && !getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                } else if (isInvisible && !p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                     getBukkitEntity().removePotionEffect(PotionEffectType.INVISIBILITY);
                     isInvisible = false;
                 }
