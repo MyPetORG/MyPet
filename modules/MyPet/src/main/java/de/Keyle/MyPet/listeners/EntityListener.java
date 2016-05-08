@@ -496,6 +496,10 @@ public class EntityListener implements Listener {
             ((MyEnderman) ((MyPetBukkitEntity) damagedEntity).getMyPet()).setScreaming(false);
         }
 
+        if(event.isCancelled()) {
+            return;
+        }
+
         if (damagedEntity instanceof LivingEntity) {
             Entity damager = event.getDamager();
 
@@ -523,6 +527,10 @@ public class EntityListener implements Listener {
                 }
             } else if (damager instanceof MyPetBukkitEntity) {
                 MyPet myPet = ((MyPetBukkitEntity) damager).getMyPet();
+
+                if(myPet.getStatus() != PetState.Here) {
+                    return;
+                }
 
                 // fix influence of other plugins
                 if (event.getDamager() instanceof Projectile) {
