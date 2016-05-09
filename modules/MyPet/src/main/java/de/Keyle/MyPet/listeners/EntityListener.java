@@ -66,7 +66,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
@@ -80,16 +79,17 @@ import static org.bukkit.Bukkit.getPluginManager;
 
 public class EntityListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMyPetEntitySpawn(final CreatureSpawnEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(false);
-        }
-        if (!Configuration.LevelSystem.Experience.FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
-            event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetApi.getPlugin(), true));
-        }
-        if (!event.isCancelled() && event.getEntity() instanceof Zombie) {
-            MyPetApi.getPlatformHelper().addZombieTargetGoal((Zombie) event.getEntity());
+        } else if (!event.isCancelled()) {
+            if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0) {
+                event.getEntity().setMetadata("SpawnReason", new FixedMetadataValue(MyPetApi.getPlugin(), event.getSpawnReason().name()));
+            }
+            if (event.getEntity() instanceof Zombie) {
+                MyPetApi.getPlatformHelper().addZombieTargetGoal((Zombie) event.getEntity());
+            }
         }
     }
 
@@ -492,7 +492,7 @@ public class EntityListener implements Listener {
             ((MyEnderman) ((MyPetBukkitEntity) damagedEntity).getMyPet()).setScreaming(false);
         }
 
-        if(event.isCancelled()) {
+        if (event.isCancelled()) {
             return;
         }
 
@@ -524,7 +524,7 @@ public class EntityListener implements Listener {
             } else if (damager instanceof MyPetBukkitEntity) {
                 MyPet myPet = ((MyPetBukkitEntity) damager).getMyPet();
 
-                if(myPet.getStatus() != PetState.Here) {
+                if (myPet.getStatus() != PetState.Here) {
                     return;
                 }
 
@@ -736,10 +736,10 @@ public class EntityListener implements Listener {
         if (Configuration.Hooks.SkillAPI.DISABLE_VANILLA_EXP) {
             return;
         }
-        if (!Configuration.LevelSystem.Experience.FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner")) {
-            for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner")) {
+        if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0 && event.getEntity().hasMetadata("SpawnReason")) {
+            for (MetadataValue value : event.getEntity().getMetadata("SpawnReason")) {
                 if (value.getOwningPlugin().getName().equals(MyPetApi.getPlugin().getName())) {
-                    if (value.asBoolean()) {
+                    if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.contains(value.asString())) {
                         return;
                     }
                     break;
