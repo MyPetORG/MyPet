@@ -37,6 +37,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -137,7 +138,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.Loss.Percent", LevelSystem.Experience.LOSS_PERCENT);
         config.addDefault("MyPet.Exp.Loss.Fixed", LevelSystem.Experience.LOSS_FIXED);
         config.addDefault("MyPet.Exp.Loss.Drop", LevelSystem.Experience.DROP_LOST_EXP);
-        config.addDefault("MyPet.Exp.Gain.MonsterSpawner", LevelSystem.Experience.FROM_MONSTER_SPAWNER_MOBS);
+        config.addDefault("MyPet.Exp.Gain.PreventFromSpawnReason", Lists.newArrayList("SPAWNER"));
         config.addDefault("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
@@ -151,7 +152,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
         for (EntityType entityType : EntityType.values()) {
-            if(MonsterExperience.mobExp.containsKey(entityType.name())) {
+            if (MonsterExperience.mobExp.containsKey(entityType.name())) {
                 config.addDefault("MyPet.Exp.Active." + entityType.name() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
                 config.addDefault("MyPet.Exp.Active." + entityType.name() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
             }
@@ -316,22 +317,33 @@ public class ConfigurationLoader {
         LevelSystem.Experience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
         LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.Exp.Passive.PercentPerMonster", 25);
         LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP = config.getBoolean("MyPet.Exp.Passive.Always-Grant-Passive-XP", true);
-        LevelSystem.Experience.FROM_MONSTER_SPAWNER_MOBS = config.getBoolean("MyPet.Exp.Gain.MonsterSpawner", true);
         LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", true);
 
-        if (config.getStringList("MyPet.exp.active") != null) {
-            double min;
-            double max;
-            for (EntityType entityType : EntityType.values()) {
-                if(MonsterExperience.mobExp.containsKey(entityType.name())) {
-                    max = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Max", 0.);
-                    min = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Min", 0.);
-                    if (min == max) {
-                        MonsterExperience.getMonsterExperience(entityType).setExp(max);
-                    } else {
-                        MonsterExperience.getMonsterExperience(entityType).setMin(min);
-                        MonsterExperience.getMonsterExperience(entityType).setMax(max);
+        if (config.contains("MyPet.Exp.Gain.PreventFromSpawnReason")) {
+            LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.clear();
+            if (config.isList("MyPet.Exp.Gain.PreventFromSpawnReason")) {
+                for (String reason : config.getStringList("MyPet.Exp.Gain.PreventFromSpawnReason")) {
+                    reason = reason.toUpperCase();
+                    try {
+                        CreatureSpawnEvent.SpawnReason.valueOf(reason);
+                        LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.add(reason);
+                    } catch (Exception ignored) {
                     }
+                }
+            }
+            MyPetApi.getLogger().info("load spawn reason: " + LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON);
+
+        }
+
+        for (EntityType entityType : EntityType.values()) {
+            if (MonsterExperience.mobExp.containsKey(entityType.name())) {
+                double max = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Max", 0.);
+                double min = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Min", 0.);
+                if (min == max) {
+                    MonsterExperience.getMonsterExperience(entityType).setExp(max);
+                } else {
+                    MonsterExperience.getMonsterExperience(entityType).setMin(min);
+                    MonsterExperience.getMonsterExperience(entityType).setMax(max);
                 }
             }
         }

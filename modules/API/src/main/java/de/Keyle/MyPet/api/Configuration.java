@@ -20,7 +20,10 @@
 
 package de.Keyle.MyPet.api;
 
+import com.google.common.collect.Sets;
 import de.Keyle.MyPet.api.util.ConfigItem;
+
+import java.util.Set;
 
 public class Configuration {
     public static class Misc {
@@ -88,11 +91,11 @@ public class Configuration {
             public static int LOSS_PERCENT = 0;
             public static double LOSS_FIXED = 0;
             public static boolean DROP_LOST_EXP = true;
-            public static boolean FROM_MONSTER_SPAWNER_MOBS = true;
             public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = false;
             public static boolean ALWAYS_GRANT_PASSIVE_XP = true;
             public static int PASSIVE_PERCENT_PER_MONSTER = 25;
             public static int LEVEL_CAP = 100;
+            public static Set<String> PREVENT_FROM_SPAWN_REASON = Sets.newHashSet("SPAWNER");
         }
     }
 
