@@ -88,4 +88,8 @@ public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyP
             e.printStackTrace();
         }
     }
+
+    public boolean damageEntity(DamageSource damagesource, float f) {
+        return false;
+    }
 }

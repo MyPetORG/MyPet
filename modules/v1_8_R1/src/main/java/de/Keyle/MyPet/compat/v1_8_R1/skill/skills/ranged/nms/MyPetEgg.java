@@ -68,4 +68,8 @@ public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
         }
         die();
     }
+
+    public boolean damageEntity(DamageSource damagesource, float f) {
+        return false;
+    }
 }

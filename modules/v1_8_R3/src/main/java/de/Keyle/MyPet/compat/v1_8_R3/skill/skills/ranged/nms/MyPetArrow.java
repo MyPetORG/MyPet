@@ -23,10 +23,7 @@ package de.Keyle.MyPet.compat.v1_8_R3.skill.skills.ranged.nms;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R3.skill.skills.ranged.bukkit.CraftMyPetArrow;
-import net.minecraft.server.v1_8_R3.EntityArrow;
-import net.minecraft.server.v1_8_R3.EntityLiving;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 
 public class MyPetArrow extends EntityArrow implements EntityMyPetProjectile {
@@ -64,5 +61,9 @@ public class MyPetArrow extends EntityArrow implements EntityMyPetProjectile {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean damageEntity(DamageSource damagesource, float f) {
+        return false;
     }
 }

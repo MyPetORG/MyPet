@@ -68,4 +68,8 @@ public class MyPetSnowball extends EntitySnowball implements EntityMyPetProjecti
         }
         die();
     }
+
+    public boolean damageEntity(DamageSource damagesource, float f) {
+        return false;
+    }
 }
