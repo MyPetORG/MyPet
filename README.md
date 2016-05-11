@@ -1,6 +1,8 @@
 [![MyPet on BukkitDev][Banner]][BukkitDev]
 ## MyPet - Take mobs on a lead!
 
+[![Join the chat at https://gitter.im/xXKeyleXx/MyPet](https://badges.gitter.im/xXKeyleXx/MyPet.svg)](https://gitter.im/xXKeyleXx/MyPet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Do you like MyPet? Feel free to donate!<br />
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)][Donate]
 
