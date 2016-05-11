@@ -67,4 +67,8 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
             e.printStackTrace();
         }
     }
+
+    public boolean damageEntity(DamageSource damagesource, float f) {
+        return false;
+    }
 }
