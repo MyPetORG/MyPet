@@ -366,8 +366,8 @@ public class ConfigurationLoader {
                     }
                 }
             }
-            MyPetApi.getLogger().info("load spawn reason: " + LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON);
-
+        } else {
+            LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.add("SPAWNER");
         }
 
         for (EntityType entityType : EntityType.values()) {
