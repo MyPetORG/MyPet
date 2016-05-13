@@ -470,6 +470,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void respawnPet() {
         if (status != PetState.Here && getOwner().isOnline()) {
+            this.status = PetState.Despawned;
             respawnTime = 0;
             switch (createEntity()) {
                 case Success:
@@ -515,7 +516,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             if (status == PetState.Dead) {
                 respawnTime--;
                 if (respawnTime <= 0) {
-                    status = PetState.Despawned;
                     respawnPet();
                 } else if (EconomyHook.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
                     double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
