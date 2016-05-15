@@ -434,19 +434,21 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.NoSpace;
                 }
 
-                MyPetApi.getEntityRegistry().spawnMinecraftEntity(minecraftEntity, loc.getWorld());
+                if (MyPetApi.getEntityRegistry().spawnMinecraftEntity(minecraftEntity, loc.getWorld())) {
 
-                bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), this));
-                status = PetState.Here;
+                    bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), this));
+                    status = PetState.Here;
 
-                if (worldGroup == null || worldGroup.equals("")) {
-                    setWorldGroup(WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName());
+                    if (worldGroup == null || worldGroup.equals("")) {
+                        setWorldGroup(WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName());
+                    }
+
+                    autoAssignSkilltree();
+                    wantsToRespawn = true;
+
+                    return SpawnFlags.Success;
                 }
-
-                autoAssignSkilltree();
-                wantsToRespawn = true;
-
-                return SpawnFlags.Success;
+                return SpawnFlags.Canceled;
             }
         }
         if (status == PetState.Dead) {
