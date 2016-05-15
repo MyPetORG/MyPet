@@ -155,6 +155,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         int forceOffset = 0;
         if (args[0].equalsIgnoreCase("-f")) {
             forceOffset = 1;
+
+            if (args.length < 3) {
+                return false;
+            }
         }
 
         try {
