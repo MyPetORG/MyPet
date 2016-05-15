@@ -79,17 +79,20 @@ import static org.bukkit.Bukkit.getPluginManager;
 
 public class EntityListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onMyPetEntitySpawn(final CreatureSpawnEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void on(final CreatureSpawnEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(false);
-        } else if (!event.isCancelled()) {
-            if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0) {
-                event.getEntity().setMetadata("SpawnReason", new FixedMetadataValue(MyPetApi.getPlugin(), event.getSpawnReason().name()));
-            }
-            if (event.getEntity() instanceof Zombie) {
-                MyPetApi.getPlatformHelper().addZombieTargetGoal((Zombie) event.getEntity());
-            }
+        }
+    }
+
+    @EventHandler
+    public void onMyPetEntitySpawn(final CreatureSpawnEvent event) {
+        if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0) {
+            event.getEntity().setMetadata("SpawnReason", new FixedMetadataValue(MyPetApi.getPlugin(), event.getSpawnReason().name()));
+        }
+        if (event.getEntity() instanceof Zombie) {
+            MyPetApi.getPlatformHelper().addZombieTargetGoal((Zombie) event.getEntity());
         }
     }
 
