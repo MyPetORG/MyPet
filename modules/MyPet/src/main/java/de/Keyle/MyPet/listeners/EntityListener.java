@@ -79,15 +79,15 @@ import static org.bukkit.Bukkit.getPluginManager;
 
 public class EntityListener implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void on(final CreatureSpawnEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onMyPet(CreatureSpawnEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(false);
         }
     }
 
-    @EventHandler
-    public void onMyPetEntitySpawn(final CreatureSpawnEvent event) {
+    @EventHandler(ignoreCancelled = true)
+    public void on(CreatureSpawnEvent event) {
         if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0) {
             event.getEntity().setMetadata("SpawnReason", new FixedMetadataValue(MyPetApi.getPlugin(), event.getSpawnReason().name()));
         }
@@ -96,15 +96,15 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onMyPetEntityPortal(EntityPortalEvent event) {
+    @EventHandler(ignoreCancelled = true)
+    public void onMyPet(EntityPortalEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler
-    public void onMyPetEntityInteract(EntityInteractEvent event) {
+    @EventHandler(ignoreCancelled = true)
+    public void onMyPet(EntityInteractEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             if (event.getBlock().getType() == Material.SOIL) {
                 event.setCancelled(true);
