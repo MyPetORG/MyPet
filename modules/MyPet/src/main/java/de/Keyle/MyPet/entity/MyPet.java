@@ -225,8 +225,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void setHungerValue(double value) {
-        hunger = Math.max(1, Math.min(100, value));
-        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
+        if (!Double.isNaN(value) && !Double.isInfinite(value)) {
+            hunger = Math.max(1, Math.min(100, value));
+            hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
+        }
     }
 
     public void decreaseHunger(double value) {

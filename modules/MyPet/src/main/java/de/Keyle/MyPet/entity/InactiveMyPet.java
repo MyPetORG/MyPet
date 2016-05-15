@@ -77,7 +77,9 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     }
 
     public void setHungerValue(double value) {
-        hunger = Math.max(1, Math.min(100, value));
+        if (!Double.isNaN(value) && !Double.isInfinite(value)) {
+            hunger = Math.max(1, Math.min(100, value));
+        }
     }
 
     public TagCompound getInfo() {
