@@ -113,7 +113,7 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
-    public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event) {
+    public void onMyPet(final EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPetBukkitEntity craftMyPet = (MyPetBukkitEntity) event.getEntity();
             MyPet myPet = craftMyPet.getMyPet();
@@ -425,7 +425,7 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
-    public void onMyPetEntityDamage(final EntityDamageEvent event) {
+    public void onMyPet(final EntityDamageEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
@@ -630,7 +630,7 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
-    public void onMyPetEntityDeath(final EntityDeathEvent event) {
+    public void onMyPet(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
         if (deadEntity instanceof MyPetBukkitEntity) {
             MyPet myPet = ((MyPetBukkitEntity) deadEntity).getMyPet();
@@ -731,7 +731,7 @@ public class EntityListener implements Listener {
 
     @SuppressWarnings("unchecked")
     @EventHandler
-    public void onEntityDeath(final EntityDeathEvent event) {
+    public void on(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
         if (deadEntity instanceof MyPetBukkitEntity) {
             return;
@@ -819,7 +819,7 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityTarget(final EntityTargetEvent event) {
+    public void on(final EntityTargetEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
             if (myPet.getSkills().isSkillActive(Behavior.class)) {

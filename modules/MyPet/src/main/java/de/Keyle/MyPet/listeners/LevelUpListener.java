@@ -42,7 +42,7 @@ import java.util.List;
 
 public class LevelUpListener implements Listener {
     @EventHandler
-    public void onLevelUp(MyPetLevelUpEvent event) {
+    public void on(MyPetLevelUpEvent event) {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
         int lastLvl = event.getLastLevel();
