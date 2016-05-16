@@ -63,7 +63,7 @@ import java.util.UUID;
 
 public class PlayerListener implements Listener {
     @EventHandler
-    public void onPlayerInteract(final PlayerInteractEvent event) {
+    public void on(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
             if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().get().canMove()) {
@@ -124,7 +124,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
+    public void on(PlayerInteractEntityEvent event) {
         if (event.isCancelled()) {
             if (event.getRightClicked() instanceof MyPetBukkitEntity) {
                 if (((MyPetBukkitEntity) event.getRightClicked()).getOwner().equals(event.getPlayer())) {
@@ -135,7 +135,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(final PlayerJoinEvent event) {
+    public void on(final PlayerJoinEvent event) {
         long delay = MyPetApi.getRepository() instanceof NbtRepository ? 1L : 20L;
 
         new BukkitRunnable() {
@@ -226,7 +226,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(final PlayerQuitEvent event) {
+    public void on(PlayerQuitEvent event) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet()) {
@@ -318,7 +318,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onMyPetPlayerTeleport(final PlayerTeleportEvent event) {
+    public void onMyPet(PlayerTeleportEvent event) {
         if (!event.getPlayer().isOnline()) {
             return;
         }
@@ -362,7 +362,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent event) {
+    public void on(final PlayerDeathEvent event) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getEntity())) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getEntity());
             if (myPetPlayer.hasMyPet()) {
@@ -379,7 +379,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerRespawn(final PlayerRespawnEvent event) {
+    public void on(final PlayerRespawnEvent event) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer respawnedMyPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             final MyPet myPet = respawnedMyPetPlayer.getMyPet();

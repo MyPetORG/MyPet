@@ -33,7 +33,7 @@ import java.io.File;
 
 public class WorldListener implements Listener {
     @EventHandler
-    public void onWorldInit(final WorldInitEvent event) {
+    public void on(WorldInitEvent event) {
         if (WorldGroup.getGroupByWorld(event.getWorld().getName()) == null) {
             WorldGroup defaultGroup = WorldGroup.getGroupByName("default");
             if (defaultGroup == null) {
