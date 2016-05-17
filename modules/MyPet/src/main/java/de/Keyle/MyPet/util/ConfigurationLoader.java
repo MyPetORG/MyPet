@@ -138,7 +138,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.Loss.Percent", LevelSystem.Experience.LOSS_PERCENT);
         config.addDefault("MyPet.Exp.Loss.Fixed", LevelSystem.Experience.LOSS_FIXED);
         config.addDefault("MyPet.Exp.Loss.Drop", LevelSystem.Experience.DROP_LOST_EXP);
-        config.addDefault("MyPet.Exp.Gain.PreventFromSpawnReason", Lists.newArrayList("SPAWNER"));
+        config.addDefault("MyPet.Exp.Gain.PreventFromSpawnReason", new ArrayList<>());
         config.addDefault("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
@@ -331,8 +331,6 @@ public class ConfigurationLoader {
                     }
                 }
             }
-        } else {
-            LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.add("SPAWNER");
         }
 
         for (EntityType entityType : EntityType.values()) {
