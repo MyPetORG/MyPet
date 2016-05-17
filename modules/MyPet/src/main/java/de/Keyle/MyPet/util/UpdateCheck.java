@@ -28,9 +28,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class UpdateCheck {
-    final static String a = "%%__USER__%%";
-    final static String b = "%%__RESOURCE__%%";
-    final static String c = "%%__NONCE__%%";
+    final static String c = "%%__USER__%%";
 
     public static Optional<String> checkForUpdate(String plugin) {
         try {
@@ -39,8 +37,8 @@ public class UpdateCheck {
             parameter += "&package=" + MyPetApi.getCompatUtil().getInternalVersion();
             parameter += "&build=" + MyPetVersion.getBuild();
             parameter += "&premium=" + MyPetVersion.isPremium();
-            parameter += "&a=" + a;
-            parameter += "&b=" + b;
+            parameter += "&a=" + "%%__USER__%%";
+            parameter += "&b=" + "%%__RESOURCE__%%";
             parameter += "&c=" + c;
 
             // no data will be saved on the server
