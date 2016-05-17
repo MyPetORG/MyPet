@@ -102,7 +102,7 @@ public class Configuration {
     public static class HungerSystem {
         public static boolean USE_HUNGER_SYSTEM = true;
         public static int HUNGER_SYSTEM_TIME = 60;
-        public static int HUNGER_SYSTEM_POINTS_PER_FEED = 6;
+        public static double HUNGER_SYSTEM_POINTS_PER_FEED = 6.0;
     }
 
     public static class Skilltree {

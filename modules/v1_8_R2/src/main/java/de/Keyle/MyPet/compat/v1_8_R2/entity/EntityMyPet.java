@@ -433,7 +433,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                             return true;
                         }
                     }
-                    int addHunger = Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED;
+                    double addHunger = Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED;
                     if (getHealth() < getMaxHealth()) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             --itemStack.count;
