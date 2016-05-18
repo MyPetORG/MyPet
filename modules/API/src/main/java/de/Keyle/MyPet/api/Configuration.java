@@ -129,8 +129,8 @@ public class Configuration {
             }
 
             public static class Inventory {
-                public static boolean OPEN_IN_CREATIVE = true;
-                public static boolean DROP_WHEN_OWNER_DIES = true;
+                public static boolean OPEN_IN_CREATIVE = false;
+                public static boolean DROP_WHEN_OWNER_DIES = false;
             }
         }
     }
@@ -147,55 +147,45 @@ public class Configuration {
         }
 
         public static class Sheep {
-
             public static boolean CAN_BE_SHEARED = true;
             public static boolean CAN_REGROW_WOOL = true;
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class IronGolem {
-
             public static boolean CAN_THROW_UP = true;
         }
 
         public static class Snowman {
-
             public static boolean FIX_SNOW_TRACK = true;
         }
 
         public static class Horse {
-
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Mooshroom {
-
             public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_GIVE_SOUP;
         }
 
         public static class Ocelot {
-
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Pig {
-
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Villager {
-
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Wolf {
-
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Zombie {
-
             public static ConfigItem GROW_UP_ITEM;
         }
 
@@ -222,7 +212,6 @@ public class Configuration {
         public static boolean USE_WorldGuard = true;
         public static boolean USE_Citizens = true;
         public static boolean USE_Heroes = true;
-        public static boolean USE_Regios = true;
         public static boolean USE_MobArena = true;
         public static boolean USE_McMMO = true;
         public static boolean USE_Residence = true;
