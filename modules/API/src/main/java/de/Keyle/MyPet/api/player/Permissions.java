@@ -41,12 +41,10 @@ public class Permissions {
         legacy.put("MyPet.command.switch", "MyPet.user.command.switch");
         legacy.put("MyPet.command.switch.bypass", "MyPet.user.command.switch.bypass");
         legacy.put("MyPet.command.switch.limit.", "MyPet.user.command.switch.limit.");
-        legacy.put("MyPet.command.trade.offer", "MyPet.user.command.trade.offer");
-        legacy.put("MyPet.command.trade.offer.type.", "MyPet.user.command.offer.type.");
-        legacy.put("MyPet.command.trade.receive", "MyPet.user.command.trade.recieve");
-        legacy.put("MyPet.command.trade.receive", "MyPet.command.trade.recieve");
-        legacy.put("MyPet.command.trade.receive.type.", "MyPet.user.trade.recieve.type.");
-        legacy.put("MyPet.command.trade.receive.type.", "MyPet.trade.recieve.type.");
+        legacy.put("MyPet.command.trade.offer.", "MyPet.user.command.offer.type.");
+        legacy.put("MyPet.command.trade.offer.", "MyPet.command.trade.offer.type.");
+        legacy.put("MyPet.command.trade.receive.", "MyPet.user.trade.recieve.type.");
+        legacy.put("MyPet.command.trade.receive.", "MyPet.command.trade.receive.type.");
         legacy.put("MyPet.leash.", "MyPet.user.leash.");
         legacy.put("MyPet.skilltree.", "MyPet.custom.skilltree.");
         legacy.put("MyPet.extended.feed", "MyPet.user.extended.CanFeed");
