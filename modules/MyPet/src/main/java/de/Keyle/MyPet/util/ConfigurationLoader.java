@@ -126,7 +126,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.WorldGuard", Hooks.USE_WorldGuard);
         config.addDefault("MyPet.Hooks.Citizens", Hooks.USE_Citizens);
         config.addDefault("MyPet.Hooks.mcMMO", Hooks.USE_McMMO);
-        config.addDefault("MyPet.Hooks.Regios", Hooks.USE_Regios);
         config.addDefault("MyPet.Hooks.MobArena.PvP", Hooks.USE_MobArena);
         config.addDefault("MyPet.Hooks.MobArena.DisablePetsInArena", Hooks.DISABLE_PETS_IN_MOB_ARENA);
         config.addDefault("MyPet.Hooks.Residence", Hooks.USE_Residence);
@@ -340,7 +339,6 @@ public class ConfigurationLoader {
         Hooks.USE_McMMO = config.getBoolean("MyPet.Hooks.mcMMO", true);
         Hooks.USE_MobArena = config.getBoolean("MyPet.Hooks.MobArena.PvP", true);
         Hooks.USE_SurvivalGame = config.getBoolean("MyPet.Hooks.SurvivalGames.PvP", true);
-        Hooks.USE_Regios = config.getBoolean("MyPet.Hooks.Regios", true);
         Hooks.USE_Residence = config.getBoolean("MyPet.Hooks.Residence", true);
         Hooks.USE_AncientRPG = config.getBoolean("MyPet.Hooks.AncientRPG", true);
         Hooks.USE_GriefPrevention = config.getBoolean("MyPet.Hooks.GriefPrevention", true);
