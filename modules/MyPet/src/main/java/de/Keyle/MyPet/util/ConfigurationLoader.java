@@ -101,7 +101,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skilltree.SwitchPenalty.Percent", Skilltree.SWITCH_PENALTY_PERCENT);
         config.addDefault("MyPet.Skilltree.SwitchPenalty.Admin", Skilltree.SWITCH_PENALTY_ADMIN);
 
-        config.addDefault("MyPet.Hooks.BungeeCord.UUID-Mode", Hooks.BUNGEE_MODE);
         config.addDefault("MyPet.Hooks.Towny", Hooks.USE_Towny);
         config.addDefault("MyPet.Hooks.Heroes", Hooks.USE_Heroes);
         config.addDefault("MyPet.Hooks.Factions", Hooks.USE_Factions);
@@ -285,7 +284,6 @@ public class ConfigurationLoader {
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
         Permissions.LEGACY = config.getBoolean("MyPet.Permissions.Legacy", Permissions.LEGACY);
 
-        Hooks.BUNGEE_MODE = config.getString("MyPet.Hooks.BungeeCord.UUID-Mode", "online");
         Hooks.USE_ECONOMY = config.getBoolean("MyPet.Hooks.Vault.Economy", true);
         Hooks.DISABLE_PETS_IN_MINIGAMES = config.getBoolean("MyPet.Hooks.Minigames.DisablePetsInGames", true);
         Hooks.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Hooks.PvPArena.DisablePetsInArena", true);

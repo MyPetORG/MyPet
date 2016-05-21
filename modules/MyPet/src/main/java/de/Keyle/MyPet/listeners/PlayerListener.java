@@ -41,7 +41,7 @@ import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
-import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -143,14 +143,18 @@ public class PlayerListener implements Listener {
             public void run() {
                 MyPetApi.getRepository().getMyPetPlayer(event.getPlayer(), new RepositoryCallback<MyPetPlayer>() {
                     @Override
-                    public void callback(final MyPetPlayer joinedPlayer) {
-                        MyPetApi.getPlayerManager().setOnline(joinedPlayer);
+                    public void callback(final MyPetPlayer p) {
+                        final MyPetPlayerImpl joinedPlayer = (MyPetPlayerImpl) p;
 
-                        if (MyPetApi.getPlugin().isInOnlineMode()) {
-                            if (joinedPlayer instanceof OnlineMyPetPlayer) {
-                                ((OnlineMyPetPlayer) joinedPlayer).setLastKnownName(event.getPlayer().getName());
+                        joinedPlayer.setLastKnownName(event.getPlayer().getName());
+                        if (!event.getPlayer().getUniqueId().equals(joinedPlayer.getOfflineUUID())) {
+                            if (joinedPlayer.getMojangUUID() == null) {
+                                joinedPlayer.setMojangUUID(event.getPlayer().getUniqueId());
                             }
+                            joinedPlayer.setOnlineMode(true);
                         }
+
+                        MyPetApi.getPlayerManager().setOnline(joinedPlayer);
 
                         final WorldGroup joinGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
                         if (joinedPlayer.hasMyPet()) {
@@ -160,7 +164,7 @@ public class PlayerListener implements Listener {
                             }
                         }
 
-                        if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
+                        if (!joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                             final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
                             MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
                                 @Override

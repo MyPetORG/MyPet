@@ -20,22 +20,30 @@
 
 package de.Keyle.MyPet.repository;
 
-import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.util.player.OfflineMyPetPlayer;
-import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class PlayerManager extends de.Keyle.MyPet.api.repository.PlayerManager {
     public MyPetPlayer createMyPetPlayer(Player player) {
+
         MyPetPlayer petPlayer = getMyPetPlayer(player);
+
         if (petPlayer == null) {
-            if (MyPetApi.getPlugin().isInOnlineMode()) {
-                petPlayer = new OnlineMyPetPlayer(player.getUniqueId());
+            UUID offlineUUID = Util.getOfflinePlayerUUID(player.getName());
+            UUID playerUUID = player.getUniqueId();
+
+            if (offlineUUID.equals(playerUUID)) {
+                petPlayer = new MyPetPlayerImpl(UUID.randomUUID(), player.getName());
             } else {
-                petPlayer = new OfflineMyPetPlayer(player.getName());
+                petPlayer = new MyPetPlayerImpl(UUID.randomUUID(), playerUUID, player.getName());
+                ((MyPetPlayerImpl) petPlayer).setOnlineMode(true);
             }
         }
+
         return petPlayer;
     }
 }

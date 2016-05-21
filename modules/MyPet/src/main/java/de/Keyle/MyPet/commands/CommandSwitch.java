@@ -90,7 +90,6 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-
             MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                 @Override
                 public void callback(List<StoredMyPet> pets) {

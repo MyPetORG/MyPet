@@ -39,12 +39,12 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlayer {
+public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
     protected String lastKnownPlayerName;
     protected String lastLanguage = "en_US";
     protected UUID mojangUUID = null;
-    protected UUID offlineUUID = null;
     protected final UUID internalUUID;
+    protected boolean onlineMode = false;
 
     protected boolean captureHelperMode = false;
     protected boolean autoRespawn = false;
@@ -59,12 +59,30 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
     private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
     private boolean donationChecked = false;
 
-    protected MyPetPlayer() {
-        this(UUID.randomUUID());
+    public MyPetPlayerImpl(UUID internalUUID, String playerName) {
+        this.internalUUID = internalUUID;
+        this.lastKnownPlayerName = playerName;
     }
 
-    protected MyPetPlayer(UUID internalUUID) {
+    public MyPetPlayerImpl(UUID internalUUID, UUID mojangUUID) {
         this.internalUUID = internalUUID;
+        this.mojangUUID = mojangUUID;
+    }
+
+    public MyPetPlayerImpl(UUID internalUUID, UUID mojangUUID, String playerName) {
+        this.internalUUID = internalUUID;
+        this.mojangUUID = mojangUUID;
+        this.lastKnownPlayerName = playerName;
+    }
+
+    public void setOnlineMode(boolean mode) {
+        onlineMode = mode;
+    }
+
+    public void setLastKnownName(String name) {
+        if (name != null) {
+            this.lastKnownPlayerName = name;
+        }
     }
 
     public String getName() {
@@ -197,10 +215,10 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
     }
 
     public UUID getPlayerUUID() {
-        if (MyPetApi.getPlugin().isInOnlineMode()) {
+        if (onlineMode) {
             return mojangUUID;
         } else {
-            return offlineUUID;
+            return Util.getOfflinePlayerUUID(getName());
         }
     }
 
@@ -209,10 +227,13 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
     }
 
     public UUID getOfflineUUID() {
-        if (offlineUUID == null && lastKnownPlayerName != null) {
-            return Util.getOfflinePlayerUUID(lastKnownPlayerName);
+        return Util.getOfflinePlayerUUID(getName());
+    }
+
+    public void setMojangUUID(UUID uuid) {
+        if (uuid != null) {
+            this.mojangUUID = uuid;
         }
-        return offlineUUID;
     }
 
     public UUID getMojangUUID() {
@@ -258,7 +279,7 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
             donationChecked = true;
             Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), new Runnable() {
                 public void run() {
-                    rank = DonateCheck.getDonationRank(MyPetPlayer.this);
+                    rank = DonateCheck.getDonationRank(MyPetPlayerImpl.this);
                 }
             }, 60L);
         }
@@ -269,21 +290,21 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
     public TagCompound save() {
         TagCompound playerNBT = new TagCompound();
 
-        playerNBT.getCompoundData().put("Name", new TagString(getName()));
-        playerNBT.getCompoundData().put("AutoRespawn", new TagByte(hasAutoRespawnEnabled()));
-        playerNBT.getCompoundData().put("AutoRespawnMin", new TagInt(getAutoRespawnMin()));
+        TagCompound settingsTag = new TagCompound();
+        settingsTag.getCompoundData().put("AutoRespawn", new TagByte(hasAutoRespawnEnabled()));
+        settingsTag.getCompoundData().put("AutoRespawnMin", new TagInt(getAutoRespawnMin()));
+        settingsTag.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
+        settingsTag.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
+        settingsTag.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
+        playerNBT.getCompoundData().put("Settings", settingsTag);
+
         playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
-        playerNBT.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
-        playerNBT.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
-        playerNBT.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
 
         TagCompound playerUUIDTag = new TagCompound();
         if (mojangUUID != null) {
             playerUUIDTag.getCompoundData().put("Mojang-UUID", new TagString(mojangUUID.toString()));
         }
-        if (offlineUUID != null) {
-            playerUUIDTag.getCompoundData().put("Offline-UUID", new TagString(offlineUUID.toString()));
-        }
+        playerUUIDTag.getCompoundData().put("Name", new TagString(getName()));
         playerUUIDTag.getCompoundData().put("Internal-UUID", new TagString(internalUUID.toString()));
         playerNBT.getCompoundData().put("UUID", playerUUIDTag);
 
@@ -301,31 +322,54 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
         if (myplayerNBT.containsKeyAs("UUID", TagCompound.class)) {
             TagCompound uuidTag = myplayerNBT.getAs("UUID", TagCompound.class);
 
-            if (uuidTag.getCompoundData().containsKey("Offline-UUID")) {
-                offlineUUID = UUID.fromString(uuidTag.getAs("Offline-UUID", TagString.class).getStringData());
-            }
             if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
                 mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
             }
-        }
-        if (myplayerNBT.getCompoundData().containsKey("AutoRespawn")) {
-            setAutoRespawnEnabled(myplayerNBT.getAs("AutoRespawn", TagByte.class).getBooleanData());
-        }
-        if (myplayerNBT.getCompoundData().containsKey("AutoRespawnMin")) {
-            setAutoRespawnMin(myplayerNBT.getAs("AutoRespawnMin", TagInt.class).getIntData());
-        }
-        if (myplayerNBT.containsKeyAs("CaptureMode", TagString.class)) {
-            if (!myplayerNBT.getAs("CaptureMode", TagString.class).getStringData().equals("Deactivated")) {
-                setCaptureHelperActive(true);
+            if (uuidTag.getCompoundData().containsKey("Name") && lastKnownPlayerName == null) {
+                lastKnownPlayerName = uuidTag.getAs("Name", TagString.class).getStringData();
             }
-        } else if (myplayerNBT.containsKeyAs("CaptureMode", TagByte.class)) {
-            setCaptureHelperActive(myplayerNBT.getAs("CaptureMode", TagByte.class).getBooleanData());
         }
-        if (myplayerNBT.getCompoundData().containsKey("HealthBar")) {
-            setHealthBarActive(myplayerNBT.getAs("HealthBar", TagByte.class).getBooleanData());
-        }
-        if (myplayerNBT.getCompoundData().containsKey("PetLivingSoundVolume")) {
-            setPetLivingSoundVolume(myplayerNBT.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());
+        if (myplayerNBT.getCompoundData().containsKey("Settings")) {
+            TagCompound settingsTag = myplayerNBT.getAs("Settings", TagCompound.class);
+
+            if (settingsTag.getCompoundData().containsKey("AutoRespawn")) {
+                setAutoRespawnEnabled(settingsTag.getAs("AutoRespawn", TagByte.class).getBooleanData());
+            }
+            if (settingsTag.getCompoundData().containsKey("AutoRespawnMin")) {
+                setAutoRespawnMin(settingsTag.getAs("AutoRespawnMin", TagInt.class).getIntData());
+            }
+            if (settingsTag.containsKeyAs("CaptureMode", TagByte.class)) {
+                setCaptureHelperActive(settingsTag.getAs("CaptureMode", TagByte.class).getBooleanData());
+            }
+            if (settingsTag.getCompoundData().containsKey("HealthBar")) {
+                setHealthBarActive(settingsTag.getAs("HealthBar", TagByte.class).getBooleanData());
+            }
+            if (settingsTag.getCompoundData().containsKey("PetLivingSoundVolume")) {
+                setPetLivingSoundVolume(settingsTag.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());
+            }
+        } else {
+            if (myplayerNBT.getCompoundData().containsKey("Name") && lastKnownPlayerName == null) {
+                lastKnownPlayerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
+            }
+            if (myplayerNBT.getCompoundData().containsKey("AutoRespawn")) {
+                setAutoRespawnEnabled(myplayerNBT.getAs("AutoRespawn", TagByte.class).getBooleanData());
+            }
+            if (myplayerNBT.getCompoundData().containsKey("AutoRespawnMin")) {
+                setAutoRespawnMin(myplayerNBT.getAs("AutoRespawnMin", TagInt.class).getIntData());
+            }
+            if (myplayerNBT.containsKeyAs("CaptureMode", TagString.class)) {
+                if (!myplayerNBT.getAs("CaptureMode", TagString.class).getStringData().equals("Deactivated")) {
+                    setCaptureHelperActive(true);
+                }
+            } else if (myplayerNBT.containsKeyAs("CaptureMode", TagByte.class)) {
+                setCaptureHelperActive(myplayerNBT.getAs("CaptureMode", TagByte.class).getBooleanData());
+            }
+            if (myplayerNBT.getCompoundData().containsKey("HealthBar")) {
+                setHealthBarActive(myplayerNBT.getAs("HealthBar", TagByte.class).getBooleanData());
+            }
+            if (myplayerNBT.getCompoundData().containsKey("PetLivingSoundVolume")) {
+                setPetLivingSoundVolume(myplayerNBT.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());
+            }
         }
         if (myplayerNBT.getCompoundData().containsKey("ExtendedInfo")) {
             setExtendedInfo(myplayerNBT.getAs("ExtendedInfo", TagCompound.class));
@@ -373,22 +417,14 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
             return false;
         } else if (obj instanceof Player) {
             Player player = (Player) obj;
-            if (MyPetApi.getPlugin().isInOnlineMode()) {
-                return getPlayerUUID().equals(player.getUniqueId());
-            } else {
-                return getName().equals(player.getName());
-            }
+            return getPlayerUUID().equals(player.getUniqueId()) || getName().equals(player.getName());
         } else if (obj instanceof OfflinePlayer) {
             OfflinePlayer offlinePlayer = (OfflinePlayer) obj;
-            if (MyPetApi.getPlugin().isInOnlineMode()) {
-                return getPlayerUUID().equals(offlinePlayer.getUniqueId());
-            } else {
-                return offlinePlayer.getName().equals(getName());
-            }
+            return getPlayer().getUniqueId().equals(offlinePlayer.getUniqueId()) || offlinePlayer.getName().equals(getName());
         } else if (obj instanceof AnimalTamer) {
             AnimalTamer animalTamer = (AnimalTamer) obj;
             return animalTamer.getName().equals(getName());
-        } else if (obj instanceof MyPetPlayer) {
+        } else if (obj instanceof MyPetPlayerImpl) {
             return this == obj;
         }
         return MyPetApi.getPlatformHelper().comparePlayerWithEntity(this, obj);
@@ -396,6 +432,6 @@ public abstract class MyPetPlayer implements de.Keyle.MyPet.api.player.MyPetPlay
 
     @Override
     public String toString() {
-        return "MyPetPlayer{name=" + getName() + ", internal-uuid=" + internalUUID + ", mojang-uuid=" + mojangUUID + ", offline-uuid=" + offlineUUID + "}";
+        return "MyPetPlayer{name=" + getName() + ", internal-uuid=" + internalUUID + ", mojang-uuid=" + mojangUUID + ", name=" + lastKnownPlayerName + "}";
     }
 }

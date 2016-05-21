@@ -51,5 +51,6 @@ public interface MyPetPlugin extends Plugin {
 
     HookManager getHookManager();
 
+    @Deprecated
     boolean isInOnlineMode();
 }

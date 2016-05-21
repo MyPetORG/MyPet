@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.player;
 
 import de.Keyle.MyPet.api.Util;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class DonateCheck {
@@ -59,8 +58,8 @@ public class DonateCheck {
             //   6 for premium
             // no data will be saved on the server
             String mode;
-            if (Bukkit.getOnlineMode()) {
-                mode = "userid=" + player.getPlayerUUID();
+            if (player.getMojangUUID() != null) {
+                mode = "userid=" + player.getMojangUUID();
             } else {
                 mode = "username=" + player.getName();
             }
