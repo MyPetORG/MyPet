@@ -31,18 +31,15 @@ import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.player.UUIDFetcher;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.entity.InactiveMyPet;
-import de.Keyle.MyPet.util.player.OfflineMyPetPlayer;
-import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
 import org.bson.Document;
 import org.bson.types.Binary;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -52,7 +49,7 @@ import java.util.*;
 public class MongoDbRepository implements Repository {
     private MongoClient mongo;
     private MongoDatabase db;
-    private int version = 2;
+    private int version = 3;
     // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
 
     @Override
@@ -116,6 +113,8 @@ public class MongoDbRepository implements Repository {
             switch (oldVersion) {
                 case 1:
                     updateToV2();
+                case 2:
+                    updateToV3();
             }
         }
     }
@@ -128,6 +127,12 @@ public class MongoDbRepository implements Repository {
         playerCollection.createIndex(new BasicDBObject("internal_uuid", 1));
         playerCollection.createIndex(new BasicDBObject("offline_uuid", 1));
         playerCollection.createIndex(new BasicDBObject("mojang_uuid", 1));
+    }
+
+    private void updateToV3() {
+        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        playerCollection.dropIndex(new BasicDBObject("offline_uuid", 1));
+        playerCollection.createIndex(new BasicDBObject("name", 1));
     }
 
     public boolean collectionExists(final String collectionName) {
@@ -246,7 +251,7 @@ public class MongoDbRepository implements Repository {
             pet.setPetName(document.getString("name"));
             pet.setPetType(MyPetType.valueOf(document.getString("type")));
             pet.setLastUsed(document.getLong("last_used"));
-            pet.setHungerValue(document.getDouble("hunger"));
+            pet.setHungerValue(((Number) document.get("hunger")).doubleValue());
             pet.setWorldGroup(document.getString("world_group"));
             pet.wantsToRespawn = document.getBoolean("wants_to_spawn");
 
@@ -310,11 +315,9 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (callback != null) {
-                        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                        long result = petCollection.count(new Document("owner_uuid", myPetPlayer.getInternalUUID()));
-                        callback.runTask(result > 0);
-                    }
+                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    long result = petCollection.count(new Document("owner_uuid", myPetPlayer.getInternalUUID().toString()));
+                    callback.runTask(result > 0);
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
         }
@@ -327,21 +330,19 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (callback != null) {
-                        final List<StoredMyPet> pets = new ArrayList<>();
-                        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                        FindIterable petDocuments = petCollection.find(new Document("owner_uuid", owner.getInternalUUID()));
-                        petDocuments.forEach(new Block<Document>() {
-                            @Override
-                            public void apply(final Document document) {
-                                StoredMyPet storedMyPet = documentToMyPet(owner, document);
-                                if (storedMyPet != null) {
-                                    pets.add(storedMyPet);
-                                }
+                    final List<StoredMyPet> pets = new ArrayList<>();
+                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    FindIterable petDocuments = petCollection.find(new Document("owner_uuid", owner.getInternalUUID().toString()));
+                    petDocuments.forEach(new Block<Document>() {
+                        @Override
+                        public void apply(final Document document) {
+                            StoredMyPet storedMyPet = documentToMyPet(owner, document);
+                            if (storedMyPet != null) {
+                                pets.add(storedMyPet);
                             }
-                        });
-                        callback.runTask(pets);
-                    }
+                        }
+                    });
+                    callback.runTask(pets);
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
         }
@@ -354,16 +355,14 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (callback != null) {
-                        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                        Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
-                        if (petDocument != null) {
-                            MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
-                            StoredMyPet pet = documentToMyPet(owner, petDocument);
+                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
+                    if (petDocument != null) {
+                        MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
+                        StoredMyPet pet = documentToMyPet(owner, petDocument);
 
-                            if (pet != null) {
-                                callback.runTask(pet);
-                            }
+                        if (pet != null) {
+                            callback.runTask(pet);
                         }
                     }
                 }
@@ -485,50 +484,35 @@ public class MongoDbRepository implements Repository {
 
     private MyPetPlayer documentToPlayer(Document document) {
         try {
-
-            MyPetPlayer petPlayer = null;
+            MyPetPlayerImpl petPlayer;
 
             UUID internalUUID = UUID.fromString(document.getString("internal_uuid"));
             String playerName = document.getString("name");
 
-            if (MyPetApi.getPlugin().isInOnlineMode()) {
-                UUID mojangUUID = document.getString("mojang_uuid") != null ? UUID.fromString(document.getString("mojang_uuid")) : null;
-                if (mojangUUID != null) {
-                    petPlayer = new OnlineMyPetPlayer(internalUUID, mojangUUID);
-                    if (playerName != null) {
-                        ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
-                    }
-                } else if (playerName != null) {
-                    Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
-                    if (!fetchedUUIDs.containsKey(playerName)) {
-                        MyPetApi.getLogger().warning(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pets may not be loaded for this player!");
-                        return null;
-                    } else {
-                        petPlayer = new OnlineMyPetPlayer(internalUUID, fetchedUUIDs.get(playerName));
-                        ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
-                    }
-                }
+            UUID mojangUUID = document.getString("mojang_uuid") != null ? UUID.fromString(document.getString("mojang_uuid")) : null;
+            if (mojangUUID != null) {
+                petPlayer = new MyPetPlayerImpl(internalUUID, mojangUUID);
+                petPlayer.setLastKnownName(playerName);
+            } else if (playerName != null) {
+                petPlayer = new MyPetPlayerImpl(internalUUID, playerName);
             } else {
-                if (playerName == null) {
-                    return null;
-                }
-                petPlayer = new OfflineMyPetPlayer(internalUUID, playerName);
+                MyPetApi.getLogger().warning("Player with no UUID or name found!");
+                return null;
             }
-            if (petPlayer != null) {
-                petPlayer.setAutoRespawnEnabled(document.getBoolean("auto_respawn"));
-                petPlayer.setAutoRespawnMin(document.getInteger("auto_respawn_min"));
-                petPlayer.setCaptureHelperActive(document.getBoolean("capture_mode"));
-                petPlayer.setHealthBarActive(document.getBoolean("health_bar"));
-                petPlayer.setPetLivingSoundVolume(document.getDouble("pet_idle_volume").floatValue());
-                petPlayer.setExtendedInfo(TagStream.readTag(((Binary) document.get("extended_info")).getData(), true));
 
-                Document jsonObject = (Document) document.get("multi_world");
-                for (Object o : jsonObject.keySet()) {
-                    String petUUID = jsonObject.get(o.toString()).toString();
-                    petPlayer.setMyPetForWorldGroup(o.toString(), UUID.fromString(petUUID));
-                }
+            petPlayer.setAutoRespawnEnabled(document.getBoolean("auto_respawn"));
+            petPlayer.setAutoRespawnMin(document.getInteger("auto_respawn_min"));
+            petPlayer.setCaptureHelperActive(document.getBoolean("capture_mode"));
+            petPlayer.setHealthBarActive(document.getBoolean("health_bar"));
+            petPlayer.setPetLivingSoundVolume(document.getDouble("pet_idle_volume").floatValue());
+            petPlayer.setExtendedInfo(TagStream.readTag(((Binary) document.get("extended_info")).getData(), true));
 
+            Document jsonObject = (Document) document.get("multi_world");
+            for (Object o : jsonObject.keySet()) {
+                String petUUID = jsonObject.get(o.toString()).toString();
+                petPlayer.setMyPetForWorldGroup(o.toString(), UUID.fromString(petUUID));
             }
+
             return petPlayer;
         } catch (IOException e) {
             e.printStackTrace();
@@ -561,13 +545,13 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (callback != null) {
-                        String uuidType = MyPetApi.getPlugin().isInOnlineMode() ? "mojang" : "offline";
+                    BasicDBList or = new BasicDBList();
+                    or.add(new BasicDBObject("mojang_uuid", player.getUniqueId().toString()));
+                    or.add(new BasicDBObject("name", player.getName()));
 
-                        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                        long result = playerCollection.count(new Document(uuidType + "_uuid", player.getUniqueId().toString()));
-                        callback.runTask(result > 0);
-                    }
+                    MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+                    long result = playerCollection.count(new BasicDBObject("$or", or));
+                    callback.runTask(result > 0);
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
         }
@@ -578,14 +562,12 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (callback != null) {
-                        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                        Document playerDocument = (Document) playerCollection.find(new Document("internal_uuid", uuid.toString())).first();
-                        if (playerDocument != null) {
-                            MyPetPlayer player = documentToPlayer(playerDocument);
-                            if (player != null) {
-                                callback.runTask(player);
-                            }
+                    MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+                    Document playerDocument = (Document) playerCollection.find(new Document("internal_uuid", uuid.toString())).first();
+                    if (playerDocument != null) {
+                        MyPetPlayer player = documentToPlayer(playerDocument);
+                        if (player != null) {
+                            callback.runTask(player);
                         }
                     }
                 }
@@ -599,15 +581,16 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (callback != null) {
-                        String uuidType = MyPetApi.getPlugin().isInOnlineMode() ? "mojang" : "offline";
-                        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                        Document playerDocument = (Document) playerCollection.find(new Document(uuidType + "_uuid", player.getUniqueId().toString())).first();
-                        if (playerDocument != null) {
-                            MyPetPlayer player = documentToPlayer(playerDocument);
-                            if (player != null) {
-                                callback.runTask(player);
-                            }
+                    BasicDBList or = new BasicDBList();
+                    or.add(new BasicDBObject("mojang_uuid", player.getUniqueId().toString()));
+                    or.add(new BasicDBObject("name", player.getName()));
+
+                    MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+                    Document playerDocument = (Document) playerCollection.find(new BasicDBObject("$or", or)).first();
+                    if (playerDocument != null) {
+                        MyPetPlayer player = documentToPlayer(playerDocument);
+                        if (player != null) {
+                            callback.runTask(player);
                         }
                     }
                 }
@@ -645,7 +628,6 @@ public class MongoDbRepository implements Repository {
     private void setPlayerData(MyPetPlayer player, Document playerDocument) {
         playerDocument.append("internal_uuid", player.getInternalUUID().toString());
         playerDocument.append("mojang_uuid", player.getMojangUUID().toString());
-        playerDocument.append("offline_uuid", player.getOfflineUUID().toString());
         playerDocument.append("name", player.getName());
         playerDocument.append("auto_respawn", player.hasAutoRespawnEnabled());
         playerDocument.append("auto_respawn_min", player.getAutoRespawnMin());

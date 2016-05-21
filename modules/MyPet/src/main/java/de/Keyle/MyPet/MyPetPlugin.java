@@ -49,10 +49,9 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.Metrics;
 import de.Keyle.MyPet.util.UpdateCheck;
-import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Hooks;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -232,8 +231,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
         Translation.init();
 
-        Bungee.reset();
-
         // init repository
         if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
             repo = new MySqlRepository();
@@ -317,15 +314,19 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         for (final Player player : getServer().getOnlinePlayers()) {
             repo.getMyPetPlayer(player, new RepositoryCallback<MyPetPlayer>() {
                 @Override
-                public void callback(final MyPetPlayer joinedPlayer) {
-                    if (joinedPlayer != null) {
-                        playerManager.setOnline(joinedPlayer);
+                public void callback(final MyPetPlayer p) {
+                    if (p != null) {
+                        final MyPetPlayerImpl joinedPlayer = (MyPetPlayerImpl) p;
 
-                        if (isInOnlineMode()) {
-                            if (joinedPlayer instanceof OnlineMyPetPlayer) {
-                                ((OnlineMyPetPlayer) joinedPlayer).setLastKnownName(player.getName());
+                        joinedPlayer.setLastKnownName(player.getName());
+                        if (!player.getUniqueId().equals(joinedPlayer.getOfflineUUID())) {
+                            if (joinedPlayer.getMojangUUID() == null) {
+                                joinedPlayer.setMojangUUID(player.getUniqueId());
                             }
+                            joinedPlayer.setOnlineMode(true);
                         }
+
+                        playerManager.setOnline(joinedPlayer);
 
                         final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
                         if (joinedPlayer.hasMyPet()) {
@@ -496,8 +497,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         return 0;
     }
 
+    @Deprecated
     public boolean isInOnlineMode() {
-        return (Bungee.isEnabled() && Bungee.isOnlineModeEnabled()) || Bukkit.getOnlineMode();
+        return Bukkit.getOnlineMode();
     }
 
     public File getFile() {

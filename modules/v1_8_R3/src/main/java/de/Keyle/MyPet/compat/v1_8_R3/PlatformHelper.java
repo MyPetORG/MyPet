@@ -218,11 +218,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public boolean comparePlayerWithEntity(MyPetPlayer player, Object obj) {
         EntityHuman entityHuman = (EntityHuman) obj;
-        if (MyPetApi.getPlugin().isInOnlineMode()) {
-            return player.getPlayerUUID().equals(entityHuman.getUniqueID());
-        } else {
-            return entityHuman.getName().equals(player.getName());
-        }
+        return player.getPlayer().getUniqueId().equals(entityHuman.getUniqueID());
     }
 
     @Override

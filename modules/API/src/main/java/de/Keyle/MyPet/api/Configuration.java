@@ -220,7 +220,6 @@ public class Configuration {
     }
 
     public static class Hooks {
-        public static String BUNGEE_MODE = "online";
         public static boolean USE_ECONOMY = true;
         public static boolean DISABLE_PETS_IN_MINIGAMES = true;
         public static boolean DISABLE_PETS_IN_ARENA = true;
