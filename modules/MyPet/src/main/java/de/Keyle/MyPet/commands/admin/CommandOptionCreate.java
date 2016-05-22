@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -286,8 +287,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
                     inactiveMyPet.setWorldGroup(wg.getName());
 
-                    MyPetSaveEvent event = new MyPetSaveEvent(inactiveMyPet);
-                    Bukkit.getServer().getPluginManager().callEvent(event);
+                    MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
+                    Bukkit.getServer().getPluginManager().callEvent(createEvent);
+
+                    MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+                    Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                     MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
                         @Override
