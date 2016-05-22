@@ -297,7 +297,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         @Override
                         public void callback(Boolean value) {
                             if (value) {
-                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
+                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
                                 MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
 
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);

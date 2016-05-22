@@ -105,7 +105,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
                 if (myPet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());
                     newPet.setWorldGroup(worldGroup.getName());
-                    newPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), newPet.getUUID());
+                    newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
                     MyPetApi.getRepository().updateMyPetPlayer(newPetOwner, null);
 
                     newOwner.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet owned by " + newPetOwner.getName() + " successfully cloned!");
