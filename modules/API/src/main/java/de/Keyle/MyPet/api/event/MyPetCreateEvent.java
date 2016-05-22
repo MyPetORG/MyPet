@@ -20,24 +20,40 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-@Deprecated
-public class MyPetLeashEvent extends MyPetCreateEvent {
-    public MyPetLeashEvent(MyPet myPet) {
-        super(myPet, Source.Leash);
+public class MyPetCreateEvent extends Event {
+    protected static final HandlerList handlers = new HandlerList();
+
+    public enum Source {
+        Leash, AdminCommand, Other
     }
 
-    @Deprecated
-    public MyPetPlayer getLeasher() {
-        return getOwner();
+    private final StoredMyPet myPet;
+    private final Source source;
+
+    public MyPetCreateEvent(StoredMyPet myPet, Source source) {
+        this.myPet = myPet;
+        this.source = source;
     }
 
-    @Deprecated
-    public MyPet getPet() {
-        return (MyPet) getMyPet();
+    public Source getSource() {
+        return source;
+    }
+
+    public MyPetPlayer getOwner() {
+        return myPet.getOwner();
+    }
+
+    public StoredMyPet getMyPet() {
+        return myPet;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     @SuppressWarnings("unused")
