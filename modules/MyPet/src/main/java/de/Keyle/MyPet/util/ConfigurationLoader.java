@@ -50,6 +50,14 @@ public class ConfigurationLoader {
     public static void setDefault() {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
+        config.options().header("" +
+                "########################################################\n" +
+                "       This is the main configuration of MyPet         #\n" +
+                "         You can find more info in the wiki:           #\n" +
+                "https://wiki.mypet-plugin.de/doku.php?id=en:configfile #\n" +
+                "########################################################\n");
+        config.options().copyHeader(true);
+
         config.addDefault("MyPet.Leash.Consume", Misc.CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.OwnerCanAttackPet", Misc.OWNER_CAN_ATTACK_PET);
         config.addDefault("MyPet.DisablePetVersusPlayer", Misc.DISABLE_PET_VS_PLAYER);
@@ -187,6 +195,14 @@ public class ConfigurationLoader {
                 e.printStackTrace();
             }
         }
+
+        config.options().header("" +
+                "#######################################################\n" +
+                "       This is the pet configuration of MyPet         #\n" +
+                "         You can find more info in the wiki:          #\n" +
+                "https://wiki.mypet-plugin.de/doku.php?id=en:petconfig #\n" +
+                "#######################################################\n");
+        config.options().copyHeader(true);
 
         for (MyPetType petType : MyPetType.values()) {
             DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
