@@ -74,7 +74,7 @@
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
-            <artifactId>mypet-core</artifactId>
+            <artifactId>mypet-skills</artifactId>
             <version>1</version>
             <exclusions>
                 <exclusion>
