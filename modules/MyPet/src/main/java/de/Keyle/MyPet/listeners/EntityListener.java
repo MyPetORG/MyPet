@@ -379,7 +379,7 @@ public class EntityListener implements Listener {
 
                         WorldGroup worldGroup = WorldGroup.getGroupByWorld(damager.getWorld().getName());
                         inactiveMyPet.setWorldGroup(worldGroup.getName());
-                        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), inactiveMyPet.getUUID());
+                        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
 
                         /*
                         if(leashTarget.getCustomName() != null)
@@ -654,7 +654,7 @@ public class EntityListener implements Listener {
 
 
                 myPet.removePet();
-                owner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()).getName(), null);
+                owner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()), null);
 
                 myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Dead", owner), myPet.getPetName()));
 

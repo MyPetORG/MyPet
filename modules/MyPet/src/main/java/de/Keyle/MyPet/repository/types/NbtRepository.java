@@ -597,8 +597,7 @@ public class NbtRepository implements Repository, Scheduler {
             }
 
             TagCompound playerTag = playerTags.get(playerUUID);
-            MyPetPlayer player = new MyPetPlayerImpl(playerUUID, "CUSTOM_PLAYER") {
-            };
+            MyPetPlayer player = new MyPetPlayerImpl(playerUUID, "CUSTOM_PLAYER");
             player.load(playerTag);
 
             if (!player.hasCustomData()) {

@@ -120,7 +120,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
 
                             WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
                             newPet.setWorldGroup(worldGroup.getName());
-                            newPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), newPet.getUUID());
+                            newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
 
                             owner.sendMessage(Util.formatText(Translation.getString("Message.MultiWorld.NowActivePet", owner), myPet.get().getPetName()));
                             switch (myPet.get().createEntity()) {

@@ -61,6 +61,8 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID);
 
+    void setMyPetForWorldGroup(WorldGroup worldGroup, UUID myPetUUID);
+
     UUID getMyPetForWorldGroup(String worldGroup);
 
     UUID getMyPetForWorldGroup(WorldGroup worldGroup);

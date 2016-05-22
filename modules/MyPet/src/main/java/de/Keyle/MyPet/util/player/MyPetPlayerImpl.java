@@ -162,6 +162,20 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         }
     }
 
+    public void setMyPetForWorldGroup(WorldGroup worldGroup, UUID myPetUUID) {
+        if (worldGroup == null) {
+            return;
+        }
+        if (myPetUUID == null) {
+            petWorldUUID.remove(worldGroup.getName());
+        } else {
+            try {
+                petWorldUUID.put(worldGroup.getName(), myPetUUID);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+    }
+
     public UUID getMyPetForWorldGroup(String worldGroup) {
         return petWorldUUID.get(worldGroup);
     }

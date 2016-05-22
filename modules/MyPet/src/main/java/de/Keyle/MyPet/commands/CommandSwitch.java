@@ -123,7 +123,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                                     Player player = owner.getPlayer();
                                     activePet.get().getOwner().sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.get().getPetName()));
                                     WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                                    owner.setMyPetForWorldGroup(wg.getName(), activePet.get().getUUID());
+                                    owner.setMyPetForWorldGroup(wg, activePet.get().getUUID());
 
                                     switch (activePet.get().createEntity()) {
                                         case Canceled:

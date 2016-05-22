@@ -306,7 +306,7 @@ public class PlayerListener implements Listener {
                                     callPet.runTaskLater(MyPetApi.getPlugin(), 20L);
                                 }
                             } else {
-                                myPetPlayer.setMyPetForWorldGroup(toGroup.getName(), null);
+                                myPetPlayer.setMyPetForWorldGroup(toGroup, null);
                             }
                         }
                     });
