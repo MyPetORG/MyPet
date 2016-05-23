@@ -190,6 +190,9 @@ public class PlayerListener implements Listener {
                                                     case Flying:
                                                         runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
                                                         break;
+                                                    case NoSpace:
+                                                        runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), myPet.getPetName()));
+                                                        break;
                                                 }
                                             }
                                         }
