@@ -59,6 +59,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -311,76 +312,81 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         this.isReady = true;
 
         // load pets for online players
-        for (final Player player : getServer().getOnlinePlayers()) {
-            repo.getMyPetPlayer(player, new RepositoryCallback<MyPetPlayer>() {
-                @Override
-                public void callback(final MyPetPlayer p) {
-                    if (p != null) {
-                        final MyPetPlayerImpl joinedPlayer = (MyPetPlayerImpl) p;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (final Player player : getServer().getOnlinePlayers()) {
+                    repo.getMyPetPlayer(player, new RepositoryCallback<MyPetPlayer>() {
+                        @Override
+                        public void callback(final MyPetPlayer p) {
+                            if (p != null) {
+                                final MyPetPlayerImpl onlinePlayer = (MyPetPlayerImpl) p;
 
-                        joinedPlayer.setLastKnownName(player.getName());
-                        if (!player.getUniqueId().equals(joinedPlayer.getOfflineUUID())) {
-                            if (joinedPlayer.getMojangUUID() == null) {
-                                joinedPlayer.setMojangUUID(player.getUniqueId());
-                            }
-                            joinedPlayer.setOnlineMode(true);
-                        }
+                                onlinePlayer.setLastKnownName(player.getName());
+                                if (!player.getUniqueId().equals(onlinePlayer.getOfflineUUID())) {
+                                    if (onlinePlayer.getMojangUUID() == null) {
+                                        onlinePlayer.setMojangUUID(player.getUniqueId());
+                                    }
+                                    onlinePlayer.setOnlineMode(true);
+                                }
 
-                        playerManager.setOnline(joinedPlayer);
+                                playerManager.setOnline(onlinePlayer);
 
-                        final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                        if (joinedPlayer.hasMyPet()) {
-                            MyPet myPet = joinedPlayer.getMyPet();
-                            if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                                myPetManager.deactivateMyPet(joinedPlayer, true);
-                            }
-                        }
+                                final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
+                                if (onlinePlayer.hasMyPet()) {
+                                    MyPet myPet = onlinePlayer.getMyPet();
+                                    if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
+                                        myPetManager.deactivateMyPet(onlinePlayer, true);
+                                    }
+                                }
 
-                        if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
-                            final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
+                                if (joinGroup != null && !onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
+                                    final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
 
-                            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
-                                @Override
-                                public void callback(StoredMyPet storedMyPet) {
-                                    myPetManager.activateMyPet(storedMyPet);
+                                    MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
+                                        @Override
+                                        public void callback(StoredMyPet storedMyPet) {
+                                            myPetManager.activateMyPet(storedMyPet);
 
-                                    if (joinedPlayer.hasMyPet()) {
-                                        final MyPet myPet = joinedPlayer.getMyPet();
-                                        final MyPetPlayer myPetPlayer = myPet.getOwner();
-                                        if (myPet.wantsToRespawn()) {
-                                            if (myPetPlayer.hasMyPet()) {
-                                                MyPet runMyPet = myPetPlayer.getMyPet();
-                                                switch (runMyPet.createEntity()) {
-                                                    case Canceled:
-                                                        runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
-                                                        break;
-                                                    case NoSpace:
-                                                        runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
-                                                        break;
-                                                    case NotAllowed:
-                                                        runMyPet.getOwner().sendMessage(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
-                                                        break;
-                                                    case Dead:
-                                                        runMyPet.getOwner().sendMessage(Translation.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
-                                                        break;
-                                                    case Flying:
-                                                        runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
-                                                        break;
-                                                    case Success:
-                                                        runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
-                                                        break;
+                                            if (onlinePlayer.hasMyPet()) {
+                                                final MyPet myPet = onlinePlayer.getMyPet();
+                                                final MyPetPlayer myPetPlayer = myPet.getOwner();
+                                                if (myPet.wantsToRespawn()) {
+                                                    if (myPetPlayer.hasMyPet()) {
+                                                        MyPet runMyPet = myPetPlayer.getMyPet();
+                                                        switch (runMyPet.createEntity()) {
+                                                            case Canceled:
+                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
+                                                                break;
+                                                            case NoSpace:
+                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                                                break;
+                                                            case NotAllowed:
+                                                                runMyPet.getOwner().sendMessage(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                                                                break;
+                                                            case Dead:
+                                                                runMyPet.getOwner().sendMessage(Translation.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                                                                break;
+                                                            case Flying:
+                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                                                break;
+                                                            case Success:
+                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
+                                                                break;
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
+                                    });
                                 }
-                            });
+                                onlinePlayer.checkForDonation();
+                            }
                         }
-                        joinedPlayer.checkForDonation();
-                    }
+                    });
                 }
-            });
-        }
+            }
+        }.runTaskLater(this, 0);
     }
 
     public static void registerSkills() {
