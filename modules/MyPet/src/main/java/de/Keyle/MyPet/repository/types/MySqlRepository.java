@@ -147,7 +147,7 @@ public class MySqlRepository implements Repository {
                     "info BLOB, " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
                     "PRIMARY KEY ( uuid ), " +
-                    "INDEX `owner_uuid` (`owner_uuid`)," +
+                    "INDEX `owner_uuid` (`owner_uuid`)" +
                     ")");
 
             create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "players (" +
