@@ -1039,6 +1039,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         float speed = 0.22222F;
         double jumpHeight = 0.3D;
+        float ascenSpeed = 0.2f;
 
         if (rideSkill != null) {
             speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
@@ -1049,17 +1050,26 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double factor = Math.log10(myPet.getHungerValue()) / 2;
             speed *= factor;
             jumpHeight *= factor;
+            ascenSpeed *= factor;
         }
 
         ride(motionSideways, motionForward, speed); // apply motion
 
         // jump when the player jumps
-        if (jump != null && onGround) {
+        if (jump != null) {
+            boolean doJump = false;
             try {
-                if (jump.getBoolean(passenger)) {
-                    this.motY = Math.sqrt(jumpHeight);
-                }
+                doJump = jump.getBoolean(passenger);
             } catch (IllegalAccessException ignored) {
+            }
+            if (doJump) {
+                if (onGround) {
+                    this.motY = Math.sqrt(jumpHeight);
+                } else if (rideSkill != null && rideSkill.canFly()) {
+                    this.motY = ascenSpeed;
+                    this.fallDistance = 0;
+                    this.isFlying = true;
+                }
             }
         }
 
