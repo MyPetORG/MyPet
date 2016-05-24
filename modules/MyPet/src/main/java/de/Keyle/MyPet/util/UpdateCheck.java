@@ -28,8 +28,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class UpdateCheck {
-    final static String c = "%%__USER__%%";
-
     public static Optional<String> checkForUpdate(String plugin) {
         try {
             String parameter = "";
@@ -37,9 +35,8 @@ public class UpdateCheck {
             parameter += "&package=" + MyPetApi.getCompatUtil().getInternalVersion();
             parameter += "&build=" + MyPetVersion.getBuild();
             parameter += "&premium=" + MyPetVersion.isPremium();
-            parameter += "&a=" + "%%__USER__%%";
-            parameter += "&b=" + "%%__RESOURCE__%%";
-            parameter += "&c=" + c;
+            parameter += "&version=" + "%%__USER__%%";
+            parameter += "&checksum=" + "%%__NONCE__%%";
 
             // no data will be saved on the server
             String content = Util.readUrlContent("http://update.mypet-plugin.de/check.php?" + parameter);
