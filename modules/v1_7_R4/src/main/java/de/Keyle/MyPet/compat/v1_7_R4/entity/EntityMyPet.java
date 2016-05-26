@@ -214,6 +214,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             forgetTarget();
             return;
         }
+        if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), entity)) {
+            forgetTarget();
+            return;
+        }
         if (priority.getPriority() > getTargetPriority().getPriority()) {
             target = ((CraftLivingEntity) entity).getHandle();
         }
