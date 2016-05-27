@@ -129,8 +129,8 @@ public class IconMenu implements Listener {
         destroy();
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    void onInventoryClick(InventoryClickEvent event) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    void on(InventoryClickEvent event) {
         if (inventory != null && inventory.isMenuInventory(event.getInventory())) {
             event.setCursor(null);
             event.setCancelled(true);
@@ -146,6 +146,13 @@ public class IconMenu implements Listener {
                     destroy();
                 }
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    void onMonitor(InventoryClickEvent event) {
+        if (inventory != null && inventory.isMenuInventory(event.getInventory())) {
+            event.setCancelled(true);
         }
     }
 
