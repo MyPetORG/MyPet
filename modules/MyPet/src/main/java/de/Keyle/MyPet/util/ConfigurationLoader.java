@@ -174,7 +174,8 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
         config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
         if (!config.contains("MyPet.Skill.Ride.FlyZones")) {
-            config.set("MyPet.Skill.Ride.FlyZones", "For info about fly zones visit: https://wiki.mypet-plugin.de/doku.php?id=en:configfile");
+            config.set("MyPet.Skill.Ride.FlyZones.SomeWorld::SomeRegion", false);
+            config.set("MyPet.Skill.Ride.FlyZones.SomeWorld::__global__", true);
         }
 
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
