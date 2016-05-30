@@ -67,10 +67,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected boolean hasRider = false;
     protected boolean isMyPet = false;
     protected boolean isFlying = false;
+    protected boolean canFly = true;
     protected boolean isInvisible = false;
     protected MyPet myPet;
     protected int jumpDelay = 0;
     protected int idleSoundTimer = 0;
+    protected int flyCheckCounter = 0;
     protected AbstractNavigation petNavigation;
     Ride rideSkill = null;
 
@@ -979,10 +981,18 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 if (onGround) {
                     this.motY = Math.sqrt(jumpHeight);
                 } else if (rideSkill != null && rideSkill.canFly()) {
-                    this.motY = ascenSpeed;
-                    this.fallDistance = 0;
-                    this.isFlying = true;
+                    if (flyCheckCounter-- <= 0) {
+                        canFly = MyPetApi.getHookManager().canMyPetFlyAt(getBukkitEntity().getLocation());
+                        flyCheckCounter = 5;
+                    }
+                    if (canFly) {
+                        this.motY = ascenSpeed;
+                        this.fallDistance = 0;
+                        this.isFlying = true;
+                    }
                 }
+            } else {
+                flyCheckCounter = 0;
             }
         }
 

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.hooks.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.HookManager;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.hooks.arenas.*;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -47,6 +48,9 @@ public class Hooks extends HookManager {
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
             ProtocolLib.findPlugin();
         }
+        if (PluginHookManager.isPluginUsable("WorldGuard")) {
+            WorldGuardHook.findPlugin();
+        }
     }
 
     public static void disable() {
@@ -54,6 +58,9 @@ public class Hooks extends HookManager {
         EconomyHook.reset();
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
             ProtocolLib.disable();
+        }
+        if (PluginHookManager.isPluginUsable("WorldGuard")) {
+            WorldGuardHook.disable();
         }
     }
 
@@ -93,6 +100,11 @@ public class Hooks extends HookManager {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean canMyPetFlyAt(Location location) {
+        return WorldGuardHook.canFly(location);
     }
 
     @Override

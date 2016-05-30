@@ -34,7 +34,6 @@ import org.bukkit.event.Listener;
 
 public class SkillApi implements Listener {
 
-
     private static boolean active = false;
 
     public static void findPlugin() {

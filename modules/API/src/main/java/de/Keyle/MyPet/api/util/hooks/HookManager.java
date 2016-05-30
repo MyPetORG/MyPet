@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -34,6 +35,8 @@ public abstract class HookManager {
     public abstract boolean canHurt(Player attacker, Entity victim);
 
     public abstract boolean canUseMyPet(MyPetPlayer player);
+
+    public abstract boolean canMyPetFlyAt(Location location);
 
     public abstract boolean isInParty(Player player);
 

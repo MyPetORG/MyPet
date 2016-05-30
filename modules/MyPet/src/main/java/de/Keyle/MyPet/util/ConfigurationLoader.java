@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.NameFilter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -166,12 +167,15 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
-        config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
-        config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
         config.addDefault("MyPet.Skill.Inventory.Creative", Skilltree.Skill.Inventory.OPEN_IN_CREATIVE);
         config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES);
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME);
         config.addDefault("MyPet.Skill.Beacon.Party-Support", Skilltree.Skill.Beacon.PARTY_SUPPORT);
+        config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
+        config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
+        if (!config.contains("MyPet.Skill.Ride.FlyZones")) {
+            config.set("MyPet.Skill.Ride.FlyZones", "For info about fly zones visit: https://wiki.mypet-plugin.de/doku.php?id=en:configfile");
+        }
 
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
@@ -254,12 +258,21 @@ public class ConfigurationLoader {
         Configuration.Misc.MAX_STORED_PET_COUNT = config.getInt("MyPet.Max-Stored-Pet-Count", Configuration.Misc.MAX_STORED_PET_COUNT);
 
         Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
-        Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
-        Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Skilltree.Skill.Beacon.PARTY_SUPPORT = config.getBoolean("MyPet.Skill.Beacon.Party-Support", true);
         Skilltree.Skill.Inventory.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
+        Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
+        Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
+        if (config.contains("MyPet.Skill.Ride.FlyZones")) {
+            Skilltree.Skill.Ride.FLY_ZONES.clear();
+            if (config.isConfigurationSection("MyPet.Skill.Ride.FlyZones")) {
+                ConfigurationSection section = config.getConfigurationSection("MyPet.Skill.Ride.FlyZones");
+                for (String zone : section.getKeys(false)) {
+                    Skilltree.Skill.Ride.FLY_ZONES.put(zone, section.getBoolean(zone));
+                }
+            }
+        }
 
         Skilltree.SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         Skilltree.SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
