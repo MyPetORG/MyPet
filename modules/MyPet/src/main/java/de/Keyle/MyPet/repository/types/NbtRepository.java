@@ -460,6 +460,12 @@ public class NbtRepository implements Repository, Scheduler {
                             return;
                         }
                     }
+                    if (playerTag.getCompoundData().containsKey("Name")) {
+                        if (Util.getOfflinePlayerUUID(playerTag.getAs("Name", TagString.class).getStringData()).equals(player.getUniqueId())) {
+                            callback.run(true);
+                            return;
+                        }
+                    }
                 }
             }
             callback.run(false);
@@ -491,6 +497,13 @@ public class NbtRepository implements Repository, Scheduler {
                     }
                     if (uuidTag.getCompoundData().containsKey("Name")) {
                         if (uuidTag.getAs("Name", TagString.class).getStringData().equals(player.getName())) {
+                            MyPetPlayer myPetPlayer = createMyPetPlayer(playerTag);
+                            callback.run(myPetPlayer);
+                            return;
+                        }
+                    }
+                    if (playerTag.getCompoundData().containsKey("Name")) {
+                        if (playerTag.getAs("Name", TagString.class).getStringData().equals(player.getName())) {
                             MyPetPlayer myPetPlayer = createMyPetPlayer(playerTag);
                             callback.run(myPetPlayer);
                             return;
