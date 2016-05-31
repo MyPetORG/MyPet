@@ -107,7 +107,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
         String[] splitData = data.split("\\s+");
 
-        int itemId = 1;
+        int itemId = 0;
         int itemDamage = 0;
 
         if (splitData.length == 0) {
