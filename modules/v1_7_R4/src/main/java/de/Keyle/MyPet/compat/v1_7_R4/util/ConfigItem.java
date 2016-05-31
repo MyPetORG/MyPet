@@ -46,7 +46,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     @Override
     public boolean compare(ItemStack compareItem) {
         boolean result = super.compare(compareItem);
-        if (result && item.hasItemMeta()) {
+        if (result && item != null && item.hasItemMeta()) {
             if (!ItemStackComparator.compareTagData(item, compareItem)) {
                 return false;
             }
