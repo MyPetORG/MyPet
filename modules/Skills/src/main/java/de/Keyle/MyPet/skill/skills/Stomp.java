@@ -33,10 +33,7 @@ import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
+import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
@@ -125,11 +122,13 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
                 } else if (livingEntity instanceof Tameable) {
                     Tameable tameable = (Tameable) livingEntity;
                     if (tameable.isTamed() && tameable.getOwner() != null) {
-                        Player tameableOwner = (Player) tameable.getOwner();
+                        AnimalTamer tameableOwner = tameable.getOwner();
                         if (myPet.getOwner().equals(tameableOwner)) {
                             continue;
-                        } else if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
-                            continue;
+                        } else {
+                            if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
+                                continue;
+                            }
                         }
                     }
                 } else if (livingEntity instanceof MyPetBukkitEntity) {
@@ -144,14 +143,13 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
 
                 ((LivingEntity) e).damage(this.damage, myPet.getEntity().get());
 
-                double distancePercent = MyPetApi.getPlatformHelper().distance(livingEntity.getLocation(),new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
+                double distancePercent = MyPetApi.getPlatformHelper().distance(livingEntity.getLocation(), new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
                 if (distancePercent <= 1.0D) {
                     double distanceX = livingEntity.getLocation().getX() - posX;
                     double distanceY = livingEntity.getLocation().getX() + livingEntity.getEyeHeight() - posY;
                     double distanceZ = livingEntity.getLocation().getX() - posZ;
                     double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
                     if (distance != 0.0D) {
-                        //TODO knockback
                         double motFactor = (1.0D - distancePercent);
                         Vector velocity = livingEntity.getVelocity();
                         velocity.multiply(motFactor);
