@@ -57,7 +57,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      * @param radius     the radius around the location
      */
     public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
-        EnumParticle effect = EnumParticle.valueOf(effectName);
+        EnumParticle effect;
+        try {
+            effect = EnumParticle.valueOf(effectName);
+        } catch (IllegalArgumentException e) {
+            effect = EnumParticle.a(effectName);
+        }
 
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effect, "Effect cannot be null");
@@ -84,7 +89,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      * @param radius     the radius around the location
      */
     public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
-        EnumParticle effect = EnumParticle.valueOf(effectName);
+        EnumParticle effect;
+        try {
+            effect = EnumParticle.valueOf(effectName);
+        } catch (IllegalArgumentException e) {
+            effect = EnumParticle.a(effectName);
+        }
 
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effect, "Effect cannot be null");
