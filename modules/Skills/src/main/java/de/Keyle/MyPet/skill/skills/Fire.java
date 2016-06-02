@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
@@ -29,7 +30,6 @@ import de.Keyle.MyPet.api.skill.skills.FireInfo;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
-import org.bukkit.Effect;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.Random;
@@ -99,7 +99,7 @@ public class Fire extends FireInfo implements SkillInstance, ActiveSkill {
 
     public void igniteTarget(LivingEntity target) {
         target.setFireTicks(getDuration() * 20);
-        target.getWorld().playEffect(target.getLocation(), Effect.POTION_BREAK, 0xD60000);
+        MyPetApi.getPlatformHelper().playParticleEffect(target.getLocation(), "SMOKE_LARGE", .5f, .5f, .5f, 0.02f, 20, 20);
     }
 
     @Override
