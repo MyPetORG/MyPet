@@ -37,7 +37,7 @@ public class CommandOptionReload implements CommandOption {
             ((MyPetLogger) MyPetApi.getLogger()).updateDebugLoggerLogLevel();
         }
 
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!");
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config loaded!");
 
         return true;
     }
