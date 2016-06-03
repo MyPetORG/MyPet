@@ -99,7 +99,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
                 }
             }
         }
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Skilltrees reloaded!");
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees loaded!");
 
         return true;
     }
