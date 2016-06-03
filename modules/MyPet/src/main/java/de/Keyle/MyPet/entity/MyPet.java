@@ -93,10 +93,12 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     @Override
     public void setOwner(MyPetPlayer owner) {
+        throw new UnsupportedOperationException("You can't change the owner for an active MyPet!");
     }
 
     @Override
     public void setPetType(MyPetType petType) {
+        throw new UnsupportedOperationException("You can't change the type for an active MyPet!");
     }
 
     @Override
@@ -120,7 +122,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         Experience expMode = null;
         if (Configuration.LevelSystem.CALCULATION_MODE.equalsIgnoreCase("JS") || Configuration.LevelSystem.CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
             if (!new File(MyPetApi.getPlugin().getDataFolder(), "rhino.jar").exists()) {
-                MyPetApi.getLogger().info("rhino.jar is missing. Please download it here (https://github.com/mozilla/rhino/releases) and put it into the MyPet folder.");
+                MyPetApi.getLogger().warning("rhino.jar is missing. Please download it here (https://github.com/mozilla/rhino/releases) and put it into the MyPet folder.");
             } else {
                 expMode = new JavaScript(this);
             }
