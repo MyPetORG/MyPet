@@ -291,7 +291,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
                 Metrics.Graph graphTotalCount = metrics.createGraph("MyPets");
 
-                Metrics.Plotter plotter = new Metrics.Plotter("Active MyPets") {
+                Metrics.Plotter plotter = new Metrics.Plotter("MyPets") {
                     @Override
                     public int getValue() {
                         return myPetManager.countActiveMyPets();
