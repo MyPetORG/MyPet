@@ -338,9 +338,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                                         }
                                     });
                                 }
-                                //donate-delete-start
                                 onlinePlayer.checkForDonation();
-                                //donate-delete-end
                             }
                         }
                     });

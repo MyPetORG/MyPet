@@ -39,8 +39,6 @@
 
         <minecraft.version>1.9</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-
-        <remove.donator>none</remove.donator>
     </properties>
 
     <dependencies>

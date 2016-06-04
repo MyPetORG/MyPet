@@ -287,7 +287,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         return rank;
     }
 
-    //donate-delete-start
     public void checkForDonation() {
         if (!donationChecked) {
             donationChecked = true;
@@ -298,7 +297,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
             }, 60L);
         }
     }
-    //donate-delete-end
 
     @Override
     public TagCompound save() {
