@@ -27,6 +27,7 @@ Download the latest builds from our [Jenkins-Server][Builds].
 
 
 [Logo]: http://dl.keyle.de/images/logo.png
+[License]: http://www.gnu.org/licenses/lgpl.html
 [Banner]: http://dl.keyle.de/images/banner.png
 [ionicons]: http://ionicons.com/
 [resources/images]: https://github.com/xXKeyleXx/MyPet/tree/master/src/main/resources/images
