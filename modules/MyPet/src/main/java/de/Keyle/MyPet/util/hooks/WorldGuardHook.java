@@ -35,16 +35,29 @@ import java.util.Set;
 public class WorldGuardHook {
     private static boolean active = false;
     private static WorldGuardPlugin wgp = null;
+    private static boolean useCustomFlags = false;
 
     public static void findPlugin() {
         if (PluginHookManager.isPluginUsable("WorldGuard")) {
             active = true;
             wgp = PluginHookManager.getPluginInstance(WorldGuardPlugin.class).get();
             MyPetApi.getLogger().info("WorldGuard hook activated.");
+
+            if (PluginHookManager.isPluginUsable("WGCustomFlags")) {
+                useCustomFlags = true;
+                WorldGuardCustomFlagsHook.findPlugin(wgp);
+            }
         }
     }
 
     public static boolean canFly(Location location) {
+        if (useCustomFlags) {
+            if (!WorldGuardCustomFlagsHook.isActive()) {
+                useCustomFlags = false;
+            } else {
+                return WorldGuardCustomFlagsHook.canFly(location);
+            }
+        }
         try {
             Map<String, Boolean> flyZones = Configuration.Skilltree.Skill.Ride.FLY_ZONES;
             boolean allowed = true;
@@ -88,5 +101,9 @@ public class WorldGuardHook {
     public static void disable() {
         active = false;
         wgp = null;
+        if (useCustomFlags) {
+            useCustomFlags = false;
+            WorldGuardCustomFlagsHook.disable();
+        }
     }
 }
