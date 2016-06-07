@@ -48,6 +48,7 @@ import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.Damage;
 import de.Keyle.MyPet.skill.skills.HP;
+import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.skill.skills.Ranged;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
@@ -466,6 +467,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             status = PetState.Despawned;
             bukkitEntity.removeEntity();
             bukkitEntity = null;
+
+            Optional<Inventory> invSkill = getSkills().getSkill(Inventory.class);
+            if (invSkill.isPresent()) {
+                invSkill.get().closeInventory();
+            }
         }
     }
 
