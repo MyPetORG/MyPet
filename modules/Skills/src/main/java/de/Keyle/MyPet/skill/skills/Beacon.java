@@ -157,6 +157,10 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                 event.setWillClose(false);
                 event.setWillDestroy(false);
 
+                if (getMyPet().getStatus() != MyPet.PetState.Here) {
+                    return;
+                }
+
                 IconMenu menu = event.getMenu();
 
                 switch (event.getPosition()) {
