@@ -50,7 +50,7 @@ import java.util.*;
 
 public class MySqlRepository implements Repository {
     private HikariDataSource dataSource;
-    private int version = 6;
+    private int version = 7;
 
     @Override
     public void disable() {
@@ -117,6 +117,8 @@ public class MySqlRepository implements Repository {
                         updateToV5();
                     case 5:
                         updateToV6();
+                    case 6:
+                        updateToV7();
                 }
             }
         } catch (SQLException e) {
@@ -136,7 +138,7 @@ public class MySqlRepository implements Repository {
                     "exp DOUBLE, " +
                     "health DOUBLE, " +
                     "respawn_time INTEGER, " +
-                    "name VARCHAR(64), " +
+                    "name VARCHAR, " +
                     "type VARCHAR(20), " +
                     "last_used BIGINT, " +
                     "hunger INTEGER, " +
@@ -289,6 +291,26 @@ public class MySqlRepository implements Repository {
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players DROP COLUMN offline_uuid;");
             update.executeUpdate("ALTER IGNORE TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD UNIQUE (name);");
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets ADD INDEX `owner_uuid` (`owner_uuid`);");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void updateToV7() {
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            Statement update = connection.createStatement();
+
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY name VARCHAR(512)");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
