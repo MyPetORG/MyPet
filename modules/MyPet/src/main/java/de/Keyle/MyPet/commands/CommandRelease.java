@@ -48,6 +48,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.bukkit.ChatColor.GOLD;
@@ -147,7 +148,13 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             }
                         } else if (myPet instanceof MyVillager) {
                             MyVillager villagerPet = (MyVillager) myPet;
-                            ((Villager) normalEntity).setProfession(Profession.getProfession(villagerPet.getProfession()));
+                            Profession profession;
+                            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
+                                profession = Profession.values()[villagerPet.getProfession() + 1];
+                            } else {
+                                profession = Profession.values()[villagerPet.getProfession()];
+                            }
+                            ((Villager) normalEntity).setProfession(profession);
                             if (villagerPet.isBaby()) {
                                 ((Villager) normalEntity).setBaby();
                             } else {
@@ -171,9 +178,19 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
                         } else if (myPet instanceof MyZombie) {
                             ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
-                            if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+                            MyPetApi.getLogger().info("compareWithMinecraftVersion: " + MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10"));
+                            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
+                                MyPetApi.getLogger().info("setVillagerProfession: 1.10");
+                                Profession profession = Profession.values()[((MyZombie) myPet).getType()];
+                                MyPetApi.getLogger().info("setVillagerProfession: " + profession);
+                                ((Zombie) normalEntity).setVillagerProfession(profession);
+                            } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                                 if (((MyZombie) myPet).isVillager()) {
-                                    ((Zombie) normalEntity).setVillagerProfession(Profession.values()[((MyZombie) myPet).getProfession() - 1]);
+                                    MyPetApi.getLogger().info("getProfession: " + ((MyZombie) myPet).getProfession());
+                                    MyPetApi.getLogger().info("values: " + Arrays.toString(Profession.values()));
+                                    Profession profession = Profession.values()[((MyZombie) myPet).getProfession()];
+                                    MyPetApi.getLogger().info("setVillagerProfession: " + profession);
+                                    ((Zombie) normalEntity).setVillagerProfession(profession);
                                 }
                             } else {
                                 ((Zombie) normalEntity).setVillager(((MyZombie) myPet).isVillager());

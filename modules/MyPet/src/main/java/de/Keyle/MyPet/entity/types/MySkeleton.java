@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -43,7 +44,7 @@ import static org.bukkit.Material.BONE;
 
 @DefaultInfo(food = {BONE})
 public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types.MySkeleton {
-    protected boolean isWither = false;
+    protected int type = 0;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MySkeleton(MyPetPlayer petOwner) {
@@ -65,7 +66,7 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Wither", new TagByte(isWither()));
+        info.getCompoundData().put("Type", new TagInt(getType()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -83,6 +84,8 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Wither")) {
             setWither(info.getAs("Wither", TagByte.class).getBooleanData());
+        } else if (info.getCompoundData().containsKey("Type")) {
+            setType(info.getAs("Type", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.getAs("Equipment", TagList.class);
@@ -101,13 +104,54 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     }
 
     public boolean isWither() {
-        return isWither;
+        return type == 1;
     }
 
     public void setWither(boolean flag) {
-        this.isWither = flag;
+        if (flag) {
+            type = 1;
+        } else {
+            if (isWither()) {
+                type = 0;
+            }
+        }
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
+        }
+    }
+
+    @Override
+    public boolean isStray() {
+        return type == 2;
+    }
+
+    @Override
+    public void setStray(boolean flag) {
+        if (flag) {
+            type = 2;
+        } else {
+            if (isStray()) {
+                type = 0;
+            }
+        }
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
+        }
+    }
+
+    @Override
+    public int getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(int type) {
+        MyPetApi.getLogger().info("setType: " + type);
+        if (Util.isBetween(0, 2, type)) {
+            this.type = type;
+            if (status == PetState.Here) {
+                getEntity().get().getHandle().updateVisuals();
+            }
         }
     }
 

@@ -30,5 +30,13 @@ import static org.bukkit.Material.BONE;
 public interface MySkeleton extends MyPet, MyPetEquipment {
     boolean isWither();
 
-    public void setWither(boolean flag);
+    void setWither(boolean flag);
+
+    boolean isStray();
+
+    void setStray(boolean flag);
+
+    int getType();
+
+    void setType(int type);
 }

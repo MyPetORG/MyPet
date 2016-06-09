@@ -97,7 +97,7 @@ public class Shield extends ShieldInfo implements SkillInstance, ActiveSkill {
         double redirectedDamage = getRedirectedDamage(damage);
         if (myPet.getStatus() == PetState.Here && myPet.getHealth() - redirectedDamage > 0) {
             myPet.getEntity().get().damage(redirectedDamage);
-            if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                 myPet.getEntity().get().getHandle().makeSound("entity.endermen.teleport", 0.2F, 1.0F);
             } else {
                 myPet.getEntity().get().getHandle().makeSound("mob.endermen.portal", 1F, 2F);
