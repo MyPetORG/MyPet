@@ -95,6 +95,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("wither");
+        petTypeOptionList.add("stray");
         petTypeOptionMap.put("skeleton", petTypeOptionList);
 
         petTypeOptionList = new ArrayList<>();
@@ -111,6 +112,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
+        petTypeOptionList.add("husk");
         petTypeOptionList.add("villager");
         petTypeOptionList.add("profession:");
         petTypeOptionMap.put("zombie", petTypeOptionList);
@@ -135,6 +137,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("elder");
         petTypeOptionMap.put("guardian", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("baby");
+        petTypeOptionMap.put("polarbear", petTypeOptionList);
 
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
@@ -201,13 +207,17 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             } else if (args[i].equalsIgnoreCase("sheared")) {
                                 TagCompound.getCompoundData().put("Sheared", new TagByte(true));
                             } else if (args[i].equalsIgnoreCase("wither")) {
-                                TagCompound.getCompoundData().put("Wither", new TagByte(true));
+                                TagCompound.getCompoundData().put("Type", new TagInt(1));
+                            } else if (args[i].equalsIgnoreCase("stray")) {
+                                TagCompound.getCompoundData().put("Type", new TagInt(2));
+                            } else if (args[i].equalsIgnoreCase("husk")) {
+                                TagCompound.getCompoundData().put("Type", new TagInt(6));
                             } else if (args[i].equalsIgnoreCase("tamed")) {
                                 TagCompound.getCompoundData().put("Tamed", new TagByte(true));
                             } else if (args[i].equalsIgnoreCase("angry")) {
                                 TagCompound.getCompoundData().put("Angry", new TagByte(true));
                             } else if (args[i].equalsIgnoreCase("villager")) {
-                                TagCompound.getCompoundData().put("Villager", new TagByte(true));
+                                TagCompound.getCompoundData().put("Type", new TagInt(1));
                             } else if (args[i].equalsIgnoreCase("chest")) {
                                 TagCompound.getCompoundData().put("Chest", new TagByte(true));
                             } else if (args[i].equalsIgnoreCase("elder")) {
@@ -250,7 +260,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                                 if (Util.isInt(professionString)) {
                                     int profession = Integer.parseInt(professionString);
                                     profession = Math.min(Math.max(0, profession), 5);
-                                    TagCompound.getCompoundData().put("Profession", new TagInt(profession));
+                                    if (myPetType == MyPetType.Villager) {
+                                        TagCompound.getCompoundData().put("Profession", new TagInt(profession));
+                                    } else if (myPetType == MyPetType.Zombie) {
+                                        TagCompound.getCompoundData().put("Type", new TagInt(profession + 1));
+                                    }
                                 }
                             } else if (args[i].startsWith("color:")) {
                                 String colorString = args[i].replace("color:", "");

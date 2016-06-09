@@ -29,6 +29,10 @@ import static org.bukkit.Material.ROTTEN_FLESH;
 
 @DefaultInfo(food = {ROTTEN_FLESH})
 public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
+    boolean isHusk();
+
+    void setHusk(boolean flag);
+
     boolean isVillager();
 
     void setVillager(boolean flag);
@@ -36,4 +40,8 @@ public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
     void setProfession(int type);
 
     int getProfession();
+
+    int getType();
+
+    void setType(int type);
 }

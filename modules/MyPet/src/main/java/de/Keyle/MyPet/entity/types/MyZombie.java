@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -44,7 +45,7 @@ import static org.bukkit.Material.ROTTEN_FLESH;
 @DefaultInfo(food = {ROTTEN_FLESH})
 public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombie {
     protected boolean isBaby = false;
-    protected int profession = 0;
+    protected int type = 0;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyZombie(MyPetPlayer petOwner) {
@@ -67,7 +68,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
-        info.getCompoundData().put("Profession", new TagInt(getProfession()));
+        info.getCompoundData().put("Type", new TagInt(getType()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -91,6 +92,9 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         }
         if (info.getCompoundData().containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
+        }
+        if (info.getCompoundData().containsKey("Type")) {
+            setType(info.getAs("Type", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
@@ -119,19 +123,44 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         }
     }
 
+    @Override
+    public boolean isHusk() {
+        return type == 6;
+    }
+
+    @Override
+    public void setHusk(boolean flag) {
+        if (flag) {
+            type = 6;
+        } else {
+            if (isHusk()) {
+                type = 0;
+            }
+        }
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
+        }
+    }
+
     public boolean isVillager() {
-        return profession > 0;
+        return Util.isBetween(1, 5, type);
     }
 
     public void setVillager(boolean flag) {
-        this.profession = 1;
+        if (flag) {
+            type = 1;
+        } else {
+            if (isVillager()) {
+                type = 0;
+            }
+        }
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
     }
 
     public void setProfession(int type) {
-        this.profession = type;
+        this.type = type + 1;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
@@ -139,7 +168,23 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public int getProfession() {
-        return profession;
+        return type - 1;
+    }
+
+    @Override
+    public int getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(int type) {
+        MyPetApi.getLogger().info("set Type:" + type);
+        if (Util.isBetween(0, 6, type)) {
+            this.type = type;
+            if (status == PetState.Here) {
+                getEntity().get().getHandle().updateVisuals();
+            }
+        }
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {

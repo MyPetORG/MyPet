@@ -98,7 +98,7 @@ public class Thorns extends ThornsInfo implements SkillInstance, ActiveSkill {
         if(myPet.getEntity().isPresent()) {
             MyPetBukkitEntity entity = myPet.getEntity().get();
             damager.damage(getReflectedDamage(damage), entity);
-            if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                 entity.getHandle().makeSound("enchant.thorns.hit", 0.2F, 1.0F);
             } else {
                 entity.getHandle().makeSound("damage.thorns", 0.5F, 1.0F);

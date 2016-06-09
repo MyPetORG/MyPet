@@ -137,7 +137,7 @@ public class EntityMyZombie extends EntityMyPet {
     @Override
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(professionWatcher, getMyPet().getProfession());
+        this.datawatcher.set(professionWatcher, getMyPet().getType());
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
             public void run() {

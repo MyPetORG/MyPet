@@ -3,7 +3,19 @@ main: de.Keyle.MyPet.MyPetPlugin
 version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
 author: Keyle
 website: ${project.url}
-softdepend: [Vault, Heroes, Ancient, BattleArena, Minigames, MobArena, pvparena, Multiverse-Core, SurvivalGames, ProtocolLib, SkillAPI, MagicSpells]
+softdepend:
+  - Vault
+  - Heroes
+  - Ancient
+  - BattleArena
+  - Minigames
+  - MobArena
+  - pvparena
+  - Multiverse-Core
+  - SurvivalGames
+  - ProtocolLib
+  - SkillAPI
+  - MagicSpells
 commands:
   myPet:
     description: Help for all MyPet commands.
@@ -109,6 +121,7 @@ permissions:
       MyPet.leash.Ocelot: true
       MyPet.leash.Pig: true
       MyPet.leash.PigZombie: true
+      MyPet.leash.PolarBear: true
       MyPet.leash.Rabbit: true
       MyPet.leash.Sheep: true
       MyPet.leash.Silverfish: true

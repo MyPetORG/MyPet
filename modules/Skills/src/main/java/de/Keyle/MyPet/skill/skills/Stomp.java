@@ -98,7 +98,7 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
 
     public void stomp(Location location) {
         location.getWorld().playEffect(location, Effect.STEP_SOUND, Material.BEDROCK);
-        if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
             location.getWorld().playSound(location, Sound.ENTITY_HOSTILE_BIG_FALL, 0.9F, 0.7F);
         } else {
             location.getWorld().playSound(location, Sound.valueOf("FALL_BIG"), 0.9F, 0.7F);

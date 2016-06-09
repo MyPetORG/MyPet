@@ -47,6 +47,7 @@ public enum MyPetClass {
     Ocelot(MyOcelot.class),
     Pig(MyPig.class),
     PigZombie(MyPigZombie.class),
+    PolarBear(MyPolarBear.class),
     Rabbit(MyRabbit.class),
     Sheep(MySheep.class),
     Silverfish(MySilverfish.class),

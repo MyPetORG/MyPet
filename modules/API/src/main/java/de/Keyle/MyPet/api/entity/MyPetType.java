@@ -43,6 +43,7 @@ public enum MyPetType {
     Ocelot("OCELOT", 98, MyOcelot.class, "Ozelot"),
     Pig("PIG", 90, MyPig.class),
     PigZombie("PIG_ZOMBIE", 57, MyPigZombie.class),
+    PolarBear("POLAR_BEAR", 102, MyPolarBear.class),
     Rabbit("RABBIT", 101, MyRabbit.class),
     Sheep("SHEEP", 91, MySheep.class),
     Silverfish("SILVERFISH", 60, MySilverfish.class),

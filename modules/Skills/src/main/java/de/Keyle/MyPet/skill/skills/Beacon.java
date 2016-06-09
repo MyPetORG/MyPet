@@ -336,7 +336,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         if (buffLevel.get(16) > 0) {
             menu.setOption(8, new IconMenuItem().setMaterial(TORCH).setAmount(buffLevel.get(16)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(16), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(16))));
         }
-        if (MyPetApi.getCompatUtil().getMinecraftVersion() >= 19) {
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
             if (buffLevel.get(26) > 0) {
                 menu.setOption(17, new IconMenuItem().setMaterial(DIAMOND).setAmount(buffLevel.get(26)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(26), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(26))));
             }
