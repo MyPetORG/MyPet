@@ -252,9 +252,6 @@ public class Util {
      * The result is zero if the strings are _numerically_ equal.
      */
     public static int versionCompare(String str1, String str2) {
-
-        MyPetApi.getLogger().info(str1 + " vs " + str2);
-
         String[] vals1 = str1.split("\\.");
         String[] vals2 = str2.split("\\.");
         if (vals1.length > vals2.length) {

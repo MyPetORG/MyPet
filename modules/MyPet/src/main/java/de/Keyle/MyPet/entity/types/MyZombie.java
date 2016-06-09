@@ -178,7 +178,6 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public void setType(int type) {
-        MyPetApi.getLogger().info("set Type:" + type);
         if (Util.isBetween(0, 6, type)) {
             this.type = type;
             if (status == PetState.Here) {
