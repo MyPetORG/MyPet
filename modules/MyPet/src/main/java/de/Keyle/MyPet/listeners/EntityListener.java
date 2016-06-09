@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.event.MyPetActiveTargetSkillEvent;
+import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
@@ -523,11 +524,15 @@ public class EntityListener implements Listener {
                     return;
                 }
 
-                // fix influence of other plugins
+                // fix influence of other plugins for this event and throw damage event
                 if (event.getDamager() instanceof Projectile) {
-                    event.setDamage(myPet.getRangedDamage());
+                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, myPet.getRangedDamage());
+                    Bukkit.getPluginManager().callEvent(petDamageEvent);
+                    event.setDamage(petDamageEvent.getDamage());
                 } else {
-                    event.setDamage(myPet.getDamage());
+                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, myPet.getDamage());
+                    Bukkit.getPluginManager().callEvent(petDamageEvent);
+                    event.setDamage(petDamageEvent.getDamage());
                 }
 
                 if (target instanceof Player && event.isCancelled()) {
