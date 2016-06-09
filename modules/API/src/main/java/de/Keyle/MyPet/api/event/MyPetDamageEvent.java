@@ -22,43 +22,41 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.skill.ActiveSkill;
-import org.bukkit.event.Cancellable;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetActiveSkillEvent extends Event implements Cancellable {
+public class MyPetDamageEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    protected boolean isCancelled = false;
 
     protected final MyPet myPet;
-    protected final ActiveSkill skill;
+    protected final Entity target;
+    protected double damage;
 
-    public MyPetActiveSkillEvent(MyPet myPet, ActiveSkill skill) {
+    public MyPetDamageEvent(MyPet myPet, Entity target, double damage) {
         this.myPet = myPet;
-        this.skill = skill;
+        this.target = target;
+        this.damage = damage;
     }
 
     public MyPet getMyPet() {
         return myPet;
     }
 
-    public ActiveSkill getSkill() {
-        return skill;
-    }
-
     public MyPetPlayer getOwner() {
         return myPet.getOwner();
     }
 
-    @Override
-    public boolean isCancelled() {
-        return isCancelled;
+    public Entity getTarget() {
+        return target;
     }
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        isCancelled = cancelled;
+    public double getDamage() {
+        return damage;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = Math.max(0, damage);
     }
 
     public HandlerList getHandlers() {
