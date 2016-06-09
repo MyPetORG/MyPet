@@ -146,7 +146,6 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public void setType(int type) {
-        MyPetApi.getLogger().info("setType: " + type);
         if (Util.isBetween(0, 2, type)) {
             this.type = type;
             if (status == PetState.Here) {

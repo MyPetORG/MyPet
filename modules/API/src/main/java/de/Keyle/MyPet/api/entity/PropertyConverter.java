@@ -145,7 +145,6 @@ public class PropertyConverter {
     }
 
     public static void convertSkeleton(Skeleton skeleton, TagCompound properties) {
-        MyPetApi.getLogger().info("skel: " + skeleton.getSkeletonType().ordinal());
         properties.getCompoundData().put("Type", new TagInt(skeleton.getSkeletonType().ordinal()));
     }
 
@@ -159,7 +158,6 @@ public class PropertyConverter {
     public static void convertZombie(Zombie zombie, TagCompound properties) {
         properties.getCompoundData().put("Baby", new TagByte(zombie.isBaby()));
         if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
-            MyPetApi.getLogger().info("Prof: " + zombie.getVillagerProfession().ordinal());
             properties.getCompoundData().put("Type", new TagInt(zombie.getVillagerProfession().ordinal()));
         } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
             if (zombie.isVillager()) {
