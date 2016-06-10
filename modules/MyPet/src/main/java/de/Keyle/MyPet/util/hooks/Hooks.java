@@ -45,6 +45,9 @@ public class Hooks extends HookManager {
         BattleArena.findPlugin();
         UltimateSurvivalGames.findPlugin();
         SurvivalGamesHook.findPlugin();
+        if (PluginHookManager.isPluginUsable("ResourcePackApi")) {
+            ResourcePackApiHook.findPlugin();
+        }
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
             ProtocolLib.findPlugin();
         }
@@ -61,6 +64,9 @@ public class Hooks extends HookManager {
         }
         if (PluginHookManager.isPluginUsable("WorldGuard")) {
             WorldGuardHook.disable();
+        }
+        if (PluginHookManager.isPluginUsable("ResourcePackApi")) {
+            ResourcePackApiHook.disable();
         }
     }
 

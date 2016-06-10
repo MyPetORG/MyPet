@@ -18,6 +18,7 @@ softdepend:
   - MagicSpells
   - WorldGuard
   - WGCustomFlags
+  - ResourcePackApi
 commands:
   myPet:
     description: Help for all MyPet commands.

@@ -55,6 +55,10 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     void setHealthBarActive(boolean showHealthBar);
 
+    void setUsesResourcePack(boolean flag);
+
+    boolean isUsingResourcePack();
+
     boolean isCaptureHelperActive();
 
     void setCaptureHelperActive(boolean captureHelperMode);

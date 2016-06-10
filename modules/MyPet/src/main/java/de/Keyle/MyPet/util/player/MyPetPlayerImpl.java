@@ -60,6 +60,7 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
     protected int captureHelperTimer = 90;
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
+    protected boolean useResourcePack = false;
     protected int autoRespawnMin = 1;
     protected float petLivingSoundVolume = 1f;
 
@@ -149,6 +150,16 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
 
     public void setHealthBarActive(boolean showHealthBar) {
         this.showHealthBar = showHealthBar;
+    }
+
+    @Override
+    public void setUsesResourcePack(boolean flag) {
+        useResourcePack = flag;
+    }
+
+    @Override
+    public boolean isUsingResourcePack() {
+        return useResourcePack;
     }
 
     public boolean isCaptureHelperActive() {
@@ -322,6 +333,7 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         settingsTag.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
         settingsTag.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
         settingsTag.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
+        settingsTag.getCompoundData().put("ResourcePack", new TagByte(isUsingResourcePack()));
         playerNBT.getCompoundData().put("Settings", settingsTag);
 
         playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
@@ -369,6 +381,9 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
             }
             if (settingsTag.getCompoundData().containsKey("HealthBar")) {
                 setHealthBarActive(settingsTag.getAs("HealthBar", TagByte.class).getBooleanData());
+            }
+            if (settingsTag.getCompoundData().containsKey("ResourcePack")) {
+                setUsesResourcePack(settingsTag.getAs("ResourcePack", TagByte.class).getBooleanData());
             }
             if (settingsTag.getCompoundData().containsKey("PetLivingSoundVolume")) {
                 setPetLivingSoundVolume(settingsTag.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());

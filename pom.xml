@@ -116,6 +116,9 @@
         <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
         <protocol-lib.version>3.7.0-SNAPSHOT</protocol-lib.version>
 
+        <!-- https://www.spigotmc.org/resources/api-resourcepackapi-1-7-1-8-1-9-1-10.2397/ -->
+        <resourcepackapi.version>2.2.1</resourcepackapi.version>
+
         <mongodb.version>3.2.1</mongodb.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <json.version>1.1.1</json.version>
@@ -158,6 +161,10 @@
         <repository>
             <id>protocollib-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>inventive-repo</id>
+            <url>https://repo.inventivetalent.org/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -356,6 +363,11 @@
             <version>${protocol-lib.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.inventivetalent.resourcepackapi</groupId>
+            <artifactId>api</artifactId>
+            <version>${resourcepackapi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>

@@ -24,6 +24,8 @@ import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.options.CommandOptionHealthbar;
 import de.Keyle.MyPet.commands.options.CommandOptionPetLivingSound;
+import de.Keyle.MyPet.commands.options.CommandOptionResourcePack;
+import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,6 +38,9 @@ public class CommandOptions implements CommandExecutor, TabCompleter {
     private static Map<String, CommandOption> commandOptions = new HashMap<>();
 
     public CommandOptions() {
+        if (ResourcePackApiHook.isActive()) {
+            commandOptions.put("resource-pack", new CommandOptionResourcePack());
+        }
         commandOptions.put("healthbar", new CommandOptionHealthbar());
         commandOptions.put("idle-volume", new CommandOptionPetLivingSound());
 
