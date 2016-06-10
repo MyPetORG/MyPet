@@ -42,14 +42,29 @@ public class EntityMySkeleton extends EntityMyPet {
     }
 
     protected String getDeathSound() {
+        if (getMyPet().isStray()) {
+            return "entity.stray.death";
+        } else if (getMyPet().isWither()) {
+            return "entity.wither_skeleton.death";
+        }
         return "entity.skeleton.death";
     }
 
     protected String getHurtSound() {
+        if (getMyPet().isStray()) {
+            return "entity.stray.hurt";
+        } else if (getMyPet().isWither()) {
+            return "entity.wither_skeleton.hurt";
+        }
         return "entity.skeleton.hurt";
     }
 
     protected String getLivingSound() {
+        if (getMyPet().isStray()) {
+            return "entity.stray.ambient";
+        } else if (getMyPet().isWither()) {
+            return "entity.wither_skeleton.ambient";
+        }
         return "entity.skeleton.ambient";
     }
 
@@ -107,7 +122,13 @@ public class EntityMySkeleton extends EntityMyPet {
     }
 
     public void playPetStepSound() {
-        makeSound("entity.skeleton.step", 0.15F, 1.0F);
+        if (getMyPet().isStray()) {
+            makeSound("entity.stray.step", 0.15F, 1.0F);
+        } else if (getMyPet().isWither()) {
+            makeSound("entity.wither_skeleton.step", 0.15F, 1.0F);
+        } else {
+            makeSound("entity.skeleton.step", 0.15F, 1.0F);
+        }
     }
 
     @Override

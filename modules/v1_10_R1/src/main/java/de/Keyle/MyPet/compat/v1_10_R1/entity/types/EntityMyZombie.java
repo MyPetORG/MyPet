@@ -48,6 +48,9 @@ public class EntityMyZombie extends EntityMyPet {
      */
     @Override
     protected String getDeathSound() {
+        if (getMyPet().isHusk()) {
+            return "entity.husk.death";
+        }
         return "entity.zombie.death";
     }
 
@@ -56,6 +59,9 @@ public class EntityMyZombie extends EntityMyPet {
      */
     @Override
     protected String getHurtSound() {
+        if (getMyPet().isHusk()) {
+            return "entity.husk.hurt";
+        }
         return "entity.zombie.hurt";
     }
 
@@ -63,6 +69,9 @@ public class EntityMyZombie extends EntityMyPet {
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound() {
+        if (getMyPet().isHusk()) {
+            return "entity.husk.ambient";
+        }
         return "entity.zombie.ambient";
     }
 
@@ -151,7 +160,11 @@ public class EntityMyZombie extends EntityMyPet {
     }
 
     public void playPetStepSound() {
-        makeSound("entity.zombie.step", 0.15F, 1.0F);
+        if (getMyPet().isHusk()) {
+            makeSound("entity.husk.step", 0.15F, 1.0F);
+        } else {
+            makeSound("entity.zombie.step", 0.15F, 1.0F);
+        }
     }
 
     public MyZombie getMyPet() {
