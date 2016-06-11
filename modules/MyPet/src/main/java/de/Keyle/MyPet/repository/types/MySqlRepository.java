@@ -37,6 +37,7 @@ import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
 import de.keyle.knbt.TagString;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONObject;
@@ -45,12 +46,13 @@ import org.json.simple.parser.ParseException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
 
 public class MySqlRepository implements Repository {
     private HikariDataSource dataSource;
-    private int version = 7;
+    private int version = 8;
 
     @Override
     public void disable() {
@@ -118,7 +120,8 @@ public class MySqlRepository implements Repository {
                     case 5:
                         updateToV6();
                     case 6:
-                        updateToV7();
+                    case 7:
+                        updateToV8();
                 }
             }
         } catch (SQLException e) {
@@ -138,7 +141,7 @@ public class MySqlRepository implements Repository {
                     "exp DOUBLE, " +
                     "health DOUBLE, " +
                     "respawn_time INTEGER, " +
-                    "name VARCHAR, " +
+                    "name VARBINARY(1024), " +
                     "type VARCHAR(20), " +
                     "last_used BIGINT, " +
                     "hunger INTEGER, " +
@@ -304,13 +307,13 @@ public class MySqlRepository implements Repository {
         }
     }
 
-    private void updateToV7() {
+    private void updateToV8() {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
             Statement update = connection.createStatement();
 
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY name VARCHAR(512)");
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY name VARBINARY (1024)");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -468,7 +471,7 @@ public class MySqlRepository implements Repository {
                 statement.setDouble(2, myPet.getExp());
                 statement.setDouble(3, myPet.getHealth());
                 statement.setInt(4, myPet.getRespawnTime());
-                statement.setString(5, myPet.getPetName());
+                statement.setBinaryStream(5, new ByteArrayInputStream(myPet.getPetName().getBytes(StandardCharsets.UTF_8)));
                 statement.setLong(6, myPet.getLastUsed());
                 statement.setDouble(7, myPet.getHungerValue());
                 statement.setString(8, myPet.getWorldGroup());
@@ -558,7 +561,7 @@ public class MySqlRepository implements Repository {
                 pet.setExp(resultSet.getDouble("exp"));
                 pet.setHealth(resultSet.getDouble("health"));
                 pet.setRespawnTime(resultSet.getInt("respawn_time"));
-                pet.setPetName(resultSet.getString("name"));
+                pet.setPetName(IOUtils.toString(resultSet.getBinaryStream("name"), "UTF-8"));
                 pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
                 pet.setLastUsed(resultSet.getLong("last_used"));
                 pet.setHungerValue(resultSet.getDouble("hunger"));
@@ -960,7 +963,7 @@ public class MySqlRepository implements Repository {
                     statement.setDouble(2, storedMyPet.getExp());
                     statement.setDouble(3, storedMyPet.getHealth());
                     statement.setInt(4, storedMyPet.getRespawnTime());
-                    statement.setString(5, storedMyPet.getPetName());
+                    statement.setBinaryStream(5, new ByteArrayInputStream(storedMyPet.getPetName().getBytes(StandardCharsets.UTF_8)));
                     statement.setLong(6, storedMyPet.getLastUsed());
                     statement.setDouble(7, storedMyPet.getHungerValue());
                     statement.setString(8, storedMyPet.getWorldGroup());
