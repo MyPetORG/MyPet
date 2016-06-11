@@ -627,7 +627,7 @@ public class MongoDbRepository implements Repository {
     @SuppressWarnings("unchecked")
     private void setPlayerData(MyPetPlayer player, Document playerDocument) {
         playerDocument.append("internal_uuid", player.getInternalUUID().toString());
-        playerDocument.append("mojang_uuid", player.getMojangUUID().toString());
+        playerDocument.append("mojang_uuid", player.getMojangUUID() != null ? player.getMojangUUID() : null);
         playerDocument.append("name", player.getName());
         playerDocument.append("auto_respawn", player.hasAutoRespawnEnabled());
         playerDocument.append("auto_respawn_min", player.getAutoRespawnMin());
