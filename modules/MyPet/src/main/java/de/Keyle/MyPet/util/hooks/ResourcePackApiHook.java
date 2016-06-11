@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -48,6 +49,13 @@ public class ResourcePackApiHook implements Listener {
 
     public static void installResourcePack(Player player) {
         ResourcePackAPI.setResourcepack(player, DOWNLOAD_LINK, "mypet_resourcepack");
+    }
+
+    public static boolean useIcons(Player player) {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            return MyPetApi.getPlayerManager().getMyPetPlayer(player).isUsingResourcePack();
+        }
+        return Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT;
     }
 
     @EventHandler

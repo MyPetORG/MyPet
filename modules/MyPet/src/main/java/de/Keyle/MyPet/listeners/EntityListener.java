@@ -43,6 +43,7 @@ import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ResourcePackIcons;
 import de.Keyle.MyPet.api.util.hooks.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
@@ -53,6 +54,7 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import de.keyle.knbt.TagCompound;
@@ -221,7 +223,21 @@ public class EntityListener implements Listener {
                     }
                     if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
                         infoShown = true;
-                        damager.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
+                        String donationMessage = "" + ChatColor.GOLD;
+                        if (ResourcePackApiHook.useIcons(damager)) {
+                            donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
+                        } else {
+                            donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                        }
+
+                        donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), damager) + " ";
+
+                        if (ResourcePackApiHook.useIcons(damager)) {
+                            donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
+                        } else {
+                            donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                        }
+                        damager.sendMessage("   " + donationMessage);
                     }
 
                     if (!infoShown) {

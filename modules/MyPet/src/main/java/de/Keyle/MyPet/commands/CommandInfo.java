@@ -30,9 +30,11 @@ import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ResourcePackIcons;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Damage;
+import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.WordUtils;
@@ -194,7 +196,21 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 }
                 if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
                     infoShown = true;
-                    sender.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
+                    String donationMessage = "" + ChatColor.GOLD;
+                    if (ResourcePackApiHook.useIcons((Player) sender)) {
+                        donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
+                    } else {
+                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                    }
+
+                    donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), player) + " ";
+
+                    if (ResourcePackApiHook.useIcons((Player) sender)) {
+                        donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
+                    } else {
+                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                    }
+                    sender.sendMessage("   " + donationMessage);
                 }
                 if (!infoShown) {
                     sender.sendMessage(Translation.getString("Message.CantViewPetInfo", player));

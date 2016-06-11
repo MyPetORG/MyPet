@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.util.ResourcePackIcons;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -61,7 +62,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                 for (SkillInstance skill : myPet.getSkills().getSkills()) {
                     if (skill.isActive()) {
                         String message = "  ";
-                        if (myPet.getOwner().isUsingResourcePack()) {
+                        if (ResourcePackApiHook.useIcons(petOwner)) {
                             message += ResourcePackIcons.valueOf("Skill_" + skill.getName()).getCode() + " ";
                         }
                         sender.sendMessage(message + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getPlayerLanguage(petOwner)) + ChatColor.RESET + " " + skill.getFormattedValue());

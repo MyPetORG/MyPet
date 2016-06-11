@@ -64,12 +64,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void on(AsyncPlayerChatEvent event) {
         if (event.getMessage().contains(":mypet:")) {
-            if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
-                MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
-                if (myPetPlayerDamagee.isUsingResourcePack()) {
-                    event.setMessage(event.getMessage().replaceAll(":mypet:", ResourcePackIcons.Logo.getCode()));
-                }
-            } else if (Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT) {
+            if (ResourcePackApiHook.useIcons(event.getPlayer())) {
                 event.setMessage(event.getMessage().replaceAll(":mypet:", ResourcePackIcons.Logo.getCode()));
             }
         }
@@ -159,7 +154,6 @@ public class PlayerListener implements Listener {
                         @Override
                         public void callback(final Boolean result) {
                             if (!result) {
-                                MyPetApi.getLogger().info("activate for normal player");
                                 ResourcePackApiHook.installResourcePack(event.getPlayer());
                             }
                         }

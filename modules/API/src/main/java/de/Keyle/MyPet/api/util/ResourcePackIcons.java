@@ -21,8 +21,17 @@
 package de.Keyle.MyPet.api.util;
 
 public enum ResourcePackIcons {
+    // http://unicode-table.com/en/#A800
+
     // Logo -----------------------
     Logo("\uA817"),
+    // Titles ---------------------
+    Title_Creator("\uA817"),
+    Title_Translator("\uA818"),
+    Title_Premium("\uA819"),
+    Title_Donator("\uA81A"),
+    Title_Developer("\uA81B"),
+    Title_Helper("\uA81C"),
     // Skills ---------------------
     Skill_Fire("\uA800"),
     Skill_Damage("\uA801"),
