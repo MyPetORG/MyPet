@@ -164,7 +164,7 @@
         </repository>
         <repository>
             <id>inventive-repo</id>
-            <url>https://repo.inventivetalent.org/content/groups/public/</url>
+            <url>http://repo.inventivetalent.org/content/repositories/releases</url>
         </repository>
     </repositories>
 
