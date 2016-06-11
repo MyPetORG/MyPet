@@ -38,7 +38,7 @@ public enum ResourcePackIcons {
     Skill_Lightning("\uA80E"),
     Skill_Knockback("\uA80F"),
     Skill_Inventory("\uA810"),
-    Ranged("\uA811"),
+    Skill_Ranged("\uA811"),
     Skill_HPregeneration("\uA812"),
     Skill_HP("\uA813"),
     Skill_Control("\uA814"),
