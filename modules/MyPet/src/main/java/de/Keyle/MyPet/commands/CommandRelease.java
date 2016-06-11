@@ -106,7 +106,9 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                                 ((Cow) normalEntity).setAdult();
                             }
                         } else if (myPet instanceof MyCreeper) {
-                            ((Creeper) normalEntity).setPowered(((MyCreeper) myPet).isPowered());
+                            if (((MyCreeper) myPet).isPowered()) {
+                                ((Creeper) normalEntity).setPowered(true);
+                            }
                         } else if (myPet instanceof MyEnderman) {
                             if (((MyEnderman) myPet).hasBlock()) {
                                 MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlock().getType(), ((MyEnderman) myPet).getBlock().getData().getData());
