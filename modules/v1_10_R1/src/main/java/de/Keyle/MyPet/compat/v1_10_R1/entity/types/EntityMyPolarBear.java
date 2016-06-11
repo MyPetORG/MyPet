@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.entity.types.MyPolarBear;
 import de.Keyle.MyPet.compat.v1_10_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_10_R1.*;
 
-@EntitySize(width = 0.7F, height = 1.3F)
+@EntitySize(width = 1.3F, height = 1.4F)
 public class EntityMyPolarBear extends EntityMyPet {
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPolarBear.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Boolean> rearWatcher = DataWatcher.a(EntityMyPolarBear.class, DataWatcherRegistry.h);
