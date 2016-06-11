@@ -1285,7 +1285,7 @@ public class MySqlRepository implements Repository {
                                     "resource_pack, " +
                                     "extended_info, " +
                                     "multi_world) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
                     statement.setString(1, player.getInternalUUID().toString());
                     statement.setString(2, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
                     statement.setString(3, player.getName());
@@ -1347,7 +1347,7 @@ public class MySqlRepository implements Repository {
                             "resource_pack, " +
                             "extended_info, " +
                             "multi_world) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
             int i = 0;
             for (MyPetPlayer player : players) {
