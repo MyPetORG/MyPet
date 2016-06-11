@@ -500,11 +500,7 @@ public class MongoDbRepository implements Repository {
                 return null;
             }
 
-            petPlayer.setAutoRespawnEnabled(document.getBoolean("auto_respawn"));
-            petPlayer.setAutoRespawnMin(document.getInteger("auto_respawn_min"));
-            petPlayer.setCaptureHelperActive(document.getBoolean("capture_mode"));
-            petPlayer.setHealthBarActive(document.getBoolean("health_bar"));
-            petPlayer.setPetLivingSoundVolume(document.getDouble("pet_idle_volume").floatValue());
+
             petPlayer.setExtendedInfo(TagStream.readTag(((Binary) document.get("extended_info")).getData(), true));
 
             Document jsonObject = (Document) document.get("multi_world");
@@ -512,6 +508,17 @@ public class MongoDbRepository implements Repository {
                 String petUUID = jsonObject.get(o.toString()).toString();
                 petPlayer.setMyPetForWorldGroup(o.toString(), UUID.fromString(petUUID));
             }
+
+            if (document.containsKey("settings")) {
+                document = (Document) document.get("settings");
+            }
+
+            petPlayer.setUsesResourcePack(document.getBoolean("resource_pack", Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT));
+            petPlayer.setAutoRespawnEnabled(document.getBoolean("auto_respawn"));
+            petPlayer.setAutoRespawnMin(document.getInteger("auto_respawn_min"));
+            petPlayer.setCaptureHelperActive(document.getBoolean("capture_mode"));
+            petPlayer.setHealthBarActive(document.getBoolean("health_bar"));
+            petPlayer.setPetLivingSoundVolume(document.getDouble("pet_idle_volume").floatValue());
 
             return petPlayer;
         } catch (IOException e) {
@@ -629,11 +636,16 @@ public class MongoDbRepository implements Repository {
         playerDocument.append("internal_uuid", player.getInternalUUID().toString());
         playerDocument.append("mojang_uuid", player.getMojangUUID() != null ? player.getMojangUUID() : null);
         playerDocument.append("name", player.getName());
-        playerDocument.append("auto_respawn", player.hasAutoRespawnEnabled());
-        playerDocument.append("auto_respawn_min", player.getAutoRespawnMin());
-        playerDocument.append("capture_mode", player.isCaptureHelperActive());
-        playerDocument.append("health_bar", player.isHealthBarActive());
-        playerDocument.append("pet_idle_volume", player.getPetLivingSoundVolume());
+
+        Document settingsDocument = new Document();
+        settingsDocument.append("auto_respawn", player.hasAutoRespawnEnabled());
+        settingsDocument.append("auto_respawn_min", player.getAutoRespawnMin());
+        settingsDocument.append("capture_mode", player.isCaptureHelperActive());
+        settingsDocument.append("health_bar", player.isHealthBarActive());
+        settingsDocument.append("pet_idle_volume", player.getPetLivingSoundVolume());
+        settingsDocument.append("resource_pack", player.isUsingResourcePack());
+
+        playerDocument.append("settings", settingsDocument);
 
         try {
             playerDocument.append("extended_info", TagStream.writeTag(player.getExtendedInfo(), true));

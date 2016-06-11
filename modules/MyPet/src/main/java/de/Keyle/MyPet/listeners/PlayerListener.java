@@ -33,11 +33,13 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
+import de.Keyle.MyPet.api.util.ResourcePackIcons;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -59,6 +61,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
+    @EventHandler
+    public void on(AsyncPlayerChatEvent event) {
+        if (event.getMessage().contains(":mypet:")) {
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+                MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
+                if (myPetPlayerDamagee.isUsingResourcePack()) {
+                    event.setMessage(event.getMessage().replaceAll(":mypet:", ResourcePackIcons.Logo.getCode()));
+                }
+            } else if (Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT) {
+                event.setMessage(event.getMessage().replaceAll(":mypet:", ResourcePackIcons.Logo.getCode()));
+            }
+        }
+    }
+
     @EventHandler
     public void on(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
@@ -134,6 +150,23 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void on(final PlayerJoinEvent event) {
         long delay = MyPetApi.getRepository() instanceof NbtRepository ? 1L : 20L;
+
+        if (Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    MyPetApi.getRepository().isMyPetPlayer(event.getPlayer(), new RepositoryCallback<Boolean>() {
+                        @Override
+                        public void callback(final Boolean result) {
+                            if (!result) {
+                                MyPetApi.getLogger().info("activate for normal player");
+                                ResourcePackApiHook.installResourcePack(event.getPlayer());
+                            }
+                        }
+                    });
+                }
+            }.runTaskLater(MyPetApi.getPlugin(), delay);
+        }
 
         new BukkitRunnable() {
             @Override

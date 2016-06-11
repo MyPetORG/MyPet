@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillInstance;
+import de.Keyle.MyPet.api.util.ResourcePackIcons;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,37 +35,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CommandSkill implements CommandExecutor, TabCompleter {
-    public static final Map<String, String> icons = new HashMap<>();
-
-    static {
-        // http://unicode-table.com/en/#A800
-        icons.put("Fire", "\uA800");
-        icons.put("Damage", "\uA801");
-        icons.put("Behavior", "\uA803");
-        icons.put("Beacon", "\uA804");
-        icons.put("Wither", "\uA805");
-        icons.put("Sprint", "\uA807");
-        icons.put("Stomp", "\uA808");
-        icons.put("Slow", "\uA809");
-        icons.put("Shield", "\uA80A");
-        icons.put("Poison", "\uA80C");
-        icons.put("Pickup", "\uA80D");
-        icons.put("Lightning", "\uA80E");
-        icons.put("Knockback", "\uA80F");
-        icons.put("Inventory", "\uA810");
-        icons.put("Ranged", "\uA811");
-        icons.put("HPregeneration", "\uA812");
-        icons.put("HP", "\uA813");
-        icons.put("Control", "\uA814");
-        icons.put("Thorns", "\uA815");
-        icons.put("Ride", "\uA816");
-    }
-
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
@@ -89,7 +62,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                     if (skill.isActive()) {
                         String message = "  ";
                         if (myPet.getOwner().isUsingResourcePack()) {
-                            message += icons.get(skill.getName()) + " ";
+                            message += ResourcePackIcons.valueOf("Skill_" + skill.getName()).getCode() + " ";
                         }
                         sender.sendMessage(message + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getPlayerLanguage(petOwner)) + ChatColor.RESET + " " + skill.getFormattedValue());
                     }

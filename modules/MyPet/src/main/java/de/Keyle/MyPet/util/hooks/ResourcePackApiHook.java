@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -28,10 +29,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.rpapi.ResourcePackAPI;
 import org.inventivetalent.rpapi.ResourcePackStatusEvent;
 
 public class ResourcePackApiHook implements Listener {
+    public static final String DOWNLOAD_LINK = "http://dl.keyle.de/mypet/MyPet.zip";
+
     private static boolean active = false;
 
     public static void findPlugin() {
@@ -43,7 +47,20 @@ public class ResourcePackApiHook implements Listener {
     }
 
     public static void installResourcePack(Player player) {
-        ResourcePackAPI.setResourcepack(player, "http://dl.keyle.de/mypet/MyPet.zip", "mypet_resourcepack");
+        ResourcePackAPI.setResourcepack(player, DOWNLOAD_LINK, "mypet_resourcepack");
+    }
+
+    @EventHandler
+    public void on(final MyPetPlayerJoinEvent e) {
+        if (e.getPlayer().isUsingResourcePack()) {
+            e.getPlayer().sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", e.getPlayer()));
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    ResourcePackApiHook.installResourcePack(e.getPlayer().getPlayer());
+                }
+            }.runTaskLater(MyPetApi.getPlugin(), 30L);
+        }
     }
 
     @EventHandler

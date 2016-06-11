@@ -70,6 +70,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
         config.addDefault("MyPet.Max-Stored-Pet-Count", Configuration.Misc.MAX_STORED_PET_COUNT);
         config.addDefault("MyPet.Update-Check", true);
+        config.addDefault("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
@@ -344,6 +345,7 @@ public class ConfigurationLoader {
         Repository.MongoDB.PORT = config.getInt("MyPet.Repository.MongoDB.Database", Repository.MongoDB.PORT);
 
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
+        Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT = config.getBoolean("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
 
         Permissions.EXTENDED = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
