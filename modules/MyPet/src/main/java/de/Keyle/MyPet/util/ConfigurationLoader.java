@@ -347,7 +347,7 @@ public class ConfigurationLoader {
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
         Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT = config.getBoolean("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
 
-        Permissions.EXTENDED = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
+        Permissions.EXTENDED = config.getBoolean("MyPet.Permissions.Extended", false);
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
         Permissions.LEGACY = config.getBoolean("MyPet.Permissions.Legacy", Permissions.LEGACY);
 
