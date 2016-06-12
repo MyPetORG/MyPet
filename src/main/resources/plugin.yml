@@ -173,3 +173,39 @@ permissions:
   MyPet.command.info.other:
     default: op
     description: Allows to view info about pets from other players with "/petinfo <playername>"
+  MyPet.extended.feed:
+    default: false
+    description: Extended permission. Allows to feed pets.
+  MyPet.extended.equip:
+    default: false
+    description: Extended permission. Allows to equip pets.
+  MyPet.extended.beacon:
+    default: false
+    description: Extended permission. Allows to open the beacon GUI.
+  MyPet.extended.inventory:
+    default: false
+    description: Extended permission. Allows to open the inventory of the pet.
+  MyPet.extended.ride:
+    default: false
+    description: Extended permission. Allows to mount pets.
+  MyPet.extended.control:
+    default: false
+    description: Extended permission. Allows to control pets.
+  MyPet.extended.pickup:
+    default: false
+    description: Extended permission. Allows to enable pickup.
+  MyPet.extended.behavior.friendly:
+    default: false
+    description: Extended permission. Allows to use the ´friendly´ behavior.
+  MyPet.extended.behavior.aggressive:
+    default: false
+    description: Extended permission. Allows to use the ´aggressive´ behavior.
+  MyPet.extended.behavior.farm:
+    default: false
+    description: Extended permission. Allows to use the ´farm´ behavior.
+  MyPet.extended.behavior.raid:
+    default: false
+    description: Extended permission. Allows to use the ´raid´ behavior.
+  MyPet.extended.behavior.duel:
+    default: false
+    description: Extended permission. Allows to use the ´duel´ behavior.
