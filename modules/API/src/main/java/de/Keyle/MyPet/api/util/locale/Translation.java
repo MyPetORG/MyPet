@@ -118,8 +118,6 @@ public class Translation {
             if (jarEntry != null) {
                 java.util.ResourceBundle defaultBundle = new PropertyResourceBundle(new InputStreamReader(jarFile.getInputStream(jarEntry), "UTF-8"));
                 newLocale = new ResourceBundle(defaultBundle);
-            } else {
-                throw new IOException();
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
