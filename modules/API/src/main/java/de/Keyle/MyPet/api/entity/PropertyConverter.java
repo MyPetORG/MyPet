@@ -161,10 +161,12 @@ public class PropertyConverter {
             properties.getCompoundData().put("Type", new TagInt(zombie.getVillagerProfession().ordinal()));
         } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
             if (zombie.isVillager()) {
-                properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal() + 1));
+                properties.getCompoundData().put("Type", new TagInt(zombie.getVillagerProfession().ordinal() + 1));
             }
         } else {
-            properties.getCompoundData().put("Villager", new TagByte(zombie.isVillager()));
+            if (zombie.isVillager()) {
+                properties.getCompoundData().put("Type", new TagInt(1));
+            }
         }
     }
 
@@ -212,7 +214,11 @@ public class PropertyConverter {
     }
 
     public static void convertVillager(Villager villager, TagCompound properties) {
-        properties.getCompoundData().put("Profession", new TagInt(villager.getProfession().getId()));
+        int profession = villager.getProfession().ordinal();
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
+            profession--;
+        }
+        properties.getCompoundData().put("Profession", new TagInt(profession));
 
         TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
         String[] allowedTags = {"Riches", "Career", "CareerLevel", "Willing", "Inventory", "Offers"};
