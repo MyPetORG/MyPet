@@ -35,7 +35,6 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
-import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -52,8 +51,8 @@ public class ProtocolLib {
         if (PluginHookManager.isPluginUsable("ProtocolLib")) {
             try {
                 // reverse dragon facing direction
-                if (Bukkit.getVersion().contains("1.9")) {
-                    registerEnderDragonFix_1_9();
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    registerEnderDragonFix_post_1_9();
                 } else {
                     registerEnderDragonFix();
                 }
@@ -84,7 +83,7 @@ public class ProtocolLib {
         return active;
     }
 
-    private static void registerEnderDragonFix_1_9() {
+    private static void registerEnderDragonFix_post_1_9() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
                     @Override
