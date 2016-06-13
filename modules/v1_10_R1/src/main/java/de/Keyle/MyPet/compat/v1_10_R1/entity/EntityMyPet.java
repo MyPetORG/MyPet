@@ -924,9 +924,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.world.methodProfiler.a("jump");
         if (this.be) {
             if (this.isInWater() || this.ao()) {
-                this.cj();
+                this.cm();
             } else if (this.onGround && this.jumpDelay == 0) {
-                this.ci();
+                this.cl();
                 this.jumpDelay = 10;
             }
         } else {
