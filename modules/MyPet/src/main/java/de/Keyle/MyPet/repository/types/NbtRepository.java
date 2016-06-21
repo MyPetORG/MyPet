@@ -59,6 +59,7 @@ public class NbtRepository implements Repository, Scheduler {
     private File NBTPetTempFile;
     private int autoSaveTimer = 0;
     private Backup backupManager;
+    private volatile boolean saveStatus = false;
 
     @Override
     public void disable() {
@@ -88,36 +89,42 @@ public class NbtRepository implements Repository, Scheduler {
     }
 
     public void saveData(boolean async) {
-        autoSaveTimer = Configuration.Repository.NBT.AUTOSAVE_TIME;
+        if (!saveStatus) {
+            autoSaveTimer = Configuration.Repository.NBT.AUTOSAVE_TIME;
 
-        TagCompound fileTag = new TagCompound();
+            TagCompound fileTag = new TagCompound();
 
-        fileTag.getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
-        fileTag.getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
-        fileTag.getCompoundData().put("Pets", savePets());
-        fileTag.getCompoundData().put("Players", savePlayers());
+            fileTag.getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
+            fileTag.getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
+            fileTag.getCompoundData().put("Pets", savePets());
+            fileTag.getCompoundData().put("Players", savePlayers());
 
-        if (async) {
-            try {
-                final byte[] data = TagStream.writeTag(fileTag, false);
-                Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
-                    public void run() {
-                        try {
-                            OutputStream os = new GZIPOutputStream(new FileOutputStream(NBTPetTempFile));
-                            os.write(data);
-                            os.close();
-                            NBTPetFile.delete();
-                            NBTPetTempFile.renameTo(NBTPetFile);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+            if (async) {
+                try {
+                    final byte[] data = TagStream.writeTag(fileTag, false);
+                    Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
+                        public void run() {
+                            if (!saveStatus) {
+                                saveStatus = true;
+                                try {
+                                    OutputStream os = new GZIPOutputStream(new FileOutputStream(NBTPetTempFile));
+                                    os.write(data);
+                                    os.close();
+                                    NBTPetFile.delete();
+                                    NBTPetTempFile.renameTo(NBTPetFile);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                saveStatus = false;
+                            }
                         }
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ConfigurationNBT.save(NBTPetFile, fileTag);
             }
-        } else {
-            ConfigurationNBT.save(NBTPetFile, fileTag);
         }
     }
 
