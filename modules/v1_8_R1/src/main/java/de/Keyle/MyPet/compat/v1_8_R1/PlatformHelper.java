@@ -249,6 +249,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
+    public String getVanillaName(org.bukkit.inventory.ItemStack itemStack) {
+        return CraftItemStack.asNMSCopy(itemStack).getItem().getName();
+    }
+
+    @Override
     public void doPickupAnimation(Entity entity, Entity target) {
         for (Entity p : target.getNearbyEntities(10, 10, 10)) {
             if (p instanceof Player) {

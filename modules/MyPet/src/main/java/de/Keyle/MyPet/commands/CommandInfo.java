@@ -37,7 +37,6 @@ import de.Keyle.MyPet.skill.skills.Damage;
 import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -151,7 +150,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                             m.then(is.getItemMeta().getDisplayName());
                         } else {
-                            m.then(WordUtils.capitalizeFully(MyPetApi.getPlatformHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")));
+                            m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is) + ".name");
                         }
                         m.color(ChatColor.GOLD);
                         ItemTooltip it = new ItemTooltip();
@@ -167,6 +166,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         m.itemTooltip(it);
                         comma = true;
                     }
+                    MyPetApi.getLogger().info(m.toJSONString());
                     MyPetApi.getPlatformHelper().sendMessageRaw(player, m.toJSONString());
 
                     infoShown = true;
