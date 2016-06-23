@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api;
 import com.google.common.base.Charsets;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.Validate;
@@ -41,33 +42,19 @@ import java.util.*;
 import java.util.regex.Matcher;
 
 public class Util {
+    @Deprecated
     public static Method getMethod(Class<?> clazz, String method, Class<?>... parameterTypes) {
-        try {
-            Method m = clazz.getDeclaredMethod(method, parameterTypes);
-            m.setAccessible(true);
-            return m;
-        } catch (Exception ignored) {
-            return null;
-        }
+        return ReflectionUtil.getMethod(clazz, method, parameterTypes);
     }
 
+    @Deprecated
     public static Field getField(Class<?> clazz, String field) {
-        try {
-            Field f = clazz.getDeclaredField(field);
-            f.setAccessible(true);
-            return f;
-        } catch (Exception ignored) {
-            return null;
-        }
+        return ReflectionUtil.getField(clazz, field);
     }
 
+    @Deprecated
     public static boolean setFieldValue(Field field, Object object, Object value) {
-        try {
-            field.set(object, value);
-            return true;
-        } catch (IllegalAccessException e) {
-            return false;
-        }
+        return ReflectionUtil.setFieldValue(field, object, value);
     }
 
     public static boolean isInt(String number) {

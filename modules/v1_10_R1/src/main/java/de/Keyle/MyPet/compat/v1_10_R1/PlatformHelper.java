@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_10_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_10_R1.*;
@@ -38,6 +39,7 @@ import org.bukkit.craftbukkit.v1_10_R1.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_10_R1.util.UnsafeList;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.entity.Zombie;
 import org.json.simple.JSONObject;
 
@@ -173,7 +175,41 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void applyTagToEntity(TagCompound tag, Entity bukkitEntity) {
         net.minecraft.server.v1_10_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
-        entity.f(vanillaNBT);
+
+        // Just a temporary fix until I come up with a better solution
+        if (bukkitEntity instanceof Villager) {
+            EntityVillager villager = (EntityVillager) entity;
+
+            villager.setProfession(vanillaNBT.getInt("Profession"));
+            villager.riches = vanillaNBT.getInt("Riches");
+            ReflectionUtil.setFieldValue("bJ", villager, vanillaNBT.getInt("Career"));
+            ReflectionUtil.setFieldValue("bK", villager, vanillaNBT.getInt("CareerLevel"));
+            ReflectionUtil.setFieldValue("bG", villager, vanillaNBT.getBoolean("Willing"));
+            if (vanillaNBT.hasKeyOfType("Offers", 10)) {
+                NBTTagCompound nbttaglist = vanillaNBT.getCompound("Offers");
+                ReflectionUtil.setFieldValue("trades", villager, new MerchantRecipeList(nbttaglist));
+            }
+
+            NBTTagList invTag = vanillaNBT.getList("Inventory", 10);
+
+            for (int i = 0; i < invTag.size(); ++i) {
+                ItemStack itemstack = ItemStack.createStack(invTag.get(i));
+                if (itemstack != null) {
+                    villager.inventory.a(itemstack);
+                }
+            }
+
+            villager.m(true);
+
+            if (villager.isBaby()) {
+                villager.goalSelector.a(8, new PathfinderGoalPlay(villager, 0.32D));
+            } else if (villager.getProfession() == 0) {
+                villager.goalSelector.a(6, new PathfinderGoalVillagerFarm(villager, 0.6D));
+            }
+        }
+
+        // can not be used in 1.10
+        //entity.f(vanillaNBT);
     }
 
     @Override

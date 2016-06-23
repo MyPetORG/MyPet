@@ -30,10 +30,10 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Throwables;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
@@ -291,10 +291,10 @@ public class ProtocolLib {
                                 getHandleMethod.setAccessible(true);
                             }
                             Object nmsPlayer = getHandleMethod.invoke(player);
-                            Object playerConnection = Util.getField(nmsPlayer.getClass(), "playerConnection").get(nmsPlayer);
-                            Object networkManager = Util.getField(playerConnection.getClass(), "networkManager").get(playerConnection);
+                            Object playerConnection = ReflectionUtil.getFieldValue(nmsPlayer.getClass(), nmsPlayer, "playerConnection");
+                            Object networkManager = ReflectionUtil.getFieldValue(playerConnection.getClass(), playerConnection, "networkManager");
 
-                            Method getVersionMethod = Util.getMethod(networkManager.getClass(), "getVersion");
+                            Method getVersionMethod = ReflectionUtil.getMethod(networkManager.getClass(), "getVersion");
                             return (Integer) getVersionMethod.invoke(networkManager) > 5;
                         } catch (Exception exception) {
                             throw Throwables.propagate(exception);
