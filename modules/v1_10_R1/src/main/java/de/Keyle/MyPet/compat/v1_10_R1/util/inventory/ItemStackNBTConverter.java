@@ -100,7 +100,7 @@ public class ItemStackNBTConverter {
             case End:
                 return null;
         }
-        return null;
+        throw new IllegalArgumentException("Not a valid tag type");
     }
 
     @SuppressWarnings("unchecked")
