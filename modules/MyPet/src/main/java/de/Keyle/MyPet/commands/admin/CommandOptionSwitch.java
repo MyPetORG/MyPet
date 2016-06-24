@@ -134,7 +134,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), myPet.get().getPetName()));
                                     break;
                                 case NotAllowed:
-                                    sender.sendMessage(Translation.getString("Message.No.AllowedHere", owner).replace("%petname%", myPet.get().getPetName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner), myPet.get().getPetName()));
                                     break;
                                 case Dead:
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.get().getPetName(), myPet.get().getRespawnTime()));

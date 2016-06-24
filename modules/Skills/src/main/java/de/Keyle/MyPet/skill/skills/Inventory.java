@@ -99,7 +99,7 @@ public class Inventory extends InventoryInfo implements SkillInstance, NBTStorag
             MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Open);
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
-                myPet.getOwner().sendMessage(Translation.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", myPet.getOwner()), myPet.getPetName()));
                 return false;
             }
             if (!myPet.getLocation().get().getBlock().isLiquid()) {

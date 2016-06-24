@@ -52,7 +52,7 @@ public class CommandCall implements CommandExecutor, TabCompleter {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", petOwner), myPet.getPetName()));
                         break;
                     case NotAllowed:
-                        sender.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", petOwner), myPet.getPetName()));
                         break;
                     case Dead:
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
