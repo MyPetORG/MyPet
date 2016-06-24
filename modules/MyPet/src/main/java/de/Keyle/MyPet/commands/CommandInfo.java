@@ -166,7 +166,6 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         m.itemTooltip(it);
                         comma = true;
                     }
-                    MyPetApi.getLogger().info(m.toJSONString());
                     MyPetApi.getPlatformHelper().sendMessageRaw(player, m.toJSONString());
 
                     infoShown = true;
