@@ -139,10 +139,10 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                                             newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", newOwner), myPet.get().getPetName()));
                                             break;
                                         case NotAllowed:
-                                            newOwner.sendMessage(Translation.getString("Message.No.AllowedHere", newOwner).replace("%petname%", myPet.get().getPetName()));
+                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", newOwner), myPet.get().getPetName()));
                                             break;
                                         case Dead:
-                                            newOwner.sendMessage(Translation.getString("Message.Spawn.Respawn.In", newOwner).replace("%petname%", myPet.get().getPetName()).replace("%time%", "" + myPet.get().getRespawnTime()));
+                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", newOwner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
                                             break;
                                         case Spectator:
                                             newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", newOwner), myPet.get().getPetName()));
