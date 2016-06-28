@@ -101,6 +101,9 @@
         <!-- http://dev.bukkit.org/bukkit-plugins/pvpmanager/ -->
         <pvpmanager.version>3.0</pvpmanager.version>
 
+        <!-- https://www.spigotmc.org/resources/kingdoms-plugin-demo.6392/ -->
+        <kingdoms.version>8.5.4</kingdoms.version>
+
         <!-- http://dev.bukkit.org/bukkit-plugins/heroes/ -->
         <heroes.version>1.5.5.7</heroes.version>
 
@@ -312,6 +315,13 @@
             <groupId>me.NoChance.PvPManager</groupId>
             <artifactId>PvPManager</artifactId>
             <version>${pvpmanager.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.kingdoms</groupId>
+            <artifactId>kingdoms</artifactId>
+            <version>${kingdoms.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
