@@ -40,6 +40,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.util.hooks.pvp.KingdomsHook;
 import me.NoChance.PvPManager.PvPManager;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
@@ -73,7 +74,7 @@ public class PvPChecker {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtPvPManager(attacker, defender) && canHurt(defender);
+            return KingdomsHook.canHurt(attacker, defender) && canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtPvPManager(attacker, defender) && canHurt(defender);
         }
         return false;
     }
