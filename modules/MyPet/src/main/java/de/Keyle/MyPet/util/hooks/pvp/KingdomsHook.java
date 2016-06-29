@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.util.hooks.pvp;
 
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import org.bukkit.entity.Player;
 import org.kingdoms.constants.land.Land;
 import org.kingdoms.constants.player.KingdomPlayer;
@@ -28,24 +30,31 @@ import org.kingdoms.manager.game.GameManagement;
 
 public class KingdomsHook {
     public static boolean canHurt(Player attacker, Player defender) {
-        KingdomPlayer attacked = GameManagement.getPlayerManager().getSession(attacker);
-        if (attacked == null) {
-            return true;
-        }
-        if (attacked.isAdminMode()) {
-            return true;
-        }
-        if (attacked.getKingdom() == null) {
-            return true;
-        }
+        if (Configuration.Hooks.USE_Kingdoms && PluginHookManager.isPluginUsable("Kingdoms")) {
+            try {
+                KingdomPlayer attacked = GameManagement.getPlayerManager().getSession(attacker);
+                if (attacked == null) {
+                    return true;
+                }
+                if (attacked.isAdminMode()) {
+                    return true;
+                }
+                if (attacked.getKingdom() == null) {
+                    return true;
+                }
 
-        KingdomPlayer damaged = GameManagement.getPlayerManager().getSession(defender);
-        if (Kingdoms.config.freePvPInWarZone) {
-            Land att = GameManagement.getLandManager().getOrLoadLand(damaged.getLoc());
-            if (att.getOwner() != null && att.getOwner().equals("WarZone")) {
-                return true;
+                KingdomPlayer damaged = GameManagement.getPlayerManager().getSession(defender);
+                if (Kingdoms.config.freePvPInWarZone) {
+                    Land att = GameManagement.getLandManager().getOrLoadLand(damaged.getLoc());
+                    if (att.getOwner() != null && att.getOwner().equals("WarZone")) {
+                        return true;
+                    }
+                }
+                return damaged.getKingdom() == null || !attacked.getKingdom().isAllianceWith(damaged.getKingdom());
+            } catch (Throwable e) {
+                Configuration.Hooks.USE_Kingdoms = false;
             }
         }
-        return damaged.getKingdom() == null || !attacked.getKingdom().isAllianceWith(damaged.getKingdom());
+        return true;
     }
 }
