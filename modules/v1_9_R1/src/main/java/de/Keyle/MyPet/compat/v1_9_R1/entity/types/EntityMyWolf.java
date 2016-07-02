@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWolf;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_9_R1.entity.ai.movement.Sit;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.DyeColor;
 
@@ -44,7 +43,6 @@ public class EntityMyWolf extends EntityMyPet {
     protected boolean shaking;
     protected boolean isWet;
     protected float shakeCounter;
-    private Sit sitPathfinder;
 
     public EntityMyWolf(World world, MyPet myPet) {
         super(world, myPet);
@@ -57,10 +55,6 @@ public class EntityMyWolf extends EntityMyPet {
         } else {
             this.datawatcher.set(sitWatcher, (byte) (i & 0xFFFFFFFE));
         }
-    }
-
-    public boolean canMove() {
-        return !sitPathfinder.isSitting();
     }
 
     @Override
@@ -110,8 +104,6 @@ public class EntityMyWolf extends EntityMyPet {
                     return true;
                 }
             }
-            this.sitPathfinder.toogleSitting();
-            return true;
         }
         return false;
     }
@@ -206,11 +198,5 @@ public class EntityMyWolf extends EntityMyPet {
 
     public MyWolf getMyPet() {
         return (MyWolf) myPet;
-    }
-
-    public void setPathfinder() {
-        super.setPathfinder();
-        sitPathfinder = new Sit(this);
-        petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }
 }

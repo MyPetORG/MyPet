@@ -50,8 +50,7 @@ public class Sit extends AIGoal {
         this.entityMyPet.getPetNavigation().stop();
         if (this.entityMyPet instanceof EntityMyOcelot) {
             ((EntityMyOcelot) this.entityMyPet).applySitting(true);
-        }
-        if (this.entityMyPet instanceof EntityMyWolf) {
+        } else if (this.entityMyPet instanceof EntityMyWolf) {
             ((EntityMyWolf) this.entityMyPet).applySitting(true);
         }
         entityMyPet.setGoalTarget(null);
@@ -61,8 +60,7 @@ public class Sit extends AIGoal {
     public void finish() {
         if (this.entityMyPet instanceof EntityMyOcelot) {
             ((EntityMyOcelot) this.entityMyPet).applySitting(false);
-        }
-        if (this.entityMyPet instanceof EntityMyWolf) {
+        } else if (this.entityMyPet instanceof EntityMyWolf) {
             ((EntityMyWolf) this.entityMyPet).applySitting(false);
         }
     }

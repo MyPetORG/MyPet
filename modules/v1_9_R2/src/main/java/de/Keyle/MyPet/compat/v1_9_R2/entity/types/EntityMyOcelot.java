@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyOcelot;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_9_R2.entity.ai.movement.Sit;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.entity.Ocelot.Type;
 
@@ -39,23 +38,17 @@ public class EntityMyOcelot extends EntityMyPet {
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.m);
     private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.b);
 
-    private Sit sitPathfinder;
-
     public EntityMyOcelot(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     public void applySitting(boolean sitting) {
-        int i = this.datawatcher.get(sitWatcher).byteValue();
+        int i = this.datawatcher.get(sitWatcher);
         if (sitting) {
             this.datawatcher.set(sitWatcher, (byte) (i | 0x1));
         } else {
             this.datawatcher.set(sitWatcher, (byte) (i & 0xFFFFFFFE));
         }
-    }
-
-    public boolean canMove() {
-        return !sitPathfinder.isSitting();
     }
 
     protected String getDeathSound() {
@@ -119,7 +112,7 @@ public class EntityMyOcelot extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(sitWatcher, (byte) 0);          // tamed/sitting
+        this.datawatcher.register(sitWatcher, (byte) 0);            // tamed/sitting
         this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
         this.datawatcher.register(typeWatcher, 0);                  // cat type
     }
@@ -132,11 +125,5 @@ public class EntityMyOcelot extends EntityMyPet {
 
     public MyOcelot getMyPet() {
         return (MyOcelot) myPet;
-    }
-
-    public void setPathfinder() {
-        super.setPathfinder();
-        sitPathfinder = new Sit(this);
-        petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }
 }
