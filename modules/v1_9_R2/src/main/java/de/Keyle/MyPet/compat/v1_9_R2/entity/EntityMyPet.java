@@ -75,8 +75,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected MyPet myPet;
     protected int jumpDelay = 0;
     protected int idleSoundTimer = 0;
+    protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
-    Ride rideSkill = null;
+    protected Ride rideSkill = null;
+    protected Sit sitPathfinder;
 
     int donatorParticleCounter = 0;
 
@@ -104,6 +106,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.petTargetSelector = new AIGoalSelector();
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
             this.petNavigation = new VanillaNavigation(this);
+            this.sitPathfinder = new Sit(this);
             this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
             this.setHealth((float) myPet.getHealth());
             this.updateNameTag();
@@ -121,6 +124,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public void setPathfinder() {
         petPathfinderSelector.addGoal("Float", new Float(this));
+        petPathfinderSelector.addGoal("Sit", sitPathfinder);
         petPathfinderSelector.addGoal("Sprint", new Sprint(this, 0.25F));
         petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
         petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 1.5, 20));
@@ -264,7 +268,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public boolean canMove() {
-        return true;
+        return !sitPathfinder.isSitting();
     }
 
     public double getWalkSpeed() {
@@ -356,6 +360,16 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     @Override
     public void updateVisuals() {
+    }
+
+    public void toggleSitting() {
+        this.sitPathfinder.toogleSitting();
+        if (this.sitPathfinder.isSitting()) {
+            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+        } else {
+            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Follow", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+        }
+        sitCounter = 0;
     }
 
     @Override
@@ -550,6 +564,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     }
                 }
             }
+        }
+        if (sitPathfinder.isSitting() && sitCounter-- <= 0) {
+            MyPetApi.getPlatformHelper().playParticleEffect(getOwner().getPlayer(), this.getBukkitEntity().getLocation().add(0, getHeadHeight() + 1, 0), "BARRIER", 0F, 0F, 0F, 5F, 1, 32);
+            sitCounter = 60;
         }
         Player p = myPet.getOwner().getPlayer();
         if (p != null && p.isOnline() && !p.isDead()) {
@@ -820,7 +838,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     public boolean a(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemstack) {
         try {
-            return handlePlayerInteraction(entityhuman, enumhand, itemstack);
+            boolean result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
+            if (!result) {
+                toggleSitting();
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
