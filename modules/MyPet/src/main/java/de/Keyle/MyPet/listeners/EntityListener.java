@@ -184,7 +184,14 @@ public class EntityListener implements Listener {
                             if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                                 m.then(is.getItemMeta().getDisplayName());
                             } else {
-                                m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is) + ".name");
+                                try {
+                                    m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is) + ".name");
+                                } catch (Exception e) {
+                                    MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
+                                    MyPetApi.getLogger().warning("" + is);
+                                    e.printStackTrace();
+                                    continue;
+                                }
                             }
                             m.color(ChatColor.GOLD);
                             ItemTooltip it = new ItemTooltip();
