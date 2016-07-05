@@ -434,10 +434,17 @@ public class ConfigurationLoader {
         }
         if (foodString.contains(";")) {
             for (String foodIDString : foodString.split("(?<!\\\\);")) {
-                MyPetApi.getMyPetInfo().setFood(type, ConfigItem.createConfigItem(foodIDString.replace("\\;", ";")));
+                ConfigItem ci = ConfigItem.createConfigItem(foodIDString.replace("\\;", ";"));
+                if (ci.getItem().getType() != Material.AIR) {
+                    MyPetApi.getMyPetInfo().setFood(type, ci);
+                }
+
             }
         } else {
-            MyPetApi.getMyPetInfo().setFood(type, ConfigItem.createConfigItem(foodString));
+            ConfigItem ci = ConfigItem.createConfigItem(foodString);
+            if (ci.getItem().getType() != Material.AIR) {
+                MyPetApi.getMyPetInfo().setFood(type, ci);
+            }
         }
     }
 
