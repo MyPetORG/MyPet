@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -158,12 +159,21 @@ public class Util {
     }
 
     public static String readUrlContent(String address) throws IOException {
+        return readUrlContent(address, 2000);
+    }
+
+    public static String readUrlContent(String address, int timeout) throws IOException {
         StringBuilder contents = new StringBuilder(2048);
         BufferedReader br = null;
 
         try {
             URL url = new URL(address);
-            br = new BufferedReader(new InputStreamReader(url.openStream()));
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            huc.setConnectTimeout(timeout);
+            huc.setReadTimeout(timeout);
+            huc.setRequestMethod("GET");
+            huc.connect();
+            br = new BufferedReader(new InputStreamReader(huc.getInputStream()));
             String line;
             while ((line = br.readLine()) != null) {
                 contents.append(line);
