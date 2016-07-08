@@ -219,7 +219,12 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
     }
 
+    @Deprecated
     public double getHungerValue() {
+        return getSaturation();
+    }
+
+    public double getSaturation() {
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             return hunger;
         } else {
@@ -227,14 +232,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
     }
 
+    @Deprecated
     public void setHungerValue(double value) {
+        setSaturation(value);
+    }
+
+    public void setSaturation(double value) {
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             hunger = Math.max(1, Math.min(100, value));
             hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
         }
     }
 
+    @Deprecated
     public void decreaseHunger(double value) {
+        decreaseSaturation(value);
+    }
+
+    public void decreaseSaturation(double value) {
         hunger = Math.max(1, Math.min(100, hunger - value));
     }
 

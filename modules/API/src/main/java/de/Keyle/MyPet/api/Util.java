@@ -315,7 +315,7 @@ public class Util {
 
     public static ItemTooltip myPetToItemTooltip(StoredMyPet mypet, String lang) {
         List<String> lore = new ArrayList<>();
-        lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + Math.round(mypet.getHungerValue()));
+        lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + Math.round(mypet.getSaturation()));
         if (mypet.getRespawnTime() > 0) {
             lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
         } else {

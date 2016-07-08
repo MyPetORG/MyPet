@@ -474,7 +474,7 @@ public class MySqlRepository implements Repository {
                 statement.setInt(4, myPet.getRespawnTime());
                 statement.setBinaryStream(5, new ByteArrayInputStream(myPet.getPetName().getBytes(StandardCharsets.UTF_8)));
                 statement.setLong(6, myPet.getLastUsed());
-                statement.setDouble(7, myPet.getHungerValue());
+                statement.setDouble(7, myPet.getSaturation());
                 statement.setString(8, myPet.getWorldGroup());
                 statement.setBoolean(9, myPet.wantsToRespawn());
                 statement.setString(10, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
@@ -836,7 +836,7 @@ public class MySqlRepository implements Repository {
                     statement.setString(6, storedMyPet.getPetName());
                     statement.setString(7, storedMyPet.getPetType().name());
                     statement.setLong(8, storedMyPet.getLastUsed());
-                    statement.setDouble(9, storedMyPet.getHungerValue());
+                    statement.setDouble(9, storedMyPet.getSaturation());
                     statement.setString(10, storedMyPet.getWorldGroup());
                     statement.setBoolean(11, storedMyPet.wantsToRespawn());
                     statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
@@ -902,7 +902,7 @@ public class MySqlRepository implements Repository {
                 statement.setString(6, storedMyPet.getPetName());
                 statement.setString(7, storedMyPet.getPetType().name());
                 statement.setLong(8, storedMyPet.getLastUsed());
-                statement.setDouble(9, storedMyPet.getHungerValue());
+                statement.setDouble(9, storedMyPet.getSaturation());
                 statement.setString(10, storedMyPet.getWorldGroup());
                 statement.setBoolean(11, storedMyPet.wantsToRespawn());
                 statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
@@ -968,7 +968,7 @@ public class MySqlRepository implements Repository {
                     statement.setInt(4, storedMyPet.getRespawnTime());
                     statement.setBinaryStream(5, new ByteArrayInputStream(storedMyPet.getPetName().getBytes(StandardCharsets.UTF_8)));
                     statement.setLong(6, storedMyPet.getLastUsed());
-                    statement.setDouble(7, storedMyPet.getHungerValue());
+                    statement.setDouble(7, storedMyPet.getSaturation());
                     statement.setString(8, storedMyPet.getWorldGroup());
                     statement.setBoolean(9, storedMyPet.wantsToRespawn());
                     statement.setString(10, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);

@@ -241,7 +241,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     FancyMessage message = new FancyMessage(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ");
 
                     List<String> lore = new ArrayList<>();
-                    lore.add(RESET + Translation.getString("Name.Hunger", petOwner) + ": " + GOLD + Math.round(myPet.getHungerValue()));
+                    lore.add(RESET + Translation.getString("Name.Hunger", petOwner) + ": " + GOLD + Math.round(myPet.getSaturation()));
                     if (myPet.getRespawnTime() > 0) {
                         lore.add(RESET + Translation.getString("Name.Respawntime", petOwner) + ": " + GOLD + myPet.getRespawnTime() + "sec");
                     } else {

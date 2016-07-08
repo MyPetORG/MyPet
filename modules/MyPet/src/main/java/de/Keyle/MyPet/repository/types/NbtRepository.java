@@ -412,7 +412,7 @@ public class NbtRepository implements Repository, Scheduler {
         petNBT.getCompoundData().put("Type", new TagString(storedMyPet.getPetType().name()));
         petNBT.getCompoundData().put("Health", new TagDouble(storedMyPet.getHealth()));
         petNBT.getCompoundData().put("Respawntime", new TagInt(storedMyPet.getRespawnTime()));
-        petNBT.getCompoundData().put("Hunger", new TagDouble(storedMyPet.getHungerValue()));
+        petNBT.getCompoundData().put("Hunger", new TagDouble(storedMyPet.getSaturation()));
         petNBT.getCompoundData().put("Name", new TagString(storedMyPet.getPetName()));
         petNBT.getCompoundData().put("WorldGroup", new TagString(storedMyPet.getWorldGroup()));
         petNBT.getCompoundData().put("Exp", new TagDouble(storedMyPet.getExp()));

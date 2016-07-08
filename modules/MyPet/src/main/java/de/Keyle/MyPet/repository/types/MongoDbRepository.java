@@ -416,7 +416,7 @@ public class MongoDbRepository implements Repository {
         petDocument.append("name", storedMyPet.getPetName());
         petDocument.append("type", storedMyPet.getPetType().name());
         petDocument.append("last_used", storedMyPet.getLastUsed());
-        petDocument.append("hunger", storedMyPet.getHungerValue());
+        petDocument.append("hunger", storedMyPet.getSaturation());
         petDocument.append("world_group", storedMyPet.getWorldGroup());
         petDocument.append("wants_to_spawn", storedMyPet.wantsToRespawn());
         petDocument.append("skilltree", storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
@@ -463,7 +463,7 @@ public class MongoDbRepository implements Repository {
         petDocument.append("name", storedMyPet.getPetName());
         petDocument.append("type", storedMyPet.getPetType().name());
         petDocument.append("last_used", storedMyPet.getLastUsed());
-        petDocument.append("hunger", storedMyPet.getHungerValue());
+        petDocument.append("hunger", storedMyPet.getSaturation());
         petDocument.append("world_group", storedMyPet.getWorldGroup());
         petDocument.append("wants_to_spawn", storedMyPet.wantsToRespawn());
         petDocument.append("skilltree", storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);

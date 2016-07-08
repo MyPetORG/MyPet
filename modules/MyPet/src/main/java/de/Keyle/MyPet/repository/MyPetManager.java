@@ -44,7 +44,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         inactiveMyPet.setPetName(myPet.getPetName());
         inactiveMyPet.setExp(myPet.getExp());
         inactiveMyPet.setHealth(myPet.getHealth());
-        inactiveMyPet.setHungerValue(myPet.getHungerValue());
+        inactiveMyPet.setSaturation(myPet.getSaturation());
         inactiveMyPet.setRespawnTime(myPet.getRespawnTime());
         inactiveMyPet.setSkills(myPet.getSkillInfo());
         inactiveMyPet.setInfo(myPet.getInfo());
@@ -96,7 +96,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
             }
         }
         myPet.setHealth(storedMyPet.getHealth());
-        myPet.setHungerValue(storedMyPet.getHungerValue());
+        myPet.setSaturation(storedMyPet.getSaturation());
 
         mActivePetsPlayer.put(myPet, myPet.getOwner());
         return Optional.of(myPet);

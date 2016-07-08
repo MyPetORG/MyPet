@@ -65,5 +65,8 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     boolean hasTarget();
 
+    @Deprecated
     void decreaseHunger(double value);
+
+    void decreaseSaturation(double value);
 }

@@ -126,7 +126,7 @@ public class MyPetSelectionGui {
 
                 SpawnerEggTypes egg = SpawnerEggTypes.getEggType(mypet.getPetType());
                 List<String> lore = new ArrayList<>();
-                lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + Math.round(mypet.getHungerValue()));
+                lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + Math.round(mypet.getSaturation()));
                 if (mypet.getRespawnTime() > 0) {
                     lore.add(RESET + Translation.getString("Name.Respawntime", player) + ": " + GOLD + mypet.getRespawnTime() + "sec");
                 } else {

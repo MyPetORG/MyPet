@@ -39,7 +39,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private String petName = "";
     private String worldGroup = "";
     private double health = -1;
-    private double hunger = 100;
+    private double saturation = 100;
     private int respawnTime = 0;
     private double exp = 0;
     protected long lastUsed = -1;
@@ -72,14 +72,24 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         this.health = health;
     }
 
+    @Override
+    public double getSaturation() {
+        return saturation;
+    }
+
     public double getHungerValue() {
-        return hunger;
+        return getSaturation();
+    }
+
+    @Override
+    public void setSaturation(double value) {
+        if (!Double.isNaN(value) && !Double.isInfinite(value)) {
+            saturation = Math.max(1, Math.min(100, value));
+        }
     }
 
     public void setHungerValue(double value) {
-        if (!Double.isNaN(value) && !Double.isInfinite(value)) {
-            hunger = Math.max(1, Math.min(100, value));
-        }
+        setSaturation(value);
     }
 
     public TagCompound getInfo() {
@@ -227,9 +237,9 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         }
 
         if (myPetNBT.containsKeyAs("Hunger", TagInt.class)) {
-            hunger = myPetNBT.getAs("Hunger", TagInt.class).getIntData();
+            saturation = myPetNBT.getAs("Hunger", TagInt.class).getIntData();
         } else if (myPetNBT.containsKeyAs("Hunger", TagDouble.class)) {
-            hunger = myPetNBT.getAs("Hunger", TagDouble.class).getDoubleData();
+            saturation = myPetNBT.getAs("Hunger", TagDouble.class).getDoubleData();
         }
 
         if (myPetNBT.getCompoundData().containsKey("WorldGroup")) {
@@ -252,7 +262,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         petNBT.getCompoundData().put("Type", new TagString(this.petType.name()));
         petNBT.getCompoundData().put("Health", new TagDouble(this.health));
         petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
-        petNBT.getCompoundData().put("Hunger", new TagDouble(this.hunger));
+        petNBT.getCompoundData().put("Hunger", new TagDouble(this.saturation));
         petNBT.getCompoundData().put("Name", new TagString(this.petName));
         petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
         petNBT.getCompoundData().put("Exp", new TagDouble(this.exp));
