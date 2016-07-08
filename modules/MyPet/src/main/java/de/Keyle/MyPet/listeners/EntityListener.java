@@ -168,7 +168,7 @@ public class EntityListener implements Listener {
                         infoShown = true;
                     }
                     if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
-                        damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + Math.round(myPet.getHungerValue()));
+                        damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + Math.round(myPet.getSaturation()));
 
                         FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", damager) + ": ");
                         boolean comma = false;

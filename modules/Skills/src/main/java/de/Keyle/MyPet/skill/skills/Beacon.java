@@ -538,7 +538,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;
 
-            double range = 100. * (Math.log10(myPet.getHungerValue()) / 2);
+            double range = this.range * myPet.getSaturation() / 100.;
 
             if (range < 0.7) {
                 active = false;
@@ -620,7 +620,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
             }
 
             if (Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
-                myPet.setHungerValue(myPet.getHungerValue() - 1);
+                myPet.decreaseSaturation(1);
                 hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
             }
         }

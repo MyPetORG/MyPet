@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.io.BufferedReader;
@@ -41,6 +40,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
+
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RESET;
 
 public class Util {
     @Deprecated
@@ -313,15 +315,15 @@ public class Util {
 
     public static ItemTooltip myPetToItemTooltip(StoredMyPet mypet, String lang) {
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.RESET + Translation.getString("Name.Hunger", lang) + ": " + ChatColor.GOLD + Math.round(mypet.getHungerValue()));
+        lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + Math.round(mypet.getSaturation()));
         if (mypet.getRespawnTime() > 0) {
-            lore.add(ChatColor.RESET + Translation.getString("Name.Respawntime", lang) + ": " + ChatColor.GOLD + mypet.getRespawnTime() + "sec");
+            lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
         } else {
-            lore.add(ChatColor.RESET + Translation.getString("Name.HP", lang) + ": " + ChatColor.GOLD + String.format("%1.2f", mypet.getHealth()));
+            lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
         }
-        lore.add(ChatColor.RESET + Translation.getString("Name.Exp", lang) + ": " + ChatColor.GOLD + String.format("%1.2f", mypet.getExp()));
-        lore.add(ChatColor.RESET + Translation.getString("Name.Type", lang) + ": " + ChatColor.GOLD + mypet.getPetType().name());
-        lore.add(ChatColor.RESET + Translation.getString("Name.Skilltree", lang) + ": " + ChatColor.GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
+        lore.add(RESET + Translation.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+        lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().name());
+        lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
         return new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(mypet.getPetName());
     }

@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
+import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -47,6 +48,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -452,31 +454,42 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                             return true;
                         }
                     }
-                    double addHunger = Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED;
-                    if (getHealth() < getMaxHealth()) {
-                        if (!entityhuman.abilities.canInstantlyBuild) {
-                            --itemStack.count;
+                    boolean used = false;
+                    double saturation = Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED;
+                    if (saturation > 0) {
+                        if (myPet.getSaturation() < 100) {
+                            MyPetFeedEvent feedEvent = new MyPetFeedEvent(getMyPet(), CraftItemStack.asCraftMirror(itemStack), saturation, MyPetFeedEvent.Result.Eat);
+                            Bukkit.getPluginManager().callEvent(feedEvent);
+                            if (!feedEvent.isCancelled()) {
+                                saturation = feedEvent.getSaturation();
+                                double missingSaturation = 100 - myPet.getSaturation();
+                                myPet.setSaturation(myPet.getSaturation() + saturation);
+                                saturation = Math.max(0, saturation - missingSaturation);
+                                used = true;
+                            }
                         }
-                        addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
-                        this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
-                        if (itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
+                    if (saturation > 0) {
+                        if (getHealth() < getMaxHealth()) {
+                            MyPetFeedEvent feedEvent = new MyPetFeedEvent(getMyPet(), CraftItemStack.asCraftMirror(itemStack), saturation, MyPetFeedEvent.Result.Heal);
+                            Bukkit.getPluginManager().callEvent(feedEvent);
+                            if (!feedEvent.isCancelled()) {
+                                saturation = feedEvent.getSaturation();
+                                float missingHealth = getMaxHealth() - getHealth();
+                                this.heal(Math.min((float) saturation, missingHealth), RegainReason.EATING);
+                                used = true;
+                            }
+                        }
+                    }
+
+                    if (used) {
+                        if (!entityhuman.abilities.canInstantlyBuild) {
+                            if (--itemStack.count <= 0) {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
                         }
                         MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getHeadHeight(), 0), "HEART", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
-                    } else if (myPet.getHungerValue() < 100) {
-                        if (!entityhuman.abilities.canInstantlyBuild) {
-                            --itemStack.count;
-                        }
-                        if (itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
-                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getHeadHeight(), 0), "HEART", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
-                    }
-                    if (addHunger > 0 && myPet.getHungerValue() < 100) {
-                        myPet.setHungerValue(myPet.getHungerValue() + addHunger);
-                        addHunger = 0;
-                    }
-                    if (addHunger < Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED) {
+
                         return true;
                     }
                 }
@@ -982,7 +995,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
-            double factor = Math.log10(myPet.getHungerValue()) / 2;
+            double factor = Math.log10(myPet.getSaturation()) / 2;
             speed *= factor;
             jumpHeight *= factor;
         }
@@ -1005,7 +1018,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double dZ = locZ - lastZ;
             if (dX != 0 || dY != 0 || dZ != 0) {
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
-                myPet.decreaseHunger(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
+                myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
             }
         }
     }
