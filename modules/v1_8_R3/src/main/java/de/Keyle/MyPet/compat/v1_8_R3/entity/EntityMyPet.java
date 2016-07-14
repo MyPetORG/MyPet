@@ -775,8 +775,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected boolean a(EntityHuman entityhuman) {
         try {
             boolean result = handlePlayerInteraction(entityhuman);
-            if (!result) {
+            if (!result && getMyPet().getOwner().equals(entityhuman)) {
                 toggleSitting();
+                result = true;
             }
             return result;
         } catch (Exception e) {
