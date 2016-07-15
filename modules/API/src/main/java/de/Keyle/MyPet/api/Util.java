@@ -327,4 +327,12 @@ public class Util {
 
         return new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(mypet.getPetName());
     }
+
+    public static String stackTraceToString() {
+        String trace = "";
+        for (StackTraceElement e1 : Thread.currentThread().getStackTrace()) {
+            trace += "\t " + e1.toString() + "\n";
+        }
+        return trace;
+    }
 }
