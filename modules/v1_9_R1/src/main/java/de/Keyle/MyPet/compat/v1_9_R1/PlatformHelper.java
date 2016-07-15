@@ -234,8 +234,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public String getVanillaName(org.bukkit.inventory.ItemStack itemStack) {
-        return CraftItemStack.asNMSCopy(itemStack).getItem().getName();
+    public String getVanillaName(org.bukkit.inventory.ItemStack bukkitItemStack) {
+        ItemStack itemStack = CraftItemStack.asNMSCopy(bukkitItemStack);
+        return itemStack.getItem().f_(itemStack);
     }
 
     @Override
