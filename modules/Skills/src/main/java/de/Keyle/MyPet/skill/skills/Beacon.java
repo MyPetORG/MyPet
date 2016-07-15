@@ -538,7 +538,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;
 
-            double range = this.range * myPet.getSaturation() / 100.;
+            double range = this.range * (Math.log10(myPet.getSaturation()) / 2);
 
             if (range < 0.7) {
                 active = false;
