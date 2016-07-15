@@ -43,6 +43,7 @@ import de.Keyle.MyPet.compat.v1_9_R2.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.ai.target.*;
+import de.Keyle.MyPet.compat.v1_9_R2.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.Bukkit;
@@ -56,6 +57,8 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -1096,6 +1099,29 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         ride(motionSideways, motionForward, speed); // apply motion
+
+        // throw player move event
+        if (!(this instanceof EntityMyHorse)) {
+            double delta = Math.pow(this.locX - this.lastX, 2.0D) + Math.pow(this.locY - this.lastY, 2.0D) + Math.pow(this.locZ - this.lastZ, 2.0D);
+            float deltaAngle = Math.abs(this.yaw - lastYaw) + Math.abs(this.pitch - lastPitch);
+            if (delta > 0.00390625D || deltaAngle > 10.0F) {
+                Location to = getBukkitEntity().getLocation();
+                Location from = new Location(world.getWorld(), this.lastX, this.lastY, this.lastZ, this.lastYaw, this.lastPitch);
+                if (from.getX() != 1.7976931348623157E+308D) {
+                    Location oldTo = to.clone();
+                    PlayerMoveEvent event = new PlayerMoveEvent((Player) passenger.getBukkitEntity(), from, to);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (event.isCancelled()) {
+                        passenger.getBukkitEntity().teleport(from);
+                        return;
+                    }
+                    if ((!oldTo.equals(event.getTo())) && (!event.isCancelled())) {
+                        passenger.getBukkitEntity().teleport(event.getTo(), PlayerTeleportEvent.TeleportCause.UNKNOWN);
+                        return;
+                    }
+                }
+            }
+        }
 
         // jump when the player jumps
         if (jump != null) {
