@@ -114,6 +114,28 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
+    public void onMyPet(EntityCombustByEntityEvent event) {
+        if (event.getEntity() instanceof MyPetBukkitEntity) {
+            if (event.getCombuster() instanceof Player || (event.getCombuster() instanceof Projectile && ((Projectile) event.getCombuster()).getShooter() instanceof Player)) {
+                Player damager;
+                if (event.getCombuster() instanceof Projectile) {
+                    damager = (Player) ((Projectile) event.getCombuster()).getShooter();
+                } else {
+                    damager = (Player) event.getCombuster();
+                }
+
+                MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
+
+                if (myPet.getOwner().equals(damager) && !Configuration.Misc.OWNER_CAN_ATTACK_PET) {
+                    event.setCancelled(true);
+                } else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer(), true)) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onMyPet(final EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPetBukkitEntity craftMyPet = (MyPetBukkitEntity) event.getEntity();
