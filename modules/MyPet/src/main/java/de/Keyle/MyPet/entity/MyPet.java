@@ -73,7 +73,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected double health;
     protected int respawnTime = 0;
     protected int hungerTime = 0;
-    protected double hunger = 100;
+    protected double saturation = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
 
@@ -226,7 +226,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public double getSaturation() {
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
-            return hunger;
+            return saturation;
         } else {
             return 100;
         }
@@ -239,8 +239,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void setSaturation(double value) {
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
-            hunger = Math.max(1, Math.min(100, value));
+            saturation = Math.max(1, Math.min(100, value));
             hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
+        } else {
+            MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + Util.stackTraceToString());
         }
     }
 
@@ -250,7 +252,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void decreaseSaturation(double value) {
-        hunger = Math.max(1, Math.min(100, hunger - value));
+        if (!Double.isNaN(value) && !Double.isInfinite(value)) {
+            saturation = Math.max(1, Math.min(100, saturation - value));
+        } else {
+            MyPetApi.getLogger().warning("Saturation was decreased by an invalid number!\n" + Util.stackTraceToString());
+        }
     }
 
     public String getPetName() {
@@ -514,7 +520,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     break;
             }
             if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
-                setHealth((int) Math.ceil(getMaxHealth() / 100. * (hunger + 1 - (hunger % 10))));
+                setHealth((int) Math.ceil(getMaxHealth() / 100. * (saturation + 1 - (saturation % 10))));
             } else {
                 setHealth(getMaxHealth());
             }
@@ -555,18 +561,18 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
             if (status == PetState.Here) {
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
-                    if (hunger > 1 && --hungerTime <= 0) {
-                        hunger--;
+                    if (saturation > 1 && --hungerTime <= 0) {
+                        saturation--;
                         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
-                        if (hunger == 66) {
+                        if (saturation == 66) {
                             getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
-                        } else if (hunger == 33) {
+                        } else if (saturation == 33) {
                             getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Hungry", getOwner()), getPetName()));
-                        } else if (hunger == 1) {
+                        } else if (saturation == 1) {
                             getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Starving", getOwner()), getPetName()));
                         }
                     }
-                    if (hunger == 1 && getHealth() >= 2) {
+                    if (saturation == 1 && getHealth() >= 2) {
                         getEntity().get().damage(1.);
                     }
                 }
@@ -586,7 +592,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petNBT.getCompoundData().put("Type", new TagString(this.getPetType().name()));
         petNBT.getCompoundData().put("Health", new TagDouble(this.health));
         petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
-        petNBT.getCompoundData().put("Hunger", new TagDouble(this.hunger));
+        petNBT.getCompoundData().put("Hunger", new TagDouble(this.saturation));
         petNBT.getCompoundData().put("Name", new TagString(this.petName));
         petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
         petNBT.getCompoundData().put("Exp", new TagDouble(this.getExp()));

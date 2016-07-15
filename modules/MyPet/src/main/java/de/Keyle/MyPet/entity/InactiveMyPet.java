@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -85,6 +86,8 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     public void setSaturation(double value) {
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             saturation = Math.max(1, Math.min(100, value));
+        } else {
+            MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + Util.stackTraceToString());
         }
     }
 
