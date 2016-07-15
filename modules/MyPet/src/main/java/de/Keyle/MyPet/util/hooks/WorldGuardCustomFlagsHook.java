@@ -40,9 +40,13 @@ public class WorldGuardCustomFlagsHook {
         if (PluginHookManager.isPluginUsable("WGCustomFlags")) {
             active = true;
             wgPlugin = wgp;
-            wgcfPlugin = PluginHookManager.getPluginInstance(WGCustomFlagsPlugin.class).get();
-            wgcfPlugin.addCustomFlag(FLY_FLAG);
-            MyPetApi.getLogger().info("WorldGuard Custom Flags hook activated.");
+            try {
+                wgcfPlugin = PluginHookManager.getPluginInstance(WGCustomFlagsPlugin.class).get();
+                wgcfPlugin.addCustomFlag(FLY_FLAG);
+                MyPetApi.getLogger().info("WorldGuard Custom Flags hook activated.");
+            } catch (Throwable e) {
+                disable();
+            }
         }
     }
 
