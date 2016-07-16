@@ -78,7 +78,7 @@ public class ControlTarget extends AIGoal {
                         Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                         if (myPet.getOwner().equals(targetPlayer)) {
                             continue;
-                        } else if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
+                        } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                             continue;
                         }
                     } else if (entityLiving instanceof EntityTameableAnimal) {
@@ -87,17 +87,17 @@ public class ControlTarget extends AIGoal {
                             Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
                             if (myPet.getOwner().equals(tameableOwner)) {
                                 continue;
-                            } else if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
+                            } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
                                 continue;
                             }
                         }
                     } else if (entityLiving instanceof EntityMyPet) {
                         MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
-                        if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                        if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                             continue;
                         }
                     }
-                    if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
                         continue;
                     }
                     if (behaviorSkill != null) {

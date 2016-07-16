@@ -217,7 +217,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             forgetTarget();
             return;
         }
-        if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), entity)) {
+        if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entity)) {
             forgetTarget();
             return;
         }
@@ -350,7 +350,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double damage = isMyPet() ? myPet.getDamage() : 0;
             if (entity instanceof EntityPlayer) {
                 Player victim = (Player) entity.getBukkitEntity();
-                if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), victim, true)) {
+                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), victim, true)) {
                     if (myPet.hasTarget()) {
                         setGoalTarget(null);
                     }
@@ -555,12 +555,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     isInvisible = false;
                 }
             }
-            // donate delete start
             if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
                 donatorParticleCounter = 20 + getRandom().nextInt(10);
                 MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "VILLAGER_HAPPY", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
             }
-            // donate delete end
         }
     }
 

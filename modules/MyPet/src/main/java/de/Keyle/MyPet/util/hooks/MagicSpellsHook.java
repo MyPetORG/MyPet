@@ -23,20 +23,25 @@ package de.Keyle.MyPet.util.hooks;
 import com.nisovin.magicspells.events.SpellTargetEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-public class MagicSpellsHook implements Listener {
-    private static boolean active = false;
+@PluginHookName("MagicSpells")
+public class MagicSpellsHook implements PluginHook, Listener {
 
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("MagicSpells")) {
-            active = true;
-            Bukkit.getPluginManager().registerEvents(new MagicSpellsHook(), MyPetApi.getPlugin());
-            MyPetApi.getLogger().info("MagicSpells hook activated.");
-        }
+    @Override
+    public boolean onEnable() {
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        return true;
+    }
+
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
     }
 
     @EventHandler
@@ -44,13 +49,9 @@ public class MagicSpellsHook implements Listener {
         if (event.getTarget() instanceof MyPetBukkitEntity) {
             if (((MyPetBukkitEntity) event.getTarget()).getOwner().equals(event.getCaster())) {
                 event.setCancelled(true);
-            } else if (!PvPChecker.canHurt(event.getCaster(), ((MyPetBukkitEntity) event.getTarget()).getOwner().getPlayer())) {
+            } else if (!MyPetApi.getHookHelper().canHurt(event.getCaster(), ((MyPetBukkitEntity) event.getTarget()).getOwner().getPlayer())) {
                 event.setCancelled(true);
             }
         }
-    }
-
-    public static boolean isActive() {
-        return active;
     }
 }

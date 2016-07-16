@@ -219,7 +219,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             forgetTarget();
             return;
         }
-        if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), entity)) {
+        if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entity)) {
             forgetTarget();
             return;
         }
@@ -352,7 +352,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double damage = isMyPet() ? myPet.getDamage() : 0;
             if (entity instanceof EntityPlayer) {
                 Player victim = (Player) entity.getBukkitEntity();
-                if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), victim, true)) {
+                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), victim, true)) {
                     if (myPet.hasTarget()) {
                         setGoalTarget(null);
                     }

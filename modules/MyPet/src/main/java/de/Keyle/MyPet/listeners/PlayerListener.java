@@ -40,7 +40,6 @@ import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.skill.skills.Ride;
-import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -219,7 +218,7 @@ public class PlayerListener implements Listener {
                         }
                     }
                 }
-                if (!PvPChecker.canHurt(projectile.getMyPetProjectile().getShooter().getOwner().getPlayer(), victim, true)) {
+                if (!MyPetApi.getHookHelper().canHurt(projectile.getMyPetProjectile().getShooter().getOwner().getPlayer(), victim, true)) {
                     event.setCancelled(true);
                 }
             }

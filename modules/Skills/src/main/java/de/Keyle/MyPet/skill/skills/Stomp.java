@@ -116,7 +116,7 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
                     Player targetPlayer = (Player) livingEntity;
                     if (myPet.getOwner().equals(targetPlayer)) {
                         continue;
-                    } else if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
+                    } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                         continue;
                     }
                 } else if (livingEntity instanceof Tameable) {
@@ -126,18 +126,18 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
                         if (myPet.getOwner().equals(tameableOwner)) {
                             continue;
                         } else {
-                            if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
+                            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
                                 continue;
                             }
                         }
                     }
                 } else if (livingEntity instanceof MyPetBukkitEntity) {
                     MyPet targetMyPet = ((MyPetBukkitEntity) livingEntity).getMyPet();
-                    if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                         continue;
                     }
                 }
-                if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
+                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
                     continue;
                 }
 

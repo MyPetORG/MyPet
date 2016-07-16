@@ -43,8 +43,7 @@ import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.hooks.EconomyHook;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
@@ -53,7 +52,7 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
 import de.Keyle.MyPet.util.CaptureHelper;
-import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import de.keyle.knbt.TagCompound;
@@ -128,7 +127,7 @@ public class EntityListener implements Listener {
 
                 if (myPet.getOwner().equals(damager) && !Configuration.Misc.OWNER_CAN_ATTACK_PET) {
                     event.setCancelled(true);
-                } else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer(), true)) {
+                } else if (!myPet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, myPet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
                 }
             }
@@ -258,9 +257,9 @@ public class EntityListener implements Listener {
                     }
 
                     event.setCancelled(true);
-                } else if (myPet.getOwner().equals(damager) && (!Configuration.Misc.OWNER_CAN_ATTACK_PET || !PvPChecker.canHurt(myPet.getOwner().getPlayer()))) {
+                } else if (myPet.getOwner().equals(damager) && (!Configuration.Misc.OWNER_CAN_ATTACK_PET)) {
                     event.setCancelled(true);
-                } else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer(), true)) {
+                } else if (!myPet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, myPet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
                 }
             }
@@ -270,14 +269,14 @@ public class EntityListener implements Listener {
                 if (myPet == projectile.getShooter().getMyPet()) {
                     event.setCancelled(true);
                 }
-                if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
+                if (!MyPetApi.getHookHelper().canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
                 }
             }
             if (!event.isCancelled() && event.getDamager() instanceof LivingEntity) {
                 LivingEntity damager = (LivingEntity) event.getDamager();
                 if (damager instanceof Player) {
-                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
                         return;
                     }
                 }
@@ -315,7 +314,7 @@ public class EntityListener implements Listener {
                     if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetApi.getPlayerManager().isMyPetPlayer(damager) && MyPetApi.getPlayerManager().getMyPetPlayer(damager).isCaptureHelperActive()) {
                         CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
-                    if (PluginHookManager.isPluginUsable("Citizens")) {
+                    if (MyPetApi.getPluginHookManager().isHookActive(CitizensHook.class)) {
                         try {
                             if (CitizensAPI.getNPCRegistry().isNPC(leashTarget)) {
                                 return;
@@ -323,7 +322,7 @@ public class EntityListener implements Listener {
                         } catch (Error | Exception ignored) {
                         }
                     }
-                    if (!PvPChecker.canHurt(damager, leashTarget)) {
+                    if (!MyPetApi.getHookHelper().canHurt(damager, leashTarget)) {
                         return;
                     }
 
@@ -751,14 +750,14 @@ public class EntityListener implements Listener {
             sendDeathMessage(event);
             myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner.getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
-            if (EconomyHook.canUseEconomy() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.hasLegacy(owner.getPlayer(), "MyPet.command.respawn")) {
+            if (MyPetApi.getPluginHookManager().isHookActive(EconomyHook.class) && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.hasLegacy(owner.getPlayer(), "MyPet.command.respawn")) {
                 double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
-                if (EconomyHook.canPay(owner, costs)) {
-                    EconomyHook.pay(owner, costs);
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", owner.getPlayer()), myPet.getPetName(), costs + " " + EconomyHook.getEconomy().currencyNameSingular()));
+                if (MyPetApi.getHookHelper().getEconomy().canPay(owner, costs)) {
+                    MyPetApi.getHookHelper().getEconomy().pay(owner, costs);
+                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", owner.getPlayer()), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                     myPet.setRespawnTime(1);
                 } else {
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", owner.getPlayer()), myPet.getPetName(), costs + " " + EconomyHook.getEconomy().currencyNameSingular()));
+                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", owner.getPlayer()), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                 }
             }
         }

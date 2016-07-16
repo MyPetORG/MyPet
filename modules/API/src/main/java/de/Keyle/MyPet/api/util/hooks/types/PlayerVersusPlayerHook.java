@@ -18,24 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.util.hooks;
+package de.Keyle.MyPet.api.util.hooks.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import org.bukkit.entity.Entity;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public abstract class HookManager {
-    public abstract boolean canHurt(Player attacker, Player victim, boolean viceversa);
-
-    public abstract boolean canHurt(Player attacker, Player victim);
-
-    public abstract boolean canHurt(Player attacker, Entity victim);
-
-    public abstract boolean canUseMyPet(MyPetPlayer player);
-
-    public abstract boolean isInParty(Player player);
-
-    public abstract List<Player> getPartyMembers(Player player);
+public interface PlayerVersusPlayerHook extends PluginHook {
+    boolean canHurt(Player attacker, Player defender);
 }

@@ -18,8 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.hooks.arenas;
+package de.Keyle.MyPet.util.hooks;
 
+import au.com.mineauz.minigames.Minigames;
 import au.com.mineauz.minigames.events.JoinMinigameEvent;
 import au.com.mineauz.minigames.events.SpectateMinigameEvent;
 import de.Keyle.MyPet.MyPetApi;
@@ -27,44 +28,48 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-public class Minigames implements Listener {
+@PluginHookName(value = "Minigames", classPath = "au.com.mineauz.minigames.Minigames")
+public class MinigamesHook implements Listener, ArenaHook {
 
-    private static au.com.mineauz.minigames.Minigames plugin;
-    private static boolean active = false;
+    protected Minigames minigames;
 
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("Minigames", "au.com.mineauz.minigames.Minigames")) {
-            plugin = PluginHookManager.getPluginInstance(au.com.mineauz.minigames.Minigames.class).get();
-            Bukkit.getPluginManager().registerEvents(new Minigames(), MyPetApi.getPlugin());
-            MyPetApi.getLogger().info("Minigames hook activated.");
-            active = true;
+    @Override
+    public boolean onEnable() {
+        if (Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES) {
+            minigames = MyPetApi.getPluginHookManager().getPluginInstance(Minigames.class).get();
+            Bukkit.getPluginManager().registerEvents(new MinigamesHook(), MyPetApi.getPlugin());
+            return true;
         }
+        return false;
     }
 
-    public static boolean isInMinigame(MyPetPlayer owner) {
-        if (active) {
-            try {
-                if (plugin != null) {
-                    Player p = owner.getPlayer();
-                    return plugin.pdata.getMinigamePlayer(p).isInMinigame();
-                }
-            } catch (Exception e) {
-                active = false;
-            }
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public boolean isInArena(MyPetPlayer owner) {
+        try {
+            Player p = owner.getPlayer();
+            return minigames.pdata.getMinigamePlayer(p).isInMinigame();
+        } catch (Exception ignored) {
         }
         return false;
     }
 
     @EventHandler
     public void onJoinMinigame(JoinMinigameEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES && MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
@@ -75,7 +80,7 @@ public class Minigames implements Listener {
 
     @EventHandler
     public void onSpectateMinigame(SpectateMinigameEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES && MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
@@ -86,10 +91,8 @@ public class Minigames implements Listener {
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES) {
-            if (isInMinigame(event.getOwner())) {
-                event.setCancelled(true);
-            }
+        if (isInArena(event.getOwner())) {
+            event.setCancelled(true);
         }
     }
 }

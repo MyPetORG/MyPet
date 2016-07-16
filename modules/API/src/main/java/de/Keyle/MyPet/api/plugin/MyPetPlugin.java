@@ -27,7 +27,8 @@ import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.CompatUtil;
-import de.Keyle.MyPet.api.util.hooks.HookManager;
+import de.Keyle.MyPet.api.util.hooks.HookHelper;
+import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -49,8 +50,10 @@ public interface MyPetPlugin extends Plugin {
 
     MyPetManager getMyPetManager();
 
-    HookManager getHookManager();
+    HookHelper getHookHelper();
 
     @Deprecated
     boolean isInOnlineMode();
+
+    PluginHookManager getPluginHookManager();
 }

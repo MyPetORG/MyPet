@@ -72,7 +72,7 @@ public class BehaviorFarmTarget extends AIGoal {
             if (!entityMonster.isAlive() || petEntity.h(entityMonster) > 91) {
                 continue;
             }
-            if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), entityMonster.getBukkitEntity())) {
+            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityMonster.getBukkitEntity())) {
                 continue;
             }
             this.target = entityMonster;

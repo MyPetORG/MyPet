@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.entity;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import org.bukkit.entity.EntityType;
 
 @Compat("v1_8_R3")
@@ -31,7 +31,7 @@ public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
     @Override
     public boolean isLeashableEntityType(EntityType bukkitType) {
         if (bukkitType == EntityType.ENDER_DRAGON) {
-            return PluginHookManager.isPluginUsable("ProtocolLib"); //ToDo & active
+            return MyPetApi.getPluginHookManager().isPluginUsable("ProtocolLib"); //ToDo & active
         }
 
         try {

@@ -18,47 +18,67 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.hooks.arenas;
+package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-public class PvPArena implements Listener {
+@PluginHookName("pvparena")
+public class PvPArenaHook implements PlayerVersusPlayerHook, ArenaHook, Listener {
 
-    private static boolean active = false;
-
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("pvparena")) {
-            Bukkit.getPluginManager().registerEvents(new PvPArena(), MyPetApi.getPlugin());
-            MyPetApi.getLogger().info("PvPArena hook activated.");
-            active = true;
+    @Override
+    public boolean onEnable() {
+        if (Configuration.Hooks.USE_PvPArena) {
+            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+            return true;
         }
+        return false;
     }
 
-    public static boolean isInPvPArena(MyPetPlayer owner) {
-        if (active) {
-            try {
-                return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
-            } catch (Exception e) {
-                active = false;
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        try {
+            if (!PVPArenaAPI.getArenaName(defender).equals("")) {
+                if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender))) {
+                    return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
+                }
             }
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isInArena(MyPetPlayer owner) {
+        try {
+            return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
+        } catch (Exception ignored) {
         }
         return false;
     }
 
     @EventHandler
     public void onJoinPvPArena(PAJoinEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_ARENA && MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
@@ -69,10 +89,8 @@ public class PvPArena implements Listener {
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_ARENA) {
-            if (isInPvPArena(event.getOwner())) {
+        if (isInArena(event.getOwner())) {
                 event.setCancelled(true);
             }
-        }
     }
 }

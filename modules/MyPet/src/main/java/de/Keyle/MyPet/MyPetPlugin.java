@@ -37,7 +37,7 @@ import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
-import de.Keyle.MyPet.api.util.hooks.HookManager;
+import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.*;
@@ -48,7 +48,7 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.Metrics;
 import de.Keyle.MyPet.util.UpdateCheck;
-import de.Keyle.MyPet.util.hooks.Hooks;
+import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.apache.commons.lang.StringUtils;
@@ -74,7 +74,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private CompatUtil compatUtil;
     private PlayerManager playerManager;
     private MyPetManager myPetManager;
-    private HookManager hookManager;
+    private HookHelper hookHelper;
+    private PluginHookManager pluginHookManager;
 
     public void onDisable() {
         if (isReady) {
@@ -85,10 +86,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             entityRegistry.unregisterEntityTypes();
         }
         Timer.reset();
-
-        PluginHookManager.reset();
-        Hooks.disable();
-
         Bukkit.getServer().getScheduler().cancelTasks(this);
 
         if (getLogger() instanceof MyPetLogger) {
@@ -130,11 +127,31 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         entityRegistry = compatUtil.getComapatInstance(EntityRegistry.class, "entity", "EntityRegistry");
         myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
-        hookManager = new Hooks();
+        hookHelper = new de.Keyle.MyPet.util.HookHelper();
+
+        pluginHookManager = new PluginHookManager();
+        pluginHookManager.registerHook(AncientHook.class);
+        pluginHookManager.registerHook(BattleArenaHook.class);
+        pluginHookManager.registerHook(CitizensHook.class);
+        pluginHookManager.registerHook(FactionsHook.class);
+        pluginHookManager.registerHook(GriefPreventionHook.class);
+        pluginHookManager.registerHook(HeroesHook.class);
+        pluginHookManager.registerHook(KingdomsHook.class);
+        pluginHookManager.registerHook(MagicSpellsHook.class);
+        pluginHookManager.registerHook(McMMOHook.class);
+        pluginHookManager.registerHook(MinigamesHook.class);
+        pluginHookManager.registerHook(MobArenaHook.class);
+        pluginHookManager.registerHook(ProtocolLibHook.class);
+        pluginHookManager.registerHook(PvPArenaHook.class);
+        pluginHookManager.registerHook(PvPManagerHook.class);
+        pluginHookManager.registerHook(ResidenceHook.class);
+        pluginHookManager.registerHook(SkillApiHook.class);
+        pluginHookManager.registerHook(SurvivalGamesHook.class);
+        pluginHookManager.registerHook(TownyHook.class);
+        pluginHookManager.registerHook(UltimateSurvivalGamesHook.class);
+        pluginHookManager.registerHook(VaultHook.class);
 
         entityRegistry.registerEntityTypes();
-
-        PluginHookManager.reset();
 
         ConfigurationLoader.setDefault();
         ConfigurationLoader.loadConfiguration();
@@ -156,8 +173,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getServer().getPluginManager().registerEvents(levelupListener, this);
         WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
-        PluginHookManager pluginSupportListener = new PluginHookManager();
-        getServer().getPluginManager().registerEvents(pluginSupportListener, this);
 
         // register commands
         getCommand("petname").setExecutor(new CommandName());
@@ -464,6 +479,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         return Bukkit.getOnlineMode();
     }
 
+    @Override
+    public PluginHookManager getPluginHookManager() {
+        return pluginHookManager;
+    }
+
     public File getFile() {
         return super.getFile();
     }
@@ -492,9 +512,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         return myPetManager;
     }
 
-    @Override
-    public HookManager getHookManager() {
-        return hookManager;
+    public HookHelper getHookHelper() {
+        return hookHelper;
     }
 
     public Repository getRepository() {

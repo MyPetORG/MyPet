@@ -293,7 +293,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         } else {
             menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
         }
-        if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookManager().isInParty(getMyPet().getOwner().getPlayer())) {
+        if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookHelper().isInParty(getMyPet().getOwner().getPlayer())) {
             if (receiver != BeaconReceiver.Party) {
                 menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setMeta(partyMeta));
             } else {
@@ -568,7 +568,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
 
             List<Player> members = null;
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BeaconReceiver.Party) {
-                members = MyPetApi.getHookManager().getPartyMembers(getMyPet().getOwner().getPlayer());
+                members = MyPetApi.getHookHelper().getPartyMembers(getMyPet().getOwner().getPlayer());
             }
             int duration = this.duration * 20;
 
