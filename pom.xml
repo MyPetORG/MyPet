@@ -99,7 +99,7 @@
         <griefprevention.version>13.9.1</griefprevention.version>
 
         <!-- http://dev.bukkit.org/bukkit-plugins/pvpmanager/ -->
-        <pvpmanager.version>3.0</pvpmanager.version>
+        <pvpmanager.version>3.1.8</pvpmanager.version>
 
         <!-- https://www.spigotmc.org/resources/kingdoms-plugin-demo.6392/ -->
         <kingdoms.version>8.5.4</kingdoms.version>
