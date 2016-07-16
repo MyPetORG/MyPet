@@ -21,111 +21,117 @@
 package de.Keyle.MyPet.api.util.hooks;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ArrayListMultimap;
+import de.Keyle.MyPet.MyPetApi;
+import org.apache.commons.lang.ClassUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class PluginHookManager implements Listener {
+public class PluginHookManager {
+    ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
+    Map<String, PluginHook> hookByName = new HashMap<>();
+    Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
 
-    private static PluginManager pluginManager = null;
-    private static Map<String, Plugin> pluginInstances = new HashMap<>();
-    private static Map<String, String> pluginNames = new HashMap<>();
-    private static Map<String, Boolean> pluginFound = new HashMap<>();
+    @SuppressWarnings("unchecked")
+    public void registerHook(Class<? extends PluginHook> hookClass) {
+        if (hookClass.isAnnotationPresent(PluginHookName.class)) {
+            PluginHookName hookNameAnnotation = hookClass.getAnnotation(PluginHookName.class);
 
+            String pluginName = hookNameAnnotation.value();
+            if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
+                if (!isPluginUsable(pluginName, hookNameAnnotation.classPath())) {
+                    return;
+                }
+            } else {
+                if (!isPluginUsable(pluginName)) {
+                    return;
+                }
+            }
+            try {
+                PluginHook hook = hookClass.newInstance();
 
-    public static <T extends JavaPlugin> Optional<T> getPluginInstance(Class<T> clazz) {
-        if (pluginManager == null) {
-            pluginManager = Bukkit.getPluginManager();
+                if (hook.onEnable()) {
+
+                    boolean genericHook = true;
+                    for (Object o : ClassUtils.getAllInterfaces(hookClass)) {
+                        if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
+                            hooks.put((Class) o, hook);
+                            genericHook = false;
+                        }
+                    }
+                    if (genericHook) {
+                        hooks.put(PluginHook.class, hook);
+                    }
+                    hookByName.put(pluginName, hook);
+                    hookByClass.put(hookClass, hook);
+
+                    String message = pluginName;
+                    if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
+                        message += "(" + hookNameAnnotation.classPath() + ")";
+                    }
+                    MyPetApi.getLogger().info(message + " hook activated.");
+                }
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
-        if (pluginInstances.containsKey(clazz.getName())) {
-            return Optional.of(clazz.cast(pluginInstances.get(clazz.getName())));
-        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends PluginHook> List<T> getHooks(Class<? extends T> hookClass) {
+        return (List<T>) hooks.get(hookClass);
+    }
+
+    public boolean hasHooks(Class<? extends PluginHook> hookClass) {
+        return hooks.containsKey(hookClass);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends PluginHook> T getHook(Class<? extends T> hookClass) {
+        return (T) hookByClass.get(hookClass);
+    }
+
+    public PluginHook getHook(String name) {
+        return hookByName.get(name);
+    }
+
+    public boolean isHookActive(String name) {
+        return hookByName.containsKey(name);
+    }
+
+    public boolean isHookActive(Class<? extends PluginHook> hookClass) {
+        return hookByClass.containsKey(hookClass);
+    }
+
+    public <T extends JavaPlugin> Optional<T> getPluginInstance(Class<T> clazz) {
         try {
             T plugin = JavaPlugin.getPlugin(clazz);
             if (plugin != null) {
-                pluginInstances.put(clazz.getName(), plugin);
-                pluginFound.put(clazz.getName(), true);
-                pluginNames.put(plugin.getName(), clazz.getName());
-                //DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
                 return Optional.of(plugin);
             }
         } catch (NoSuchMethodError e) {
-            for (Plugin p : pluginManager.getPlugins()) {
+            for (Plugin p : Bukkit.getPluginManager().getPlugins()) {
                 if (clazz.isInstance(p)) {
                     T plugin = clazz.cast(p);
-                    pluginInstances.put(clazz.getName(), plugin);
-                    pluginFound.put(clazz.getName(), true);
-                    pluginNames.put(plugin.getName(), clazz.getName());
-                    //DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
                     return Optional.of(plugin);
                 }
             }
         }
-        pluginFound.put(clazz.getName(), false);
         return Optional.absent();
     }
 
-    public static boolean isPluginUsable(String pluginName) {
-        if (pluginManager == null) {
-            pluginManager = Bukkit.getPluginManager();
-        }
-        if (pluginFound.containsKey(pluginName)) {
-            return pluginFound.get(pluginName);
-        }
-        if (!pluginNames.containsKey(pluginName)) {
-            JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
-            if (plugin != null && plugin.isEnabled()) {
-                return getPluginInstance(plugin.getClass()).isPresent();
-            } else {
-                pluginFound.put(pluginName, false);
-            }
-            return false;
-        } else {
-            return true;
-        }
+    public boolean isPluginUsable(String pluginName) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.isEnabled();
     }
 
     public static boolean isPluginUsable(String pluginName, String className) {
-        if (pluginManager == null) {
-            pluginManager = Bukkit.getPluginManager();
-        }
-        if (pluginFound.containsKey(className)) {
-            return pluginFound.get(className);
-        }
-        if (!pluginNames.containsKey(pluginName) || !pluginFound.containsKey(className)) {
-            JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
-            if (plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className)) {
-                return getPluginInstance(plugin.getClass()).isPresent();
-            } else {
-                pluginFound.put(className, false);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static void reset() {
-        pluginFound.clear();
-        pluginInstances.clear();
-        pluginNames.clear();
-        pluginManager = null;
-    }
-
-    @EventHandler
-    public void onPluginDisable(final PluginDisableEvent event) {
-        String pluginName = event.getPlugin().getName();
-        String className = event.getPlugin().getClass().getName();
-
-        pluginNames.remove(pluginName);
-        pluginFound.remove(className);
-        pluginInstances.remove(className);
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className);
     }
 }

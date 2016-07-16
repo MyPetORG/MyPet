@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.options.CommandOptionHealthbar;
@@ -38,7 +39,7 @@ public class CommandOptions implements CommandExecutor, TabCompleter {
     private static Map<String, CommandOption> commandOptions = new HashMap<>();
 
     public CommandOptions() {
-        if (ResourcePackApiHook.isActive()) {
+        if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class)) {
             commandOptions.put("resource-pack", new CommandOptionResourcePack());
         }
         commandOptions.put("healthbar", new CommandOptionHealthbar());

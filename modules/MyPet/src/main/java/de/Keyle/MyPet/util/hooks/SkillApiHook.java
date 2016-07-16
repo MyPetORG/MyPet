@@ -26,22 +26,26 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-public class SkillApi implements Listener {
+@PluginHookName("SkillAPI")
+public class SkillApiHook implements Listener, PluginHook {
 
-    private static boolean active = false;
+    @Override
+    public boolean onEnable() {
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        return true;
+    }
 
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("SkillAPI")) {
-            active = true;
-            Bukkit.getPluginManager().registerEvents(new SkillApi(), MyPetApi.getPlugin());
-            MyPetApi.getLogger().info("SkillAPI hook activated.");
-        }
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
     }
 
     @EventHandler
@@ -81,9 +85,5 @@ public class SkillApi implements Listener {
                 }
             }
         }
-    }
-
-    public static boolean isActive() {
-        return active;
     }
 }

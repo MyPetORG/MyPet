@@ -32,10 +32,9 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.CaptureHelper;
-import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.keyle.knbt.*;
 import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Bukkit;
@@ -452,7 +451,7 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
             }
         }
 
-        boolean citizensUsable = PluginHookManager.isPluginUsable("Citizens");
+        boolean citizensUsable = MyPetApi.getPluginHookManager().isHookActive(CitizensHook.class);
 
         if (isCaptureHelperActive()) {
             if (captureHelperTimer-- <= 0) {
@@ -473,7 +472,7 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
                             } catch (Error | Exception ignored) {
                             }
                         }
-                        if (!PvPChecker.canHurt(p, entity)) {
+                        if (!MyPetApi.getHookHelper().canHurt(p, entity)) {
                             continue;
                         }
                         if (!Permissions.hasLegacy(this, "MyPet.leash.", MyPetType.byEntityTypeName(entity.getType().name()))) {

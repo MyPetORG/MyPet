@@ -42,7 +42,6 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
-import de.Keyle.MyPet.api.util.hooks.EconomyHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
@@ -50,6 +49,7 @@ import de.Keyle.MyPet.skill.skills.Damage;
 import de.Keyle.MyPet.skill.skills.HP;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.skill.skills.Ranged;
+import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -550,11 +550,12 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 respawnTime--;
                 if (respawnTime <= 0) {
                     respawnPet();
-                } else if (EconomyHook.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
+                } else if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
                     double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
-                    if (EconomyHook.canPay(getOwner().getPlayer(), cost)) {
-                        EconomyHook.pay(getOwner().getPlayer(), cost);
-                        getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + EconomyHook.getEconomy().currencyNameSingular()));
+                    VaultHook vaultHook = MyPetApi.getPluginHookManager().getHook(VaultHook.class);
+                    if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
+                        vaultHook.pay(getOwner().getPlayer(), cost);
+                        getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + vaultHook.currencyNameSingular()));
                         respawnTime = 1;
                     }
                 }

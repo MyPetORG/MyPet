@@ -62,7 +62,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                 for (SkillInstance skill : myPet.getSkills().getSkills()) {
                     if (skill.isActive()) {
                         String message = "  ";
-                        if (ResourcePackApiHook.useIcons(petOwner)) {
+                        if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class) && MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).useIcons(petOwner)) {
                             message += ResourcePackIcons.valueOf("Skill_" + skill.getName()).getCode() + " ";
                         }
                         sender.sendMessage(message + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getPlayerLanguage(petOwner)) + ChatColor.RESET + " " + skill.getFormattedValue());

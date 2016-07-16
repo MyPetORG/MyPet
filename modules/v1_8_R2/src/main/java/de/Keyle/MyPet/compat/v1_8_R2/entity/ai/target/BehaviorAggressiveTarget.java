@@ -78,12 +78,12 @@ public class BehaviorAggressiveTarget extends AIGoal {
                     if (myPet.getOwner().equals(targetPlayer)) {
                         continue;
                     }
-                    if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                         continue;
                     }
                 } else if (entityLiving instanceof EntityMyPet) {
                     MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
-                    if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                         continue;
                     }
                 } else if (entityLiving instanceof EntityTameableAnimal) {
@@ -92,12 +92,12 @@ public class BehaviorAggressiveTarget extends AIGoal {
                         Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
                         if (myPet.getOwner().equals(tameableOwner)) {
                             continue;
-                        } else if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
+                        } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
                             continue;
                         }
                     }
                 }
-                if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
+                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
                     continue;
                 }
                 this.target = entityLiving;

@@ -38,7 +38,6 @@ import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.skills.*;
-import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
@@ -64,7 +63,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void on(AsyncPlayerChatEvent event) {
         if (event.getMessage().contains(":mypet:")) {
-            if (ResourcePackApiHook.useIcons(event.getPlayer())) {
+            if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class) && MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).useIcons(event.getPlayer())) {
                 event.setMessage(event.getMessage().replaceAll(":mypet:", ResourcePackIcons.Logo.getCode()));
             }
         }
@@ -145,22 +144,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void on(final PlayerJoinEvent event) {
         long delay = MyPetApi.getRepository() instanceof NbtRepository ? 1L : 20L;
-
-        if (Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    MyPetApi.getRepository().isMyPetPlayer(event.getPlayer(), new RepositoryCallback<Boolean>() {
-                        @Override
-                        public void callback(final Boolean result) {
-                            if (!result) {
-                                ResourcePackApiHook.installResourcePack(event.getPlayer());
-                            }
-                        }
-                    });
-                }
-            }.runTaskLater(MyPetApi.getPlugin(), delay);
-        }
 
         new BukkitRunnable() {
             @Override
@@ -243,7 +226,7 @@ public class PlayerListener implements Listener {
                         }
                     }
                 }
-                if (!PvPChecker.canHurt(projectile.getMyPetProjectile().getShooter().getOwner().getPlayer(), victim, true)) {
+                if (!MyPetApi.getHookHelper().canHurt(projectile.getMyPetProjectile().getShooter().getOwner().getPlayer(), victim, true)) {
                     event.setCancelled(true);
                 }
             }

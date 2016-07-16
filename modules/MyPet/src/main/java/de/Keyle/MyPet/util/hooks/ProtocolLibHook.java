@@ -34,7 +34,8 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -44,43 +45,40 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class ProtocolLib {
-    private static boolean active = false;
+@PluginHookName("ProtocolLib")
+public class ProtocolLibHook implements PluginHook {
 
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("ProtocolLib")) {
-            try {
-                // reverse dragon facing direction
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    registerEnderDragonFix_post_1_9();
-                } else {
-                    registerEnderDragonFix();
-                }
-
-                if (MyPetApi.getCompatUtil().getInternalVersion().equals("v1_7_R4")) {
-                    boolean activate = true;
-                    try {
-                        Class.forName("org.spigotmc.SpigotConfig");
-                    } catch (Throwable throwable) {
-                        activate = false;
-                    }
-                    if (activate) {
-                        registerCompatFix_1_8();
-                        MyPetApi.getLogger().info("1.8 Version hack fix activated.");
-                    }
-                }
-
-                MyPetApi.getLogger().info("ProtocolLib hook activated.");
-
-                active = true;
-            } catch (Exception e) {
-                active = false;
+    @Override
+    public boolean onEnable() {
+        try {
+            // reverse dragon facing direction
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                registerEnderDragonFix_post_1_9();
+            } else {
+                registerEnderDragonFix();
             }
+
+            if (MyPetApi.getCompatUtil().getInternalVersion().equals("v1_7_R4")) {
+                boolean activate = true;
+                try {
+                    Class.forName("org.spigotmc.SpigotConfig");
+                } catch (Throwable throwable) {
+                    activate = false;
+                }
+                if (activate) {
+                    registerCompatFix_1_8();
+                }
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
-    public static boolean isActive() {
-        return active;
+    @Override
+    public void onDisable() {
+        ProtocolLibrary.getProtocolManager().removePacketListeners(MyPetApi.getPlugin());
     }
 
     private static void registerEnderDragonFix_post_1_9() {
@@ -302,11 +300,5 @@ public class ProtocolLib {
                     }
                 }
         );
-    }
-
-    public static void disable() {
-        if (active) {
-            ProtocolLibrary.getProtocolManager().removePacketListeners(MyPetApi.getPlugin());
-        }
     }
 }

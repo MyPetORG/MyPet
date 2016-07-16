@@ -28,7 +28,8 @@ import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.CompatUtil;
-import de.Keyle.MyPet.api.util.hooks.HookManager;
+import de.Keyle.MyPet.api.util.hooks.HookHelper;
+import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 
 import java.util.logging.Logger;
 
@@ -88,7 +89,11 @@ public class MyPetApi {
         return plugin.getMyPetManager();
     }
 
-    public static HookManager getHookManager() {
-        return plugin.getHookManager();
+    public static HookHelper getHookHelper() {
+        return plugin.getHookHelper();
+    }
+
+    public static PluginHookManager getPluginHookManager() {
+        return plugin.getPluginHookManager();
     }
 }

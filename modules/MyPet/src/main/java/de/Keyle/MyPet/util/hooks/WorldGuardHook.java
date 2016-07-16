@@ -22,41 +22,56 @@ package de.Keyle.MyPet.util.hooks;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.Set;
 
-public class WorldGuardHook {
-    private static boolean active = false;
-    private static WorldGuardPlugin wgp = null;
-    private static boolean useCustomFlags = false;
+@PluginHookName("WorldGuard")
+public class WorldGuardHook implements PlayerVersusPlayerHook {
 
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("WorldGuard")) {
-            active = true;
-            wgp = PluginHookManager.getPluginInstance(WorldGuardPlugin.class).get();
-            MyPetApi.getLogger().info("WorldGuard hook activated.");
+    protected WorldGuardPlugin wgp = null;
+    protected WorldGuardCustomFlagsHook flagHook = null;
 
-            if (PluginHookManager.isPluginUsable("WGCustomFlags")) {
-                useCustomFlags = true;
-                WorldGuardCustomFlagsHook.findPlugin(wgp);
-            }
+    @Override
+    public boolean onEnable() {
+        if (Configuration.Hooks.USE_WorldGuard) {
+            wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+            return true;
         }
+        return false;
     }
 
-    public static boolean canFly(Location location) {
-        if (useCustomFlags) {
-            if (!WorldGuardCustomFlagsHook.isActive()) {
-                useCustomFlags = false;
-            } else {
-                return WorldGuardCustomFlagsHook.canFly(location);
-            }
+    @Override
+    public void onDisable() {
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        try {
+            Location location = defender.getLocation();
+            WorldGuardPlugin wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+            RegionManager mgr = wgp.getRegionManager(location.getWorld());
+            ApplicableRegionSet set = mgr.getApplicableRegions(location);
+            StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
+            return s == null || s == StateFlag.State.ALLOW;
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    public boolean canFly(Location location) {
+        if (flagHook != null) {
+            return flagHook.canFly(location);
         }
         try {
             Map<String, Boolean> flyZones = Configuration.Skilltree.Skill.Ride.FLY_ZONES;
@@ -88,22 +103,20 @@ public class WorldGuardHook {
             }
 
             return allowed;
-        } catch (Throwable e) {
-            active = false;
+        } catch (Throwable ignored) {
         }
         return true;
     }
 
-    public static boolean isActive() {
-        return active;
+    public void enableFlagSupport(WorldGuardCustomFlagsHook hook) {
+        flagHook = hook;
     }
 
-    public static void disable() {
-        active = false;
-        wgp = null;
-        if (useCustomFlags) {
-            useCustomFlags = false;
-            WorldGuardCustomFlagsHook.disable();
-        }
+    public void disableFlagSupport() {
+        flagHook = null;
+    }
+
+    public WorldGuardPlugin getPlugin() {
+        return wgp;
     }
 }

@@ -203,7 +203,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
                     infoShown = true;
                     String donationMessage = "" + ChatColor.GOLD;
-                    if (ResourcePackApiHook.useIcons((Player) sender)) {
+                    if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class) && MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).useIcons((Player) sender)) {
                         donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
                     } else {
                         donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
@@ -211,7 +211,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
 
                     donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), player) + " ";
 
-                    if (ResourcePackApiHook.useIcons((Player) sender)) {
+                    if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class) && MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).useIcons((Player) sender)) {
                         donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
                     } else {
                         donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();

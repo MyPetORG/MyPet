@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.hooks.EconomyHook;
+import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.fanciful.FancyMessage;
 import org.bukkit.Bukkit;
@@ -97,8 +97,8 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                         }
 
                         if (offer.getPrice() > 0) {
-                            if (!EconomyHook.transfer(player, owner, offer.getPrice())) {
-                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.NotEnoughMoney", player), EconomyHook.getEconomy().format(offer.getPrice())));
+                            if (!MyPetApi.getHookHelper().getEconomy().transfer(player, owner, offer.getPrice())) {
+                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.NotEnoughMoney", player), MyPetApi.getHookHelper().getEconomy().format(offer.getPrice())));
                                 return true;
                             }
                         }
@@ -219,7 +219,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     double price = 0;
 
                     if (args.length >= 2) {
-                        if (EconomyHook.canUseEconomy()) {
+                        if (MyPetApi.getPluginHookManager().isHookActive(EconomyHook.class)) {
                             if (Util.isDouble(args[1])) {
                                 price = Double.parseDouble(args[1]);
                             } else {
@@ -235,8 +235,8 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     Offer offer = new Offer(price, myPet, player.getUniqueId(), receiver.getUniqueId(), receiver.getName(), player.getName());
                     offers.put(receiver.getUniqueId(), offer);
                     if (price > 0) {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Offer.Price", player), myPet.getPetName(), receiver.getName(), EconomyHook.getEconomy().format(price)));
-                        receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer.Price", receiver), player.getName(), EconomyHook.getEconomy().format(price)));
+                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Offer.Price", player), myPet.getPetName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+                        receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer.Price", receiver), player.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
                     } else {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Offer", player), myPet.getPetName(), receiver.getName()));
                         receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer", receiver), player.getName()));

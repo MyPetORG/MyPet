@@ -63,12 +63,12 @@ public class HurtByTarget extends AIGoal {
 
             if (targetPlayer == myPet.getOwner().getPlayer()) {
                 return false;
-            } else if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
+            } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                 return false;
             }
         } else if (target instanceof EntityMyPet) {
             MyPet targetMyPet = ((EntityMyPet) target).getMyPet();
-            if (!MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                 return false;
             }
         } else if (target instanceof EntityTameableAnimal) {
@@ -80,7 +80,7 @@ public class HurtByTarget extends AIGoal {
                 }
             }
         }
-        return MyPetApi.getHookManager().canHurt(myPet.getOwner().getPlayer(), target.getBukkitEntity());
+        return MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), target.getBukkitEntity());
     }
 
     @Override

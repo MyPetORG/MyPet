@@ -18,47 +18,53 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.hooks.arenas;
+package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import mc.alk.arena.events.players.ArenaPlayerEnterEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-public class BattleArena implements Listener {
-    private static boolean active = false;
+@PluginHookName("BattleArena")
+public class BattleArenaHook implements Listener, ArenaHook {
 
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("BattleArena")) {
-            Bukkit.getPluginManager().registerEvents(new BattleArena(), MyPetApi.getPlugin());
-            active = true;
-            MyPetApi.getLogger().info("BattleArena hook activated.");
+    @Override
+    public boolean onEnable() {
+        if (Configuration.Hooks.DISABLE_PETS_IN_ARENA) {
+            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+            return true;
         }
+        return false;
     }
 
-    public static boolean isInBattleArena(MyPetPlayer owner) {
-        if (active) {
-            try {
-                Player p = owner.getPlayer();
-                return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
-            } catch (Exception e) {
-                active = false;
-            }
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public boolean isInArena(MyPetPlayer owner) {
+        try {
+            Player p = owner.getPlayer();
+            return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
+        } catch (Exception ignored) {
         }
         return false;
     }
 
     @EventHandler
     public void onJoinBattleArena(ArenaPlayerEnterEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_ARENA && MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer().getName())) {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer().getName())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
@@ -69,10 +75,8 @@ public class BattleArena implements Listener {
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_ARENA) {
-            if (isInBattleArena(event.getOwner())) {
-                event.setCancelled(true);
-            }
+        if (isInArena(event.getOwner())) {
+            event.setCancelled(true);
         }
     }
 }

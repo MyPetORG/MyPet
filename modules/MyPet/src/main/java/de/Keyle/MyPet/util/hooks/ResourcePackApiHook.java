@@ -24,34 +24,41 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.repository.RepositoryCallback;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.rpapi.ResourcePackAPI;
 import org.inventivetalent.rpapi.ResourcePackStatusEvent;
 
-public class ResourcePackApiHook implements Listener {
+@PluginHookName("ResourcePackApi")
+public class ResourcePackApiHook implements Listener, PluginHook {
+
     public static final String DOWNLOAD_LINK = "http://dl.keyle.de/mypet/MyPet.zip";
 
-    private static boolean active = false;
-
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("ResourcePackApi")) {
-            active = true;
-            Bukkit.getPluginManager().registerEvents(new ResourcePackApiHook(), MyPetApi.getPlugin());
-            MyPetApi.getLogger().info("ResourcePackApi hook activated.");
-        }
+    @Override
+    public boolean onEnable() {
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        return true;
     }
 
-    public static void installResourcePack(Player player) {
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+    }
+
+    public void installResourcePack(Player player) {
         ResourcePackAPI.setResourcepack(player, DOWNLOAD_LINK, "mypet_resourcepack");
     }
 
-    public static boolean useIcons(Player player) {
+    public boolean useIcons(Player player) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             return MyPetApi.getPlayerManager().getMyPetPlayer(player).isUsingResourcePack();
         }
@@ -65,7 +72,26 @@ public class ResourcePackApiHook implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    ResourcePackApiHook.installResourcePack(e.getPlayer().getPlayer());
+                    installResourcePack(e.getPlayer().getPlayer());
+                }
+            }.runTaskLater(MyPetApi.getPlugin(), 30L);
+        }
+    }
+
+    @EventHandler
+    public void on(final PlayerJoinEvent event) {
+        if (Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    MyPetApi.getRepository().isMyPetPlayer(event.getPlayer(), new RepositoryCallback<Boolean>() {
+                        @Override
+                        public void callback(final Boolean result) {
+                            if (!result) {
+                                installResourcePack(event.getPlayer());
+                            }
+                        }
+                    });
                 }
             }.runTaskLater(MyPetApi.getPlugin(), 30L);
         }
@@ -96,13 +122,5 @@ public class ResourcePackApiHook implements Listener {
                     break;
             }
         }
-    }
-
-    public static boolean isActive() {
-        return active;
-    }
-
-    public static void disable() {
-        active = false;
     }
 }

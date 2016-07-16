@@ -26,49 +26,47 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Location;
 
-public class WorldGuardCustomFlagsHook {
+@PluginHookName("WGCustomFlags")
+public class WorldGuardCustomFlagsHook implements PluginHook {
+
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
 
-    private static boolean active = false;
-    private static WorldGuardPlugin wgPlugin = null;
-    private static WGCustomFlagsPlugin wgcfPlugin;
+    protected WorldGuardPlugin wgPlugin = null;
 
-    public static void findPlugin(WorldGuardPlugin wgp) {
-        if (PluginHookManager.isPluginUsable("WGCustomFlags")) {
-            active = true;
-            wgPlugin = wgp;
+    @Override
+    public boolean onEnable() {
+        if (MyPetApi.getPluginHookManager().isHookActive(WorldGuardHook.class)) {
             try {
-                wgcfPlugin = PluginHookManager.getPluginInstance(WGCustomFlagsPlugin.class).get();
+                WGCustomFlagsPlugin wgcfPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WGCustomFlagsPlugin.class).get();
                 wgcfPlugin.addCustomFlag(FLY_FLAG);
-                MyPetApi.getLogger().info("WorldGuard Custom Flags hook activated.");
             } catch (Throwable e) {
-                disable();
+                return false;
             }
+            WorldGuardHook wgh = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
+            wgh.enableFlagSupport(this);
+            wgPlugin = wgh.getPlugin();
         }
+        return false;
     }
 
-    public static boolean canFly(Location location) {
+    @Override
+    public void onDisable() {
+        WorldGuardHook wgh = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
+        wgh.disableFlagSupport();
+    }
+
+    public boolean canFly(Location location) {
         try {
             RegionManager mgr = wgPlugin.getRegionManager(location.getWorld());
             ApplicableRegionSet regions = mgr.getApplicableRegions(location);
             StateFlag.State s = regions.queryState(null, FLY_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
-        } catch (Throwable e) {
-            disable();
+        } catch (Throwable ignored) {
         }
         return true;
-    }
-
-    public static boolean isActive() {
-        return active;
-    }
-
-    public static void disable() {
-        active = false;
-        wgPlugin = null;
-        wgcfPlugin = null;
     }
 }

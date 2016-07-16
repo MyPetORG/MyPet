@@ -34,14 +34,14 @@ public class CommandOptionResourcePack implements CommandOption {
     public boolean onCommandOption(final CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
-            if (ResourcePackApiHook.isActive()) {
+            if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class)) {
                 myPetPlayer.setUsesResourcePack(!myPetPlayer.isUsingResourcePack());
                 if (myPetPlayer.isUsingResourcePack()) {
                     sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", sender));
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            ResourcePackApiHook.installResourcePack((Player) sender);
+                            MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).installResourcePack((Player) sender);
                         }
                     }.runTaskLater(MyPetApi.getPlugin(), 30L);
                 } else {

@@ -18,49 +18,53 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.hooks.arenas;
+package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.MyPet;
 import me.maker56.survivalgames.events.UserLobbyJoinedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import static me.maker56.survivalgames.SurvivalGames.getUserManager;
 
-public class UltimateSurvivalGames implements Listener {
-    public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
+@PluginHookName(value = "SurvivalGames", classPath = "me.maker56.survivalgames.SurvivalGames")
+public class UltimateSurvivalGamesHook implements ArenaHook, Listener {
 
-    private static boolean active = false;
-
-    public static void findPlugin() {
-        if (PluginHookManager.isPluginUsable("SurvivalGames", "me.maker56.survivalgames.SurvivalGames")) {
-            Bukkit.getPluginManager().registerEvents(new UltimateSurvivalGames(), MyPetApi.getPlugin());
-            MyPetApi.getLogger().info("Ultimate Survival Games hook activated.");
-            active = true;
+    @Override
+    public boolean onEnable() {
+        if (Configuration.Hooks.DISABLE_PETS_IN_SURVIVAL_GAMES) {
+            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+            return true;
         }
+        return false;
     }
 
-    public static boolean isInSurvivalGames(MyPetPlayer owner) {
-        if (active) {
-            try {
-                return getUserManager().isPlaying(owner.getPlayer().getName()) || getUserManager().isSpectator(owner.getPlayer().getName());
-            } catch (Throwable e) {
-                active = false;
-            }
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public boolean isInArena(MyPetPlayer owner) {
+        try {
+            return getUserManager().isPlaying(owner.getPlayer().getName()) || getUserManager().isSpectator(owner.getPlayer().getName());
+        } catch (Throwable ignored) {
         }
         return false;
     }
 
     @EventHandler
     public void onJoinPvPArena(UserLobbyJoinedEvent event) {
-        if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetApi.getPlayerManager().isMyPetPlayer(event.getUser().getPlayer())) {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getUser().getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getUser().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
@@ -71,10 +75,8 @@ public class UltimateSurvivalGames implements Listener {
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (active && Configuration.Hooks.DISABLE_PETS_IN_SURVIVAL_GAMES) {
-            if (isInSurvivalGames(event.getOwner())) {
-                event.setCancelled(true);
-            }
+        if (isInArena(event.getOwner())) {
+            event.setCancelled(true);
         }
     }
 }
