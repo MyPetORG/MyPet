@@ -73,7 +73,7 @@ public class Sit extends AIGoal {
         return this.sitting;
     }
 
-    public void toogleSitting() {
+    public void toggleSitting() {
         this.sitting = !this.sitting;
     }
 }

@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
+import de.Keyle.MyPet.api.event.MyPetSitEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -74,8 +75,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected MyPet myPet;
     protected int jumpDelay = 0;
     protected int idleSoundTimer = 0;
+    protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
-    Ride rideSkill = null;
+    protected Ride rideSkill = null;
+    protected Sit sitPathfinder;
 
     int donatorParticleCounter = 0;
 
@@ -104,6 +107,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
             this.getAttributeInstance(GenericAttributes.b).setValue(32.0f);
             this.petNavigation = new VanillaNavigation(this);
+            this.sitPathfinder = new Sit(this);
             this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
             this.setHealth((float) myPet.getHealth());
             this.updateNameTag();
@@ -129,6 +133,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public void setPathfinder() {
         petPathfinderSelector.addGoal("Float", new Float(this));
+        petPathfinderSelector.addGoal("Sit", sitPathfinder);
         petPathfinderSelector.addGoal("Sprint", new Sprint(this, 0.25F));
         petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
         petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 1.5, 20));
@@ -272,7 +277,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public boolean canMove() {
-        return true;
+        return !sitPathfinder.isSitting();
     }
 
     public double getWalkSpeed() {
@@ -350,6 +355,21 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     @Override
     public void updateVisuals() {
+    }
+
+    public boolean toggleSitting() {
+        MyPetSitEvent sitEvent = new MyPetSitEvent(getMyPet(), this.sitPathfinder.isSitting() ? MyPetSitEvent.Action.Follow : MyPetSitEvent.Action.Stay);
+        Bukkit.getPluginManager().callEvent(sitEvent);
+        if (!sitEvent.isCancelled()) {
+            this.sitPathfinder.toggleSitting();
+            if (this.sitPathfinder.isSitting()) {
+                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+            } else {
+                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Follow", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+            }
+            sitCounter = 0;
+        }
+        return !sitEvent.isCancelled();
     }
 
     @Override
@@ -510,6 +530,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     this.passenger.mount(null);
                 }
             }
+        }
+        if (sitPathfinder.isSitting() && sitCounter-- <= 0) {
+            MyPetApi.getPlatformHelper().playParticleEffect(getOwner().getPlayer(), this.getBukkitEntity().getLocation().add(0, getHeadHeight() + 1, 0), "spell", 0F, 0F, 0F, 1F, 3, 32);
+            sitCounter = 30;
         }
         Player p = myPet.getOwner().getPlayer();
         if (p != null && p.isOnline() && !p.isDead()) {
@@ -732,7 +756,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     protected boolean a(EntityHuman entityhuman) {
         try {
-            return handlePlayerInteraction(entityhuman);
+            boolean result = handlePlayerInteraction(entityhuman);
+            if (!result && getMyPet().getOwner().equals(entityhuman)) {
+                result = toggleSitting();
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }

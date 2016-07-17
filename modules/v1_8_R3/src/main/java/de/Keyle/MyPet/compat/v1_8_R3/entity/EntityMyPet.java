@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
+import de.Keyle.MyPet.api.event.MyPetSitEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -368,14 +369,19 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public void updateVisuals() {
     }
 
-    public void toggleSitting() {
-        this.sitPathfinder.toogleSitting();
-        if (this.sitPathfinder.isSitting()) {
-            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
-        } else {
-            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Follow", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+    public boolean toggleSitting() {
+        MyPetSitEvent sitEvent = new MyPetSitEvent(getMyPet(), this.sitPathfinder.isSitting() ? MyPetSitEvent.Action.Follow : MyPetSitEvent.Action.Stay);
+        Bukkit.getPluginManager().callEvent(sitEvent);
+        if (!sitEvent.isCancelled()) {
+            this.sitPathfinder.toggleSitting();
+            if (this.sitPathfinder.isSitting()) {
+                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+            } else {
+                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Follow", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+            }
+            sitCounter = 0;
         }
-        sitCounter = 0;
+        return !sitEvent.isCancelled();
     }
 
     @Override
@@ -772,8 +778,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         try {
             boolean result = handlePlayerInteraction(entityhuman);
             if (!result && getMyPet().getOwner().equals(entityhuman)) {
-                toggleSitting();
-                result = true;
+                result = toggleSitting();
             }
             return result;
         } catch (Exception e) {
