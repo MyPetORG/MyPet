@@ -22,12 +22,25 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class CommandOptionTest implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
+            MyPet myPet = MyPetApi.getMyPetManager().getMyPet((Player) sender);
+
+
+            if (myPet.getEntity().isPresent()) {
+                MyPetBukkitEntity petBukkitEntity = myPet.getEntity().get();
+
+
+            }
+        }
 
         return true;
     }
