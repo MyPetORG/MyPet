@@ -70,4 +70,8 @@ public interface MyPetMinecraftEntity {
     void showPotionParticles(Color color);
 
     void hidePotionParticles();
+
+    void setSitting(boolean sitting);
+
+    boolean isSitting();
 }
