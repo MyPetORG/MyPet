@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyOcelot;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_7_R4.entity.ai.movement.Sit;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.Item;
 import net.minecraft.server.v1_7_R4.ItemStack;
@@ -34,7 +33,6 @@ import org.bukkit.entity.Ocelot.Type;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
-    private Sit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet) {
         super(world, myPet);
@@ -47,10 +45,6 @@ public class EntityMyOcelot extends EntityMyPet {
         } else {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
-    }
-
-    public boolean canMove() {
-        return !sitPathfinder.isSitting();
     }
 
     protected String getDeathSound() {
@@ -107,8 +101,6 @@ public class EntityMyOcelot extends EntityMyPet {
                     return true;
                 }
             }
-            this.sitPathfinder.toogleSitting();
-            return true;
         }
         return false;
     }
@@ -133,11 +125,5 @@ public class EntityMyOcelot extends EntityMyPet {
 
     public MyOcelot getMyPet() {
         return (MyOcelot) myPet;
-    }
-
-    public void setPathfinder() {
-        super.setPathfinder();
-        sitPathfinder = new Sit(this);
-        petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }
 }

@@ -103,7 +103,7 @@ public class EntityMyOcelot extends EntityMyPet {
                     return true;
                 }
             }
-            this.sitPathfinder.toogleSitting();
+            this.sitPathfinder.toggleSitting();
             return true;
         }
         return false;
