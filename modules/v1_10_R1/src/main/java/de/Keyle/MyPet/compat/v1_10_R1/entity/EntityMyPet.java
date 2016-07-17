@@ -368,11 +368,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public boolean toggleSitting() {
-        MyPetSitEvent sitEvent = new MyPetSitEvent(getMyPet(), this.sitPathfinder.isSitting() ? MyPetSitEvent.Action.Follow : MyPetSitEvent.Action.Stay);
+        MyPetSitEvent sitEvent = new MyPetSitEvent(getMyPet(), isSitting() ? MyPetSitEvent.Action.Follow : MyPetSitEvent.Action.Stay);
         Bukkit.getPluginManager().callEvent(sitEvent);
         if (!sitEvent.isCancelled()) {
-            this.sitPathfinder.toogleSitting();
-            if (this.sitPathfinder.isSitting()) {
+            this.sitPathfinder.toggleSitting();
+            if (isSitting()) {
                 getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
             } else {
                 getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Follow", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
@@ -380,6 +380,23 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             sitCounter = 0;
         }
         return !sitEvent.isCancelled();
+    }
+
+    @Override
+    public void setSitting(boolean sitting) {
+        if (isSitting() != sitting) {
+            MyPetSitEvent sitEvent = new MyPetSitEvent(getMyPet(), sitting ? MyPetSitEvent.Action.Follow : MyPetSitEvent.Action.Stay);
+            Bukkit.getPluginManager().callEvent(sitEvent);
+            if (!sitEvent.isCancelled()) {
+                this.sitPathfinder.toggleSitting();
+                sitCounter = 0;
+            }
+        }
+    }
+
+    @Override
+    public boolean isSitting() {
+        return this.sitPathfinder.isSitting();
     }
 
     @Override

@@ -373,6 +373,23 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     @Override
+    public void setSitting(boolean sitting) {
+        if (isSitting() != sitting) {
+            MyPetSitEvent sitEvent = new MyPetSitEvent(getMyPet(), sitting ? MyPetSitEvent.Action.Follow : MyPetSitEvent.Action.Stay);
+            Bukkit.getPluginManager().callEvent(sitEvent);
+            if (!sitEvent.isCancelled()) {
+                this.sitPathfinder.toggleSitting();
+                sitCounter = 0;
+            }
+        }
+    }
+
+    @Override
+    public boolean isSitting() {
+        return this.sitPathfinder.isSitting();
+    }
+
+    @Override
     public boolean isPersistent() {
         return false;
     }

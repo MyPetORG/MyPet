@@ -50,6 +50,16 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
     }
 
     @Override
+    public void setSitting(boolean sitting) {
+        getHandle().setSitting(sitting);
+    }
+
+    @Override
+    public boolean isSitting() {
+        return getHandle().isSitting();
+    }
+
+    @Override
     public EntityMyPet getHandle() {
         return petEntity;
     }
