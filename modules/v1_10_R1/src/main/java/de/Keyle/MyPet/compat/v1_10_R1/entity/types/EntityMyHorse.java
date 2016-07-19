@@ -274,17 +274,17 @@ public class EntityMyHorse extends EntityMyPet {
             if ((this.isVehicle()) && (horseType != 1) && (horseType != 2)) {
                 this.soundCounter += 1;
                 if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0)) {
-                    a(SoundEffects.ct, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                    a(SoundEffects.cv, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                     if ((horseType == 0) && (this.random.nextInt(10) == 0)) {
-                        a(SoundEffects.cq, soundeffecttype.a() * 0.6F, soundeffecttype.b());
+                        a(SoundEffects.cs, soundeffecttype.a() * 0.6F, soundeffecttype.b());
                     }
                 } else if (this.soundCounter <= 5) {
-                    a(SoundEffects.cz, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                    a(SoundEffects.cB, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                 }
             } else if (soundeffecttype == SoundEffectType.a) {
-                a(SoundEffects.cz, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                a(SoundEffects.cB, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             } else {
-                a(SoundEffects.cy, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                a(SoundEffects.cA, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             }
         }
     }
