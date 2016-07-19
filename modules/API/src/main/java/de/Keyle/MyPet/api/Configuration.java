@@ -91,7 +91,7 @@ public class Configuration {
             public static int LOSS_PERCENT = 0;
             public static double LOSS_FIXED = 0;
             public static boolean DROP_LOST_EXP = true;
-            public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = false;
+            public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = true;
             public static boolean ALWAYS_GRANT_PASSIVE_XP = true;
             public static int PASSIVE_PERCENT_PER_MONSTER = 25;
             public static int LEVEL_CAP = 100;
