@@ -1119,7 +1119,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         ride(motionSideways, motionForward, speed); // apply motion
 
         // throw player move event
-        if (!(this instanceof EntityMyHorse)) {
+        if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING && !(this instanceof EntityMyHorse)) {
             double delta = Math.pow(this.locX - this.lastX, 2.0D) + Math.pow(this.locY - this.lastY, 2.0D) + Math.pow(this.locZ - this.lastZ, 2.0D);
             float deltaAngle = Math.abs(this.yaw - lastYaw) + Math.abs(this.pitch - lastPitch);
             if (delta > 0.00390625D || deltaAngle > 10.0F) {
