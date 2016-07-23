@@ -28,7 +28,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import com.google.common.base.Throwables;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
@@ -295,7 +294,7 @@ public class ProtocolLibHook implements PluginHook {
                             Method getVersionMethod = ReflectionUtil.getMethod(networkManager.getClass(), "getVersion");
                             return (Integer) getVersionMethod.invoke(networkManager) > 5;
                         } catch (Exception exception) {
-                            throw Throwables.propagate(exception);
+                            return false;
                         }
                     }
                 }
