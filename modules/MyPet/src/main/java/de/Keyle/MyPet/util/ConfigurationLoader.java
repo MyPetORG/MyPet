@@ -60,6 +60,7 @@ public class ConfigurationLoader {
         config.options().copyHeader(true);
 
         config.addDefault("MyPet.Leash.Consume", Misc.CONSUME_LEASH_ITEM);
+        config.addDefault("MyPet.Leash.AllowRanged", Misc.ALLOW_RANGED_LEASHING);
         config.addDefault("MyPet.OwnerCanAttackPet", Misc.OWNER_CAN_ATTACK_PET);
         config.addDefault("MyPet.DisablePetVersusPlayer", Misc.DISABLE_PET_VS_PLAYER);
         config.addDefault("MyPet.RemovePetsAfterRelease", Misc.REMOVE_PETS_AFTER_RELEASE);
@@ -258,6 +259,7 @@ public class ConfigurationLoader {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
         Misc.CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
+        Misc.ALLOW_RANGED_LEASHING = config.getBoolean("MyPet.Leash.AllowRanged", true);
         Misc.MAX_STORED_PET_COUNT = config.getInt("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
 
         Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));

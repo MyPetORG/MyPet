@@ -327,65 +327,70 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final PlayerInteractEvent event) {
-        if (event.useItemInHand() != Event.Result.DENY && event.getItem() != null) {
-            usedItems.put(event.getPlayer().getUniqueId(), event.getItem().clone());
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    usedItems.remove(event.getPlayer().getUniqueId());
-                }
-            }.runTaskLater(MyPetApi.getPlugin(), 0);
+        if (Configuration.Misc.ALLOW_RANGED_LEASHING) {
+            if (event.useItemInHand() != Event.Result.DENY && event.getItem() != null) {
+                usedItems.put(event.getPlayer().getUniqueId(), event.getItem().clone());
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        usedItems.remove(event.getPlayer().getUniqueId());
+                    }
+                }.runTaskLater(MyPetApi.getPlugin(), 0);
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void on(EntityShootBowEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (event.getProjectile() instanceof Arrow) {
-                Player player = (Player) event.getEntity();
-                Arrow projectile = (Arrow) event.getProjectile();
-                PlayerInventory inventory = player.getInventory();
+        if (Configuration.Misc.ALLOW_RANGED_LEASHING) {
+            if (event.getEntity() instanceof Player) {
+                if (event.getProjectile() instanceof Arrow) {
+                    Player player = (Player) event.getEntity();
+                    Arrow projectile = (Arrow) event.getProjectile();
+                    PlayerInventory inventory = player.getInventory();
 
-                projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), event.getBow().clone()));
+                    projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), event.getBow().clone()));
 
-                ItemStack arrow = null;
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    switch (inventory.getItemInOffHand().getType()) {
-                        case ARROW:
-                        case TIPPED_ARROW:
-                        case SPECTRAL_ARROW:
-                            arrow = inventory.getItemInOffHand();
-                    }
-                    switch (inventory.getItemInMainHand().getType()) {
-                        case ARROW:
-                        case TIPPED_ARROW:
-                        case SPECTRAL_ARROW:
-                            arrow = inventory.getItemInMainHand();
-                    }
-                }
-                if (arrow == null) {
-                    int firstArrow = -1;
-                    int normalArrow = inventory.first(Material.ARROW);
-                    if (normalArrow != -1) {
-                        arrow = inventory.getItem(inventory.first(Material.ARROW));
-                        firstArrow = normalArrow;
-                    }
+                    ItemStack arrow = null;
                     if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                        int tippedFirst = inventory.first(Material.TIPPED_ARROW);
-                        if (tippedFirst != -1 && firstArrow > tippedFirst) {
-                            arrow = inventory.getItem(inventory.first(Material.TIPPED_ARROW));
-                            firstArrow = tippedFirst;
+                        switch (inventory.getItemInOffHand().getType()) {
+                            case ARROW:
+                            case TIPPED_ARROW:
+                            case SPECTRAL_ARROW:
+                                arrow = inventory.getItemInOffHand();
+                        }
+                        switch (inventory.getItemInMainHand().getType()) {
+                            case ARROW:
+                            case TIPPED_ARROW:
+                            case SPECTRAL_ARROW:
+                                arrow = inventory.getItemInMainHand();
                         }
                     }
-                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                        int spectralFirst = inventory.first(Material.SPECTRAL_ARROW);
-                        if (spectralFirst != -1 && firstArrow > spectralFirst) {
-                            arrow = inventory.getItem(inventory.first(Material.SPECTRAL_ARROW));
+                    if (arrow == null) {
+                        int firstArrow = -1;
+                        int normalArrow = inventory.first(Material.ARROW);
+                        if (normalArrow != -1) {
+                            arrow = inventory.getItem(inventory.first(Material.ARROW));
+                            firstArrow = normalArrow;
+                        }
+                        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                            int tippedFirst = inventory.first(Material.TIPPED_ARROW);
+                            if (tippedFirst != -1 && firstArrow > tippedFirst) {
+                                arrow = inventory.getItem(inventory.first(Material.TIPPED_ARROW));
+                                firstArrow = tippedFirst;
+                            }
+                        }
+                        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                            int spectralFirst = inventory.first(Material.SPECTRAL_ARROW);
+                            if (spectralFirst != -1 && firstArrow > spectralFirst) {
+                                arrow = inventory.getItem(inventory.first(Material.SPECTRAL_ARROW));
+                            }
                         }
                     }
-                }
-                if (arrow != null) {
-                    projectile.setMetadata("MyPetLeashItemArrow", new FixedMetadataValue(MyPetApi.getPlugin(), arrow));
+                    if (arrow != null) {
+                        projectile.setMetadata("MyPetLeashItemArrow", new FixedMetadataValue(MyPetApi.getPlugin(), arrow));
+                    }
+
                 }
             }
         }
@@ -412,7 +417,7 @@ public class EntityListener implements Listener {
                 ItemStack leashItem = null;
                 ItemStack leashItemArrow = null;
                 Player player;
-                if (event.getDamager() instanceof Projectile) {
+                if (Configuration.Misc.ALLOW_RANGED_LEASHING && event.getDamager() instanceof Projectile) {
                     Projectile projectile = (Projectile) event.getDamager();
                     if (!(projectile.getShooter() instanceof Player)) {
                         return;

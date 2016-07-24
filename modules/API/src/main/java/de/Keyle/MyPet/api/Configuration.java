@@ -30,6 +30,7 @@ import java.util.Set;
 public class Configuration {
     public static class Misc {
         public static boolean CONSUME_LEASH_ITEM = false;
+        public static boolean ALLOW_RANGED_LEASHING = true;
         public static boolean OWNER_CAN_ATTACK_PET = false;
         public static boolean DISABLE_PET_VS_PLAYER = false;
         public static boolean REMOVE_PETS_AFTER_RELEASE = false;
