@@ -62,22 +62,30 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
 public class EntityListener implements Listener {
+    Map<UUID, ItemStack> usedItems = new HashMap<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMyPet(CreatureSpawnEvent event) {
@@ -146,7 +154,13 @@ public class EntityListener implements Listener {
                 } else {
                     damager = (Player) event.getDamager();
                 }
-                if (MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType()).compare(damager.getItemInHand())) {
+                ItemStack leashItem;
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    leashItem = damager.getEquipment().getItemInMainHand();
+                } else {
+                    leashItem = damager.getItemInHand();
+                }
+                if (MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType()).compare(leashItem)) {
                     boolean infoShown = false;
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet)) {
                         damager.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
@@ -297,22 +311,150 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event) {
-        if (!event.getEntity().isDead() && !(event.getEntity() instanceof MyPetBukkitEntity) && event.getDamager() instanceof Player) {
-            if (MyPetApi.getMyPetInfo().isLeashableEntityType(event.getEntity().getType())) {
-                Player damager = (Player) event.getDamager();
+    public void on(final PlayerInteractEvent event) {
+        if (event.useItemInHand() != Event.Result.DENY && event.getItem() != null) {
+            usedItems.put(event.getPlayer().getUniqueId(), event.getItem().clone());
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    usedItems.remove(event.getPlayer().getUniqueId());
+                }
+            }.runTaskLater(MyPetApi.getPlugin(), 0);
+        }
+    }
 
-                if (!MyPetApi.getMyPetManager().hasActiveMyPet(damager)) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void on(EntityShootBowEvent event) {
+        if (event.getEntity() instanceof Player) {
+            if (event.getProjectile() instanceof Arrow) {
+                Player player = (Player) event.getEntity();
+                Arrow projectile = (Arrow) event.getProjectile();
+                PlayerInventory inventory = player.getInventory();
+
+                projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), event.getBow().clone()));
+
+                ItemStack arrow = null;
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    switch (inventory.getItemInOffHand().getType()) {
+                        case ARROW:
+                        case TIPPED_ARROW:
+                        case SPECTRAL_ARROW:
+                            arrow = inventory.getItemInOffHand();
+                    }
+                    switch (inventory.getItemInMainHand().getType()) {
+                        case ARROW:
+                        case TIPPED_ARROW:
+                        case SPECTRAL_ARROW:
+                            arrow = inventory.getItemInMainHand();
+                    }
+                }
+                if (arrow == null) {
+                    int firstArrow = -1;
+                    int normalArrow = inventory.first(Material.ARROW);
+                    if (normalArrow != -1) {
+                        arrow = inventory.getItem(inventory.first(Material.ARROW));
+                        firstArrow = normalArrow;
+                    }
+                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                        int tippedFirst = inventory.first(Material.TIPPED_ARROW);
+                        if (tippedFirst != -1 && firstArrow > tippedFirst) {
+                            arrow = inventory.getItem(inventory.first(Material.TIPPED_ARROW));
+                            firstArrow = tippedFirst;
+                        }
+                    }
+                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                        int spectralFirst = inventory.first(Material.SPECTRAL_ARROW);
+                        if (spectralFirst != -1 && firstArrow > spectralFirst) {
+                            arrow = inventory.getItem(inventory.first(Material.SPECTRAL_ARROW));
+                        }
+                    }
+                }
+                if (arrow != null) {
+                    projectile.setMetadata("MyPetLeashItemArrow", new FixedMetadataValue(MyPetApi.getPlugin(), arrow));
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void on(ProjectileLaunchEvent event) {
+        Projectile projectile = event.getEntity();
+        if (projectile.getShooter() instanceof Player && !(projectile instanceof Arrow)) {
+            Player player = (Player) projectile.getShooter();
+            if (!MyPetApi.getPlayerManager().isMyPetPlayer(player) || !MyPetApi.getPlayerManager().getMyPetPlayer(player).hasMyPet()) {
+                ItemStack leashItem = usedItems.get(player.getUniqueId());
+                if (leashItem != null) {
+                    projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), leashItem));
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void on(final EntityDamageByEntityEvent event) {
+        if (!event.getEntity().isDead() && !(event.getEntity() instanceof MyPetBukkitEntity)) {
+            if (MyPetApi.getMyPetInfo().isLeashableEntityType(event.getEntity().getType())) {
+                ItemStack leashItem = null;
+                ItemStack leashItemArrow = null;
+                Player player;
+                if (event.getDamager() instanceof Projectile) {
+                    Projectile projectile = (Projectile) event.getDamager();
+                    if (!(projectile.getShooter() instanceof Player)) {
+                        return;
+                    }
+                    player = (Player) projectile.getShooter();
+
+                    if (projectile.hasMetadata("MyPetLeashItem")) {
+                        List<MetadataValue> metaList = projectile.getMetadata("MyPetLeashItem");
+                        for (MetadataValue meta : metaList) {
+                            if (meta.getOwningPlugin() == MyPetApi.getPlugin()) {
+                                leashItem = (ItemStack) meta.value();
+                                break;
+                            }
+                        }
+                        if (leashItem == null) {
+                            return;
+                        }
+                        if (projectile.hasMetadata("MyPetLeashItemArrow")) {
+                            metaList = projectile.getMetadata("MyPetLeashItemArrow");
+                            for (MetadataValue meta : metaList) {
+                                if (meta.getOwningPlugin() == MyPetApi.getPlugin()) {
+                                    leashItemArrow = (ItemStack) meta.value();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } else if (event.getDamager() instanceof Player) {
+                    player = (Player) event.getDamager();
+                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                        leashItem = player.getEquipment().getItemInMainHand();
+                    } else {
+                        leashItem = player.getItemInHand();
+                    }
+                } else {
+                    return;
+                }
+
+                if (!MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
                     MyPetType petType = MyPetType.byEntityTypeName(leashTarget.getType().name());
-                    ConfigItem leashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
+                    ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
 
-                    if (!leashItem.compare(damager.getItemInHand()) || !Permissions.hasLegacy(damager, "MyPet.leash.", petType.name())) {
+                    if (!Permissions.hasLegacy(player, "MyPet.leash.", petType.name())) {
                         return;
                     }
-                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetApi.getPlayerManager().isMyPetPlayer(damager) && MyPetApi.getPlayerManager().getMyPetPlayer(damager).isCaptureHelperActive()) {
-                        CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
+                    boolean usedArrow = false;
+                    if (!neededLeashItem.compare(leashItem)) {
+                        if (leashItemArrow == null || !neededLeashItem.compare(leashItemArrow)) {
+                            return;
+                        } else {
+                            usedArrow = true;
+                        }
+                    }
+                    if (Permissions.has(player, "MyPet.user.capturehelper") && MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPlayerManager().getMyPetPlayer(player).isCaptureHelperActive()) {
+                        CaptureHelper.checkTamable(leashTarget, event.getDamage(), player);
                     }
                     if (MyPetApi.getPluginHookManager().isHookActive(CitizensHook.class)) {
                         try {
@@ -322,7 +464,7 @@ public class EntityListener implements Listener {
                         } catch (Error | Exception ignored) {
                         }
                     }
-                    if (!MyPetApi.getHookHelper().canHurt(damager, leashTarget)) {
+                    if (!MyPetApi.getHookHelper().canHurt(player, leashTarget)) {
                         return;
                     }
 
@@ -364,9 +506,9 @@ public class EntityListener implements Listener {
                                 break;
                             case Tamed:
                                 if (leashTarget instanceof Tameable) {
-                                    willBeLeashed = ((Tameable) leashTarget).isTamed() && ((Tameable) leashTarget).getOwner() == damager;
+                                    willBeLeashed = ((Tameable) leashTarget).isTamed() && ((Tameable) leashTarget).getOwner() == player;
                                 } else if (leashTarget instanceof Horse) {
-                                    willBeLeashed = ((Horse) leashTarget).isTamed() && ((Horse) leashTarget).getOwner() == damager;
+                                    willBeLeashed = ((Horse) leashTarget).isTamed() && ((Horse) leashTarget).getOwner() == player;
                                 }
                                 break;
                             case CanBreed:
@@ -395,17 +537,17 @@ public class EntityListener implements Listener {
                         event.setCancelled(true);
 
                         final MyPetPlayer owner;
-                        if (MyPetApi.getPlayerManager().isMyPetPlayer(damager)) {
-                            owner = MyPetApi.getPlayerManager().getMyPetPlayer(damager);
+                        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                            owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                         } else {
-                            owner = MyPetApi.getPlayerManager().registerMyPetPlayer(damager);
+                            owner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
                         }
 
                         final InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
                         inactiveMyPet.setPetType(petType);
                         inactiveMyPet.setPetName(Translation.getString("Name." + petType.name(), inactiveMyPet.getOwner().getLanguage()));
 
-                        WorldGroup worldGroup = WorldGroup.getGroupByWorld(damager.getWorld().getName());
+                        WorldGroup worldGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
                         inactiveMyPet.setWorldGroup(worldGroup.getName());
                         inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
 
@@ -421,11 +563,17 @@ public class EntityListener implements Listener {
 
                         leashTarget.remove();
 
-                        if (Configuration.Misc.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null) {
-                            if (damager.getItemInHand().getAmount() > 1) {
-                                damager.getItemInHand().setAmount(damager.getItemInHand().getAmount() - 1);
-                            } else {
-                                damager.setItemInHand(null);
+                        if (!usedArrow) {
+                            if (Configuration.Misc.CONSUME_LEASH_ITEM && player.getGameMode() != GameMode.CREATIVE && leashItem != null) {
+                                if (leashItem.getAmount() > 1) {
+                                    leashItem.setAmount(leashItem.getAmount() - 1);
+                                } else {
+                                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                                        player.getEquipment().setItemInMainHand(null);
+                                    } else {
+                                        player.setItemInHand(null);
+                                    }
+                                }
                             }
                         }
 
