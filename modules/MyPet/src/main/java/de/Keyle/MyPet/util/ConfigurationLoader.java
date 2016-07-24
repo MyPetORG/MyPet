@@ -402,7 +402,7 @@ public class ConfigurationLoader {
                 List<String> foodList = config.getStringList("MyPet.Pets." + petType.name() + ".Food");
                 for (String foodString : foodList) {
                     ConfigItem ci = ConfigItem.createConfigItem(foodString);
-                    if (ci.getItem().getType() != Material.AIR) {
+                    if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
                         MyPetApi.getMyPetInfo().setFood(petType, ci);
                     }
                 }
