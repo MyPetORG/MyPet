@@ -106,19 +106,22 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         }
 
         String[] splitData = data.split("\\s+");
-
-        int itemId = 0;
-        int itemDamage = 0;
-
         if (splitData.length == 0) {
             return;
         }
+
+        Item item = null;
         if (splitData.length >= 1) {
             if (Util.isInt(splitData[0])) {
-                itemId = Integer.parseInt(splitData[0]);
+                int itemId = Integer.parseInt(splitData[0]);
+                item = Item.getById(itemId);
+            } else {
+                item = (Item) Item.REGISTRY.get(splitData[0]);
             }
         }
-        if (itemId != 0) {
+        if (item != null) {
+            int itemDamage = 0;
+
             if (splitData.length >= 2) {
                 if (splitData[1].startsWith("<")) {
                     this.durabilityMode = DurabilityMode.Smaller;
@@ -134,12 +137,12 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
                 }
             }
 
-            net.minecraft.server.v1_7_R4.ItemStack is = new net.minecraft.server.v1_7_R4.ItemStack(Item.getById(itemId), 1, itemDamage);
+            net.minecraft.server.v1_7_R4.ItemStack is = new net.minecraft.server.v1_7_R4.ItemStack(item, 1, itemDamage);
             if (nbtBase != null) {
                 is.setTag((NBTTagCompound) nbtBase);
             }
 
-            item = CraftItemStack.asBukkitCopy(is);
+            this.item = CraftItemStack.asBukkitCopy(is);
         }
     }
 }
