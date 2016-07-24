@@ -30,8 +30,8 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.keyle.fanciful.FancyMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -219,7 +219,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                     double price = 0;
 
                     if (args.length >= 2) {
-                        if (MyPetApi.getPluginHookManager().isHookActive(EconomyHook.class)) {
+                        if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
                             if (Util.isDouble(args[1])) {
                                 price = Double.parseDouble(args[1]);
                             } else {
@@ -227,7 +227,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                                 return true;
                             }
                         } else {
-                            receiver.sendMessage(Translation.getString("Message.No.Economy", player));
+                            sender.sendMessage(Translation.getString("Message.No.Economy", player));
                             return true;
                         }
                     }
