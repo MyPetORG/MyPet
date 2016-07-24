@@ -23,10 +23,7 @@ package de.Keyle.MyPet.compat.v1_10_R1.util;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.compat.v1_10_R1.util.inventory.ItemStackComparator;
-import net.minecraft.server.v1_10_R1.Item;
-import net.minecraft.server.v1_10_R1.MojangsonParser;
-import net.minecraft.server.v1_10_R1.NBTBase;
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_10_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
@@ -104,19 +101,23 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         }
 
         String[] splitData = data.split("\\s+");
-
-        int itemId = 0;
-        int itemDamage = 0;
-
         if (splitData.length == 0) {
             return;
         }
+
+        Item item = null;
         if (splitData.length >= 1) {
             if (Util.isInt(splitData[0])) {
-                itemId = Integer.parseInt(splitData[0]);
+                int itemId = Integer.parseInt(splitData[0]);
+                item = Item.getById(itemId);
+            } else {
+                MinecraftKey key = new MinecraftKey(splitData[0]);
+                item = Item.REGISTRY.get(key);
             }
         }
-        if (itemId != 0) {
+        if (item != null) {
+            int itemDamage = 0;
+
             if (splitData.length >= 2) {
                 if (splitData[1].startsWith("<")) {
                     this.durabilityMode = DurabilityMode.Smaller;
@@ -132,12 +133,12 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
                 }
             }
 
-            net.minecraft.server.v1_10_R1.ItemStack is = new net.minecraft.server.v1_10_R1.ItemStack(Item.getById(itemId), 1, itemDamage);
+            net.minecraft.server.v1_10_R1.ItemStack is = new net.minecraft.server.v1_10_R1.ItemStack(item, 1, itemDamage);
             if (nbtBase != null) {
                 is.setTag((NBTTagCompound) nbtBase);
             }
 
-            item = CraftItemStack.asBukkitCopy(is);
+            this.item = CraftItemStack.asBukkitCopy(is);
         }
     }
 }
