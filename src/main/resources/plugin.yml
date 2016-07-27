@@ -19,6 +19,7 @@ softdepend:
   - WorldGuard
   - WGCustomFlags
   - ResourcePackApi
+  - NoCheatPlus
 commands:
   myPet:
     description: Help for all MyPet commands.

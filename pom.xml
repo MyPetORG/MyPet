@@ -122,6 +122,9 @@
         <!-- https://www.spigotmc.org/resources/api-resourcepackapi-1-7-1-8-1-9-1-10.2397/ -->
         <resourcepackapi.version>2.2.1</resourcepackapi.version>
 
+        <!-- https://www.spigotmc.org/resources/nocheatplus2015-07-25.26/ -->
+        <nocheatplus.version>3.15.0-SNAPSHOT</nocheatplus.version>
+
         <mongodb.version>3.2.1</mongodb.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <json.version>1.1.1</json.version>
@@ -168,6 +171,10 @@
         <repository>
             <id>inventive-repo</id>
             <url>http://repo.inventivetalent.org/content/repositories/releases</url>
+        </repository>
+        <repository>
+            <id>md5-repo</id>
+            <url>http://repo.md-5.net/content/repositories/public</url>
         </repository>
     </repositories>
 
@@ -371,6 +378,13 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>${protocol-lib.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>fr.neatmonster</groupId>
+            <artifactId>nocheatplus</artifactId>
+            <version>${nocheatplus.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
