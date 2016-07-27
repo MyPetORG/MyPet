@@ -30,37 +30,39 @@ import fr.neatmonster.nocheatplus.hooks.NCPHookManager;
 import org.bukkit.entity.Player;
 
 @PluginHookName("NoCheatPlus")
-public class NoCheatPlusHook implements PluginHook, NCPHook {
+public class NoCheatPlusHook implements PluginHook {
+    int hookId;
+
     @Override
     public boolean onEnable() {
-        NCPHookManager.addHook(CheckType.MOVING_VEHICLE_ENVELOPE, this);
+        hookId = NCPHookManager.addHook(CheckType.MOVING_VEHICLE_ENVELOPE, new NCPHook() {
+            @Override
+            public String getHookName() {
+                return "MyPet";
+            }
+
+            @Override
+            public String getHookVersion() {
+                return "1.0";
+            }
+
+            @Override
+            public boolean onCheckFailure(CheckType checkType, Player player, IViolationInfo iViolationInfo) {
+                if (checkType == CheckType.MOVING_VEHICLE_ENVELOPE) {
+                    if (player.isInsideVehicle()) {
+                        if (player.getVehicle() instanceof MyPetBukkitEntity) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
         return true;
     }
 
     @Override
     public void onDisable() {
-        NCPHookManager.removeHook(this);
-    }
-
-    @Override
-    public String getHookName() {
-        return "MyPet";
-    }
-
-    @Override
-    public String getHookVersion() {
-        return "1.0";
-    }
-
-    @Override
-    public boolean onCheckFailure(CheckType checkType, Player player, IViolationInfo iViolationInfo) {
-        if (checkType == CheckType.MOVING_VEHICLE_ENVELOPE) {
-            if (player.isInsideVehicle()) {
-                if (player.getVehicle() instanceof MyPetBukkitEntity) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        NCPHookManager.removeHook(hookId);
     }
 }
