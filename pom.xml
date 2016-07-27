@@ -116,6 +116,9 @@
         <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
         <protocol-lib.version>3.7.0-SNAPSHOT</protocol-lib.version>
 
+        <!-- https://www.spigotmc.org/resources/nocheatplus2015-07-25.26/ -->
+        <nocheatplus.version>3.15.0-SNAPSHOT</nocheatplus.version>
+
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
         <fanciful-chat.version>0.0.4</fanciful-chat.version>
@@ -154,6 +157,10 @@
         <repository>
             <id>protocollib-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>md5-repo</id>
+            <url>http://repo.md-5.net/content/repositories/public</url>
         </repository>
     </repositories>
 
@@ -350,6 +357,13 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>${protocol-lib.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>fr.neatmonster</groupId>
+            <artifactId>nocheatplus</artifactId>
+            <version>${nocheatplus.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

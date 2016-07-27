@@ -16,6 +16,8 @@ softdepend:
   - ProtocolLib
   - SkillAPI
   - MagicSpells
+  - WorldGuard
+  - NoCheatPlus
 commands:
   myPet:
     description: Help for all MyPet commands.
