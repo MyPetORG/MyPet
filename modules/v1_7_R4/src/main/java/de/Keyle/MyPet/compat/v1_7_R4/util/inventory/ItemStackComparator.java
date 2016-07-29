@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.util.inventory;
 
+import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -29,6 +30,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.Map;
 
+@Compat("v1_7_R4")
 public class ItemStackComparator {
     public static boolean compareItem(ItemStack i1, ItemStack i2) {
         if (i1 == null || i2 == null) {

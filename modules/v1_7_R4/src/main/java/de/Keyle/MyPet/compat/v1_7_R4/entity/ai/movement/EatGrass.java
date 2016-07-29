@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_7_R4.entity.ai.movement;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.types.EntityMySheep;
 import net.minecraft.server.v1_7_R4.Block;
 import net.minecraft.server.v1_7_R4.Blocks;
@@ -30,6 +31,7 @@ import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R4.event.CraftEventFactory;
 
+@Compat("v1_7_R4")
 public class EatGrass extends AIGoal {
     private EntityMySheep entityMySheep;
     private World world;

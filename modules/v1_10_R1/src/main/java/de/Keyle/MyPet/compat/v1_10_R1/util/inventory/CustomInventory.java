@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_10_R1.util.inventory;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
@@ -41,6 +42,7 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+@Compat("v1_10_R1")
 public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
     private String inventroyName = null;
     private List<ItemStack> items = new ArrayList<>();

@@ -23,11 +23,13 @@ package de.Keyle.MyPet.compat.v1_8_R3.skill.skills.ranged.bukkit;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.server.v1_8_R3.EntityLargeFireball;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLargeFireball;
 import org.bukkit.entity.LivingEntity;
 
+@Compat("v1_8_R3")
 public class CraftMyPetLargeFireball extends CraftLargeFireball implements CraftMyPetProjectile {
 
     public CraftMyPetLargeFireball(CraftServer server, EntityLargeFireball entity) {

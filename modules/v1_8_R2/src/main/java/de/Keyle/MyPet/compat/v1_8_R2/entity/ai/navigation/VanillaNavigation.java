@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_8_R2.entity.ai.navigation;
 
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.navigation.NavigationParameters;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.EntityMyPet;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 import net.minecraft.server.v1_8_R2.GenericAttributes;
@@ -29,6 +30,7 @@ import net.minecraft.server.v1_8_R2.Navigation;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
+@Compat("v1_8_R2")
 public class VanillaNavigation extends AbstractNavigation {
     Navigation nav;
 

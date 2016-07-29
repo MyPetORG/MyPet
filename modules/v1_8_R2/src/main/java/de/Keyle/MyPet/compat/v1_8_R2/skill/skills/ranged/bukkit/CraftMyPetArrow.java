@@ -23,11 +23,13 @@ package de.Keyle.MyPet.compat.v1_8_R2.skill.skills.ranged.bukkit;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.server.v1_8_R2.EntityArrow;
 import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftArrow;
 import org.bukkit.entity.LivingEntity;
 
+@Compat("v1_8_R2")
 public class CraftMyPetArrow extends CraftArrow implements CraftMyPetProjectile {
     public CraftMyPetArrow(CraftServer server, EntityArrow entity) {
         super(server, entity);

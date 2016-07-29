@@ -21,9 +21,11 @@
 package de.Keyle.MyPet.compat.v1_7_R4.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import net.minecraft.server.v1_7_R4.Entity;
 
+@Compat("v1_7_R4")
 public class LookAtPlayer extends AIGoal {
     private EntityMyPet petEntity;
     protected Entity targetPlayer;

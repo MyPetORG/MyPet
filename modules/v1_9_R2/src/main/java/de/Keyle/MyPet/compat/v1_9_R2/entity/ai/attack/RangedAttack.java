@@ -25,12 +25,14 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skills.RangedInfo;
 import de.Keyle.MyPet.api.skill.skills.RangedInfo.Projectiles;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_9_R2.skill.skills.ranged.nms.*;
 import de.Keyle.MyPet.skill.skills.Ranged;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftLivingEntity;
 
+@Compat("v1_9_R2")
 public class RangedAttack extends AIGoal {
     private MyPet myPet;
     private final EntityMyPet entityMyPet;

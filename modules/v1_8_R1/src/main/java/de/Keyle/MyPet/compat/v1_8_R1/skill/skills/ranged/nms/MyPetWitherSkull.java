@@ -21,11 +21,13 @@
 package de.Keyle.MyPet.compat.v1_8_R1.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R1.skill.skills.ranged.bukkit.CraftMyPetWitherSkull;
 import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 
+@Compat("v1_8_R1")
 public class MyPetWitherSkull extends EntityWitherSkull implements EntityMyPetProjectile {
     protected float damage = 0;
     protected int deathCounter = 100;

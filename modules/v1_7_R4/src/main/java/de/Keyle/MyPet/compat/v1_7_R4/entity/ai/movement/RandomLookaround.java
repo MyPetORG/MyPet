@@ -21,8 +21,10 @@
 package de.Keyle.MyPet.compat.v1_7_R4.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 
+@Compat("v1_7_R4")
 public class RandomLookaround extends AIGoal {
     private EntityMyPet petEntity;
     private double directionX;

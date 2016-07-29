@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R1.entity.ai.movement.Control;
 import de.Keyle.MyPet.skill.skills.Behavior;
@@ -37,6 +38,7 @@ import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+@Compat("v1_8_R1")
 public class ControlTarget extends AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;

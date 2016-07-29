@@ -23,12 +23,14 @@ package de.Keyle.MyPet.compat.v1_9_R2.entity.ai.target;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.EntityMyPet;
 import net.minecraft.server.v1_9_R2.EntityLiving;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 
+@Compat("v1_9_R2")
 public class OwnerHurtTarget extends AIGoal {
 
     EntityMyPet petEntity;

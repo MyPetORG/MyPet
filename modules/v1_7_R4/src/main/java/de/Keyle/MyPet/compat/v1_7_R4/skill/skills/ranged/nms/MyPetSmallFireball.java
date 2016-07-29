@@ -21,11 +21,13 @@
 package de.Keyle.MyPet.compat.v1_7_R4.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_7_R4.skill.skills.ranged.bukkit.CraftMyPetSmallFireball;
 import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 
+@Compat("v1_7_R4")
 public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyPetProjectile {
     protected float damage = 0;
     protected int deathCounter = 100;

@@ -23,11 +23,13 @@ package de.Keyle.MyPet.compat.v1_10_R1.entity.ai.movement;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_10_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_10_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 
+@Compat("v1_10_R1")
 public class FollowOwner extends AIGoal {
     private EntityMyPet petEntity;
     private AbstractNavigation nav;

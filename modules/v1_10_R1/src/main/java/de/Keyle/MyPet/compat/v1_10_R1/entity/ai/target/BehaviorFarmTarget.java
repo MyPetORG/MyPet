@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_10_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import net.minecraft.server.v1_10_R1.EntityLiving;
@@ -34,6 +35,7 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 
+@Compat("v1_10_R1")
 public class BehaviorFarmTarget extends AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;

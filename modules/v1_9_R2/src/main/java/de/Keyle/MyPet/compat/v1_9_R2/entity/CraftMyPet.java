@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.craftbukkit.v1_9_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftCreature;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftLivingEntity;
@@ -34,6 +35,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
+@Compat("v1_9_R2")
 public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
     protected MyPetPlayer petOwner;
     protected EntityMyPet petEntity;
