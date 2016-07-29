@@ -490,14 +490,14 @@ public class ConfigurationLoader {
         if (foodString.contains(";")) {
             for (String foodIDString : foodString.split("(?<!\\\\);")) {
                 ConfigItem ci = ConfigItem.createConfigItem(foodIDString.replace("\\;", ";"));
-                if (ci.getItem().getType() != Material.AIR) {
+                if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
                     MyPetApi.getMyPetInfo().setFood(type, ci);
                 }
 
             }
         } else {
             ConfigItem ci = ConfigItem.createConfigItem(foodString);
-            if (ci.getItem().getType() != Material.AIR) {
+            if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
                 MyPetApi.getMyPetInfo().setFood(type, ci);
             }
         }
