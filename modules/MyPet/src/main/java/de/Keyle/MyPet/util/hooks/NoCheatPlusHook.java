@@ -35,6 +35,12 @@ public class NoCheatPlusHook implements PluginHook {
 
     @Override
     public boolean onEnable() {
+        try {
+            CheckType.valueOf("MOVING_VEHICLE_ENVELOPE");
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
         hookId = NCPHookManager.addHook(CheckType.MOVING_VEHICLE_ENVELOPE, new NCPHook() {
             @Override
             public String getHookName() {
