@@ -404,6 +404,8 @@ public class ConfigurationLoader {
                     ConfigItem ci = ConfigItem.createConfigItem(foodString);
                     if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
                         MyPetApi.getMyPetInfo().setFood(petType, ci);
+                    } else {
+                        MyPetApi.getLogger().warning(foodString + " is not a valid food item!");
                     }
                 }
             } else {
@@ -442,13 +444,16 @@ public class ConfigurationLoader {
                 ConfigItem ci = ConfigItem.createConfigItem(foodIDString.replace("\\;", ";"));
                 if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
                     MyPetApi.getMyPetInfo().setFood(type, ci);
+                } else {
+                    MyPetApi.getLogger().warning(foodString + " is not a valid food item!");
                 }
-
             }
         } else {
             ConfigItem ci = ConfigItem.createConfigItem(foodString);
             if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
                 MyPetApi.getMyPetInfo().setFood(type, ci);
+            } else {
+                MyPetApi.getLogger().warning(foodString + " is not a valid food item!");
             }
         }
     }
