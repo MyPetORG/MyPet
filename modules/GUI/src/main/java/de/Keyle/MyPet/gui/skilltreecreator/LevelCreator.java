@@ -283,7 +283,7 @@ public class LevelCreator {
                     permissionTextField.setEnabled(false);
                     skillTree.setPermission(null);
                 }
-                permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+                permissionDisplayTextField.setText("MyPet.skilltree." + skillTree.getPermission());
             }
         });
         displayNameCheckbox.addActionListener(new ActionListener() {
@@ -318,7 +318,7 @@ public class LevelCreator {
         });
         copyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                StringSelection stringSelection = new StringSelection("MyPet.custom.skilltree." + skillTree.getName());
+                StringSelection stringSelection = new StringSelection("MyPet.skilltree." + skillTree.getName());
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
             }
@@ -362,7 +362,7 @@ public class LevelCreator {
                     } else {
                         skillTree.setPermission(null);
                     }
-                    permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+                    permissionDisplayTextField.setText("MyPet.skilltree." + skillTree.getPermission());
                 }
             }
 
@@ -613,7 +613,7 @@ public class LevelCreator {
             permissionCheckbox.setSelected(false);
         }
         permissionTextField.setText(skillTree.getPermission());
-        permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+        permissionDisplayTextField.setText("MyPet.skilltree." + skillTree.getPermission());
 
         if (skillTree.getMaxLevel() > 0) {
             maxLevelCheckBox.setSelected(true);
