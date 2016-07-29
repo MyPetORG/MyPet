@@ -196,7 +196,7 @@
             </constraints>
             <properties>
               <editable value="false"/>
-              <text value="MyPet.custom.skilltree."/>
+              <text value="MyPet.skilltree."/>
             </properties>
           </component>
           <component id="e19aa" class="javax.swing.JButton" binding="copyButton" default-binding="true">

@@ -37,18 +37,14 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;
 
-import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.*;
-import java.util.*;
 
 public class LevelCreator {
     JTree skillTreeTree;
@@ -283,7 +279,7 @@ public class LevelCreator {
                     permissionTextField.setEnabled(false);
                     skillTree.setPermission(null);
                 }
-                permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+                permissionDisplayTextField.setText("MyPet.skilltree." + skillTree.getPermission());
             }
         });
         displayNameCheckbox.addActionListener(new ActionListener() {
