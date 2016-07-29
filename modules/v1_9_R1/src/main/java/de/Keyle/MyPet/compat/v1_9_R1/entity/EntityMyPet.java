@@ -423,23 +423,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     public boolean handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, final ItemStack itemStack) {
         if (enumhand == EnumHand.OFF_HAND) {
-            if (itemStack != null) {
-                if (itemStack.getItem() == Items.LEAD) {
-                    ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
-                    entityhuman.a(EnumHand.OFF_HAND, null);
-                    new BukkitRunnable() {
-                        public void run() {
-                            if (entityhuman instanceof EntityPlayer) {
-                                entityhuman.a(EnumHand.OFF_HAND, itemStack);
-                                Player p = (Player) entityhuman.getBukkitEntity();
-                                if (!p.isOnline()) {
-                                    p.saveData();
-                                }
-                            }
-                        }
-                    }.runTaskLater(MyPetApi.getPlugin(), 5);
-                }
-            }
             return true;
         }
 
@@ -448,21 +431,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
-                    if (itemStack != null && itemStack.getItem() == Items.LEAD) {
-                        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
-                        entityhuman.a(EnumHand.MAIN_HAND, null);
-                        new BukkitRunnable() {
-                            public void run() {
-                                if (entityhuman instanceof EntityPlayer) {
-                                    entityhuman.a(EnumHand.MAIN_HAND, itemStack);
-                                    Player p = (Player) entityhuman.getBukkitEntity();
-                                    if (!p.isOnline()) {
-                                        p.saveData();
-                                    }
-                                }
-                            }
-                        }.runTaskLater(MyPetApi.getPlugin(), 5);
-                    }
                     if (Permissions.hasExtendedLegacy(owner, "MyPet.extended.ride")) {
                         ((CraftPlayer) owner).getHandle().startRiding(this);
                         return true;
@@ -544,21 +512,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
                         return true;
                     }
-                }
-                if (itemStack.getItem() == Items.LEAD) {
-                    ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
-                    entityhuman.a(EnumHand.MAIN_HAND, null);
-                    new BukkitRunnable() {
-                        public void run() {
-                            if (entityhuman instanceof EntityPlayer) {
-                                entityhuman.a(EnumHand.MAIN_HAND, itemStack);
-                                Player p = (Player) entityhuman.getBukkitEntity();
-                                if (!p.isOnline()) {
-                                    p.saveData();
-                                }
-                            }
-                        }
-                    }.runTaskLater(MyPetApi.getPlugin(), 5);
                 }
             }
         } else {
