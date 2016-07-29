@@ -21,11 +21,13 @@
 package de.Keyle.MyPet.compat.v1_9_R1.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_9_R1.skill.skills.ranged.bukkit.CraftMyPetArrow;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftEntity;
 
+@Compat("v1_9_R1")
 public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjectile {
     public MyPetArrow(World world, EntityMyPet entityMyPet) {
         super(world, entityMyPet);

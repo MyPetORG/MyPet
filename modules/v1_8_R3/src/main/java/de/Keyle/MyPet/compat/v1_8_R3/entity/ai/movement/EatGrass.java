@@ -22,11 +22,13 @@ package de.Keyle.MyPet.compat.v1_8_R3.entity.ai.movement;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.types.EntityMySheep;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.event.CraftEventFactory;
 
+@Compat("v1_8_R3")
 public class EatGrass extends AIGoal {
     private EntityMySheep entityMySheep;
     private World world;

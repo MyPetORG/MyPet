@@ -22,12 +22,14 @@ package de.Keyle.MyPet.compat.v1_8_R2.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R2.util.inventory.ItemStackComparator;
 import net.minecraft.server.v1_8_R2.*;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
+@Compat("v1_8_R2")
 public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     public ConfigItem(ItemStack item, DurabilityMode durabilityMode) {

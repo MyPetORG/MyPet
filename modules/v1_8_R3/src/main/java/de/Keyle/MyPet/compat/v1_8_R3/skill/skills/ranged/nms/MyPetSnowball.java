@@ -21,11 +21,13 @@
 package de.Keyle.MyPet.compat.v1_8_R3.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R3.skill.skills.ranged.bukkit.CraftMyPetSnowball;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 
+@Compat("v1_8_R3")
 public class MyPetSnowball extends EntitySnowball implements EntityMyPetProjectile {
     protected float damage = 0;
 

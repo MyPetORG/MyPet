@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.util.inventory;
 
+import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Compat("v1_7_R4")
 public class ItemStackNBTConverter {
     private static Field TAG_LIST_LIST = null;
 

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import net.minecraft.server.v1_8_R1.EntityLiving;
@@ -32,6 +33,7 @@ import net.minecraft.server.v1_8_R1.EntityPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 
+@Compat("v1_8_R1")
 public class BehaviorDuelTarget extends AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;
