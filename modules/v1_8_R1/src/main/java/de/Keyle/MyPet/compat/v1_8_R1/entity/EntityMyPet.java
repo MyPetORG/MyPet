@@ -120,14 +120,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
-    /*
-    public void applyLeash() {
-        if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER) {
-            ((EntityPlayer) this.bI()).playerConnection.sendPacket(new PacketPlayOutAttachEntity(1, this, this.bI()));
-        }
-    }
-    */
-
     public boolean isMyPet() {
         return isMyPet;
     }
@@ -426,11 +418,20 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+    public boolean handlePlayerInteraction(final EntityHuman entityhuman) {
+        final ItemStack itemStack = entityhuman.inventory.getItemInHand();
         Player owner = this.getOwner().getPlayer();
 
-        //applyLeash();
+        if (itemStack != null && itemStack.getItem() == Items.LEAD) {
+            ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutAttachEntity(1, this, null));
+            if (!entityhuman.abilities.canInstantlyBuild) {
+                new BukkitRunnable() {
+                    public void run() {
+                        ((EntityPlayer) entityhuman).updateInventory(entityhuman.defaultContainer);
+                    }
+                }.runTaskLater(MyPetApi.getPlugin(), 5);
+            }
+        }
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
@@ -927,7 +928,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * be fired when a lead is used
      */
     public boolean cb() {
-        return false;
+        return true;
     }
 
     /**
@@ -958,15 +959,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             e.printStackTrace();
         }
     }
-
-    /*
-    public Entity bI() {
-        if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER) {
-            return ((CraftPlayer) getOwner().getPlayer()).getHandle();
-        }
-        return null;
-    }
-    */
 
     @Override
     public boolean d(NBTTagCompound nbttagcompound) {
