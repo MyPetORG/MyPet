@@ -26,20 +26,21 @@ import de.Keyle.MyPet.api.skill.SkillProperties;
 import de.Keyle.MyPet.api.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
 
-@SkillName(value = "HP", translationNode = "Name.Skill.Hitpoints")
+@SkillName(value = "HPregeneration", translationNode = "Name.Skill.Regeneration")
 @SkillProperties(
-        parameterNames = {"hp_double", "addset_hp"},
-        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},
-        parameterDefaultValues = {"1.0", "add"})
-public class HPInfo extends SkillTreeSkill implements SkillInfo {
-    protected double hpIncrease = 0;
+        parameterNames = {"hp_double", "time", "addset_hp", "addset_time"},
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
+        parameterDefaultValues = {"1.0", "60", "add", "add"})
+public class HealInfo extends SkillTreeSkill implements SkillInfo {
+    protected double increaseHpBy = 0;
+    protected int regenTime = 0;
 
-    public HPInfo(boolean addedByInheritance) {
+    public HealInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
     public SkillInfo cloneSkill() {
-        HPInfo newSkill = new HPInfo(this.isAddedByInheritance());
+        HealInfo newSkill = new HealInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
     }

@@ -365,12 +365,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     public static void registerSkills() {
         Skills.registerSkill(Inventory.class);
-        Skills.registerSkill(HPregeneration.class);
+        Skills.registerSkill(Heal.class);
         Skills.registerSkill(Pickup.class);
         Skills.registerSkill(Behavior.class);
         Skills.registerSkill(Damage.class);
         Skills.registerSkill(Control.class);
-        Skills.registerSkill(HP.class);
+        Skills.registerSkill(Life.class);
         Skills.registerSkill(Poison.class);
         Skills.registerSkill(Ride.class);
         Skills.registerSkill(Thorns.class);
@@ -387,12 +387,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     public static void registerSkillsInfo() {
         SkillsInfo.registerSkill(InventoryInfo.class);
-        SkillsInfo.registerSkill(HPregenerationInfo.class);
+        SkillsInfo.registerSkill(HealInfo.class);
         SkillsInfo.registerSkill(PickupInfo.class);
         SkillsInfo.registerSkill(BehaviorInfo.class);
         SkillsInfo.registerSkill(DamageInfo.class);
         SkillsInfo.registerSkill(ControlInfo.class);
-        SkillsInfo.registerSkill(HPInfo.class);
+        SkillsInfo.registerSkill(LifeInfo.class);
         SkillsInfo.registerSkill(PoisonInfo.class);
         SkillsInfo.registerSkill(RideInfo.class);
         SkillsInfo.registerSkill(ThornsInfo.class);

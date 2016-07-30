@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class HealthRegeneration implements SkillPropertiesPanel {
+public class Heal implements SkillPropertiesPanel {
     private JTextField healthInput;
     private JRadioButton addHealthRadioButton;
     private JRadioButton setHealthRadioButton;

@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
-import de.Keyle.MyPet.api.skill.skills.HPregenerationInfo;
+import de.Keyle.MyPet.api.skill.skills.HealInfo;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
@@ -33,12 +33,12 @@ import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 import org.bukkit.Color;
 
-public class HPregeneration extends HPregenerationInfo implements SkillInstance, Scheduler {
+public class Heal extends HealInfo implements SkillInstance, Scheduler {
     private int timeCounter = 0;
     private MyPet myPet;
     protected boolean particles = false;
 
-    public HPregeneration(boolean addedByInheritance) {
+    public Heal(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
@@ -55,7 +55,7 @@ public class HPregeneration extends HPregenerationInfo implements SkillInstance,
     }
 
     public void upgrade(SkillInfo upgrade, boolean quiet) {
-        if (upgrade instanceof HPregenerationInfo) {
+        if (upgrade instanceof HealInfo) {
             boolean valuesEdit = false;
             if (upgrade.getProperties().getCompoundData().containsKey("hp")) {
                 int hp = upgrade.getProperties().getAs("hp", TagInt.class).getIntData();
@@ -126,7 +126,7 @@ public class HPregeneration extends HPregenerationInfo implements SkillInstance,
 
     @Override
     public SkillInstance cloneSkill() {
-        HPregeneration newSkill = new HPregeneration(this.isAddedByInheritance());
+        Heal newSkill = new Heal(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
     }
