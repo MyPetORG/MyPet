@@ -25,16 +25,16 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
-import de.Keyle.MyPet.api.skill.skills.HPInfo;
+import de.Keyle.MyPet.api.skill.skills.LifeInfo;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 
-public class HP extends HPInfo implements SkillInstance {
+public class Life extends LifeInfo implements SkillInstance {
     private MyPet myPet;
 
-    public HP(boolean addedByInheritance) {
+    public Life(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
@@ -51,7 +51,7 @@ public class HP extends HPInfo implements SkillInstance {
     }
 
     public void upgrade(SkillInfo upgrade, boolean quiet) {
-        if (upgrade instanceof HPInfo) {
+        if (upgrade instanceof LifeInfo) {
             if (upgrade.getProperties().getCompoundData().containsKey("hp")) {
                 int hp = upgrade.getProperties().getAs("hp", TagInt.class).getIntData();
                 upgrade.getProperties().getCompoundData().remove("hp");
@@ -90,7 +90,7 @@ public class HP extends HPInfo implements SkillInstance {
 
     @Override
     public SkillInstance cloneSkill() {
-        HP newSkill = new HP(isAddedByInheritance());
+        Life newSkill = new Life(isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
     }

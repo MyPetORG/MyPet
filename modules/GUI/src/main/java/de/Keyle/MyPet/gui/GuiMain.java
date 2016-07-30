@@ -175,8 +175,8 @@ public class GuiMain {
         SkillsInfo.registerSkill(ControlInfo.class);
         SkillsInfo.registerSkill(DamageInfo.class);
         SkillsInfo.registerSkill(FireInfo.class);
-        SkillsInfo.registerSkill(HPInfo.class);
-        SkillsInfo.registerSkill(HPregenerationInfo.class);
+        SkillsInfo.registerSkill(LifeInfo.class);
+        SkillsInfo.registerSkill(HealInfo.class);
         SkillsInfo.registerSkill(InventoryInfo.class);
         SkillsInfo.registerSkill(KnockbackInfo.class);
         SkillsInfo.registerSkill(LightningInfo.class);

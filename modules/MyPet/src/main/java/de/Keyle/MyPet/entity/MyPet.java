@@ -46,8 +46,8 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.Damage;
-import de.Keyle.MyPet.skill.skills.HP;
 import de.Keyle.MyPet.skill.skills.Inventory;
+import de.Keyle.MyPet.skill.skills.Life;
 import de.Keyle.MyPet.skill.skills.Ranged;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.keyle.knbt.*;
@@ -197,7 +197,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getMaxHealth() {
-        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isSkillActive(HP.class) ? skills.getSkill(HP.class).get().getHpIncrease() : 0);
+        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isSkillActive(Life.class) ? skills.getSkill(Life.class).get().getHpIncrease() : 0);
     }
 
     public double getHealth() {

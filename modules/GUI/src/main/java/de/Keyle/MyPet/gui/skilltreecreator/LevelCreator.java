@@ -566,8 +566,8 @@ public class LevelCreator {
         skillPanels.put(BehaviorInfo.class, new Behavior());
         skillPanels.put(DamageInfo.class, new Damage());
         skillPanels.put(FireInfo.class, new Fire());
-        skillPanels.put(HPInfo.class, new Health());
-        skillPanels.put(HPregenerationInfo.class, new HealthRegeneration());
+        skillPanels.put(LifeInfo.class, new Life());
+        skillPanels.put(HealInfo.class, new Heal());
         skillPanels.put(InventoryInfo.class, new Inventory());
         skillPanels.put(KnockbackInfo.class, new Knockback());
         skillPanels.put(LightningInfo.class, new Lightning());
