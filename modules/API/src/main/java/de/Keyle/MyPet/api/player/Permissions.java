@@ -169,6 +169,13 @@ public class Permissions {
         return false;
     }
 
+    public static boolean hasExtended(MyPetPlayer player, String node) {
+        if (player != null && player.isOnline()) {
+            return hasExtended(player.getPlayer(), node);
+        }
+        return !Configuration.Permissions.EXTENDED;
+    }
+
     public static boolean hasExtended(Player player, String node) {
         return !Configuration.Permissions.EXTENDED || has(player, node);
     }

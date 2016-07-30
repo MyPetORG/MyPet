@@ -449,8 +449,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
             if (itemStack != null) {
-                if (itemStack.getItem() == Items.NAME_TAG && Permissions.hasLegacy(getOwner(), "MyPet.command.name")) {
-                    if (itemStack.hasName()) {
+                if (itemStack.getItem() == Items.NAME_TAG && itemStack.hasName()) {
+                    if (Permissions.hasLegacy(getOwner(), "MyPet.command.name") && Permissions.hasExtended(getOwner(), "MyPet.extended.nametag")) {
                         final String name = itemStack.getName();
                         getMyPet().setPetName(name);
                         EntityMyPet.super.setCustomName("-");
