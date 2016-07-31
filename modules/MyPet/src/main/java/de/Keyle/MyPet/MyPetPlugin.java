@@ -93,10 +93,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
     }
 
-    public void onEnable() {
+    public void onLoad() {
         MyPetApi.setPlugin(this);
-        getDataFolder().mkdirs();
         replaceLogger();
+    }
+
+    public void onEnable() {
+        getDataFolder().mkdirs();
 
         this.isReady = false;
 
