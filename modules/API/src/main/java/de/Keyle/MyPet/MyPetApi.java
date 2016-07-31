@@ -57,6 +57,9 @@ public class MyPetApi {
         return plugin.getRepository();
     }
 
+    /**
+     * @return the pluginlogger or a logger instance called MyPet
+     */
     public static Logger getLogger() {
         if (plugin != null) {
             return plugin.getLogger();
@@ -65,34 +68,58 @@ public class MyPetApi {
         }
     }
 
+    /**
+     * @return instance of the Bukkit plattform helper
+     */
     public static PlatformHelper getPlatformHelper() {
         return plugin.getPlatformHelper();
     }
 
+    /**
+     * @return you can find info about pet types here
+     */
     public static MyPetInfo getMyPetInfo() {
         return plugin.getMyPetInfo();
     }
 
+    /**
+     * @return register and create entities here
+     */
     public static EntityRegistry getEntityRegistry() {
         return plugin.getEntityRegistry();
     }
 
+    /**
+     * @return bukkit version compatibility manager
+     */
     public static CompatUtil getCompatUtil() {
         return plugin.getCompatUtil();
     }
 
+    /**
+     * @return MyPet player manager
+     */
     public static PlayerManager getPlayerManager() {
         return plugin.getPlayerManager();
     }
 
+    /**
+     * @return MyPet manager
+     */
     public static MyPetManager getMyPetManager() {
         return plugin.getMyPetManager();
     }
 
+    /**
+     * @return you can find plugin hook helper functions here
+     */
     public static HookHelper getHookHelper() {
         return plugin.getHookHelper();
     }
 
+    /**
+     * @return instance of the plugin hook manager
+     */
     public static PluginHookManager getPluginHookManager() {
         return plugin.getPluginHookManager();
     }

@@ -23,6 +23,15 @@ package de.Keyle.MyPet.api.util.hooks.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 
+/**
+ * This interface defines that the hook checks if a player is in an arena
+ */
 public interface ArenaHook extends PluginHook {
-    boolean isInArena(MyPetPlayer owner);
+    /**
+     * Return if a MyPet player is in any type of arena (Minigames, Survival Games, PvP Arena, etc.)
+     *
+     * @param player the MyPet player
+     * @return if player is in arena
+     */
+    boolean isInArena(MyPetPlayer player);
 }

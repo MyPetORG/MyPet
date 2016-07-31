@@ -23,6 +23,16 @@ package de.Keyle.MyPet.api.util.hooks.types;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import org.bukkit.entity.Player;
 
+/**
+ * This interface defines that the hook checks if players can do PvP
+ */
 public interface PlayerVersusPlayerHook extends PluginHook {
+    /**
+     * Return if a player can hurt another player.
+     *
+     * @param attacker attacking player
+     * @param defender defending player
+     * @return if the attacker can hurt the attacked player
+     */
     boolean canHurt(Player attacker, Player defender);
 }

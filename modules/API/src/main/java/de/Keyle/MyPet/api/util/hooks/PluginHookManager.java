@@ -32,11 +32,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The {@link PluginHookManager} manages all interactions with other plugins. Hooks are stored by class and by the
+ * interfaces they implement so they can also be retrieved by them. You can get instances of other plugins and check if
+ * other plugins are active.
+ */
 public class PluginHookManager {
     ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
     Map<String, PluginHook> hookByName = new HashMap<>();
     Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
 
+    /**
+     * register new hooks here. A hook needs the {@link PluginHookName} annotation to be accepted.
+     *
+     * @param hookClass the hook class
+     */
     @SuppressWarnings("unchecked")
     public void registerHook(Class<? extends PluginHook> hookClass) {
         if (hookClass.isAnnotationPresent(PluginHookName.class)) {
@@ -82,32 +92,68 @@ public class PluginHookManager {
         }
     }
 
+    /**
+     * returns all hooks that inherit from a specific class/interface
+     *
+     * @param hookClass class that implements from {@link PluginHook}
+     * @return list of instances of the hook class
+     */
     @SuppressWarnings("unchecked")
     public <T extends PluginHook> List<T> getHooks(Class<? extends T> hookClass) {
         return (List<T>) hooks.get(hookClass);
     }
 
+    /**
+     * returns if hooks that inherit from a specific class/interface are available
+     * @param hookClass class that implements from {@link PluginHook}
+     * @return if any hook was found
+     */
     public boolean hasHooks(Class<? extends PluginHook> hookClass) {
         return hooks.containsKey(hookClass);
     }
 
+    /**
+     * returns the hooks of a specific class
+     * @param hookClass class that implements from {@link PluginHook}
+     * @return instance of the hook class
+     */
     @SuppressWarnings("unchecked")
     public <T extends PluginHook> T getHook(Class<? extends T> hookClass) {
         return (T) hookByClass.get(hookClass);
     }
 
+    /**
+     * returns the hooks with a specific {@link PluginHookName}
+     * @param name name of the plugin
+     * @return instance of a hook class associated with the plugin name
+     */
     public PluginHook getHook(String name) {
         return hookByName.get(name);
     }
 
+    /**
+     * returns if a hooks with a specific {@link PluginHookName} is available
+     * @param name name of the plugin
+     * @return if any hook was found
+     */
     public boolean isHookActive(String name) {
         return hookByName.containsKey(name);
     }
 
+    /**
+     * returns if a hook that inherit from a specific class/interface is available
+     * @param hookClass class that implements from {@link PluginHook}
+     * @return if any hook was found
+     */
     public boolean isHookActive(Class<? extends PluginHook> hookClass) {
         return hookByClass.containsKey(hookClass);
     }
 
+    /**
+     * searches for an instance of a plugin
+     * @param clazz class of the plugin
+     * @return instance of the plugin
+     */
     public <T extends JavaPlugin> Optional<T> getPluginInstance(Class<T> clazz) {
         try {
             T plugin = JavaPlugin.getPlugin(clazz);
@@ -125,11 +171,22 @@ public class PluginHookManager {
         return Optional.absent();
     }
 
+    /**
+     * checks if a plugin is enabled
+     * @param pluginName name of the plugin
+     * @return if the plugin is enabled
+     */
     public boolean isPluginUsable(String pluginName) {
         JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
         return plugin != null && plugin.isEnabled();
     }
 
+    /**
+     * checks if a plugin with a specific class name is enabled
+     * @param pluginName name of the plugin
+     * @param className class name
+     * @return if the plugin is enabled
+     */
     public static boolean isPluginUsable(String pluginName, String className) {
         JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
         return plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className);

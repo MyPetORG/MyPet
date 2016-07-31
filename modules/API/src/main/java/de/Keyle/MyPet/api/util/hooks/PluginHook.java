@@ -20,8 +20,19 @@
 
 package de.Keyle.MyPet.api.util.hooks;
 
+/**
+ * Plugin hooks are used to create a wrapper for functionality used from another plugin.
+ */
 public interface PluginHook {
+    /**
+     * Enables the hook and returns if activation was successfull
+     *
+     * @return if activation was successfull
+     */
     boolean onEnable();
 
+    /**
+     * Disables the hook
+     */
     void onDisable();
 }
