@@ -25,10 +25,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to add name information to the {@link PluginHook} class
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface PluginHookName {
+    /**
+     * @return the name of the plugin
+     */
     String value();
 
+    /**
+     * @return the classpath of the plugin when multiple plugins use the same name
+     */
     String classPath() default "";
 }

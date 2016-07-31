@@ -24,6 +24,9 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+/**
+ * This interface defines that the hook checks if players can attack an entity
+ */
 public interface PlayerVersusEntityHook extends PluginHook {
     boolean canHurt(Player attacker, Entity defender);
 }
