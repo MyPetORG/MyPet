@@ -23,8 +23,7 @@ commands:
     description: Help for all MyPet commands.
   petname:
     description: Changes the name of your MyPet
-    usage: '/<command> <PetName>'
-    permission: MyPet.command.name
+    usage: '/<command> <pet name>'
   petcall:
     aliases: [petc, pc]
     description: Calls your MyPet.
@@ -33,8 +32,7 @@ commands:
     description: Send your MyPet away.
   petrelease:
     description: Releases your MyPet.
-    usage: '/<command> <PetName>'
-    permission: MyPet.command.release
+    usage: '/<command> <pet name>'
   petstop:
     aliases: [pets, ps]
     description: Stops your MyPet from attacking.
@@ -44,7 +42,7 @@ commands:
   petinventory:
     aliases: [peti, pi]
     description: Opens the inventory of your MyPet.
-    usage: '/<command> [playername]'
+    usage: '/<command> [player name]'
   petbehavior:
     aliases: [petb, pb]
     description: Changes the behavior mode of your MyPet.
@@ -52,11 +50,11 @@ commands:
   petinfo:
     aliases: [pinfo]
     description: Shows info about your MyPet
-    usage: '/<command> [PlayerName]'
+    usage: '/<command> [player name]'
   petskill:
     aliases: [pskill]
     description: Shows the Skill-levels of your MyPet
-    usage: '/<command> <Playername>'
+    usage: '/<command> <player name>'
   mypetadmin:
     aliases: [petadmin]
     description: §6MyPet-Admin-Command §r-> §3https://wiki.mypet-plugin.de/doku.php?id=en:commands
@@ -64,11 +62,11 @@ commands:
   petskilltree:
     aliases: [pst, petst]
     description: Shows a fully configured skilltree
-    usage: '/<command> <mobtype> [SkillTreeName]'
+    usage: '/<command> <mobtype> [skilltree name]'
   petchooseskilltree:
     aliases: [pcst, petcst]
     description: Chooses a skilltree.
-    usage: '/<command> <SkillTreeName>'
+    usage: '/<command> <skilltree name>'
   petbeacon:
     aliases: [pbeacon]
     description: Beacon!
@@ -76,27 +74,22 @@ commands:
     aliases: [pr, petr]
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
-    permission: MyPet.command.respawn
   pettype:
     description: Shows info about the MyPet-types.
-    usage: '/<command> <Pettype>'
+    usage: '/<command> <pet type>'
   petcapturehelper:
     aliases: [pch]
     description: Toogles CaptureHelper on/off
-    permission: MyPet.command.capturehelper
   petoptions:
     aliases: [po, peto, petoption]
     description: MyPet player options
-    permission: MyPet.command.options
   petswitch:
     aliases: [pswitch, psw]
     description: Opens a MyPet selection GUI
-    permission: MyPet.command.switch
   petlist:
     aliases: [plist, pl]
     description: Lists all your MyPets
-    usage: '/<command> <player>'
-    permission: MyPet.command.list
+    usage: '/<command> <player name>'
 
 permissions:
   MyPet.leash.*:
