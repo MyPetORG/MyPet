@@ -44,10 +44,11 @@ commands:
   petinventory:
     aliases: [peti, pi]
     description: Opens the inventory of your MyPet.
+    usage: '/<command> [playername]'
   petbehavior:
     aliases: [petb, pb]
     description: Changes the behavior mode of your MyPet.
-    usage: '/<command> [<friendly/friend/aggressive/aggro/normal/farm/raid/duel>]'
+    usage: '/<command> [<friendly/aggressive/normal/farm/raid/duel>]'
   petinfo:
     aliases: [pinfo]
     description: Shows info about your MyPet
@@ -82,17 +83,14 @@ commands:
   petcapturehelper:
     aliases: [pch]
     description: Toogles CaptureHelper on/off
-    usage: '/<command>'
     permission: MyPet.command.capturehelper
   petoptions:
     aliases: [po, peto, petoption]
     description: MyPet player options
-    usage: '/<command>'
     permission: MyPet.command.options
   petswitch:
     aliases: [pswitch, psw]
     description: Opens a MyPet selection GUI
-    usage: '/<command>'
     permission: MyPet.command.switch
   petlist:
     aliases: [plist, pl]
@@ -139,7 +137,6 @@ permissions:
       MyPet.leash.Zombie: true
   MyPet.admin:
     description: Gives access to the MyPet admin features.
-    default: op
   MyPet.*:
     description: Gives access to MyPet features for normal user.
     children:
@@ -152,62 +149,42 @@ permissions:
       MyPet.command.options: true
       MyPet.command.list: true
   MyPet.command.release:
-    default: true
     description: Allows usage of /petrelease
   MyPet.command.capturehelper:
-    default: true
     description: Gives access to the CaptureHelper
   MyPet.command.respawn:
-    default: true
     description: Allows usage of /petrespawn
   MyPet.command.name:
-    default: true
     description: Allows usage of /petname
   MyPet.command.name.color:
-    default: true
     description: Allows to use colors in petnames
   MyPet.command.options:
-    default: true
     description: Allows to use the MyPet options command
   MyPet.command.switch:
-    default: op
     description: Allows to switch between MyPets
   MyPet.command.info.other:
-    default: op
     description: Allows to view info about pets from other players with "/petinfo <playername>"
   MyPet.extended.feed:
-    default: false
     description: Extended permission. Allows to feed pets.
   MyPet.extended.equip:
-    default: false
     description: Extended permission. Allows to equip pets.
   MyPet.extended.beacon:
-    default: false
     description: Extended permission. Allows to open the beacon GUI.
   MyPet.extended.inventory:
-    default: false
     description: Extended permission. Allows to open the inventory of the pet.
   MyPet.extended.ride:
-    default: false
     description: Extended permission. Allows to mount pets.
   MyPet.extended.control:
-    default: false
     description: Extended permission. Allows to control pets.
   MyPet.extended.pickup:
-    default: false
     description: Extended permission. Allows to enable pickup.
   MyPet.extended.behavior.friendly:
-    default: false
     description: Extended permission. Allows to use the ´friendly´ behavior.
   MyPet.extended.behavior.aggressive:
-    default: false
     description: Extended permission. Allows to use the ´aggressive´ behavior.
   MyPet.extended.behavior.farm:
-    default: false
     description: Extended permission. Allows to use the ´farm´ behavior.
   MyPet.extended.behavior.raid:
-    default: false
     description: Extended permission. Allows to use the ´raid´ behavior.
   MyPet.extended.behavior.duel:
-    default: false
     description: Extended permission. Allows to use the ´duel´ behavior.
