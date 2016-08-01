@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util.locale;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Colorizer;
 import org.bukkit.command.CommandSender;
@@ -76,6 +77,10 @@ public class Translation {
         if (instance == null) {
             return key;
         }
+        if (!Configuration.Misc.OVERWRITE_LANGUAGE.equalsIgnoreCase("")) {
+            localeString = Configuration.Misc.OVERWRITE_LANGUAGE;
+        }
+
         return instance.getText(key, localeString);
     }
 
