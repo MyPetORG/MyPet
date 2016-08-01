@@ -72,6 +72,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Update-Check", true);
         config.addDefault("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
+        config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
 
         config.addDefault("MyPet.Repository.NBT.AutoSaveTime", Repository.NBT.AUTOSAVE_TIME);
         config.addDefault("MyPet.Repository.NBT.Pet.SaveOnAdd", Repository.NBT.SAVE_ON_PET_ADD);
@@ -272,6 +273,7 @@ public class ConfigurationLoader {
         Misc.INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
         Misc.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
         Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = config.getBoolean("MyPet.Throw-PlayerMoveEvent-While-Riding", true);
+        Misc.OVERWRITE_LANGUAGE = config.getString("MyPet.OverwriteLanguages", "");
         LevelSystem.FIREWORK_COLOR = Integer.decode(config.getString("MyPet.LevelSystem.Firework.Color", "#00FF00"));
         LevelSystem.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         LevelSystem.FIREWORK = config.getBoolean("MyPet.LevelSystem.Firework", true);
