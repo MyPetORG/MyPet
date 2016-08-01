@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.entity.Player;
 import org.kingdoms.constants.land.Land;
 import org.kingdoms.constants.player.KingdomPlayer;
@@ -30,15 +31,11 @@ import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
 @PluginHookName("Kingdoms")
-public class KingdomsHook implements PlayerVersusPlayerHook {
+public class KingdomsHook extends PluginHook implements PlayerVersusPlayerHook {
 
     @Override
     public boolean onEnable() {
         return Configuration.Hooks.USE_Kingdoms;
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     @Override

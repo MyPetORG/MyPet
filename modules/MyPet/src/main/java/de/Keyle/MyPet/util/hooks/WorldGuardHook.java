@@ -20,56 +20,48 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.gmail.nossr50.api.PartyAPI;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.util.PluginHook;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+@PluginHookName("WorldGuard")
+public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook {
 
-@PluginHookName("mcMMO")
-public class McMMOHook extends PluginHook implements PlayerVersusPlayerHook, PartyHook {
+    protected WorldGuardPlugin wgp = null;
 
     @Override
     public boolean onEnable() {
-        return Configuration.Hooks.USE_McMMO;
-    }
-
-    @Override
-    public boolean canHurt(Player attacker, Player defender) {
-        try {
-            return !PartyAPI.inSameParty(attacker, defender);
-        } catch (Throwable ignored) {
-        }
-        return true;
-    }
-
-    @Override
-    public boolean isInParty(Player player) {
-        try {
-            return PartyAPI.inParty(player);
-        } catch (Exception ignored) {
+        if (Configuration.Hooks.USE_WorldGuard) {
+            wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+            return true;
         }
         return false;
     }
 
     @Override
-    public List<Player> getPartyMembers(Player player) {
+    public boolean canHurt(Player attacker, Player defender) {
         try {
-            if (PartyAPI.inParty(player)) {
-                List<Player> members = new ArrayList<>();
-                String partyName = PartyAPI.getPartyName(player);
-                for (Player member : PartyAPI.getOnlineMembers(partyName)) {
-                    members.add(member);
-                }
-                return members;
-            }
-        } catch (Exception ignored) {
+            Location location = defender.getLocation();
+            WorldGuardPlugin wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+            RegionManager mgr = wgp.getRegionManager(location.getWorld());
+            ApplicableRegionSet set = mgr.getApplicableRegions(location);
+            StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
+            return s == null || s == StateFlag.State.ALLOW;
+        } catch (Throwable ignored) {
         }
-        return null;
+        return true;
+    }
+
+    public WorldGuardPlugin getPlugin() {
+        return wgp;
     }
 }

@@ -23,21 +23,16 @@ package de.Keyle.MyPet.util.hooks;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Residence")
-public class ResidenceHook implements PlayerVersusPlayerHook, PluginHook {
+public class ResidenceHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusPlayerHook {
 
     @Override
     public boolean onEnable() {
         return Configuration.Hooks.USE_Residence;
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     @Override

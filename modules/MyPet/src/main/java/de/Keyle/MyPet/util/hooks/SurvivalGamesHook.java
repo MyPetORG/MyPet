@@ -28,15 +28,15 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.mcsg.survivalgames.GameManager;
 import org.mcsg.survivalgames.api.PlayerJoinArenaEvent;
 
 @PluginHookName(value = "SurvivalGames", classPath = "org.mcsg.survivalgames.SurvivalGames")
-public class SurvivalGamesHook implements ArenaHook, Listener {
+public class SurvivalGamesHook extends PluginHook implements ArenaHook {
 
     @Override
     public boolean onEnable() {

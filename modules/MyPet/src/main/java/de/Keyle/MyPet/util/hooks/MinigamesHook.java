@@ -31,14 +31,14 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 
 @PluginHookName(value = "Minigames", classPath = "au.com.mineauz.minigames.Minigames")
-public class MinigamesHook implements Listener, ArenaHook {
+public class MinigamesHook extends PluginHook implements ArenaHook {
 
     protected Minigames minigames;
 

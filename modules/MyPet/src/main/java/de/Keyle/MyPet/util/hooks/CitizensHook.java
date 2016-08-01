@@ -24,21 +24,18 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.util.PluginHook;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Citizens")
-public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
+public class CitizensHook extends PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
     @Override
     public boolean onEnable() {
         return Configuration.Hooks.USE_Citizens;
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     public boolean canHurt(Player attacker, Entity defender) {

@@ -18,39 +18,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.hooks;
+package de.Keyle.MyPet.util;
 
-import com.palmergames.bukkit.towny.Towny;
-import com.palmergames.bukkit.towny.utils.CombatUtil;
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
-@PluginHookName("Towny")
-public class TownyHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusEntityHook {
-
-    Towny towny;
-
+public class PluginHook implements de.Keyle.MyPet.api.util.hooks.PluginHook {
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_Towny) {
-            towny = MyPetApi.getPluginHookManager().getPluginInstance(Towny.class).get();
-            return true;
-        }
         return false;
     }
 
     @Override
-    public boolean canHurt(Player attacker, Entity defender) {
-        try {
-            if (CombatUtil.preventDamageCall(towny, attacker, defender)) {
-                return false;
-            }
-        } catch (Throwable ignored) {
+    public void onDisable() {
+    }
+
+    @Override
+    public String getPluginName() {
+        if (this.getClass().isAnnotationPresent(PluginHookName.class)) {
+            PluginHookName hookNameAnnotation = this.getClass().getAnnotation(PluginHookName.class);
+            return hookNameAnnotation.value();
         }
-        return true;
+        return "INVALID HOOK";
     }
 }
