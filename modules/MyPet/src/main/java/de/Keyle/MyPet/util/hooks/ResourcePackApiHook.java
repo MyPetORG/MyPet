@@ -25,21 +25,20 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.rpapi.ResourcePackAPI;
 import org.inventivetalent.rpapi.ResourcePackStatusEvent;
 
 @PluginHookName("ResourcePackApi")
-public class ResourcePackApiHook implements Listener, PluginHook {
+public class ResourcePackApiHook extends PluginHook {
 
     public static final String DOWNLOAD_LINK = "http://dl.keyle.de/mypet/MyPet.zip";
 

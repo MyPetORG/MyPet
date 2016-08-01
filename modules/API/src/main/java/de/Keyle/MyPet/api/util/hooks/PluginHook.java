@@ -20,10 +20,12 @@
 
 package de.Keyle.MyPet.api.util.hooks;
 
+import org.bukkit.event.Listener;
+
 /**
  * Plugin hooks are used to create a wrapper for functionality used from another plugin.
  */
-public interface PluginHook {
+public interface PluginHook extends Listener {
     /**
      * Enables the hook and returns if activation was successfull
      *
@@ -35,4 +37,11 @@ public interface PluginHook {
      * Disables the hook
      */
     void onDisable();
+
+    /**
+     * Returns the name of the hooked plugin
+     *
+     * @return name of the plugin
+     */
+    String getPluginName();
 }

@@ -24,12 +24,13 @@ import com.massivecraft.factions.engine.EngineMain;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 @PluginHookName("Factions")
-public class FactionsHook implements PlayerVersusPlayerHook {
+public class FactionsHook extends PluginHook implements PlayerVersusPlayerHook {
 
     protected EngineMain engineMain;
 
@@ -40,10 +41,6 @@ public class FactionsHook implements PlayerVersusPlayerHook {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     @Override

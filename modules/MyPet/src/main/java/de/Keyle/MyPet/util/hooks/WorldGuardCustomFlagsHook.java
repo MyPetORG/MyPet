@@ -29,10 +29,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Location;
 
 @PluginHookName("WGCustomFlags")
-public class WorldGuardCustomFlagsHook implements FlyHook {
+public class WorldGuardCustomFlagsHook extends PluginHook implements FlyHook {
 
     protected WorldGuardPlugin wgPlugin = null;
 
@@ -50,10 +51,6 @@ public class WorldGuardCustomFlagsHook implements FlyHook {
             }
         }
         return false;
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     public boolean canFly(Location location) {

@@ -97,17 +97,26 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     public void onLoad() {
         MyPetApi.setPlugin(this);
         replaceLogger();
-    }
-
-    public void onEnable() {
         getDataFolder().mkdirs();
-
-        this.isReady = false;
 
         // load version from manifest
         MyPetVersion.reset();
 
         compatUtil = new CompatUtil();
+
+        petInfo = compatUtil.getComapatInstance(MyPetInfo.class, "entity", "MyPetInfo");
+        platformHelper = compatUtil.getComapatInstance(PlatformHelper.class, "", "PlatformHelper");
+        entityRegistry = compatUtil.getComapatInstance(EntityRegistry.class, "entity", "EntityRegistry");
+        myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
+        playerManager = new de.Keyle.MyPet.repository.PlayerManager();
+        hookHelper = new de.Keyle.MyPet.util.HookHelper();
+
+        pluginHookManager = new PluginHookManager();
+        registerHooks();
+    }
+
+    public void onEnable() {
+        this.isReady = false;
 
         if (getConfig().getBoolean("MyPet.Update-Check", true)) {
             Optional<String> message = UpdateCheck.checkForUpdate("MyPet");
@@ -125,39 +134,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             return;
         }
 
-
-        petInfo = compatUtil.getComapatInstance(MyPetInfo.class, "entity", "MyPetInfo");
-        platformHelper = compatUtil.getComapatInstance(PlatformHelper.class, "", "PlatformHelper");
-        entityRegistry = compatUtil.getComapatInstance(EntityRegistry.class, "entity", "EntityRegistry");
-        myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
-        playerManager = new de.Keyle.MyPet.repository.PlayerManager();
-        hookHelper = new de.Keyle.MyPet.util.HookHelper();
-
-        pluginHookManager = new PluginHookManager();
-        pluginHookManager.registerHook(AncientHook.class);
-        pluginHookManager.registerHook(BattleArenaHook.class);
-        pluginHookManager.registerHook(CitizensHook.class);
-        pluginHookManager.registerHook(FactionsHook.class);
-        pluginHookManager.registerHook(GriefPreventionHook.class);
-        pluginHookManager.registerHook(HeroesHook.class);
-        pluginHookManager.registerHook(KingdomsHook.class);
-        pluginHookManager.registerHook(MagicSpellsHook.class);
-        pluginHookManager.registerHook(McMMOHook.class);
-        pluginHookManager.registerHook(MinigamesHook.class);
-        pluginHookManager.registerHook(MobArenaHook.class);
-        pluginHookManager.registerHook(NoCheatPlusHook.class);
-        pluginHookManager.registerHook(ProtocolLibHook.class);
-        pluginHookManager.registerHook(PvPArenaHook.class);
-        pluginHookManager.registerHook(PvPManagerHook.class);
-        pluginHookManager.registerHook(ResidenceHook.class);
-        pluginHookManager.registerHook(ResourcePackApiHook.class);
-        pluginHookManager.registerHook(SkillApiHook.class);
-        pluginHookManager.registerHook(SurvivalGamesHook.class);
-        pluginHookManager.registerHook(TownyHook.class);
-        pluginHookManager.registerHook(UltimateSurvivalGamesHook.class);
-        pluginHookManager.registerHook(VaultHook.class);
-        pluginHookManager.registerHook(WorldGuardHook.class);
-        pluginHookManager.registerHook(WorldGuardCustomFlagsHook.class);
+        pluginHookManager.enableHooks();
 
         entityRegistry.registerEntityTypes();
 
@@ -409,6 +386,33 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 }
             }
         }.runTaskLater(this, 0);
+    }
+
+    private void registerHooks() {
+        pluginHookManager.registerHook(AncientHook.class);
+        pluginHookManager.registerHook(BattleArenaHook.class);
+        pluginHookManager.registerHook(CitizensHook.class);
+        pluginHookManager.registerHook(FactionsHook.class);
+        pluginHookManager.registerHook(GriefPreventionHook.class);
+        pluginHookManager.registerHook(HeroesHook.class);
+        pluginHookManager.registerHook(KingdomsHook.class);
+        pluginHookManager.registerHook(MagicSpellsHook.class);
+        pluginHookManager.registerHook(McMMOHook.class);
+        pluginHookManager.registerHook(MinigamesHook.class);
+        pluginHookManager.registerHook(MobArenaHook.class);
+        pluginHookManager.registerHook(NoCheatPlusHook.class);
+        pluginHookManager.registerHook(ProtocolLibHook.class);
+        pluginHookManager.registerHook(PvPArenaHook.class);
+        pluginHookManager.registerHook(PvPManagerHook.class);
+        pluginHookManager.registerHook(ResidenceHook.class);
+        pluginHookManager.registerHook(ResourcePackApiHook.class);
+        pluginHookManager.registerHook(SkillApiHook.class);
+        pluginHookManager.registerHook(SurvivalGamesHook.class);
+        pluginHookManager.registerHook(TownyHook.class);
+        pluginHookManager.registerHook(UltimateSurvivalGamesHook.class);
+        pluginHookManager.registerHook(VaultHook.class);
+        pluginHookManager.registerHook(WorldGuardHook.class);
+        pluginHookManager.registerHook(WorldGuardCustomFlagsHook.class);
     }
 
     public static void registerSkills() {

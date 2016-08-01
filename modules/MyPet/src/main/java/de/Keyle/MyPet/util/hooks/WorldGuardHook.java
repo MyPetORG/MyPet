@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -39,32 +40,27 @@ import java.util.Map;
 import java.util.Set;
 
 @PluginHookName("WorldGuard")
-public class WorldGuardHook implements PlayerVersusPlayerHook, FlyHook {
+public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook, FlyHook {
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
 
     protected WorldGuardPlugin wgp = null;
     protected WorldGuardCustomFlagsHook flagHook = null;
     protected boolean customFlags = false;
 
-    @Override
-    public boolean onEnable() {
-        if (Configuration.Hooks.USE_WorldGuard) {
-            wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+    public WorldGuardHook() {
+        wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
 
-            try {
-                FlagRegistry flagRegistry = wgp.getFlagRegistry();
-                flagRegistry.register(FLY_FLAG);
-                customFlags = true;
-            } catch (Exception ignored) {
-            }
-
-            return true;
+        try {
+            FlagRegistry flagRegistry = wgp.getFlagRegistry();
+            flagRegistry.register(FLY_FLAG);
+            customFlags = true;
+        } catch (Exception ignored) {
         }
-        return false;
     }
 
     @Override
-    public void onDisable() {
+    public boolean onEnable() {
+        return Configuration.Hooks.USE_WorldGuard;
     }
 
     @Override
@@ -86,7 +82,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, FlyHook {
             RegionManager mgr = wgp.getRegionManager(location.getWorld());
             ApplicableRegionSet regions = mgr.getApplicableRegions(location);
             StateFlag.State s = regions.queryState(null, FLY_FLAG);
-            return s == null || s != StateFlag.State.ALLOW;
+            return s == null || s == StateFlag.State.ALLOW;
         }
 
         try {

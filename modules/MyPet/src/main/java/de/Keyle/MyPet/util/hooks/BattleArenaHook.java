@@ -28,15 +28,15 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.PluginHook;
 import mc.alk.arena.events.players.ArenaPlayerEnterEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 
 @PluginHookName("BattleArena")
-public class BattleArenaHook implements Listener, ArenaHook {
+public class BattleArenaHook extends PluginHook implements ArenaHook {
 
     @Override
     public boolean onEnable() {

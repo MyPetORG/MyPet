@@ -22,14 +22,14 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.util.PluginHook;
 import me.NoChance.PvPManager.PvPManager;
 import org.bukkit.entity.Player;
 
 @PluginHookName("PvPManager")
-public class PvPManagerHook implements PlayerVersusPlayerHook, PluginHook {
+public class PvPManagerHook extends PluginHook implements PlayerVersusPlayerHook {
 
     PvPManager pvpmanager;
 
@@ -48,10 +48,6 @@ public class PvPManagerHook implements PlayerVersusPlayerHook, PluginHook {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     @Override

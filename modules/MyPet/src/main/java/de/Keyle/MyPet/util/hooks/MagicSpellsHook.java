@@ -23,15 +23,14 @@ package de.Keyle.MyPet.util.hooks;
 import com.nisovin.magicspells.events.SpellTargetEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 
 @PluginHookName("MagicSpells")
-public class MagicSpellsHook implements PluginHook, Listener {
+public class MagicSpellsHook extends PluginHook {
 
     @Override
     public boolean onEnable() {

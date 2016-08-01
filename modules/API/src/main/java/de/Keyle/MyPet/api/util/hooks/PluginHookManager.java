@@ -28,6 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,34 +42,53 @@ public class PluginHookManager {
     ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
     Map<String, PluginHook> hookByName = new HashMap<>();
     Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
+    List<PluginHook> registeredHooks = new ArrayList<>();
 
     /**
      * register new hooks here. A hook needs the {@link PluginHookName} annotation to be accepted.
      *
      * @param hookClass the hook class
      */
-    @SuppressWarnings("unchecked")
     public void registerHook(Class<? extends PluginHook> hookClass) {
         if (hookClass.isAnnotationPresent(PluginHookName.class)) {
             PluginHookName hookNameAnnotation = hookClass.getAnnotation(PluginHookName.class);
 
             String pluginName = hookNameAnnotation.value();
             if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
-                if (!isPluginUsable(pluginName, hookNameAnnotation.classPath())) {
+                if (!isPluginAvailable(pluginName, hookNameAnnotation.classPath())) {
                     return;
                 }
             } else {
-                if (!isPluginUsable(pluginName)) {
+                if (!isPluginAvailable(pluginName)) {
                     return;
                 }
             }
             try {
                 PluginHook hook = hookClass.newInstance();
+                registeredHooks.add(hook);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    @SuppressWarnings("unchecked")
+    public void enableHooks() {
+        for (PluginHook hook : registeredHooks) {
+            try {
+                PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
+                if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
+                    if (!isPluginUsable(hook.getPluginName(), hookNameAnnotation.classPath())) {
+                        return;
+                    }
+                } else {
+                    if (!isPluginUsable(hook.getPluginName())) {
+                        return;
+                    }
+                }
                 if (hook.onEnable()) {
-
                     boolean genericHook = true;
-                    for (Object o : ClassUtils.getAllInterfaces(hookClass)) {
+                    for (Object o : ClassUtils.getAllInterfaces(hook.getClass())) {
                         if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
                             hooks.put((Class) o, hook);
                             genericHook = false;
@@ -77,23 +97,25 @@ public class PluginHookManager {
                     if (genericHook) {
                         hooks.put(PluginHook.class, hook);
                     }
-                    hookByName.put(pluginName, hook);
-                    hookByClass.put(hookClass, hook);
+                    hookByName.put(hook.getPluginName(), hook);
+                    hookByClass.put(hook.getClass(), hook);
 
-                    String message = pluginName;
+                    String message = hook.getPluginName();
                     if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
                         message += "(" + hookNameAnnotation.classPath() + ")";
                     }
                     MyPetApi.getLogger().info(message + " hook activated.");
                 }
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        registeredHooks.clear();
     }
 
     /**
      * returns all hooks that inherit from a specific class/interface
+     *
      * @param hookClass class that implements from {@link PluginHook}
      * @return list of instances of the hook class
      */
@@ -104,6 +126,7 @@ public class PluginHookManager {
 
     /**
      * returns if hooks that inherit from a specific class/interface are available
+     *
      * @param hookClass class that implements from {@link PluginHook}
      * @return if any hook was found
      */
@@ -113,6 +136,7 @@ public class PluginHookManager {
 
     /**
      * returns the hooks of a specific class
+     *
      * @param hookClass class that implements from {@link PluginHook}
      * @return instance of the hook class
      */
@@ -123,6 +147,7 @@ public class PluginHookManager {
 
     /**
      * returns the hooks with a specific {@link PluginHookName}
+     *
      * @param name name of the plugin
      * @return instance of a hook class associated with the plugin name
      */
@@ -132,6 +157,7 @@ public class PluginHookManager {
 
     /**
      * returns if a hooks with a specific {@link PluginHookName} is available
+     *
      * @param name name of the plugin
      * @return if any hook was found
      */
@@ -141,6 +167,7 @@ public class PluginHookManager {
 
     /**
      * returns if a hook that inherit from a specific class/interface is available
+     *
      * @param hookClass class that implements from {@link PluginHook}
      * @return if any hook was found
      */
@@ -150,6 +177,7 @@ public class PluginHookManager {
 
     /**
      * searches for an instance of a plugin
+     *
      * @param clazz class of the plugin
      * @return instance of the plugin
      */
@@ -172,6 +200,7 @@ public class PluginHookManager {
 
     /**
      * checks if a plugin is enabled
+     *
      * @param pluginName name of the plugin
      * @return if the plugin is enabled
      */
@@ -189,5 +218,28 @@ public class PluginHookManager {
     public static boolean isPluginUsable(String pluginName, String className) {
         JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
         return plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className);
+    }
+
+    /**
+     * checks if a plugin is available
+     *
+     * @param pluginName name of the plugin
+     * @return if the plugin is available
+     */
+    public boolean isPluginAvailable(String pluginName) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null;
+    }
+
+    /**
+     * checks if a plugin with a specific class name is available
+     *
+     * @param pluginName name of the plugin
+     * @param className  class name
+     * @return if the plugin is available
+     */
+    public static boolean isPluginAvailable(String pluginName, String className) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.getClass().getName().equals(className);
     }
 }

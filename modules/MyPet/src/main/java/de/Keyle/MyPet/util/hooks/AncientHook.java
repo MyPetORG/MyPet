@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -34,15 +35,11 @@ import java.util.List;
 import java.util.UUID;
 
 @PluginHookName("Ancient")
-public class AncientHook implements PlayerVersusPlayerHook, PartyHook {
+public class AncientHook extends PluginHook implements PlayerVersusPlayerHook, PartyHook {
 
     @Override
     public boolean onEnable() {
         return Configuration.Hooks.USE_AncientRPG;
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     public boolean canHurt(Player attacker, Player defender) {
