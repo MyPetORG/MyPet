@@ -93,7 +93,7 @@
         <residence.version>2.6.6.6</residence.version>
 
         <!-- http://towny.palmergames.com/ -->
-        <towny.version>0.91.0.0</towny.version>
+        <towny.version>0.91.1.0</towny.version>
 
         <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
         <griefprevention.version>13.9.1</griefprevention.version>
@@ -150,10 +150,12 @@
             <id>citizens-repo</id>
             <url>http://repo.citizensnpcs.co/</url>
         </repository>
+        <!--
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
         </repository>
+        -->
         <repository>
             <id>protocollib-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public</url>
