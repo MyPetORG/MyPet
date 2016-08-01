@@ -98,8 +98,7 @@ public class BehaviorAggressiveTarget extends AIGoal {
                             continue;
                         }
                     }
-                }
-                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
+                } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
                     continue;
                 }
                 this.target = entityLiving;
