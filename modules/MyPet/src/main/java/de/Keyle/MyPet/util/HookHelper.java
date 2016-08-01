@@ -24,7 +24,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.types.*;
-import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -92,8 +91,11 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean canMyPetFlyAt(Location location) {
-        if (MyPetApi.getPluginHookManager().isHookActive(WorldGuardHook.class)) {
-            return MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class).canFly(location);
+        List<FlyHook> flyHooks = MyPetApi.getPluginHookManager().getHooks(FlyHook.class);
+        for (FlyHook hook : flyHooks) {
+            if (!hook.canFly(location)) {
+                return false;
+            }
         }
         return true;
     }

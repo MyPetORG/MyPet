@@ -24,11 +24,13 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -37,15 +39,25 @@ import java.util.Map;
 import java.util.Set;
 
 @PluginHookName("WorldGuard")
-public class WorldGuardHook implements PlayerVersusPlayerHook {
+public class WorldGuardHook implements PlayerVersusPlayerHook, FlyHook {
+    public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
 
     protected WorldGuardPlugin wgp = null;
     protected WorldGuardCustomFlagsHook flagHook = null;
+    protected boolean customFlags = false;
 
     @Override
     public boolean onEnable() {
         if (Configuration.Hooks.USE_WorldGuard) {
             wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+
+            try {
+                FlagRegistry flagRegistry = wgp.getFlagRegistry();
+                flagRegistry.register(FLY_FLAG);
+                customFlags = true;
+            } catch (Exception ignored) {
+            }
+
             return true;
         }
         return false;
@@ -70,9 +82,13 @@ public class WorldGuardHook implements PlayerVersusPlayerHook {
     }
 
     public boolean canFly(Location location) {
-        if (flagHook != null) {
-            return flagHook.canFly(location);
+        if (customFlags) {
+            RegionManager mgr = wgp.getRegionManager(location.getWorld());
+            ApplicableRegionSet regions = mgr.getApplicableRegions(location);
+            StateFlag.State s = regions.queryState(null, FLY_FLAG);
+            return s == null || s != StateFlag.State.ALLOW;
         }
+
         try {
             Map<String, Boolean> flyZones = Configuration.Skilltree.Skill.Ride.FLY_ZONES;
             boolean allowed = true;
