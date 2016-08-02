@@ -684,7 +684,7 @@ public class EntityListener implements Listener {
 
             if (source instanceof Player) {
                 Player player = (Player) source;
-                if (event.getDamage() == 0 || event.isCancelled()) {
+                if (event.getDamage() == 0) {
                     return;
                 } else if (target instanceof MyPetBukkitEntity) {
                     if (MyPetApi.getMyPetInfo().getLeashItem(((MyPetBukkitEntity) target).getPetType()).compare(player.getItemInHand())) {
@@ -706,17 +706,13 @@ public class EntityListener implements Listener {
 
                 // fix influence of other plugins for this event and throw damage event
                 if (event.getDamager() instanceof Projectile) {
-                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, myPet.getRangedDamage());
+                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
                     Bukkit.getPluginManager().callEvent(petDamageEvent);
                     event.setDamage(petDamageEvent.getDamage());
                 } else {
-                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, myPet.getDamage());
+                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
                     Bukkit.getPluginManager().callEvent(petDamageEvent);
                     event.setDamage(petDamageEvent.getDamage());
-                }
-
-                if (target instanceof Player && event.isCancelled()) {
-                    return;
                 }
 
                 if (!isSkillActive) {
