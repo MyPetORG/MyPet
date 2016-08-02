@@ -101,6 +101,7 @@ public class PluginHookManager {
                     hookByClass.put(hook.getClass(), hook);
 
                     String message = hook.getPluginName();
+                    message += " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ")";
                     if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
                         message += "(" + hookNameAnnotation.classPath() + ")";
                     }
