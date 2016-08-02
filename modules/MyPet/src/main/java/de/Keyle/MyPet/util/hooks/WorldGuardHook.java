@@ -54,7 +54,7 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
             FlagRegistry flagRegistry = wgp.getFlagRegistry();
             flagRegistry.register(FLY_FLAG);
             customFlags = true;
-        } catch (Exception ignored) {
+        } catch (NoSuchMethodError ignored) {
         }
     }
 
