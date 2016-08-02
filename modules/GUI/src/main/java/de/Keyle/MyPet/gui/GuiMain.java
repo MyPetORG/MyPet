@@ -42,7 +42,7 @@ public class GuiMain {
     public static SkillPropertyEditor skillPropertyEditor;
     public static String configPath;
 
-    public static String[] petTypes = new String[]{"default", "Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "EnderDragon", "Enderman", "Endermite", "Ghast", "Giant", "Guardian", "Horse", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Rabbit", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Squid", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
+    public static String[] petTypes = new String[]{"default", "Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "EnderDragon", "Enderman", "Endermite", "Ghast", "Giant", "Guardian", "Horse", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "PolarBear", "Rabbit", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Squid", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
 
     public static void main(String[] args) {
         String path = "";
