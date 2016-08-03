@@ -26,11 +26,12 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Towny")
-public class TownyHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusEntityHook {
+public class TownyHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
     Towny towny;
 
@@ -52,5 +53,10 @@ public class TownyHook extends de.Keyle.MyPet.util.PluginHook implements PlayerV
         } catch (Throwable ignored) {
         }
         return true;
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        return canHurt(attacker, (Entity) defender);
     }
 }
