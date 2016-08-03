@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.util.PluginHook;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
@@ -32,7 +33,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("GriefPrevention")
-public class GriefPreventionHook extends PluginHook implements PlayerVersusEntityHook {
+public class GriefPreventionHook extends PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
     protected GriefPrevention griefPrevention;
 
@@ -92,5 +93,10 @@ public class GriefPreventionHook extends PluginHook implements PlayerVersusEntit
         } catch (Throwable ignored) {
         }
         return true;
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        return canHurt(attacker, (Entity) defender);
     }
 }
