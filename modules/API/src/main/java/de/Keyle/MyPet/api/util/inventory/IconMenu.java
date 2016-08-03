@@ -23,14 +23,12 @@ package de.Keyle.MyPet.api.util.inventory;
 import de.Keyle.MyPet.MyPetApi;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -134,25 +132,33 @@ public class IconMenu implements Listener {
         if (inventory != null && inventory.isMenuInventory(event.getInventory())) {
             event.setCursor(null);
             event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
             int slot = event.getRawSlot();
             if (slot >= 0 && slot < getSize() && options.containsKey(slot)) {
-                IconMenu.OptionClickEvent e = new IconMenu.OptionClickEvent((Player) event.getWhoClicked(), slot, this, options.get(slot));
+                final IconMenu.OptionClickEvent e = new IconMenu.OptionClickEvent((Player) event.getWhoClicked(), slot, this, options.get(slot));
                 handler.onOptionClick(e);
-                if (e.willClose()) {
-                    final Player p = (Player) event.getWhoClicked();
-                    p.closeInventory();
-                }
-                if (e.willDestroy()) {
-                    destroy();
-                }
+
+                final Player p = (Player) event.getWhoClicked();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (e.willClose()) {
+                            p.closeInventory();
+                        }
+                        if (e.willDestroy()) {
+                            destroy();
+                        }
+                    }
+                }.runTaskLater(MyPetApi.getPlugin(), 0);
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     void onMonitor(InventoryClickEvent event) {
         if (inventory != null && inventory.isMenuInventory(event.getInventory())) {
             event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
         }
     }
 
