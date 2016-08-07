@@ -29,11 +29,15 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 @PluginHookName("WGCustomFlags")
-public class WorldGuardCustomFlagsHook extends PluginHook implements FlyHook {
+public class WorldGuardCustomFlagsHook extends PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
 
     protected WorldGuardPlugin wgPlugin = null;
 
@@ -45,12 +49,40 @@ public class WorldGuardCustomFlagsHook extends PluginHook implements FlyHook {
                     wgPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
                     WGCustomFlagsPlugin wgcfPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WGCustomFlagsPlugin.class).get();
                     wgcfPlugin.addCustomFlag(WorldGuardHook.FLY_FLAG);
+                    wgcfPlugin.addCustomFlag(WorldGuardHook.DAMAGE_FLAG);
                     return true;
                 }
             } catch (Throwable ignored) {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Entity defender) {
+        try {
+            Location location = defender.getLocation();
+            RegionManager mgr = wgPlugin.getRegionManager(location.getWorld());
+            ApplicableRegionSet set = mgr.getApplicableRegions(location);
+            StateFlag.State s = set.queryState(null, WorldGuardHook.DAMAGE_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        try {
+            Location location = defender.getLocation();
+            RegionManager mgr = wgPlugin.getRegionManager(location.getWorld());
+            ApplicableRegionSet set = mgr.getApplicableRegions(location);
+            StateFlag.State s;
+            s = set.queryState(wgPlugin.wrapPlayer(defender), WorldGuardHook.DAMAGE_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        } catch (Throwable ignored) {
+        }
+        return true;
     }
 
     public boolean canFly(Location location) {

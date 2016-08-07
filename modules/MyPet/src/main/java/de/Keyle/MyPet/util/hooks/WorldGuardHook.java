@@ -31,17 +31,20 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.Set;
 
 @PluginHookName("WorldGuard")
-public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook, FlyHook {
+public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
+    public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
 
     protected WorldGuardPlugin wgp = null;
     protected WorldGuardCustomFlagsHook flagHook = null;
@@ -53,6 +56,7 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
         try {
             FlagRegistry flagRegistry = wgp.getFlagRegistry();
             flagRegistry.register(FLY_FLAG);
+            flagRegistry.register(DAMAGE_FLAG);
             customFlags = true;
         } catch (NoSuchMethodError ignored) {
         }
@@ -64,13 +68,33 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
     }
 
     @Override
+    public boolean canHurt(Player attacker, Entity defender) {
+        if (customFlags) {
+            try {
+                Location location = defender.getLocation();
+                RegionManager mgr = wgp.getRegionManager(location.getWorld());
+
+                ApplicableRegionSet set = mgr.getApplicableRegions(location);
+                StateFlag.State s = set.queryState(null, DAMAGE_FLAG);
+                return s == null || s == StateFlag.State.ALLOW;
+            } catch (Throwable ignored) {
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
             Location location = defender.getLocation();
-            WorldGuardPlugin wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
             RegionManager mgr = wgp.getRegionManager(location.getWorld());
             ApplicableRegionSet set = mgr.getApplicableRegions(location);
-            StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
+            StateFlag.State s;
+            if (customFlags) {
+                s = set.queryState(wgp.wrapPlayer(defender), DefaultFlag.PVP, DAMAGE_FLAG);
+            } else {
+                s = set.queryState(wgp.wrapPlayer(defender), DefaultFlag.PVP);
+            }
             return s == null || s == StateFlag.State.ALLOW;
         } catch (Throwable ignored) {
         }
