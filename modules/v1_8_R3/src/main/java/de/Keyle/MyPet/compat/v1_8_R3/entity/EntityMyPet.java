@@ -937,6 +937,21 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             if (isAlive()) {
                 getEntitySenses().a(); // sensing
 
+                Player p = getOwner().getPlayer();
+                if (p == null || !p.isOnline()) {
+
+                    MyPetApi.getLogger().warning("==========================================");
+                    MyPetApi.getLogger().warning("Please report this to the MyPet developer!");
+
+                    MyPetApi.getLogger().warning("MyPet: " + getMyPet());
+                    MyPetApi.getLogger().warning("MyPetOwner: " + getOwner());
+                    MyPetApi.getLogger().warning("Owner online: " + (getOwner() != null ? getOwner().isOnline() : "null"));
+
+                    MyPetApi.getLogger().warning("==========================================");
+                    this.die();
+                    return;
+                }
+
                 if (!hasRider()) {
                     petTargetSelector.tick(); // target selector
                     petPathfinderSelector.tick(); // pathfinder selector
