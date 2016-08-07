@@ -39,6 +39,13 @@ public class PvPManagerHook extends PluginHook implements PlayerVersusPlayerHook
             pvpmanager = MyPetApi.getPluginHookManager().getPluginInstance(PvPManager.class).get();
 
             try {
+                pvpmanager.getPlayerHandler();
+            } catch (Throwable e) {
+                MyPetApi.getLogger().warning("PvPManager Premium is not supported because it has no API!");
+                return false;
+            }
+
+            try {
                 pvpmanager.getClass().getDeclaredMethod("canAttack", Player.class, Player.class);
             } catch (NoSuchMethodException e) {
                 MyPetApi.getLogger().warning("Please use PvPManager build 113+");
