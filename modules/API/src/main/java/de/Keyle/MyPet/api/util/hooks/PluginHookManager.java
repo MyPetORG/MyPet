@@ -66,7 +66,8 @@ public class PluginHookManager {
             try {
                 PluginHook hook = hookClass.newInstance();
                 registeredHooks.add(hook);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (Throwable e) {
+                MyPetApi.getLogger().warning("Error occured while enabling " + pluginName + " (" + Bukkit.getPluginManager().getPlugin(pluginName).getDescription().getVersion() + ") hook.");
                 e.printStackTrace();
             }
         }
@@ -107,7 +108,8 @@ public class PluginHookManager {
                     }
                     MyPetApi.getLogger().info(message + " hook activated.");
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                MyPetApi.getLogger().warning("Error occured while enabling " + hook.getPluginName() + " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ") hook.");
                 e.printStackTrace();
             }
         }
@@ -212,8 +214,9 @@ public class PluginHookManager {
 
     /**
      * checks if a plugin with a specific class name is enabled
+     *
      * @param pluginName name of the plugin
-     * @param className class name
+     * @param className  class name
      * @return if the plugin is enabled
      */
     public static boolean isPluginUsable(String pluginName, String className) {
