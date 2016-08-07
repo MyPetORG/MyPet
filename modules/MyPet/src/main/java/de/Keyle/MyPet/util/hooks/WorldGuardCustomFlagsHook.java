@@ -20,11 +20,10 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import com.mewin.WGCustomFlags.WGCustomFlagsPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
@@ -36,40 +35,36 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@PluginHookName("WorldGuard")
-public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
-    public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
+@PluginHookName("WGCustomFlags")
+public class WorldGuardCustomFlagsHook extends PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
 
-    protected WorldGuardPlugin wgp = null;
-    protected boolean customFlags = false;
-
-    public WorldGuardHook() {
-        wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
-
-        try {
-            FlagRegistry flagRegistry = wgp.getFlagRegistry();
-            flagRegistry.register(DAMAGE_FLAG);
-            customFlags = true;
-        } catch (NoSuchMethodError ignored) {
-        }
-    }
+    protected WorldGuardPlugin wgPlugin = null;
 
     @Override
     public boolean onEnable() {
-        return Configuration.Hooks.USE_WorldGuard;
+        if (Configuration.Hooks.USE_WorldGuard) {
+            try {
+                if (MyPetApi.getPluginHookManager().isPluginUsable("WorldGuard")) {
+                    wgPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+                    WGCustomFlagsPlugin wgcfPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WGCustomFlagsPlugin.class).get();
+                    wgcfPlugin.addCustomFlag(WorldGuardHook.DAMAGE_FLAG);
+                    return true;
+                }
+            } catch (Throwable ignored) {
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
-        if (customFlags) {
-            try {
-                Location location = defender.getLocation();
-                RegionManager mgr = wgp.getRegionManager(location.getWorld());
-                ApplicableRegionSet set = mgr.getApplicableRegions(location);
-                StateFlag.State s = set.queryState(null, DAMAGE_FLAG);
-                return s == null || s == StateFlag.State.ALLOW;
-            } catch (Throwable ignored) {
-            }
+        try {
+            Location location = defender.getLocation();
+            RegionManager mgr = wgPlugin.getRegionManager(location.getWorld());
+            ApplicableRegionSet set = mgr.getApplicableRegions(location);
+            StateFlag.State s = set.queryState(null, WorldGuardHook.DAMAGE_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        } catch (Throwable ignored) {
         }
         return true;
     }
@@ -78,21 +73,13 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
     public boolean canHurt(Player attacker, Player defender) {
         try {
             Location location = defender.getLocation();
-            RegionManager mgr = wgp.getRegionManager(location.getWorld());
+            RegionManager mgr = wgPlugin.getRegionManager(location.getWorld());
             ApplicableRegionSet set = mgr.getApplicableRegions(location);
             StateFlag.State s;
-            if (customFlags) {
-                s = set.queryState(wgp.wrapPlayer(defender), DefaultFlag.PVP, DAMAGE_FLAG);
-            } else {
-                s = set.queryState(wgp.wrapPlayer(defender), DefaultFlag.PVP);
-            }
+            s = set.queryState(wgPlugin.wrapPlayer(defender), WorldGuardHook.DAMAGE_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
         } catch (Throwable ignored) {
         }
         return true;
-    }
-
-    public WorldGuardPlugin getPlugin() {
-        return wgp;
     }
 }
