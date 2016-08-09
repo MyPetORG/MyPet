@@ -44,13 +44,15 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
     protected boolean customFlags = false;
 
     public WorldGuardHook() {
-        wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+        if (Configuration.Hooks.USE_WorldGuard) {
+            wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
 
-        try {
-            FlagRegistry flagRegistry = wgp.getFlagRegistry();
-            flagRegistry.register(DAMAGE_FLAG);
-            customFlags = true;
-        } catch (NoSuchMethodError ignored) {
+            try {
+                FlagRegistry flagRegistry = wgp.getFlagRegistry();
+                flagRegistry.register(DAMAGE_FLAG);
+                customFlags = true;
+            } catch (NoSuchMethodError ignored) {
+            }
         }
     }
 

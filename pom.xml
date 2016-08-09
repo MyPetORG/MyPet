@@ -56,6 +56,9 @@
         <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
         <mcmmo.version>1.5.00</mcmmo.version>
 
+        <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
+        <plotsquared.version>3.4.4</plotsquared.version>
+
         <!-- http://dev.bukkit.org/bukkit-plugins/vault/ -->
         <vaultapi.version>1.5</vaultapi.version>
 
@@ -203,6 +206,13 @@
             <groupId>com.pauldavdesign.mineauz</groupId>
             <artifactId>Minigames</artifactId>
             <version>${minigames.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.plotsquared.bukkit</groupId>
+            <artifactId>PlotSquared</artifactId>
+            <version>${plotsquared.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
