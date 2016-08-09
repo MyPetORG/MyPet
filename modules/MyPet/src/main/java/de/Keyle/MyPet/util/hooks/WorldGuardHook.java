@@ -93,8 +93,4 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
         }
         return true;
     }
-
-    public WorldGuardPlugin getPlugin() {
-        return wgp;
-    }
 }
