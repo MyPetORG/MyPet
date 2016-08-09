@@ -48,7 +48,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
@@ -416,7 +415,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     public boolean handlePlayerInteraction(final EntityHuman entityhuman) {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
-        Player owner = this.getOwner().getPlayer();
 
         if (itemStack != null && itemStack.getItem() == Items.LEAD) {
             ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutAttachEntity(1, this, null));
@@ -430,10 +428,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
+            Player owner = this.getOwner().getPlayer();
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
                     if (Permissions.hasExtendedLegacy(owner, "MyPet.extended.ride")) {
-                        ((CraftPlayer) owner).getHandle().mount(this);
+                        entityhuman.mount(this);
                         return true;
                     } else {
                         getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
@@ -919,11 +918,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     /**
-     * Allows handlePlayerInteraction() to
-     * be fired when a lead is used
+     * Allows handlePlayerInteraction() to be fired when a lead is used
      */
     public boolean cb() {
-        return true;
+        return false;
     }
 
     /**
