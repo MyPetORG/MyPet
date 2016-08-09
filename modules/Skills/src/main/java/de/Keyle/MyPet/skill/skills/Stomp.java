@@ -34,6 +34,7 @@ import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
@@ -110,7 +111,7 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
 
         for (Entity e : myPet.getEntity().get().getNearbyEntities(2.5, 2.5, 2.5)) {
             if (e instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity) e;
+                final LivingEntity livingEntity = (LivingEntity) e;
 
                 if (livingEntity instanceof Player) {
                     Player targetPlayer = (Player) livingEntity;
@@ -151,9 +152,14 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
                     double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
                     if (distance != 0.0D) {
                         double motFactor = (1.0D - distancePercent);
-                        Vector velocity = livingEntity.getVelocity();
+                        final Vector velocity = livingEntity.getVelocity();
                         velocity.multiply(motFactor);
-                        livingEntity.setVelocity(velocity);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                livingEntity.setVelocity(velocity);
+                            }
+                        }.runTaskLater(MyPetApi.getPlugin(), 0);
                     }
                 }
             }
