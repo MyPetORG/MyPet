@@ -47,7 +47,6 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
 
     protected WorldGuardPlugin wgp = null;
-    protected WorldGuardCustomFlagsHook flagHook = null;
     protected boolean customFlags = false;
 
     public WorldGuardHook() {
@@ -144,17 +143,5 @@ public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook
         } catch (Throwable ignored) {
         }
         return true;
-    }
-
-    public void enableFlagSupport(WorldGuardCustomFlagsHook hook) {
-        flagHook = hook;
-    }
-
-    public void disableFlagSupport() {
-        flagHook = null;
-    }
-
-    public WorldGuardPlugin getPlugin() {
-        return wgp;
     }
 }
