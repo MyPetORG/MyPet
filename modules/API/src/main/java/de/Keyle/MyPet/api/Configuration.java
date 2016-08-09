@@ -247,6 +247,7 @@ public class Configuration {
         public static boolean USE_PvPManager = true;
         public static boolean USE_SurvivalGame = true;
         public static boolean USE_Kingdoms = true;
+        public static boolean USE_PlotSquared = true;
 
         public static class SkillAPI {
             public static boolean GRANT_EXP = true;
