@@ -111,6 +111,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
 
         pluginHookManager = new PluginHookManager();
+
+        ConfigurationLoader.setDefault();
+        ConfigurationLoader.loadConfiguration();
+
         registerHooks();
     }
 
@@ -136,9 +140,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         pluginHookManager.enableHooks();
 
         entityRegistry.registerEntityTypes();
-
-        ConfigurationLoader.setDefault();
-        ConfigurationLoader.loadConfiguration();
 
         if (getLogger() instanceof MyPetLogger) {
             ((MyPetLogger) getLogger()).updateDebugLoggerLogLevel();
