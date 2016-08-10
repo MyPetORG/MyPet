@@ -50,119 +50,119 @@ public class PlotSquaredHook extends PluginHook implements PlayerVersusPlayerHoo
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
-        com.intellectualcrafters.plot.object.Location dloc = BukkitUtil.getLocation(attacker);
-        com.intellectualcrafters.plot.object.Location vloc = BukkitUtil.getLocation(defender);
-        PlotArea dArea = dloc.getPlotArea();
-        PlotArea vArea = dArea != null && dArea.contains(vloc.getX(), vloc.getZ()) ? dArea : vloc.getPlotArea();
-        if (dArea == null && vArea == null) {
-            return true;
-        } else {
-            Plot dplot = dArea != null ? dArea.getPlot(dloc) : null;
-            Plot vplot = vArea != null ? vArea.getPlot(vloc) : null;
-            Plot plot;
-            String stub;
-            if (dplot == null && vplot == null) {
-                if (dArea == null) {
-                    return true;
-                }
+        try {
+            com.intellectualcrafters.plot.object.Location dloc = BukkitUtil.getLocation(attacker);
+            com.intellectualcrafters.plot.object.Location vloc = BukkitUtil.getLocation(defender);
+            PlotArea dArea = dloc.getPlotArea();
+            PlotArea vArea = dArea != null && dArea.contains(vloc.getX(), vloc.getZ()) ? dArea : vloc.getPlotArea();
+            if (dArea != null || vArea != null) {
+                Plot dplot = dArea != null ? dArea.getPlot(dloc) : null;
+                Plot vplot = vArea != null ? vArea.getPlot(vloc) : null;
+                Plot plot;
+                String stub;
+                if (dplot == null && vplot == null) {
+                    if (dArea == null) {
+                        return true;
+                    }
 
-                plot = null;
-                stub = "road";
-            } else {
-                if (defender.getTicksLived() > attacker.getTicksLived()) {
-                    if (dplot != null && defender instanceof Player) {
-                        plot = dplot;
+                    plot = null;
+                    stub = "road";
+                } else {
+                    if (defender.getTicksLived() > attacker.getTicksLived()) {
+                        if (dplot != null && defender instanceof Player) {
+                            plot = dplot;
+                        } else if (vplot == null) {
+                            plot = dplot;
+                        } else {
+                            plot = vplot;
+                        }
+                    } else if (dplot != null && defender instanceof Player) {
+                        if (vplot == null) {
+                            plot = dplot;
+                        } else {
+                            plot = vplot;
+                        }
                     } else if (vplot == null) {
                         plot = dplot;
                     } else {
                         plot = vplot;
                     }
-                } else if (dplot != null && defender instanceof Player) {
-                    if (vplot == null) {
-                        plot = dplot;
+
+                    if (plot.hasOwner()) {
+                        stub = "other";
                     } else {
-                        plot = vplot;
+                        stub = "unowned";
                     }
-                } else if (vplot == null) {
-                    plot = dplot;
-                } else {
-                    plot = vplot;
                 }
 
-                if (plot.hasOwner()) {
-                    stub = "other";
+                PlotPlayer plotPlayer1 = BukkitUtil.getPlayer(attacker);
+                if (defender instanceof Hanging) {
+                    if (plot != null && (plot.getFlag(Flags.HANGING_BREAK, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
+                        return true;
+                    }
+
+                    if (!Permissions.hasPermission(plotPlayer1, "plots.admin.destroy." + stub)) {
+                        return false;
+                    }
+                } else if (defender.getEntityId() == 30) {
+                    if (plot != null && (plot.getFlag(Flags.MISC_BREAK, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
+                        return true;
+                    }
+
+                    if (!Permissions.hasPermission(plotPlayer1, "plots.admin.destroy." + stub)) {
+                        return false;
+                    }
+                } else if (!(defender instanceof Monster) && !(defender instanceof EnderDragon)) {
+                    if (defender instanceof Tameable) {
+                        if (plot != null && (plot.getFlag(Flags.TAMED_ATTACK, Boolean.FALSE) || plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
+                            return true;
+                        }
+
+                        if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
+                            return false;
+                        }
+                    } else if (defender instanceof Player) {
+                        if (plot != null) {
+                            return !(Flags.PVP.isFalse(plot) && !Permissions.hasPermission(plotPlayer1, "plots.admin.pvp." + stub));
+                        }
+
+                        if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pvp." + stub)) {
+                            return false;
+                        }
+                    } else if (!(defender instanceof Creature)) {
+                        if (defender instanceof Vehicle) {
+                            return true;
+                        }
+
+                        if (plot != null && (plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
+                            return true;
+                        }
+
+                        if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
+                            return false;
+                        }
+                    } else {
+                        if (plot != null && (plot.getFlag(Flags.ANIMAL_ATTACK, Boolean.FALSE) || plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
+                            return true;
+                        }
+
+                        if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
+                            return false;
+                        }
+                    }
                 } else {
-                    stub = "unowned";
+                    if (plot != null && (plot.getFlag(Flags.HOSTILE_ATTACK, Boolean.FALSE) || plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
+                        return true;
+                    }
+
+                    if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
+                        return false;
+                    }
                 }
             }
-
-            PlotPlayer plotPlayer1 = BukkitUtil.getPlayer(attacker);
-            if (defender instanceof Hanging) {
-                if (plot != null && (plot.getFlag(Flags.HANGING_BREAK, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
-                    return true;
-                }
-
-                if (!Permissions.hasPermission(plotPlayer1, "plots.admin.destroy." + stub)) {
-                    return false;
-                }
-            } else if (defender.getEntityId() == 30) {
-                if (plot != null && (plot.getFlag(Flags.MISC_BREAK, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
-                    return true;
-                }
-
-                if (!Permissions.hasPermission(plotPlayer1, "plots.admin.destroy." + stub)) {
-                    return false;
-                }
-            } else if (!(defender instanceof Monster) && !(defender instanceof EnderDragon)) {
-                if (defender instanceof Tameable) {
-                    if (plot != null && (plot.getFlag(Flags.TAMED_ATTACK, Boolean.FALSE) || plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
-                        return true;
-                    }
-
-                    if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
-                        return false;
-                    }
-                } else if (defender instanceof Player) {
-                    if (plot != null) {
-                        return !(Flags.PVP.isFalse(plot) && !Permissions.hasPermission(plotPlayer1, "plots.admin.pvp." + stub));
-                    }
-
-                    if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pvp." + stub)) {
-                        return false;
-                    }
-                } else if (!(defender instanceof Creature)) {
-                    if (defender instanceof Vehicle) {
-                        return true;
-                    }
-
-                    if (plot != null && (plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
-                        return true;
-                    }
-
-                    if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
-                        return false;
-                    }
-                } else {
-                    if (plot != null && (plot.getFlag(Flags.ANIMAL_ATTACK, Boolean.FALSE) || plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
-                        return true;
-                    }
-
-                    if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
-                        return false;
-                    }
-                }
-            } else {
-                if (plot != null && (plot.getFlag(Flags.HOSTILE_ATTACK, Boolean.FALSE) || plot.getFlag(Flags.PVE, Boolean.FALSE) || plot.isAdded(plotPlayer1.getUUID()))) {
-                    return true;
-                }
-
-                if (!Permissions.hasPermission(plotPlayer1, "plots.admin.pve." + stub)) {
-                    return false;
-                }
-            }
-
-            return true;
+        } catch (Throwable ignored) {
         }
+        return true;
     }
 
     @Override
