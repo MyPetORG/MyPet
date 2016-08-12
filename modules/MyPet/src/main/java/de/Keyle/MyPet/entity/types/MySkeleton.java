@@ -62,7 +62,7 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Type", new TagInt(getType()));
+        info.getCompoundData().put("Type", new TagInt(type));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -137,7 +137,10 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public int getType() {
-        return type;
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
+            return type;
+        }
+        return type >= 2 ? 0 : 1;
     }
 
     @Override

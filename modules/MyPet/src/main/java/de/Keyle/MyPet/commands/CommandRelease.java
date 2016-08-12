@@ -191,8 +191,8 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                                 ((Zombie) normalEntity).setVillager(((MyZombie) myPet).isVillager());
                             }
                         } else if (myPet instanceof MySkeleton) {
+                            ((Skeleton) normalEntity).setSkeletonType(SkeletonType.values()[((MySkeleton) myPet).getType()]);
                             if (((MySkeleton) myPet).isWither()) {
-                                ((Skeleton) normalEntity).setSkeletonType(SkeletonType.WITHER);
                                 normalEntity.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD));
                             } else {
                                 normalEntity.getEquipment().setItemInHand(new ItemStack(Material.BOW));
