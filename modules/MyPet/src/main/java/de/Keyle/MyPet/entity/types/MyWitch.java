@@ -20,15 +20,11 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import org.bukkit.ChatColor;
 
-import static org.bukkit.Material.MUSHROOM_SOUP;
-
-@DefaultInfo(food = {MUSHROOM_SOUP})
 public class MyWitch extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWitch {
     public MyWitch(MyPetPlayer petOwner) {
         super(petOwner);

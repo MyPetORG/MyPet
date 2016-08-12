@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -28,9 +27,6 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
-import static org.bukkit.Material.SEEDS;
-
-@DefaultInfo(food = {SEEDS})
 public class MyChicken extends MyPet implements de.Keyle.MyPet.api.entity.types.MyChicken {
     protected boolean isBaby = false;
 

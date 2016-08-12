@@ -20,16 +20,11 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import org.bukkit.ChatColor;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.Impossible;
-import static org.bukkit.Material.ENDER_STONE;
-
-@DefaultInfo(food = {ENDER_STONE}, leashFlags = {Impossible})
 public class MyEnderDragon extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEnderDragon {
     public MyEnderDragon(MyPetPlayer petOwner) {
         super(petOwner);

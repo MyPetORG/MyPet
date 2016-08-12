@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -28,10 +27,6 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
-import static org.bukkit.Material.CARROT_ITEM;
-import static org.bukkit.Material.SNOW_BALL;
-
-@DefaultInfo(food = {CARROT_ITEM, SNOW_BALL})
 public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.MySnowman {
     boolean sheared = false;
 

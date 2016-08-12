@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -30,9 +29,6 @@ import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 
-import static org.bukkit.Material.WHEAT;
-
-@DefaultInfo(food = {WHEAT})
 public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.MySheep {
     protected DyeColor color = DyeColor.WHITE;
     protected boolean isSheared = false;

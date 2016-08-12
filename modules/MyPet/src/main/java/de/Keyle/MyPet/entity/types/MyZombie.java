@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -40,9 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.bukkit.Material.ROTTEN_FLESH;
-
-@DefaultInfo(food = {ROTTEN_FLESH})
 public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombie {
     protected boolean isBaby = false;
     protected int type = 0;

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -31,9 +30,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import static org.bukkit.Material.CARROT_ITEM;
-
-@DefaultInfo(food = {CARROT_ITEM})
 public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPig {
     protected boolean isBaby = false;
     public ItemStack saddle = null;

@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -30,10 +29,6 @@ import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Ocelot.Type;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.Tamed;
-import static org.bukkit.Material.RAW_FISH;
-
-@DefaultInfo(food = {RAW_FISH}, leashFlags = {Tamed})
 public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.MyOcelot {
     protected boolean isBaby = false;
     protected Type catType = Type.WILD_OCELOT;

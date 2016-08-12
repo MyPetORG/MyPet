@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -30,10 +29,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.UserCreated;
-import static org.bukkit.Material.IRON_INGOT;
-
-@DefaultInfo(food = {IRON_INGOT}, leashFlags = {UserCreated})
 public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.types.MyIronGolem {
     protected ItemStack flower;
 
