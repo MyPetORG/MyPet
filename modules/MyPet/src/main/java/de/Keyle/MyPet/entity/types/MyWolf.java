@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -29,11 +28,6 @@ import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.Tamed;
-import static org.bukkit.Material.RAW_BEEF;
-import static org.bukkit.Material.RAW_CHICKEN;
-
-@DefaultInfo(food = {RAW_BEEF, RAW_CHICKEN}, leashFlags = {Tamed})
 public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWolf {
     protected boolean isBaby = false;
     protected boolean isTamed = false;

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -33,9 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.Material.AIR;
-import static org.bukkit.Material.SOUL_SAND;
 
-@DefaultInfo(food = {SOUL_SAND})
 public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEnderman {
 
     public boolean isScreaming = false;

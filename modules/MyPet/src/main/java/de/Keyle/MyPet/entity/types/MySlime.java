@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -28,9 +27,6 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 
-import static org.bukkit.Material.SUGAR;
-
-@DefaultInfo(food = {SUGAR})
 public class MySlime extends MyPet implements de.Keyle.MyPet.api.entity.types.MySlime {
     protected int size = 1;
 

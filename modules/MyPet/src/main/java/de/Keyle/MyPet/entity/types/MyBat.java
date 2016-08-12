@@ -20,15 +20,11 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import org.bukkit.ChatColor;
 
-import static org.bukkit.Material.SPIDER_EYE;
-
-@DefaultInfo(food = {SPIDER_EYE})
 public class MyBat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBat {
     public MyBat(MyPetPlayer petOwner) {
         super(petOwner);

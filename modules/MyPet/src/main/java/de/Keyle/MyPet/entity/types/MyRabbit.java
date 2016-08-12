@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -28,10 +27,6 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
-import static org.bukkit.Material.CARROT_ITEM;
-import static org.bukkit.Material.RED_ROSE;
-
-@DefaultInfo(food = {CARROT_ITEM, RED_ROSE})
 public class MyRabbit extends MyPet implements de.Keyle.MyPet.api.entity.types.MyRabbit {
     protected boolean isBaby = false;
     protected RabbitType variant = RabbitType.BROWN;
