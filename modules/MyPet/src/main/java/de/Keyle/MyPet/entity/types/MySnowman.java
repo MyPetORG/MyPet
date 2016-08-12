@@ -28,10 +28,10 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
-import static org.bukkit.Material.CARROT;
+import static org.bukkit.Material.CARROT_ITEM;
 import static org.bukkit.Material.SNOW_BALL;
 
-@DefaultInfo(food = {CARROT, SNOW_BALL})
+@DefaultInfo(food = {CARROT_ITEM, SNOW_BALL})
 public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.MySnowman {
     boolean sheared = false;
 
