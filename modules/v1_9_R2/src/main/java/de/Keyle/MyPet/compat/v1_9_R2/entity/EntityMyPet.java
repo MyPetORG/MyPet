@@ -424,6 +424,17 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * false: no reaction on rightclick
      */
     public boolean handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, final ItemStack itemStack) {
+        if (itemStack != null && itemStack.getItem() == Items.LEAD) {
+            ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutAttachEntity(this, null));
+            if (!entityhuman.abilities.canInstantlyBuild) {
+                new BukkitRunnable() {
+                    public void run() {
+                        ((EntityPlayer) entityhuman).updateInventory(entityhuman.defaultContainer);
+                    }
+                }.runTaskLater(MyPetApi.getPlugin(), 5);
+            }
+        }
+
         if (enumhand == EnumHand.OFF_HAND) {
             return true;
         }
