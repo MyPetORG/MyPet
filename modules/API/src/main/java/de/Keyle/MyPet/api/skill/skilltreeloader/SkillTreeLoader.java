@@ -26,10 +26,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class SkillTreeLoader {
     protected static List<SkillTree> alreadyLoadedInheritance = new ArrayList<>();
@@ -89,5 +86,12 @@ public abstract class SkillTreeLoader {
         }
     }
 
-    public abstract void loadSkillTrees(String configPath, String[] mobtypes);
+    @Deprecated
+    public void loadSkillTrees(String configPath, String[] mobtypes) {
+        List<String> mobtypeList = new LinkedList<>();
+        Collections.addAll(mobtypeList, mobtypes);
+        loadSkillTrees(configPath, mobtypeList);
+    }
+
+    public abstract void loadSkillTrees(String configPath, List<String> mobtypes);
 }

@@ -112,6 +112,6 @@ public class CompatUtil {
             compareCache.put(minecraftVersion + "-::-" + version, compare);
             return compare;
         }
-        throw new IllegalArgumentException("\"version\" must be a valid Minecraft version.");
+        throw new IllegalArgumentException("\"version\" must be a valid Minecraft version. \"" + version + "\" given.");
     }
 }

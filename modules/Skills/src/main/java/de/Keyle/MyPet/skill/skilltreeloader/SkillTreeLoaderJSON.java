@@ -49,7 +49,7 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
     private SkillTreeLoaderJSON() {
     }
 
-    public void loadSkillTrees(String configPath, String[] mobtypes) {
+    public void loadSkillTrees(String configPath, List<String> mobtypes) {
         ConfigurationJSON skilltreeConfig;
         File skillFile;
 
