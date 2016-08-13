@@ -20,8 +20,12 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public enum MyPetType {
     Bat("BAT", 65, MyBat.class),
@@ -32,10 +36,10 @@ public enum MyPetType {
     Creeper("CREEPER", 50, MyCreeper.class),
     EnderDragon("ENDER_DRAGON", 63, MyEnderDragon.class),
     Enderman("ENDERMAN", 58, MyEnderman.class),
-    Endermite("ENDERMITE", 67, MyEndermite.class),
+    Endermite("ENDERMITE", 67, "1.8", MyEndermite.class),
     Ghast("GHAST", 56, MyGhast.class),
     Giant("GIANT", 53, MyGiant.class),
-    Guardian("GUARDIAN", 68, MyGuardian.class),
+    Guardian("GUARDIAN", 68, "1.8", MyGuardian.class),
     Horse("HORSE", 100, MyHorse.class, "EntityHorse"),
     IronGolem("IRON_GOLEM", 99, MyIronGolem.class, "VillagerGolem"),
     MagmaCube("MAGMA_CUBE", 62, MyMagmaCube.class, "LavaSlime"),
@@ -43,8 +47,8 @@ public enum MyPetType {
     Ocelot("OCELOT", 98, MyOcelot.class, "Ozelot"),
     Pig("PIG", 90, MyPig.class),
     PigZombie("PIG_ZOMBIE", 57, MyPigZombie.class),
-    PolarBear("POLAR_BEAR", 102, MyPolarBear.class),
-    Rabbit("RABBIT", 101, MyRabbit.class),
+    PolarBear("POLAR_BEAR", 102, "1.10", MyPolarBear.class),
+    Rabbit("RABBIT", 101, "1.8", MyRabbit.class),
     Sheep("SHEEP", 91, MySheep.class),
     Silverfish("SILVERFISH", 60, MySilverfish.class),
     Skeleton("SKELETON", 51, MySkeleton.class),
@@ -60,6 +64,7 @@ public enum MyPetType {
 
     private String bukkitName;
     private String minecraftName;
+    private String minecraftVersion = null;
     private int typeID;
     private Class<? extends MyPet> mypetClass;
 
@@ -70,11 +75,14 @@ public enum MyPetType {
         this.mypetClass = mypetClass;
     }
 
+    MyPetType(String typeName, int typeID, String minecraftVersion, Class<? extends MyPet> mypetClass) {
+        this(typeName, typeID, mypetClass);
+        this.minecraftVersion = minecraftVersion;
+    }
+
     MyPetType(String bukkitName, int typeID, Class<? extends MyPet> mypetClass, String minecraftName) {
-        this.bukkitName = bukkitName;
+        this(bukkitName, typeID, mypetClass);
         this.minecraftName = minecraftName;
-        this.typeID = typeID;
-        this.mypetClass = mypetClass;
     }
 
     public String getBukkitName() {
@@ -93,10 +101,27 @@ public enum MyPetType {
         return mypetClass;
     }
 
+    public boolean checkMinecraftVersion() {
+        return minecraftVersion == null || MyPetApi.getCompatUtil().compareWithMinecraftVersion(this.minecraftVersion) >= 0;
+    }
+
+    public static List<MyPetType> all() {
+        List<MyPetType> all = new LinkedList<>();
+        for (MyPetType t : values()) {
+            if (t.checkMinecraftVersion()) {
+                all.add(t);
+            }
+        }
+        return all;
+    }
+
     public static MyPetType byEntityTypeName(String name) {
         for (MyPetType t : values()) {
             if (t.getBukkitName().equalsIgnoreCase(name)) {
-                return t;
+                if (t.checkMinecraftVersion()) {
+                    return t;
+                }
+                break;
             }
         }
         throw new MyPetTypeNotFoundException(name);
@@ -105,7 +130,10 @@ public enum MyPetType {
     public static MyPetType byName(String name) {
         for (MyPetType t : values()) {
             if (t.name().equalsIgnoreCase(name)) {
-                return t;
+                if (t.checkMinecraftVersion()) {
+                    return t;
+                }
+                break;
             }
         }
         throw new MyPetTypeNotFoundException(name);

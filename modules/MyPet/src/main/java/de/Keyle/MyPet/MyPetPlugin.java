@@ -199,10 +199,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
 
         // load skilltrees
-        String[] petTypes = new String[MyPetType.values().length + 1];
-        petTypes[0] = "default";
-        for (int i = 1; i <= MyPetType.values().length; i++) {
-            petTypes[i] = MyPetType.values()[i - 1].name();
+        List<String> petTypes = new LinkedList<>();
+        petTypes.add("default");
+        for (MyPetType type : MyPetType.all()) {
+            petTypes.add(type.name());
         }
 
         SkillTreeMobType.clearMobTypes();

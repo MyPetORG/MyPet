@@ -44,7 +44,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
     private SkillTreeLoaderNBT() {
     }
 
-    public void loadSkillTrees(String configPath, String[] mobtypes) {
+    public void loadSkillTrees(String configPath, List<String> mobtypes) {
         ConfigurationNBT skilltreeConfig;
         File skillFile;
 
