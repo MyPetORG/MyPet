@@ -104,6 +104,9 @@
         <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
         <griefprevention.version>13.9.1</griefprevention.version>
 
+        <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
+        <griefpreventionplus.version>12.28</griefpreventionplus.version>
+
         <!-- http://dev.bukkit.org/bukkit-plugins/pvpmanager/ -->
         <pvpmanager.version>3.1.8</pvpmanager.version>
 
@@ -348,6 +351,13 @@
             <groupId>me.ryanhamshire</groupId>
             <artifactId>GriefPrevention</artifactId>
             <version>${griefprevention.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>net.kaikk.mc</groupId>
+            <artifactId>GriefPreventionPlus</artifactId>
+            <version>${griefpreventionplus.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
