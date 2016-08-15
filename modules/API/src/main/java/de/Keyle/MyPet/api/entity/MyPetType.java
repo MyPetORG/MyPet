@@ -116,9 +116,14 @@ public enum MyPetType {
     }
 
     public static MyPetType byEntityTypeName(String name) {
+        return byEntityTypeName(name, true);
+    }
+
+    @Deprecated
+    public static MyPetType byEntityTypeName(String name, boolean versionCheck) {
         for (MyPetType t : values()) {
             if (t.getBukkitName().equalsIgnoreCase(name)) {
-                if (t.checkMinecraftVersion()) {
+                if (!versionCheck || t.checkMinecraftVersion()) {
                     return t;
                 }
                 break;
@@ -128,12 +133,14 @@ public enum MyPetType {
     }
 
     public static MyPetType byName(String name) {
+        return byName(name, true);
+    }
+
+    @Deprecated
+    public static MyPetType byName(String name, boolean versionCheck) {
         for (MyPetType t : values()) {
-            if (t.name().equalsIgnoreCase(name)) {
-                if (t.checkMinecraftVersion()) {
-                    return t;
-                }
-                break;
+            if (!versionCheck || t.name().equalsIgnoreCase(name)) {
+                return t;
             }
         }
         throw new MyPetTypeNotFoundException(name);
