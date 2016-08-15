@@ -157,10 +157,11 @@ public class SkillTreeMobType {
         if (typeName == null) {
             return DEFAULT;
         }
-        if (!mobTypes.containsKey(MyPetType.byName(typeName))) {
-            return new SkillTreeMobType(MyPetType.byName(typeName));
+        MyPetType type = MyPetType.byName(typeName, false);
+        if (!mobTypes.containsKey(type)) {
+            return new SkillTreeMobType(type);
         }
-        return mobTypes.get(MyPetType.byName(typeName));
+        return mobTypes.get(type);
     }
 
     public static SkillTreeMobType byPetType(MyPetType type) {
