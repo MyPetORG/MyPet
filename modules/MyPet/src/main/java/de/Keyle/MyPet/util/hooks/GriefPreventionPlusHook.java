@@ -53,14 +53,14 @@ public class GriefPreventionPlusHook extends PluginHook implements PlayerVersusE
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
         try {
-            if (!GriefPreventionPlus.getInstance().claimsEnabledForWorld(defender.getWorld())) {
+            if (!griefPrevention.claimsEnabledForWorld(defender.getWorld())) {
                 return true;
             }
 
             DataStore dataStore = griefPrevention.getDataStore();
 
-            if (defender instanceof Creature && GriefPreventionPlus.getInstance().config.claims_protectCreatures) {
-                if (defender instanceof Tameable && !GriefPreventionPlus.getInstance().config.pvp_enabledWorlds.contains(defender.getWorld().getUID())) {
+            if (defender instanceof Creature && griefPrevention.config.claims_protectCreatures) {
+                if (defender instanceof Tameable && !griefPrevention.config.pvp_enabledWorlds.contains(defender.getWorld().getUID())) {
                     final Tameable tameable = (Tameable) defender;
                     if (tameable.isTamed() && (tameable.getOwner() != null)) {
                         final UUID ownerID = tameable.getOwner().getUniqueId();
@@ -102,35 +102,35 @@ public class GriefPreventionPlusHook extends PluginHook implements PlayerVersusE
                 final PlayerData defenderData = dataStore.getPlayerData(defender.getUniqueId());
                 final PlayerData attackerData = dataStore.getPlayerData(attacker.getUniqueId());
 
-                if (GriefPreventionPlus.getInstance().config.pvp_protectFreshSpawns) {
+                if (griefPrevention.config.pvp_protectFreshSpawns) {
                     if (defenderData.pvpImmune || attackerData.pvpImmune) {
                         return false;
                     }
                 }
 
-                if (GriefPreventionPlus.getInstance().config.pvp_noCombatInPlayerLandClaims || GriefPreventionPlus.getInstance().config.pvp_noCombatInAdminLandClaims) {
+                if (griefPrevention.config.pvp_noCombatInPlayerLandClaims || griefPrevention.config.pvp_noCombatInAdminLandClaims) {
                     final Claim attackerClaim = dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
                     if (attackerClaim != null) {
-                        if (attackerClaim.isAdminClaim() && (attackerClaim.getParent() == null) && GriefPreventionPlus.getInstance().config.pvp_noCombatInAdminLandClaims) {
+                        if (attackerClaim.isAdminClaim() && (attackerClaim.getParent() == null) && griefPrevention.config.pvp_noCombatInAdminLandClaims) {
                             return false;
                         }
-                        if (attackerClaim.isAdminClaim() && (attackerClaim.getParent() != null) && GriefPreventionPlus.getInstance().config.pvp_noCombatInAdminSubdivisions) {
+                        if (attackerClaim.isAdminClaim() && (attackerClaim.getParent() != null) && griefPrevention.config.pvp_noCombatInAdminSubdivisions) {
                             return false;
                         }
-                        if (!attackerClaim.isAdminClaim() && GriefPreventionPlus.getInstance().config.pvp_noCombatInPlayerLandClaims) {
+                        if (!attackerClaim.isAdminClaim() && griefPrevention.config.pvp_noCombatInPlayerLandClaims) {
                             return false;
                         }
                     }
 
                     final Claim defenderClaim = dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
                     if (defenderClaim != null) {
-                        if (defenderClaim.isAdminClaim() && (defenderClaim.getParent() == null) && GriefPreventionPlus.getInstance().config.pvp_noCombatInAdminLandClaims) {
+                        if (defenderClaim.isAdminClaim() && (defenderClaim.getParent() == null) && griefPrevention.config.pvp_noCombatInAdminLandClaims) {
                             return false;
                         }
-                        if (defenderClaim.isAdminClaim() && (defenderClaim.getParent() != null) && GriefPreventionPlus.getInstance().config.pvp_noCombatInAdminSubdivisions) {
+                        if (defenderClaim.isAdminClaim() && (defenderClaim.getParent() != null) && griefPrevention.config.pvp_noCombatInAdminSubdivisions) {
                             return false;
                         }
-                        if (!defenderClaim.isAdminClaim() && GriefPreventionPlus.getInstance().config.pvp_noCombatInPlayerLandClaims) {
+                        if (!defenderClaim.isAdminClaim() && griefPrevention.config.pvp_noCombatInPlayerLandClaims) {
                             return false;
                         }
                     }
