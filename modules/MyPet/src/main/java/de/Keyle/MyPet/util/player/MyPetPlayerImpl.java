@@ -32,11 +32,11 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.CaptureHelper;
 import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.keyle.knbt.*;
-import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -461,15 +461,14 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
             Player p = getPlayer();
             List<Entity> entities = p.getNearbyEntities(7, 7, 7);
             int count = 0;
+
+            entityLoop:
             for (Entity entity : entities) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetBukkitEntity)) {
                     if (MyPetApi.getMyPetInfo().isLeashableEntityType(entity.getType())) {
-                        if (citizensUsable) {
-                            try {
-                                if (CitizensAPI.getNPCRegistry().isNPC(entity)) {
-                                    continue;
-                                }
-                            } catch (Error | Exception ignored) {
+                        for (PlayerLeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(PlayerLeashEntityHook.class)) {
+                            if (!hook.canLeash(p, entity)) {
+                                continue entityLoop;
                             }
                         }
                         if (!MyPetApi.getHookHelper().canHurt(p, entity)) {

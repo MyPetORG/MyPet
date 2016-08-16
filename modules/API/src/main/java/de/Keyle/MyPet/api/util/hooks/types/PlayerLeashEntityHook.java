@@ -1,15 +1,15 @@
 /*
- * This file is part of MyPet
+ * This file is part of mypet-api_main
  *
- * Copyright © 2011-2016 Keyle
- * MyPet is licensed under the GNU Lesser General Public License.
+ * Copyright (C) 2011-2016 Keyle
+ * mypet-api_main is licensed under the GNU Lesser General Public License.
  *
- * MyPet is free software: you can redistribute it and/or modify
+ * mypet-api_main is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * MyPet is distributed in the hope that it will be useful,
+ * mypet-api_main is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -21,18 +21,12 @@
 package de.Keyle.MyPet.api.util.hooks.types;
 
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 /**
- * This interface defines that the hook checks if players can do PvP
+ * This interface defines that the hook checks if players can attack an entity
  */
-public interface PlayerVersusPlayerHook extends PluginHook {
-    /**
-     * Return if a player can hurt another player.
-     *
-     * @param attacker attacking player
-     * @param defender defending player
-     * @return if the attacker can hurt the attacked player
-     */
-    boolean canHurt(Player attacker, Player defender);
+public interface PlayerLeashEntityHook extends PluginHook {
+    boolean canLeash(Player attacker, Entity defender);
 }
