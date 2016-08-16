@@ -140,7 +140,7 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
         if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
             return type;
         }
-        return type >= 2 ? 0 : 1;
+        return type >= 2 ? 0 : type;
     }
 
     @Override
