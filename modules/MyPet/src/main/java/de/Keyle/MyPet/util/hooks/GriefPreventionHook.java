@@ -29,8 +29,9 @@ import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+
+import java.util.UUID;
 
 @PluginHookName("GriefPrevention")
 public class GriefPreventionHook extends PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
@@ -48,6 +49,51 @@ public class GriefPreventionHook extends PluginHook implements PlayerVersusEntit
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
+        try {
+            if (!griefPrevention.claimsEnabledForWorld(defender.getWorld())) {
+                return true;
+            }
+
+            if (defender instanceof Creature && griefPrevention.config_claims_protectCreatures) {
+                if (defender instanceof Tameable) {
+                    final Tameable tameable = (Tameable) defender;
+                    if (tameable.isTamed() && tameable.getOwner() != null) {
+                        UUID ownerID = tameable.getOwner().getUniqueId();
+                        if (attacker.getUniqueId().equals(ownerID)) {
+                            return false;
+                        }
+
+                        PlayerData attackerData = griefPrevention.dataStore.getPlayerData(attacker.getUniqueId());
+                        if (attackerData.ignoreClaims) {
+                            return true;
+                        }
+
+                        if (!GriefPrevention.instance.pvpRulesApply(defender.getLocation().getWorld()) || (GriefPrevention.instance.config_pvp_protectPets && defender.getType() != EntityType.WOLF)) {
+                            return false;
+                        } else if (attackerData.pvpImmune) {
+                            return false;
+                        }
+                    }
+                }
+
+                PlayerData playerData = griefPrevention.dataStore.getPlayerData(attacker.getUniqueId());
+                Claim claim = griefPrevention.dataStore.getClaimAt(defender.getLocation(), false, playerData.lastClaim);
+
+                if (claim != null) {
+                    if (!(defender.getWorld().getPVP() && defender.getType() == EntityType.WOLF)) {
+                        if (claim.allowContainers(attacker) != null) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
         try {
             if (griefPrevention.pvpRulesApply(attacker.getWorld())) {
                 if (attacker != defender) {
@@ -93,10 +139,5 @@ public class GriefPreventionHook extends PluginHook implements PlayerVersusEntit
         } catch (Throwable ignored) {
         }
         return true;
-    }
-
-    @Override
-    public boolean canHurt(Player attacker, Player defender) {
-        return canHurt(attacker, (Entity) defender);
     }
 }

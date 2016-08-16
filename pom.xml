@@ -102,7 +102,7 @@
         <towny.version>0.91.1.0</towny.version>
 
         <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
-        <griefprevention.version>13.9.1</griefprevention.version>
+        <griefprevention.version>15.0.1</griefprevention.version>
 
         <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
         <griefpreventionplus.version>12.28</griefpreventionplus.version>
