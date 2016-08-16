@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.util.PluginHook;
@@ -31,7 +32,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Citizens")
-public class CitizensHook extends PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
+public class CitizensHook extends PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, PlayerLeashEntityHook {
 
     @Override
     public boolean onEnable() {
@@ -55,5 +56,14 @@ public class CitizensHook extends PluginHook implements PlayerVersusEntityHook, 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         return canHurt(attacker, (Entity) defender);
+    }
+
+    @Override
+    public boolean canLeash(Player attacker, Entity defender) {
+        try {
+            return !CitizensAPI.getNPCRegistry().isNPC(defender);
+        } catch (Throwable ignored) {
+        }
+        return true;
     }
 }

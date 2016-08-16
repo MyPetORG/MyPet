@@ -44,6 +44,7 @@ import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
@@ -52,11 +53,9 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
 import de.Keyle.MyPet.util.CaptureHelper;
-import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import de.keyle.knbt.TagCompound;
-import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -458,19 +457,13 @@ public class EntityListener implements Listener {
                             usedArrow = true;
                         }
                     }
-                    if (Permissions.has(player, "MyPet.user.capturehelper") && MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPlayerManager().getMyPetPlayer(player).isCaptureHelperActive()) {
-                        CaptureHelper.checkTamable(leashTarget, event.getDamage(), player);
-                    }
-                    if (MyPetApi.getPluginHookManager().isHookActive(CitizensHook.class)) {
-                        try {
-                            if (CitizensAPI.getNPCRegistry().isNPC(leashTarget)) {
-                                return;
-                            }
-                        } catch (Error | Exception ignored) {
+                    for (PlayerLeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(PlayerLeashEntityHook.class)) {
+                        if (!hook.canLeash(player, leashTarget)) {
+                            return;
                         }
                     }
-                    if (!MyPetApi.getHookHelper().canHurt(player, leashTarget)) {
-                        return;
+                    if (Permissions.has(player, "MyPet.user.capturehelper") && MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPlayerManager().getMyPetPlayer(player).isCaptureHelperActive()) {
+                        CaptureHelper.checkTamable(leashTarget, event.getDamage(), player);
                     }
 
                     boolean willBeLeashed = true;
