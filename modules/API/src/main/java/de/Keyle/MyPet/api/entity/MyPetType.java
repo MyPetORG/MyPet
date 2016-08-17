@@ -139,8 +139,11 @@ public enum MyPetType {
     @Deprecated
     public static MyPetType byName(String name, boolean versionCheck) {
         for (MyPetType t : values()) {
-            if (!versionCheck || t.name().equalsIgnoreCase(name)) {
-                return t;
+            if (t.name().equalsIgnoreCase(name)) {
+                if (!versionCheck || t.checkMinecraftVersion()) {
+                    return t;
+                }
+                break;
             }
         }
         throw new MyPetTypeNotFoundException(name);

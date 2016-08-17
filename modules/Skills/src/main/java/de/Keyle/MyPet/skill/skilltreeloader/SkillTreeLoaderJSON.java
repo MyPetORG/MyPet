@@ -232,7 +232,7 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
         SkillTreeMobType mobType;
         if (petTypeName.equalsIgnoreCase("default")) {
             mobType = SkillTreeMobType.DEFAULT;
-        } else if (SkillTreeMobType.hasMobType(MyPetType.byName(petTypeName))) {
+        } else if (SkillTreeMobType.hasMobType(MyPetType.byName(petTypeName, false))) {
             mobType = SkillTreeMobType.getMobTypeByName(petTypeName);
         } else {
             return false;
