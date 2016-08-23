@@ -20,47 +20,39 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.util.PluginHook;
-import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import org.bukkit.entity.Player;
 
 @PluginHookName("PvPManager")
 public class PvPManagerHook extends PluginHook implements PlayerVersusPlayerHook {
 
-    PvPManager pvpmanager;
-
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_PvPManager) {
-            pvpmanager = MyPetApi.getPluginHookManager().getPluginInstance(PvPManager.class).get();
-
-            try {
-                pvpmanager.getPlayerHandler();
-            } catch (Throwable e) {
-                MyPetApi.getLogger().warning("PvPManager Premium is not supported because it has no API!");
-                return false;
-            }
-
-            try {
-                pvpmanager.getClass().getDeclaredMethod("canAttack", Player.class, Player.class);
-            } catch (NoSuchMethodException e) {
-                MyPetApi.getLogger().warning("Please use PvPManager build 113+");
-                return false;
-            }
-
-            return true;
-        }
-        return false;
+        return Configuration.Hooks.USE_PvPManager;
     }
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            return pvpmanager.getPlayerHandler().canAttack(attacker, defender);
+            PvPlayer pvpAttacker = PvPlayer.get(attacker);
+            PvPlayer pvpDefender = PvPlayer.get(defender);
+            if (pvpAttacker.hasOverride()) {
+                return true;
+            }
+            if (pvpDefender.hasRespawnProtection() || pvpAttacker.hasRespawnProtection()) {
+                return false;
+            }
+            if (pvpDefender.isNewbie() || pvpAttacker.isNewbie()) {
+                return false;
+            }
+            if (!pvpDefender.hasPvPEnabled() || !pvpAttacker.hasPvPEnabled()) {
+                return false;
+            }
+            return true;
         } catch (Throwable ignored) {
         }
         return true;
