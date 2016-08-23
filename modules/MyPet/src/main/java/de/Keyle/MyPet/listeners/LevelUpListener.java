@@ -20,15 +20,18 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.ResourcePackManager;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -78,10 +81,11 @@ public class LevelUpListener implements Listener {
         }
 
         if (myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().get().getHandle().updateNameTag();
+            MyPetBukkitEntity entity = myPet.getEntity().get();
+            entity.getHandle().updateNameTag();
             if (!event.isQuiet()) {
                 myPet.setHealth(myPet.getMaxHealth());
-                myPet.setHungerValue(100);
+                myPet.setSaturation(100);
 
                 if (Configuration.LevelSystem.FIREWORK) {
                     Firework fw = (Firework) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.FIREWORK);
@@ -93,6 +97,14 @@ public class LevelUpListener implements Listener {
                     fwm.setPower(0);
                     fw.setFireworkMeta(fwm);
                     //fw.detonate(); // the rocket just disappears when used
+                }
+
+                if (ResourcePackManager.get().usesResourcePack(myPet.getOwner().getPlayer())) {
+                    entity.getWorld().playSound(entity.getLocation(), "mypet.levelup", 1F, 1F);
+                } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
+                } else {
+                    entity.getWorld().playSound(entity.getLocation(), "random.levelup", 1F, 0.7F);
                 }
             }
         }

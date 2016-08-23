@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
+import de.Keyle.MyPet.util.ResourcePackManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -34,22 +34,17 @@ public class CommandOptionResourcePack implements CommandOption {
     public boolean onCommandOption(final CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
-            if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class)) {
-                myPetPlayer.setUsesResourcePack(!myPetPlayer.isUsingResourcePack());
-                if (myPetPlayer.isUsingResourcePack()) {
-                    sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", sender));
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).installResourcePack((Player) sender);
-                        }
-                    }.runTaskLater(MyPetApi.getPlugin(), 30L);
-                } else {
-                    sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Disable", sender));
-                }
+            myPetPlayer.setUsesResourcePack(!myPetPlayer.isUsingResourcePack());
+            if (ResourcePackManager.get().usesResourcePack((Player) sender)) {
+                sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", sender));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        ResourcePackManager.get().installResourcePack((Player) sender);
+                    }
+                }.runTaskLater(MyPetApi.getPlugin(), 30L);
             } else {
-                myPetPlayer.setUsesResourcePack(false);
-                sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.NotActive", sender));
+                sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Disable", sender));
             }
             return true;
         }

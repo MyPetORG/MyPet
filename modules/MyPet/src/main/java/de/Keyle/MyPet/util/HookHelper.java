@@ -62,8 +62,8 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             return canHurt(attacker, (Player) defender);
         }
         if (attacker != null && defender != null && attacker != defender) {
-            List<PlayerVersusEntityHook> pvpHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusEntityHook.class);
-            for (PlayerVersusEntityHook hook : pvpHooks) {
+            List<PlayerVersusEntityHook> pveHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusEntityHook.class);
+            for (PlayerVersusEntityHook hook : pveHooks) {
                 if (!hook.canHurt(attacker, defender)) {
                     return false;
                 }
@@ -102,8 +102,8 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean isInParty(Player player) {
-        List<PartyHook> arenaHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
-        for (PartyHook hook : arenaHooks) {
+        List<PartyHook> partyHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
+        for (PartyHook hook : partyHooks) {
             if (!hook.isInParty(player)) {
                 return false;
             }
@@ -113,8 +113,8 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public List<Player> getPartyMembers(Player player) {
-        List<PartyHook> arenaHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
-        for (PartyHook hook : arenaHooks) {
+        List<PartyHook> partyHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
+        for (PartyHook hook : partyHooks) {
             List<Player> members = hook.getPartyMembers(player);
             if (members != null) {
                 return members;
@@ -124,8 +124,8 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     }
 
     public EconomyHook getEconomy() {
-        List<EconomyHook> arenaHooks = MyPetApi.getPluginHookManager().getHooks(EconomyHook.class);
-        for (EconomyHook hook : arenaHooks) {
+        List<EconomyHook> economyHooks = MyPetApi.getPluginHookManager().getHooks(EconomyHook.class);
+        for (EconomyHook hook : economyHooks) {
             return hook;
         }
         return null;

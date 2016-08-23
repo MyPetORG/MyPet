@@ -53,7 +53,7 @@ import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
-import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
+import de.Keyle.MyPet.util.ResourcePackManager;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import de.keyle.knbt.TagCompound;
@@ -264,7 +264,7 @@ public class EntityListener implements Listener {
                     if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
                         infoShown = true;
                         String donationMessage = "" + ChatColor.GOLD;
-                        if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class) && MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).useIcons(damager)) {
+                        if (ResourcePackManager.get().usesResourcePack(damager)) {
                             donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
                         } else {
                             donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
@@ -272,7 +272,7 @@ public class EntityListener implements Listener {
 
                         donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), damager) + " ";
 
-                        if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class) && MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).useIcons(damager)) {
+                        if (ResourcePackManager.get().usesResourcePack(damager)) {
                             donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
                         } else {
                             donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();

@@ -38,7 +38,7 @@ import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.skills.*;
-import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
+import de.Keyle.MyPet.util.ResourcePackManager;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -63,7 +63,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void on(AsyncPlayerChatEvent event) {
         if (event.getMessage().contains(":mypet:")) {
-            if (MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class) && MyPetApi.getPluginHookManager().getHook(ResourcePackApiHook.class).useIcons(event.getPlayer())) {
+            if (ResourcePackManager.get().usesResourcePack(event.getPlayer())) {
                 event.setMessage(event.getMessage().replaceAll(":mypet:", ResourcePackIcons.Logo.getCode()));
             }
         }
