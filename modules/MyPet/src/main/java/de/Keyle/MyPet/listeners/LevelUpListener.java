@@ -20,23 +20,21 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.FireworkEffect.Type;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
+import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.List;
 
@@ -78,21 +76,24 @@ public class LevelUpListener implements Listener {
         }
 
         if (myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().get().getHandle().updateNameTag();
+            MyPetBukkitEntity entity = myPet.getEntity().get();
+            entity.getHandle().updateNameTag();
             if (!event.isQuiet()) {
                 myPet.setHealth(myPet.getMaxHealth());
-                myPet.setHungerValue(100);
+                myPet.setSaturation(100);
 
-                if (Configuration.LevelSystem.FIREWORK) {
-                    Firework fw = (Firework) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.FIREWORK);
-                    FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(Configuration.LevelSystem.FIREWORK_COLOR)).withTrail().withFlicker().build();
-                    FireworkMeta fwm = fw.getFireworkMeta();
-                    fwm.addEffect(fwe);
-                    fwm.addEffect(fwe);
-                    fwm.addEffect(fwe);
-                    fwm.setPower(0);
-                    fw.setFireworkMeta(fwm);
-                    //fw.detonate(); // the rocket just disappears when used
+                new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
+                    @Override
+                    protected void playParticleEffect(Location location) {
+                        MyPetApi.getPlatformHelper().playParticleEffect(location, "magicCrit", 0, 0, 0, 0, 1, 32);
+                        //MyPetApi.getPlatformHelper().playParticleEffect(location, "flame", 0, 0, 0, 0, 1, 32);
+                    }
+                }.loop(2);
+
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
+                } else {
+                    entity.getWorld().playSound(entity.getLocation(), "random.levelup", 1F, 0.7F);
                 }
             }
         }
