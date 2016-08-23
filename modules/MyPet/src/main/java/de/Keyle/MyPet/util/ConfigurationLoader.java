@@ -116,8 +116,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Permissions.Legacy", Permissions.LEGACY);
 
         config.addDefault("MyPet.LevelSystem.CalculationMode", LevelSystem.CALCULATION_MODE);
-        config.addDefault("MyPet.LevelSystem.Firework.Enabled", LevelSystem.FIREWORK);
-        config.addDefault("MyPet.LevelSystem.Firework.Color", "#00FF00");
 
         config.addDefault("MyPet.HungerSystem.Active", HungerSystem.USE_HUNGER_SYSTEM);
         config.addDefault("MyPet.HungerSystem.Time", HungerSystem.HUNGER_SYSTEM_TIME);
@@ -307,9 +305,7 @@ public class ConfigurationLoader {
         Misc.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
         Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = config.getBoolean("MyPet.Throw-PlayerMoveEvent-While-Riding", true);
         Misc.OVERWRITE_LANGUAGE = config.getString("MyPet.OverwriteLanguages", "");
-        LevelSystem.FIREWORK_COLOR = Integer.decode(config.getString("MyPet.LevelSystem.Firework.Color", "#00FF00"));
         LevelSystem.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
-        LevelSystem.FIREWORK = config.getBoolean("MyPet.LevelSystem.Firework", true);
 
         Log.LEVEL = config.getString("MyPet.Log.Level", Log.LEVEL);
 

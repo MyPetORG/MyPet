@@ -110,7 +110,9 @@ public class Configuration {
 
     public static class LevelSystem {
         public static String CALCULATION_MODE = "Default";
+        @Deprecated
         public static boolean FIREWORK = true;
+        @Deprecated
         public static int FIREWORK_COLOR = 0x00FF00;
 
         public static class Experience {
