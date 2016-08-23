@@ -33,6 +33,9 @@ import java.util.List;
 public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     @Override
     public boolean canHurt(Player attacker, Player defender, boolean viceversa) {
+        if (!attacker.getWorld().getPVP()) {
+            return false;
+        }
         if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
             return false;
         }
@@ -45,6 +48,9 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
+            if (!attacker.getWorld().getPVP()) {
+                return false;
+            }
             List<PlayerVersusPlayerHook> pvpHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusPlayerHook.class);
             for (PlayerVersusPlayerHook hook : pvpHooks) {
                 if (!hook.canHurt(attacker, defender)) {
