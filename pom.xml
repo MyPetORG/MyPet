@@ -53,6 +53,9 @@
         <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
         <citizensapi.version>2.0.17-SNAPSHOT</citizensapi.version>
 
+        <!-- https://www.spigotmc.org/resources/day-night-pvp-difficulty-cycle.21979/ -->
+        <pvpdifftimer.version>1.4.1</pvpdifftimer.version>
+
         <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
         <mcmmo.version>1.5.00</mcmmo.version>
 
@@ -213,6 +216,13 @@
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
             <version>${citizensapi.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>br.net.fabiozumbi12</groupId>
+            <artifactId>PvPDiffTimer</artifactId>
+            <version>${pvpdifftimer.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

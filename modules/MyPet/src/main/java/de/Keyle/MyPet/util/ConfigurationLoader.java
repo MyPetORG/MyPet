@@ -142,6 +142,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.AncientRPG", Hooks.USE_AncientRPG);
         config.addDefault("MyPet.Hooks.GriefPrevention", Hooks.USE_GriefPrevention);
         config.addDefault("MyPet.Hooks.PvPManager", Hooks.USE_PvPManager);
+        config.addDefault("MyPet.Hooks.PvPDiffTimer", Hooks.USE_PvPDiffTimer);
         config.addDefault("MyPet.Hooks.Minigames.DisablePetsInGames", Hooks.DISABLE_PETS_IN_MINIGAMES);
         config.addDefault("MyPet.Hooks.PvPArena.DisablePetsInArena", Hooks.DISABLE_PETS_IN_ARENA);
         config.addDefault("MyPet.Hooks.PlotSquared", Hooks.USE_PlotSquared);
@@ -377,6 +378,7 @@ public class ConfigurationLoader {
         Hooks.USE_GriefPrevention = config.getBoolean("MyPet.Hooks.GriefPrevention", true);
         Hooks.USE_PvPManager = config.getBoolean("MyPet.Hooks.PvPManager", true);
         Hooks.USE_PlotSquared = config.getBoolean("MyPet.Hooks.PlotSquared", true);
+        Hooks.USE_PvPDiffTimer = config.getBoolean("MyPet.Hooks.PvPDiffTimer", true);
 
         LevelSystem.Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
