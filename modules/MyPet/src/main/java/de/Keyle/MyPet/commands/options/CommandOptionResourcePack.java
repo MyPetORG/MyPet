@@ -35,7 +35,7 @@ public class CommandOptionResourcePack implements CommandOption {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
             myPetPlayer.setUsesResourcePack(!myPetPlayer.isUsingResourcePack());
-            if (ResourcePackManager.get().usesResourcePack((Player) sender)) {
+            if (myPetPlayer.isUsingResourcePack()) {
                 sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", sender));
                 new BukkitRunnable() {
                     @Override

@@ -26,10 +26,10 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.PluginHook;
 import de.Keyle.MyPet.util.ResourcePackManager;
-import de.inventivegames.rpapi.ResourcePackStatusEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
+import org.inventivetalent.rpapi.ResourcePackStatusEvent;
 
 @PluginHookName("ResourcePackApi")
 public class ResourcePackApiHook extends PluginHook {
@@ -37,6 +37,11 @@ public class ResourcePackApiHook extends PluginHook {
     @Override
     public boolean onEnable() {
         if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.8.8") < 0) {
+            try {
+                Class.forName("org.spigotmc.ProtocolInjector");
+            } catch (ClassNotFoundException e) {
+                return false;
+            }
             Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
             return true;
         }
