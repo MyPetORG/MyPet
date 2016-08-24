@@ -25,7 +25,7 @@
     <artifactId>mypet-compat-v1_10_R1</artifactId>
     <version>1</version>
     <packaging>jar</packaging>
-    <name>MyPet-Premium-v1_10_R1</name>
+    <name>MyPet-v1_10_R1</name>
 
     <parent>
         <groupId>de.keyle</groupId>
