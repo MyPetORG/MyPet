@@ -43,12 +43,6 @@
             <groupId>de.keyle</groupId>
             <artifactId>mypet-api</artifactId>
             <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>

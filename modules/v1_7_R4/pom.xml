@@ -36,9 +36,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <minecraft.version>1.7.10</minecraft.version>
-        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
     </properties>
 
     <dependencies>
@@ -50,27 +47,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        <!--
-        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.spigotmc</groupId>
-                    <artifactId>sneaky-throw</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-        -->
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-api</artifactId>
@@ -99,25 +81,6 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.wolvereness</groupId>
-                <artifactId>overmapped</artifactId>
-                <version>0.0.2</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>map</goal>
-                        </goals>
-                        <configuration>
-                            <maps>${basedir}/maps.yml</maps>
-                            <input>${basedir}/target/${project.name}.jar</input>
-                            <original>${basedir}/target/unmapped-${project.name}.jar</original>
-                            <missing>FAIL</missing>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
