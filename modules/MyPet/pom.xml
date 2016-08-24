@@ -22,185 +22,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>de.keyle</groupId>
     <artifactId>mypet</artifactId>
     <version>2.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MyPet-Premium</name>
     <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
 
-    <parent>
-        <groupId>de.keyle</groupId>
-        <artifactId>mypet-parent</artifactId>
-        <version>1</version>
-        <relativePath>../../</relativePath>
-    </parent>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <minecraft.version>1.10</minecraft.version>
-        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
         <bukkit.packets>v1_7_R4;v1_8_R1;v1_8_R2;v1_8_R3;v1_9_R1;v1_9_R2;v1_10_R1</bukkit.packets>
-
-        <download.translations>prepare-package</download.translations>
-        <remove.donator>none</remove.donator>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>comphenix-releases</id>
-            <url>http://repo.comphenix.net/content/repositories/public/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.10-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>de.keyle</groupId>
-            <artifactId>mypet-api</artifactId>
+            <artifactId>mypet-plugin</artifactId>
             <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-skills</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_8_R2</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_8_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_7_R4</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_8_R3</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_9_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_9_R2</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_10_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-gui</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.14</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>2.4.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.18</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-            <version>1.7.18</version>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.jansi</groupId>
-            <artifactId>jansi</artifactId>
-            <version>1.11</version>
-        </dependency>
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.4.0</version>
         </dependency>
     </dependencies>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
+        <directory>../../target</directory>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -234,28 +80,19 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9.4</version>
-                <executions>
-                    <execution>
-                        <phase>${download.translations}</phase>
-                        <configuration>
-                            <connectionUrl>scm:git:https://github.com/xXKeyleXx/MyPet-Translations.git</connectionUrl>
-                            <checkoutDirectory>target/classes/locale</checkoutDirectory>
-                            <excludes>exclude,.git,.gitignore,README.md</excludes>
-                        </configuration>
-                        <goals>
-                            <goal>checkout</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <outputDirectory>../../target</outputDirectory>
                     <jarName>${project.name}-${project.version}</jarName>
                     <archive>
                         <manifestEntries>
@@ -275,17 +112,8 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.2</version>
+                <version>1.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -293,60 +121,17 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <artifactSet>
                                 <includes>
-                                    <include>de.keyle:mypet*</include>
-                                    <include>de.keyle:knbt:jar:*</include>
-                                    <include>de.keyle:fanciful-chat:*</include>
-                                    <include>com.intellij:forms_rt:*</include>
-                                    <include>com.googlecode.json-simple:json-simple:*</include>
-                                    <include>com.google.code.gson:gson:*</include>
-                                    <include>com.zaxxer:HikariCP:*</include>
-                                    <include>org.slf4j:slf4j-api:*</include>
-                                    <include>org.slf4j:slf4j-nop:*</include>
+                                    <include>de.keyle:mypet-plugin</include>
                                 </includes>
                             </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.mcstats</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>de.keyle.knbt</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.nbt</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.intellij.uiDesigner.core</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.gui.uiDesigner</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>de.keyle.fanciful</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.chat.fanciful</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.json.simple</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.json.simple</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.google.gson</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.gson</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.hikari</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.slf4j</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.logger.slf4j</shadedPattern>
-                                </relocation>
-                            </relocations>
                             <filters>
                                 <filter>
-                                    <artifact>com.intellij:forms_rt</artifact>
-                                    <includes>
-                                        <include>com/intellij/uiDesigner/core/**</include>
-                                    </includes>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/maven/**</exclude>
+                                    </excludes>
                                 </filter>
                             </filters>
                         </configuration>
@@ -356,9 +141,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
                 <configuration>
-                    <skip>false</skip>
+                    <!-- <skip>true</skip> -->
                 </configuration>
             </plugin>
         </plugins>
