@@ -36,9 +36,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <minecraft.version>1.9.4</minecraft.version>
-        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
     </properties>
 
     <dependencies>

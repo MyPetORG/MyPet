@@ -190,17 +190,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <distributionManagement>
-        <repository>
-            <id>Keyle-Release-Repo</id>
-            <url>http://nexus.keyle.de/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>Keyle-Snapshot-Repo</id>
-            <url>http://nexus.keyle.de/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <dependencies>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
