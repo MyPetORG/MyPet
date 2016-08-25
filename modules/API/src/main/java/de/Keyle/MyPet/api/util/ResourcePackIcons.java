@@ -48,8 +48,8 @@ public enum ResourcePackIcons {
     Skill_Knockback("\uA80F"),
     Skill_Inventory("\uA810"),
     Skill_Ranged("\uA811"),
-    Skill_Heal("\uA812"),
-    Skill_Life("\uA813"),
+    Skill_HPregeneration("\uA812"),
+    Skill_HP("\uA813"),
     Skill_Control("\uA814"),
     Skill_Thorns("\uA815"),
     Skill_Ride("\uA816");
