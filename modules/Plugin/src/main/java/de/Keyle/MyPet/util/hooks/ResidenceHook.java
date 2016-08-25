@@ -24,14 +24,21 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Residence")
-public class ResidenceHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusPlayerHook {
+public class ResidenceHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
 
     @Override
     public boolean onEnable() {
+        FlagPermissions.addFlag("mypet-fly");
+        FlagPermissions.addFlag("mypet-damage");
+
         return Configuration.Hooks.USE_Residence;
     }
 
@@ -39,7 +46,27 @@ public class ResidenceHook extends de.Keyle.MyPet.util.PluginHook implements Pla
     public boolean canHurt(Player attacker, Player defender) {
         try {
             FlagPermissions flagPermissions = Residence.getPermsByLoc(defender.getLocation());
-            return flagPermissions.has("pvp", true);
+            return flagPermissions.has("pvp", true) && flagPermissions.has("mypet-damage", true);
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canFly(Location location) {
+        try {
+            FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
+            return flagPermissions.has("mypet-fly", true);
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Entity defender) {
+        try {
+            FlagPermissions flagPermissions = Residence.getPermsByLoc(defender.getLocation());
+            return flagPermissions.has("mypet-damage", true);
         } catch (Throwable ignored) {
         }
         return true;
