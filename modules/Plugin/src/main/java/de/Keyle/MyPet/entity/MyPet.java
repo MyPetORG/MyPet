@@ -451,11 +451,37 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 loc.setPitch(0);
                 loc.setYaw(0);
-                minecraftEntity.setLocation(loc);
 
-                if (!MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
-                    status = PetState.Despawned;
-                    return SpawnFlags.NoSpace;
+                Location origin = loc.clone();
+                boolean positionFound = false;
+
+                loc.subtract(1, 0, 1);
+                for (double x = 0; x <= 2; x += 0.5) {
+                    for (double z = 0; z <= 2; z += 0.5) {
+                        if (x != 1 && z != 1) {
+                            minecraftEntity.setLocation(loc);
+                            if (MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
+                                Block b = loc.getBlock();
+                                if (b.getRelative(BlockFace.DOWN).getType().isSolid()) {
+                                    positionFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                        loc.add(0, 0, 0.5);
+                    }
+                    if (positionFound) {
+                        break;
+                    }
+                    loc.subtract(0, 0, 2);
+                    loc.add(0.5, 0, 0);
+                }
+                if (!positionFound) {
+                    minecraftEntity.setLocation(origin);
+                    if (!MyPetApi.getPlatformHelper().canSpawn(origin, minecraftEntity)) {
+                        status = PetState.Despawned;
+                        return SpawnFlags.NoSpace;
+                    }
                 }
 
                 if (MyPetApi.getEntityRegistry().spawnMinecraftEntity(minecraftEntity, loc.getWorld())) {
