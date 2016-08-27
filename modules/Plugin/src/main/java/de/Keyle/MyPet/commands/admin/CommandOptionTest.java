@@ -31,14 +31,17 @@ public class CommandOptionTest implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-        if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet((Player) sender);
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
 
 
-            if (myPet.getEntity().isPresent()) {
-                MyPetBukkitEntity petBukkitEntity = myPet.getEntity().get();
+                if (myPet.getEntity().isPresent()) {
+                    MyPetBukkitEntity petBukkitEntity = myPet.getEntity().get();
 
 
+                }
             }
         }
 
