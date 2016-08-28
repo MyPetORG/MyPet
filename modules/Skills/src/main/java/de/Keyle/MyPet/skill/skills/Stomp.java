@@ -68,9 +68,6 @@ public class Stomp extends StompInfo implements SkillInstance, ActiveSkill {
                     chance = upgrade.getProperties().getAs("chance", TagInt.class).getIntData();
                 }
                 chance = Math.min(chance, 100);
-                if (!quiet) {
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Stomp.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance));
-                }
             }
             if (upgrade.getProperties().getCompoundData().containsKey("damage")) {
                 if (!upgrade.getProperties().getCompoundData().containsKey("addset_damage") || upgrade.getProperties().getAs("addset_damage", TagString.class).getStringData().equals("add")) {
