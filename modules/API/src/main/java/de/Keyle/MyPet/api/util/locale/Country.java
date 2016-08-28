@@ -23,12 +23,12 @@ package de.Keyle.MyPet.api.util.locale;
 public class Country {
     private Language language;
     private String code;
-    private boolean loaded = false;
-    private ResourceBundle translations = null;
+    private TranslationBundle translations = null;
 
     public Country(Language language, String code) {
         this.language = language;
         this.code = code;
+        load();
     }
 
     public String getCode() {
@@ -36,20 +36,13 @@ public class Country {
     }
 
     public String translate(String key) {
-        load();
-
-        if (translations != null) {
-            if (translations.containsKey(key)) {
-                return translations.getString(key);
-            }
+        if (translations.containsKey(key)) {
+            return translations.getString(key);
         }
         return key;
     }
 
     private void load() {
-        if (!loaded) {
-            loaded = true;
-            translations = Translation.loadLocale(language.getCode() + "_" + getCode());
-        }
+        translations = Translation.loadLocale(language.getCode() + "_" + getCode());
     }
 }
