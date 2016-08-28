@@ -56,7 +56,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.util.Collection;
@@ -406,17 +408,18 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public SpawnFlags createEntity() {
         lastUsed = System.currentTimeMillis();
         if (status != PetState.Here && getOwner().isOnline()) {
-            if (getOwner().getPlayer().isDead()) {
+            Player owner = getOwner().getPlayer();
+            if (owner.isDead()) {
                 status = PetState.Despawned;
                 return SpawnFlags.OwnerDead;
             }
-            if (getOwner().getPlayer().getGameMode().name().equals("SPECTATOR")) {
+            if (owner.getGameMode().name().equals("SPECTATOR")) {
                 return SpawnFlags.Spectator;
             }
 
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
-                if (getOwner().getPlayer().isFlying()) {
+                if (owner.isFlying()) {
                     boolean groundFound = false;
                     for (int i = 10; i >= 0; i--) {
                         Block b = loc.getBlock();
@@ -495,6 +498,21 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
                     autoAssignSkilltree();
                     wantsToRespawn = true;
+
+                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                        Team t;
+                        if (owner.getScoreboard().getTeam("#####MyPet#####") != null) {
+                            t = owner.getScoreboard().getTeam("#####MyPet#####");
+                        } else {
+                            t = owner.getScoreboard().registerNewTeam("#####MyPet#####");
+                            t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+                        }
+
+                        for (String entry : t.getEntries()) {
+                            t.removeEntry(entry);
+                        }
+                        t.addEntry(minecraftEntity.getUniqueID().toString());
+                    }
 
                     return SpawnFlags.Success;
                 }
