@@ -51,6 +51,7 @@ import de.Keyle.MyPet.skill.skills.Life;
 import de.Keyle.MyPet.skill.skills.Ranged;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.keyle.knbt.*;
+import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -61,10 +62,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -501,10 +499,15 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
                     if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                         Team t;
-                        if (owner.getScoreboard().getTeam("#####MyPet#####") != null) {
-                            t = owner.getScoreboard().getTeam("#####MyPet#####");
+
+
+                        Random r = new Random(petOwner.getInternalUUID().toString().hashCode());
+                        String random = RandomStringUtils.random(10, 0, 0, true, true, null, r);
+
+                        if (owner.getScoreboard().getTeam("MyPet-" + random) != null) {
+                            t = owner.getScoreboard().getTeam("MyPet-" + random);
                         } else {
-                            t = owner.getScoreboard().registerNewTeam("#####MyPet#####");
+                            t = owner.getScoreboard().registerNewTeam("MyPet-" + random);
                             t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
                         }
 
