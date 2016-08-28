@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_9_R2.util.iconmenu;
 
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.compat.v1_9_R2.util.inventory.CustomInventory;
@@ -47,9 +48,8 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
     static {
         try {
             Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_9_R2.inventory.CraftMetaItem");
-            applyToItemMethhod = craftMetaItemClass.getDeclaredMethod("applyToItem", NBTTagCompound.class);
-            applyToItemMethhod.setAccessible(true);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            applyToItemMethhod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", NBTTagCompound.class);
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

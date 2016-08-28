@@ -48,6 +48,8 @@ import java.util.List;
 
 @Compat("v1_10_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
+    Field EntityPlayer_locale_FIELD = ReflectionUtil.getField(EntityPlayer.class, "locale");
+
     /**
      * @param location   the {@link Location} around which players must be to see the effect
      * @param effectName list of effects: https://gist.github.com/riking/5759002
@@ -148,17 +150,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             return "en_US";
         }
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-        try {
-            Field field = entityPlayer.getClass().getDeclaredField("locale");
-            field.setAccessible(true);
-            String lang = field.get(entityPlayer).toString();
-            if (lang == null) {
-                return "en_US";
-            }
-            return lang;
-        } catch (Exception e) {
+        Object lang = ReflectionUtil.getFieldValue(EntityPlayer_locale_FIELD, entityPlayer);
+        if (lang == null) {
             return "en_US";
         }
+        return lang.toString();
     }
 
     @Override

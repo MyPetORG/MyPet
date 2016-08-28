@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util.logger;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.LogFormat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginLogger;
@@ -55,10 +56,9 @@ public class MyPetLogger extends PluginLogger {
         pluginName = applyStyles(pluginName);
 
         try {
-            Field logger = PluginLogger.class.getDeclaredField("pluginName");
-            logger.setAccessible(true);
+            Field logger = ReflectionUtil.getField(PluginLogger.class, "pluginName");
             logger.set(this, pluginName);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }

@@ -37,6 +37,7 @@ import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.ai.attack.RangedAttack;
@@ -88,16 +89,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     int donatorParticleCounter = 0;
 
-    private static Field jump = null;
-
-    static {
-        try {
-            jump = EntityLiving.class.getDeclaredField("bc");
-            jump.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Field jump = ReflectionUtil.getField(EntityLiving.class, "bc");
 
     public EntityMyPet(World world, MyPet myPet) {
         super(world);

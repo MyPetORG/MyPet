@@ -155,7 +155,8 @@ public class ProtocolLibHook extends PluginHook {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(MyPetApi.getPlugin(), ListenerPriority.HIGHEST, PacketType.Play.Server.SPAWN_ENTITY_LIVING, PacketType.Play.Server.ENTITY_METADATA) {
 
-                    Method getHandleMethod = null;
+                    Class entityClass = ReflectionUtil.getClass("org.bukkit.craftbukkit." + MyPetApi.getCompatUtil().getInternalVersion() + ".entity.CraftEntity");
+                    Method getHandleMethod = ReflectionUtil.getMethod(entityClass, "getHandle");
 
                     private final EnumMap<DyeColor, Integer> convertedDyeColors = new EnumMap<DyeColor, Integer>(DyeColor.class) {
                         {
@@ -282,11 +283,6 @@ public class ProtocolLibHook extends PluginHook {
                     @SuppressWarnings("unchecked")
                     private boolean isPlayerRunningv1_8(Player player) {
                         try {
-                            if (getHandleMethod == null) {
-                                Class entityClass = Class.forName("org.bukkit.craftbukkit." + MyPetApi.getCompatUtil().getInternalVersion() + ".entity.CraftEntity");
-                                getHandleMethod = entityClass.getDeclaredMethod("getHandle");
-                                getHandleMethod.setAccessible(true);
-                            }
                             Object nmsPlayer = getHandleMethod.invoke(player);
                             Object playerConnection = ReflectionUtil.getFieldValue(nmsPlayer.getClass(), nmsPlayer, "playerConnection");
                             Object networkManager = ReflectionUtil.getFieldValue(playerConnection.getClass(), playerConnection, "networkManager");

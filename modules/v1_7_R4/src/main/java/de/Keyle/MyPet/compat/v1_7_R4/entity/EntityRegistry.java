@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.types.*;
 import net.minecraft.server.v1_7_R4.EntityTypes;
 import net.minecraft.server.v1_7_R4.World;
@@ -118,10 +119,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @SuppressWarnings("unchecked")
     public void registerEntityType(MyPetType type, Class<? extends MyPetMinecraftEntity> entityClass) {
         try {
-            Field EntityTypes_d = EntityTypes.class.getDeclaredField("d");
-            Field EntityTypes_f = EntityTypes.class.getDeclaredField("f");
-            EntityTypes_d.setAccessible(true);
-            EntityTypes_f.setAccessible(true);
+            Field EntityTypes_d = ReflectionUtil.getField(EntityTypes.class, "d");
+            Field EntityTypes_f = ReflectionUtil.getField(EntityTypes.class, "f");
 
             Map<Class, String> d = (Map) EntityTypes_d.get(EntityTypes_d);
             Map<Class, Integer> f = (Map) EntityTypes_f.get(EntityTypes_f);
@@ -154,10 +153,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @SuppressWarnings("unchecked")
     public void unregisterEntityTypes() {
         try {
-            Field EntityTypes_d = EntityTypes.class.getDeclaredField("d");
-            Field EntityTypes_f = EntityTypes.class.getDeclaredField("f");
-            EntityTypes_d.setAccessible(true);
-            EntityTypes_f.setAccessible(true);
+            Field EntityTypes_d = ReflectionUtil.getField(EntityTypes.class, "d");
+            Field EntityTypes_f = ReflectionUtil.getField(EntityTypes.class, "f");
 
             Map<Class, String> d = (Map) EntityTypes_d.get(EntityTypes_d);
             Map<Class, Integer> f = (Map) EntityTypes_f.get(EntityTypes_f);
