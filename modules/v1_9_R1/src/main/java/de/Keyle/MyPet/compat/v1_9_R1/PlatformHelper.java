@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_9_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_9_R1.*;
@@ -46,6 +47,9 @@ import java.util.List;
 
 @Compat("v1_9_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
+
+    Field EntityPlayer_locale_FIELD = ReflectionUtil.getField(EntityPlayer.class, "locale");
+
     /**
      * @param location   the {@link Location} around which players must be to see the effect
      * @param effectName list of effects: https://gist.github.com/riking/5759002
@@ -102,9 +106,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
         PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, data);
 
-            if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(),location) <= radius) {
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-            }
+        if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), location) <= radius) {
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        }
     }
 
     public boolean canSpawn(Location loc, MyPetMinecraftEntity entity) {
@@ -146,17 +150,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             return "en_US";
         }
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-        try {
-            Field field = entityPlayer.getClass().getDeclaredField("locale");
-            field.setAccessible(true);
-            String lang = field.get(entityPlayer).toString();
-            if (lang == null) {
-                return "en_US";
-            }
-            return lang;
-        } catch (Exception e) {
+        Object lang = ReflectionUtil.getFieldValue(EntityPlayer_locale_FIELD, entityPlayer);
+        if (lang == null) {
             return "en_US";
         }
+        return lang.toString();
     }
 
     @Override

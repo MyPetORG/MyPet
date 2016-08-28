@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.skill.skills.*;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoader;
 import de.Keyle.MyPet.api.util.CompatUtil;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
@@ -612,10 +613,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     private void replaceLogger() {
         try {
-            Field logger = JavaPlugin.class.getDeclaredField("logger");
-            logger.setAccessible(true);
-            logger.set(this, new MyPetLogger(this));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+            Field logger = ReflectionUtil.getField(JavaPlugin.class, "logger");
+            if (logger != null) {
+                logger.set(this, new MyPetLogger(this));
+            }
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }

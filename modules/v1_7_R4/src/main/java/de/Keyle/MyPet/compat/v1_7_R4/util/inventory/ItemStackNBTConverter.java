@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_7_R4.util.inventory;
 
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
@@ -32,7 +33,7 @@ import java.util.Set;
 
 @Compat("v1_7_R4")
 public class ItemStackNBTConverter {
-    private static Field TAG_LIST_LIST = null;
+    private static Field TAG_LIST_LIST = ReflectionUtil.getField(NBTTagList.class, "list");
 
     public static TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
         return itemStackToCompund(CraftItemStack.asNMSCopy(itemStack));
@@ -125,15 +126,6 @@ public class ItemStackNBTConverter {
             case 8:
                 return new TagString(((NBTTagString) vanillaTag).a_());
             case 9:
-                if (TAG_LIST_LIST == null) {
-                    try {
-                        TAG_LIST_LIST = NBTTagList.class.getDeclaredField("list");
-                        TAG_LIST_LIST.setAccessible(true);
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
-                }
-
                 NBTTagList tagList = (NBTTagList) vanillaTag;
                 List compoundList = new ArrayList();
                 try {

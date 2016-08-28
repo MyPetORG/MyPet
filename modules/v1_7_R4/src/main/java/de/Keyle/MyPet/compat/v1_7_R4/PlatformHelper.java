@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_7_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
@@ -47,17 +48,7 @@ import java.util.List;
 
 @Compat("v1_7_R4")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
-    private static Field goalSelectorField = null;
-
-    static {
-        try {
-            goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
-            goalSelectorField.setAccessible(true);
-
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Field EntityInsentient_goalSelector_FIELD = ReflectionUtil.getField(EntityInsentient.class, "goalSelector");
 
     /**
      * @param location   the {@link Location} around which players must be to see the effect
@@ -197,9 +188,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public void addZombieTargetGoal(Zombie zombie) {
         EntityZombie ez = ((CraftZombie) zombie).getHandle();
-        if (goalSelectorField != null) {
+        if (EntityInsentient_goalSelector_FIELD != null) {
             try {
-                PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelectorField.get(ez);
+                PathfinderGoalSelector pgs = (PathfinderGoalSelector) EntityInsentient_goalSelector_FIELD.get(ez);
                 pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();

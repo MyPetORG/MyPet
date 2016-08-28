@@ -24,6 +24,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ReflectionUtil {
+    public static Class getClass(String name) {
+        try {
+            return Class.forName(name);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
     public static Method getMethod(Class<?> clazz, String method, Class<?>... parameterTypes) {
         try {
             Method m = clazz.getDeclaredMethod(method, parameterTypes);
@@ -52,6 +60,15 @@ public class ReflectionUtil {
         } catch (Exception ignored) {
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Object getFieldValue(Field field, Object object) {
+        try {
+            return field.get(object);
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     public static boolean setFieldValue(Field field, Object object, Object value) {

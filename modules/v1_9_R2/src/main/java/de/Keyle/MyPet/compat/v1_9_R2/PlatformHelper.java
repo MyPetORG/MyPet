@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_9_R2.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_9_R2.*;
@@ -46,6 +47,9 @@ import java.util.List;
 
 @Compat("v1_9_R2")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
+
+    Field EntityPlayer_locale_FIELD = ReflectionUtil.getField(EntityPlayer.class, "locale");
+
     /**
      * @param location   the {@link Location} around which players must be to see the effect
      * @param effectName list of effects: https://gist.github.com/riking/5759002
@@ -147,13 +151,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         }
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         try {
-            Field field = entityPlayer.getClass().getDeclaredField("locale");
-            field.setAccessible(true);
-            String lang = field.get(entityPlayer).toString();
+            Object lang = ReflectionUtil.getFieldValue(EntityPlayer_locale_FIELD, entityPlayer);
             if (lang == null) {
                 return "en_US";
             }
-            return lang;
+            return lang.toString();
         } catch (Exception e) {
             return "en_US";
         }
