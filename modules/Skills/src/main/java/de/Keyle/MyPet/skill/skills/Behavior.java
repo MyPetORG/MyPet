@@ -113,6 +113,9 @@ public class Behavior extends BehaviorInfo implements SkillInstance, Scheduler, 
             if (upgrade.getProperties().getCompoundData().containsKey("raid")) {
                 if (upgrade.getProperties().getAs("raid", TagByte.class).getBooleanData()) {
                     activeBehaviors.add(Raid);
+                    if (!activeModes.equalsIgnoreCase("")) {
+                        activeModes += ", ";
+                    }
                     activeModes += ChatColor.GOLD + Translation.getString("Name.Raid", myPet.getOwner().getLanguage()) + ChatColor.RESET;
                 } else {
                     activeBehaviors.remove(Raid);
@@ -122,6 +125,9 @@ public class Behavior extends BehaviorInfo implements SkillInstance, Scheduler, 
             if (upgrade.getProperties().getCompoundData().containsKey("duel")) {
                 if (upgrade.getProperties().getAs("duel", TagByte.class).getBooleanData()) {
                     activeBehaviors.add(Duel);
+                    if (!activeModes.equalsIgnoreCase("")) {
+                        activeModes += ", ";
+                    }
                     activeModes += ChatColor.GOLD + Translation.getString("Name.Duel", myPet.getOwner().getLanguage()) + ChatColor.RESET;
                 } else {
                     activeBehaviors.remove(Duel);
