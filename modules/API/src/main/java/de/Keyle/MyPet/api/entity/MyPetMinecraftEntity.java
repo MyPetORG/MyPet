@@ -28,6 +28,8 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
+import java.util.UUID;
+
 public interface MyPetMinecraftEntity {
     boolean isMyPet();
 
@@ -74,4 +76,6 @@ public interface MyPetMinecraftEntity {
     void setSitting(boolean sitting);
 
     boolean isSitting();
+
+    UUID getUniqueID();
 }

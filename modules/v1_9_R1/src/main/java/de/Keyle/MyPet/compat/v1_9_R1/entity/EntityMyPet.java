@@ -274,19 +274,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public double getWalkSpeed() {
         return walkSpeed;
     }
-
-    public boolean isCollidable() {
-        return false;
-    }
-
-    @Override
-    public void collide(Entity entity) {
-        if (getOwner().equals(entity)) {
-            return;
-        }
-        super.collide(entity);
-    }
-
     public boolean canEat(ItemStack itemstack) {
         List<ConfigItem> foodList = MyPetApi.getMyPetInfo().getFood(myPet.getPetType());
         for (ConfigItem foodItem : foodList) {
