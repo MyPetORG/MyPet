@@ -24,13 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Language {
-    private boolean loaded = false;
     private String code;
     private Map<String, Country> countries = new HashMap<>();
-    private ResourceBundle translations = null;
+    private TranslationBundle translations;
 
     public Language(String code) {
         this.code = code;
+        load();
     }
 
     public String getCode() {
@@ -47,8 +47,6 @@ public class Language {
             return translated;
         }
 
-        load();
-
         if (translations != null) {
             if (translations.containsKey(key)) {
                 translated = translations.getString(key);
@@ -58,7 +56,6 @@ public class Language {
     }
 
     public String translate(String key) {
-        load();
         String translated = key;
         if (translations != null) {
             if (translations.containsKey(key)) {
@@ -69,9 +66,6 @@ public class Language {
     }
 
     private void load() {
-        if (!loaded) {
-            loaded = true;
-            translations = Translation.loadLocale(getCode());
-        }
+        translations = Translation.loadLocale(getCode());
     }
 }
