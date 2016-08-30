@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -39,6 +40,8 @@ public class CommandOptionReload implements CommandOption {
         }
 
         Translation.init();
+
+        new ShopManager();
 
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config loaded!");
 
