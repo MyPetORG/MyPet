@@ -94,6 +94,7 @@ Shops:
         PetType: Horse
         EXP: 0
         Price: 100
+      iron_golem:
         Name: IronGolem
         Description:
         - <green>It's a IronGolem!
