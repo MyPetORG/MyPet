@@ -117,7 +117,7 @@ public class VaultHook extends PluginHook implements EconomyHook {
 
     @Override
     public String format(double amount) {
-        return economy.currencyNameSingular();
+        return economy.format(amount);
     }
 
     public Economy getEconomy() {
