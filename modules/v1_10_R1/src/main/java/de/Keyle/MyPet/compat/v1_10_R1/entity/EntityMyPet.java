@@ -108,7 +108,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.petNavigation = new VanillaNavigation(this);
             this.sitPathfinder = new Sit(this);
             this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
-            this.setHealth((float) myPet.getHealth());
+            this.setHealth((float) Math.min(myPet.getHealth(), myPet.getMaxHealth()));
             this.updateNameTag();
             this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(walkSpeed);
             this.setPathfinder();
@@ -579,7 +579,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public void setHealth(float f) {
         float deltaHealth = getHealth();
         super.setHealth(f);
-        deltaHealth = getHealth() - deltaHealth;
+
+        if (deltaHealth > getMaxHealth()) {
+            deltaHealth = 0;
+        } else {
+            deltaHealth = getHealth() - deltaHealth;
+        }
 
         String msg = myPet.getPetName() + ChatColor.RESET + ": ";
         if (getHealth() > myPet.getMaxHealth() / 3 * 2) {
@@ -595,7 +600,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             if (!myPet.getOwner().isHealthBarActive()) {
                 if (deltaHealth > 0) {
                     msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
-                } else {
+                } else if (deltaHealth < 0) {
                     msg += " (" + ChatColor.RED + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
                 }
             }
