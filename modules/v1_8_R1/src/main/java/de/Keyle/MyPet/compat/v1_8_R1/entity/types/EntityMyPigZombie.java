@@ -111,7 +111,7 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().a(12, new Byte((byte) 0)); // is baby
+        getDataWatcher().a(12, (byte) 0); // is baby
     }
 
     /**
