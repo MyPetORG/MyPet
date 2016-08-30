@@ -44,10 +44,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CommandOptionCreate implements CommandOptionTabCompleter {
     private static List<String> petTypeList = new ArrayList<>();
@@ -193,109 +190,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     inactiveMyPet.setPetType(myPetType);
                     inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner().getLanguage()));
 
-                    TagCompound TagCompound = inactiveMyPet.getInfo();
-                    if (args.length > 2 + forceOffset) {
-                        for (int i = 2 + forceOffset; i < args.length; i++) {
-                            if (args[i].equalsIgnoreCase("baby")) {
-                                TagCompound.getCompoundData().put("Baby", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("fire")) {
-                                TagCompound.getCompoundData().put("Fire", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("powered")) {
-                                TagCompound.getCompoundData().put("Powered", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("saddle")) {
-                                TagCompound.getCompoundData().put("Saddle", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("sheared")) {
-                                TagCompound.getCompoundData().put("Sheared", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("wither")) {
-                                TagCompound.getCompoundData().put("Type", new TagInt(1));
-                            } else if (args[i].equalsIgnoreCase("stray")) {
-                                TagCompound.getCompoundData().put("Type", new TagInt(2));
-                            } else if (args[i].equalsIgnoreCase("husk")) {
-                                TagCompound.getCompoundData().put("Type", new TagInt(6));
-                            } else if (args[i].equalsIgnoreCase("tamed")) {
-                                TagCompound.getCompoundData().put("Tamed", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("angry")) {
-                                TagCompound.getCompoundData().put("Angry", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("villager")) {
-                                TagCompound.getCompoundData().put("Type", new TagInt(1));
-                            } else if (args[i].equalsIgnoreCase("chest")) {
-                                TagCompound.getCompoundData().put("Chest", new TagByte(true));
-                            } else if (args[i].equalsIgnoreCase("elder")) {
-                                TagCompound.getCompoundData().put("Elder", new TagByte(true));
-                            } else if (args[i].startsWith("size:")) {
-                                String size = args[i].replace("size:", "");
-                                if (Util.isInt(size)) {
-                                    TagCompound.getCompoundData().put("Size", new TagInt(Integer.parseInt(size)));
-                                }
-                            } else if (args[i].startsWith("horse:")) {
-                                String horseTypeString = args[i].replace("horse:", "");
-                                if (Util.isByte(horseTypeString)) {
-                                    int horseType = Integer.parseInt(horseTypeString);
-                                    horseType = Math.min(Math.max(0, horseType), 4);
-                                    TagCompound.getCompoundData().put("Type", new TagByte((byte) horseType));
-                                }
-                            } else if (args[i].startsWith("variant:")) {
-                                String variantString = args[i].replace("variant:", "");
-                                if (Util.isInt(variantString)) {
-                                    int variant = Integer.parseInt(variantString);
-                                    if (myPetType == MyPetType.Horse) {
-                                        variant = Math.min(Math.max(0, variant), 1030);
-                                        TagCompound.getCompoundData().put("Variant", new TagInt(variant));
-                                    } else if (myPetType == MyPetType.Rabbit) {
-                                        if (variant != 99 && (variant > 5 || variant < 0)) {
-                                            variant = 0;
-                                        }
-                                        TagCompound.getCompoundData().put("Variant", new TagByte(variant));
-                                    }
-                                }
-                            } else if (args[i].startsWith("cat:")) {
-                                String catTypeString = args[i].replace("cat:", "");
-                                if (Util.isInt(catTypeString)) {
-                                    int catType = Integer.parseInt(catTypeString);
-                                    catType = Math.min(Math.max(0, catType), 3);
-                                    TagCompound.getCompoundData().put("CatType", new TagInt(catType));
-                                }
-                            } else if (args[i].startsWith("profession:")) {
-                                String professionString = args[i].replace("profession:", "");
-                                if (Util.isInt(professionString)) {
-                                    int profession = Integer.parseInt(professionString);
-                                    profession = Math.min(Math.max(0, profession), 5);
-                                    if (myPetType == MyPetType.Villager) {
-                                        TagCompound.getCompoundData().put("Profession", new TagInt(profession));
-                                    } else if (myPetType == MyPetType.Zombie) {
-                                        TagCompound.getCompoundData().put("Type", new TagInt(profession + 1));
-                                    }
-                                }
-                            } else if (args[i].startsWith("color:")) {
-                                String colorString = args[i].replace("color:", "");
-                                if (Util.isByte(colorString)) {
-                                    byte color = Byte.parseByte(colorString);
-                                    color = color > 15 ? 15 : color < 0 ? 0 : color;
-                                    TagCompound.getCompoundData().put("Color", new TagByte(color));
-                                }
-                            } else if (args[i].startsWith("collar:")) {
-                                String colorString = args[i].replace("collar:", "");
-                                if (Util.isByte(colorString)) {
-                                    byte color = Byte.parseByte(colorString);
-                                    color = color > 15 ? 15 : color < 0 ? 0 : color;
-                                    TagCompound.getCompoundData().put("CollarColor", new TagByte(color));
-                                }
-                            } else if (args[i].startsWith("block:")) {
-                                String blocks = args[i].replace("block:", "");
-                                String[] blockInfo = blocks.split(":");
-                                if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && MyPetApi.getPlatformHelper().isValidMaterial(Integer.parseInt(blockInfo[0]))) {
-                                    TagCompound.getCompoundData().put("BlockID", new TagInt(Integer.parseInt(blockInfo[0])));
-                                }
-                                if (blockInfo.length >= 2 && Util.isInt(blockInfo[1])) {
-                                    int blockData = Integer.parseInt(blockInfo[1]);
-                                    blockData = Math.min(Math.max(0, blockData), 15);
-                                    TagCompound.getCompoundData().put("BlockData", new TagInt(blockData));
-                                }
-                            } else {
-                                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] \"" + ChatColor.RED + args[i] + "\" is not a valid option!");
-                            }
-                        }
-                    }
+                    TagCompound compound = inactiveMyPet.getInfo();
+                    createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);
 
                     final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
 
@@ -352,5 +248,106 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             }
         }
         return CommandAdmin.EMPTY_LIST;
+    }
+
+    public static void createInfo(MyPetType petType, String[] args, TagCompound compound) {
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("baby")) {
+                compound.getCompoundData().put("Baby", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("fire")) {
+                compound.getCompoundData().put("Fire", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("powered")) {
+                compound.getCompoundData().put("Powered", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("saddle")) {
+                compound.getCompoundData().put("Saddle", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("sheared")) {
+                compound.getCompoundData().put("Sheared", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("wither")) {
+                compound.getCompoundData().put("Type", new TagInt(1));
+            } else if (arg.equalsIgnoreCase("stray")) {
+                compound.getCompoundData().put("Type", new TagInt(2));
+            } else if (arg.equalsIgnoreCase("husk")) {
+                compound.getCompoundData().put("Type", new TagInt(6));
+            } else if (arg.equalsIgnoreCase("tamed")) {
+                compound.getCompoundData().put("Tamed", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("angry")) {
+                compound.getCompoundData().put("Angry", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("villager")) {
+                compound.getCompoundData().put("Type", new TagInt(1));
+            } else if (arg.equalsIgnoreCase("chest")) {
+                compound.getCompoundData().put("Chest", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("elder")) {
+                compound.getCompoundData().put("Elder", new TagByte(true));
+            } else if (arg.startsWith("size:")) {
+                String size = arg.replace("size:", "");
+                if (Util.isInt(size)) {
+                    compound.getCompoundData().put("Size", new TagInt(Integer.parseInt(size)));
+                }
+            } else if (arg.startsWith("horse:")) {
+                String horseTypeString = arg.replace("horse:", "");
+                if (Util.isByte(horseTypeString)) {
+                    int horseType = Integer.parseInt(horseTypeString);
+                    horseType = Math.min(Math.max(0, horseType), 4);
+                    compound.getCompoundData().put("Type", new TagByte((byte) horseType));
+                }
+            } else if (arg.startsWith("variant:")) {
+                String variantString = arg.replace("variant:", "");
+                if (Util.isInt(variantString)) {
+                    int variant = Integer.parseInt(variantString);
+                    if (petType == MyPetType.Horse) {
+                        variant = Math.min(Math.max(0, variant), 1030);
+                        compound.getCompoundData().put("Variant", new TagInt(variant));
+                    } else if (petType == MyPetType.Rabbit) {
+                        if (variant != 99 && (variant > 5 || variant < 0)) {
+                            variant = 0;
+                        }
+                        compound.getCompoundData().put("Variant", new TagByte(variant));
+                    }
+                }
+            } else if (arg.startsWith("cat:")) {
+                String catTypeString = arg.replace("cat:", "");
+                if (Util.isInt(catTypeString)) {
+                    int catType = Integer.parseInt(catTypeString);
+                    catType = Math.min(Math.max(0, catType), 3);
+                    compound.getCompoundData().put("CatType", new TagInt(catType));
+                }
+            } else if (arg.startsWith("profession:")) {
+                String professionString = arg.replace("profession:", "");
+                if (Util.isInt(professionString)) {
+                    int profession = Integer.parseInt(professionString);
+                    profession = Math.min(Math.max(0, profession), 5);
+                    if (petType == MyPetType.Villager) {
+                        compound.getCompoundData().put("Profession", new TagInt(profession));
+                    } else if (petType == MyPetType.Zombie) {
+                        compound.getCompoundData().put("Type", new TagInt(profession + 1));
+                    }
+                }
+            } else if (arg.startsWith("color:")) {
+                String colorString = arg.replace("color:", "");
+                if (Util.isByte(colorString)) {
+                    byte color = Byte.parseByte(colorString);
+                    color = color > 15 ? 15 : color < 0 ? 0 : color;
+                    compound.getCompoundData().put("Color", new TagByte(color));
+                }
+            } else if (arg.startsWith("collar:")) {
+                String colorString = arg.replace("collar:", "");
+                if (Util.isByte(colorString)) {
+                    byte color = Byte.parseByte(colorString);
+                    color = color > 15 ? 15 : color < 0 ? 0 : color;
+                    compound.getCompoundData().put("CollarColor", new TagByte(color));
+                }
+            } else if (arg.startsWith("block:")) {
+                String blocks = arg.replace("block:", "");
+                String[] blockInfo = blocks.split(":");
+                if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && MyPetApi.getPlatformHelper().isValidMaterial(Integer.parseInt(blockInfo[0]))) {
+                    compound.getCompoundData().put("BlockID", new TagInt(Integer.parseInt(blockInfo[0])));
+                }
+                if (blockInfo.length >= 2 && Util.isInt(blockInfo[1])) {
+                    int blockData = Integer.parseInt(blockInfo[1]);
+                    blockData = Math.min(Math.max(0, blockData), 15);
+                    compound.getCompoundData().put("BlockData", new TagInt(blockData));
+                }
+            }
+        }
     }
 }
