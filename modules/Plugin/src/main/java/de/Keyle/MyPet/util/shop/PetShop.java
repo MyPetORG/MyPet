@@ -7,6 +7,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
@@ -38,7 +39,7 @@ public class PetShop {
     }
 
     public void open(final Player player) {
-        IconMenu shop = new IconMenu(displayName, new IconMenu.OptionClickEventHandler() {
+        IconMenu shop = new IconMenu(Colorizer.setColors(displayName), new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
                 if (pets.containsKey(event.getPosition())) {
