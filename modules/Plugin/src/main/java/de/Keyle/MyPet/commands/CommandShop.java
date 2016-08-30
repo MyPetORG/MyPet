@@ -27,10 +27,7 @@ import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -41,30 +38,36 @@ public class CommandShop implements CommandExecutor, TabCompleter {
             sender.sendMessage(Translation.getString("Message.No.Economy", sender));
             return true;
         }
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        Player player = null;
 
-            if (args.length > 1) {
-                if (Permissions.has(player, "MyPet.admin")) {
-                    player = Bukkit.getPlayer(args[0]);
-                    if (player == null || !player.isOnline()) {
-                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", sender));
-                        return true;
-                    }
-                }
-            }
-
-            if (args.length > 0) {
-                ShopManager.get().open(args[0], player);
-            } else {
-                ShopManager.get().open(player);
-            }
-
+        if (sender instanceof ConsoleCommandSender && args.length < 2) {
+            sender.sendMessage("You can't use this command from server console!");
             return true;
         }
-        if (args.length < 2) {
-            sender.sendMessage("You can't use this command from server console!");
+
+        if (args.length > 1) {
+            if (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin")) {
+                player = Bukkit.getPlayer(args[1]);
+                if (player == null || !player.isOnline()) {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", sender));
+                    return true;
+                }
+            }
         }
+        if (player == null) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("You can't use this command from server console!");
+                return true;
+            }
+            player = (Player) sender;
+        }
+
+        if (args.length > 0) {
+            ShopManager.get().open(args[0], player);
+        } else {
+            ShopManager.get().open(player);
+        }
+
         return true;
     }
 
