@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -82,10 +83,17 @@ public class LevelUpListener implements Listener {
                 myPet.setHealth(myPet.getMaxHealth());
                 myPet.setSaturation(100);
 
+                final boolean version17 = MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.8") < 0;
+
                 new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
                     @Override
                     protected void playParticleEffect(Location location) {
-                        MyPetApi.getPlatformHelper().playParticleEffect(location, "magicCrit", 0, 0, 0, 0, 1, 32);
+                        if (version17) {
+                            MyPetApi.getPlatformHelper().playParticleEffect(location, "magicCrit", 0, 0, 0, 0, 1, 32);
+                        } else {
+                            MyPetApi.getPlatformHelper().playParticleEffect(location, "CRIT_MAGIC", 0, 0, 0, 0, 1, 32);
+
+                        }
                         //MyPetApi.getPlatformHelper().playParticleEffect(location, "flame", 0, 0, 0, 0, 1, 32);
                     }
                 }.loop(2);
@@ -93,7 +101,7 @@ public class LevelUpListener implements Listener {
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                     entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
                 } else {
-                    entity.getWorld().playSound(entity.getLocation(), "random.levelup", 1F, 0.7F);
+                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("LEVEL_UP"), 1F, 0.7F);
                 }
             }
         }
