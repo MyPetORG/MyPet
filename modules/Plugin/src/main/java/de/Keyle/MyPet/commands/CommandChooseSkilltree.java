@@ -102,7 +102,6 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                 } else {
                     List<SkillTree> availableSkilltrees = new ArrayList<>();
                     for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
-                        MyPetApi.getLogger().info(skillTree.getName() + ": " + Permissions.hasLegacy(player, "MyPet.skilltree.", skillTree.getPermission()));
                         if (Permissions.hasLegacy(player, "MyPet.skilltree.", skillTree.getPermission())) {
                             availableSkilltrees.add(skillTree);
                         }
