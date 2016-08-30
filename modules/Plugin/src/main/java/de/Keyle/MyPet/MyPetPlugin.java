@@ -54,6 +54,7 @@ import de.Keyle.MyPet.util.UpdateCheck;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.Keyle.MyPet.util.shop.ShopManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -185,8 +186,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getCommand("petcapturehelper").setExecutor(new CommandCaptureHelper());
         getCommand("petoptions").setExecutor(new CommandOptions());
         getCommand("petswitch").setExecutor(new CommandSwitch());
-        getCommand("pettrade").setExecutor(new CommandTrade());
         getCommand("petlist").setExecutor(new CommandList());
+        // register premium commands
+        getCommand("pettrade").setExecutor(new CommandTrade());
+        getCommand("petshop").setExecutor(new CommandShop());
 
         // register skills
         registerSkillsInfo();
@@ -271,6 +274,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         // load worldgroups
         loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
+
+        File shopConfig = new File(getDataFolder(), "pet-shops.yml");
+        if (!shopConfig.exists()) {
+            platformHelper.copyResource(this, "pet-shops.yml", shopConfig);
+        }
+        new ShopManager();
+
         Timer.startTimer();
 
         // init Metrics

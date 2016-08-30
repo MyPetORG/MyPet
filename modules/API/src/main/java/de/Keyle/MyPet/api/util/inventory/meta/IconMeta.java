@@ -22,6 +22,8 @@ package de.Keyle.MyPet.api.util.inventory.meta;
 
 import de.keyle.knbt.TagCompound;
 
-public interface IconMeta {
+public interface IconMeta extends Cloneable {
     void applyTo(TagCompound tag);
+
+    IconMeta clone();
 }

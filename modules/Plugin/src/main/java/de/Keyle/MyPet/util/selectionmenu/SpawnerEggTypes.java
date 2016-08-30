@@ -29,29 +29,30 @@ public enum SpawnerEggTypes {
     Chicken(MyPetType.Chicken, 93),
     Cow(MyPetType.Cow, 92),
     Creeper(MyPetType.Creeper, 50),
-    EnderDragon(MyPetType.EnderDragon, 59, true),
+    EnderDragon(MyPetType.EnderDragon, 59, true, "Shulker"),
     Enderman(MyPetType.Enderman, 58),
     Endermite(MyPetType.Endermite, 67),
     Ghast(MyPetType.Ghast, 56),
-    Giant(MyPetType.Giant, 54, true),
-    Guardian(MyPetType.Guardian, 68, true),
+    Giant(MyPetType.Giant, 54, true, "Zombie"),
+    Guardian(MyPetType.Guardian, 68),
     Horse(MyPetType.Horse, 100),
-    IronGolem(MyPetType.IronGolem, 60, true),
+    IronGolem(MyPetType.IronGolem, 60, "Skeleton"),
     MagmaCube(MyPetType.MagmaCube, 62),
     Mooshroom(MyPetType.Mooshroom, 96),
     Ocelot(MyPetType.Ocelot, 98),
     Pig(MyPetType.Pig, 90),
     PigZombie(MyPetType.PigZombie, 57),
+    PolarBear(MyPetType.PolarBear, 56),
     Rabbit(MyPetType.Rabbit, 101),
     Sheep(MyPetType.Sheep, 91),
     Silverfish(MyPetType.Silverfish, 60),
     Skeleton(MyPetType.Skeleton, 51),
     Slime(MyPetType.Slime, 55),
-    Snowman(MyPetType.Snowman, 97),
+    Snowman(MyPetType.Snowman, 97, ""),
     Spider(MyPetType.Spider, 52),
     Squid(MyPetType.Squid, 94),
     Witch(MyPetType.Witch, 66),
-    Wither(MyPetType.Wither, 58, true),
+    Wither(MyPetType.Wither, 58, true, "Endermite"),
     Wolf(MyPetType.Wolf, 95),
     Villager(MyPetType.Villager, 120),
     Zombie(MyPetType.Zombie, 54);
@@ -59,15 +60,27 @@ public enum SpawnerEggTypes {
     MyPetType type;
     short color;
     boolean glowing;
+    String eggName = null;
 
     SpawnerEggTypes(MyPetType type, int color) {
         this(type, color, false);
+    }
+
+    SpawnerEggTypes(MyPetType type, int color, String eggName) {
+        this(type, color, false, eggName);
     }
 
     SpawnerEggTypes(MyPetType type, int color, boolean glowing) {
         this.type = type;
         this.color = (short) color;
         this.glowing = glowing;
+    }
+
+    SpawnerEggTypes(MyPetType type, int color, boolean glowing, String eggName) {
+        this.type = type;
+        this.color = (short) color;
+        this.glowing = glowing;
+        this.eggName = eggName;
     }
 
     public static SpawnerEggTypes getEggType(MyPetType type) {
@@ -85,5 +98,9 @@ public enum SpawnerEggTypes {
 
     public boolean isGlowing() {
         return glowing;
+    }
+
+    public String getEggName() {
+        return eggName != null ? eggName : type.getMinecraftName();
     }
 }

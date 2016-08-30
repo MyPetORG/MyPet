@@ -97,14 +97,18 @@ commands:
   petswitch:
     aliases: [pswitch, psw]
     description: Opens a MyPet selection GUI
-  pettrade:
-    aliases: [pett, pt]
-    description: Trade MyPets with other players
-    usage: '/<command> [accept/reject/cancel/<playername>] <price>'
   petlist:
     aliases: [plist, pl]
     description: Lists all your MyPets
     usage: '/<command> <player name>'
+  pettrade:
+    aliases: [pett, pt]
+    description: Trade MyPets with other players
+    usage: '/<command> [accept/reject/cancel/<playername>] <price>'
+  petshop:
+    aliases: [petsh, psh]
+    description: Opens a pet shop
+    usage: '/<command> [shopname]'
 
 permissions:
   MyPet.leash.*:

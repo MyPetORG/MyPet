@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class IconMenuItem {
+public class IconMenuItem implements Cloneable {
     protected Material material = Material.NAME_TAG;
     protected int data = 0;
     protected int amount = 1;
@@ -119,6 +119,13 @@ public class IconMenuItem {
     public IconMenuItem addLoreLine(String line) {
         Validate.notNull(line, "Lore line cannot be null");
         this.lore.add(line);
+        hasChanged = true;
+        return this;
+    }
+
+    public IconMenuItem addLoreLine(String line, int position) {
+        Validate.notNull(line, "Lore line cannot be null");
+        this.lore.add(position, line);
         hasChanged = true;
         return this;
     }
@@ -228,5 +235,27 @@ public class IconMenuItem {
             }
         }
         return icon;
+    }
+
+    public IconMenuItem clone() {
+        IconMenuItem newItem = new IconMenuItem();
+        newItem.material = this.material;
+        newItem.data = this.data;
+        newItem.amount = this.amount;
+        newItem.title = this.title;
+        newItem.lore.addAll(this.lore);
+        newItem.glowing = this.glowing;
+        if (this.bukkitMeta != null) {
+            newItem.bukkitMeta = this.bukkitMeta.clone();
+        }
+        if (this.meta != null) {
+            newItem.meta = this.meta.clone();
+        }
+        if (this.tag != null) {
+            newItem.tag = this.tag.clone();
+        }
+        newItem.hasChanged = true;
+
+        return newItem;
     }
 }

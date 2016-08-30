@@ -99,7 +99,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         myPet.setSaturation(storedMyPet.getSaturation());
 
         mActivePetsPlayer.put(myPet, myPet.getOwner());
-        return Optional.of(myPet);
 
+        return Optional.of(myPet);
     }
 }
