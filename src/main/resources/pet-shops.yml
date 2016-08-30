@@ -73,13 +73,6 @@ Shops:
         PetType: Endermite
         EXP: 0
         Price: 100
-      giant:
-        Name: Giant
-        Description:
-        - <green>It's a Giant!
-        PetType: Giant
-        EXP: 0
-        Price: 100
       guardian:
         Name: Guardian
         Description:
@@ -246,6 +239,13 @@ Shops:
 #        Description:
 #        - <green>It's a Ghast!
 #        PetType: Ghast
+#        EXP: 0
+#        Price: 100
+#      giant:
+#        Name: Giant
+#        Description:
+#        - <green>It's a Giant!
+#        PetType: Giant
 #        EXP: 0
 #        Price: 100
   babies:
