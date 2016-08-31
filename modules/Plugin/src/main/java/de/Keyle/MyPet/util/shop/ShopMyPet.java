@@ -136,10 +136,10 @@ public class ShopMyPet implements StoredMyPet {
 
     public String getPetName() {
         if (petName != null) {
-            return petName;
+            return Colorizer.setColors(petName);
         }
         if (petOwner != null) {
-            Translation.getString("Name." + petType.name(), petOwner);
+            return Colorizer.setColors(Translation.getString("Name." + petType.name(), petOwner));
         }
         return "MyPet";
     }
