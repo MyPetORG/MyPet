@@ -441,7 +441,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     }
 
     private void registerServices() {
-
+        serviceManager.registerService(ShopManager.class);
     }
 
     private void registerHooks() {

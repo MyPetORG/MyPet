@@ -3,6 +3,9 @@ package de.Keyle.MyPet.util.shop;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.ServiceName;
+import de.Keyle.MyPet.api.util.service.types.ShopService;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -14,15 +17,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShopManager {
-    private static ShopManager instance = null;
-
+@Load(Load.State.AfterHooks)
+@ServiceName("ShopService")
+public class ShopManager implements ShopService {
     YamlConfiguration config;
     protected Map<String, PetShop> shops = new HashMap<>();
     protected String defaultShop = null;
 
-    public ShopManager() {
-        instance = this;
+    @Override
+    public boolean onEnable() {
         File petConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pet-shops.yml");
         config = new YamlConfiguration();
 
@@ -37,7 +40,6 @@ public class ShopManager {
         ConfigurationSection shops = config.getConfigurationSection("Shops");
 
         if (shops != null) {
-            MyPetApi.getLogger().info("Loaded shops: " + shops.getKeys(false));
             for (String name : shops.getKeys(false)) {
                 PetShop shop = new PetShop(name);
                 shop.load(shops.getConfigurationSection(name));
@@ -47,6 +49,17 @@ public class ShopManager {
                 this.shops.put(name, shop);
             }
         }
+        return true;
+    }
+
+    @Override
+    public void onDisable() {
+        //TODO close all shops
+    }
+
+    @Override
+    public String getServiceName() {
+        return "ShopService";
     }
 
     public void open(String name, Player player) {
@@ -74,9 +87,5 @@ public class ShopManager {
             }
             player.sendMessage(Translation.getString("Message.No.Allowed", player));
         }
-    }
-
-    public static ShopManager get() {
-        return instance;
     }
 }

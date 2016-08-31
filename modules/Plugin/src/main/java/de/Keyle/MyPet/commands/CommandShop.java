@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -62,10 +63,13 @@ public class CommandShop implements CommandExecutor, TabCompleter {
             player = (Player) sender;
         }
 
-        if (args.length > 0) {
-            ShopManager.get().open(args[0], player);
-        } else {
-            ShopManager.get().open(player);
+        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
+        if (shopManager.isPresent()) {
+            if (args.length > 0) {
+                shopManager.get().open(args[0], player);
+            } else {
+                shopManager.get().open(player);
+            }
         }
 
         return true;
