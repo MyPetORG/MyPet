@@ -101,7 +101,7 @@ public class PetShop {
                                                 public void callback(Boolean value) {
                                                     petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), pet.getUUID());
                                                     MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
-                                                    p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), pet.getPetName()));
+                                                    p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
                                                     MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(pet).get();
                                                     activePet.createEntity();
                                                 }
