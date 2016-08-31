@@ -1,7 +1,6 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -71,11 +70,9 @@ public class ShopManager implements ShopService {
         }
         PetShop shop = shops.get(name);
         if (shop != null) {
-            if (Permissions.has(player, "MyPet.command.shop." + name)) {
-                shop.open(player);
-            } else {
-                player.sendMessage(Translation.getString("Message.No.Allowed", player));
-            }
+            shop.open(player);
+        } else {
+            player.sendMessage(Translation.getString("Message.Shop.NotFound", player));
         }
     }
 
@@ -89,6 +86,10 @@ public class ShopManager implements ShopService {
             }
             player.sendMessage(Translation.getString("Message.No.Allowed", player));
         }
+    }
+
+    public String getDefaultShopName() {
+        return defaultShop;
     }
 
     @Override

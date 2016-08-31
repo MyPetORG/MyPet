@@ -66,9 +66,22 @@ public class CommandShop implements CommandExecutor, TabCompleter {
         Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
         if (shopManager.isPresent()) {
             if (args.length > 0) {
-                shopManager.get().open(args[0], player);
+                String shop = args[0];
+                if (Permissions.has(player, "MyPet.command.shop." + shop) || Permissions.has(player, "MyPet.admin")) {
+                    shopManager.get().open(shop, player);
+                } else {
+                    player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                }
+
             } else {
-                shopManager.get().open(player);
+                String shop = shopManager.get().getDefaultShopName();
+                if (shop != null) {
+                    if (Permissions.has(player, "MyPet.command.shop." + shop) || Permissions.has(player, "MyPet.admin")) {
+                        shopManager.get().open(player);
+                        return true;
+                    }
+                }
+                player.sendMessage(Translation.getString("Message.No.Allowed", player));
             }
         }
 
