@@ -96,6 +96,7 @@ public class NbtRepository implements Repository, Scheduler {
 
             fileTag.getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
             fileTag.getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
+            fileTag.getCompoundData().put("Timestamp", new TagLong(System.currentTimeMillis()));
             fileTag.getCompoundData().put("Pets", savePets());
             fileTag.getCompoundData().put("Players", savePlayers());
 
