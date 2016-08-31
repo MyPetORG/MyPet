@@ -4,6 +4,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
@@ -95,15 +96,19 @@ public class PetShop {
                                             }
 
                                             pet.setOwner(petOwner);
-                                            pet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
+                                            final StoredMyPet clonedPet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet);
 
-                                            MyPetApi.getRepository().addMyPet(pet, new RepositoryCallback<Boolean>() {
+                                            clonedPet.setOwner(petOwner);
+                                            clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
+                                            clonedPet.setUUID(null);
+
+                                            MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
                                                 @Override
                                                 public void callback(Boolean value) {
-                                                    petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), pet.getUUID());
+                                                    petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
                                                     MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
-                                                    p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
-                                                    MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(pet).get();
+                                                    p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
+                                                    MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(clonedPet).get();
                                                     activePet.createEntity();
                                                 }
                                             });
