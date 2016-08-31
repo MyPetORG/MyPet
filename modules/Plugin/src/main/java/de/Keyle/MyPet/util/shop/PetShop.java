@@ -95,6 +95,7 @@ public class PetShop {
                                             }
 
                                             pet.setOwner(petOwner);
+                                            pet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
 
                                             MyPetApi.getRepository().addMyPet(pet, new RepositoryCallback<Boolean>() {
                                                 @Override
