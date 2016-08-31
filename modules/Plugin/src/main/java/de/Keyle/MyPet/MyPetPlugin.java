@@ -45,7 +45,7 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
-import de.Keyle.MyPet.repository.types.NbtRepository;
+import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
@@ -251,7 +251,17 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Translation.init();
 
         // init repository
-        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("NBT")) {
+            Configuration.Repository.REPOSITORY_TYPE = "SQLite";
+            Configuration.Repository.CONVERT_FROM = "NBT";
+            repo = new SqLiteRepository();
+            try {
+                repo.init();
+            } catch (RepositoryInitException e) {
+                e.printStackTrace();
+                repo = null;
+            }
+        } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
             repo = new MySqlRepository();
             try {
                 repo.init();
@@ -270,7 +280,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
 
         if (repo == null) {
-            repo = new NbtRepository();
+            repo = new SqLiteRepository();
             try {
                 repo.init();
             } catch (RepositoryInitException ignored) {

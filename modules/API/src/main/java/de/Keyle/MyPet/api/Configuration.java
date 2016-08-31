@@ -53,16 +53,27 @@ public class Configuration {
         public static String REPOSITORY_TYPE = "NBT";
         public static String CONVERT_FROM = "";
 
+        @Deprecated
         public static class NBT {
+            @Deprecated
             public static int AUTOSAVE_TIME = 60;
+            @Deprecated
             public static boolean SAVE_ON_PET_ADD = true;
+            @Deprecated
             public static boolean SAVE_ON_PET_UPDATE = true;
+            @Deprecated
             public static boolean SAVE_ON_PET_REMOVE = true;
+            @Deprecated
             public static boolean SAVE_ON_PLAYER_ADD = true;
+            @Deprecated
             public static boolean SAVE_ON_PLAYER_UPDATE = true;
+            @Deprecated
             public static boolean SAVE_ON_PLAYER_REMOVE = true;
+            @Deprecated
             public static boolean MAKE_BACKUPS = true;
+            @Deprecated
             public static int SAVE_INTERVAL = 1440;
+            @Deprecated
             public static String DATE_FORMAT = "yyyy_MM_dd_HH.mm";
         }
 

@@ -29,7 +29,9 @@ import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
+import de.Keyle.MyPet.repository.types.SqLiteRepository;
 
+import java.io.File;
 import java.util.List;
 
 public class Converter {
@@ -46,6 +48,8 @@ public class Converter {
             fromRepo = new NbtRepository();
         } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
             fromRepo = new MySqlRepository();
+        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("SQLite")) {
+            fromRepo = new SqLiteRepository();
         } else {
             return false;
         }
@@ -62,11 +66,11 @@ public class Converter {
 
         List<MyPetPlayer> playerList = fromRepo.getAllMyPetPlayers();
         if (toRepo instanceof NbtRepository) {
-            for (MyPetPlayer player : playerList) {
-                toRepo.addMyPetPlayer(player, null);
-            }
+            return false;
         } else if (toRepo instanceof MySqlRepository) {
             ((MySqlRepository) toRepo).addMyPetPlayers(playerList);
+        } else if (toRepo instanceof SqLiteRepository) {
+            ((SqLiteRepository) toRepo).addMyPetPlayers(playerList);
         } else if (toRepo instanceof MongoDbRepository) {
             for (MyPetPlayer player : playerList) {
                 ((MongoDbRepository) toRepo).addMyPetPlayer(player);
@@ -75,12 +79,10 @@ public class Converter {
 
         List<StoredMyPet> pets = fromRepo.getAllMyPets();
 
-        if (toRepo instanceof NbtRepository) {
-            for (StoredMyPet pet : pets) {
-                toRepo.addMyPet(pet, null);
-            }
-        } else if (toRepo instanceof MySqlRepository) {
+        if (toRepo instanceof MySqlRepository) {
             ((MySqlRepository) toRepo).addMyPets(pets);
+        } else if (toRepo instanceof SqLiteRepository) {
+            ((SqLiteRepository) toRepo).addMyPets(pets);
         } else if (toRepo instanceof MongoDbRepository) {
             for (StoredMyPet pet : pets) {
                 ((MongoDbRepository) toRepo).addMyPet(pet);
@@ -90,6 +92,13 @@ public class Converter {
         toRepo.save();
         fromRepo.disable();
 
+        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("NBT")) {
+            File nbtFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
+            File nbtFileOld = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets.old");
+            nbtFile.renameTo(nbtFileOld);
+            MyPetApi.getPlugin().getConfig().set("MyPet.Repository.Type", Configuration.Repository.REPOSITORY_TYPE);
+            MyPetApi.getPlugin().getConfig().set("MyPet.Repository.NBT", null);
+        }
         MyPetApi.getPlugin().getConfig().set("MyPet.Repository.ConvertFrom", "-");
         MyPetApi.getPlugin().saveConfig();
 

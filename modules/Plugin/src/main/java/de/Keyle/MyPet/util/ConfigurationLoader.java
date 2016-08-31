@@ -78,17 +78,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
 
-        config.addDefault("MyPet.Repository.NBT.AutoSaveTime", Repository.NBT.AUTOSAVE_TIME);
-        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnAdd", Repository.NBT.SAVE_ON_PET_ADD);
-        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnUpdate", Repository.NBT.SAVE_ON_PET_UPDATE);
-        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnRemove", Repository.NBT.SAVE_ON_PET_REMOVE);
-        config.addDefault("MyPet.Repository.NBT.Player.SaveOnAdd", Repository.NBT.SAVE_ON_PLAYER_ADD);
-        config.addDefault("MyPet.Repository.NBT.Player.SaveOnUpdate", Repository.NBT.SAVE_ON_PLAYER_UPDATE);
-        config.addDefault("MyPet.Repository.NBT.Player.SaveOnRemove", Repository.NBT.SAVE_ON_PLAYER_REMOVE);
-        config.addDefault("MyPet.Repository.NBT.Backup.Active", Repository.NBT.MAKE_BACKUPS);
-        config.addDefault("MyPet.Repository.NBT.Backup.SaveInterval", Repository.NBT.SAVE_INTERVAL);
-        config.addDefault("MyPet.Repository.NBT.Backup.DateFormat", Repository.NBT.DATE_FORMAT);
-
         config.addDefault("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
         config.addDefault("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);
         config.addDefault("MyPet.Repository.MySQL.Host", Repository.MySQL.HOST);
@@ -321,17 +310,6 @@ public class ConfigurationLoader {
 
         Repository.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         Repository.CONVERT_FROM = config.getString("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
-
-        Repository.NBT.AUTOSAVE_TIME = config.getInt("MyPet.Repository.NBT.AutoSaveTime", Repository.NBT.AUTOSAVE_TIME);
-        Repository.NBT.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnUpdate", Repository.NBT.SAVE_ON_PET_UPDATE);
-        Repository.NBT.SAVE_ON_PET_REMOVE = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnRemove", Repository.NBT.SAVE_ON_PET_REMOVE);
-        Repository.NBT.SAVE_ON_PET_ADD = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnAdd", Repository.NBT.SAVE_ON_PET_ADD);
-        Repository.NBT.SAVE_ON_PLAYER_ADD = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnAdd", Repository.NBT.SAVE_ON_PLAYER_ADD);
-        Repository.NBT.SAVE_ON_PLAYER_UPDATE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnUpdate", Repository.NBT.SAVE_ON_PLAYER_UPDATE);
-        Repository.NBT.SAVE_ON_PLAYER_REMOVE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnRemove", Repository.NBT.SAVE_ON_PLAYER_REMOVE);
-        Repository.NBT.MAKE_BACKUPS = config.getBoolean("MyPet.Repository.NBT.Backup.Active", Repository.NBT.MAKE_BACKUPS);
-        Repository.NBT.SAVE_INTERVAL = config.getInt("MyPet.Repository.NBT.Backup.SaveInterval", Repository.NBT.SAVE_INTERVAL);
-        Repository.NBT.DATE_FORMAT = config.getString("MyPet.Repository.NBT.Backup.DateFormat", Repository.NBT.DATE_FORMAT);
 
         Repository.MySQL.DATABASE = config.getString("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
         Repository.MySQL.PREFIX = config.getString("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);
