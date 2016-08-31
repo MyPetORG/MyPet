@@ -45,7 +45,8 @@ import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.repository.types.NbtRepository;
+import de.Keyle.MyPet.repository.Converter;
+import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
@@ -242,13 +243,19 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Translation.init();
 
         // init repository
-        if (repo == null) {
-            repo = new NbtRepository();
-            try {
-                repo.init();
-            } catch (RepositoryInitException ignored) {
-            }
+        repo = new SqLiteRepository();
+        try {
+            repo.init();
+        } catch (RepositoryInitException ignored) {
+            setEnabled(false);
+            return;
         }
+
+        File nbtFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
+        if (nbtFile.exists()) {
+            Converter.convert();
+        }
+
         if (repo instanceof Scheduler) {
             Timer.addTask((Scheduler) repo);
         }

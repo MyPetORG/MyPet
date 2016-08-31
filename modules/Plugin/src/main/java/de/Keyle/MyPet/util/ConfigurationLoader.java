@@ -74,17 +74,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
 
-        config.addDefault("MyPet.Repository.NBT.AutoSaveTime", Repository.NBT.AUTOSAVE_TIME);
-        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnAdd", Repository.NBT.SAVE_ON_PET_ADD);
-        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnUpdate", Repository.NBT.SAVE_ON_PET_UPDATE);
-        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnRemove", Repository.NBT.SAVE_ON_PET_REMOVE);
-        config.addDefault("MyPet.Repository.NBT.Player.SaveOnAdd", Repository.NBT.SAVE_ON_PLAYER_ADD);
-        config.addDefault("MyPet.Repository.NBT.Player.SaveOnUpdate", Repository.NBT.SAVE_ON_PLAYER_UPDATE);
-        config.addDefault("MyPet.Repository.NBT.Player.SaveOnRemove", Repository.NBT.SAVE_ON_PLAYER_REMOVE);
-        config.addDefault("MyPet.Repository.NBT.Backup.Active", Repository.NBT.MAKE_BACKUPS);
-        config.addDefault("MyPet.Repository.NBT.Backup.SaveInterval", Repository.NBT.SAVE_INTERVAL);
-        config.addDefault("MyPet.Repository.NBT.Backup.DateFormat", Repository.NBT.DATE_FORMAT);
-
         config.addDefault("MyPet.Respawn.Time.Default.Factor", Respawn.TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", Respawn.TIME_PLAYER_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Default.Fixed", Respawn.TIME_FIXED);
@@ -286,18 +275,6 @@ public class ConfigurationLoader {
         Name.OVERHEAD_NAME = config.getBoolean("MyPet.Name.OverHead.Visible", true);
         Name.OVERHEAD_PREFIX = Colorizer.setColors(config.getString("MyPet.Name.OverHead.Prefix", "<aqua>"));
         Name.OVERHEAD_SUFFIX = Colorizer.setColors(config.getString("MyPet.Name.OverHead.Suffix", ""));
-
-        Repository.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
-        Repository.NBT.AUTOSAVE_TIME = config.getInt("MyPet.Repository.NBT.AutoSaveTime", Repository.NBT.AUTOSAVE_TIME);
-        Repository.NBT.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnUpdate", Repository.NBT.SAVE_ON_PET_UPDATE);
-        Repository.NBT.SAVE_ON_PET_REMOVE = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnRemove", Repository.NBT.SAVE_ON_PET_REMOVE);
-        Repository.NBT.SAVE_ON_PET_ADD = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnAdd", Repository.NBT.SAVE_ON_PET_ADD);
-        Repository.NBT.SAVE_ON_PLAYER_ADD = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnAdd", Repository.NBT.SAVE_ON_PLAYER_ADD);
-        Repository.NBT.SAVE_ON_PLAYER_UPDATE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnUpdate", Repository.NBT.SAVE_ON_PLAYER_UPDATE);
-        Repository.NBT.SAVE_ON_PLAYER_REMOVE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnRemove", Repository.NBT.SAVE_ON_PLAYER_REMOVE);
-        Repository.NBT.MAKE_BACKUPS = config.getBoolean("MyPet.Repository.NBT.Backup.Active", Repository.NBT.MAKE_BACKUPS);
-        Repository.NBT.SAVE_INTERVAL = config.getInt("MyPet.Repository.NBT.Backup.SaveInterval", Repository.NBT.SAVE_INTERVAL);
-        Repository.NBT.DATE_FORMAT = config.getString("MyPet.Repository.NBT.Backup.DateFormat", Repository.NBT.DATE_FORMAT);
 
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
