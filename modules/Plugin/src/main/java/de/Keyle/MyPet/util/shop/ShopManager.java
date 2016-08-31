@@ -14,8 +14,10 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Load(Load.State.AfterHooks)
 @ServiceName("ShopService")
@@ -87,5 +89,10 @@ public class ShopManager implements ShopService {
             }
             player.sendMessage(Translation.getString("Message.No.Allowed", player));
         }
+    }
+
+    @Override
+    public Set<String> getShopNames() {
+        return Collections.unmodifiableSet(shops.keySet());
     }
 }
