@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.service.ServiceManager;
 
 import java.util.logging.Logger;
 
@@ -122,5 +123,12 @@ public class MyPetApi {
      */
     public static PluginHookManager getPluginHookManager() {
         return plugin.getPluginHookManager();
+    }
+
+    /**
+     * @return instance of the plugin hook manager
+     */
+    public static ServiceManager getServiceManager() {
+        return plugin.getServiceManager();
     }
 }
