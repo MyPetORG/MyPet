@@ -38,6 +38,8 @@ import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
@@ -80,6 +82,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private MyPetManager myPetManager;
     private HookHelper hookHelper;
     private PluginHookManager pluginHookManager;
+    private ServiceManager serviceManager;
 
     public void onDisable() {
         if (isReady) {
@@ -95,6 +98,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         if (getLogger() instanceof MyPetLogger) {
             ((MyPetLogger) getLogger()).disableDebugLogger();
         }
+
+        serviceManager.disableServices();
     }
 
     public void onLoad() {
@@ -114,10 +119,14 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
 
+        serviceManager = new ServiceManager();
         pluginHookManager = new PluginHookManager();
 
         ConfigurationLoader.setDefault();
         ConfigurationLoader.loadConfiguration();
+
+        registerServices();
+        serviceManager.activateOn(Load.State.OnLoad);
 
         registerHooks();
     }
@@ -141,6 +150,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             return;
         }
 
+        serviceManager.activateOn(Load.State.OnEnable);
         pluginHookManager.enableHooks();
 
         entityRegistry.registerEntityTypes();
@@ -325,6 +335,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getLogger().info("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + (MyPetVersion.isPremium() ? "P" : "") + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
+        serviceManager.activateOn(Load.State.OnReady);
+
         // load pets for online players
         new BukkitRunnable() {
             @Override
@@ -425,6 +437,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 }.runTaskLater(MyPetApi.getPlugin(), 30L);
             }
         }.runTaskLater(this, 0);
+    }
+
+    private void registerServices() {
+
     }
 
     private void registerHooks() {
@@ -579,6 +595,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     @Override
     public PluginHookManager getPluginHookManager() {
         return pluginHookManager;
+    }
+
+    @Override
+    public ServiceManager getServiceManager() {
+        return serviceManager;
     }
 
     public File getFile() {
