@@ -50,7 +50,7 @@ public class Configuration {
     }
 
     public static class Repository {
-        public static String REPOSITORY_TYPE = "NBT";
+        public static String REPOSITORY_TYPE = "SQLite";
         public static String CONVERT_FROM = "";
 
         @Deprecated
