@@ -333,7 +333,9 @@ public class EntityListener implements Listener {
                     Arrow projectile = (Arrow) event.getProjectile();
                     PlayerInventory inventory = player.getInventory();
 
-                    projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), event.getBow().clone()));
+                    if (event.getBow() != null) {
+                        projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), event.getBow().clone()));
+                    }
 
                     ItemStack arrow = null;
                     if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
@@ -372,7 +374,7 @@ public class EntityListener implements Listener {
                         }
                     }
                     if (arrow != null) {
-                        projectile.setMetadata("MyPetLeashItemArrow", new FixedMetadataValue(MyPetApi.getPlugin(), arrow));
+                        projectile.setMetadata("MyPetLeashItemArrow", new FixedMetadataValue(MyPetApi.getPlugin(), arrow.clone()));
                     }
 
                 }
@@ -408,8 +410,9 @@ public class EntityListener implements Listener {
                     }
                     player = (Player) projectile.getShooter();
 
+                    List<MetadataValue> metaList;
                     if (projectile.hasMetadata("MyPetLeashItem")) {
-                        List<MetadataValue> metaList = projectile.getMetadata("MyPetLeashItem");
+                        metaList = projectile.getMetadata("MyPetLeashItem");
                         for (MetadataValue meta : metaList) {
                             if (meta.getOwningPlugin() == MyPetApi.getPlugin()) {
                                 leashItem = (ItemStack) meta.value();
@@ -419,14 +422,17 @@ public class EntityListener implements Listener {
                         if (leashItem == null) {
                             return;
                         }
-                        if (projectile.hasMetadata("MyPetLeashItemArrow")) {
-                            metaList = projectile.getMetadata("MyPetLeashItemArrow");
-                            for (MetadataValue meta : metaList) {
-                                if (meta.getOwningPlugin() == MyPetApi.getPlugin()) {
-                                    leashItemArrow = (ItemStack) meta.value();
-                                    break;
-                                }
+                    }
+                    if (projectile.hasMetadata("")) {
+                        metaList = projectile.getMetadata("MyPetLeashItemArrow");
+                        for (MetadataValue meta : metaList) {
+                            if (meta.getOwningPlugin() == MyPetApi.getPlugin()) {
+                                leashItemArrow = (ItemStack) meta.value();
+                                break;
                             }
+                        }
+                        if (leashItemArrow == null) {
+                            return;
                         }
                     }
                 } else if (event.getDamager() instanceof Player) {
