@@ -231,7 +231,7 @@ public class ShopMyPet implements StoredMyPet {
         petName = config.getString("Name", null);
         skillTree = SkillTreeMobType.byPetType(petType).getSkillTree(config.getString("Skilltree", null));
         for (String line : config.getStringList("Description")) {
-            icon.addLoreLine(Colorizer.setColors(line));
+            icon.addLoreLine(ChatColor.RESET + Colorizer.setColors(line));
         }
         List<String> options = config.getStringList("Options");
         if (options != null && options.size() > 0) {
