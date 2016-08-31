@@ -126,7 +126,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         ConfigurationLoader.loadConfiguration();
 
         registerServices();
-        serviceManager.activateOn(Load.State.OnLoad);
+        serviceManager.activate(Load.State.OnLoad);
 
         registerHooks();
     }
@@ -150,8 +150,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             return;
         }
 
-        serviceManager.activateOn(Load.State.OnEnable);
+        serviceManager.activate(Load.State.OnEnable);
         pluginHookManager.enableHooks();
+        serviceManager.activate(Load.State.AfterHooks);
 
         entityRegistry.registerEntityTypes();
 
@@ -335,7 +336,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getLogger().info("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + (MyPetVersion.isPremium() ? "P" : "") + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
-        serviceManager.activateOn(Load.State.OnReady);
+        serviceManager.activate(Load.State.OnReady);
 
         // load pets for online players
         new BukkitRunnable() {

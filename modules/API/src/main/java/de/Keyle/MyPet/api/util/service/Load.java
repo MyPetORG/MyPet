@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Load {
     enum State {
-        OnEnable, OnLoad, OnReady
+        OnEnable, OnLoad, AfterHooks, OnReady
     }
 
     /**

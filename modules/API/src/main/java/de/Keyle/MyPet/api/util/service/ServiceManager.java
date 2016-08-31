@@ -78,7 +78,7 @@ public class ServiceManager {
         MyPetApi.getLogger().info(service.getServiceName() + " service activated.");
     }
 
-    public void activateOn(Load.State state) {
+    public void activate(Load.State state) {
         List<ServiceContainer> services = registeredServices.get(state);
 
         for (ServiceContainer service : services) {
