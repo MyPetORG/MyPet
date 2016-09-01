@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -149,7 +150,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
 
                         TagCompound tag = addedSkilltree.getIconItem();
                         IconMenuItem option = IconMenuItem.fromTagCompund(tag);
-                        option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰");
+                        option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + Colorizer.setColors(addedSkilltree.getDisplayName()) + ChatColor.RESET + "  ❰❰❰");
 
                         boolean selectable = false;
                         int requiredLevel = addedSkilltree.getRequiredLevel();
@@ -168,7 +169,9 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                             reqLevelMessage += Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Item", myPetOwner), requiredLevel) + ChatColor.RESET + "  ◀◀◀";
                             description.add(reqLevelMessage);
                         }
-                        description.addAll(addedSkilltree.getDescription());
+                        for (String line : addedSkilltree.getDescription()) {
+                            description.add(Colorizer.setColors(line));
+                        }
 
                         option.addLore(description);
                         menu.setOption(i, option);
