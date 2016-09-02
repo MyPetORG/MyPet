@@ -183,9 +183,11 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) commandSender)) {
-            return storeList;
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        if (sender instanceof Player) {
+            if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
+                return storeList;
+            }
         }
         return CommandAdmin.EMPTY_LIST;
     }

@@ -194,24 +194,26 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        Player player = (Player) commandSender;
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
-            if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
-                return CommandAdmin.EMPTY_LIST;
-            } else if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
-                return CommandAdmin.EMPTY_LIST;
-            } else if (SkillTreeMobType.hasMobType(myPet.getPetType())) {
-                SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+                if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
+                    return CommandAdmin.EMPTY_LIST;
+                } else if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
+                    return CommandAdmin.EMPTY_LIST;
+                } else if (SkillTreeMobType.hasMobType(myPet.getPetType())) {
+                    SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
 
-                List<String> skilltreeList = new ArrayList<>();
-                for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
-                    if (Permissions.hasLegacy(player, "MyPet.skilltree.", skillTree.getPermission())) {
-                        skilltreeList.add(skillTree.getName());
+                    List<String> skilltreeList = new ArrayList<>();
+                    for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
+                        if (Permissions.hasLegacy(player, "MyPet.skilltree.", skillTree.getPermission())) {
+                            skilltreeList.add(skillTree.getName());
+                        }
                     }
+                    return skilltreeList;
                 }
-                return skilltreeList;
             }
         }
         return CommandAdmin.EMPTY_LIST;

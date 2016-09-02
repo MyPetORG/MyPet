@@ -79,9 +79,11 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false)) {
-            return null;
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        if (sender instanceof Player) {
+            if (strings.length == 1 && Permissions.has((Player) sender, "MyPet.admin", false)) {
+                return null;
+            }
         }
         return CommandAdmin.EMPTY_LIST;
     }

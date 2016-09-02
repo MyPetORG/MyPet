@@ -112,9 +112,11 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length == 1) {
-            return optionsList;
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        if (sender instanceof Player) {
+            if (strings.length == 1) {
+                return optionsList;
+            }
         }
         return CommandAdmin.EMPTY_LIST;
     }

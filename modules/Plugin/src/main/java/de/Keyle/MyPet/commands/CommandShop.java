@@ -31,6 +31,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandShop implements CommandExecutor, TabCompleter {
@@ -90,6 +91,34 @@ public class CommandShop implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
+        if (shopManager.isPresent()) {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                if (strings.length == 1) {
+                    if (Permissions.has(player, "MyPet.admin")) {
+                        return new ArrayList<>(shopManager.get().getShopNames());
+                    }
+                    List<String> shops = new ArrayList<>();
+                    for (String shop : shopManager.get().getShopNames()) {
+                        if (Permissions.has(player, "MyPet.command.shop." + shop)) {
+                            shops.add(shop);
+                        }
+                    }
+                    return shops;
+                } else if (strings.length == 2) {
+                    if (Permissions.has(player, "MyPet.admin")) {
+                        return null;
+                    }
+                }
+            } else {
+                if (strings.length == 1) {
+                    return new ArrayList<>(shopManager.get().getShopNames());
+                } else if (strings.length == 2) {
+                    return null;
+                }
+            }
+        }
         return CommandAdmin.EMPTY_LIST;
     }
 }
