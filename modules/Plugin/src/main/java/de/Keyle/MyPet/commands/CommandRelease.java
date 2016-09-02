@@ -268,11 +268,13 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings) {
-        if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) commandSender)) {
-            List<String> petnameList = new ArrayList<>();
-            petnameList.add(MyPetApi.getMyPetManager().getMyPet((Player) commandSender).getPetName());
-            return petnameList;
+    public List<String> onTabComplete(final CommandSender sender, Command command, String s, String[] strings) {
+        if (sender instanceof Player) {
+            if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
+                List<String> petnameList = new ArrayList<>();
+                petnameList.add(MyPetApi.getMyPetManager().getMyPet((Player) sender).getPetName());
+                return petnameList;
+            }
         }
         return CommandAdmin.EMPTY_LIST;
     }

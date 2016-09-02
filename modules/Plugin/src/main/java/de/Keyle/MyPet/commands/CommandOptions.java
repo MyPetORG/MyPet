@@ -28,6 +28,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -61,14 +62,16 @@ public class CommandOptions implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length == 1) {
-            return optionsList;
-        } else if (strings.length >= 1) {
-            CommandOption co = commandOptions.get(strings[0]);
-            if (co != null) {
-                if (co instanceof CommandOptionTabCompleter) {
-                    return ((CommandOptionTabCompleter) co).onTabComplete(commandSender, strings);
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
+        if (sender instanceof Player) {
+            if (strings.length == 1) {
+                return optionsList;
+            } else if (strings.length >= 1) {
+                CommandOption co = commandOptions.get(strings[0]);
+                if (co != null) {
+                    if (co instanceof CommandOptionTabCompleter) {
+                        return ((CommandOptionTabCompleter) co).onTabComplete(sender, strings);
+                    }
                 }
             }
         }

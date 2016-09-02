@@ -113,7 +113,7 @@ public class CommandList implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (strings.length == 1 && Permissions.has((Player) sender, "MyPet.admin", false)) {
+        if (sender instanceof Player && strings.length == 1 && Permissions.has((Player) sender, "MyPet.admin", false)) {
             return null;
         }
         return CommandAdmin.EMPTY_LIST;
