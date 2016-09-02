@@ -69,6 +69,7 @@ public class SqLiteRepository implements Repository {
     public void init() throws RepositoryInitException {
         try {
             File dbFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pets.db");
+            Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
 
 
