@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONObject;
@@ -360,7 +359,7 @@ public class SqLiteRepository implements Repository {
                 pet.setExp(resultSet.getDouble("exp"));
                 pet.setHealth(resultSet.getDouble("health"));
                 pet.setRespawnTime(resultSet.getInt("respawn_time"));
-                pet.setPetName(IOUtils.toString(resultSet.getBytes("name"), "UTF-8"));
+                pet.setPetName(new String(resultSet.getBytes("name"), StandardCharsets.UTF_8));
                 pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
                 pet.setLastUsed(resultSet.getLong("last_used"));
                 pet.setHungerValue(resultSet.getDouble("hunger"));
