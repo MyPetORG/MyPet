@@ -70,7 +70,7 @@ public class EntityMySheep extends EntityMyPet {
                 int woolDropCount = 1 + this.random.nextInt(3);
 
                 for (int j = 0; j < woolDropCount; ++j) {
-                    EntityItem entityitem = this.a(new ItemStack(Blocks.WOOL, 1, getMyPet().getColor().getDyeData()), 1.0F);
+                    EntityItem entityitem = this.a(new ItemStack(Blocks.WOOL, 1, getMyPet().getColor().ordinal()), 1.0F);
 
                     entityitem.motY += (double) this.random.nextFloat() * 0.05F;
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -96,26 +96,20 @@ public class EntityMySheep extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Byte((byte) 0));     // age
-        this.datawatcher.a(16, new Byte((byte) 0)); // color/sheared
+        this.datawatcher.a(12, (byte) 0); // age
+        this.datawatcher.a(16, (byte) 0); // color/sheared
     }
 
     @Override
     public void updateVisuals() {
         if (getMyPet().isBaby()) {
-            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.MIN_VALUE);
         } else {
-            this.datawatcher.watch(12, new Byte((byte) 0));
+            this.datawatcher.watch(12, (byte) 0);
         }
 
-        byte b0 = this.datawatcher.getByte(16);
-        if (getMyPet().isSheared()) {
-            this.datawatcher.watch(16, (byte) (b0 | 16));
-        } else {
-            this.datawatcher.watch(16, (byte) (b0 & -17));
-        }
-
-        this.datawatcher.watch(16, getMyPet().getColor().getWoolData());
+        byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
+        this.datawatcher.watch(16, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
     }
 
     public void playStepSound() {
@@ -128,6 +122,6 @@ public class EntityMySheep extends EntityMyPet {
 
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this, 0.02));
+        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this, 2));
     }
 }

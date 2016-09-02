@@ -43,10 +43,10 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setColor(DyeColor color) {
+        this.color = color;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.color = color;
     }
 
     @Override
@@ -94,10 +94,10 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setSheared(boolean flag) {
+        this.isSheared = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.isSheared = flag;
     }
 
     @Override

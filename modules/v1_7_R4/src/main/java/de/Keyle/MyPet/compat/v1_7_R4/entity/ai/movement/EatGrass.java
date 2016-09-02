@@ -40,7 +40,7 @@ public class EatGrass extends AIGoal {
 
     public EatGrass(EntityMySheep entityMySheep, double chanceToEat) {
         this.entityMySheep = entityMySheep;
-        this.chanceToEat = chanceToEat;
+        this.chanceToEat = chanceToEat / 10000.;
         this.world = entityMySheep.world;
     }
 
@@ -50,7 +50,7 @@ public class EatGrass extends AIGoal {
             return false;
         } else if (!this.entityMySheep.getMyPet().isSheared()) {
             return false;
-        } else if (entityMySheep.getRandom().nextDouble() > chanceToEat / 100.) {
+        } else if (entityMySheep.getRandom().nextDouble() > chanceToEat) {
             return false;
         } else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getTarget().isDead()) {
             return false;
@@ -69,7 +69,7 @@ public class EatGrass extends AIGoal {
 
     @Override
     public void start() {
-        this.eatTicks = 40;
+        this.eatTicks = 30;
         this.world.broadcastEntityEffect(this.entityMySheep, (byte) 10);
         this.entityMySheep.getPetNavigation().stop();
     }
@@ -81,8 +81,7 @@ public class EatGrass extends AIGoal {
 
     @Override
     public void tick() {
-        this.eatTicks--;
-        if (this.eatTicks == 4) {
+        if (--this.eatTicks == 0) {
             int blockLocX = MathHelper.floor(this.entityMySheep.locX);
             int blockLocY = MathHelper.floor(this.entityMySheep.locY);
             int blockLocZ = MathHelper.floor(this.entityMySheep.locZ);

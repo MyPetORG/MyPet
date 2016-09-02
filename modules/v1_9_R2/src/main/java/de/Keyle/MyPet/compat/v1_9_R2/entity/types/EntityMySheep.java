@@ -71,7 +71,7 @@ public class EntityMySheep extends EntityMyPet {
                 int woolDropCount = 1 + this.random.nextInt(3);
 
                 for (int j = 0; j < woolDropCount; ++j) {
-                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, new ItemStack(Blocks.WOOL, 1, getMyPet().getColor().getDyeData()));
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, new ItemStack(Blocks.WOOL, 1, getMyPet().getColor().ordinal()));
                     entityitem.pickupDelay = 10;
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     this.world.addEntity(entityitem);
@@ -104,17 +104,8 @@ public class EntityMySheep extends EntityMyPet {
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
 
-        byte b0 = this.datawatcher.get(colorWatcher).byteValue();
-        if (getMyPet().isSheared()) {
-            this.datawatcher.set(colorWatcher, (byte) (b0 | 16));
-        } else {
-            this.datawatcher.set(colorWatcher, (byte) (b0 & -17));
-        }
-
-        b0 = this.datawatcher.get(colorWatcher).byteValue();
-        EnumColor color = EnumColor.fromColorIndex(getMyPet().getColor().getWoolData());
-
-        this.datawatcher.set(colorWatcher, (byte) (b0 & 0xF0 | color.getColorIndex() & 0xF));
+        byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
+        this.datawatcher.set(colorWatcher, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
     }
 
     public void playPetStepSound() {
@@ -127,6 +118,6 @@ public class EntityMySheep extends EntityMyPet {
 
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this, 0.02));
+        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this, 2));
     }
 }
