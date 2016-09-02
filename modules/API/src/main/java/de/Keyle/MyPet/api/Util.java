@@ -30,14 +30,12 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Matcher;
 
@@ -236,6 +234,22 @@ public class Util {
             rang += 2;
         }
         return thousands + result;
+    }
+
+    public static String toString(InputStream is, Charset charset) {
+        String content = "";
+
+        try {
+            InputStreamReader in = new InputStreamReader(is, charset);
+            int numBytes;
+            final char[] buf = new char[512];
+            while ((numBytes = in.read(buf)) != -1) {
+                content += String.copyValueOf(buf, 0, numBytes);
+            }
+        } catch (Exception ignored) {
+        }
+
+        return content;
     }
 
     /**
