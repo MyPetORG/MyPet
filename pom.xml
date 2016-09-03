@@ -129,6 +129,9 @@
         <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
         <protocol-lib.version>3.7.0-SNAPSHOT</protocol-lib.version>
 
+        <!-- https://www.spigotmc.org/resources/placeholderapi.6245/ -->
+        <playceholder-api.version>2.5.1</playceholder-api.version>
+
         <!-- https://www.spigotmc.org/resources/api-resourcepackapi-1-7-1-8-1-9-1-10.2397/ -->
         <resourcepackapi.version>2.2.1</resourcepackapi.version>
 
@@ -179,6 +182,10 @@
         <repository>
             <id>protocollib-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>placeholderapi-repo</id>
+            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>inventive-repo</id>
@@ -402,6 +409,12 @@
             <version>${protocol-lib.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>${playceholder-api.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>fr.neatmonster</groupId>
