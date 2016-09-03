@@ -102,19 +102,17 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                         int inactivePetCount = getInactivePetCount(pets, worldGroup);
                         int maxPetCount = getMaxPetCount(owner.getPlayer());
 
+                        String title;
                         if (owner.hasMyPet()) {
                             inactivePetCount--;
-                            if (!Permissions.hasLegacy(owner, "MyPet.command.switch.bypass")) {
-                                if (inactivePetCount > maxPetCount) {
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
-                                    return;
-                                }
-                            }
+                            title = Translation.getString("Message.Npc.SwitchTitle", owner);
+                        } else {
+                            title = Translation.getString("Message.SelectMyPet", owner);
                         }
 
                         String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, stats + " " + Translation.getString("Message.SelectMyPet", owner));
+                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, stats + " " + title);
                         gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
@@ -160,7 +158,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         } else {
             for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
-                if (Permissions.hasLegacy(p, "MyPet.command.switch.limit.", i)) {
+                if (Permissions.hasLegacy(p, "MyPet.petstorage.limit.", i)) {
                     maxPetCount = i;
                     break;
                 }

@@ -39,8 +39,9 @@ public class Permissions {
         legacy.put("MyPet.command.name", "MyPet.user.command.name");
         legacy.put("MyPet.command.name.color", "MyPet.user.command.name.color");
         legacy.put("MyPet.command.switch", "MyPet.user.command.switch");
-        legacy.put("MyPet.command.switch.bypass", "MyPet.user.command.switch.bypass");
-        legacy.put("MyPet.command.switch.limit.", "MyPet.user.command.switch.limit.");
+        legacy.put("MyPet.petstorage.limit.", "MyPet.user.command.switch.limit.");
+        legacy.put("MyPet.petstorage.limit.", "MyPet.command.switch.limit.");
+        legacy.put("MyPet.petstorage.limit.", "MyPet.npc.storage.max.");
         legacy.put("MyPet.leash.", "MyPet.user.leash.");
         legacy.put("MyPet.skilltree.", "MyPet.custom.skilltree.");
         legacy.put("MyPet.extended.feed", "MyPet.user.extended.CanFeed");
