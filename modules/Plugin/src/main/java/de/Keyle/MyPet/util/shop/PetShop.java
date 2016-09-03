@@ -1,6 +1,7 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -59,7 +60,8 @@ public class PetShop {
                         } else {
                             owner = null;
                         }
-                        new BukkitRunnable() {
+
+                        final BukkitRunnable confirmRunner = new BukkitRunnable() {
                             @Override
                             public void run() {
                                 IconMenu menu = new IconMenu(Util.formatText(Translation.getString("Message.Shop.Confirm.Title", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())), new IconMenu.OptionClickEventHandler() {
@@ -138,7 +140,24 @@ public class PetShop {
                                         .setLore(Util.formatText(Translation.getString("Message.Shop.Confirm.No", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice()))));
                                 menu.open(player);
                             }
-                        }.runTaskLater(MyPetApi.getPlugin(), 5L);
+                        };
+
+                        if (owner != null && owner.hasMyPet()) {
+                            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+                                @Override
+                                public void callback(List<StoredMyPet> value) {
+                                    int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
+                                    int limit = getMaxPetCount(p);
+                                    if (petCount >= limit) {
+                                        p.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), limit));
+                                        return;
+                                    }
+                                    confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
+                                }
+                            });
+                        } else {
+                            confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
+                        }
                     }
                 }
             }
@@ -153,6 +172,34 @@ public class PetShop {
         }
 
         shop.open(player);
+    }
+
+    public int getMaxPetCount(Player p) {
+        int maxPetCount = 0;
+        if (Permissions.has(p, "MyPet.admin")) {
+            maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
+        } else {
+            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
+                if (Permissions.hasLegacy(p, "MyPet.petstorage.limit.", i)) {
+                    maxPetCount = i;
+                    break;
+                }
+            }
+        }
+        return maxPetCount;
+    }
+
+    private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
+        int inactivePetCount = 0;
+
+        for (StoredMyPet pet : pets) {
+            if (!pet.getWorldGroup().equals(worldGroup)) {
+                continue;
+            }
+            inactivePetCount++;
+        }
+
+        return inactivePetCount;
     }
 
     public void depositPrivate(double amount) {
