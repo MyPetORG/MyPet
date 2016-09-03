@@ -18,6 +18,8 @@ softdepend:
   - MobArena
   - Multiverse-Core
   - NoCheatPlus
+  - PlayeholderAPI
+  - PlotSquared
   - ProtocolLib
   - pvparena
   - PvPManager
