@@ -68,7 +68,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
         if (shopManager.isPresent()) {
             if (args.length > 0) {
                 String shop = args[0];
-                if (Permissions.has(player, "MyPet.command.shop." + shop) || Permissions.has(player, "MyPet.admin")) {
+                if (Permissions.has(player, "MyPet.shop.access." + shop) || Permissions.has(player, "MyPet.admin")) {
                     shopManager.get().open(shop, player);
                 } else {
                     player.sendMessage(Translation.getString("Message.No.Allowed", player));
@@ -77,7 +77,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
             } else {
                 String shop = shopManager.get().getDefaultShopName();
                 if (shop != null) {
-                    if (Permissions.has(player, "MyPet.command.shop." + shop) || Permissions.has(player, "MyPet.admin")) {
+                    if (Permissions.has(player, "MyPet.shop.access." + shop) || Permissions.has(player, "MyPet.admin")) {
                         shopManager.get().open(player);
                         return true;
                     }
@@ -101,7 +101,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                     }
                     List<String> shops = new ArrayList<>();
                     for (String shop : shopManager.get().getShopNames()) {
-                        if (Permissions.has(player, "MyPet.command.shop." + shop)) {
+                        if (Permissions.has(player, "MyPet.shop.access." + shop)) {
                             shops.add(shop);
                         }
                     }

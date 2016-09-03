@@ -7,6 +7,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.WalletType;
@@ -51,7 +52,7 @@ public class PetShop {
                         if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
                             owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-                            if (owner.hasMyPet()) {
+                            if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
                                 p.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", player));
                                 return;
                             }
@@ -105,11 +106,15 @@ public class PetShop {
                                             MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
                                                 @Override
                                                 public void callback(Boolean value) {
-                                                    petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
-                                                    MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
                                                     p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
-                                                    MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(clonedPet).get();
-                                                    activePet.createEntity();
+                                                    if (petOwner.hasMyPet()) {
+                                                        p.sendMessage(Util.formatText(Translation.getString("Message.Shop.SuccessStorage", player), clonedPet.getPetName()));
+                                                    } else {
+                                                        petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
+                                                        MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
+                                                        MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(clonedPet).get();
+                                                        activePet.createEntity();
+                                                    }
                                                 }
                                             });
                                         }
@@ -117,11 +122,15 @@ public class PetShop {
                                         event.setWillDestroy(true);
                                     }
                                 }, MyPetApi.getPlugin());
-                                menu.setOption(3, new IconMenuItem()
+                                IconMenuItem icon = new IconMenuItem()
                                         .setMaterial(Material.WOOL)
                                         .setData(5)
                                         .setTitle(ChatColor.GREEN + Translation.getString("Name.Yes", player))
-                                        .setLore(Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice()))));
+                                        .setLore(Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
+                                if (owner != null && owner.hasMyPet()) {
+                                    icon.addLoreLine("").addLoreLine(Util.formatText(Translation.getString("Message.Shop.Confirm.SendStorage", player)));
+                                }
+                                menu.setOption(3, icon);
                                 menu.setOption(5, new IconMenuItem()
                                         .setMaterial(Material.WOOL)
                                         .setData(14)

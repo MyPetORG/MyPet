@@ -29,6 +29,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class IconMenuItem implements Cloneable {
@@ -118,14 +119,27 @@ public class IconMenuItem implements Cloneable {
 
     public IconMenuItem addLoreLine(String line) {
         Validate.notNull(line, "Lore line cannot be null");
-        this.lore.add(line);
+        if (line.contains("\n")) {
+            Collections.addAll(this.lore, line.split("\n"));
+        } else {
+            this.lore.add(line);
+        }
         hasChanged = true;
         return this;
     }
 
     public IconMenuItem addLoreLine(String line, int position) {
         Validate.notNull(line, "Lore line cannot be null");
-        this.lore.add(position, line);
+        if (line.contains("\n")) {
+            List<String> lore = new LinkedList<>();
+            Collections.addAll(lore, line.split("\n"));
+            Collections.reverse(lore);
+            for (String l : lore) {
+                this.lore.add(position, l);
+            }
+        } else {
+            this.lore.add(line);
+        }
         hasChanged = true;
         return this;
     }
