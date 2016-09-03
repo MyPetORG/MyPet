@@ -154,7 +154,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
 
     private int getMaxPetCount(Player p) {
         int maxPetCount = 0;
-        if (p.isOp()) {
+        if (Permissions.has(p, "MyPet.admin")) {
             maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         } else {
             for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
