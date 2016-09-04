@@ -128,4 +128,11 @@ public class SkullMeta implements IconMeta {
             tag.put("SkullOwner", ownerTag);
         }
     }
+
+    public SkullMeta clone() {
+        SkullMeta meta = new SkullMeta();
+        meta.name = this.name;
+        meta.texture = this.texture;
+        return meta;
+    }
 }
