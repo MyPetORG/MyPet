@@ -128,7 +128,7 @@ public class PetShop {
                                         .setMaterial(Material.WOOL)
                                         .setData(5)
                                         .setTitle(ChatColor.GREEN + Translation.getString("Name.Yes", player))
-                                        .setLore(Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
+                                        .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
                                 if (owner != null && owner.hasMyPet()) {
                                     icon.addLoreLine("").addLoreLine(Util.formatText(Translation.getString("Message.Shop.Confirm.SendStorage", player)));
                                 }
@@ -137,7 +137,7 @@ public class PetShop {
                                         .setMaterial(Material.WOOL)
                                         .setData(14)
                                         .setTitle(ChatColor.RED + Translation.getString("Name.No", player))
-                                        .setLore(Util.formatText(Translation.getString("Message.Shop.Confirm.No", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice()))));
+                                        .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.No", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice()))));
                                 menu.open(player);
                             }
                         };
