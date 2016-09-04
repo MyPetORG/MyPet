@@ -138,7 +138,7 @@ public class IconMenuItem implements Cloneable {
                 this.lore.add(position, l);
             }
         } else {
-            this.lore.add(line);
+            this.lore.add(position, line);
         }
         hasChanged = true;
         return this;
