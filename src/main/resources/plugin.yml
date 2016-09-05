@@ -22,6 +22,7 @@ softdepend:
   - PlotSquared
   - ProtocolLib
   - pvparena
+  - PvPDiffTimer
   - PvPManager
   - Residence
   - ResourcePackApi
