@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -41,7 +42,10 @@ public class CommandOptionReload implements CommandOption {
 
         Translation.init();
 
-        new ShopManager();
+        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
+        if (shopManager.isPresent()) {
+            MyPetApi.getServiceManager().getService(ShopManager.class).get().onEnable(); //TODO reload method?
+        }
 
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config loaded!");
 

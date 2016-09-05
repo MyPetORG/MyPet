@@ -41,6 +41,7 @@ public class ShopManager implements ShopService {
         ConfigurationSection shops = config.getConfigurationSection("Shops");
 
         if (shops != null) {
+            this.shops.clear();
             for (String name : shops.getKeys(false)) {
                 PetShop shop = new PetShop(name);
                 shop.load(shops.getConfigurationSection(name));
