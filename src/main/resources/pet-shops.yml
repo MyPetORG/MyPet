@@ -101,6 +101,8 @@ Shops:
         PetType: MagmaCube
         EXP: 0
         Price: 100
+        Options:
+          - size:2
       mooshroom:
         Name: Mooshroom
         Description:
@@ -171,6 +173,8 @@ Shops:
         PetType: Slime
         EXP: 0
         Price: 100
+        Options:
+          - size:2
       snowman:
         Name: Snowman
         Description:
