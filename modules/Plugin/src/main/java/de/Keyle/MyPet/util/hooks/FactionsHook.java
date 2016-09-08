@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import com.massivecraft.factions.engine.EngineCombat;
 import com.massivecraft.factions.engine.EngineMain;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -29,16 +30,35 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.lang.reflect.Method;
+
 @PluginHookName("Factions")
 public class FactionsHook extends PluginHook implements PlayerVersusPlayerHook {
 
-    protected EngineMain engineMain;
+    enum AccessMethod {
+        Reflektion, Normal
+    }
+
+    AccessMethod accessMethod = AccessMethod.Normal;
+    Method engineMethod;
 
     @Override
     public boolean onEnable() {
         if (Configuration.Hooks.USE_Factions) {
-            engineMain = EngineMain.get();
-            return true;
+            try {
+                EngineMain engineMain = EngineMain.get();
+                engineMethod = engineMain.getClass().getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+                engineMethod.setAccessible(true);
+                accessMethod = AccessMethod.Reflektion;
+                return true;
+            } catch (Throwable ignored) {
+            }
+            try {
+                EngineCombat engineCombat = EngineCombat.get();
+                engineCombat.getClass().getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+                return true;
+            } catch (Throwable ignored) {
+            }
         }
         return false;
     }
@@ -47,7 +67,11 @@ public class FactionsHook extends PluginHook implements PlayerVersusPlayerHook {
     public boolean canHurt(Player attacker, Player defender) {
         try {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
-            return engineMain.canCombatDamageHappen(sub, false);
+            if (accessMethod == AccessMethod.Reflektion) {
+                return engineMethod.invoke("canCombatDamageHappen", sub, false) == true;
+            } else {
+                return EngineCombat.get().canCombatDamageHappen(sub, false);
+            }
         } catch (Throwable ignored) {
         }
         return true;

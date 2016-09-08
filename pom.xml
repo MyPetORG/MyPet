@@ -79,7 +79,7 @@
         <ancient.version>1.1.0</ancient.version>
 
         <!-- http://dev.bukkit.org/bukkit-plugins/factions/ -->
-        <factions.version>2.8.5</factions.version>
+        <factions.version>2.8.20</factions.version>
 
         <!-- http://dev.bukkit.org/bukkit-plugins/mcore/ -->
         <massivecore.version>2.8.6</massivecore.version>
