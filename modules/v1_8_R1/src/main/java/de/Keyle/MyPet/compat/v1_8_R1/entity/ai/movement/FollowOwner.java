@@ -113,14 +113,23 @@ public class FollowOwner extends AIGoal {
         this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.bP());
 
         if (this.petEntity.canMove()) {
+            if (owner.onGround) {
+                if (this.petEntity.h(owner) >= this.teleportDistance) {
+                    if (controlPathfinderGoal.moveTo == null) {
+                        if (!petEntity.hasTarget()) {
+                            if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
+                                this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
+                                this.setPathTimer = 0;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (--this.setPathTimer <= 0) {
                 this.setPathTimer = 10;
-                if (!this.nav.navigateTo(this.owner.getBukkitEntity())) {
-                    if (owner.onGround && this.petEntity.h(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && !petEntity.hasTarget() && MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
-                        this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
-                        this.nav.navigateTo(owner.getBukkitEntity());
-                    }
-                } else {
+                if (this.nav.navigateTo(owner.getBukkitEntity())) {
                     applyWalkSpeed();
                 }
             }
