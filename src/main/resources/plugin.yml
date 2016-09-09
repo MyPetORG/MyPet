@@ -33,47 +33,47 @@ softdepend:
   - WorldGuard
 commands:
   myPet:
-    description: Help for all MyPet commands.
+    description: Help for all pet commands.
   petname:
-    description: Changes the name of your MyPet
+    description: Changes the name of your pet
     usage: '/<command> <pet name>'
   petcall:
     aliases: [petc, pc]
-    description: Calls your MyPet.
+    description: Calls your pet.
   petsendaway:
     aliases: [petsa, psa]
-    description: Send your MyPet away.
+    description: Send your pet away.
   petrelease:
-    description: Releases your MyPet.
+    description: Releases your pet.
     usage: '/<command> <pet name>'
   petstop:
     aliases: [pets, ps]
-    description: Stops your MyPet from attacking.
+    description: Stops your pet from attacking.
   petpickup:
     aliases: [petp, pp]
-    description: Toogles pickup of your MyPet.
+    description: Toogles pickup of your pet.
   petinventory:
     aliases: [peti, pi]
-    description: Opens the inventory of your MyPet.
+    description: Opens the inventory of your pet.
     usage: '/<command> [player name]'
   petbehavior:
     aliases: [petb, pb]
-    description: Changes the behavior mode of your MyPet.
+    description: Changes the behavior mode of your pet.
     usage: '/<command> [<friendly/aggressive/normal/farm/raid/duel>]'
   petinfo:
     aliases: [pinfo]
-    description: Shows info about your MyPet
+    description: Shows info about your pet.
     usage: '/<command> [player name]'
   petskill:
     aliases: [pskill]
-    description: Shows the Skill-levels of your MyPet
+    description: Shows the skill levels of your pet.
     usage: '/<command> <player name>'
   mypetadmin:
     aliases: [petadmin]
     description: §6MyPet-Admin-Command §r-> §3https://wiki.mypet-plugin.de/doku.php?id=en:commands
     permission: MyPet.admin
   petskilltree:
-    aliases: [pst, petst]
+    aliases: [petst]
     description: Shows a fully configured skilltree
     usage: '/<command> <mobtype> [skilltree name]'
   petchooseskilltree:
@@ -88,20 +88,23 @@ commands:
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
   pettype:
-    description: Shows info about the MyPet-types.
+    description: Shows info about the pet-types.
     usage: '/<command> <pet type>'
   petcapturehelper:
     aliases: [pch]
-    description: Toogles CaptureHelper on/off
+    description: Toogles the CaptureHelper on/off
   petoptions:
     aliases: [po, peto, petoption]
-    description: MyPet player options
+    description: Player options
   petswitch:
     aliases: [pswitch, psw]
-    description: Opens a MyPet selection GUI
+    description: Opens a pet selection GUI
+  petstore:
+    aliases: [pstore, pst]
+    description: Stores your current pet
   petlist:
     aliases: [plist, pl]
-    description: Lists all your MyPets
+    description: Lists all your pet
     usage: '/<command> <player name>'
 
 permissions:

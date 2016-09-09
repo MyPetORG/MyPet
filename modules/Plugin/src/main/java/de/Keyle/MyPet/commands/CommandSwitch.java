@@ -63,33 +63,6 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-            if (args.length > 0 && args[0].equalsIgnoreCase("store")) {
-                if (owner.isOnline() && owner.hasMyPet()) {
-                    MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
-                        @Override
-                        public void callback(List<StoredMyPet> pets) {
-                            MyPet myPet = owner.getMyPet();
-                            String worldGroup = myPet.getWorldGroup();
-
-                            int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
-                            int maxPetCount = getMaxPetCount(owner.getPlayer());
-
-                            if (inactivePetCount >= maxPetCount) {
-                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", owner), maxPetCount));
-                                return;
-                            }
-                            if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
-                                owner.setMyPetForWorldGroup(worldGroup, null);
-                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Success", owner), myPet.getPetName()));
-                            }
-                        }
-                    });
-                } else {
-                    player.sendMessage(Translation.getString("Message.Command.Switch.NoPet", player));
-                }
-                return true;
-            }
-
             MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                 @Override
                 public void callback(List<StoredMyPet> pets) {
