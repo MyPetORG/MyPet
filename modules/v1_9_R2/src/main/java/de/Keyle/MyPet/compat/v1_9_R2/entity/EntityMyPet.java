@@ -823,7 +823,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public boolean a(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemstack) {
         try {
             boolean result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
-            if (!result && getMyPet().getOwner().equals(entityhuman)) {
+            if (!result && getMyPet().getOwner().equals(entityhuman) && entityhuman.isSneaking()) {
                 result = toggleSitting();
             }
             return result;
