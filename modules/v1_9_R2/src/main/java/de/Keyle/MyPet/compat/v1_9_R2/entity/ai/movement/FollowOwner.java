@@ -39,6 +39,7 @@ public class FollowOwner extends AIGoal {
     private float teleportDistance;
     private Control controlPathfinderGoal;
     private EntityPlayer owner;
+    private boolean waitForGround = false;
 
     public FollowOwner(EntityMyPet entityMyPet, double startDistance, float stopDistance, float teleportDistance) {
         this.petEntity = entityMyPet;
@@ -109,18 +110,26 @@ public class FollowOwner extends AIGoal {
         this.petEntity.getControllerLook().a(owner, this.petEntity.cF(), (float) this.petEntity.N());
 
         if (this.petEntity.canMove()) {
-            if (owner.onGround) {
-                if (this.petEntity.h(owner) >= this.teleportDistance) {
-                    if (controlPathfinderGoal.moveTo == null) {
-                        if (!petEntity.hasTarget()) {
-                            if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
-                                this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
-                                this.setPathTimer = 0;
-                                return;
+            if (!owner.abilities.isFlying) {
+                if (!waitForGround) {
+                    if (owner.fallDistance <= 4) {
+                        if (this.petEntity.h(owner) >= this.teleportDistance) {
+                            if (controlPathfinderGoal.moveTo == null) {
+                                if (!petEntity.hasTarget()) {
+                                    if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
+                                        this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
+                                        this.setPathTimer = 0;
+                                        return;
+                                    }
+                                }
                             }
                         }
                     }
+                } else if (owner.onGround) {
+                    waitForGround = false;
                 }
+            } else {
+                waitForGround = true;
             }
 
             if (--this.setPathTimer <= 0) {
