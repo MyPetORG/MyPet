@@ -140,19 +140,8 @@ public class PlayerListener implements Listener {
                         }
                     } else {
                         if (p.isOnGround()) {
-                            switch (myPet.createEntity()) {
-                                case Success:
-                                    p.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", p), myPet.getPetName()));
-                                    return;
-                                case Canceled:
-                                    p.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", p), myPet.getPetName()));
-                                    break;
-                                case NoSpace:
-                                    p.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", p), myPet.getPetName()));
-                                    break;
-                                case NotAllowed:
-                                    p.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", p), myPet.getPetName()));
-                                    break;
+                            if (myPet.createEntity() == MyPet.SpawnFlags.Success) {
+                                p.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", p), myPet.getPetName()));
                             }
                         } else {
                             p.setMetadata("MyPetOnGround", new FixedMetadataValue(MyPetApi.getPlugin(), false));
