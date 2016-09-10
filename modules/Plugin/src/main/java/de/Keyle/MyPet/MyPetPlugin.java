@@ -85,7 +85,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     public void onDisable() {
         if (isReady) {
             for (MyPet myPet : myPetManager.getAllActiveMyPets()) {
-                myPet.removePet();
+                if (myPet.getStatus() == MyPet.PetState.Here) {
+                    myPet.removePet(true);
+                }
             }
             repo.disable();
             entityRegistry.unregisterEntityTypes();

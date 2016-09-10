@@ -495,7 +495,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
 
                     autoAssignSkilltree();
-                    wantsToRespawn = true;
 
                     if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                         Team t;
@@ -516,6 +515,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         }
                         t.addEntry(minecraftEntity.getUniqueID().toString());
                     }
+
+                    wantsToRespawn = false;
 
                     return SpawnFlags.Success;
                 }

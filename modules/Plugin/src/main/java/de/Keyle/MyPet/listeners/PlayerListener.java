@@ -54,6 +54,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
@@ -90,6 +92,63 @@ public class PlayerListener implements Listener {
                             block = block.getRelative(BlockFace.DOWN);
                         }
                         myPet.getSkills().getSkill(Control.class).get().setMoveTo(block.getLocation());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerMoveEvent event) {
+        Player p = event.getPlayer();
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
+            MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(p);
+            if (petPlayer.hasMyPet()) {
+                MyPet myPet = petPlayer.getMyPet();
+                if (myPet.getStatus() == MyPet.PetState.Despawned && myPet.wantsToRespawn()) {
+                    if (p.hasMetadata("MyPetOnGround")) {
+                        List<MetadataValue> data = p.getMetadata("MyPetOnGround");
+                        for (MetadataValue meta : data) {
+                            if (meta.getOwningPlugin().equals(MyPetApi.getPlugin())) {
+                                if (p.isOnGround()) {
+                                    p.removeMetadata("MyPetOnGround", MyPetApi.getPlugin());
+                                    switch (myPet.createEntity()) {
+                                        case Success:
+                                            p.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", p), myPet.getPetName()));
+                                            break;
+                                        case Canceled:
+                                            p.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", p), myPet.getPetName()));
+                                            break;
+                                        case NoSpace:
+                                            p.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", p), myPet.getPetName()));
+                                            break;
+                                        case NotAllowed:
+                                            p.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", p), myPet.getPetName()));
+                                            break;
+                                    }
+                                }
+                                return;
+                            }
+                        }
+                    } else {
+                        if (p.isOnGround()) {
+                            switch (myPet.createEntity()) {
+                                case Success:
+                                    p.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", p), myPet.getPetName()));
+                                    return;
+                                case Canceled:
+                                    p.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", p), myPet.getPetName()));
+                                    break;
+                                case NoSpace:
+                                    p.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", p), myPet.getPetName()));
+                                    break;
+                                case NotAllowed:
+                                    p.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", p), myPet.getPetName()));
+                                    break;
+                            }
+                        } else {
+                            p.setMetadata("MyPetOnGround", new FixedMetadataValue(MyPetApi.getPlugin(), false));
+                        }
                     }
                 }
             }
@@ -174,24 +233,24 @@ public class PlayerListener implements Listener {
                                         final MyPet myPet = joinedPlayer.getMyPet();
                                         if (myPet.wantsToRespawn()) {
                                             switch (myPet.createEntity()) {
-                                                    case Canceled:
-                                                        joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", joinedPlayer), myPet.getPetName()));
-                                                        break;
-                                                    case NotAllowed:
-                                                        joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", joinedPlayer), myPet.getPetName()));
-                                                        break;
-                                                    case Dead:
-                                                        joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", joinedPlayer), myPet.getPetName(), myPet.getRespawnTime()));
-                                                        break;
-                                                    case Flying:
-                                                        joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", joinedPlayer), myPet.getPetName()));
-                                                        break;
-                                                    case NoSpace:
-                                                        joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", joinedPlayer), myPet.getPetName()));
-                                                        break;
-                                                }
+                                                case Canceled:
+                                                    joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", joinedPlayer), myPet.getPetName()));
+                                                    break;
+                                                case NotAllowed:
+                                                    joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", joinedPlayer), myPet.getPetName()));
+                                                    break;
+                                                case Dead:
+                                                    joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", joinedPlayer), myPet.getPetName(), myPet.getRespawnTime()));
+                                                    break;
+                                                case Flying:
+                                                    joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", joinedPlayer), myPet.getPetName()));
+                                                    break;
+                                                case NoSpace:
+                                                    joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", joinedPlayer), myPet.getPetName()));
+                                                    break;
                                             }
                                         }
+                                    }
                                 }
                             });
                         }
