@@ -583,7 +583,16 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public void setHealth(float f) {
         float deltaHealth = getHealth();
         super.setHealth(f);
-        deltaHealth = getHealth() - deltaHealth;
+
+        if (!this.valid) {
+            return;
+        }
+
+        if (deltaHealth > getMaxHealth()) {
+            deltaHealth = 0;
+        } else {
+            deltaHealth = getHealth() - deltaHealth;
+        }
 
         String msg = myPet.getPetName() + ChatColor.RESET + ": ";
         if (getHealth() > myPet.getMaxHealth() / 3 * 2) {
