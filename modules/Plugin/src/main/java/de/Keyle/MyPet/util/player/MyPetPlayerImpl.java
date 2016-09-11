@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
@@ -35,7 +36,6 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.CaptureHelper;
-import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -430,8 +430,9 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         }
         if (hasMyPet()) {
             MyPet myPet = getMyPet();
-            if (myPet.getStatus() == de.Keyle.MyPet.entity.MyPet.PetState.Here) {
-                if (myPet.getLocation().get().getWorld() != this.getPlayer().getLocation().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(),this.getPlayer().getLocation()) > 40) {
+            Player p = this.getPlayer();
+            if (myPet.getStatus() == PetState.Here) {
+                if (myPet.getLocation().get().getWorld() != p.getLocation().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), p.getLocation()) > 40) {
                     myPet.removePet(true);
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
                 }
@@ -448,10 +449,38 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
                     msg += String.format("%1.2f", myPet.getHealth()) + org.bukkit.ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                     MyPetApi.getPlatformHelper().sendMessageActionBar(getPlayer(), msg);
                 }
+            } else if (myPet.getStatus() == PetState.Despawned) {
+                if (myPet.wantsToRespawn() && !p.isFlying()) {
+                    boolean velocity = p.getVelocity().getY() >= 0;
+                    boolean fall = p.getFallDistance() == 0;
+
+                    if (velocity || fall || p.isOnGround()) {
+                        boolean spawn = true;
+
+                        if (velocity) {
+                            spawn = !p.isInsideVehicle();
+                            if (spawn && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                                spawn = !p.isGliding();
+                            }
+                        }
+                        if (spawn && fall) {
+                            switch (p.getWorld().getBlockAt(p.getLocation().subtract(0, 0.5, 0)).getType()) {
+                                case AIR:
+                                case WATER:
+                                case STATIONARY_WATER:
+                                case LAVA:
+                                case STATIONARY_LAVA:
+                                    spawn = false;
+                            }
+                        }
+
+                        if (spawn && myPet.createEntity() == MyPet.SpawnFlags.Success) {
+                            p.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", p), myPet.getPetName()));
+                        }
+                    }
+                }
             }
         }
-
-        boolean citizensUsable = MyPetApi.getPluginHookManager().isHookActive(CitizensHook.class);
 
         if (isCaptureHelperActive()) {
             if (captureHelperTimer-- <= 0) {
