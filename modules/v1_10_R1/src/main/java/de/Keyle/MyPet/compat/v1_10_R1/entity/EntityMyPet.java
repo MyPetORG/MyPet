@@ -577,6 +577,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         float deltaHealth = getHealth();
         super.setHealth(f);
 
+        if (!this.valid) {
+            return;
+        }
+
         if (deltaHealth > getMaxHealth()) {
             deltaHealth = 0;
         } else {
