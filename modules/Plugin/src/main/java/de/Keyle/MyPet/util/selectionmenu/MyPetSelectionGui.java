@@ -136,17 +136,18 @@ public class MyPetSelectionGui {
                 lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + mypet.getPetType().name());
                 lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
-                TagCompound entityTag = new TagCompound();
-                entityTag.put("id", new TagString(mypet.getPetType().getMinecraftName()));
-                int pos = menu.addOption(
-                        new IconMenuItem()
-                                .setMaterial(Material.MONSTER_EGG)
-                                .setData(egg.getColor())
-                                .setTitle(RESET + mypet.getPetName())
-                                .addLore(lore)
-                                .setGlowing(egg.isGlowing())
-                                .addTag("EntityTag", entityTag)
-                );
+                IconMenuItem icon = new IconMenuItem();
+                icon.setMaterial(Material.MONSTER_EGG);
+                icon.setGlowing(egg.isGlowing());
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    TagCompound entityTag = new TagCompound();
+                    entityTag.put("id", new TagString(egg.getEggName()));
+                    icon.addTag("EntityTag", entityTag);
+                } else {
+                    icon.setData(egg.getColor());
+                }
+
+                int pos = menu.addOption(icon);
                 petSlotList.put(pos, mypet);
             }
 
