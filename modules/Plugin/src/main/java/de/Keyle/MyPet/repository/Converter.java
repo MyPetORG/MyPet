@@ -48,6 +48,8 @@ public class Converter {
             fromRepo = new NbtRepository();
         } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
             fromRepo = new MySqlRepository();
+        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MongoDB")) {
+            fromRepo = new MongoDbRepository();
         } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("SQLite")) {
             fromRepo = new SqLiteRepository();
         } else {
