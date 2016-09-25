@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Load(Load.State.AfterHooks)
+@Load(Load.State.OnReady)
 @ServiceName("ShopService")
 public class ShopManager implements ShopService {
     YamlConfiguration config;
