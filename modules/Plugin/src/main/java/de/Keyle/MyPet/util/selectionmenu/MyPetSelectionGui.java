@@ -139,6 +139,8 @@ public class MyPetSelectionGui {
                 IconMenuItem icon = new IconMenuItem();
                 icon.setMaterial(Material.MONSTER_EGG);
                 icon.setGlowing(egg.isGlowing());
+                icon.setTitle(RESET + mypet.getPetName());
+                icon.addLore(lore);
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                     TagCompound entityTag = new TagCompound();
                     entityTag.put("id", new TagString(egg.getEggName()));
