@@ -316,7 +316,7 @@ public class ConfigurationLoader {
         Repository.MySQL.HOST = config.getString("MyPet.Repository.MySQL.Host", Repository.MySQL.HOST);
         Repository.MySQL.PASSWORD = config.getString("MyPet.Repository.MySQL.Password", Repository.MySQL.PASSWORD);
         Repository.MySQL.USER = config.getString("MyPet.Repository.MySQL.User", Repository.MySQL.USER);
-        Repository.MySQL.PORT = config.getInt("MyPet.Repository.MySQL.Database", Repository.MySQL.PORT);
+        Repository.MySQL.PORT = config.getInt("MyPet.Repository.MySQL.Port", Repository.MySQL.PORT);
         Repository.MySQL.POOL_SIZE = config.getInt("MyPet.Repository.MySQL.MaxConnections", Repository.MySQL.POOL_SIZE);
 
         Repository.MongoDB.DATABASE = config.getString("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
@@ -324,7 +324,7 @@ public class ConfigurationLoader {
         Repository.MongoDB.HOST = config.getString("MyPet.Repository.MongoDB.Host", Repository.MongoDB.HOST);
         Repository.MongoDB.PASSWORD = config.getString("MyPet.Repository.MongoDB.Password", Repository.MongoDB.PASSWORD);
         Repository.MongoDB.USER = config.getString("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);
-        Repository.MongoDB.PORT = config.getInt("MyPet.Repository.MongoDB.Database", Repository.MongoDB.PORT);
+        Repository.MongoDB.PORT = config.getInt("MyPet.Repository.MongoDB.Port", Repository.MongoDB.PORT);
 
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
         Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT = config.getBoolean("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
