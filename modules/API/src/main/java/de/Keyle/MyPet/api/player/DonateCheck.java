@@ -56,13 +56,13 @@ public class DonateCheck {
             //   5 for creator
             //   6 for premium
             // no data will be saved on the server
-            String mode;
+            String check;
             if (player.getMojangUUID() != null) {
-                mode = "userid=" + player.getMojangUUID();
+                check = "userid=" + player.getMojangUUID();
             } else {
-                mode = "username=" + player.getName();
+                check = "username=" + player.getName();
             }
-            String donation = Util.readUrlContent("http://donation.mypet-plugin.de/donated.php?" + mode);
+            String donation = Util.readUrlContent("http://particle.mypet-plugin.de/?" + check);
             switch (donation) {
                 case "1":
                     return DonationRank.Donator;
