@@ -137,7 +137,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         this.isReady = false;
 
         if (getConfig().getBoolean("MyPet.Update-Check", true)) {
-            Optional<String> message = UpdateCheck.checkForUpdate("MyPet");
+            Optional<String> message = UpdateCheck.checkForUpdate("MyPet-Premium");
             if (message.isPresent()) {
                 String m = "#  A new version is available: " + message.get() + "  #";
                 MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));

@@ -39,7 +39,7 @@ public class UpdateCheck {
             parameter += "&checksum=" + "%%__NONCE__%%";
 
             // no data will be saved on the server
-            String content = Util.readUrlContent("http://update.mypet-plugin.de/check.php?" + parameter);
+            String content = Util.readUrlContent("http://update.mypet-plugin.de/" + plugin + "?" + parameter);
             JSONParser parser = new JSONParser();
             JSONObject result = (JSONObject) parser.parse(content);
 
