@@ -21,12 +21,15 @@
 package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
 
 public class CommandOptionReload implements CommandOption {
     @Override
@@ -39,6 +42,13 @@ public class CommandOptionReload implements CommandOption {
         }
 
         Translation.init();
+
+        for (int i = 0; i < Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
+            try {
+                Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
+            } catch (Exception ignored) {
+            }
+        }
 
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config loaded!");
 
