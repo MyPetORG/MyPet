@@ -31,7 +31,6 @@ public class UpdateCheck {
     public static Optional<String> checkForUpdate(String plugin) {
         try {
             String parameter = "";
-            parameter += "plugin=" + plugin;
             parameter += "&package=" + MyPetApi.getCompatUtil().getInternalVersion();
             parameter += "&build=" + MyPetVersion.getBuild();
             parameter += "&premium=" + MyPetVersion.isPremium();
