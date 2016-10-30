@@ -22,13 +22,16 @@ package de.Keyle.MyPet.commands.admin;
 
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.shop.ShopManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
 
 public class CommandOptionReload implements CommandOption {
     @Override
@@ -45,6 +48,13 @@ public class CommandOptionReload implements CommandOption {
         Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
         if (shopManager.isPresent()) {
             MyPetApi.getServiceManager().getService(ShopManager.class).get().onEnable(); //TODO reload method?
+        }
+
+        for (int i = 0; i < Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
+            try {
+                Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
+            } catch (Exception ignored) {
+            }
         }
 
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config loaded!");
