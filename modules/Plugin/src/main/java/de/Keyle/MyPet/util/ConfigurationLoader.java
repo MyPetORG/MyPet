@@ -77,6 +77,7 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
+        config.addDefault("MyPet.Repository.LoadDelay", Repository.EXTERNAL_LOAD_DELAY);
 
         config.addDefault("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
         config.addDefault("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);
@@ -310,6 +311,7 @@ public class ConfigurationLoader {
 
         Repository.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         Repository.CONVERT_FROM = config.getString("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
+        Repository.EXTERNAL_LOAD_DELAY = config.getLong("MyPet.Repository.LoadDelay", Repository.EXTERNAL_LOAD_DELAY);
 
         Repository.MySQL.DATABASE = config.getString("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
         Repository.MySQL.PREFIX = config.getString("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);

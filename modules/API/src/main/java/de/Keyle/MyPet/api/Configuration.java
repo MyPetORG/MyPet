@@ -50,6 +50,8 @@ public class Configuration {
     }
 
     public static class Repository {
+        public static long EXTERNAL_LOAD_DELAY = 20L;
+
         public static String REPOSITORY_TYPE = "SQLite";
         public static String CONVERT_FROM = "";
 

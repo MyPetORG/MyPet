@@ -209,7 +209,7 @@ public class PlayerListener implements Listener {
                     }
                 });
             }
-        }.runTaskLater(MyPetApi.getPlugin(), delay);
+        }.runTaskLater(MyPetApi.getPlugin(), Configuration.Repository.EXTERNAL_LOAD_DELAY);
     }
 
     @EventHandler
