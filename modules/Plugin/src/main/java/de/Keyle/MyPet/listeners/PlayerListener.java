@@ -36,7 +36,7 @@ import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.util.ResourcePackIcons;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.repository.types.NbtRepository;
+import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ResourcePackManager;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -143,7 +143,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(final PlayerJoinEvent event) {
-        long delay = MyPetApi.getRepository() instanceof NbtRepository ? 1L : 20L;
+        long delay = MyPetApi.getRepository() instanceof SqLiteRepository ? 1L : 20L;
 
         new BukkitRunnable() {
             @Override
