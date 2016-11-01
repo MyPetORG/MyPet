@@ -143,7 +143,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(final PlayerJoinEvent event) {
-        long delay = MyPetApi.getRepository() instanceof SqLiteRepository ? 1L : 20L;
+        long delay = MyPetApi.getRepository() instanceof SqLiteRepository ? 1L : Configuration.Repository.EXTERNAL_LOAD_DELAY;
 
         new BukkitRunnable() {
             @Override
@@ -209,7 +209,7 @@ public class PlayerListener implements Listener {
                     }
                 });
             }
-        }.runTaskLater(MyPetApi.getPlugin(), Configuration.Repository.EXTERNAL_LOAD_DELAY);
+        }.runTaskLater(MyPetApi.getPlugin(), delay);
     }
 
     @EventHandler
