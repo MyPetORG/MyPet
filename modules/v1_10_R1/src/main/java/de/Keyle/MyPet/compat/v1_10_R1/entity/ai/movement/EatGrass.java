@@ -34,27 +34,24 @@ import org.bukkit.craftbukkit.v1_10_R1.event.CraftEventFactory;
 public class EatGrass extends AIGoal {
     private EntityMySheep entityMySheep;
     private World world;
-    private double chanceToEat;
     int eatTicks = 0;
 
     private static final Predicate<IBlockData> TALL_GRASS = BlockStatePredicate
             .a(Blocks.TALLGRASS)
             .a(BlockLongGrass.TYPE, Predicates.equalTo(BlockLongGrass.EnumTallGrassType.GRASS));
 
-    public EatGrass(EntityMySheep entityMySheep, double chanceToEat) {
+    public EatGrass(EntityMySheep entityMySheep) {
         this.entityMySheep = entityMySheep;
-        this.chanceToEat = chanceToEat / 10000.;
         this.world = entityMySheep.world;
     }
 
     @Override
     public boolean shouldStart() {
-        double random = entityMySheep.getRandom().nextDouble();
         if (!Configuration.MyPet.Sheep.CAN_REGROW_WOOL) {
             return false;
         } else if (!this.entityMySheep.getMyPet().isSheared()) {
             return false;
-        } else if (random > chanceToEat) {
+        } else if (entityMySheep.getRandom().nextInt(1000) != 0) {
             return false;
         } else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getTarget().isDead()) {
             return false;

@@ -35,12 +35,10 @@ import org.bukkit.craftbukkit.v1_7_R4.event.CraftEventFactory;
 public class EatGrass extends AIGoal {
     private EntityMySheep entityMySheep;
     private World world;
-    private double chanceToEat;
     int eatTicks = 0;
 
-    public EatGrass(EntityMySheep entityMySheep, double chanceToEat) {
+    public EatGrass(EntityMySheep entityMySheep) {
         this.entityMySheep = entityMySheep;
-        this.chanceToEat = chanceToEat / 10000.;
         this.world = entityMySheep.world;
     }
 
@@ -50,7 +48,7 @@ public class EatGrass extends AIGoal {
             return false;
         } else if (!this.entityMySheep.getMyPet().isSheared()) {
             return false;
-        } else if (entityMySheep.getRandom().nextDouble() > chanceToEat) {
+        } else if (entityMySheep.getRandom().nextInt(1000) != 0) {
             return false;
         } else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getTarget().isDead()) {
             return false;
