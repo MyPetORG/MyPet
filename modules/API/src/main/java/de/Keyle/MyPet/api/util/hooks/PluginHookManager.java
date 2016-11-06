@@ -28,8 +28,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class PluginHookManager {
     ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
     Map<String, PluginHook> hookByName = new HashMap<>();
     Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
-    List<PluginHook> registeredHooks = new ArrayList<>();
+    List<PluginHook> registeredHooks = new LinkedList<>();
 
     /**
      * register new hooks here. A hook needs the {@link PluginHookName} annotation to be accepted.
