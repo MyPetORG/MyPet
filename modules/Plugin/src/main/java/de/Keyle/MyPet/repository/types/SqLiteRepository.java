@@ -988,10 +988,20 @@ public class SqLiteRepository implements Repository {
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
             int i = 0;
+
+            HashSet<String> playerNames = new HashSet<>();
+
             for (MyPetPlayer player : players) {
+                String playerName = player.getName();
+                if (playerNames.contains(playerName)) {
+                    MyPetApi.getLogger().info("Found duplicate Player: " + player.toString());
+                    continue;
+                }
+                playerNames.add(playerName);
+
                 statement.setString(1, player.getInternalUUID().toString());
                 statement.setString(2, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
-                statement.setString(3, player.getName());
+                statement.setString(3, playerName);
                 statement.setBoolean(4, player.hasAutoRespawnEnabled());
                 statement.setInt(5, player.getAutoRespawnMin());
                 statement.setBoolean(6, player.isCaptureHelperActive());

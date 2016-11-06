@@ -32,6 +32,7 @@ import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 
 public class Converter {
@@ -74,7 +75,14 @@ public class Converter {
         } else if (toRepo instanceof SqLiteRepository) {
             ((SqLiteRepository) toRepo).addMyPetPlayers(playerList);
         } else if (toRepo instanceof MongoDbRepository) {
+            HashSet<String> playerNames = new HashSet<>();
             for (MyPetPlayer player : playerList) {
+                String playerName = player.getName();
+                if (playerNames.contains(playerName)) {
+                    MyPetApi.getLogger().info("Found duplicate Player: " + player.toString());
+                    continue;
+                }
+                playerNames.add(playerName);
                 ((MongoDbRepository) toRepo).addMyPetPlayer(player);
             }
         }
