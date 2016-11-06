@@ -49,7 +49,7 @@ import java.util.*;
 public class MongoDbRepository implements Repository {
     private MongoClient mongo;
     private MongoDatabase db;
-    private int version = 3;
+    private int version = 4;
     // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
 
     @Override
@@ -115,6 +115,8 @@ public class MongoDbRepository implements Repository {
                     updateToV2();
                 case 2:
                     updateToV3();
+                case 3:
+                    updateToV4();
             }
         }
     }
@@ -133,6 +135,14 @@ public class MongoDbRepository implements Repository {
         MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
         playerCollection.dropIndex(new BasicDBObject("offline_uuid", 1));
         playerCollection.createIndex(new BasicDBObject("name", 1));
+    }
+
+    private void updateToV4() {
+        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        Document filter = new Document();
+        Document data = new Document("$set", new Document("last_update", System.currentTimeMillis()));
+
+        playerCollection.updateMany(filter, data);
     }
 
     public boolean collectionExists(final String collectionName) {
@@ -636,6 +646,7 @@ public class MongoDbRepository implements Repository {
         playerDocument.append("internal_uuid", player.getInternalUUID().toString());
         playerDocument.append("mojang_uuid", player.getMojangUUID() != null ? player.getMojangUUID() : null);
         playerDocument.append("name", player.getName());
+        playerDocument.append("last_update", System.currentTimeMillis());
 
         Document settingsDocument = new Document();
         settingsDocument.append("auto_respawn", player.hasAutoRespawnEnabled());

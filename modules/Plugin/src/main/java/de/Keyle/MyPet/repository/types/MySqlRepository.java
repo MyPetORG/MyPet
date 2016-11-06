@@ -52,7 +52,7 @@ import java.util.*;
 
 public class MySqlRepository implements Repository {
     private HikariDataSource dataSource;
-    private int version = 8;
+    private int version = 9;
 
     @Override
     public void disable() {
@@ -122,6 +122,8 @@ public class MySqlRepository implements Repository {
                     case 6:
                     case 7:
                         updateToV8();
+                    case 8:
+                        updateToV9();
                 }
             }
         } catch (SQLException e) {
@@ -316,6 +318,26 @@ public class MySqlRepository implements Repository {
 
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN resource_pack BOOLEAN NULL DEFAULT NULL AFTER `pet_idle_volume`;");
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY name VARBINARY (1024)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void updateToV9() {
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            Statement update = connection.createStatement();
+
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,;");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
