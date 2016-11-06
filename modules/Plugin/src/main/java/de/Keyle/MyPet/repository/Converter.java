@@ -46,7 +46,6 @@ public class Converter {
         List<StoredMyPet> pets = fromRepo.getAllMyPets();
         toRepo.addMyPets(pets);
 
-
         toRepo.save();
         fromRepo.disable();
 
