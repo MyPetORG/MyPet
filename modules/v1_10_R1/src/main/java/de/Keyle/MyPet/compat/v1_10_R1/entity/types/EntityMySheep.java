@@ -118,6 +118,6 @@ public class EntityMySheep extends EntityMyPet {
 
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this, 2));
+        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this));
     }
 }
