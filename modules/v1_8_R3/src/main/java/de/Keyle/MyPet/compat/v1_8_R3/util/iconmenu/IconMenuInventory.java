@@ -31,6 +31,7 @@ import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.NBTTagList;
 import net.minecraft.server.v1_8_R3.NBTTagString;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
@@ -74,7 +75,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
 
             for (int slot = 0; slot < size; slot++) {
                 IconMenuItem menuItem = menu.getOption(slot);
-                if(menuItem != null) {
+                if (menuItem != null) {
                     ItemStack item = createItemStack(menuItem);
                     minecraftInventory.setItem(slot, item);
                 }
@@ -126,7 +127,11 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
     }
 
     protected ItemStack createItemStack(IconMenuItem icon) {
-        ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData()));
+        ItemStack is = CraftItemStack.asNMSCopy(CraftItemStack.asCraftCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData())));
+        //TODO allow items like FIRE (51)
+        if (is == null) {
+            is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.SAPLING));
+        }
 
         NBTTagList emptyList = new NBTTagList();
         if (is.getTag() == null) {

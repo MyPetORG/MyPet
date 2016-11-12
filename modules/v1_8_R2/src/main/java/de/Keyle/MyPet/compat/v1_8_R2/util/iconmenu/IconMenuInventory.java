@@ -31,6 +31,7 @@ import net.minecraft.server.v1_8_R2.ItemStack;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;
 import net.minecraft.server.v1_8_R2.NBTTagList;
 import net.minecraft.server.v1_8_R2.NBTTagString;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
@@ -128,6 +129,10 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
 
     protected ItemStack createItemStack(IconMenuItem icon) {
         ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData()));
+        //TODO allow items like FIRE (51)
+        if (is == null) {
+            is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.SAPLING));
+        }
 
         NBTTagList emptyList = new NBTTagList();
         if (is.getTag() == null) {
