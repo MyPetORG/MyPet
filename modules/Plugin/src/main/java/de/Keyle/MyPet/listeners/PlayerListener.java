@@ -264,10 +264,10 @@ public class PlayerListener implements Listener {
             if (player.hasMyPet()) {
                 MyPet myPet = player.getMyPet();
 
-                MyPetApi.getMyPetManager().deactivateMyPet(player, true);
                 if (myPet.getStatus() == MyPet.PetState.Here) {
                     myPet.removePet(true);
                 }
+                MyPetApi.getMyPetManager().deactivateMyPet(player, true);
             }
 
             MyPetApi.getPlayerManager().setOffline(player);
