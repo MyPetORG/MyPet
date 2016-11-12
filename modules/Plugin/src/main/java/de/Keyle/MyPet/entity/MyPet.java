@@ -447,6 +447,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 bukkitEntity = minecraftEntity.getBukkitEntity();
 
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    Random r = new Random(petOwner.getInternalUUID().toString().hashCode());
+                    String random = RandomStringUtils.random(10, 0, 0, true, true, null, r);
+
+                    Team t;
+                    if (owner.getScoreboard().getTeam("MyPet-" + random) != null) {
+                        t = owner.getScoreboard().getTeam("MyPet-" + random);
+                    } else {
+                        t = owner.getScoreboard().registerNewTeam("MyPet-" + random);
+                        t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+                    }
+
+                    for (String entry : t.getEntries()) {
+                        t.removeEntry(entry);
+                    }
+                    t.addEntry(minecraftEntity.getUniqueID().toString());
+                }
+
                 if (getYSpawnOffset() > 0) {
                     loc = loc.add(0, getYSpawnOffset(), 0);
                 }
@@ -495,26 +513,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
 
                     autoAssignSkilltree();
-
-                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                        Team t;
-
-
-                        Random r = new Random(petOwner.getInternalUUID().toString().hashCode());
-                        String random = RandomStringUtils.random(10, 0, 0, true, true, null, r);
-
-                        if (owner.getScoreboard().getTeam("MyPet-" + random) != null) {
-                            t = owner.getScoreboard().getTeam("MyPet-" + random);
-                        } else {
-                            t = owner.getScoreboard().registerNewTeam("MyPet-" + random);
-                            t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
-                        }
-
-                        for (String entry : t.getEntries()) {
-                            t.removeEntry(entry);
-                        }
-                        t.addEntry(minecraftEntity.getUniqueID().toString());
-                    }
 
                     wantsToRespawn = false;
 
