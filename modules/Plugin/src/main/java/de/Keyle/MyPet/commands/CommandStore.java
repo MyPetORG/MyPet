@@ -54,6 +54,12 @@ public class CommandStore implements CommandExecutor, TabCompleter {
 
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+            final int maxPetCount = getMaxPetCount(owner.getPlayer());
+
+            if (maxPetCount == 0) {
+                player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                return true;
+            }
 
             if (owner.hasMyPet()) {
                 MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
@@ -63,8 +69,6 @@ public class CommandStore implements CommandExecutor, TabCompleter {
                         String worldGroup = myPet.getWorldGroup();
 
                         int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
-                        int maxPetCount = getMaxPetCount(owner.getPlayer());
-
                         if (inactivePetCount >= maxPetCount) {
                             sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), maxPetCount));
                             return;
