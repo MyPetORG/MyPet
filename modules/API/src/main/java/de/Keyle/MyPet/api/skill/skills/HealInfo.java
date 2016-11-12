@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.skill.SkillProperties;
 import de.Keyle.MyPet.api.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
 
-@SkillName(value = "HPregeneration", translationNode = "Name.Skill.Regeneration")
+@SkillName(value = "HPregeneration", translationNode = "Name.Skill.Heal")
 @SkillProperties(
         parameterNames = {"hp_double", "time", "addset_hp", "addset_time"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
