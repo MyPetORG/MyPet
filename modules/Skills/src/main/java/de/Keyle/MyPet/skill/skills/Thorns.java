@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.skill.skills.ThornsInfo;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.Random;
@@ -78,7 +79,7 @@ public class Thorns extends ThornsInfo implements SkillInstance, ActiveSkill {
     }
 
     public String getFormattedValue() {
-        return chance + "% -> " + reflectedDamagePercent + "% " + Translation.getString("Name.Damage", myPet.getOwner().getLanguage());
+        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + reflectedDamagePercent + ChatColor.RESET + "% " + Translation.getString("Name.Damage", myPet.getOwner().getLanguage());
     }
 
     public void reset() {
@@ -95,7 +96,7 @@ public class Thorns extends ThornsInfo implements SkillInstance, ActiveSkill {
     }
 
     public void reflectDamage(LivingEntity damager, double damage) {
-        if(myPet.getEntity().isPresent()) {
+        if (myPet.getEntity().isPresent()) {
             MyPetBukkitEntity entity = myPet.getEntity().get();
             damager.damage(getReflectedDamage(damage), entity);
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
