@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.skill.skills.KnockbackInfo;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
@@ -71,7 +72,7 @@ public class Knockback extends KnockbackInfo implements SkillInstance, ActiveSki
     }
 
     public String getFormattedValue() {
-        return chance + "%";
+        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "%";
     }
 
     public void reset() {

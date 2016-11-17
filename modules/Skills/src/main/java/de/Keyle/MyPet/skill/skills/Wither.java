@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.skill.skills.WitherInfo;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -82,7 +83,7 @@ public class Wither extends WitherInfo implements SkillInstance, ActiveSkill {
     }
 
     public String getFormattedValue() {
-        return chance + "% -> " + duration + "sec";
+        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + duration + ChatColor.RESET + "sec";
     }
 
     public void reset() {

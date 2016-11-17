@@ -40,6 +40,7 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagString;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
@@ -86,7 +87,7 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
     }
 
     public String getFormattedValue() {
-        return Translation.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + String.format("%1.2f", range) + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
+        return Translation.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + ChatColor.GOLD + String.format("%1.2f", range) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }
 
     public void reset() {

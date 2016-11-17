@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
+import org.bukkit.ChatColor;
 
 public class Life extends LifeInfo implements SkillInstance {
     private MyPet myPet;
@@ -77,7 +78,7 @@ public class Life extends LifeInfo implements SkillInstance {
     }
 
     public String getFormattedValue() {
-        return "+" + hpIncrease;
+        return "+" + ChatColor.GOLD + hpIncrease;
     }
 
     public void reset() {

@@ -81,7 +81,7 @@ public class Ride extends RideInfo implements SkillInstance {
     }
 
     public String getFormattedValue() {
-        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + "%" + (canFly() ? ChatColor.RESET + " (" + ChatColor.GOLD + "can fly" + ChatColor.RESET + ")" : "") + ChatColor.RESET;
+        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + ChatColor.RESET + "%";
     }
 
     public void reset() {
