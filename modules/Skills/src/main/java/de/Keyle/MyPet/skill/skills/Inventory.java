@@ -37,6 +37,7 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -81,7 +82,7 @@ public class Inventory extends InventoryInfo implements SkillInstance, NBTStorag
     }
 
     public String getFormattedValue() {
-        return rows + " " + Translation.getString("Name.Rows", myPet.getOwner());
+        return "" + ChatColor.GOLD + rows + ChatColor.RESET + " " + Translation.getString("Name.Rows", myPet.getOwner());
     }
 
     public void reset() {

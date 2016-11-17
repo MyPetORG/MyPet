@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 
 public class Heal extends HealInfo implements SkillInstance, Scheduler {
@@ -90,7 +91,7 @@ public class Heal extends HealInfo implements SkillInstance, Scheduler {
     }
 
     public String getFormattedValue() {
-        return "+" + increaseHpBy + Translation.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + regenTime + "sec";
+        return "+" + ChatColor.GOLD + increaseHpBy + ChatColor.RESET + Translation.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + ChatColor.GOLD + regenTime + ChatColor.RESET + "sec";
     }
 
     public void reset() {

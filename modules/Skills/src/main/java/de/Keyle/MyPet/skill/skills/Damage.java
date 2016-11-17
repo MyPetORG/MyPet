@@ -84,7 +84,7 @@ public class Damage extends DamageInfo implements SkillInstance {
     }
 
     public String getFormattedValue() {
-        return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
+        return "" + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset() {
