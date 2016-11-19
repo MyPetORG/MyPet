@@ -28,7 +28,7 @@ public class ReflectionUtil {
         try {
             return Class.forName(name);
         } catch (Exception ignored) {
-            return null;
+            return Class.class;
         }
     }
 
