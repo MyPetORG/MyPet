@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_10_R1.entity;
+package de.Keyle.MyPet.compat.v1_11_R1.entity;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
@@ -39,22 +39,22 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.compat.v1_10_R1.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_10_R1.entity.ai.attack.RangedAttack;
-import de.Keyle.MyPet.compat.v1_10_R1.entity.ai.movement.*;
-import de.Keyle.MyPet.compat.v1_10_R1.entity.ai.movement.Float;
-import de.Keyle.MyPet.compat.v1_10_R1.entity.ai.navigation.VanillaNavigation;
-import de.Keyle.MyPet.compat.v1_10_R1.entity.ai.target.*;
-import de.Keyle.MyPet.compat.v1_10_R1.entity.types.EntityMyHorse;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.attack.RangedAttack;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.movement.*;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.movement.Float;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.navigation.VanillaNavigation;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.target.*;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.skill.skills.Ride;
-import net.minecraft.server.v1_10_R1.*;
+import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -69,7 +69,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
-    protected static final DataWatcherObject<Byte> potionParticleWatcher = au;
+    protected static final DataWatcherObject<Byte> potionParticleWatcher = at;
 
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected EntityLiving target = null;
@@ -91,7 +91,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     int donatorParticleCounter = 0;
 
-    private static Field jump = ReflectionUtil.getField(EntityLiving.class, "be");
+    private static Field jump = ReflectionUtil.getField(EntityLiving.class, "bd");
 
     public EntityMyPet(World world, MyPet myPet) {
         super(world);
@@ -445,9 +445,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         EntityMyPet.super.setCustomName("-");
                         myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", myPet.getOwner()), name));
                         if (!entityhuman.abilities.canInstantlyBuild) {
-                            --itemStack.count;
+                            itemStack.subtract(1);
                         }
-                        if (itemStack.count <= 0) {
+                        if (itemStack.getCount() <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
                         new BukkitRunnable() {
@@ -498,7 +498,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
                     if (used) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
-                            if (--itemStack.count <= 0) {
+                            itemStack.subtract(1);
+                            if (itemStack.getCount() <= 0) {
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
                         }
@@ -577,17 +578,17 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public void setHealth(float f) {
-        float deltaHealth = getHealth();
+        float deltaGealth = getHealth();
         super.setHealth(f);
 
         if (!this.valid) {
             return;
         }
 
-        if (deltaHealth > getMaxHealth()) {
-            deltaHealth = 0;
+        if (deltaGealth > getMaxHealth()) {
+            deltaGealth = 0;
         } else {
-            deltaHealth = getHealth() - deltaHealth;
+            deltaGealth = getHealth() - deltaGealth;
         }
 
         String msg = myPet.getPetName() + ChatColor.RESET + ": ";
@@ -602,10 +603,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             msg += String.format("%1.2f", getHealth()) + org.bukkit.ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
 
             if (!myPet.getOwner().isHealthBarActive()) {
-                if (deltaHealth > 0) {
-                    msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
-                } else if (deltaHealth < 0) {
-                    msg += " (" + ChatColor.RED + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
+                if (deltaGealth > 0) {
+                    msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaGealth) + ChatColor.RESET + ")";
+                } else if (deltaGealth < 0) {
+                    msg += " (" + ChatColor.RED + String.format("%1.2f", deltaGealth) + ChatColor.RESET + ")";
                 }
             }
         } else {
@@ -705,7 +706,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
 
             this.a(motionSideways, motionForward, swimmSpeed);
-            this.move(this.motX, this.motY, this.motZ);
+            this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
             this.motX *= (double) speed;
             this.motY *= 0.800000011920929D;
             this.motZ *= (double) speed;
@@ -716,7 +717,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         } else if (this.ao()) { // in lava
             locY = this.locY;
             this.a(motionSideways, motionForward, 0.02F);
-            this.move(this.motX, this.motY, this.motZ);
+            this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
             this.motX *= 0.5D;
             this.motY *= 0.5D;
             this.motZ *= 0.5D;
@@ -748,7 +749,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
 
-            this.move(this.motX, this.motY, this.motZ);
+            this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
             if (this.positionChanged && this.m_()) {
                 this.motY = 0.2D;
             }
@@ -760,7 +761,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.motZ *= (double) friction;
         }
 
-        this.aG = this.aH;
+        this.aF = this.aG;
         locY = this.locX - this.lastX;
         double d1 = this.locZ - this.lastZ;
         f2 = MathHelper.sqrt(locY * locY + d1 * d1) * 4.0F;
@@ -768,8 +769,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             f2 = 1.0F;
         }
 
-        this.aH += (f2 - this.aH) * 0.4F;
-        this.aI += this.aH;
+        this.aG += (f2 - this.aG) * 0.4F;
+        this.aH += this.aG;
     }
 
     public void makeSound(String sound, float volume, float pitch) {
@@ -859,7 +860,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected SoundEffect bV() {
+    protected SoundEffect bW() {
         try {
             return SoundEffect.a.get(new MinecraftKey(getHurtSound()));
         } catch (Exception e) {
@@ -872,7 +873,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected SoundEffect bW() {
+    protected SoundEffect bX() {
         try {
             return SoundEffect.a.get(new MinecraftKey(getDeathSound()));
         } catch (Exception e) {
@@ -884,13 +885,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     /**
      * Returns the speed of played sounds
      */
-    protected float ci() {
+    protected float cj() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.ci();
+        return super.cj();
     }
 
     public void n() {
@@ -908,7 +909,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             --this.bi;
             this.setPosition(d0, d1, d2);
             this.setYawPitch(this.yaw, this.pitch);
-        } else if (!this.ct()) {
+        } else if (!this.cu()) {
             this.motX *= 0.98D;
             this.motY *= 0.98D;
             this.motZ *= 0.98D;
@@ -927,12 +928,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         this.world.methodProfiler.a("ai");
-        if (this.cj()) {
-            this.be = false;
+        if (this.isFrozen()) {
+            this.bd = false;
+            this.be = 0.0F;
             this.bf = 0.0F;
             this.bg = 0.0F;
-            this.bh = 0.0F;
-        } else if (this.ct()) {
+        } else if (this.cu()) {
             this.world.methodProfiler.a("newAi");
             this.doMyPetTick();
             this.world.methodProfiler.b();
@@ -940,11 +941,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         this.world.methodProfiler.b();
         this.world.methodProfiler.a("jump");
-        if (this.be) {
+        if (this.bd) {
             if (this.isInWater() || this.ao()) {
-                this.cm();
+                this.cn();
             } else if (this.onGround && this.jumpDelay == 0) {
-                this.cl();
+                this.cm();
                 this.jumpDelay = 10;
             }
         } else {
@@ -953,14 +954,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         this.world.methodProfiler.b();
         this.world.methodProfiler.a("travel");
+        this.be *= 0.98F;
         this.bf *= 0.98F;
-        this.bg *= 0.98F;
-        this.bh *= 0.9F;
+        this.bg *= 0.9F;
         this.r();
-        this.g(this.bf, this.bg);
+        this.g(this.be, this.bf);
         this.world.methodProfiler.b();
         this.world.methodProfiler.a("push");
-        this.cs();
+        this.ct();
         this.world.methodProfiler.b();
     }
 
@@ -1154,8 +1155,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     /**
      * -> onLivingUpdate()
      */
-    public void m() {
-        super.m();
+    public void A_() {
+        super.A_();
         try {
             onLivingUpdate();
         } catch (Exception e) {
