@@ -448,7 +448,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                             itemStack.subtract(1);
                         }
                         if (itemStack.getCount() <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                         }
                         new BukkitRunnable() {
                             public void run() {
@@ -500,7 +500,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             itemStack.subtract(1);
                             if (itemStack.getCount() <= 0) {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                             }
                         }
                         MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getHeadHeight(), 0), "HEART", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
@@ -832,8 +832,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * false: no reaction on rightclick
      * -> handlePlayerInteraction(EntityHuman)
      */
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemstack) {
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
         try {
+            ItemStack itemstack = entityhuman.b(enumhand);
             boolean result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
             if (!result && getMyPet().getOwner().equals(entityhuman) && entityhuman.isSneaking()) {
                 result = toggleSitting();

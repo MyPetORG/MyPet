@@ -73,7 +73,7 @@ public class EntityMyLlama extends EntityMyPet {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                     }
                 }
                 return true;
@@ -82,7 +82,7 @@ public class EntityMyLlama extends EntityMyPet {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                     }
                 }
                 return true;
@@ -112,7 +112,7 @@ public class EntityMyLlama extends EntityMyPet {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                     }
                 }
                 getMyPet().setAge(getMyPet().getAge() + 3000);
