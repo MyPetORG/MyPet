@@ -22,31 +22,26 @@ package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.types.MyGuardian;
-import de.Keyle.MyPet.compat.v1_11_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_11_R1.World;
 
-@EntitySize(width = 0.7F, height = 0.85F)
-public class EntityMyGuardian extends EntityMyPet {
-    public EntityMyGuardian(World world, MyPet myPet) {
+@EntitySize(width = 1.4F, height = 1.6F)
+public class EntityMyZombieHorse extends EntityMyHorse {
+
+    public EntityMyZombieHorse(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
     protected String getDeathSound() {
-        return "entity.guardian.death";
+        return "entity.zombie_horse.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.guardian.hurt";
+        return "entity.zombie_horse.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.guardian.ambient";
-    }
-
-    public MyGuardian getMyPet() {
-        return (MyGuardian) myPet;
+        return "entity.zombie_horse.ambient";
     }
 }

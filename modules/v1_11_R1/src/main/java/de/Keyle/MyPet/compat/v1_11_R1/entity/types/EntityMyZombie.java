@@ -36,7 +36,6 @@ import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 public class EntityMyZombie extends EntityMyPet {
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> shiverWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
 
     public EntityMyZombie(World world, MyPet myPet) {
@@ -48,9 +47,6 @@ public class EntityMyZombie extends EntityMyPet {
      */
     @Override
     protected String getDeathSound() {
-        if (getMyPet().isHusk()) {
-            return "entity.husk.death";
-        }
         return "entity.zombie.death";
     }
 
@@ -59,9 +55,6 @@ public class EntityMyZombie extends EntityMyPet {
      */
     @Override
     protected String getHurtSound() {
-        if (getMyPet().isHusk()) {
-            return "entity.husk.hurt";
-        }
         return "entity.zombie.hurt";
     }
 
@@ -69,9 +62,6 @@ public class EntityMyZombie extends EntityMyPet {
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound() {
-        if (getMyPet().isHusk()) {
-            return "entity.husk.ambient";
-        }
         return "entity.zombie.ambient";
     }
 
@@ -141,14 +131,12 @@ public class EntityMyZombie extends EntityMyPet {
         super.initDatawatcher();
         getDataWatcher().register(ageWatcher, false);    // is baby
         getDataWatcher().register(typeWatcher, 0);       // type
-        getDataWatcher().register(shiverWatcher, false); // does shiver
         getDataWatcher().register(watcher, false);       // N/A
     }
 
     @Override
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(typeWatcher, getMyPet().getType());
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
             public void run() {
@@ -162,11 +150,7 @@ public class EntityMyZombie extends EntityMyPet {
     }
 
     public void playPetStepSound() {
-        if (getMyPet().isHusk()) {
-            makeSound("entity.husk.step", 0.15F, 1.0F);
-        } else {
-            makeSound("entity.zombie.step", 0.15F, 1.0F);
-        }
+        makeSound("entity.zombie.step", 0.15F, 1.0F);
     }
 
     public MyZombie getMyPet() {
