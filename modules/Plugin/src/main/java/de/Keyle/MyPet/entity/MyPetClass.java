@@ -41,7 +41,9 @@ public enum MyPetClass {
     Giant(MyGiant.class),
     Guardian(MyGuardian.class),
     Horse(MyHorse.class),
+    Evoker(MyEvoker.class),
     IronGolem(MyIronGolem.class),
+    Llama(MyLlama.class),
     MagmaCube(MyMagmaCube.class),
     Mooshroom(MyMooshroom.class),
     Ocelot(MyOcelot.class),
@@ -59,7 +61,9 @@ public enum MyPetClass {
     Witch(MyWitch.class),
     Wither(MyWither.class),
     Wolf(MyWolf.class),
+    Vex(MyVex.class),
     Villager(MyVillager.class),
+    Vindicator(MyVindicator.class),
     Zombie(MyZombie.class);
 
     private Class<? extends MyPet> clazz;
