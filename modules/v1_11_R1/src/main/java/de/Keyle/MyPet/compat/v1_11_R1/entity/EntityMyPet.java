@@ -1049,8 +1049,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.aP = (this.aN = this.yaw);
 
         // get motion from passenger (player)
-        motionSideways = passenger.bf * 0.5F;
-        motionForward = passenger.bg;
+        motionSideways = passenger.be * 0.5F;
+        motionForward = passenger.bf;
 
         // backwards is slower
         if (motionForward <= 0.0F) {
