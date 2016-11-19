@@ -37,11 +37,13 @@ public enum MyPetType {
     EnderDragon("ENDER_DRAGON", 63, MyEnderDragon.class),
     Enderman("ENDERMAN", 58, MyEnderman.class),
     Endermite("ENDERMITE", 67, "1.8", MyEndermite.class),
+    Evoker("EVOKER", 34, "1.11", MyEvoker.class, "EvocationIllager"),
     Ghast("GHAST", 56, MyGhast.class),
     Giant("GIANT", 53, MyGiant.class),
     Guardian("GUARDIAN", 68, "1.8", MyGuardian.class),
     Horse("HORSE", 100, MyHorse.class, "EntityHorse"),
     IronGolem("IRON_GOLEM", 99, MyIronGolem.class, "VillagerGolem"),
+    Llama("LLAMA", 103, "1.11", MyLlama.class, "VillagerGolem"),
     MagmaCube("MAGMA_CUBE", 62, MyMagmaCube.class, "LavaSlime"),
     Mooshroom("MUSHROOM_COW", 96, MyMooshroom.class, "MushroomCow"),
     Ocelot("OCELOT", 98, MyOcelot.class, "Ozelot"),
@@ -59,7 +61,9 @@ public enum MyPetType {
     Witch("WITCH", 66, MyWitch.class),
     Wither("WITHER", 64, MyWither.class, "WitherBoss"),
     Wolf("WOLF", 95, MyWolf.class),
+    Vex("VEX", 35, "1.11", MyVillager.class),
     Villager("VILLAGER", 120, MyVillager.class),
+    Vindicator("VINDICATOR", 36, "1.11", MyVillager.class, "VindicationIllager"),
     Zombie("ZOMBIE", 54, MyZombie.class);
 
     private String bukkitName;
@@ -83,6 +87,12 @@ public enum MyPetType {
     MyPetType(String bukkitName, int typeID, Class<? extends MyPet> mypetClass, String minecraftName) {
         this(bukkitName, typeID, mypetClass);
         this.minecraftName = minecraftName;
+    }
+
+    MyPetType(String bukkitName, int typeID, String minecraftVersion, Class<? extends MyPet> mypetClass, String minecraftName) {
+        this(bukkitName, typeID, mypetClass);
+        this.minecraftName = minecraftName;
+        this.minecraftVersion = minecraftVersion;
     }
 
     public String getBukkitName() {

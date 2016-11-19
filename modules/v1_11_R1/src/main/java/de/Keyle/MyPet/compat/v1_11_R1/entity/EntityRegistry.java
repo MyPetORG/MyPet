@@ -65,11 +65,13 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(EnderDragon, EntityMyEnderDragon.class);
         entityClasses.put(Enderman, EntityMyEnderman.class);
         entityClasses.put(Endermite, EntityMyEndermite.class);
+        entityClasses.put(Evoker, EntityMyEvoker.class);
         entityClasses.put(Ghast, EntityMyGhast.class);
         entityClasses.put(Giant, EntityMyGiant.class);
         entityClasses.put(Guardian, EntityMyGuardian.class);
         entityClasses.put(Horse, EntityMyHorse.class);
         entityClasses.put(IronGolem, EntityMyIronGolem.class);
+        entityClasses.put(Llama, EntityMyLlama.class);
         entityClasses.put(MagmaCube, EntityMyMagmaCube.class);
         entityClasses.put(Mooshroom, EntityMyMooshroom.class);
         entityClasses.put(Ocelot, EntityMyOcelot.class);
@@ -87,7 +89,9 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(Witch, EntityMyWitch.class);
         entityClasses.put(Wither, EntityMyWither.class);
         entityClasses.put(Wolf, EntityMyWolf.class);
+        entityClasses.put(Vex, EntityMyVex.class);
         entityClasses.put(Villager, EntityMyVillager.class);
+        entityClasses.put(Vindicator, EntityMyVindicator.class);
         entityClasses.put(Zombie, EntityMyZombie.class);
     }
 
@@ -241,6 +245,9 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
         public MyPetRegistryMaterials(RegistryMaterials original) {
             this.original = original;
+            if (this.original instanceof MyPetRegistryMaterials) {
+                this.original = ((MyPetRegistryMaterials) this.original).original;
+            }
         }
 
         public void enableCustomEntities() {
