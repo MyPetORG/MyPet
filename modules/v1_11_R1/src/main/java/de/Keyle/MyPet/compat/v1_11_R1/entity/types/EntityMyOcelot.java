@@ -89,7 +89,7 @@ public class EntityMyOcelot extends EntityMyPet {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             itemStack.subtract(1);
                             if (itemStack.getCount() <= 0) {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                             }
                         }
                         return true;
@@ -98,7 +98,7 @@ public class EntityMyOcelot extends EntityMyPet {
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                         }
                     }
                     getMyPet().setBaby(false);
