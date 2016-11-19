@@ -34,9 +34,6 @@ import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMySkeleton extends EntityMyPet {
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMySkeleton.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMySkeleton.class, DataWatcherRegistry.h);
-
     public EntityMySkeleton(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -116,12 +113,6 @@ public class EntityMySkeleton extends EntityMyPet {
         return false;
     }
 
-    protected void initDatawatcher() {
-        super.initDatawatcher();
-        this.datawatcher.register(typeWatcher, 0); // skeleton type
-        this.datawatcher.register(watcher, false);
-    }
-
     public void playPetStepSound() {
         if (getMyPet().isStray()) {
             makeSound("entity.stray.step", 0.15F, 1.0F);
@@ -134,8 +125,6 @@ public class EntityMySkeleton extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(typeWatcher, getMyPet().getType());
-
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
             public void run() {
                 if (getMyPet().getStatus() == PetState.Here) {

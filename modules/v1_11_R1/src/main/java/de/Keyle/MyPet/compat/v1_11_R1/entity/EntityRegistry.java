@@ -26,6 +26,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.types.MyGuardian;
+import de.Keyle.MyPet.api.entity.types.MyHorse;
+import de.Keyle.MyPet.api.entity.types.MySkeleton;
+import de.Keyle.MyPet.api.entity.types.MyZombie;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.types.*;
@@ -91,7 +95,48 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
         EntityMyPet petEntity = null;
 
-        Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
+        Class<? extends MyPetMinecraftEntity> entityClass = null;
+        switch (pet.getPetType()) {
+            case Horse:
+                switch (((MyHorse) pet).getHorseType()) {
+                    case 1:
+                        //entityClass = EntityMyDonkey.class; //TODO not working
+                        break;
+                    case 2:
+                        //entityClass = EntityMyMule.class; //TODO not working
+                        break;
+                    case 3:
+                        entityClass = EntityMyZombieHorse.class;
+                        break;
+                    case 4:
+                        entityClass = EntityMySkeletonHorse.class;
+                        break;
+                }
+                break;
+            case Guardian:
+                if (((MyGuardian) pet).isElder()) {
+                    entityClass = EntityMyElderGuardian.class;
+                }
+                break;
+            case Skeleton:
+                if (((MySkeleton) pet).isWither()) {
+                    entityClass = EntityMyWitherSkeleton.class;
+                } else if (((MySkeleton) pet).isStray()) {
+                    entityClass = EntityMyStray.class;
+                }
+                break;
+            case Zombie:
+                if (((MyZombie) pet).isVillager()) {
+                    entityClass = EntityMyZombieVillager.class;
+                } else if (((MyZombie) pet).isHusk()) {
+                    entityClass = EntityMyHusk.class;
+                }
+                break;
+        }
+        if (entityClass == null) {
+            entityClass = entityClasses.get(pet.getPetType());
+        }
+
         World world = ((CraftWorld) bukkitWorld).getHandle();
 
         try {
@@ -140,6 +185,16 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         for (MyPetType type : entityClasses.keySet()) {
             registry.addToRegistry(type.getTypeID(), new MinecraftKey(type.getMinecraftName()), (Class<? extends EntityMyPet>) entityClasses.get(type));
         }
+
+        registry.addToRegistry(4, new MinecraftKey("elder_guardian"), EntityMyElderGuardian.class);
+        registry.addToRegistry(5, new MinecraftKey("wither_skeleton"), EntityMyWitherSkeleton.class);
+        registry.addToRegistry(6, new MinecraftKey("stray"), EntityMyStray.class);
+        registry.addToRegistry(23, new MinecraftKey("husk"), EntityMyHusk.class);
+        registry.addToRegistry(27, new MinecraftKey("zombie_villager"), EntityMyZombieVillager.class);
+        registry.addToRegistry(28, new MinecraftKey("skeleton_horse"), EntityMySkeletonHorse.class);
+        registry.addToRegistry(29, new MinecraftKey("zombie_horse"), EntityMyZombieHorse.class);
+        registry.addToRegistry(31, new MinecraftKey("donkey"), EntityMyDonkey.class);
+        registry.addToRegistry(32, new MinecraftKey("mule"), EntityMyMule.class);
     }
 
     @Override

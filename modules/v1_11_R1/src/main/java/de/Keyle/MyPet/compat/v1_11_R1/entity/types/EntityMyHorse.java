@@ -87,45 +87,15 @@ public class EntityMyHorse extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        int horseType = getMyPet().getHorseType();
-        if (horseType == 3) {
-            return "entity.zombie_horse.death";
-        }
-        if (horseType == 4) {
-            return "entity.skeleton_horse.death";
-        }
-        if ((horseType == 1) || (horseType == 2)) {
-            return "entity.donkey.death";
-        }
         return "entity.horse.death";
     }
 
     @Override
     protected String getHurtSound() {
-        int horseType = ((MyHorse) myPet).getHorseType();
-        if (horseType == 3) {
-            return "entity.zombie_horse.hurt";
-        }
-        if (horseType == 4) {
-            return "entity.skeleton_horse.hurt";
-        }
-        if ((horseType == 1) || (horseType == 2)) {
-            return "entity.donkey.hurt";
-        }
         return "entity.horse.hurt";
     }
 
     protected String getLivingSound() {
-        int horseType = ((MyHorse) myPet).getHorseType();
-        if (horseType == 3) {
-            return "entity.zombie_horse.ambient";
-        }
-        if (horseType == 4) {
-            return "entity.skeleton_horse.ambient";
-        }
-        if ((horseType == 1) || (horseType == 2)) {
-            return "entity.donkey.ambient";
-        }
         return "entity.horse.ambient";
     }
 
@@ -229,19 +199,17 @@ public class EntityMyHorse extends EntityMyPet {
         this.datawatcher.register(ageWatcher, false);               // age
         this.datawatcher.register(saddleChestWatcher, (byte) 0);    // saddle & chest
         this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        //this.datawatcher.register(typeWatcher, 0);                  // horse type
         this.datawatcher.register(variantWatcher, 0);               // variant
         this.datawatcher.register(armorWatcher, 0);                 // armor
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
-        //this.datawatcher.set(typeWatcher, (int) getMyPet().getHorseType());
-        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
-        applyVisual(8, getMyPet().hasChest());
-        applyVisual(4, getMyPet().hasSaddle());
+        //this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        //this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
+        //this.datawatcher.set(variantWatcher, getMyPet().getVariant());
+        //applyVisual(8, getMyPet().hasChest());
+        //applyVisual(4, getMyPet().hasSaddle());
     }
 
     public void onLivingUpdate() {

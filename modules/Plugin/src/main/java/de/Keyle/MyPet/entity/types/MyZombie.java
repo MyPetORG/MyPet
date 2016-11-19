@@ -135,6 +135,10 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         }
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+                removePet();
+                createEntity();
+            }
         }
     }
 
@@ -159,6 +163,10 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         this.type = type + 1;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+                removePet();
+                createEntity();
+            }
         }
     }
 

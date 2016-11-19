@@ -113,6 +113,10 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
         }
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+                removePet();
+                createEntity();
+            }
         }
     }
 
@@ -132,6 +136,10 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
         }
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+                removePet();
+                createEntity();
+            }
         }
     }
 
@@ -149,6 +157,10 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
             this.type = type;
             if (status == PetState.Here) {
                 getEntity().get().getHandle().updateVisuals();
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+                    removePet();
+                    createEntity();
+                }
             }
         }
     }

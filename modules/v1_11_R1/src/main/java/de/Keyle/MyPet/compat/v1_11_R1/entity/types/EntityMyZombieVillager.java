@@ -22,31 +22,30 @@ package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.types.MyGuardian;
-import de.Keyle.MyPet.compat.v1_11_R1.entity.EntityMyPet;
+import net.minecraft.server.v1_11_R1.DataWatcher;
+import net.minecraft.server.v1_11_R1.DataWatcherObject;
+import net.minecraft.server.v1_11_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_11_R1.World;
 
-@EntitySize(width = 0.7F, height = 0.85F)
-public class EntityMyGuardian extends EntityMyPet {
-    public EntityMyGuardian(World world, MyPet myPet) {
+@EntitySize(width = 0.6F, height = 1.9F)
+public class EntityMyZombieVillager extends EntityMyZombie {
+
+    private static final DataWatcherObject<Boolean> shiverwatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
+
+    public EntityMyZombieVillager(World world, MyPet myPet) {
         super(world, myPet);
     }
 
-    @Override
-    protected String getDeathSound() {
-        return "entity.guardian.death";
+    protected void initDatawatcher() {
+        super.initDatawatcher();
+        getDataWatcher().register(shiverwatcher, false);
+        getDataWatcher().register(professionWatcher, 0);
     }
 
     @Override
-    protected String getHurtSound() {
-        return "entity.guardian.hurt";
-    }
-
-    protected String getLivingSound() {
-        return "entity.guardian.ambient";
-    }
-
-    public MyGuardian getMyPet() {
-        return (MyGuardian) myPet;
+    public void updateVisuals() {
+        super.updateVisuals();
+        this.datawatcher.set(professionWatcher, getMyPet().getProfession());
     }
 }
