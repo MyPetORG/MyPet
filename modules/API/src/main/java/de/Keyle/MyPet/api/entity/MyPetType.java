@@ -61,9 +61,9 @@ public enum MyPetType {
     Witch("WITCH", 66, MyWitch.class),
     Wither("WITHER", 64, MyWither.class, "WitherBoss"),
     Wolf("WOLF", 95, MyWolf.class),
-    Vex("VEX", 35, "1.11", MyVillager.class),
+    Vex("VEX", 35, "1.11", MyVex.class),
     Villager("VILLAGER", 120, MyVillager.class),
-    Vindicator("VINDICATOR", 36, "1.11", MyVillager.class, "VindicationIllager"),
+    Vindicator("VINDICATOR", 36, "1.11", MyVindicator.class, "VindicationIllager"),
     Zombie("ZOMBIE", 54, MyZombie.class);
 
     private String bukkitName;
