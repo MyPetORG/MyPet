@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.api.entity.types.MySkeleton;
 import de.Keyle.MyPet.api.entity.types.MyZombie;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.types.*;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.ChatColor;
@@ -42,7 +41,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import static de.Keyle.MyPet.api.entity.MyPetType.*;
@@ -205,33 +203,12 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @SuppressWarnings("unchecked")
     public void unregisterEntityTypes() {
         try {
-            Field EntityTypes_d = ReflectionUtil.getField(EntityTypes.class, "d");
-            Field EntityTypes_f = ReflectionUtil.getField(EntityTypes.class, "f");
-
-            if (EntityTypes_d != null && EntityTypes_f != null) {
-                Map<Class, String> d = (Map) EntityTypes_d.get(EntityTypes_d);
-                Map<Class, Integer> f = (Map) EntityTypes_f.get(EntityTypes_f);
-
-                Iterator dIterator = d.keySet().iterator();
-                while (dIterator.hasNext()) {
-                    Class clazz = (Class) dIterator.next();
-                    if (clazz.getCanonicalName().startsWith("de.Keyle.MyPet")) {
-                        dIterator.remove();
-                    }
-                }
-
-                Iterator fIterator = f.keySet().iterator();
-                while (fIterator.hasNext()) {
-                    Class clazz = (Class) fIterator.next();
-                    if (clazz.getCanonicalName().startsWith("de.Keyle.MyPet")) {
-                        fIterator.remove();
-                    }
-                }
-                return;
-            }
-        } catch (Exception ignored) {
+            Field registryField = EntityTypes.class.getDeclaredField("b");
+            registryField.setAccessible(true);
+            registryField.set(null, registry.original);
+        } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+            ex.printStackTrace();
         }
-        MyPetApi.getLogger().warning("Error while unregistering MyPet entities");
     }
 
     private class MyPetRegistryMaterials extends RegistryMaterials {
