@@ -86,7 +86,7 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setDecor(ItemStack item) {
-        if (item != null && item.getType() != Material.SADDLE) {
+        if (item != null && item.getType() != Material.CARPET) {
             return;
         }
         this.decor = item;
@@ -102,7 +102,7 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Variant", new TagInt(getVariant()));
-        info.getCompoundData().put("Age", new TagInt(getAge()));
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         if (hasChest()) {
             info.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(getChest()));
         }
@@ -116,9 +116,6 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
-        if (info.getCompoundData().containsKey("Age")) {
-            setAge(info.getAs("Age", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());

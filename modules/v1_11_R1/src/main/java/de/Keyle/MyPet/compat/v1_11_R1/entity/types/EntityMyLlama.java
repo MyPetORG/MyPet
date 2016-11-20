@@ -31,17 +31,15 @@ import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 
 import java.util.UUID;
 
-@EntitySize(width = 1.4F, height = 1.6F)
+@EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyLlama extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.m);
-    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> bG = DataWatcher.a(EntityLlama.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> bH = DataWatcher.a(EntityLlama.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> bI = DataWatcher.a(EntityLlama.class, DataWatcherRegistry.b);
-
-    int ageCounter = -1;
+    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> strengthWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> colorWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
 
     public EntityMyLlama(World world, MyPet myPet) {
         super(world, myPet);
@@ -68,7 +66,7 @@ public class EntityMyLlama extends EntityMyPet {
         }
 
         if (itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Item.getItemOf(Blocks.CARPET) && !getMyPet().hasDecor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            if (itemStack.getItem() == Item.getItemOf(Blocks.CARPET) && !getMyPet().hasDecor() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setDecor(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -108,24 +106,15 @@ public class EntityMyLlama extends EntityMyPet {
                 }
 
                 return true;
-            } else if (Configuration.MyPet.Horse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (Configuration.MyPet.Llama.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                     }
                 }
-                getMyPet().setAge(getMyPet().getAge() + 3000);
+                getMyPet().setBaby(false);
                 return true;
-            }
-            if (itemStack.getItem() == Items.BREAD ||
-                    itemStack.getItem() == Items.WHEAT ||
-                    itemStack.getItem() == Items.GOLDEN_APPLE ||
-                    itemStack.getItem() == Item.getItemOf(Blocks.HAY_BLOCK) ||
-                    itemStack.getItem() == Items.GOLDEN_CARROT ||
-                    itemStack.getItem() == Items.APPLE ||
-                    itemStack.getItem() == Items.SUGAR) {
-                ageCounter = 5;
             }
         }
         return false;
@@ -136,20 +125,22 @@ public class EntityMyLlama extends EntityMyPet {
         this.datawatcher.register(ageWatcher, false);               // age
         this.datawatcher.register(saddleChestWatcher, (byte) 0);    // saddle & chest
         this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        this.datawatcher.register(chestWatcher, false);
-        this.datawatcher.register(bG, 0);                 // armor
-        this.datawatcher.register(bH, 0);                 // armor
-        this.datawatcher.register(bI, 0);                 // armor
+        this.datawatcher.register(chestWatcher, true);
+        this.datawatcher.register(strengthWatcher, 0);
+        this.datawatcher.register(colorWatcher, 0);
+        this.datawatcher.register(variantWatcher, 0);
     }
 
     @Override
     public void updateVisuals() {
         this.datawatcher.set(chestWatcher, getMyPet().hasChest());
-        //this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        //this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
-        //this.datawatcher.set(variantWatcher, getMyPet().getVariant());
-        //applyVisual(8, getMyPet().hasChest());
-        //applyVisual(4, getMyPet().hasSaddle());
+        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        if (getMyPet().hasDecor()) {
+            this.datawatcher.set(colorWatcher, (int) getMyPet().getDecor().getData().getData());
+        } else {
+            this.datawatcher.set(colorWatcher, -1);
+        }
+        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
     }
 
     public MyLlama getMyPet() {
