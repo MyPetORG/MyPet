@@ -73,6 +73,13 @@ Shops:
         PetType: Endermite
         EXP: 0
         Price: 100
+      evoker:
+        Name: Evoker
+        Description:
+        - <green>It's an Evoker!
+        PetType: Evoker
+        EXP: 0
+        Price: 100
       guardian:
         Name: Guardian
         Description:
@@ -92,6 +99,13 @@ Shops:
         Description:
         - <green>It's a IronGolem!
         PetType: IronGolem
+        EXP: 0
+        Price: 100
+      llama:
+        Name: Llama
+        Description:
+        - <green>It's a Llama!
+        PetType: Llama
         EXP: 0
         Price: 100
       magmacube:
@@ -217,11 +231,25 @@ Shops:
         PetType: Wolf
         EXP: 0
         Price: 100
+      vex:
+        Name: Vex
+        Description:
+        - <green>It's a Vex!
+        PetType: Vex
+        EXP: 0
+        Price: 100
       villager:
         Name: Villager
         Description:
         - <green>It's a Villager!
         PetType: Villager
+        EXP: 0
+        Price: 100
+      vindicator:
+        Name: Vindicator
+        Description:
+        - <green>It's a Vindicator!
+        PetType: Vindicator
         EXP: 0
         Price: 100
       zombie:
@@ -280,6 +308,15 @@ Shops:
         Description:
         - <green>It's a baby Horse!
         PetType: Horse
+        EXP: 0
+        Price: 50
+        Options:
+          - baby
+      baby_llama:
+        Name: Llama
+        Description:
+        - <green>It's a baby Llama!
+        PetType: Llama
         EXP: 0
         Price: 50
         Options:
