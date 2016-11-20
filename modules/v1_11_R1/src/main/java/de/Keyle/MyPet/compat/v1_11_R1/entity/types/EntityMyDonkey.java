@@ -20,30 +20,31 @@
 
 package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
-import de.Keyle.MyPet.api.entity.EntitySize;
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.entity.MyPet;
 import net.minecraft.server.v1_11_R1.DataWatcher;
 import net.minecraft.server.v1_11_R1.DataWatcherObject;
 import net.minecraft.server.v1_11_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_11_R1.World;
 
-@EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyDonkey extends EntityMyHorse {
 
-    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.h);
 
     public EntityMyDonkey(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     protected void initDatawatcher() {
-        super.initDatawatcher();
-        this.datawatcher.register(chestWatcher, false);
+        this.datawatcher.register(ageWatcher, false);
+        this.datawatcher.register(saddleChestWatcher, (byte) 0);
+        this.datawatcher.register(ownerWatcher, Optional.absent());
+        this.datawatcher.register(chestWatcher, true);
     }
 
     @Override
     public void updateVisuals() {
-        super.updateVisuals();
+        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
         this.datawatcher.set(chestWatcher, getMyPet().hasChest());
     }
 

@@ -34,16 +34,14 @@ import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.m);
+    protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.h);
+    protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.m);
     private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Integer> armorWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.b);
 
     int soundCounter = 0;
     int rearCounter = -1;
-    int ageCounter = -1;
-    int ageFailCounter = 1;
 
     public EntityMyHorse(World world, MyPet myPet) {
         super(world, myPet);
@@ -106,7 +104,7 @@ public class EntityMyHorse extends EntityMyPet {
         }
 
         if (itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && canWearSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -115,7 +113,7 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
+            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && canWearChest() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
                 getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -124,7 +122,7 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (getHorseArmorId(CraftItemStack.asBukkitCopy(itemStack)) > 0 && !getMyPet().hasArmor() && getMyPet().getHorseType() == 0 && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (getHorseArmorId(CraftItemStack.asBukkitCopy(itemStack)) > 0 && canWearArmor() && !getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setArmor(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -169,20 +167,23 @@ public class EntityMyHorse extends EntityMyPet {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                     }
                 }
-                getMyPet().setAge(getMyPet().getAge() + 3000);
+                getMyPet().setBaby(false);
                 return true;
-            }
-            if (itemStack.getItem() == Items.BREAD ||
-                    itemStack.getItem() == Items.WHEAT ||
-                    itemStack.getItem() == Items.GOLDEN_APPLE ||
-                    itemStack.getItem() == Item.getItemOf(Blocks.HAY_BLOCK) ||
-                    itemStack.getItem() == Items.GOLDEN_CARROT ||
-                    itemStack.getItem() == Items.APPLE ||
-                    itemStack.getItem() == Items.SUGAR) {
-                ageCounter = 5;
             }
         }
         return false;
+    }
+
+    private boolean canWearChest() {
+        return this instanceof EntityMyMule || this instanceof EntityMyDonkey;
+    }
+
+    private boolean canWearArmor() {
+        return getMyPet().getHorseType() == 0;
+    }
+
+    private boolean canWearSaddle() {
+        return !(this instanceof EntityMyMule || this instanceof EntityMyDonkey);
     }
 
     private int getHorseArmorId(org.bukkit.inventory.ItemStack itemstack) {
@@ -196,20 +197,20 @@ public class EntityMyHorse extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(saddleChestWatcher, (byte) 0);    // saddle & chest
-        this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        this.datawatcher.register(variantWatcher, 0);               // variant
-        this.datawatcher.register(armorWatcher, 0);                 // armor
+        this.datawatcher.register(ageWatcher, false);
+        this.datawatcher.register(saddleChestWatcher, (byte) 0);
+        this.datawatcher.register(ownerWatcher, Optional.absent());
+        this.datawatcher.register(variantWatcher, 0);
+        this.datawatcher.register(armorWatcher, 0);
     }
 
     @Override
     public void updateVisuals() {
-        //this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        //this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
-        //this.datawatcher.set(variantWatcher, getMyPet().getVariant());
-        //applyVisual(8, getMyPet().hasChest());
-        //applyVisual(4, getMyPet().hasSaddle());
+        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
+        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
+        applyVisual(8, getMyPet().hasChest());
+        applyVisual(4, getMyPet().hasSaddle());
     }
 
     public void onLivingUpdate() {
@@ -225,12 +226,6 @@ public class EntityMyHorse extends EntityMyPet {
             } else {
                 applyVisual(4, getMyPet().hasSaddle());
             }
-        }
-
-        if (ageCounter > -1 && ageCounter-- == 0) {
-            // TODO this.datawatcher.set(12, Byte.valueOf((byte) MathHelper.clamp(getMyPet().getAge() + ageFailCounter++, -1, 1)));
-            ageCounter = -1;
-            ageFailCounter %= 1000;
         }
     }
 

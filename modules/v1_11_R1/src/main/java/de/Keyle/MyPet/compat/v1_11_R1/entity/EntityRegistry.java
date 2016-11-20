@@ -104,10 +104,10 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
             case Horse:
                 switch (((MyHorse) pet).getHorseType()) {
                     case 1:
-                        //entityClass = EntityMyDonkey.class; //TODO not working
+                        entityClass = EntityMyDonkey.class;
                         break;
                     case 2:
-                        //entityClass = EntityMyMule.class; //TODO not working
+                        entityClass = EntityMyMule.class;
                         break;
                     case 3:
                         entityClass = EntityMyZombieHorse.class;
