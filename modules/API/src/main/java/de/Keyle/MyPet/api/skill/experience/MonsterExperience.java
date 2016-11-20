@@ -63,6 +63,10 @@ public class MonsterExperience {
         mobExp.put("ENDER_CRYSTAL", new MonsterExperience(10., "ENDER_CRYSTAL"));
         mobExp.put("WITHER", new MonsterExperience(100., "WITHER"));
         mobExp.put("RABBIT", new MonsterExperience(1., "RABBIT"));
+        mobExp.put("VINDICATOR", new MonsterExperience(5., "VINDICATOR"));
+        mobExp.put("EVOKER", new MonsterExperience(10., "EVOKER"));
+        mobExp.put("VEX", new MonsterExperience(3., "VEX"));
+        mobExp.put("LLAMA", new MonsterExperience(0., "LLAMA"));
     }
     
     private double min;
