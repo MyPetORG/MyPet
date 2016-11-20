@@ -60,7 +60,7 @@ public class EntityMyPig extends EntityMyPet {
             if (itemStack != null) {
                 if (itemStack.getItem() == Items.LEAD) {
                     ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
-                    entityhuman.a(EnumHand.OFF_HAND, null);
+                    entityhuman.a(EnumHand.OFF_HAND, ItemStack.a);
                     new BukkitRunnable() {
                         public void run() {
                             if (entityhuman instanceof EntityPlayer) {
@@ -82,7 +82,7 @@ public class EntityMyPig extends EntityMyPet {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
                     if (itemStack != null && itemStack.getItem() == Items.LEAD) {
                         ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
-                        entityhuman.a(EnumHand.MAIN_HAND, null);
+                        entityhuman.a(EnumHand.MAIN_HAND, ItemStack.a);
                         new BukkitRunnable() {
                             public void run() {
                                 if (entityhuman instanceof EntityPlayer) {
