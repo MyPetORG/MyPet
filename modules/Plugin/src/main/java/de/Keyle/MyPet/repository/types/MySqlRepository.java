@@ -337,7 +337,7 @@ public class MySqlRepository implements Repository {
             connection = dataSource.getConnection();
             Statement update = connection.createStatement();
 
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,;");
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
