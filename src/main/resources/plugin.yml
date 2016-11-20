@@ -129,11 +129,13 @@ permissions:
       MyPet.leash.Enderdragon: true
       MyPet.leash.Enderman: true
       MyPet.leash.Endermite: true
+      MyPet.leash.Evoker: true
       MyPet.leash.Giant: true
       MyPet.leash.Ghast: true
       MyPet.leash.Guardian: true
       MyPet.leash.Horse: true
       MyPet.leash.IronGolem: true
+      MyPet.leash.Llama: true
       MyPet.leash.MagmaCube: true
       MyPet.leash.Mooshroom: true
       MyPet.leash.Ocelot: true
@@ -148,7 +150,9 @@ permissions:
       MyPet.leash.Snowman: true
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
+      MyPet.leash.Vex: true
       MyPet.leash.Villager: true
+      MyPet.leash.Vindicator: true
       MyPet.leash.Witch: true
       MyPet.leash.Wither: true
       MyPet.leash.Wolf: true
@@ -165,11 +169,13 @@ permissions:
       MyPet.command.trade.offer.Enderdragon: true
       MyPet.command.trade.offer.Enderman: true
       MyPet.command.trade.offer.Endermite: true
+      MyPet.command.trade.offer.Evoker: true
       MyPet.command.trade.offer.Giant: true
       MyPet.command.trade.offer.Ghast: true
       MyPet.command.trade.offer.Guardian: true
       MyPet.command.trade.offer.Horse: true
       MyPet.command.trade.offer.IronGolem: true
+      MyPet.command.trade.offer.Llama: true
       MyPet.command.trade.offer.MagmaCube: true
       MyPet.command.trade.offer.Mooshroom: true
       MyPet.command.trade.offer.Ocelot: true
@@ -184,7 +190,9 @@ permissions:
       MyPet.command.trade.offer.Snowman: true
       MyPet.command.trade.offer.Spider: true
       MyPet.command.trade.offer.Squid: true
+      MyPet.command.trade.offer.Vex: true
       MyPet.command.trade.offer.Villager: true
+      MyPet.command.trade.offer.Vindicator: true
       MyPet.command.trade.offer.Witch: true
       MyPet.command.trade.offer.Wither: true
       MyPet.command.trade.offer.Wolf: true
@@ -201,11 +209,13 @@ permissions:
       MyPet.command.trade.receive.Enderdragon: true
       MyPet.command.trade.receive.Enderman: true
       MyPet.command.trade.receive.Endermite: true
+      MyPet.command.trade.receive.Evoker: true
       MyPet.command.trade.receive.Giant: true
       MyPet.command.trade.receive.Ghast: true
       MyPet.command.trade.receive.Guardian: true
       MyPet.command.trade.receive.Horse: true
       MyPet.command.trade.receive.IronGolem: true
+      MyPet.command.trade.receive.Llama: true
       MyPet.command.trade.receive.MagmaCube: true
       MyPet.command.trade.receive.Mooshroom: true
       MyPet.command.trade.receive.Ocelot: true
@@ -220,7 +230,9 @@ permissions:
       MyPet.command.trade.receive.Snowman: true
       MyPet.command.trade.receive.Spider: true
       MyPet.command.trade.receive.Squid: true
+      MyPet.command.trade.receive.Vex: true
       MyPet.command.trade.receive.Villager: true
+      MyPet.command.trade.receive.Vindicator: true
       MyPet.command.trade.receive.Witch: true
       MyPet.command.trade.receive.Wither: true
       MyPet.command.trade.receive.Wolf: true
