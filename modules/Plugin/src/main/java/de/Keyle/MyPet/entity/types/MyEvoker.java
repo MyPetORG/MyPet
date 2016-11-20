@@ -20,20 +20,12 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MyEvoker extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEvoker {
-
-    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyEvoker(MyPetPlayer petOwner) {
         super(petOwner);
@@ -47,47 +39,5 @@ public class MyEvoker extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     @Override
     public String toString() {
         return "MyEvoker{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
-    }
-
-    @Override
-    public ItemStack[] getEquipment() {
-        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
-        for (int i = 0; i < EquipmentSlot.values().length; i++) {
-            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
-        }
-        return equipment;
-    }
-
-    @Override
-    public ItemStack getEquipment(EquipmentSlot slot) {
-        return equipment.get(slot);
-    }
-
-    @Override
-    public void setEquipment(EquipmentSlot slot, ItemStack item) {
-        if (item == null) {
-            equipment.remove(slot);
-            getEntity().get().getHandle().updateVisuals();
-            return;
-        }
-
-        item = item.clone();
-        item.setAmount(1);
-        equipment.put(slot, item);
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-        }
-    }
-
-    @Override
-    public void dropEquipment() {
-        if (getStatus() == PetState.Here) {
-            Location dropLocation = getLocation().get();
-            for (ItemStack itemStack : equipment.values()) {
-                if (itemStack != null) {
-                    dropLocation.getWorld().dropItem(dropLocation, itemStack);
-                }
-            }
-        }
     }
 }
