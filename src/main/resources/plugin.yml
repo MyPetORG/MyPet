@@ -120,11 +120,13 @@ permissions:
       MyPet.leash.Enderdragon: true
       MyPet.leash.Enderman: true
       MyPet.leash.Endermite: true
+      MyPet.leash.Evoker: true
       MyPet.leash.Giant: true
       MyPet.leash.Ghast: true
       MyPet.leash.Guardian: true
       MyPet.leash.Horse: true
       MyPet.leash.IronGolem: true
+      MyPet.leash.Llama: true
       MyPet.leash.MagmaCube: true
       MyPet.leash.Mooshroom: true
       MyPet.leash.Ocelot: true
@@ -139,7 +141,9 @@ permissions:
       MyPet.leash.Snowman: true
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
+      MyPet.leash.Vex: true
       MyPet.leash.Villager: true
+      MyPet.leash.Vindicator: true
       MyPet.leash.Witch: true
       MyPet.leash.Wither: true
       MyPet.leash.Wolf: true
