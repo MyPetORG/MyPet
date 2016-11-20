@@ -17,6 +17,7 @@ import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,7 +58,11 @@ public class ShopMyPet implements StoredMyPet {
             icon.setGlowing(egg.isGlowing());
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                 TagCompound entityTag = new TagCompound();
-                entityTag.put("id", new TagString(egg.getEggName()));
+                String eggName = egg.getEggName();
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+                    eggName = "minecraft:" + EntityType.valueOf(petType.getBukkitName()).getName(); //TODO move egg colors to new class
+                }
+                entityTag.put("id", new TagString(eggName));
                 icon.addTag("EntityTag", entityTag);
             } else {
                 icon.setData(egg.getColor());
