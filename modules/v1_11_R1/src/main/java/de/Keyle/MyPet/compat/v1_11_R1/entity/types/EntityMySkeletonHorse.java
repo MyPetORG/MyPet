@@ -20,11 +20,9 @@
 
 package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
-import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import net.minecraft.server.v1_11_R1.World;
 
-@EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMySkeletonHorse extends EntityMyHorse {
 
     public EntityMySkeletonHorse(World world, MyPet myPet) {
