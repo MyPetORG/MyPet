@@ -22,10 +22,9 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 import static org.bukkit.Material.APPLE;
 
 @DefaultInfo(food = {APPLE})
-public interface MyEvoker extends MyPet, MyPetEquipment {
+public interface MyEvoker extends MyPet {
 }

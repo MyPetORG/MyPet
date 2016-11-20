@@ -20,10 +20,12 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +49,23 @@ public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVe
     @Override
     public String toString() {
         return "MyVex{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
+        info.getCompoundData().put("Weapon", item);
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Weapon")) {
+            TagCompound item = info.getAs("Weapon", TagCompound.class);
+            ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+            setEquipment(EquipmentSlot.MainHand, itemStack);
+        }
     }
 
     @Override
