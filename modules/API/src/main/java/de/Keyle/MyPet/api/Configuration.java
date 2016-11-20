@@ -183,6 +183,10 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class Llama {
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Mooshroom {
             public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_GIVE_SOUP;

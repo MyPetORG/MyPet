@@ -86,6 +86,9 @@ public class PropertyConverter {
             case "RABBIT":
                 convertRabbit((Rabbit) entity, properties);
                 break;
+            case "LLAMA":
+                convertLlama((Llama) entity, properties);
+                break;
         }
         
         if (entity instanceof Ageable) {
@@ -93,6 +96,14 @@ public class PropertyConverter {
         }
 
         return properties;
+    }
+
+    private static void convertLlama(Llama llama, TagCompound properties) {
+        properties.getCompoundData().put("Variant", new TagInt(llama.getVariant().ordinal()));
+        properties.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(llama.getInventory().getDecor()));
+        if (llama.isCarryingChest()) {
+            properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
+        }
     }
 
     public static void convertRabbit(Rabbit rabbit, TagCompound properties) {
