@@ -20,11 +20,17 @@
 
 package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MyGiant;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.server.v1_11_R1.World;
+import net.minecraft.server.v1_11_R1.*;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 6.0f, height = 10.440001F)
 public class EntityMyGiant extends EntityMyPet {
@@ -55,5 +61,83 @@ public class EntityMyGiant extends EntityMyPet {
         if (myPet.getDamage() > 0) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 8, 20));
         }
+    }
+
+    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
+            return true;
+        }
+
+        if (getOwner().equals(entityhuman) && itemStack != null) {
+            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                boolean hadEquipment = false;
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                    if (itemInSlot != null) {
+                        EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
+                        entityitem.pickupDelay = 10;
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        this.world.addEntity(entityitem);
+                        getMyPet().setEquipment(slot, null);
+                        hadEquipment = true;
+                    }
+                }
+                if (hadEquipment) {
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        itemStack.damage(1, entityhuman);
+                    }
+                }
+                return true;
+            } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
+                EquipmentSlot slot = EquipmentSlot.getSlotById(d(itemStack).c());
+                ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
+                    entityitem.pickupDelay = 10;
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    this.world.addEntity(entityitem);
+                }
+                getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemStack.subtract(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void updateVisuals() {
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
+            public void run() {
+                if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                    for (EquipmentSlot slot : EquipmentSlot.values()) {
+                        setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
+                    }
+                }
+            }
+        }, 5L);
+    }
+
+    public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
+        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.values()[slot.get19Slot()], itemStack));
+    }
+
+    public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
+        if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
+            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.c());
+            if (getMyPet().getEquipment(slot) != null) {
+                return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+            }
+        }
+        return super.getEquipment(vanillaSlot);
+    }
+
+    public MyGiant getMyPet() {
+        return (MyGiant) myPet;
     }
 }

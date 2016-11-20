@@ -22,9 +22,10 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @DefaultInfo(food = {ROTTEN_FLESH})
-public interface MyGiant extends MyPet {
+public interface MyGiant extends MyPet, MyPetEquipment {
 }

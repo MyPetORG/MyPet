@@ -20,12 +20,27 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagList;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MyGiant extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGiant {
+
+    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
+
     public MyGiant(MyPetPlayer petOwner) {
         super(petOwner);
     }
@@ -33,6 +48,74 @@ public class MyGiant extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @Override
     public MyPetType getPetType() {
         return MyPetType.Giant;
+    }
+
+    public ItemStack[] getEquipment() {
+        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
+        for (int i = 0; i < EquipmentSlot.values().length; i++) {
+            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
+        }
+        return equipment;
+    }
+
+    public ItemStack getEquipment(EquipmentSlot slot) {
+        return equipment.get(slot);
+    }
+
+    public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        if (item == null) {
+            equipment.remove(slot);
+            getEntity().get().getHandle().updateVisuals();
+            return;
+        }
+
+        item = item.clone();
+        item.setAmount(1);
+        equipment.put(slot, item);
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
+        }
+    }
+
+    @Override
+    public void dropEquipment() {
+        if (getStatus() == PetState.Here) {
+            Location dropLocation = getLocation().get();
+            for (ItemStack itemStack : equipment.values()) {
+                if (itemStack != null) {
+                    dropLocation.getWorld().dropItem(dropLocation, itemStack);
+                }
+            }
+        }
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+
+        List<TagCompound> itemList = new ArrayList<>();
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (getEquipment(slot) != null) {
+                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(slot));
+                item.getCompoundData().put("Slot", new TagInt(slot.getSlotId()));
+                itemList.add(item);
+            }
+        }
+        info.getCompoundData().put("Equipment", new TagList(itemList));
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Equipment")) {
+            TagList equipment = info.get("Equipment");
+            for (int i = 0; i < equipment.size(); i++) {
+                TagCompound item = equipment.getTag(i);
+
+                ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+                setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
+            }
+        }
     }
 
     @Override
