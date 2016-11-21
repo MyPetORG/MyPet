@@ -25,6 +25,7 @@ import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
 import org.apache.commons.lang.ClassUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,8 @@ import java.util.Map;
  * other plugins are active.
  */
 public class ServiceManager {
-    ArrayListMultimap<Class<? extends ServiceContainer>, ServiceContainer> services = ArrayListMultimap.create();
+    Map<Class<? extends ServiceContainer>, ServiceContainer> services = new HashMap<>();
     Map<String, ServiceContainer> serviceByName = new HashMap<>();
-    Map<Class<? extends ServiceContainer>, ServiceContainer> servicesByClass = new HashMap<>();
 
     ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
 
@@ -69,13 +69,17 @@ public class ServiceManager {
                 genericService = false;
             }
         }
+        for (Object o : ClassUtils.getAllSuperclasses(service.getClass())) {
+            if (o != ServiceContainer.class && ServiceContainer.class.isAssignableFrom((Class) o)) {
+                services.put((Class) o, service);
+                genericService = false;
+            }
+        }
         if (genericService) {
             services.put(ServiceContainer.class, service);
         }
         serviceByName.put(service.getServiceName(), service);
-        servicesByClass.put(service.getClass(), service);
-
-        MyPetApi.getLogger().info(service.getServiceName() + " service activated.");
+        services.put(service.getClass(), service);
     }
 
     public void activate(Load.State state) {
@@ -104,7 +108,15 @@ public class ServiceManager {
      */
     @SuppressWarnings("unchecked")
     public <T extends ServiceContainer> List<T> getServices(Class<? extends T> serviceClass) {
-        return (List<T>) services.get(serviceClass);
+        List<T> list = new ArrayList<>();
+
+        for (ServiceContainer service : services.values()) {
+            if (service.getClass().isAssignableFrom(serviceClass) && !list.contains(service)) {
+                list.add((T) service);
+            }
+        }
+
+        return list;
     }
 
     /**
@@ -125,7 +137,7 @@ public class ServiceManager {
      */
     @SuppressWarnings("unchecked")
     public <T extends ServiceContainer> Optional<T> getService(Class<? extends T> serviceClass) {
-        return Optional.fromNullable((T) servicesByClass.get(serviceClass));
+        return Optional.fromNullable((T) services.get(serviceClass));
     }
 
     /**
@@ -155,6 +167,6 @@ public class ServiceManager {
      * @return if any service was found
      */
     public boolean isServiceActive(Class<? extends ServiceContainer> serviceClass) {
-        return servicesByClass.containsKey(serviceClass);
+        return services.containsKey(serviceClass);
     }
 }

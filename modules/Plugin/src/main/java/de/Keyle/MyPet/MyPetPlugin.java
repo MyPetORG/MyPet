@@ -30,9 +30,7 @@ import de.Keyle.MyPet.api.skill.SkillsInfo;
 import de.Keyle.MyPet.api.skill.skills.*;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoader;
-import de.Keyle.MyPet.api.util.CompatUtil;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.api.util.Scheduler;
+import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
@@ -123,6 +121,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         ConfigurationLoader.loadConfiguration();
 
         registerServices();
+        compatUtil.getComapatInstance(CompatManager.class, "", "CompatManager").init();
+
         serviceManager.activate(Load.State.OnLoad);
 
         registerHooks();
