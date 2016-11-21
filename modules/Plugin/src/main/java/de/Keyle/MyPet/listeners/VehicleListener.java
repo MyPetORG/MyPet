@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -34,7 +35,10 @@ public class VehicleListener implements Listener {
         if (event.getEntered() instanceof Player && !(event.getVehicle() instanceof Horse)) {
             Player player = (Player) event.getEntered();
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                MyPetApi.getMyPetManager().getMyPet(player).removePet(true);
+                MyPet pet = MyPetApi.getMyPetManager().getMyPet(player);
+                if (pet.getStatus() == MyPet.PetState.Here) {
+                    pet.removePet(true);
+                }
             }
         }
         if (event.getEntered() instanceof MyPetBukkitEntity) {
