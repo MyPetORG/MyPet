@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.selectionmenu;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -28,11 +29,9 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagString;
+import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -125,7 +124,6 @@ public class MyPetSelectionGui {
             for (int i = 0; i < pagePets && i <= 45; i++) {
                 StoredMyPet mypet = pets.get(i + ((page - 1) * 45));
 
-                SpawnerEggTypes egg = SpawnerEggTypes.getEggType(mypet.getPetType());
                 List<String> lore = new ArrayList<>();
                 lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + Math.round(mypet.getSaturation()));
                 if (mypet.getRespawnTime() > 0) {
@@ -138,20 +136,11 @@ public class MyPetSelectionGui {
                 lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
                 IconMenuItem icon = new IconMenuItem();
-                icon.setMaterial(Material.MONSTER_EGG);
-                icon.setGlowing(egg.isGlowing());
                 icon.setTitle(RESET + mypet.getPetName());
                 icon.addLore(lore);
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    TagCompound entityTag = new TagCompound();
-                    String eggName = egg.getEggName();
-                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
-                        eggName = "minecraft:" + EntityType.valueOf(mypet.getPetType().getBukkitName()).getName(); //TODO move egg colors to new class
-                    }
-                    entityTag.put("id", new TagString(eggName));
-                    icon.addTag("EntityTag", entityTag);
-                } else {
-                    icon.setData(egg.getColor());
+                Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
+                if (egg.isPresent()) {
+                    egg.get().updateIcon(mypet.getPetType(), icon);
                 }
 
                 int pos = menu.addOption(icon);

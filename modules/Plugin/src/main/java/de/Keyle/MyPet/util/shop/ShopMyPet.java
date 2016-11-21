@@ -1,5 +1,6 @@
 package de.Keyle.MyPet.util.shop;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -10,14 +11,12 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.NotImplemented;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
-import de.Keyle.MyPet.util.selectionmenu.SpawnerEggTypes;
 import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.EntityType;
 
 import java.util.List;
 import java.util.UUID;
@@ -54,18 +53,9 @@ public class ShopMyPet implements StoredMyPet {
     public IconMenuItem getIcon() {
         IconMenuItem icon = this.icon.clone();
         if (icon.getMaterial() == Material.MONSTER_EGG) {
-            SpawnerEggTypes egg = SpawnerEggTypes.getEggType(petType);
-            icon.setGlowing(egg.isGlowing());
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                TagCompound entityTag = new TagCompound();
-                String eggName = egg.getEggName();
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
-                    eggName = "minecraft:" + EntityType.valueOf(petType.getBukkitName()).getName(); //TODO move egg colors to new class
-                }
-                entityTag.put("id", new TagString(eggName));
-                icon.addTag("EntityTag", entityTag);
-            } else {
-                icon.setData(egg.getColor());
+            Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
+            if (egg.isPresent()) {
+                egg.get().updateIcon(petType, icon);
             }
         }
         icon.setTitle(ChatColor.AQUA + Colorizer.setColors(getPetName()));
