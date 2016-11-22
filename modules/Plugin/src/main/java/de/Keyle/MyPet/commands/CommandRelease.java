@@ -218,6 +218,17 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                                 ((Horse) normalEntity).getInventory().setArmor(((MyHorse) myPet).getArmor().clone());
                             }
                             ((Horse) normalEntity).setOwner(petOwner);
+                        } else if (myPet instanceof MyLlama) {
+                            if (((MyLlama) myPet).isBaby()) {
+                                ((Llama) normalEntity).setBaby();
+                            }
+                            ((Llama) normalEntity).setColor(Llama.Color.values()[((MyLlama) myPet).getVariant()]);
+                            ((Llama) normalEntity).setCarryingChest(((MyLlama) myPet).hasChest());
+
+                            if (((MyLlama) myPet).hasDecor()) {
+                                ((Llama) normalEntity).getInventory().setDecor(((MyLlama) myPet).getDecor());
+                            }
+                            ((Llama) normalEntity).setOwner(petOwner);
                         } else if (myPet instanceof MyRabbit) {
                             if (((MyRabbit) myPet).isBaby()) {
                                 ((Rabbit) normalEntity).setBaby();
