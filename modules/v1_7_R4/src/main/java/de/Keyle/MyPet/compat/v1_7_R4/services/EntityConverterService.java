@@ -1,9 +1,8 @@
-package de.Keyle.MyPet.compat.v1_11_R1.services;
+package de.Keyle.MyPet.compat.v1_7_R4.services;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
-import de.Keyle.MyPet.api.entity.types.MyRabbit;
 import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -15,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-@Compat("v1_11_R1")
+@Compat("v1_7_R4")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
-    @Override
+
     public TagCompound convertEntity(LivingEntity entity) {
         TagCompound properties = new TagCompound();
         switch (entity.getType()) {
@@ -46,9 +45,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case HORSE:
                 convertHorse((Horse) entity, properties);
                 break;
-            case HUSK:
-            case ZOMBIE:
-            case ZOMBIE_VILLAGER:
             case PIG_ZOMBIE:
                 convertZombie((Zombie) entity, properties);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
@@ -58,22 +54,11 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case ENDERMAN:
                 convertEnderman((Enderman) entity, properties);
                 break;
-            case STRAY:
-            case WITHER_SKELETON:
             case SKELETON:
                 convertSkeleton((Skeleton) entity, properties);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
                     convertEquipable(entity, properties);
                 }
-                break;
-            case GUARDIAN:
-                convertGuardian((Guardian) entity, properties);
-                break;
-            case RABBIT:
-                convertRabbit((Rabbit) entity, properties);
-                break;
-            case LLAMA:
-                convertLlama((Llama) entity, properties);
                 break;
         }
 
@@ -82,22 +67,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         }
 
         return properties;
-    }
-
-    private void convertLlama(Llama llama, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagInt(llama.getVariant().ordinal()));
-        properties.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(llama.getInventory().getDecor()));
-        if (llama.isCarryingChest()) {
-            properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
-        }
-    }
-
-    public void convertRabbit(Rabbit rabbit, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagByte(MyRabbit.RabbitType.getTypeByBukkitEnum(rabbit.getRabbitType()).getId()));
-    }
-
-    public void convertGuardian(Guardian guardian, TagCompound properties) {
-        properties.getCompoundData().put("Elder", new TagByte(guardian.isElder()));
     }
 
     public void convertEquipable(LivingEntity entity, TagCompound properties) {
@@ -154,12 +123,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertZombie(Zombie zombie, TagCompound properties) {
         properties.getCompoundData().put("Baby", new TagByte(zombie.isBaby()));
-        if (zombie instanceof ZombieVillager) {
-            properties.getCompoundData().put("Villager", new TagByte(true));
-            properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal()));
-        }
-        if (zombie instanceof Husk) {
-            properties.getCompoundData().put("Husk", new TagByte(true));
+        if (zombie.isVillager()) {
+            properties.getCompoundData().put("Type", new TagInt(1));
+
         }
     }
 
@@ -207,7 +173,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertVillager(Villager villager, TagCompound properties) {
-        int profession = villager.getProfession().ordinal() - 1;
+        int profession = villager.getProfession().ordinal();
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
+            profession--;
+        }
         properties.getCompoundData().put("Profession", new TagInt(profession));
 
         TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
