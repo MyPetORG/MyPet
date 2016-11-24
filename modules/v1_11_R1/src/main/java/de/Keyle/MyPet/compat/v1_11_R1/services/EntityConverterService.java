@@ -1,30 +1,10 @@
-/*
- * This file is part of MyPet
- *
- * Copyright © 2011-2016 Keyle
- * MyPet is licensed under the GNU Lesser General public static License.
- *
- * MyPet is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General public static License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MyPet is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General public static License for more details.
- *
- * You should have received a copy of the GNU General public static License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+package de.Keyle.MyPet.compat.v1_11_R1.services;
 
-package de.Keyle.MyPet.api.entity;
-
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
-import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
+import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -35,16 +15,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class PropertyConverter {
-    private static Random random = new Random();
+@Compat("v1_11_R1")
+public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
+    private Random random = new Random();
 
-    public static TagCompound convertEntity(LivingEntity entity) {
-        Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
-        if (converter.isPresent()) {
-            return converter.get().convertEntity(entity);
-        }
-
+    @Override
+    public TagCompound convertEntity(LivingEntity entity) {
         TagCompound properties = new TagCompound();
+        MyPetApi.getLogger().info("convert Entity: " + entity.getType().name());
         switch (entity.getType().name()) {
             case "OCELOT":
                 convertOcelot((Ocelot) entity, properties);
@@ -71,6 +49,9 @@ public class PropertyConverter {
             case "HORSE":
                 convertHorse((Horse) entity, properties);
                 break;
+            case "HUSK":
+            case "ZOMBIE":
+            case "ZOMBIE_VILLAGER":
             case "PIG_ZOMBIE":
                 convertZombie((Zombie) entity, properties);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
@@ -80,6 +61,8 @@ public class PropertyConverter {
             case "ENDERMAN":
                 convertEnderman((Enderman) entity, properties);
                 break;
+            case "STRAY":
+            case "WITHER_SKELETON":
             case "SKELETON":
                 convertSkeleton((Skeleton) entity, properties);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
@@ -104,7 +87,7 @@ public class PropertyConverter {
         return properties;
     }
 
-    private static void convertLlama(Llama llama, TagCompound properties) {
+    private void convertLlama(Llama llama, TagCompound properties) {
         properties.getCompoundData().put("Variant", new TagInt(llama.getVariant().ordinal()));
         properties.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(llama.getInventory().getDecor()));
         if (llama.isCarryingChest()) {
@@ -112,15 +95,15 @@ public class PropertyConverter {
         }
     }
 
-    public static void convertRabbit(Rabbit rabbit, TagCompound properties) {
+    public void convertRabbit(Rabbit rabbit, TagCompound properties) {
         properties.getCompoundData().put("Variant", new TagByte(MyRabbit.RabbitType.getTypeByBukkitEnum(rabbit.getRabbitType()).getId()));
     }
 
-    public static void convertGuardian(Guardian guardian, TagCompound properties) {
+    public void convertGuardian(Guardian guardian, TagCompound properties) {
         properties.getCompoundData().put("Elder", new TagByte(guardian.isElder()));
     }
 
-    public static void convertEquipable(LivingEntity entity, TagCompound properties) {
+    public void convertEquipable(LivingEntity entity, TagCompound properties) {
         List<TagCompound> equipmentList = new ArrayList<>();
         if (random.nextFloat() <= entity.getEquipment().getChestplateDropChance()) {
             ItemStack itemStack = entity.getEquipment().getChestplate();
@@ -157,41 +140,37 @@ public class PropertyConverter {
         properties.getCompoundData().put("Equipment", new TagList(equipmentList));
     }
 
-    public static void convertAgable(Ageable ageable, TagCompound properties) {
+    public void convertAgable(Ageable ageable, TagCompound properties) {
         properties.getCompoundData().put("Baby", new TagByte(!ageable.isAdult()));
     }
 
-    public static void convertSkeleton(Skeleton skeleton, TagCompound properties) {
+    public void convertSkeleton(Skeleton skeleton, TagCompound properties) {
         properties.getCompoundData().put("Type", new TagInt(skeleton.getSkeletonType().ordinal()));
     }
 
-    public static void convertEnderman(Enderman enderman, TagCompound properties) {
+    public void convertEnderman(Enderman enderman, TagCompound properties) {
         if (enderman.getCarriedMaterial().getItemType() != Material.AIR) {
             ItemStack block = enderman.getCarriedMaterial().toItemStack(1);
             properties.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
         }
     }
 
-    public static void convertZombie(Zombie zombie, TagCompound properties) {
+    public void convertZombie(Zombie zombie, TagCompound properties) {
         properties.getCompoundData().put("Baby", new TagByte(zombie.isBaby()));
-        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
-            properties.getCompoundData().put("Type", new TagInt(zombie.getVillagerProfession().ordinal()));
-        } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-            if (zombie.isVillager()) {
-                properties.getCompoundData().put("Type", new TagInt(zombie.getVillagerProfession().ordinal() + 1));
-            }
-        } else {
-            if (zombie.isVillager()) {
-                properties.getCompoundData().put("Type", new TagInt(1));
-            }
+        if (zombie instanceof ZombieVillager) {
+            properties.getCompoundData().put("Villager", new TagByte(true));
+            properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal()));
+        }
+        if (zombie instanceof Husk) {
+            properties.getCompoundData().put("Husk", new TagByte(true));
         }
     }
 
-    public static void convertCreeper(Creeper creeper, TagCompound properties) {
+    public void convertCreeper(Creeper creeper, TagCompound properties) {
         properties.getCompoundData().put("Powered", new TagByte(creeper.isPowered()));
     }
 
-    public static void convertHorse(Horse horse, TagCompound properties) {
+    public void convertHorse(Horse horse, TagCompound properties) {
         byte type = (byte) horse.getVariant().ordinal();
         int style = horse.getStyle().ordinal();
         int color = horse.getColor().ordinal();
@@ -222,19 +201,16 @@ public class PropertyConverter {
         }
     }
 
-    public static void convertSlime(Slime slime, TagCompound properties) {
+    public void convertSlime(Slime slime, TagCompound properties) {
         properties.getCompoundData().put("Size", new TagInt(slime.getSize()));
     }
 
-    public static void convertPig(Pig pig, TagCompound properties) {
+    public void convertPig(Pig pig, TagCompound properties) {
         properties.getCompoundData().put("Saddle", new TagByte(pig.hasSaddle()));
     }
 
-    public static void convertVillager(Villager villager, TagCompound properties) {
-        int profession = villager.getProfession().ordinal();
-        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
-            profession--;
-        }
+    public void convertVillager(Villager villager, TagCompound properties) {
+        int profession = villager.getProfession().ordinal() - 1;
         properties.getCompoundData().put("Profession", new TagInt(profession));
 
         TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
@@ -249,17 +225,17 @@ public class PropertyConverter {
         properties.getCompoundData().put("OriginalData", villagerTag);
     }
 
-    public static void convertSheep(Sheep sheep, TagCompound properties) {
+    public void convertSheep(Sheep sheep, TagCompound properties) {
         properties.getCompoundData().put("Color", new TagInt(sheep.getColor().getDyeData()));
         properties.getCompoundData().put("Sheared", new TagByte(sheep.isSheared()));
     }
 
-    public static void convertOcelot(Ocelot ocelot, TagCompound properties) {
+    public void convertOcelot(Ocelot ocelot, TagCompound properties) {
         properties.getCompoundData().put("CatType", new TagInt(ocelot.getCatType().getId()));
         properties.getCompoundData().put("Sitting", new TagByte(ocelot.isSitting()));
     }
 
-    public static void convertWolf(Wolf wolf, TagCompound properties) {
+    public void convertWolf(Wolf wolf, TagCompound properties) {
         properties.getCompoundData().put("Sitting", new TagByte(wolf.isSitting()));
         properties.getCompoundData().put("Tamed", new TagByte(wolf.isTamed()));
         properties.getCompoundData().put("CollarColor", new TagByte(wolf.getCollarColor().getWoolData()));
