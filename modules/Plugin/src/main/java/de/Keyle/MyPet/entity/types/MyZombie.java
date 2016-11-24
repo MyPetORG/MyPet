@@ -40,8 +40,13 @@ import java.util.List;
 import java.util.Map;
 
 public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombie {
+    private enum Type {
+        NORMAL, HUSK, VILLAGER
+    }
+
     protected boolean isBaby = false;
-    protected int type = 0;
+    protected Type type = Type.NORMAL;
+    protected int profession = 0;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyZombie(MyPetPlayer petOwner) {
@@ -64,7 +69,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
-        info.getCompoundData().put("Type", new TagInt(getType()));
+        info.getCompoundData().put("Type", new TagInt(type.ordinal()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -86,11 +91,24 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         if (info.getCompoundData().containsKey("Villager")) {
             setVillager(info.getAs("Villager", TagByte.class).getBooleanData());
         }
+        if (info.getCompoundData().containsKey("Husk")) {
+            setHusk(info.getAs("Husk", TagByte.class).getBooleanData());
+        }
         if (info.getCompoundData().containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Type")) {
-            setType(info.getAs("Type", TagInt.class).getIntData());
+            int type = info.getAs("Type", TagInt.class).getIntData();
+            if (!info.getCompoundData().containsKey("Version")) {
+                if (type == 6) {
+                    setHusk(true);
+                }
+            } else if (type > 0 && type < 6) {
+                setVillager(true);
+                setProfession(type);
+
+            }
+            setType(type);
         }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
@@ -121,18 +139,12 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public boolean isHusk() {
-        return type == 6;
+        return type == Type.HUSK;
     }
 
     @Override
     public void setHusk(boolean flag) {
-        if (flag) {
-            type = 6;
-        } else {
-            if (isHusk()) {
-                type = 0;
-            }
-        }
+        type = Type.HUSK;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
@@ -143,24 +155,18 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     public boolean isVillager() {
-        return Util.isBetween(1, 5, type);
+        return type == Type.VILLAGER;
     }
 
     public void setVillager(boolean flag) {
-        if (flag) {
-            type = 1;
-        } else {
-            if (isVillager()) {
-                type = 0;
-            }
-        }
+        type = Type.VILLAGER;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
     }
 
     public void setProfession(int type) {
-        this.type = type + 1;
+        this.profession = type + 1;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
@@ -172,18 +178,19 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public int getProfession() {
-        return type - 1;
+        return profession - 1;
     }
 
     @Override
+    @Deprecated
     public int getType() {
-        return type;
+        return type.ordinal();
     }
 
     @Override
     public void setType(int type) {
-        if (Util.isBetween(0, 6, type)) {
-            this.type = type;
+        if (Util.isBetween(0, 2, type)) {
+            this.type = Type.values()[type];
             if (status == PetState.Here) {
                 getEntity().get().getHandle().updateVisuals();
             }

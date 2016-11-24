@@ -38,6 +38,7 @@ public class PropertyConverter {
     
     public static TagCompound convertEntity(LivingEntity entity) {
         TagCompound properties = new TagCompound();
+        MyPetApi.getLogger().info("convert Entity: " + entity.getType().name());
         switch (entity.getType().name()) {
             case "OCELOT":
                 convertOcelot((Ocelot) entity, properties);
@@ -64,7 +65,9 @@ public class PropertyConverter {
             case "HORSE":
                 convertHorse((Horse) entity, properties);
                 break;
+            case "HUSK":
             case "ZOMBIE":
+            case "ZOMBIE_VILLAGER":
             case "PIG_ZOMBIE":
                 convertZombie((Zombie) entity, properties);
                 if(Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
@@ -74,6 +77,8 @@ public class PropertyConverter {
             case "ENDERMAN":
                 convertEnderman((Enderman) entity, properties);
                 break;
+            case "STRAY":
+            case "WITHER_SKELETON":
             case "SKELETON":
                 convertSkeleton((Skeleton) entity, properties);
                 if(Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
@@ -168,7 +173,15 @@ public class PropertyConverter {
 
     public static void convertZombie(Zombie zombie, TagCompound properties) {
         properties.getCompoundData().put("Baby", new TagByte(zombie.isBaby()));
-        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+            if (zombie instanceof ZombieVillager) {
+                properties.getCompoundData().put("Villager", new TagByte(true));
+                properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal()));
+            }
+            if (zombie instanceof Husk) {
+                properties.getCompoundData().put("Husk", new TagByte(true));
+            }
+        } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
             properties.getCompoundData().put("Type", new TagInt(zombie.getVillagerProfession().ordinal()));
         } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
             if (zombie.isVillager()) {
