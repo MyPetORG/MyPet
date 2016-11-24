@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.*;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -80,6 +81,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public boolean canUseMyPet(MyPetPlayer player) {
         return isInArena(player);
     }

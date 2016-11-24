@@ -22,13 +22,16 @@ package de.Keyle.MyPet.api.entity;
 
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.entity.LivingEntity;
 
 @Deprecated
+@Since("24.11.2016")
 public class PropertyConverter {
     @Deprecated
+    @Since("24.11.2016")
     public static TagCompound convertEntity(LivingEntity entity) {
         Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
         if (converter.isPresent()) {

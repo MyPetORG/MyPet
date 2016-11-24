@@ -182,7 +182,6 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     @Override
-    @Deprecated
     public int getType() {
         return type.ordinal();
     }

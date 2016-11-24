@@ -9,6 +9,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.NotImplemented;
+import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
@@ -97,6 +98,7 @@ public class ShopMyPet implements StoredMyPet {
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public double getHungerValue() {
         return getSaturation();
     }
@@ -106,6 +108,7 @@ public class ShopMyPet implements StoredMyPet {
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public void setHungerValue(double value) {
         setSaturation(value);
     }

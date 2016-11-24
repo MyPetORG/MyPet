@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.util.Since;
 
 import java.util.*;
 
@@ -87,6 +88,7 @@ public abstract class SkillTreeLoader {
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public void loadSkillTrees(String configPath, String[] mobtypes) {
         List<String> mobtypeList = new LinkedList<>();
         Collections.addAll(mobtypeList, mobtypes);

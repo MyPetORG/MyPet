@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -66,6 +67,7 @@ public abstract class HookHelper {
     public abstract boolean isInArena(MyPetPlayer player);
 
     @Deprecated
+    @Since("24.11.2016")
     public abstract boolean canUseMyPet(MyPetPlayer player);
 
     /**

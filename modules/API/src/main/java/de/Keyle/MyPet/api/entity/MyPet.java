@@ -24,6 +24,7 @@ import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.util.Scheduler;
+import de.Keyle.MyPet.api.util.Since;
 import org.bukkit.Location;
 
 public interface MyPet extends StoredMyPet, Scheduler {
@@ -66,6 +67,7 @@ public interface MyPet extends StoredMyPet, Scheduler {
     boolean hasTarget();
 
     @Deprecated
+    @Since("24.11.2016")
     void decreaseHunger(double value);
 
     void decreaseSaturation(double value);

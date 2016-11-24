@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api;
 
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.Since;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,26 +57,37 @@ public class Configuration {
         public static String CONVERT_FROM = "";
 
         @Deprecated
+        @Since("24.11.2016")
         public static class NBT {
             @Deprecated
+            @Since("24.11.2016")
             public static int AUTOSAVE_TIME = 60;
             @Deprecated
+            @Since("24.11.2016")
             public static boolean SAVE_ON_PET_ADD = true;
             @Deprecated
+            @Since("24.11.2016")
             public static boolean SAVE_ON_PET_UPDATE = true;
             @Deprecated
+            @Since("24.11.2016")
             public static boolean SAVE_ON_PET_REMOVE = true;
             @Deprecated
+            @Since("24.11.2016")
             public static boolean SAVE_ON_PLAYER_ADD = true;
             @Deprecated
+            @Since("24.11.2016")
             public static boolean SAVE_ON_PLAYER_UPDATE = true;
             @Deprecated
+            @Since("24.11.2016")
             public static boolean SAVE_ON_PLAYER_REMOVE = true;
             @Deprecated
+            @Since("24.11.2016")
             public static boolean MAKE_BACKUPS = true;
             @Deprecated
+            @Since("24.11.2016")
             public static int SAVE_INTERVAL = 1440;
             @Deprecated
+            @Since("24.11.2016")
             public static String DATE_FORMAT = "yyyy_MM_dd_HH.mm";
         }
 
@@ -124,8 +136,10 @@ public class Configuration {
     public static class LevelSystem {
         public static String CALCULATION_MODE = "Default";
         @Deprecated
+        @Since("24.11.2016")
         public static boolean FIREWORK = true;
         @Deprecated
+        @Since("24.11.2016")
         public static int FIREWORK_COLOR = 0x00FF00;
 
         public static class Experience {

@@ -42,6 +42,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
+import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
@@ -222,6 +223,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public double getHungerValue() {
         return getSaturation();
     }
@@ -235,6 +237,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public void setHungerValue(double value) {
         setSaturation(value);
     }
@@ -249,6 +252,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public void decreaseHunger(double value) {
         decreaseSaturation(value);
     }
