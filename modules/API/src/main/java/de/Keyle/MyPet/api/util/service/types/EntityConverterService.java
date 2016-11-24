@@ -13,7 +13,7 @@ public abstract class EntityConverterService implements ServiceContainer {
 
     @Override
     public boolean onEnable() {
-        return false;
+        return true;
     }
 
     @Override
