@@ -95,6 +95,7 @@ public class CompatUtil {
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public int getMinecraftVersion() {
         String version = minecraftVersion.replace(".", "");
         if (Util.isInt(version)) {

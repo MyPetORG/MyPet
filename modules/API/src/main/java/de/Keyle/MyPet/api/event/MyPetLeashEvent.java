@@ -22,20 +22,24 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.Since;
 import org.bukkit.event.HandlerList;
 
 @Deprecated
+@Since("24.11.2016")
 public class MyPetLeashEvent extends MyPetCreateEvent {
     public MyPetLeashEvent(MyPet myPet) {
         super(myPet, Source.Leash);
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public MyPetPlayer getLeasher() {
         return getOwner();
     }
 
     @Deprecated
+    @Since("24.11.2016")
     public MyPet getPet() {
         return (MyPet) getMyPet();
     }

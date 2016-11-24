@@ -21,8 +21,10 @@
 package de.Keyle.MyPet.util.selectionmenu;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.util.Since;
 
 @Deprecated
+@Since("24.11.2016")
 public enum SpawnerEggTypes {
     Bat(MyPetType.Bat, 65),
     Blaze(MyPetType.Blaze, 61),
