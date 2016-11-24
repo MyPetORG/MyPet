@@ -47,6 +47,7 @@ import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.InactiveMyPet;
@@ -55,7 +56,6 @@ import de.Keyle.MyPet.skill.skills.Wither;
 import de.Keyle.MyPet.util.CaptureHelper;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
-import de.keyle.knbt.TagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -562,8 +562,10 @@ public class EntityListener implements Listener {
                         }
                         */
 
-                        TagCompound extendedInfo = PropertyConverter.convertEntity(leashTarget);
-                        inactiveMyPet.setInfo(extendedInfo);
+                        Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
+                        if (converter.isPresent()) {
+                            inactiveMyPet.setInfo(converter.get().convertEntity(leashTarget));
+                        }
 
                         leashTarget.remove();
 
