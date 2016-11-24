@@ -190,7 +190,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public TagCompound writeExtendedInfo() {
-        return new TagCompound();
+        TagCompound newTag = new TagCompound();
+        newTag.put("Version", new TagString(MyPetApi.getCompatUtil().getInternalVersion()));
+        return newTag;
     }
 
     public void readExtendedInfo(TagCompound info) {
