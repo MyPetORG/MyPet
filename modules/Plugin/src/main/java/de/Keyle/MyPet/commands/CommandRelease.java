@@ -179,7 +179,9 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
                         } else if (myPet instanceof MyZombie) {
                             ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
-                            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
+                            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+                                //TODO
+                            } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
                                 Profession profession = Profession.values()[((MyZombie) myPet).getType()];
                                 ((Zombie) normalEntity).setVillagerProfession(profession);
                             } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
@@ -201,15 +203,15 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             normalEntity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD));
                             ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
                         } else if (myPet instanceof MyHorse) {
-                            Horse.Variant type = Horse.Variant.values()[((MyHorse) myPet).getHorseType()];
+                            //Horse.Variant type = Horse.Variant.values()[((MyHorse) myPet).getHorseType()];
                             Horse.Style style = Horse.Style.values()[(((MyHorse) myPet).getVariant() >>> 8)];
                             Horse.Color color = Horse.Color.values()[(((MyHorse) myPet).getVariant() & 0xFF)];
 
                             ((Horse) normalEntity).setAge(((MyHorse) myPet).getAge());
-                            ((Horse) normalEntity).setVariant(type);
+                            //((Horse) normalEntity).setVariant(type);
                             ((Horse) normalEntity).setColor(color);
                             ((Horse) normalEntity).setStyle(style);
-                            ((Horse) normalEntity).setCarryingChest(((MyHorse) myPet).hasChest());
+                            //((Horse) normalEntity).setCarryingChest(((MyHorse) myPet).hasChest());
 
                             if (((MyHorse) myPet).hasSaddle()) {
                                 ((Horse) normalEntity).getInventory().setSaddle(((MyHorse) myPet).getSaddle().clone());
@@ -237,7 +239,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             }
                             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
                         } else if (myPet instanceof MyGuardian) {
-                            ((Guardian) normalEntity).setElder(((MyGuardian) myPet).isElder());
+                            //((Guardian) normalEntity).setElder(((MyGuardian) myPet).isElder());
                         }
                     }
                     myPet.removePet();
