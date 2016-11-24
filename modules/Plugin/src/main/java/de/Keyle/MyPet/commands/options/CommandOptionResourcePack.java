@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.options;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ResourcePackManager;
 import org.bukkit.command.CommandSender;
@@ -34,6 +35,10 @@ public class CommandOptionResourcePack implements CommandOption {
     public boolean onCommandOption(final CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
+            if (!myPetPlayer.isUsingResourcePack() && !Permissions.has(myPetPlayer, "MyPet.command.options.resourcepack")) {
+                myPetPlayer.sendMessage(Translation.getString("Message.No.Allowed", myPetPlayer));
+                return true;
+            }
             myPetPlayer.setUsesResourcePack(!myPetPlayer.isUsingResourcePack());
             if (myPetPlayer.isUsingResourcePack()) {
                 sender.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", sender));

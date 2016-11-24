@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.hooks.ResourcePackApiHook;
@@ -40,6 +41,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+// TODO convert to service
 public class ResourcePackManager implements Listener {
     public static final String DOWNLOAD_LINK = "http://dl.keyle.de/mypet/MyPet.zip";
     protected static ResourcePackManager instance = null;
@@ -116,7 +118,13 @@ public class ResourcePackManager implements Listener {
                 return;
             }
         }
+
         if (e.getPlayer().isUsingResourcePack()) {
+            if (!Permissions.has(e.getPlayer(), "MyPet.command.options.resourcepack")) {
+                e.getPlayer().sendMessage(Translation.getString("Message.No.Allowed", e.getPlayer()));
+                e.getPlayer().setUsesResourcePack(false);
+                return;
+            }
             e.getPlayer().sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", e.getPlayer()));
             new BukkitRunnable() {
                 @Override
