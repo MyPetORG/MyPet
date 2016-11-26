@@ -707,7 +707,9 @@ public class EntityListener implements Listener {
                 if (source != target && MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                     if (myPet.getStatus() == PetState.Here && target != myPet.getEntity().get()) {
-                        myPet.getEntity().get().setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
+                        if (myPet.getDamage() > 0 || myPet.getRangedDamage() > 0) {
+                            myPet.getEntity().get().setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
+                        }
                     }
                 }
             } else if (source instanceof MyPetBukkitEntity) {
