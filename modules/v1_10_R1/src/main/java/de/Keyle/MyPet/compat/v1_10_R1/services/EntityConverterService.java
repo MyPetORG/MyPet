@@ -3,7 +3,8 @@ package de.Keyle.MyPet.compat.v1_10_R1.services;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
-import de.Keyle.MyPet.api.entity.types.MyRabbit;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -12,6 +13,7 @@ import de.keyle.knbt.TagList;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.util.*;
 
@@ -74,6 +76,127 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         }
 
         return properties;
+    }
+
+    @Override
+    public void convertEntity(MyPet myPet, LivingEntity normalEntity) {
+        if (myPet instanceof MyChicken) {
+            if (((MyChicken) myPet).isBaby()) {
+                ((Chicken) normalEntity).setBaby();
+            } else {
+                ((Chicken) normalEntity).setAdult();
+            }
+        } else if (myPet instanceof MyCow) {
+            if (((MyCow) myPet).isBaby()) {
+                ((Cow) normalEntity).setBaby();
+            } else {
+                ((Cow) normalEntity).setAdult();
+            }
+        } else if (myPet instanceof MyCreeper) {
+            if (((MyCreeper) myPet).isPowered()) {
+                ((Creeper) normalEntity).setPowered(true);
+            }
+        } else if (myPet instanceof MyEnderman) {
+            if (((MyEnderman) myPet).hasBlock()) {
+                MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlock().getType(), ((MyEnderman) myPet).getBlock().getData().getData());
+                ((Enderman) normalEntity).setCarriedMaterial(materialData);
+            }
+        } else if (myPet instanceof MyIronGolem) {
+            ((IronGolem) normalEntity).setPlayerCreated(true);
+        } else if (myPet instanceof MyMooshroom) {
+            if (((MyMooshroom) myPet).isBaby()) {
+                ((MushroomCow) normalEntity).setBaby();
+            } else {
+                ((MushroomCow) normalEntity).setAdult();
+            }
+        } else if (myPet instanceof MyMagmaCube) {
+            ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
+        } else if (myPet instanceof MyOcelot) {
+            ((Ocelot) normalEntity).setCatType(Ocelot.Type.WILD_OCELOT);
+            ((Ocelot) normalEntity).setTamed(false);
+            if (((MyOcelot) myPet).isBaby()) {
+                ((Ocelot) normalEntity).setBaby();
+            } else {
+                ((Ocelot) normalEntity).setAdult();
+            }
+        } else if (myPet instanceof MyPig) {
+            ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
+            if (((MyPig) myPet).isBaby()) {
+                ((Pig) normalEntity).setBaby();
+            } else {
+                ((Pig) normalEntity).setAdult();
+            }
+        } else if (myPet instanceof MySheep) {
+            ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
+            ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
+            if (((MySheep) myPet).isBaby()) {
+                ((Sheep) normalEntity).setBaby();
+            } else {
+                ((Sheep) normalEntity).setAdult();
+            }
+        } else if (myPet instanceof MyVillager) {
+            MyVillager villagerPet = (MyVillager) myPet;
+            Villager.Profession profession = Villager.Profession.values()[villagerPet.getProfession() + 1];
+
+            ((Villager) normalEntity).setProfession(profession);
+            if (villagerPet.isBaby()) {
+                ((Villager) normalEntity).setBaby();
+            } else {
+                ((Villager) normalEntity).setAdult();
+            }
+            if (villagerPet.hasOriginalData()) {
+                TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
+                for (String key : villagerPet.getOriginalData().getCompoundData().keySet()) {
+                    villagerTag.put(key, villagerPet.getOriginalData().get(key));
+                }
+                MyPetApi.getPlatformHelper().applyTagToEntity(villagerTag, normalEntity);
+            }
+        } else if (myPet instanceof MyWolf) {
+            ((Wolf) normalEntity).setTamed(false);
+            if (((MyWolf) myPet).isBaby()) {
+                ((Wolf) normalEntity).setBaby();
+            } else {
+                ((Wolf) normalEntity).setAdult();
+            }
+        } else if (myPet instanceof MySlime) {
+            ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
+        } else if (myPet instanceof MyZombie) {
+            ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
+            Villager.Profession profession = Villager.Profession.values()[((MyZombie) myPet).getType()];
+            ((Zombie) normalEntity).setVillagerProfession(profession);
+        } else if (myPet instanceof MySkeleton) {
+            ((Skeleton) normalEntity).setSkeletonType(Skeleton.SkeletonType.values()[((MySkeleton) myPet).getType()]);
+            if (((MySkeleton) myPet).isWither()) {
+                normalEntity.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD));
+            } else {
+                normalEntity.getEquipment().setItemInHand(new ItemStack(Material.BOW));
+            }
+        } else if (myPet instanceof MyPigZombie) {
+            normalEntity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD));
+            ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
+        } else if (myPet instanceof MyHorse) {
+            Horse.Style style = Horse.Style.values()[(((MyHorse) myPet).getVariant() >>> 8)];
+            Horse.Color color = Horse.Color.values()[(((MyHorse) myPet).getVariant() & 0xFF)];
+
+            ((Horse) normalEntity).setAge(((MyHorse) myPet).getAge());
+            ((Horse) normalEntity).setColor(color);
+            ((Horse) normalEntity).setStyle(style);
+
+            if (((MyHorse) myPet).hasSaddle()) {
+                ((Horse) normalEntity).getInventory().setSaddle(((MyHorse) myPet).getSaddle().clone());
+            }
+            if (((MyHorse) myPet).hasArmor()) {
+                ((Horse) normalEntity).getInventory().setArmor(((MyHorse) myPet).getArmor().clone());
+            }
+            ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyRabbit) {
+            if (((MyRabbit) myPet).isBaby()) {
+                ((Rabbit) normalEntity).setBaby();
+            } else {
+                ((Rabbit) normalEntity).setAdult();
+            }
+            ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
+        }
     }
 
     public void convertRabbit(Rabbit rabbit, TagCompound properties) {
