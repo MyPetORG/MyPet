@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,6 +37,7 @@ import java.util.Map;
 public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVex {
 
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
+    protected boolean isGlowing = false;
 
     public MyVex(MyPetPlayer petOwner) {
         super(petOwner);
@@ -56,6 +58,7 @@ public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVe
         TagCompound info = super.writeExtendedInfo();
         TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
         info.getCompoundData().put("Weapon", item);
+        info.getCompoundData().put("Glowing", new TagByte(isGlowing()));
         return info;
     }
 
@@ -65,6 +68,20 @@ public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVe
             TagCompound item = info.getAs("Weapon", TagCompound.class);
             ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
             setEquipment(EquipmentSlot.MainHand, itemStack);
+        }
+        if (info.getCompoundData().containsKey("Glowing")) {
+            setGlowing(info.getAs("Glowing", TagByte.class).getBooleanData());
+        }
+    }
+
+    public boolean isGlowing() {
+        return isGlowing;
+    }
+
+    public void setGlowing(boolean flag) {
+        this.isGlowing = flag;
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
         }
     }
 

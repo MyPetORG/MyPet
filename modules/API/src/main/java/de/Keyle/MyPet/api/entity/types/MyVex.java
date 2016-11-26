@@ -28,4 +28,7 @@ import static org.bukkit.Material.APPLE;
 
 @DefaultInfo(food = {APPLE})
 public interface MyVex extends MyPet, MyPetEquipment {
+    boolean isGlowing();
+
+    void setGlowing(boolean flag);
 }
