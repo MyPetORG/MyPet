@@ -485,6 +485,7 @@ public class MySqlRepository implements Repository {
                         "health=?, " +
                         "respawn_time=?, " +
                         "name=?, " +
+                        "type=?, " +
                         "last_used=?, " +
                         "hunger=?, " +
                         "world_group=?, " +
@@ -498,15 +499,16 @@ public class MySqlRepository implements Repository {
                 statement.setDouble(3, myPet.getHealth());
                 statement.setInt(4, myPet.getRespawnTime());
                 statement.setBinaryStream(5, new ByteArrayInputStream(myPet.getPetName().getBytes(StandardCharsets.UTF_8)));
-                statement.setLong(6, myPet.getLastUsed());
-                statement.setDouble(7, myPet.getSaturation());
-                statement.setString(8, myPet.getWorldGroup());
-                statement.setBoolean(9, myPet.wantsToRespawn());
-                statement.setString(10, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-                statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkillInfo(), true)));
-                statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
+                statement.setString(6, myPet.getPetType().name());
+                statement.setLong(7, myPet.getLastUsed());
+                statement.setDouble(8, myPet.getSaturation());
+                statement.setString(9, myPet.getWorldGroup());
+                statement.setBoolean(10, myPet.wantsToRespawn());
+                statement.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
+                statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkillInfo(), true)));
+                statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
 
-                statement.setString(13, myPet.getUUID().toString());
+                statement.setString(14, myPet.getUUID().toString());
 
                 int result = statement.executeUpdate();
 
@@ -984,6 +986,7 @@ public class MySqlRepository implements Repository {
                             "health=?, " +
                             "respawn_time=?, " +
                             "name=?, " +
+                            "type=?, " +
                             "last_used=?, " +
                             "hunger=?, " +
                             "world_group=?, " +
@@ -997,15 +1000,16 @@ public class MySqlRepository implements Repository {
                     statement.setDouble(3, storedMyPet.getHealth());
                     statement.setInt(4, storedMyPet.getRespawnTime());
                     statement.setBinaryStream(5, new ByteArrayInputStream(storedMyPet.getPetName().getBytes(StandardCharsets.UTF_8)));
-                    statement.setLong(6, storedMyPet.getLastUsed());
-                    statement.setDouble(7, storedMyPet.getSaturation());
-                    statement.setString(8, storedMyPet.getWorldGroup());
-                    statement.setBoolean(9, storedMyPet.wantsToRespawn());
-                    statement.setString(10, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
-                    statement.setBlob(11, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
-                    statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
+                    statement.setString(6, storedMyPet.getPetType().name());
+                    statement.setLong(7, storedMyPet.getLastUsed());
+                    statement.setDouble(8, storedMyPet.getSaturation());
+                    statement.setString(9, storedMyPet.getWorldGroup());
+                    statement.setBoolean(10, storedMyPet.wantsToRespawn());
+                    statement.setString(11, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
+                    statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
+                    statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
 
-                    statement.setString(13, storedMyPet.getUUID().toString());
+                    statement.setString(14, storedMyPet.getUUID().toString());
 
                     int result = statement.executeUpdate();
 
