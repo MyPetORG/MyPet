@@ -71,11 +71,7 @@ public class EntityMyHorse extends EntityMyPet {
             if (flag) {
                 applyVisual(64, true);
                 rearCounter = 10;
-                if (getMyPet().getHorseType() == 0) {
-                    this.makeSound("entity.horse.angry", 1.0F, 1.0F);
-                } else if (getMyPet().getHorseType() == 2 || getMyPet().getHorseType() == 1) {
-                    this.makeSound("entity.donkey.angry", 1.0F, 1.0F);
-                }
+                this.makeSound("entity.horse.angry", 1.0F, 1.0F);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +100,7 @@ public class EntityMyHorse extends EntityMyPet {
         }
 
         if (itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && canWearSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -113,16 +109,7 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && canWearChest() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
-                getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
-                if (!entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.subtract(1);
-                    if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
-                    }
-                }
-                return true;
-            } else if (getHorseArmorId(CraftItemStack.asBukkitCopy(itemStack)) > 0 && canWearArmor() && !getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (getHorseArmorId(CraftItemStack.asBukkitCopy(itemStack)) > 0 && !getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setArmor(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -174,18 +161,6 @@ public class EntityMyHorse extends EntityMyPet {
         return false;
     }
 
-    private boolean canWearChest() {
-        return this instanceof EntityMyMule || this instanceof EntityMyDonkey;
-    }
-
-    private boolean canWearArmor() {
-        return getMyPet().getHorseType() == 0;
-    }
-
-    private boolean canWearSaddle() {
-        return !(this instanceof EntityMyMule || this instanceof EntityMyDonkey);
-    }
-
     private int getHorseArmorId(org.bukkit.inventory.ItemStack itemstack) {
         if (itemstack == null) {
             return 0;
@@ -209,7 +184,6 @@ public class EntityMyHorse extends EntityMyPet {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
         this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
         this.datawatcher.set(variantWatcher, getMyPet().getVariant());
-        applyVisual(8, getMyPet().hasChest());
         applyVisual(4, getMyPet().hasSaddle());
     }
 
@@ -236,12 +210,11 @@ public class EntityMyHorse extends EntityMyPet {
             soundeffecttype = Blocks.SNOW_LAYER.getStepSound();
         }
         if (!block.getBlockData().getMaterial().isLiquid()) {
-            int horseType = getMyPet().getHorseType();
-            if ((this.isVehicle()) && (horseType != 1) && (horseType != 2)) {
+            if ((this.isVehicle())) {
                 this.soundCounter += 1;
                 if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0)) {
                     a(SoundEffects.cv, soundeffecttype.a() * 0.15F, soundeffecttype.b());
-                    if ((horseType == 0) && (this.random.nextInt(10) == 0)) {
+                    if ((this.random.nextInt(10) == 0)) {
                         a(SoundEffects.cs, soundeffecttype.a() * 0.6F, soundeffecttype.b());
                     }
                 } else if (this.soundCounter <= 5) {

@@ -4,6 +4,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.TagByte;
@@ -47,10 +48,18 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case HORSE:
                 convertHorse((Horse) entity, properties);
+            case SKELETON_HORSE:
+            case ZOMBIE_HORSE:
+                convertSaddledHorse((Horse) entity, properties);
                 break;
+            case MULE:
+            case DONKEY:
+                convertChestedHorse((ChestedHorse) entity, properties);
+                break;
+            case ZOMBIE_VILLAGER:
+                convertZombieVillager((ZombieVillager) entity, properties);
             case HUSK:
             case ZOMBIE:
-            case ZOMBIE_VILLAGER:
             case PIG_ZOMBIE:
                 convertZombie((Zombie) entity, properties);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
@@ -67,9 +76,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
                     convertEquipable(entity, properties);
                 }
-                break;
-            case GUARDIAN:
-                convertGuardian((Guardian) entity, properties);
                 break;
             case RABBIT:
                 convertRabbit((Rabbit) entity, properties);
@@ -167,32 +173,25 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
         } else if (myPet instanceof MySlime) {
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
-        } else if (myPet instanceof MyZombie) {
-            ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
-            //TODO
-            //Villager.Profession profession = Villager.Profession.values()[((MyZombie) myPet).getType()];
-            //((Zombie) normalEntity).setVillagerProfession(profession);
+        } else if (myPet instanceof MyZombie || myPet instanceof MyHusk) {
+            ((Zombie) normalEntity).setBaby(((MyPetBaby) myPet).isBaby());
+        } else if (myPet instanceof MyZombieVillager) {
+            Villager.Profession profession = Villager.Profession.values()[((MyZombieVillager) myPet).getProfession()];
+            ((ZombieVillager) normalEntity).setVillagerProfession(profession);
+        } else if (myPet instanceof MyWitherSkeleton) {
+            normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD));
         } else if (myPet instanceof MySkeleton) {
-            ((Skeleton) normalEntity).setSkeletonType(Skeleton.SkeletonType.values()[((MySkeleton) myPet).getType()]);
-            if (((MySkeleton) myPet).isWither()) {
-                normalEntity.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD));
-            } else {
-                normalEntity.getEquipment().setItemInHand(new ItemStack(Material.BOW));
-            }
+            normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
         } else if (myPet instanceof MyPigZombie) {
-            normalEntity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD));
+            normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.GOLD_SWORD));
             ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
         } else if (myPet instanceof MyHorse) {
-            //TODO
-            //Horse.Variant type = Horse.Variant.values()[((MyHorse) myPet).getHorseType()];
             Horse.Style style = Horse.Style.values()[(((MyHorse) myPet).getVariant() >>> 8)];
             Horse.Color color = Horse.Color.values()[(((MyHorse) myPet).getVariant() & 0xFF)];
 
             ((Horse) normalEntity).setAge(((MyHorse) myPet).getAge());
-            //((Horse) normalEntity).setVariant(type);
             ((Horse) normalEntity).setColor(color);
             ((Horse) normalEntity).setStyle(style);
-            //((Horse) normalEntity).setCarryingChest(((MyHorse) myPet).hasChest());
 
             if (((MyHorse) myPet).hasSaddle()) {
                 ((Horse) normalEntity).getInventory().setSaddle(((MyHorse) myPet).getSaddle().clone());
@@ -200,6 +199,26 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             if (((MyHorse) myPet).hasArmor()) {
                 ((Horse) normalEntity).getInventory().setArmor(((MyHorse) myPet).getArmor().clone());
             }
+            ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MySkeletonHorse) {
+            if (((MySkeletonHorse) myPet).isBaby()) {
+                ((Horse) normalEntity).setBaby();
+            }
+
+            if (((MySkeletonHorse) myPet).hasSaddle()) {
+                ((Horse) normalEntity).getInventory().setSaddle(((MySkeletonHorse) myPet).getSaddle().clone());
+            }
+
+            ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyZombieHorse) {
+            if (((MyZombieHorse) myPet).isBaby()) {
+                ((Horse) normalEntity).setBaby();
+            }
+
+            if (((MyZombieHorse) myPet).hasSaddle()) {
+                ((Horse) normalEntity).getInventory().setSaddle(((MyZombieHorse) myPet).getSaddle().clone());
+            }
+
             ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyLlama) {
             if (((MyLlama) myPet).isBaby()) {
@@ -219,9 +238,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 ((Rabbit) normalEntity).setAdult();
             }
             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
-        } else if (myPet instanceof MyGuardian) {
-            //TODO
-            //((Guardian) normalEntity).setElder(((MyGuardian) myPet).isElder());
         }
     }
 
@@ -235,10 +251,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertRabbit(Rabbit rabbit, TagCompound properties) {
         properties.getCompoundData().put("Variant", new TagByte(MyRabbit.RabbitType.getTypeByBukkitEnum(rabbit.getRabbitType()).getId()));
-    }
-
-    public void convertGuardian(Guardian guardian, TagCompound properties) {
-        properties.getCompoundData().put("Elder", new TagByte(guardian.isElder()));
     }
 
     public void convertEquipable(LivingEntity entity, TagCompound properties) {
@@ -293,15 +305,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         }
     }
 
+    public void convertZombieVillager(ZombieVillager zombie, TagCompound properties) {
+        properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal()));
+    }
+
     public void convertZombie(Zombie zombie, TagCompound properties) {
         properties.getCompoundData().put("Baby", new TagByte(zombie.isBaby()));
-        if (zombie instanceof ZombieVillager) {
-            properties.getCompoundData().put("Villager", new TagByte(true));
-            properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal()));
-        }
-        if (zombie instanceof Husk) {
-            properties.getCompoundData().put("Husk", new TagByte(true));
-        }
     }
 
     public void convertCreeper(Creeper creeper, TagCompound properties) {
@@ -309,7 +318,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertHorse(Horse horse, TagCompound properties) {
-        byte type = (byte) horse.getVariant().ordinal();
         int style = horse.getStyle().ordinal();
         int color = horse.getColor().ordinal();
         int variant = color & 255 | style << 8;
@@ -318,16 +326,29 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             TagCompound armor = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getArmor());
             properties.getCompoundData().put("Armor", armor);
         }
+
+        properties.getCompoundData().put("Variant", new TagInt(variant));
+
+        if (horse.isCarryingChest()) {
+            ItemStack[] contents = horse.getInventory().getContents();
+            for (int i = 2; i < contents.length; i++) {
+                ItemStack item = contents[i];
+                if (item != null) {
+                    horse.getWorld().dropItem(horse.getLocation(), item);
+                }
+            }
+        }
+    }
+
+    public void convertSaddledHorse(Horse horse, TagCompound properties) {
         if (horse.getInventory().getSaddle() != null) {
             TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
             properties.getCompoundData().put("Saddle", saddle);
         }
+    }
 
-        properties.getCompoundData().put("Type", new TagByte(type));
-        properties.getCompoundData().put("Variant", new TagInt(variant));
+    public void convertChestedHorse(ChestedHorse horse, TagCompound properties) {
         properties.getCompoundData().put("Chest", new TagByte(horse.isCarryingChest()));
-        properties.getCompoundData().put("Age", new TagInt(horse.getAge()));
-
         if (horse.isCarryingChest()) {
             ItemStack[] contents = horse.getInventory().getContents();
             for (int i = 2; i < contents.length; i++) {

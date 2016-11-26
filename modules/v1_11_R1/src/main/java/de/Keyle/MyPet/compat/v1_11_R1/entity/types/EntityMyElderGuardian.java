@@ -22,10 +22,12 @@ package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MyElderGuardian;
+import de.Keyle.MyPet.compat.v1_11_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_11_R1.World;
 
 @EntitySize(width = 0.7F, height = 0.85F)
-public class EntityMyElderGuardian extends EntityMyGuardian {
+public class EntityMyElderGuardian extends EntityMyPet {
 
     public EntityMyElderGuardian(World world, MyPet myPet) {
         super(world, myPet);
@@ -43,5 +45,9 @@ public class EntityMyElderGuardian extends EntityMyGuardian {
 
     protected String getLivingSound() {
         return "entity.elder_guardian.ambient";
+    }
+
+    public MyElderGuardian getMyPet() {
+        return (MyElderGuardian) myPet;
     }
 }
