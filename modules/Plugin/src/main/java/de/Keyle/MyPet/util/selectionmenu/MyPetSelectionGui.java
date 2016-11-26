@@ -132,7 +132,7 @@ public class MyPetSelectionGui {
                     lore.add(RESET + Translation.getString("Name.HP", player) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
                 }
                 lore.add(RESET + Translation.getString("Name.Exp", player) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
-                lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + mypet.getPetType().name());
+                lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + Translation.getString("Name." + mypet.getPetType().name(), player));
                 lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
                 IconMenuItem icon = new IconMenuItem();

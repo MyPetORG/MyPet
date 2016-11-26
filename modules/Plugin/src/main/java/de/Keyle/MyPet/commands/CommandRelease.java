@@ -114,7 +114,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                         lore.add(RESET + Translation.getString("Name.HP", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getHealth()));
                     }
                     lore.add(RESET + Translation.getString("Name.Exp", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getExp()));
-                    lore.add(RESET + Translation.getString("Name.Type", petOwner) + ": " + GOLD + myPet.getPetType().name());
+                    lore.add(RESET + Translation.getString("Name.Type", petOwner) + ": " + GOLD + Translation.getString("Name." + myPet.getPetType().name(), petOwner));
                     lore.add(RESET + Translation.getString("Name.Skilltree", petOwner) + ": " + GOLD + (myPet.getSkilltree() != null ? myPet.getSkilltree().getDisplayName() : "-"));
 
                     message.then(myPet.getPetName())
