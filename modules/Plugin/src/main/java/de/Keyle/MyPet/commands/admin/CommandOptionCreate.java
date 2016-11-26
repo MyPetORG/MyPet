@@ -147,6 +147,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("baby");
         petTypeOptionMap.put("wither", petTypeOptionList);
 
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("glowing");
+        petTypeOptionMap.put("vex", petTypeOptionList);
+
         for (MyPetType petType : MyPetType.values()) {
             petTypeList.add(petType.name());
         }
@@ -290,6 +294,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Type", new TagByte((byte) 3));
             } else if (arg.equalsIgnoreCase("skeleton")) {
                 compound.getCompoundData().put("Type", new TagByte((byte) 4));
+            } else if (arg.equalsIgnoreCase("glowing")) {
+                compound.getCompoundData().put("Glowing", new TagByte(true));
             } else if (arg.startsWith("size:")) {
                 String size = arg.replace("size:", "");
                 if (Util.isInt(size)) {

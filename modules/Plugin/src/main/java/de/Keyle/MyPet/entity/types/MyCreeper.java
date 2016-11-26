@@ -28,7 +28,7 @@ import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
 public class MyCreeper extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCreeper {
-    boolean isPowered = false;
+    protected boolean isPowered = false;
 
     public MyCreeper(MyPetPlayer petOwner) {
         super(petOwner);
