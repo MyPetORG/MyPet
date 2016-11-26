@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.keyle.knbt.TagByte;
@@ -151,6 +152,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("glowing");
         petTypeOptionMap.put("vex", petTypeOptionList);
 
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("variant:");
+        petTypeOptionMap.put("llama", petTypeOptionList);
+
         for (MyPetType petType : MyPetType.values()) {
             petTypeList.add(petType.name());
         }
@@ -204,6 +210,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
 
                     inactiveMyPet.setWorldGroup(wg.getName());
+
+                    Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+                    if (converter.isPresent()) {
+                        converter.get().convert(inactiveMyPet);
+                    }
 
                     MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
                     Bukkit.getServer().getPluginManager().callEvent(createEvent);
@@ -320,6 +331,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             variant = 0;
                         }
                         compound.getCompoundData().put("Variant", new TagByte(variant));
+                    } else if (petType == MyPetType.Llama) {
+                        if (variant > 3 || variant < 0) {
+                            variant = 0;
+                        }
+                        compound.getCompoundData().put("Variant", new TagInt(variant));
                     }
                 }
             } else if (arg.startsWith("cat:")) {

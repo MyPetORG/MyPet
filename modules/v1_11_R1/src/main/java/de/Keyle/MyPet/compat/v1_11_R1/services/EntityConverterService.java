@@ -202,24 +202,14 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MySkeletonHorse) {
             if (((MySkeletonHorse) myPet).isBaby()) {
-                ((Horse) normalEntity).setBaby();
+                ((SkeletonHorse) normalEntity).setBaby();
             }
-
-            if (((MySkeletonHorse) myPet).hasSaddle()) {
-                ((Horse) normalEntity).getInventory().setSaddle(((MySkeletonHorse) myPet).getSaddle().clone());
-            }
-
-            ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+            ((SkeletonHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyZombieHorse) {
             if (((MyZombieHorse) myPet).isBaby()) {
-                ((Horse) normalEntity).setBaby();
+                ((ZombieHorse) normalEntity).setBaby();
             }
-
-            if (((MyZombieHorse) myPet).hasSaddle()) {
-                ((Horse) normalEntity).getInventory().setSaddle(((MyZombieHorse) myPet).getSaddle().clone());
-            }
-
-            ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+            ((ZombieHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyLlama) {
             if (((MyLlama) myPet).isBaby()) {
                 ((Llama) normalEntity).setBaby();

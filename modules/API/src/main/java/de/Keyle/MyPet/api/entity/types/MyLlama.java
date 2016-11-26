@@ -30,10 +30,6 @@ import static org.bukkit.Material.WHEAT;
 
 @DefaultInfo(food = {WHEAT}, leashFlags = {Tamed})
 public interface MyLlama extends MyPet, MyPetBaby {
-    int getAge();
-
-    void setAge(int value);
-
     ItemStack getChest();
 
     boolean hasChest();
