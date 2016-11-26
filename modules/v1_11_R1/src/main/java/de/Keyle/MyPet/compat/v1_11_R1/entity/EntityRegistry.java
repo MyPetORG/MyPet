@@ -37,11 +37,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static de.Keyle.MyPet.api.entity.MyPetType.*;
 
@@ -213,14 +213,14 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     private class MyPetRegistryMaterials extends RegistryMaterials {
 
-        private RegistryMaterials original;
+        private RegistryMaterials<MinecraftKey, Class<? extends Entity>> original;
         private boolean useCustomEntities = false;
         private final BiMap<MinecraftKey, Class<? extends EntityMyPet>> key2Class = HashBiMap.create();
         private final BiMap<Class<? extends EntityMyPet>, MinecraftKey> class2Key = key2Class.inverse();
-        private final BiMap<Class<? extends EntityMyPet>, Integer> ID2Class = HashBiMap.create();
-        private final BiMap<Integer, Class<? extends EntityMyPet>> class2ID = ID2Class.inverse();
+        private final BiMap<Class<? extends EntityMyPet>, Integer> class2ID = HashBiMap.create();
+        private final BiMap<Integer, Class<? extends EntityMyPet>> ID2Class = class2ID.inverse();
 
-        public MyPetRegistryMaterials(RegistryMaterials original) {
+        public MyPetRegistryMaterials(RegistryMaterials<MinecraftKey, Class<? extends Entity>> original) {
             this.original = original;
             if (this.original instanceof MyPetRegistryMaterials) {
                 this.original = ((MyPetRegistryMaterials) this.original).original;
@@ -237,43 +237,77 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
         public void addToRegistry(int id, MinecraftKey key, Class<? extends EntityMyPet> clazz) {
             key2Class.put(key, clazz);
-            class2ID.put(id, clazz);
+            ID2Class.put(id, clazz);
+        }
+
+        @Nullable
+        @Override
+        public Class<? extends Entity> a(Random random) {
+            return original.a(random);
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public Class<? extends Entity> get(Object key) {
-            if (useCustomEntities && key2Class.containsKey(key)) {
-                return key2Class.get(key);
+        public void a(int i, Object minecraftKey, Object aClass) {
+            original.a(i, (MinecraftKey) minecraftKey, (Class<? extends Entity>) aClass);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void a(Object minecraftKey, Object aClass) {
+            original.a((MinecraftKey) minecraftKey, (Class<? extends Entity>) aClass);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public int a(@Nullable Object aClass) {
+            if (useCustomEntities && class2ID.containsKey(aClass)) {
+                return class2ID.get(aClass);
             }
-            return (Class<? extends Entity>) original.get(key);
+            return original.a((Class<? extends Entity>) aClass);
         }
 
+        @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        public MinecraftKey b(Object value) {
-            if (useCustomEntities && class2Key.containsKey(value)) {
-                return class2Key.get(value);
+        public MinecraftKey b(Object aClass) {
+            if (useCustomEntities && class2Key.containsKey(aClass)) {
+                return class2Key.get(aClass);
             }
-            return (MinecraftKey) original.b(value);
+            return original.b((Class<? extends Entity>) aClass);
         }
 
         @Override
-        @SuppressWarnings("unchecked")
-        public int a(Object key) {
-            if (useCustomEntities && ID2Class.containsKey(key)) {
-                return ID2Class.get(key);
+        public boolean d(Object minecraftKey) {
+            return original.d((MinecraftKey) minecraftKey);
+        }
+
+        @Nullable
+        @Override
+        public Class<? extends Entity> get(@Nullable Object minecraftKey) {
+            if (useCustomEntities && key2Class.containsKey(minecraftKey)) {
+                return key2Class.get(minecraftKey);
             }
-            return original.a(key);
+            return original.get((MinecraftKey) minecraftKey);
         }
 
+        @Nullable
         @Override
-        @SuppressWarnings("unchecked")
         public Class<? extends Entity> getId(int id) {
-            if (useCustomEntities && class2ID.containsKey(id)) {
-                return class2ID.get(id);
+            if (useCustomEntities && ID2Class.containsKey(id)) {
+                return ID2Class.get(id);
             }
-            return (Class<? extends Entity>) original.getId(id);
+            return original.getId(id);
+        }
+
+        @Override
+        public Iterator<Class<? extends Entity>> iterator() {
+            return original.iterator();
+        }
+
+        @Override
+        public Set<MinecraftKey> keySet() {
+            return original.keySet();
         }
     }
 }
