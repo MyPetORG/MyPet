@@ -41,6 +41,10 @@ public class ServiceManager {
 
     ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
 
+    public void listServices() {
+        MyPetApi.getLogger().info("Loaded services: " + serviceByName.keySet());
+    }
+
     /**
      * register new services here. A service needs the {@link ServiceName} annotation to be accepted.
      *
