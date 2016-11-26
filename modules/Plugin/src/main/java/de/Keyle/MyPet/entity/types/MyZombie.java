@@ -58,6 +58,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Type", new TagInt(type.ordinal()));
+        info.getCompoundData().put("Profession", new TagInt(profession));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {

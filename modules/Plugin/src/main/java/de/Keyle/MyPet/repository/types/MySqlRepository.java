@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.repository.types;
 
+import com.google.common.base.Optional;
 import com.zaxxer.hikari.HikariDataSource;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
@@ -33,6 +34,7 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagCompound;
@@ -607,6 +609,11 @@ public class MySqlRepository implements Repository {
 
                 pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
                 pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
+
+                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+                if (converter.isPresent()) {
+                    converter.get().convert(pet);
+                }
 
                 pets.add(pet);
             }

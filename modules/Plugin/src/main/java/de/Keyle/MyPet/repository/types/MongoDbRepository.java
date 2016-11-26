@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.repository.types;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.mongodb.*;
 import com.mongodb.client.FindIterable;
@@ -35,6 +36,7 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
@@ -278,6 +280,11 @@ public class MongoDbRepository implements Repository {
 
             pet.setSkills(TagStream.readTag(((Binary) document.get("skills")).getData(), true));
             pet.setInfo(TagStream.readTag(((Binary) document.get("info")).getData(), true));
+
+            Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+            if (converter.isPresent()) {
+                converter.get().convert(pet);
+            }
 
             return pet;
         } catch (IOException e) {
