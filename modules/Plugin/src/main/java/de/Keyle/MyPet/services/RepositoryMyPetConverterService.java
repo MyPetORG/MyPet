@@ -3,15 +3,24 @@ package de.Keyle.MyPet.services;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.util.service.Load;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 
+@Load(Load.State.AfterHooks)
 public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService {
+
+    Version toVersion;
 
     @Override
     public boolean onEnable() {
+        try {
+            toVersion = Version.valueOf(MyPetApi.getCompatUtil().getInternalVersion());
+        } catch (Throwable e) {
+            return false;
+        }
         return true;
     }
 
@@ -27,7 +36,6 @@ public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.
     @Override
     public void convert(StoredMyPet pet) {
         Version fromVersion = Version.v1_7_R4;
-        Version toVersion = Version.valueOf(MyPetApi.getCompatUtil().getInternalVersion());
 
         TagCompound info = pet.getInfo();
         if (info.containsKey("Version")) {
