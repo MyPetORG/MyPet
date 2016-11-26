@@ -42,6 +42,7 @@ import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
+import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
@@ -375,7 +376,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     }
 
     private void registerServices() {
-
+        serviceManager.registerService(RepositoryMyPetConverterService.class);
     }
 
     private void registerHooks() {

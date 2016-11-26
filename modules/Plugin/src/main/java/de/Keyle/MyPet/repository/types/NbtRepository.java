@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.repository.types;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.Keyle.MyPet.MyPetApi;
@@ -30,6 +31,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationNBT;
+import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagCompound;
@@ -151,6 +153,12 @@ public class NbtRepository implements Repository {
                 if (petTags.containsKey(petUUID)) {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTags.get(petUUID));
+
+                    Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+                    if (converter.isPresent()) {
+                        converter.get().convert(myPet);
+                    }
+
                     petList.add(myPet);
                 }
             }
@@ -176,6 +184,12 @@ public class NbtRepository implements Repository {
                 if (owner != null) {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTag);
+
+                    Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+                    if (converter.isPresent()) {
+                        converter.get().convert(myPet);
+                    }
+
                     callback.run(myPet);
                 }
             }

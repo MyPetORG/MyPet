@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.repository.types;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -30,6 +31,7 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
@@ -379,6 +381,11 @@ public class SqLiteRepository implements Repository {
 
                 pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
                 pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
+
+                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+                if (converter.isPresent()) {
+                    converter.get().convert(pet);
+                }
 
                 pets.add(pet);
             }
