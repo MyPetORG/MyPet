@@ -148,6 +148,7 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Zombie:
                 entityTag.put("id", new TagString("minecraft:zombie"));
+                break;
             case ZombieVillager:
                 entityTag.put("id", new TagString("minecraft:zombie_villager"));
                 break;
