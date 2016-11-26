@@ -26,10 +26,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.types.MyGuardian;
-import de.Keyle.MyPet.api.entity.types.MyHorse;
-import de.Keyle.MyPet.api.entity.types.MySkeleton;
-import de.Keyle.MyPet.api.entity.types.MyZombie;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.types.*;
 import net.minecraft.server.v1_11_R1.*;
@@ -60,6 +56,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(Chicken, EntityMyChicken.class);
         entityClasses.put(Cow, EntityMyCow.class);
         entityClasses.put(Creeper, EntityMyCreeper.class);
+        entityClasses.put(Donkey, EntityMyDonkey.class);
+        entityClasses.put(ElderGuardian, EntityMyElderGuardian.class);
         entityClasses.put(EnderDragon, EntityMyEnderDragon.class);
         entityClasses.put(Enderman, EntityMyEnderman.class);
         entityClasses.put(Endermite, EntityMyEndermite.class);
@@ -68,10 +66,12 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(Giant, EntityMyGiant.class);
         entityClasses.put(Guardian, EntityMyGuardian.class);
         entityClasses.put(Horse, EntityMyHorse.class);
+        entityClasses.put(Husk, EntityMyHusk.class);
         entityClasses.put(IronGolem, EntityMyIronGolem.class);
         entityClasses.put(Llama, EntityMyLlama.class);
         entityClasses.put(MagmaCube, EntityMyMagmaCube.class);
         entityClasses.put(Mooshroom, EntityMyMooshroom.class);
+        entityClasses.put(Mule, EntityMyMule.class);
         entityClasses.put(Ocelot, EntityMyOcelot.class);
         entityClasses.put(Pig, EntityMyPig.class);
         entityClasses.put(PigZombie, EntityMyPigZombie.class);
@@ -80,65 +80,28 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(Sheep, EntityMySheep.class);
         entityClasses.put(Silverfish, EntityMySilverfish.class);
         entityClasses.put(Skeleton, EntityMySkeleton.class);
+        entityClasses.put(SkeletonHorse, EntityMySkeletonHorse.class);
         entityClasses.put(Slime, EntityMySlime.class);
         entityClasses.put(Snowman, EntityMySnowman.class);
         entityClasses.put(Spider, EntityMySpider.class);
         entityClasses.put(Squid, EntityMySquid.class);
+        entityClasses.put(Stray, EntityMyStray.class);
         entityClasses.put(Witch, EntityMyWitch.class);
         entityClasses.put(Wither, EntityMyWither.class);
+        entityClasses.put(WitherSkeleton, EntityMyWitherSkeleton.class);
         entityClasses.put(Wolf, EntityMyWolf.class);
         entityClasses.put(Vex, EntityMyVex.class);
         entityClasses.put(Villager, EntityMyVillager.class);
         entityClasses.put(Vindicator, EntityMyVindicator.class);
         entityClasses.put(Zombie, EntityMyZombie.class);
+        entityClasses.put(ZombieHorse, EntityMyZombieHorse.class);
+        entityClasses.put(ZombieVillager, EntityMyZombieVillager.class);
     }
 
     @Override
     public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
         EntityMyPet petEntity = null;
-
-        Class<? extends MyPetMinecraftEntity> entityClass = null;
-        switch (pet.getPetType()) {
-            case Horse:
-                switch (((MyHorse) pet).getHorseType()) {
-                    case 1:
-                        entityClass = EntityMyDonkey.class;
-                        break;
-                    case 2:
-                        entityClass = EntityMyMule.class;
-                        break;
-                    case 3:
-                        entityClass = EntityMyZombieHorse.class;
-                        break;
-                    case 4:
-                        entityClass = EntityMySkeletonHorse.class;
-                        break;
-                }
-                break;
-            case Guardian:
-                if (((MyGuardian) pet).isElder()) {
-                    entityClass = EntityMyElderGuardian.class;
-                }
-                break;
-            case Skeleton:
-                if (((MySkeleton) pet).isWither()) {
-                    entityClass = EntityMyWitherSkeleton.class;
-                } else if (((MySkeleton) pet).isStray()) {
-                    entityClass = EntityMyStray.class;
-                }
-                break;
-            case Zombie:
-                if (((MyZombie) pet).isVillager()) {
-                    entityClass = EntityMyZombieVillager.class;
-                } else if (((MyZombie) pet).isHusk()) {
-                    entityClass = EntityMyHusk.class;
-                }
-                break;
-        }
-        if (entityClass == null) {
-            entityClass = entityClasses.get(pet.getPetType());
-        }
-
+        Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
         World world = ((CraftWorld) bukkitWorld).getHandle();
 
         try {
@@ -187,16 +150,6 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         for (MyPetType type : entityClasses.keySet()) {
             registry.addToRegistry(type.getTypeID(), new MinecraftKey(type.getMinecraftName()), (Class<? extends EntityMyPet>) entityClasses.get(type));
         }
-
-        registry.addToRegistry(4, new MinecraftKey("elder_guardian"), EntityMyElderGuardian.class);
-        registry.addToRegistry(5, new MinecraftKey("wither_skeleton"), EntityMyWitherSkeleton.class);
-        registry.addToRegistry(6, new MinecraftKey("stray"), EntityMyStray.class);
-        registry.addToRegistry(23, new MinecraftKey("husk"), EntityMyHusk.class);
-        registry.addToRegistry(27, new MinecraftKey("zombie_villager"), EntityMyZombieVillager.class);
-        registry.addToRegistry(28, new MinecraftKey("skeleton_horse"), EntityMySkeletonHorse.class);
-        registry.addToRegistry(29, new MinecraftKey("zombie_horse"), EntityMyZombieHorse.class);
-        registry.addToRegistry(31, new MinecraftKey("donkey"), EntityMyDonkey.class);
-        registry.addToRegistry(32, new MinecraftKey("mule"), EntityMyMule.class);
     }
 
     @Override

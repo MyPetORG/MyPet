@@ -53,14 +53,24 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Guardian:
                 entityTag.put("id", new TagString("minecraft:guardian"));
-                //entityTag.put("id", new TagString("minecraft:elder_guardian"));
+                break;
+            case ElderGuardian:
+                entityTag.put("id", new TagString("minecraft:elder_guardian"));
                 break;
             case Horse:
                 entityTag.put("id", new TagString("minecraft:horse"));
-                //entityTag.put("id", new TagString("minecraft:donkey"));
-                //entityTag.put("id", new TagString("minecraft:mule"));
-                //entityTag.put("id", new TagString("minecraft:skeleton_horse"));
-                //entityTag.put("id", new TagString("minecraft:zombie_horse"));
+                break;
+            case Donkey:
+                entityTag.put("id", new TagString("minecraft:donkey"));
+                break;
+            case Mule:
+                entityTag.put("id", new TagString("minecraft:mule"));
+                break;
+            case SkeletonHorse:
+                entityTag.put("id", new TagString("minecraft:skeleton_horse"));
+                break;
+            case ZombieHorse:
+                entityTag.put("id", new TagString("minecraft:zombie_horse"));
                 break;
             case IronGolem:
                 entityTag.put("id", new TagString("minecraft:skeleton"));
@@ -98,8 +108,12 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Skeleton:
                 entityTag.put("id", new TagString("minecraft:skeleton"));
-                //entityTag.put("id", new TagString("minecraft:stray"));
-                //entityTag.put("id", new TagString("minecraft:wither_skeleton"));
+                break;
+            case Stray:
+                entityTag.put("id", new TagString("minecraft:stray"));
+                break;
+            case WitherSkeleton:
+                entityTag.put("id", new TagString("minecraft:wither_skeleton"));
                 break;
             case Slime:
                 entityTag.put("id", new TagString("minecraft:slime"));
@@ -134,8 +148,11 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Zombie:
                 entityTag.put("id", new TagString("minecraft:zombie"));
-                //entityTag.put("id", new TagString("minecraft:zombie_villager"));
-                //entityTag.put("id", new TagString("minecraft:husk"));
+            case ZombieVillager:
+                entityTag.put("id", new TagString("minecraft:zombie_villager"));
+                break;
+            case Husk:
+                entityTag.put("id", new TagString("minecraft:husk"));
                 break;
         }
 

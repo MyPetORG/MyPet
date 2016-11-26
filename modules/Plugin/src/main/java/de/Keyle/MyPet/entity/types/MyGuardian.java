@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -62,10 +61,6 @@ public class MyGuardian extends MyPet implements de.Keyle.MyPet.api.entity.types
         this.isElder = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
-                removePet();
-                createEntity();
-            }
         }
     }
 

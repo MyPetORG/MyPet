@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -39,25 +38,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombie {
-    private enum Type {
-        NORMAL, HUSK, VILLAGER
-    }
-
+public class MyHusk extends MyPet implements de.Keyle.MyPet.api.entity.types.MyHusk {
     protected boolean isBaby = false;
-    protected Type type = Type.NORMAL;
-    protected int profession = 0;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
-    public MyZombie(MyPetPlayer petOwner) {
+    public MyHusk(MyPetPlayer petOwner) {
         super(petOwner);
+    }
+
+    public ItemStack[] getEquipment() {
+        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
+        for (int i = 0; i < EquipmentSlot.values().length; i++) {
+            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
+        }
+        return equipment;
+    }
+
+    public ItemStack getEquipment(EquipmentSlot slot) {
+        return equipment.get(slot);
     }
 
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
-        info.getCompoundData().put("Type", new TagInt(type.ordinal()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -76,28 +80,6 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Villager")) {
-            setVillager(info.getAs("Villager", TagByte.class).getBooleanData());
-        }
-        if (info.getCompoundData().containsKey("Husk")) {
-            setHusk(info.getAs("Husk", TagByte.class).getBooleanData());
-        }
-        if (info.getCompoundData().containsKey("Profession")) {
-            setProfession(info.getAs("Profession", TagInt.class).getIntData());
-        }
-        if (info.getCompoundData().containsKey("Type")) {
-            int type = info.getAs("Type", TagInt.class).getIntData();
-            if (!info.getCompoundData().containsKey("Version")) {
-                if (type == 6) {
-                    setHusk(true);
-                }
-            } else if (type > 0 && type < 6) {
-                setVillager(true);
-                setProfession(type);
-
-            }
-            setType(type);
-        }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
             for (int i = 0; i < equipment.size(); i++) {
@@ -111,7 +93,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public MyPetType getPetType() {
-        return MyPetType.Zombie;
+        return MyPetType.Husk;
     }
 
     public boolean isBaby() {
@@ -123,77 +105,6 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-    }
-
-    @Override
-    public boolean isHusk() {
-        return type == Type.HUSK;
-    }
-
-    @Override
-    public void setHusk(boolean flag) {
-        type = Type.HUSK;
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
-                removePet();
-                createEntity();
-            }
-        }
-    }
-
-    public boolean isVillager() {
-        return type == Type.VILLAGER;
-    }
-
-    public void setVillager(boolean flag) {
-        type = Type.VILLAGER;
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-        }
-    }
-
-    public void setProfession(int type) {
-        this.profession = type + 1;
-        if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
-                removePet();
-                createEntity();
-            }
-        }
-    }
-
-    @Override
-    public int getProfession() {
-        return profession - 1;
-    }
-
-    @Override
-    public int getType() {
-        return type.ordinal();
-    }
-
-    @Override
-    public void setType(int type) {
-        if (Util.isBetween(0, 2, type)) {
-            this.type = Type.values()[type];
-            if (status == PetState.Here) {
-                getEntity().get().getHandle().updateVisuals();
-            }
-        }
-    }
-
-    public ItemStack[] getEquipment() {
-        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
-        for (int i = 0; i < EquipmentSlot.values().length; i++) {
-            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
-        }
-        return equipment;
-    }
-
-    public ItemStack getEquipment(EquipmentSlot slot) {
-        return equipment.get(slot);
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
@@ -225,6 +136,6 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public String toString() {
-        return "MyZombie{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", villager=" + isVillager() + ", baby=" + isBaby() + "}";
+        return "MyHusk{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
     }
 }

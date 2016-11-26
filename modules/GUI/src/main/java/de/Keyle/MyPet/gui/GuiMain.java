@@ -41,7 +41,55 @@ public class GuiMain {
     public static SkillPropertyEditor skillPropertyEditor;
     public static String configPath;
 
-    public static String[] petTypes = new String[]{"default", "Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "EnderDragon", "Enderman", "Endermite", "Evoker", "Ghast", "Giant", "Guardian", "Horse", "IronGolem", "Llama", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "PolarBear", "Rabbit", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Squid", "Witch", "Wither", "Wolf", "Vex", "Villager", "Vindicator", "Zombie"};
+    public static String[] petTypes = new String[]{
+            "default",
+            "Bat",
+            "Blaze",
+            "CaveSpider",
+            "Chicken",
+            "Cow",
+            "Creeper",
+            "Donkey",
+            "ElderGuardian",
+            "EnderDragon",
+            "Enderman",
+            "Endermite",
+            "Evoker",
+            "Ghast",
+            "Giant",
+            "Guardian",
+            "Horse",
+            "Husk",
+            "IronGolem",
+            "Llama",
+            "MagmaCube",
+            "Mooshroom",
+            "Mule",
+            "Ocelot",
+            "Pig",
+            "PigZombie",
+            "PolarBear",
+            "Rabbit",
+            "Sheep",
+            "Silverfish",
+            "Skeleton",
+            "SkeletonHorse",
+            "Slime",
+            "Snowman",
+            "Spider",
+            "Squid",
+            "Stray",
+            "Witch",
+            "Wither",
+            "WitherSkeleton",
+            "Wolf",
+            "Vex",
+            "Villager",
+            "Vindicator",
+            "Zombie",
+            "ZombieHorse",
+            "ZombieVillager"
+    };
 
     public static void main(String[] args) {
         String path = "";

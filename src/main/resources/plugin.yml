@@ -117,6 +117,8 @@ permissions:
       MyPet.leash.Chicken: true
       MyPet.leash.Cow: true
       MyPet.leash.Creeper: true
+      MyPet.leash.Donkey: true
+      MyPet.leash.ElderGuardian: true
       MyPet.leash.Enderdragon: true
       MyPet.leash.Enderman: true
       MyPet.leash.Endermite: true
@@ -125,10 +127,12 @@ permissions:
       MyPet.leash.Ghast: true
       MyPet.leash.Guardian: true
       MyPet.leash.Horse: true
+      MyPet.leash.Husk: true
       MyPet.leash.IronGolem: true
       MyPet.leash.Llama: true
       MyPet.leash.MagmaCube: true
       MyPet.leash.Mooshroom: true
+      MyPet.leash.Mule: true
       MyPet.leash.Ocelot: true
       MyPet.leash.Pig: true
       MyPet.leash.PigZombie: true
@@ -137,17 +141,22 @@ permissions:
       MyPet.leash.Sheep: true
       MyPet.leash.Silverfish: true
       MyPet.leash.Skeleton: true
+      MyPet.leash.SkeletonHorse: true
       MyPet.leash.Slime: true
       MyPet.leash.Snowman: true
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
+      MyPet.leash.Stray: true
       MyPet.leash.Vex: true
       MyPet.leash.Villager: true
       MyPet.leash.Vindicator: true
       MyPet.leash.Witch: true
       MyPet.leash.Wither: true
+      MyPet.leash.WitherSkeleton: true
       MyPet.leash.Wolf: true
       MyPet.leash.Zombie: true
+      MyPet.leash.ZombieHorse: true
+      MyPet.leash.ZombieVillager: true
   MyPet.admin:
     description: Gives access to the MyPet admin features.
   MyPet.*:
