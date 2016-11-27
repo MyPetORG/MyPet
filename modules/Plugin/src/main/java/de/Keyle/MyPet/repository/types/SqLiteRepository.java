@@ -288,7 +288,7 @@ public class SqLiteRepository implements Repository {
                 statement.setDouble(3, myPet.getHealth());
                 statement.setInt(4, myPet.getRespawnTime());
                 statement.setBytes(5, myPet.getPetName().getBytes(StandardCharsets.UTF_8));
-                statement.setLong(6, myPet.getLastUsed());
+                statement.setString(6, myPet.getPetType().name());
                 statement.setLong(7, myPet.getLastUsed());
                 statement.setDouble(8, myPet.getSaturation());
                 statement.setString(9, myPet.getWorldGroup());
