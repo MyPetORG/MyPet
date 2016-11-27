@@ -59,6 +59,20 @@ Shops:
         PetType: Creeper
         EXP: 0
         Price: 100
+      donkey:
+        Name: Donkey
+        Description:
+        - <green>It's a Donkey!
+        PetType: Donkey
+        EXP: 0
+        Price: 100
+      elder_guardian:
+        Name: Elder Guardian
+        Description:
+        - <green>It's an Elder Guardian!
+        PetType: ElderGuardian
+        EXP: 0
+        Price: 100
       enderman:
         Name: Enderman
         Description:
@@ -124,6 +138,13 @@ Shops:
         PetType: Mooshroom
         EXP: 0
         Price: 100
+      mule:
+        Name: Mule
+        Description:
+        - <green>It's a Mule!
+        PetType: Mule
+        EXP: 0
+        Price: 100
       ocelot:
         Name: Ocelot
         Description:
@@ -180,6 +201,13 @@ Shops:
         PetType: Skeleton
         EXP: 0
         Price: 100
+      skeleton_horse:
+        Name: Skeleton Horse
+        Description:
+        - <green>It's a Skeleton Horse!
+        PetType: SkeletonHorse
+        EXP: 0
+        Price: 100
       slime:
         Name: Slime
         Description:
@@ -210,6 +238,13 @@ Shops:
         PetType: Squid
         EXP: 0
         Price: 100
+      stray:
+        Name: Stray
+        Description:
+        - <green>It's a Stray!
+        PetType: Stray
+        EXP: 0
+        Price: 100
       witch:
         Name: Witch
         Description:
@@ -222,6 +257,13 @@ Shops:
         Description:
         - <green>It's a Wither!
         PetType: Wither
+        EXP: 0
+        Price: 100
+      wither_skeleton:
+        Name: Wither Skeleton
+        Description:
+        - <green>It's a Wither Skeleton!
+        PetType: WitherSkeleton
         EXP: 0
         Price: 100
       wolf:
@@ -257,6 +299,20 @@ Shops:
         Description:
         - <green>It's a Zombie!
         PetType: Zombie
+        EXP: 0
+        Price: 100
+      zombie_horse:
+        Name: Zombie Horse
+        Description:
+        - <green>It's a Zombie Horse!
+        PetType: ZombieHorse
+        EXP: 0
+        Price: 100
+      zombie_villager:
+        Name: Zombie Villager
+        Description:
+        - <green>It's a Zombie Villager!
+        PetType: ZombieVillager
         EXP: 0
         Price: 100
 #      enderdragon:
@@ -303,6 +359,15 @@ Shops:
         Price: 50
         Options:
           - baby
+      baby_donkey:
+        Name: Donkey
+        Description:
+        - <green>It's a bab Donkey!
+        PetType: Donkey
+        EXP: 0
+        Price: 50
+        Options:
+          - baby
       baby_horse:
         Name: "Horse"
         Description:
@@ -326,6 +391,15 @@ Shops:
         Description:
         - <green>It's a baby Mooshroom!
         PetType: Mooshroom
+        EXP: 0
+        Price: 50
+        Options:
+          - baby
+      baby_mule:
+        Name: Mule
+        Description:
+        - <green>It's a baby Mule!
+        PetType: Mule
         EXP: 0
         Price: 50
         Options:
@@ -384,6 +458,15 @@ Shops:
         Price: 50
         Options:
           - baby
+      baby_skeleton_horse:
+        Name: Skeleton Horse
+        Description:
+        - <green>It's a baby Skeleton Horse!
+        PetType: SkeletonHorse
+        EXP: 0
+        Price: 50
+        Options:
+          - baby
       baby_villager:
         Name: "Villager"
         Description:
@@ -416,6 +499,24 @@ Shops:
         Description:
         - <green>It's a baby Zombie!
         PetType: Zombie
+        EXP: 0
+        Price: 50
+        Options:
+          - baby
+      baby_zombie_horse:
+        Name: Zombie Horse
+        Description:
+        - <green>It's a baby Zombie Horse!
+        PetType: ZombieHorse
+        EXP: 0
+        Price: 50
+        Options:
+          - baby
+      baby_zombie_villager:
+        Name: Zombie Villager
+        Description:
+        - <green>It's a baby Zombie Villager!
+        PetType: ZombieVillager
         EXP: 0
         Price: 50
         Options:
