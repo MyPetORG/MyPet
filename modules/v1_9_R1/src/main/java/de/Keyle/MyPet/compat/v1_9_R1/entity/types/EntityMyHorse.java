@@ -43,8 +43,6 @@ public class EntityMyHorse extends EntityMyPet {
 
     int soundCounter = 0;
     int rearCounter = -1;
-    int ageCounter = -1;
-    int ageFailCounter = 1;
 
     public EntityMyHorse(World world, MyPet myPet) {
         super(world, myPet);
@@ -196,17 +194,8 @@ public class EntityMyHorse extends EntityMyPet {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
-                getMyPet().setAge(getMyPet().getAge() + 3000);
+                getMyPet().setBaby(false);
                 return true;
-            }
-            if (itemStack.getItem() == Items.BREAD ||
-                    itemStack.getItem() == Items.WHEAT ||
-                    itemStack.getItem() == Items.GOLDEN_APPLE ||
-                    itemStack.getItem() == Item.getItemOf(Blocks.HAY_BLOCK) ||
-                    itemStack.getItem() == Items.GOLDEN_CARROT ||
-                    itemStack.getItem() == Items.APPLE ||
-                    itemStack.getItem() == Items.SUGAR) {
-                ageCounter = 5;
             }
         }
         return false;
@@ -254,12 +243,6 @@ public class EntityMyHorse extends EntityMyPet {
             } else {
                 applyVisual(4, getMyPet().hasSaddle());
             }
-        }
-
-        if (ageCounter > -1 && ageCounter-- == 0) {
-            // TODO this.datawatcher.set(12, Byte.valueOf((byte) MathHelper.clamp(getMyPet().getAge() + ageFailCounter++, -1, 1)));
-            ageCounter = -1;
-            ageFailCounter %= 1000;
         }
     }
 

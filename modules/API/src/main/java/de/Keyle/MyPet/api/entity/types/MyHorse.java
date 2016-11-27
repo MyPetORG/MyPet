@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.util.Since;
 import org.bukkit.inventory.ItemStack;
 
 import static de.Keyle.MyPet.api.entity.LeashFlag.Tamed;
@@ -30,8 +31,12 @@ import static org.bukkit.Material.*;
 
 @DefaultInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {Tamed})
 public interface MyHorse extends MyPet, MyPetBaby {
+    @Deprecated
+    @Since("27.11.2016")
     int getAge();
 
+    @Deprecated
+    @Since("27.11.2016")
     void setAge(int value);
 
     ItemStack getArmor();
