@@ -32,7 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.MyHorse {
-    public int age = 0;
+    public boolean baby = false;
     protected byte horseType = 0;
     protected int variant = 0;
     public ItemStack armor = null;
@@ -44,16 +44,16 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public int getAge() {
-        return age;
+        return baby ? -24000 : 0;
     }
 
     public void setAge(int value) {
-        value = Math.min(0, (Math.max(-24000, value)));
-        value = value - (value % 1000);
+        if (value < 0) {
+            setBaby(true);
+        }
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
-        this.age = value;
     }
 
     public ItemStack getArmor() {
@@ -236,15 +236,11 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     public boolean isBaby() {
-        return age < 0;
+        return baby;
     }
 
     public void setBaby(boolean flag) {
-        if (flag) {
-            this.age = -24000;
-        } else {
-            this.age = 0;
-        }
+        this.baby = flag;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
         }
