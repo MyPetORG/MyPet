@@ -85,7 +85,7 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
 
                         String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, stats + " " + title);
+                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title + " " + stats);
                         gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
