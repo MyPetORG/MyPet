@@ -1,5 +1,6 @@
 package de.Keyle.MyPet.util.shop;
 
+import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -15,6 +16,7 @@ import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -230,6 +232,12 @@ public class PetShop {
             ShopMyPet pet = new ShopMyPet(name);
             try {
                 pet.load(pets.getConfigurationSection(name));
+
+                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+                if (converter.isPresent()) {
+                    converter.get().convert(pet);
+                }
+
                 if (Util.isBetween(0, 53, pet.getPosition())) {
                     this.pets.put(pet.getPosition(), pet);
                 } else {
