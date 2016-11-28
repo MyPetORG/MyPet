@@ -199,33 +199,33 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
                 }
 
-                if (!newOwner.hasMyPet()) {
-                    final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
-                    inactiveMyPet.setPetType(myPetType);
-                    inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner().getLanguage()));
+                final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
+                inactiveMyPet.setPetType(myPetType);
+                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner().getLanguage()));
 
-                    TagCompound compound = inactiveMyPet.getInfo();
-                    createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);
+                TagCompound compound = inactiveMyPet.getInfo();
+                createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);
 
-                    final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
+                final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
 
-                    inactiveMyPet.setWorldGroup(wg.getName());
+                inactiveMyPet.setWorldGroup(wg.getName());
 
-                    Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                    if (converter.isPresent()) {
-                        converter.get().convert(inactiveMyPet);
-                    }
+                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
+                if (converter.isPresent()) {
+                    converter.get().convert(inactiveMyPet);
+                }
 
-                    MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
-                    Bukkit.getServer().getPluginManager().callEvent(createEvent);
+                MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
+                Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
-                    MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
-                    Bukkit.getServer().getPluginManager().callEvent(saveEvent);
+                MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+                Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
-                    MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
-                        @Override
-                        public void callback(Boolean value) {
-                            if (value) {
+                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
+                    @Override
+                    public void callback(Boolean added) {
+                        if (added) {
+                            if (!newOwner.hasMyPet()) {
                                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
                                 MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
 
@@ -236,12 +236,12 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                                 } else {
                                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
                                 }
+                            } else {
+                                sender.sendMessage(Translation.getString("Message.Command.Success", sender));
                             }
                         }
-                    });
-                } else {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
-                }
+                    }
+                });
             }
         } catch (MyPetTypeNotFoundException e) {
             sender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", lang));
