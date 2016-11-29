@@ -139,6 +139,9 @@
         <!-- https://www.spigotmc.org/resources/nocheatplus2015-07-25.26/ -->
         <nocheatplus.version>3.15.0-SNAPSHOT</nocheatplus.version>
 
+        <!-- https://www.spigotmc.org/resources/supervanish-be-invisible.1331/ -->
+        <supervanish.version>5.8.4</supervanish.version>
+
         <mongodb.version>3.2.1</mongodb.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <json.version>1.1.1</json.version>
@@ -421,6 +424,13 @@
             <groupId>fr.neatmonster</groupId>
             <artifactId>nocheatplus</artifactId>
             <version>${nocheatplus.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.myzelyam</groupId>
+            <artifactId>supervanish</artifactId>
+            <version>${supervanish.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

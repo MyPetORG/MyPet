@@ -27,6 +27,7 @@ softdepend:
   - Residence
   - ResourcePackApi
   - SkillAPI
+  - SuperVanish
   - SurvivalGames
   - Towny
   - Vault
