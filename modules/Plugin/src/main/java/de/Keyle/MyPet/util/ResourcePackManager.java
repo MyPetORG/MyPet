@@ -44,6 +44,7 @@ import java.util.UUID;
 // TODO convert to service
 public class ResourcePackManager implements Listener {
     public static final String DOWNLOAD_LINK = "http://dl.keyle.de/mypet/MyPet.zip";
+    public static final String DOWNLOAD_LINK_V3 = "http://dl.keyle.de/mypet/MyPet_v3.zip";
     protected static ResourcePackManager instance = null;
 
     protected Set<UUID> acceptedPlayers = new HashSet<>();
@@ -57,7 +58,11 @@ public class ResourcePackManager implements Listener {
     }
 
     public void installResourcePack(Player player) {
-        player.setResourcePack(DOWNLOAD_LINK);
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
+            player.setResourcePack(DOWNLOAD_LINK_V3);
+        } else {
+            player.setResourcePack(DOWNLOAD_LINK);
+        }
     }
 
     /**
