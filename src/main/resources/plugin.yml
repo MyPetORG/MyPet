@@ -26,6 +26,7 @@ softdepend:
   - PvPManager
   - Residence
   - SkillAPI
+  - SuperVanish
   - SurvivalGames
   - Towny
   - Vault
