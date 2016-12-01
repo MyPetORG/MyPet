@@ -94,7 +94,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.Icon
                     ItemStack item = createItemStack(menuItem);
                     minecraftInventory.setItem(slot, item);
                 } else {
-                    minecraftInventory.setItem(slot, null);
+                    minecraftInventory.setItem(slot, ItemStack.a);
                 }
             }
         }
