@@ -214,7 +214,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         @Override
         @SuppressWarnings("unchecked")
         public int a(@Nullable Object aClass) {
-            if (useCustomEntities && class2ID.containsKey(aClass)) {
+            if (class2ID.containsKey(aClass)) {
                 return class2ID.get(aClass);
             }
             return original.a((Class<? extends Entity>) aClass);
