@@ -1,7 +1,7 @@
-[![MyPet on BukkitDev][Banner]][BukkitDev]
+[![MyPet on BukkitDev][Banner]][Homepage]
 ## MyPet - Take mobs on a lead!
 
-Do you like MyPet? Feel free to donate!<br />
+Do you like MyPet? Feel free to donate or buy [MyPet-Premium][Premium]!<br />
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)][Donate]
 
 ## What is MyPet?
@@ -11,8 +11,6 @@ Take them on a lead, train them and make them a very powerful companion!
 [![MCStats][MCStatsImage]][MCStats]
 [![Builds][BuildsImage]][Builds]
 [![Wiki][WikiImage]][Wiki]
-
-[![BukkitDev][BukkitDevImage]][BukkitDev] 
 [![Spigot][SpigotImage]][Spigot]
 [![Premium][PremiumImage]][Premium]
 
@@ -23,7 +21,7 @@ MyPet is licensed under the [GNU Lesser General Public License Version 3][Licens
 All icons (except logo.png) in the [resources/images] folder are from the [ionicons] icon pack and that is MIT licensed.
 
 ## Builds
-Download the latest builds from our [Jenkins-Server][Builds].
+Download the latest builds from the official [MyPet-Site][Builds].
 
 
 [Logo]: http://dl.keyle.de/images/logo.png
@@ -34,12 +32,11 @@ Download the latest builds from our [Jenkins-Server][Builds].
 [Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
 [MCStats]: http://mcstats.org/plugin/MyPet
 [MCStatsImage]: http://dl.keyle.de/images/metrics.png
-[Builds]: https://build.keyle.de/job/MyPet/
+[Builds]: https://mypet-plugin.de/download
 [BuildsImage]: http://dl.keyle.de/images/devbuilds.png
+[Homepage]: https://mypet-plugin.de/
 [Wiki]: https://wiki.mypet-plugin.de/
 [WikiImage]: http://dl.keyle.de/images/wiki.png
-[BukkitDev]: http://dev.bukkit.org/server-mods/mypet/
-[BukkitDevImage]: http://dl.keyle.de/images/bukkitdev.png 
 [Spigot]: https://www.spigotmc.org/resources/mypet.12725/
 [SpigotImage]: http://dl.keyle.de/images/spigot.png
 [Premium]: https://www.spigotmc.org/resources/mypet-premium.17566/
