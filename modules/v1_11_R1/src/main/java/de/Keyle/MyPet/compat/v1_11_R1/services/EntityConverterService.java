@@ -213,6 +213,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyLlama) {
             if (((MyLlama) myPet).isBaby()) {
                 ((Llama) normalEntity).setBaby();
+            } else {
+                ((Llama) normalEntity).setAdult();
             }
             ((Llama) normalEntity).setColor(Llama.Color.values()[Math.min(0, Math.max(3, ((MyLlama) myPet).getVariant()))]);
             ((Llama) normalEntity).setCarryingChest(((MyLlama) myPet).hasChest());
@@ -232,7 +234,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     private void convertLlama(Llama llama, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagInt(llama.getVariant().ordinal()));
+        properties.getCompoundData().put("Variant", new TagInt(llama.getColor().ordinal()));
         properties.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(llama.getInventory().getDecor()));
         if (llama.isCarryingChest()) {
             properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
