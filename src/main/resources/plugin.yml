@@ -59,7 +59,7 @@ commands:
     description: Opens the inventory of your pet.
     usage: '/<command> [player name]'
   petbehavior:
-    aliases: [petb, pb]
+    aliases: [petbehaviour, petb, pb]
     description: Changes the behavior mode of your pet.
     usage: '/<command> [<friendly/aggressive/normal/farm/raid/duel>]'
   petinfo:
