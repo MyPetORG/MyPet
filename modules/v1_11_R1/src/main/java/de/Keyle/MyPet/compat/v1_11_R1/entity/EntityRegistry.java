@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.types.*;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.ChatColor;
@@ -36,7 +37,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static de.Keyle.MyPet.api.entity.MyPetType.*;
@@ -134,11 +134,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         registry = new MyPetRegistryMaterials(EntityTypes.b);
         try {
             Field registryField = EntityTypes.class.getDeclaredField("b");
-            registryField.setAccessible(true);
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(registryField, registryField.getModifiers() & ~Modifier.FINAL);
-            registryField.set(null, registry);
+            ReflectionUtil.setFinalStaticValue(registryField, registry);
         } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             ex.printStackTrace();
         }
@@ -157,8 +153,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public void unregisterEntityTypes() {
         try {
             Field registryField = EntityTypes.class.getDeclaredField("b");
-            registryField.setAccessible(true);
-            registryField.set(null, registry.original);
+            ReflectionUtil.setFinalStaticValue(registryField, registry.original);
         } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             ex.printStackTrace();
         }
