@@ -216,7 +216,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             } else {
                 ((Llama) normalEntity).setAdult();
             }
-            ((Llama) normalEntity).setColor(Llama.Color.values()[Math.min(0, Math.max(3, ((MyLlama) myPet).getVariant()))]);
+            ((Llama) normalEntity).setColor(Llama.Color.values()[Math.max(0, Math.min(3, ((MyLlama) myPet).getVariant()))]);
             ((Llama) normalEntity).setCarryingChest(((MyLlama) myPet).hasChest());
 
             if (((MyLlama) myPet).hasDecor()) {
