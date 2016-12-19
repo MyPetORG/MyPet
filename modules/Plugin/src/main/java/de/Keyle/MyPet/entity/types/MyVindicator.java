@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class MyVindicator extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVindicator {
@@ -100,7 +101,7 @@ public class MyVindicator extends MyPet implements de.Keyle.MyPet.api.entity.typ
     @Override
     public void dropEquipment() {
         if (getStatus() == PetState.Here) {
-            if (weapon != null) {
+            if (weapon != null && weapon.getType() != Material.AIR) {
                 Location dropLocation = getLocation().get();
                 dropLocation.getWorld().dropItem(dropLocation, weapon);
             }

@@ -31,6 +31,7 @@ import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class MyPigZombie extends MyPet implements de.Keyle.MyPet.api.entity.type
         if (getStatus() == PetState.Here) {
             Location dropLocation = getLocation().get();
             for (ItemStack itemStack : equipment.values()) {
-                if (itemStack != null) {
+                if (itemStack != null && itemStack.getType() != Material.AIR) {
                     dropLocation.getWorld().dropItem(dropLocation, itemStack);
                 }
             }
