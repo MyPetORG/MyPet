@@ -689,7 +689,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             locY = this.locY;
             speed = 0.8F;
             swimmSpeed = 0.02F;
-            f2 = (float) EnchantmentManager.d(this);
+            f2 = (float) EnchantmentManager.a(Enchantments.DEPTH_STRIDER, this);
             if (f2 > 3.0F) {
                 f2 = 3.0F;
             }
