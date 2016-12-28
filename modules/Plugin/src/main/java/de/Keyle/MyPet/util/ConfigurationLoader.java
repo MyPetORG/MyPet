@@ -100,6 +100,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skilltree.SwitchPenalty.Percent", Skilltree.SWITCH_PENALTY_PERCENT);
         config.addDefault("MyPet.Skilltree.SwitchPenalty.Admin", Skilltree.SWITCH_PENALTY_ADMIN);
 
+        config.addDefault("MyPet.Hooks.Kingdoms", Hooks.USE_Kingdoms);
         config.addDefault("MyPet.Hooks.Towny", Hooks.USE_Towny);
         config.addDefault("MyPet.Hooks.Heroes", Hooks.USE_Heroes);
         config.addDefault("MyPet.Hooks.Factions", Hooks.USE_Factions);
@@ -307,6 +308,7 @@ public class ConfigurationLoader {
         Hooks.USE_PvPManager = config.getBoolean("MyPet.Hooks.PvPManager", true);
         Hooks.USE_PlotSquared = config.getBoolean("MyPet.Hooks.PlotSquared", true);
         Hooks.USE_PvPDiffTimer = config.getBoolean("MyPet.Hooks.PvPDiffTimer", true);
+        Hooks.USE_Kingdoms = config.getBoolean("MyPet.Hooks.Kingdoms", true);
 
         LevelSystem.Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
