@@ -25,10 +25,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.inventory.ItemStack;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.Tamed;
-import static org.bukkit.Material.*;
+import static org.bukkit.Material.ROTTEN_FLESH;
 
-@DefaultInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {Tamed})
+@DefaultInfo(food = {ROTTEN_FLESH})
 public interface MyZombieHorse extends MyPet, MyPetBaby {
     ItemStack getSaddle();
 
