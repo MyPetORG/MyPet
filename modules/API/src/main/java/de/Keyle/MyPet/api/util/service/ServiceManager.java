@@ -118,6 +118,9 @@ public class ServiceManager {
             if (service.getClass().isAssignableFrom(serviceClass) && !list.contains(service)) {
                 list.add((T) service);
             }
+            if (serviceClass.isAssignableFrom(service.getClass()) && !list.contains(service)) {
+                list.add((T) service);
+            }
         }
 
         return list;
