@@ -65,9 +65,9 @@ public class EntityMySnowman extends EntityMyPet {
     public void updateVisuals() {
         byte oldValue = this.datawatcher.get(shearedWatcher);
         if (getMyPet().isSheared()) {
-            this.datawatcher.set(shearedWatcher, (byte) (oldValue | 0x10));
-        } else {
             this.datawatcher.set(shearedWatcher, (byte) (oldValue & 0xFFFFFFEF));
+        } else {
+            this.datawatcher.set(shearedWatcher, (byte) (oldValue | 0x10));
         }
     }
 
