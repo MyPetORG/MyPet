@@ -35,4 +35,10 @@ public interface MyDonkey extends MyPet, MyPetBaby {
     boolean hasChest();
 
     void setChest(ItemStack item);
+
+    ItemStack getSaddle();
+
+    boolean hasSaddle();
+
+    void setSaddle(ItemStack item);
 }
