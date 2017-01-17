@@ -33,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyMule {
     public boolean baby = false;
     public ItemStack chest = null;
+    public ItemStack saddle = null;
 
     public MyMule(MyPetPlayer petOwner) {
         super(petOwner);
@@ -59,12 +60,36 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
         }
     }
 
+    public ItemStack getSaddle() {
+        return saddle;
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
+    }
+
+    public void setSaddle(ItemStack item) {
+        if (item != null && item.getType() != Material.SADDLE) {
+            return;
+        }
+        this.saddle = item;
+        if (this.saddle != null) {
+            this.saddle.setAmount(1);
+        }
+        if (status == PetState.Here) {
+            getEntity().get().getHandle().updateVisuals();
+        }
+    }
+
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         if (hasChest()) {
             info.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(getChest()));
+        }
+        if (hasSaddle()) {
+            info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
         }
         return info;
     }
@@ -84,6 +109,17 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
             TagCompound itemTag = info.get("Chest");
             ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
             setChest(item);
+        }
+        if (info.containsKeyAs("Saddle", TagByte.class)) {
+            boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
+            if (saddle) {
+                ItemStack item = new ItemStack(Material.SADDLE);
+                setSaddle(item);
+            }
+        } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
+            TagCompound itemTag = info.get("Saddle");
+            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+            setSaddle(item);
         }
     }
 

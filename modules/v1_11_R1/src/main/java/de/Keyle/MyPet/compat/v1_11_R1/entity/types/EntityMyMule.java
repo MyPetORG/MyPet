@@ -82,7 +82,16 @@ public class EntityMyMule extends EntityMyPet {
         }
 
         if (itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+                getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemStack.subtract(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                    }
+                }
+                return true;
+            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
                 getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -98,9 +107,16 @@ public class EntityMyMule extends EntityMyPet {
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     this.world.addEntity(entityitem);
                 }
+                if (getMyPet().hasSaddle()) {
+                    EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+                    entityitem.pickupDelay = 10;
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    this.world.addEntity(entityitem);
+                }
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setChest(null);
+                getMyPet().setSaddle(null);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.damage(1, entityhuman);
                 }
@@ -148,10 +164,18 @@ public class EntityMyMule extends EntityMyPet {
     }
 
     public void onLivingUpdate() {
+        boolean oldRiding = hasRider;
         super.onLivingUpdate();
         if (rearCounter > -1 && rearCounter-- == 0) {
             applyVisual(64, false);
             rearCounter = -1;
+        }
+        if (oldRiding != hasRider) {
+            if (hasRider) {
+                applyVisual(4, true);
+            } else {
+                applyVisual(4, getMyPet().hasSaddle());
+            }
         }
     }
 
