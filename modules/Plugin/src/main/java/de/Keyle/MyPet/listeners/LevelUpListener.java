@@ -99,10 +99,12 @@ public class LevelUpListener implements Listener {
                     }
                 }.loop(2);
 
-                if (ResourcePackManager.get().usesResourcePack(myPet.getOwner().getPlayer())) {
-                    entity.getWorld().playSound(entity.getLocation(), "mypet.levelup", 1F, 1F);
-                } else if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    if (ResourcePackManager.get().usesResourcePack(myPet.getOwner().getPlayer())) {
+                        entity.getWorld().playSound(entity.getLocation(), "mypet.levelup", 1F, 1F);
+                    } else {
+                        entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
+                    }
                 } else {
                     entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("LEVEL_UP"), 1F, 0.7F);
                 }
