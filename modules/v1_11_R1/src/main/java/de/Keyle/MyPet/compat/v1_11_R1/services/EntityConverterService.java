@@ -13,6 +13,7 @@ import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
@@ -50,7 +51,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 convertHorse((Horse) entity, properties);
             case SKELETON_HORSE:
             case ZOMBIE_HORSE:
-                convertSaddledHorse((Horse) entity, properties);
+                convertSaddledHorse((AbstractHorse) entity, properties);
                 break;
             case MULE:
             case DONKEY:
@@ -332,10 +333,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         }
     }
 
-    public void convertSaddledHorse(Horse horse, TagCompound properties) {
-        if (horse.getInventory().getSaddle() != null) {
-            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
-            properties.getCompoundData().put("Saddle", saddle);
+    public void convertSaddledHorse(AbstractHorse horse, TagCompound properties) {
+        if (horse.getInventory() instanceof HorseInventory) {
+            if (((HorseInventory) horse.getInventory()).getSaddle() != null) {
+                TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(((HorseInventory) horse.getInventory()).getSaddle());
+                properties.getCompoundData().put("Saddle", saddle);
+            }
         }
     }
 
