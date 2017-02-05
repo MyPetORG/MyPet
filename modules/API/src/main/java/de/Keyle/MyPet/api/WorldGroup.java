@@ -20,9 +20,6 @@
 
 package de.Keyle.MyPet.api;
 
-import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-
 import java.util.*;
 
 public class WorldGroup {
@@ -86,16 +83,6 @@ public class WorldGroup {
      */
     public static Collection<WorldGroup> getGroups() {
         return Collections.unmodifiableCollection(allGroups.values());
-    }
-
-    public static boolean check(MyPetPlayer player, StoredMyPet pet) {
-        if (player.isOnline()) {
-            final WorldGroup playerGroup = getGroupByWorld(player.getPlayer().getLocation().getWorld().getName());
-            final WorldGroup petGroup = allGroups.get(pet.getWorldGroup());
-
-            return Objects.equals(playerGroup, petGroup);
-        }
-        return true;
     }
 
     /**
