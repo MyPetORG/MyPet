@@ -178,7 +178,7 @@ public class PlayerListener implements Listener {
                                 public void callback(StoredMyPet storedMyPet) {
                                     MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
 
-                                    if (joinedPlayer.hasMyPet() && WorldGroup.check(joinedPlayer, joinedPlayer.getMyPet())) {
+                                    if (joinedPlayer.hasMyPet()) {
                                         final MyPet myPet = joinedPlayer.getMyPet();
                                         if (myPet.wantsToRespawn()) {
                                             switch (myPet.createEntity()) {
@@ -288,7 +288,7 @@ public class PlayerListener implements Listener {
             final MyPet myPet = myPetPlayer.hasMyPet() ? myPetPlayer.getMyPet() : null;
             final BukkitRunnable callPet = new BukkitRunnable() {
                 public void run() {
-                    if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet() && WorldGroup.check(myPetPlayer, myPetPlayer.getMyPet())) {
+                    if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet()) {
                         MyPet runMyPet = myPetPlayer.getMyPet();
                         switch (runMyPet.createEntity()) {
                             case Canceled:
@@ -361,12 +361,12 @@ public class PlayerListener implements Listener {
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here) {
-                    if (myPet.getLocation().get().getWorld().equals(event.getTo().getWorld()) || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), event.getTo()) > 10) {
+                    if (myPet.getLocation().get().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), event.getTo()) > 10) {
                         final boolean sameWorld = myPet.getLocation().get().getWorld() == event.getTo().getWorld();
-                        myPet.removePet(true);
+                        myPet.removePet();
                         new BukkitRunnable() {
                             public void run() {
-                                if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet() && WorldGroup.check(myPetPlayer, myPetPlayer.getMyPet())) {
+                                if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet()) {
                                     MyPet runMyPet = myPetPlayer.getMyPet();
                                     switch (runMyPet.createEntity()) {
                                         case Canceled:
@@ -421,7 +421,7 @@ public class PlayerListener implements Listener {
             if (respawnedMyPetPlayer.hasMyPet() && myPet.wantsToRespawn()) {
                 new BukkitRunnable() {
                     public void run() {
-                        if (respawnedMyPetPlayer.hasMyPet() && WorldGroup.check(respawnedMyPetPlayer, respawnedMyPetPlayer.getMyPet())) {
+                        if (respawnedMyPetPlayer.hasMyPet()) {
                             MyPet runMyPet = respawnedMyPetPlayer.getMyPet();
                             switch (runMyPet.createEntity()) {
                                 case Canceled:

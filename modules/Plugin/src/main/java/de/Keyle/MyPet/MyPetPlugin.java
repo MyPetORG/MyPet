@@ -395,7 +395,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                                         public void callback(StoredMyPet storedMyPet) {
                                             myPetManager.activateMyPet(storedMyPet);
 
-                                            if (onlinePlayer.hasMyPet() && WorldGroup.check(onlinePlayer, onlinePlayer.getMyPet())) {
+                                            if (onlinePlayer.hasMyPet()) {
                                                 final MyPet myPet = onlinePlayer.getMyPet();
                                                 final MyPetPlayer myPetPlayer = myPet.getOwner();
                                                 if (myPet.wantsToRespawn()) {
