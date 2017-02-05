@@ -424,6 +424,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
+
+                if (!WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName().equals(getWorldGroup())) {
+                    return SpawnFlags.WrongWorldGroup;
+                }
+
                 if (owner.isFlying()) {
                     boolean groundFound = false;
                     for (int i = 10; i >= 0; i--) {
