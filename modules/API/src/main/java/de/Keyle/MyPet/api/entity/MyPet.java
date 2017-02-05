@@ -35,12 +35,14 @@ public interface MyPet extends StoredMyPet, Scheduler {
     }
 
     enum SpawnFlags {
-        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, NotAllowed
+        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, WrongWorldGroup, NotAllowed
     }
 
     void removePet();
 
     void removePet(boolean wantsToRespawn);
+
+    SpawnFlags createEntity();
 
     PetState getStatus();
 
@@ -53,8 +55,6 @@ public interface MyPet extends StoredMyPet, Scheduler {
     Skills getSkills();
 
     boolean autoAssignSkilltree();
-
-    SpawnFlags createEntity();
 
     Optional<MyPetBukkitEntity> getEntity();
 
