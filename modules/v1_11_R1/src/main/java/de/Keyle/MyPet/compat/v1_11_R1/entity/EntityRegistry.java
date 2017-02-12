@@ -20,36 +20,31 @@
 
 package de.Keyle.MyPet.compat.v1_11_R1.entity;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.types.*;
-import net.minecraft.server.v1_11_R1.*;
+import net.minecraft.server.v1_11_R1.EntityTypes;
+import net.minecraft.server.v1_11_R1.MinecraftKey;
+import net.minecraft.server.v1_11_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static de.Keyle.MyPet.api.entity.MyPetType.*;
 
 @Compat("v1_11_R1")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
-    protected Map<MyPetType, Class<? extends MyPetMinecraftEntity>> entityClasses = new HashMap<>();
-    private MyPetRegistryMaterials registry = null;
+    protected static Map<MyPetType, Class<? extends EntityMyPet>> entityClasses = new HashMap<>();
 
     public EntityRegistry() {
-        replaceEntityRegistryMaterials();
-
         entityClasses.put(Bat, EntityMyBat.class);
         entityClasses.put(Blaze, EntityMyBlaze.class);
         entityClasses.put(CaveSpider, EntityMyCaveSpider.class);
@@ -122,140 +117,22 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
         if (entity != null) {
             World world = ((CraftWorld) bukkitWorld).getHandle();
-            registry.enableCustomEntities();
-            boolean result = world.addEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
-            registry.disableCustomEntities();
-            return result;
+            return world.addEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
         }
         return false;
-    }
-
-    private void replaceEntityRegistryMaterials() {
-        registry = new MyPetRegistryMaterials(EntityTypes.b);
-        try {
-            Field registryField = EntityTypes.class.getDeclaredField("b");
-            ReflectionUtil.setFinalStaticValue(registryField, registry);
-        } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
-            ex.printStackTrace();
-        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void registerEntityTypes() {
         for (MyPetType type : entityClasses.keySet()) {
-            registry.addToRegistry(type.getTypeID(), new MinecraftKey(type.getMinecraftName()), (Class<? extends EntityMyPet>) entityClasses.get(type));
+            EntityTypes.b.a(type.getTypeID(), new MinecraftKey("My" + type.name()), entityClasses.get(type));
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void unregisterEntityTypes() {
-        try {
-            Field registryField = EntityTypes.class.getDeclaredField("b");
-            ReflectionUtil.setFinalStaticValue(registryField, registry.original);
-        } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private class MyPetRegistryMaterials extends RegistryMaterials {
-
-        private RegistryMaterials<MinecraftKey, Class<? extends Entity>> original;
-        private boolean useCustomEntities = false;
-        private final BiMap<MinecraftKey, Class<? extends EntityMyPet>> key2Class = HashBiMap.create();
-        private final BiMap<Class<? extends EntityMyPet>, MinecraftKey> class2Key = key2Class.inverse();
-        private final BiMap<Class<? extends EntityMyPet>, Integer> class2ID = HashBiMap.create();
-        private final BiMap<Integer, Class<? extends EntityMyPet>> ID2Class = class2ID.inverse();
-
-        public MyPetRegistryMaterials(RegistryMaterials<MinecraftKey, Class<? extends Entity>> original) {
-            this.original = original;
-            if (this.original instanceof MyPetRegistryMaterials) {
-                this.original = ((MyPetRegistryMaterials) this.original).original;
-            }
-        }
-
-        public void enableCustomEntities() {
-            useCustomEntities = true;
-        }
-
-        public void disableCustomEntities() {
-            useCustomEntities = false;
-        }
-
-        public void addToRegistry(int id, MinecraftKey key, Class<? extends EntityMyPet> clazz) {
-            key2Class.put(key, clazz);
-            ID2Class.put(id, clazz);
-        }
-
-        @Nullable
-        @Override
-        public Class<? extends Entity> a(Random random) {
-            return original.a(random);
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void a(int i, Object minecraftKey, Object aClass) {
-            original.a(i, (MinecraftKey) minecraftKey, (Class<? extends Entity>) aClass);
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void a(Object minecraftKey, Object aClass) {
-            original.a((MinecraftKey) minecraftKey, (Class<? extends Entity>) aClass);
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public int a(@Nullable Object aClass) {
-            if (class2ID.containsKey(aClass)) {
-                return class2ID.get(aClass);
-            }
-            return original.a((Class<? extends Entity>) aClass);
-        }
-
-        @Nullable
-        @Override
-        @SuppressWarnings("unchecked")
-        public MinecraftKey b(Object aClass) {
-            if (useCustomEntities && class2Key.containsKey(aClass)) {
-                return class2Key.get(aClass);
-            }
-            return original.b((Class<? extends Entity>) aClass);
-        }
-
-        @Override
-        public boolean d(Object minecraftKey) {
-            return original.d((MinecraftKey) minecraftKey);
-        }
-
-        @Nullable
-        @Override
-        public Class<? extends Entity> get(@Nullable Object minecraftKey) {
-            if (useCustomEntities && key2Class.containsKey(minecraftKey)) {
-                return key2Class.get(minecraftKey);
-            }
-            return original.get((MinecraftKey) minecraftKey);
-        }
-
-        @Nullable
-        @Override
-        public Class<? extends Entity> getId(int id) {
-            if (useCustomEntities && ID2Class.containsKey(id)) {
-                return ID2Class.get(id);
-            }
-            return original.getId(id);
-        }
-
-        @Override
-        public Iterator<Class<? extends Entity>> iterator() {
-            return original.iterator();
-        }
-
-        @Override
-        public Set<MinecraftKey> keySet() {
-            return original.keySet();
-        }
+        // There is not much I can do to undo the registration
     }
 }
