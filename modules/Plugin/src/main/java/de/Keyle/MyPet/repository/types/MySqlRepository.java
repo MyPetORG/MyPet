@@ -70,7 +70,9 @@ public class MySqlRepository implements Repository {
     @Override
     public void init() throws RepositoryInitException {
         this.dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://" + Configuration.Repository.MySQL.HOST + ":" + Configuration.Repository.MySQL.PORT + "/" + Configuration.Repository.MySQL.DATABASE + "?useUnicode=true&characterEncoding=UTF-8");
+        dataSource.setJdbcUrl("jdbc:mysql://" +
+                Configuration.Repository.MySQL.HOST + ":" + Configuration.Repository.MySQL.PORT + "/" +
+                Configuration.Repository.MySQL.DATABASE + (Configuration.Repository.MySQL.DATABASE.contains("?") ? "&" : "?") + "useUnicode=true&characterEncoding=UTF-8");
         dataSource.setUsername(Configuration.Repository.MySQL.USER);
         dataSource.setPassword(Configuration.Repository.MySQL.PASSWORD);
         dataSource.setMaximumPoolSize(Configuration.Repository.MySQL.POOL_SIZE);
