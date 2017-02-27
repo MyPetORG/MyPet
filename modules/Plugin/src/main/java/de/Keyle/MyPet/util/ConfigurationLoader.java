@@ -125,6 +125,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.Vault.Economy", Hooks.USE_ECONOMY);
         config.addDefault("MyPet.Hooks.SkillAPI.GrantExp", Hooks.SkillAPI.GRANT_EXP);
         config.addDefault("MyPet.Hooks.SkillAPI.Disable-Vanilla-Exp", Hooks.SkillAPI.DISABLE_VANILLA_EXP);
+        config.addDefault("MyPet.Hooks.MythicMobs.Disable-Leashing", Hooks.DISABLE_MYTHIC_MOB_LEASHING);
 
         config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
         config.addDefault("MyPet.Name.MaxLength", Name.MAX_LENGTH);
@@ -309,6 +310,7 @@ public class ConfigurationLoader {
         Hooks.USE_PlotSquared = config.getBoolean("MyPet.Hooks.PlotSquared", true);
         Hooks.USE_PvPDiffTimer = config.getBoolean("MyPet.Hooks.PvPDiffTimer", true);
         Hooks.USE_Kingdoms = config.getBoolean("MyPet.Hooks.Kingdoms", true);
+        Hooks.DISABLE_MYTHIC_MOB_LEASHING = config.getBoolean("MyPet.Hooks.MythicMobs.Disable-Leashing", true);
 
         LevelSystem.Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
