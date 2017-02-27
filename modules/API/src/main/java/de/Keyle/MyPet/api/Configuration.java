@@ -266,6 +266,7 @@ public class Configuration {
         public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
         public static boolean DISABLE_PETS_IN_HUNGER_GAMES = true;
         public static boolean DISABLE_PETS_IN_MOB_ARENA = true;
+        public static boolean DISABLE_MYTHIC_MOB_LEASHING = true;
         public static boolean USE_Towny = true;
         public static boolean USE_Factions = true;
         public static boolean USE_WorldGuard = true;
