@@ -205,25 +205,22 @@ public class EntityMyHorse extends EntityMyPet {
 
     @Override
     public void playStepSound(BlockPosition pos, Block block) {
-        SoundEffectType soundeffecttype = block.getStepSound();
-        if (this.world.getType(pos) == Blocks.SNOW) {
-            soundeffecttype = Blocks.SNOW_LAYER.getStepSound();
-        }
         if (!block.getBlockData().getMaterial().isLiquid()) {
-            if ((this.isVehicle())) {
+            SoundEffectType soundeffecttype = block.getStepSound();
+            if (this.world.getType(pos.up()).getBlock() == Blocks.SNOW_LAYER) {
+                soundeffecttype = Blocks.SNOW_LAYER.getStepSound();
+            }
+            if (isVehicle()) {
                 this.soundCounter += 1;
-                if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0)) {
-                    a(SoundEffects.cv, soundeffecttype.a() * 0.15F, soundeffecttype.b());
-                    if ((this.random.nextInt(10) == 0)) {
-                        a(SoundEffects.cs, soundeffecttype.a() * 0.6F, soundeffecttype.b());
+                if (this.soundCounter % 3 != 0) {
+                    if (this.soundCounter <= 5) {
+                        a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                     }
-                } else if (this.soundCounter <= 5) {
-                    a(SoundEffects.cB, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                 }
             } else if (soundeffecttype == SoundEffectType.a) {
-                a(SoundEffects.cB, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             } else {
-                a(SoundEffects.cA, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                a(SoundEffects.cK, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             }
         }
     }
