@@ -43,6 +43,14 @@ public class PetShop {
         economyHook = (VaultHook) MyPetApi.getHookHelper().getEconomy();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public void open(final Player player) {
         IconMenu shop = new IconMenu(Colorizer.setColors(displayName), new IconMenu.OptionClickEventHandler() {
             @Override

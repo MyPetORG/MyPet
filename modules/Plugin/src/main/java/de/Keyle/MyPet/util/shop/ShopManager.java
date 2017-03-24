@@ -89,6 +89,10 @@ public class ShopManager implements ShopService {
         }
     }
 
+    public PetShop getShop(String name) {
+        return shops.get(name);
+    }
+
     public String getDefaultShopName() {
         return defaultShop;
     }

@@ -23,16 +23,22 @@ package de.Keyle.MyPet.commands;
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.inventory.IconMenu;
+import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.bukkit.ChatColor.RESET;
 
 public class CommandShop implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -64,7 +70,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
             player = (Player) sender;
         }
 
-        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
+        final Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
         if (shopManager.isPresent()) {
             if (args.length > 0) {
                 String shop = args[0];
@@ -79,6 +85,42 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                 if (shop != null) {
                     if (Permissions.has(player, "MyPet.shop.access." + shop) || Permissions.has(player, "MyPet.admin")) {
                         shopManager.get().open(player);
+                        return true;
+                    }
+                } else {
+                    final List<String> availableShops = getAvailablePetShops(player);
+                    if (availableShops != null && availableShops.size() > 0) {
+                        final Player finalPlayer = player;
+                        IconMenu menu = new IconMenu(Translation.getString("Message.Shop.Available", player), new IconMenu.OptionClickEventHandler() {
+                            @Override
+                            public void onOptionClick(IconMenu.OptionClickEvent event) {
+                                String shopname = null;
+                                try {
+                                    shopname = availableShops.get(event.getPosition());
+                                } catch (Exception ignored) {
+                                }
+                                if (shopname != null) {
+                                    final String finalShopname = shopname;
+                                    new BukkitRunnable() {
+                                        @Override
+                                        public void run() {
+                                            shopManager.get().open(finalShopname, finalPlayer);
+                                        }
+                                    }.runTaskLater(MyPetApi.getPlugin(), 5L);
+
+                                    event.setWillClose(true);
+                                    event.setWillDestroy(true);
+                                }
+                            }
+                        }, MyPetApi.getPlugin());
+                        for (String shopname : availableShops) {
+                            IconMenuItem icon = new IconMenuItem();
+                            icon.setTitle(RESET + shopManager.get().getShop(shopname).getDisplayName());
+                            icon.setMaterial(Material.CHEST);
+                            menu.addOption(icon);
+                        }
+
+                        menu.open(player);
                         return true;
                     }
                 }
@@ -96,16 +138,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 if (strings.length == 1) {
-                    if (Permissions.has(player, "MyPet.admin")) {
-                        return new ArrayList<>(shopManager.get().getShopNames());
-                    }
-                    List<String> shops = new ArrayList<>();
-                    for (String shop : shopManager.get().getShopNames()) {
-                        if (Permissions.has(player, "MyPet.shop.access." + shop)) {
-                            shops.add(shop);
-                        }
-                    }
-                    return shops;
+                    return getAvailablePetShops(player);
                 } else if (strings.length == 2) {
                     if (Permissions.has(player, "MyPet.admin")) {
                         return null;
@@ -120,5 +153,22 @@ public class CommandShop implements CommandExecutor, TabCompleter {
             }
         }
         return CommandAdmin.EMPTY_LIST;
+    }
+
+    public List<String> getAvailablePetShops(Player player) {
+        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
+        if (shopManager.isPresent()) {
+            if (Permissions.has(player, "MyPet.admin")) {
+                return new ArrayList<>(shopManager.get().getShopNames());
+            }
+            List<String> shops = new ArrayList<>();
+            for (String shop : shopManager.get().getShopNames()) {
+                if (Permissions.has(player, "MyPet.shop.access." + shop)) {
+                    shops.add(shop);
+                }
+            }
+            return shops;
+        }
+        return null;
     }
 }

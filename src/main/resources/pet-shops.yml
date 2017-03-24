@@ -1,6 +1,7 @@
 Shops:
   all:
-    Default: true
+# When Default is set to true /petshop will open the sop instead of the shop selection GUI
+#    Default: true
     Name: "All Pets"
     Balance:
       Type: Private
