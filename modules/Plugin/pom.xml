@@ -43,8 +43,8 @@
 
     <repositories>
         <repository>
-            <id>comphenix-releases</id>
-            <url>http://repo.comphenix.net/content/repositories/public/</url>
+            <id>dmulloy2-repo</id>
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -200,8 +200,8 @@
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.4.0</version>
+            <artifactId>ProtocolLib-API</artifactId>
+            <version>4.2.0</version>
         </dependency>
     </dependencies>
 
