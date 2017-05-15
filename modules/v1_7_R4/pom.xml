@@ -98,25 +98,24 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.wolvereness</groupId>
-                <artifactId>overmapped</artifactId>
-                <version>0.0.2</version>
+                <groupId>net.md-5</groupId>
+                <artifactId>specialsource-maven-plugin</artifactId>
+                <version>1.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>map</goal>
+                            <goal>remap</goal>
                         </goals>
                         <configuration>
-                            <maps>${basedir}/maps.yml</maps>
-                            <input>${basedir}/target/${project.name}.jar</input>
-                            <original>${basedir}/target/unmapped-${project.name}.jar</original>
-                            <missing>FAIL</missing>
+                            <srgIn>
+                                ${project.basedir}/deprecation-mappings.csrg
+                            </srgIn>
                         </configuration>
                     </execution>
                 </executions>

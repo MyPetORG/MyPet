@@ -68,7 +68,7 @@ public class FactionsHook extends PluginHook implements PlayerVersusPlayerHook {
         try {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
             if (accessMethod == AccessMethod.Reflektion) {
-                return engineMethod.invoke("canCombatDamageHappen", sub, false) == true;
+                return engineMethod.invoke("canCombatDamageHappen", sub, false).equals(true);
             } else {
                 return EngineCombat.get().canCombatDamageHappen(sub, false);
             }
