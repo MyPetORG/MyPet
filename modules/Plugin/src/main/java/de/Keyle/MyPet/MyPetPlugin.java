@@ -132,12 +132,14 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     public void onEnable() {
         this.isReady = false;
 
+        UpdateCheck.reset();
         if (getConfig().getBoolean("MyPet.Update-Check", true)) {
             Optional<String> message = UpdateCheck.checkForUpdate("MyPet");
             if (message.isPresent()) {
                 String m = "#  A new version is available: " + message.get() + "  #";
                 MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
                 MyPetApi.getLogger().info(m);
+                MyPetApi.getLogger().info("   https://mypet-plugin.de/download");
                 MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
             }
         }

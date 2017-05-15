@@ -28,6 +28,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class UpdateCheck {
+    static String latest = null;
+
     public static Optional<String> checkForUpdate(String plugin) {
         try {
             String parameter = "";
@@ -40,10 +42,19 @@ public class UpdateCheck {
             JSONObject result = (JSONObject) parser.parse(content);
 
             if (result.containsKey("latest")) {
-                return Optional.of(result.get("latest").toString());
+                latest = result.get("latest").toString();
+                return Optional.of(latest);
             }
         } catch (Exception ignored) {
         }
         return Optional.absent();
+    }
+
+    public static String getLatest() {
+        return latest;
+    }
+
+    public static void reset() {
+        latest = null;
     }
 }
