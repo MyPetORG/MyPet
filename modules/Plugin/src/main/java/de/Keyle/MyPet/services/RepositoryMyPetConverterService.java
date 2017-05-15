@@ -48,6 +48,7 @@ public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.
         if (fromVersion != toVersion) {
             switch (toVersion) {
                 case v1_11_R1:
+                case v1_12_R1:
                     v1_11_R1(pet);
                     break;
             }

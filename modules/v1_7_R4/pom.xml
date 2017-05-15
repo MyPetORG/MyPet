@@ -25,7 +25,7 @@
     <artifactId>mypet-compat-v1_7_R4</artifactId>
     <version>1</version>
     <packaging>jar</packaging>
-    <name>MyPet-v1_7_R4</name>
+    <name>MyPet-Premium-v1_7_R4</name>
 
     <parent>
         <groupId>de.keyle</groupId>
@@ -78,9 +78,27 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.md-5</groupId>
+                <artifactId>specialsource-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>remap</goal>
+                        </goals>
+                        <configuration>
+                            <srgIn>
+                                ${project.basedir}/deprecation-mappings.csrg
+                            </srgIn>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

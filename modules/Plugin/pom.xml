@@ -168,6 +168,17 @@
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
+            <artifactId>mypet-compat-v1_12_R1</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
             <artifactId>mypet-gui</artifactId>
             <version>1</version>
         </dependency>
@@ -226,8 +237,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

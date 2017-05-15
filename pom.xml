@@ -40,6 +40,7 @@
         <module>modules/v1_9_R2</module>
         <module>modules/v1_10_R1</module>
         <module>modules/v1_11_R1</module>
+        <module>modules/v1_12_R1</module>
         <module>modules/GUI</module>
         <module>modules/Plugin</module>
         <module>modules/MyPet</module>
@@ -499,8 +500,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
