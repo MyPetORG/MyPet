@@ -49,7 +49,6 @@ import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
-import de.Keyle.MyPet.util.Metrics;
 import de.Keyle.MyPet.util.ResourcePackManager;
 import de.Keyle.MyPet.util.UpdateCheck;
 import de.Keyle.MyPet.util.hooks.*;
@@ -57,6 +56,7 @@ import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.apache.commons.lang.StringUtils;
+import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -66,7 +66,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -317,40 +316,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Timer.startTimer();
 
         // init Metrics
-        try {
-            Metrics metrics = new Metrics(this);
-            if (!metrics.isOptOut()) {
-
-                Metrics.Graph graphTotalCount = metrics.createGraph("MyPets");
-
-                Metrics.Plotter plotter = new Metrics.Plotter("Active MyPets") {
-                    @Override
-                    public int getValue() {
-                        return myPetManager.countActiveMyPets();
-                    }
-                };
-                graphTotalCount.addPlotter(plotter);
-
-                metrics.start();
+        Metrics metrics = new Metrics(this);
+        metrics.addCustomChart(new Metrics.SingleLineChart("active_pets") {
+            @Override
+            public int getValue() {
+                return myPetManager.countActiveMyPets();
             }
-            metrics = new Metrics(this, "MyPet-Premium");
-            if (!metrics.isOptOut()) {
-
-                Metrics.Graph graphTotalCount = metrics.createGraph("MyPets");
-
-                Metrics.Plotter plotter = new Metrics.Plotter("MyPets") {
-                    @Override
-                    public int getValue() {
-                        return myPetManager.countActiveMyPets();
-                    }
-                };
-                graphTotalCount.addPlotter(plotter);
-
-                metrics.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
 
         if (MyPetVersion.isPremium()) {
             getLogger().info("Thank you for buying MyPet-" + ChatColor.YELLOW + "Premium" + ChatColor.RESET + "!");
