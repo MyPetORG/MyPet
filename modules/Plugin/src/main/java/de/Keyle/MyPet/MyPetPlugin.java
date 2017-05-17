@@ -46,12 +46,12 @@ import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
-import de.Keyle.MyPet.util.Metrics;
 import de.Keyle.MyPet.util.UpdateCheck;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.apache.commons.lang.StringUtils;
+import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -61,7 +61,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -274,25 +273,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Timer.startTimer();
 
         // init Metrics
-        try {
-            Metrics metrics = new Metrics(this);
-            if (!metrics.isOptOut()) {
-
-                Metrics.Graph graphTotalCount = metrics.createGraph("MyPets");
-
-                Metrics.Plotter plotter = new Metrics.Plotter("Active MyPets") {
-                    @Override
-                    public int getValue() {
-                        return myPetManager.countActiveMyPets();
-                    }
-                };
-                graphTotalCount.addPlotter(plotter);
-
-                metrics.start();
+        Metrics metrics = new Metrics(this);
+        metrics.addCustomChart(new Metrics.SingleLineChart("active_pets") {
+            @Override
+            public int getValue() {
+                return myPetManager.countActiveMyPets();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
 
         getLogger().info("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;

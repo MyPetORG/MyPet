@@ -27,7 +27,7 @@
     <version>1</version>
     <packaging>pom</packaging>
     <name>MyPet-Parent</name>
-    <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
+    <url>https://www.spigotmc.org/resources/mypet.12725/</url>
 
     <modules>
         <module>modules/API</module>
@@ -143,6 +143,7 @@
         <!-- https://www.spigotmc.org/resources/supervanish-be-invisible.1331/ -->
         <supervanish.version>5.8.4</supervanish.version>
 
+        <bstats.version>1.1</bstats.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
         <fanciful-chat.version>0.0.4</fanciful-chat.version>
@@ -191,6 +192,10 @@
         <repository>
             <id>md5-repo</id>
             <url>http://repo.md-5.net/content/repositories/public</url>
+        </repository>
+        <repository>
+            <id>bstats-repo</id>
+            <url>http://repo.bstats.org/content/repositories/releases/</url>
         </repository>
     </repositories>
 
@@ -440,6 +445,11 @@
             <version>${forms_rt.version}</version>
             <scope>compile</scope>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>${bstats.version}</version>
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>

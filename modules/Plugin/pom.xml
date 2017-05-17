@@ -259,13 +259,10 @@
                                     <include>de.keyle:knbt:jar:*</include>
                                     <include>de.keyle:fanciful-chat:*</include>
                                     <include>com.intellij:forms_rt:*</include>
+                                    <include>org.bstats:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
-                                <relocation>
-                                    <pattern>org.mcstats</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util</shadedPattern>
-                                </relocation>
                                 <relocation>
                                     <pattern>de.keyle.knbt</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.nbt</shadedPattern>
@@ -278,6 +275,11 @@
                                     <pattern>de.keyle.fanciful</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.chat.fanciful</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util</shadedPattern>
+                                </relocation>
+
                             </relocations>
                             <filters>
                                 <filter>
