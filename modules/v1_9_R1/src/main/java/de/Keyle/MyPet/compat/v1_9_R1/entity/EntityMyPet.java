@@ -972,6 +972,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     /**
+     * -> unmount(Entity)
+     */
+    protected void p(Entity entity) {
+        super.p(entity);
+        entity.setPosition(locX, locY, locZ);
+    }
+
+    /**
      * Entity AI tick method
      * -> updateAITasks()
      */
