@@ -330,6 +330,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 return myPetManager.countActiveMyPets();
             }
         });
+        metrics.addCustomChart(new Metrics.SimplePie("build") {
+            @Override
+            public String getValue() {
+                return MyPetVersion.getBuild();
+            }
+        });
 
         if (MyPetVersion.isPremium()) {
             getLogger().info("Thank you for buying MyPet-" + ChatColor.YELLOW + "Premium" + ChatColor.RESET + "!");
