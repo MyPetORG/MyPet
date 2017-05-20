@@ -61,6 +61,7 @@ public class GuiMain {
             "Guardian",
             "Horse",
             "Husk",
+            "Illusioner",
             "IronGolem",
             "Llama",
             "MagmaCube",

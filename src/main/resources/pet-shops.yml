@@ -116,6 +116,13 @@ Shops:
         PetType: IronGolem
         EXP: 0
         Price: 100
+      illusioner:
+        Name: Illusioner
+        Description:
+        - <green>It's an Illusioner!
+        PetType: Illusioner
+        EXP: 0
+        Price: 100
       llama:
         Name: Llama
         Description:

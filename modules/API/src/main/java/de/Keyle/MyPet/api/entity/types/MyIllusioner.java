@@ -21,15 +21,11 @@
 package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.LeashFlag;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
-import static org.bukkit.Material.COOKIE;
-import static org.bukkit.Material.SEEDS;
+import static org.bukkit.Material.APPLE;
 
-@DefaultInfo(food = {SEEDS, COOKIE}, leashFlags = {LeashFlag.Tamed})
-public interface MyParrot extends MyPet {
-    int getVariant();
-
-    void setVariant(int variant);
+@DefaultInfo(food = {APPLE})
+public interface MyIllusioner extends MyPet, MyPetEquipment {
 }

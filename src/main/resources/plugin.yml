@@ -139,6 +139,7 @@ permissions:
       MyPet.leash.Guardian: true
       MyPet.leash.Horse: true
       MyPet.leash.Husk: true
+      MyPet.leash.Illusioner: true
       MyPet.leash.IronGolem: true
       MyPet.leash.Llama: true
       MyPet.leash.MagmaCube: true

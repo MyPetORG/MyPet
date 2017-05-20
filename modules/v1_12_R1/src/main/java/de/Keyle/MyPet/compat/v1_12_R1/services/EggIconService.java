@@ -72,6 +72,10 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case ZombieHorse:
                 entityTag.put("id", new TagString("minecraft:zombie_horse"));
                 break;
+            case Illusioner:
+                entityTag.put("id", new TagString("minecraft:squid"));
+                icon.setGlowing(true);
+                break;
             case IronGolem:
                 entityTag.put("id", new TagString("minecraft:skeleton"));
                 icon.setGlowing(true);
