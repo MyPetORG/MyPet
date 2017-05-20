@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.11-R0.1-SNAPSHOT</version>
+            <version>1.12-pre5-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

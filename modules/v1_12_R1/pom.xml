@@ -42,14 +42,14 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.12-pre2-SNAPSHOT</version>
+            <version>1.12-pre5-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.12-pre2</version>
+            <version>1.12-pre5</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

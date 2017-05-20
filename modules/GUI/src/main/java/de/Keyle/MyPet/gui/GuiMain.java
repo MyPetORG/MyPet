@@ -67,6 +67,7 @@ public class GuiMain {
             "Mooshroom",
             "Mule",
             "Ocelot",
+            "Parrot",
             "Pig",
             "PigZombie",
             "PolarBear",

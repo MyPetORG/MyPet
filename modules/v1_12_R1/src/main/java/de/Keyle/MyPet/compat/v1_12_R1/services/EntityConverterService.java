@@ -84,6 +84,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case LLAMA:
                 convertLlama((Llama) entity, properties);
                 break;
+            case PARROT:
+                convertParrot((Parrot) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -231,6 +234,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 ((Rabbit) normalEntity).setAdult();
             }
             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
+        } else if (myPet instanceof MyParrot) {
+            ((Parrot) normalEntity).setVariant(Parrot.Variant.values()[((MyParrot) myPet).getVariant()]);
         }
     }
 
@@ -240,6 +245,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         if (llama.isCarryingChest()) {
             properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
         }
+    }
+
+    private void convertParrot(Parrot parrot, TagCompound properties) {
+        properties.getCompoundData().put("Variant", new TagInt(parrot.getVariant().ordinal()));
     }
 
     public void convertRabbit(Rabbit rabbit, TagCompound properties) {

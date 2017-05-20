@@ -153,6 +153,13 @@ Shops:
         PetType: Ocelot
         EXP: 0
         Price: 100
+      parrot:
+        Name: Parrot
+        Description:
+        - <green>It's a Parrot!
+        PetType: Parrot
+        EXP: 0
+        Price: 100
       pig:
         Name: Pig
         Description:
