@@ -45,6 +45,7 @@ public enum MyPetClass {
     Horse(MyHorse.class),
     Husk(MyHusk.class),
     Evoker(MyEvoker.class),
+    Illusioner(MyIllusioner.class),
     IronGolem(MyIronGolem.class),
     Llama(MyLlama.class),
     MagmaCube(MyMagmaCube.class),
