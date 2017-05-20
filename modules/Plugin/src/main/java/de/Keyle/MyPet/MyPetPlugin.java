@@ -64,6 +64,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -316,7 +317,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Timer.startTimer();
 
         // init Metrics
-        Metrics metrics = new Metrics(this);
+        Metrics metrics = new Metrics(this) {
+            public JSONObject getPluginData() {
+                JSONObject data = super.getPluginData();
+                data.put("pluginName", "MyPet-Premium");
+                return data;
+            }
+        };
         metrics.addCustomChart(new Metrics.SingleLineChart("active_pets") {
             @Override
             public int getValue() {
