@@ -136,6 +136,7 @@ permissions:
       MyPet.leash.Mooshroom: true
       MyPet.leash.Mule: true
       MyPet.leash.Ocelot: true
+      MyPet.leash.Parrot: true
       MyPet.leash.Pig: true
       MyPet.leash.PigZombie: true
       MyPet.leash.PolarBear: true

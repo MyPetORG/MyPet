@@ -88,6 +88,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Ocelot:
                 entityTag.put("id", new TagString("minecraft:ocelot"));
                 break;
+            case Parrot:
+                entityTag.put("id", new TagString("minecraft:parrot"));
+                break;
             case Pig:
                 entityTag.put("id", new TagString("minecraft:pig"));
                 break;

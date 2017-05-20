@@ -157,6 +157,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("variant:");
         petTypeOptionMap.put("llama", petTypeOptionList);
 
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("variant:");
+        petTypeOptionMap.put("parrot", petTypeOptionList);
+
         for (MyPetType petType : MyPetType.values()) {
             petTypeList.add(petType.name());
         }
@@ -335,6 +339,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         if (variant > 3 || variant < 0) {
                             variant = 0;
                         }
+                        compound.getCompoundData().put("Variant", new TagInt(variant));
+                    } else if (petType == MyPetType.Parrot) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     }
                 }
