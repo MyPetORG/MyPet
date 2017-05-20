@@ -1035,7 +1035,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public void a(float motionSideways, float motionForward, float f) {
         if (!hasRider || !this.isVehicle()) {
-            super.a(motionSideways, f, motionForward);
+            super.a(motionSideways, motionForward, f);
             return;
         }
 
