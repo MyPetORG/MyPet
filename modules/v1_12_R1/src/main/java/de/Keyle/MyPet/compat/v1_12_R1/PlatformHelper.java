@@ -153,15 +153,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     public String getPlayerLanguage(Player player) {
-        if (!(player instanceof CraftPlayer)) {
-            return "en_US";
-        }
-        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-        Object lang = ReflectionUtil.getFieldValue(EntityPlayer_locale_FIELD, entityPlayer);
-        if (lang == null) {
-            return "en_US";
-        }
-        return lang.toString();
+        return player.getLocale();
     }
 
     @Override
