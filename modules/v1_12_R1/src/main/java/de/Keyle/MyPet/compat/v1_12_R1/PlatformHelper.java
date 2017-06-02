@@ -224,7 +224,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void sendMessageActionBar(Player player, String message) {
         if (player instanceof CraftPlayer) {
             IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + JSONObject.escape(message) + "\"}");
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.CHAT));
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.GAME_INFO));
         }
     }
 
