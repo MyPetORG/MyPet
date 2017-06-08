@@ -871,7 +871,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected SoundEffect cd() {
+    protected SoundEffect cf() {
         try {
             return SoundEffect.a.get(new MinecraftKey(getDeathSound()));
         } catch (Exception e) {
@@ -883,13 +883,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     /**
      * Returns the speed of played sounds
      */
-    protected float cp() {
+    protected float cr() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.cp();
+        return super.cr();
     }
 
     public void n() {
@@ -897,7 +897,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             --this.jumpDelay;
         }
 
-        if (this.bi > 0 && !this.bG()) {
+        if (this.bi > 0 && !this.bI()) {
             double d0 = this.locX + (this.bj - this.locX) / (double) this.bi;
             double d1 = this.locY + (this.bk - this.locY) / (double) this.bi;
             double d2 = this.locZ + (this.bl - this.locZ) / (double) this.bi;
@@ -907,7 +907,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             --this.bi;
             this.setPosition(d0, d1, d2);
             this.setYawPitch(this.yaw, this.pitch);
-        } else if (!this.cA()) {
+        } else if (!this.cC()) {
             this.motX *= 0.98D;
             this.motY *= 0.98D;
             this.motZ *= 0.98D;
@@ -931,7 +931,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.be = 0.0F;
             this.bg = 0.0F;
             this.bh = 0.0F;
-        } else if (this.cA()) {
+        } else if (this.cC()) {
             this.world.methodProfiler.a("newAi");
             this.doMyPetTick();
             this.world.methodProfiler.b();
@@ -941,9 +941,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.world.methodProfiler.a("jump");
         if (this.bd) {
             if (this.isInWater() || this.au()) {
-                this.ct();
+                this.cv();
             } else if (this.onGround && this.jumpDelay == 0) {
-                this.cs();
+                this.cu();
                 this.jumpDelay = 10;
             }
         } else {
@@ -959,7 +959,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.a(this.be, this.bf, this.bg);
         this.world.methodProfiler.b();
         this.world.methodProfiler.a("push");
-        this.cz();
+        this.cB();
         this.world.methodProfiler.b();
     }
 
@@ -1030,7 +1030,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * returns the first passenger
      */
     public Entity bw() {
-        return this.bD().isEmpty() ? null : this.bD().get(0);
+        return this.bF().isEmpty() ? null : this.bF().get(0);
     }
 
     /**
