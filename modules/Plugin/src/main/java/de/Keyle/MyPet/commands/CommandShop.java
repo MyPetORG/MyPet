@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.inventory.IconMenu;
 import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -115,7 +116,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                         }, MyPetApi.getPlugin());
                         for (String shopname : availableShops) {
                             IconMenuItem icon = new IconMenuItem();
-                            icon.setTitle(RESET + shopManager.get().getShop(shopname).getDisplayName());
+                            icon.setTitle(RESET + Colorizer.setColors(shopManager.get().getShop(shopname).getDisplayName()));
                             icon.setMaterial(Material.CHEST);
                             menu.addOption(icon);
                         }
