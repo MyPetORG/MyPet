@@ -23,12 +23,10 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.Tamed;
-import static org.bukkit.Material.*;
-
-@DefaultInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {Tamed})
+@DefaultInfo(food = {Material.BONE})
 public interface MySkeletonHorse extends MyPet, MyPetBaby {
     ItemStack getSaddle();
 
