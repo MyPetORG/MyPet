@@ -94,19 +94,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertEntity(MyPet myPet, LivingEntity normalEntity) {
-        if (myPet instanceof MyChicken) {
-            if (((MyChicken) myPet).isBaby()) {
-                ((Chicken) normalEntity).setBaby();
-            } else {
-                ((Chicken) normalEntity).setAdult();
-            }
-        } else if (myPet instanceof MyCow) {
-            if (((MyCow) myPet).isBaby()) {
-                ((Cow) normalEntity).setBaby();
-            } else {
-                ((Cow) normalEntity).setAdult();
-            }
-        } else if (myPet instanceof MyCreeper) {
+        if (myPet instanceof MyCreeper) {
             if (((MyCreeper) myPet).isPowered()) {
                 ((Creeper) normalEntity).setPowered(true);
             }
@@ -117,47 +105,21 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
         } else if (myPet instanceof MyIronGolem) {
             ((IronGolem) normalEntity).setPlayerCreated(true);
-        } else if (myPet instanceof MyMooshroom) {
-            if (((MyMooshroom) myPet).isBaby()) {
-                ((MushroomCow) normalEntity).setBaby();
-            } else {
-                ((MushroomCow) normalEntity).setAdult();
-            }
         } else if (myPet instanceof MyMagmaCube) {
             ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
         } else if (myPet instanceof MyOcelot) {
             ((Ocelot) normalEntity).setCatType(Ocelot.Type.WILD_OCELOT);
             ((Ocelot) normalEntity).setTamed(false);
-            if (((MyOcelot) myPet).isBaby()) {
-                ((Ocelot) normalEntity).setBaby();
-            } else {
-                ((Ocelot) normalEntity).setAdult();
-            }
         } else if (myPet instanceof MyPig) {
             ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
-            if (((MyPig) myPet).isBaby()) {
-                ((Pig) normalEntity).setBaby();
-            } else {
-                ((Pig) normalEntity).setAdult();
-            }
         } else if (myPet instanceof MySheep) {
             ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
             ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
-            if (((MySheep) myPet).isBaby()) {
-                ((Sheep) normalEntity).setBaby();
-            } else {
-                ((Sheep) normalEntity).setAdult();
-            }
         } else if (myPet instanceof MyVillager) {
             MyVillager villagerPet = (MyVillager) myPet;
             Villager.Profession profession;
             profession = Villager.Profession.values()[villagerPet.getProfession() + 1];
             ((Villager) normalEntity).setProfession(profession);
-            if (villagerPet.isBaby()) {
-                ((Villager) normalEntity).setBaby();
-            } else {
-                ((Villager) normalEntity).setAdult();
-            }
             if (villagerPet.hasOriginalData()) {
                 TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
                 for (String key : villagerPet.getOriginalData().getCompoundData().keySet()) {
@@ -167,15 +129,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
         } else if (myPet instanceof MyWolf) {
             ((Wolf) normalEntity).setTamed(false);
-            if (((MyWolf) myPet).isBaby()) {
-                ((Wolf) normalEntity).setBaby();
-            } else {
-                ((Wolf) normalEntity).setAdult();
-            }
         } else if (myPet instanceof MySlime) {
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
-        } else if (myPet instanceof MyZombie || myPet instanceof MyHusk) {
-            ((Zombie) normalEntity).setBaby(((MyPetBaby) myPet).isBaby());
         } else if (myPet instanceof MyZombieVillager) {
             Villager.Profession profession = Villager.Profession.values()[((MyZombieVillager) myPet).getProfession()];
             ((ZombieVillager) normalEntity).setVillagerProfession(profession);
@@ -185,12 +140,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
         } else if (myPet instanceof MyPigZombie) {
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.GOLD_SWORD));
-            ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
         } else if (myPet instanceof MyHorse) {
             Horse.Style style = Horse.Style.values()[(((MyHorse) myPet).getVariant() >>> 8)];
             Horse.Color color = Horse.Color.values()[(((MyHorse) myPet).getVariant() & 0xFF)];
 
-            ((Horse) normalEntity).setAge(((MyHorse) myPet).getAge());
             ((Horse) normalEntity).setColor(color);
             ((Horse) normalEntity).setStyle(style);
 
@@ -202,9 +155,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
             ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MySkeletonHorse) {
-            if (((MySkeletonHorse) myPet).isBaby()) {
-                ((SkeletonHorse) normalEntity).setBaby();
-            }
             ((SkeletonHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyZombieHorse) {
             if (((MyZombieHorse) myPet).isBaby()) {
@@ -212,11 +162,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
             ((ZombieHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyLlama) {
-            if (((MyLlama) myPet).isBaby()) {
-                ((Llama) normalEntity).setBaby();
-            } else {
-                ((Llama) normalEntity).setAdult();
-            }
             ((Llama) normalEntity).setColor(Llama.Color.values()[Math.max(0, Math.min(3, ((MyLlama) myPet).getVariant()))]);
             ((Llama) normalEntity).setCarryingChest(((MyLlama) myPet).hasChest());
 
@@ -225,12 +170,15 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
             ((Llama) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyRabbit) {
-            if (((MyRabbit) myPet).isBaby()) {
-                ((Rabbit) normalEntity).setBaby();
-            } else {
-                ((Rabbit) normalEntity).setAdult();
-            }
             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
+        }
+
+        if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
+            if (((MyPetBaby) myPet).isBaby()) {
+                ((Ageable) normalEntity).setBaby();
+            } else {
+                ((Ageable) normalEntity).setAdult();
+            }
         }
     }
 
