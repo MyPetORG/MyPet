@@ -43,17 +43,24 @@ public class MyPetLogger extends PluginLogger {
     protected boolean debugSetup = false;
     private final Map<ChatColor, String> replacements = new HashMap<>();
     private static FileHandler debugLogFileHandler = null;
+    private static boolean AnsiSupported = true;
 
     public MyPetLogger(Plugin context) {
         super(context);
 
-        if (Ansi.isEnabled()) {
-            registerStyles();
+        try {
+            if (Ansi.isEnabled()) {
+                registerStyles();
+            }
+        } catch (NoClassDefFoundError e) {
+            AnsiSupported = false;
         }
 
         String prefix = context.getDescription().getPrefix();
         String pluginName = prefix != null ? "[" + ChatColor.DARK_GREEN + prefix + ChatColor.RESET + "] " : "[" + ChatColor.DARK_GREEN + context.getDescription().getName() + ChatColor.RESET + "] ";
-        pluginName = applyStyles(pluginName);
+        if (AnsiSupported) {
+            pluginName = applyStyles(pluginName);
+        }
 
         try {
             Field logger = ReflectionUtil.getField(PluginLogger.class, "pluginName");
@@ -70,7 +77,9 @@ public class MyPetLogger extends PluginLogger {
         }
 
         String message = logRecord.getMessage();
-        message = applyStyles(message);
+        if (AnsiSupported) {
+            message = applyStyles(message);
+        }
         logRecord.setMessage(message);
 
         super.log(logRecord);
