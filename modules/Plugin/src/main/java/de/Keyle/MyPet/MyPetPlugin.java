@@ -580,7 +580,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             if (logger != null) {
                 logger.set(this, new MyPetLogger(this));
             }
-        } catch (IllegalAccessException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
