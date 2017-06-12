@@ -49,12 +49,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.9</minecraft.version>
-        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
-
         <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
-        <citizensapi.version>2.0.17-SNAPSHOT</citizensapi.version>
+        <citizensapi.version>2.0.22</citizensapi.version>
 
         <!-- https://www.spigotmc.org/resources/day-night-pvp-difficulty-cycle.21979/ -->
         <pvpdifftimer.version>1.4.1</pvpdifftimer.version>
@@ -171,11 +167,11 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
+        <!--
         <repository>
             <id>citizens-repo</id>
             <url>http://repo.citizensnpcs.co/</url>
         </repository>
-        <!--
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
