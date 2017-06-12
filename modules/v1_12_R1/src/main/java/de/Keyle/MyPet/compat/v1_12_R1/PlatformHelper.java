@@ -181,9 +181,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
             villager.setProfession(vanillaNBT.getInt("Profession"));
             villager.riches = vanillaNBT.getInt("Riches");
-            ReflectionUtil.setFieldValue("bJ", villager, vanillaNBT.getInt("Career"));
-            ReflectionUtil.setFieldValue("bK", villager, vanillaNBT.getInt("CareerLevel"));
-            ReflectionUtil.setFieldValue("bG", villager, vanillaNBT.getBoolean("Willing"));
+            ReflectionUtil.setFieldValue("bK", villager, vanillaNBT.getInt("Career"));
+            ReflectionUtil.setFieldValue("bL", villager, vanillaNBT.getInt("CareerLevel"));
+            ReflectionUtil.setFieldValue("bH", villager, vanillaNBT.getBoolean("Willing"));
             if (vanillaNBT.hasKeyOfType("Offers", 10)) {
                 NBTTagCompound nbttaglist = vanillaNBT.getCompound("Offers");
                 ReflectionUtil.setFieldValue("trades", villager, new MerchantRecipeList(nbttaglist));
