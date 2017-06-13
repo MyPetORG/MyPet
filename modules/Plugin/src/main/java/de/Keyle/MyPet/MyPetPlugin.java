@@ -59,6 +59,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -249,6 +250,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             platformHelper.copyResource(this, "locale-readme.txt", translationReadme);
         }
         Translation.init();
+
+        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+            if (team.getName().startsWith("MyPet-")) {
+                team.unregister();
+            }
+        }
 
         // init repository
         repo = new SqLiteRepository();
