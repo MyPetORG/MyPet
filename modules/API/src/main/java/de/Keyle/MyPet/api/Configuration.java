@@ -161,9 +161,18 @@ public class Configuration {
     }
 
     public static class Skilltree {
+        @Deprecated
+        @Since("17.06.2017")
         public static int SWITCH_PENALTY_PERCENT = 5;
+        @Deprecated
+        @Since("17.06.2017")
         public static double SWITCH_PENALTY_FIXED = 0.0;
+        @Deprecated
+        @Since("17.06.2017")
         public static boolean SWITCH_PENALTY_ADMIN = false;
+        public static int SWITCH_FEE_PERCENT = 5;
+        public static double SWITCH_FEE_FIXED = 0.0;
+        public static boolean SWITCH_FEE_ADMIN = false;
         public static boolean AUTOMATIC_SKILLTREE_ASSIGNMENT = false;
         public static boolean RANDOM_SKILLTREE_ASSIGNMENT = false;
         public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = false;

@@ -47,7 +47,6 @@ import java.util.List;
 
 public class ConfigurationLoader {
 
-
     public static void setDefault() {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
@@ -116,9 +115,9 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skilltree.InheritAlreadyInheritedSkills", Skilltree.INHERIT_ALREADY_INHERITED_SKILLS);
         config.addDefault("MyPet.Skilltree.ChooseOnce", Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE);
         config.addDefault("MyPet.Skilltree.PreventLevellingWithout", Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE);
-        config.addDefault("MyPet.Skilltree.SwitchPenalty.Fixed", Skilltree.SWITCH_PENALTY_FIXED);
-        config.addDefault("MyPet.Skilltree.SwitchPenalty.Percent", Skilltree.SWITCH_PENALTY_PERCENT);
-        config.addDefault("MyPet.Skilltree.SwitchPenalty.Admin", Skilltree.SWITCH_PENALTY_ADMIN);
+        config.addDefault("MyPet.Skilltree.SwitchFee.Fixed", Skilltree.SWITCH_FEE_FIXED);
+        config.addDefault("MyPet.Skilltree.SwitchFee.Percent", Skilltree.SWITCH_FEE_PERCENT);
+        config.addDefault("MyPet.Skilltree.SwitchFee.Admin", Skilltree.SWITCH_FEE_ADMIN);
 
         config.addDefault("MyPet.Hooks.Kingdoms", Hooks.USE_Kingdoms);
         config.addDefault("MyPet.Hooks.Towny", Hooks.USE_Towny);
@@ -273,9 +272,13 @@ public class ConfigurationLoader {
             }
         }
 
-        Skilltree.SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenalty.Fixed", 0.0);
-        Skilltree.SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenalty.Percent", 5);
-        Skilltree.SWITCH_PENALTY_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenalty.Admin", false);
+
+        Skilltree.SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchFee.Fixed", 0.0);
+        Skilltree.SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchFee.Percent", 5);
+        Skilltree.SWITCH_PENALTY_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchFee.Admin", false);
+        Skilltree.SWITCH_FEE_FIXED = config.getDouble("MyPet.Skilltree.SwitchFee.Fixed", 0.0);
+        Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchFee.Percent", 5);
+        Skilltree.SWITCH_FEE_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchFee.Admin", false);
         Skilltree.INHERIT_ALREADY_INHERITED_SKILLS = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
         Respawn.TIME_FACTOR = config.getInt("MyPet.Respawn.Time.Default.Factor", 5);
         Respawn.TIME_PLAYER_FACTOR = config.getInt("MyPet.Respawn.Time.Player.Factor", 5);
@@ -453,6 +456,37 @@ public class ConfigurationLoader {
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
             MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "" + Material.LEASH.getId())));
+        }
+    }
+
+    public static void upgradeConfig() {
+        FileConfiguration config = MyPetApi.getPlugin().getConfig();
+
+        if (config.contains("MyPet.Skilltree.SwitchPenalty.Fixed")) {
+            Configuration.Skilltree.SWITCH_FEE_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenalty.Fixed", 0.0);
+            Configuration.Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenalty.Percent", 5);
+            Configuration.Skilltree.SWITCH_FEE_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenalty.Admin", false);
+            config.getConfigurationSection("MyPet.Skilltree").set("SwitchPenalty", null);
+        }
+
+        MyPetApi.getPlugin().saveConfig();
+
+        File petConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
+        config = new YamlConfiguration();
+        if (petConfigFile.exists()) {
+            try {
+                config.load(petConfigFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // upgrade petconfig here
+
+        try {
+            config.save(petConfigFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

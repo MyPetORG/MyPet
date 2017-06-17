@@ -124,6 +124,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         serviceManager = new ServiceManager();
         pluginHookManager = new PluginHookManager();
 
+        ConfigurationLoader.upgradeConfig();
         ConfigurationLoader.setDefault();
         ConfigurationLoader.loadConfiguration();
 
