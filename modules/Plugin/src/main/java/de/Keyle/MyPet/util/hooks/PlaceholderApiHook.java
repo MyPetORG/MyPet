@@ -206,7 +206,7 @@ public class PlaceholderApiHook extends PluginHook {
 
             @Override
             public String getVersion() {
-                return "1.0.0";
+                return "1.0.1";
             }
 
             /**
@@ -235,6 +235,8 @@ public class PlaceholderApiHook extends PluginHook {
                             }
                         }
                     }
+
+                    return "";
                 }
 
                 return null;
