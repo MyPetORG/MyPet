@@ -173,10 +173,11 @@ public class PetShop {
             }
         }, MyPetApi.getPlugin());
 
+        double balance = economyHook.getEconomy().getBalance(player);
         for (int pos : pets.keySet()) {
             ShopMyPet pet = pets.get(pos);
             IconMenuItem icon = pet.getIcon();
-            ChatColor canPay = economyHook.canPay(player, pet.getPrice()) ? ChatColor.GREEN : ChatColor.RED;
+            ChatColor canPay = balance >= pet.getPrice() ? ChatColor.GREEN : ChatColor.RED;
             icon.addLoreLine(ChatColor.BLUE + Translation.getString("Name.Price", player) + ": " + canPay + economyHook.getEconomy().format(pet.getPrice()), 0);
             shop.setOption(pos, icon);
         }
