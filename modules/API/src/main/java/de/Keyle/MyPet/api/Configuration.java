@@ -121,9 +121,22 @@ public class Configuration {
     }
 
     public static class Name {
-        public static String OVERHEAD_PREFIX = "<aqua>";
-        public static String OVERHEAD_SUFFIX = "";
         public static int MAX_LENGTH = 32;
+
+        public static class Tag {
+            public static boolean SHOW = true;
+            public static String PREFIX = "<aqua>";
+            public static String SUFFIX = "";
+        }
+
+        @Deprecated
+        @Since("24.11.2016")
+        public static String OVERHEAD_PREFIX = "<aqua>";
+        @Deprecated
+        @Since("24.11.2016")
+        public static String OVERHEAD_SUFFIX = "";
+        @Deprecated
+        @Since("24.11.2016")
         public static boolean OVERHEAD_NAME = true;
     }
 

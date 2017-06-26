@@ -149,9 +149,9 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
         config.addDefault("MyPet.Name.MaxLength", Name.MAX_LENGTH);
-        config.addDefault("MyPet.Name.OverHead.Visible", Name.OVERHEAD_NAME);
-        config.addDefault("MyPet.Name.OverHead.Prefix", Name.OVERHEAD_PREFIX);
-        config.addDefault("MyPet.Name.OverHead.Suffix", Name.OVERHEAD_SUFFIX);
+        config.addDefault("MyPet.Name.Tag.Show", Name.Tag.SHOW);
+        config.addDefault("MyPet.Name.Tag.Prefix", Name.Tag.PREFIX);
+        config.addDefault("MyPet.Name.Tag.Suffix", Name.Tag.SUFFIX);
 
         config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION);
         config.addDefault("MyPet.Exp.Passive.Always-Grant-Passive-XP", LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP);
@@ -311,10 +311,10 @@ public class ConfigurationLoader {
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {
             NameFilter.NAME_FILTER.add(o.toString());
         }
-        Name.MAX_LENGTH = config.getInt("MyPet.Name.MaxLength", 64);
-        Name.OVERHEAD_NAME = config.getBoolean("MyPet.Name.OverHead.Visible", true);
-        Name.OVERHEAD_PREFIX = Colorizer.setColors(config.getString("MyPet.Name.OverHead.Prefix", "<aqua>"));
-        Name.OVERHEAD_SUFFIX = Colorizer.setColors(config.getString("MyPet.Name.OverHead.Suffix", ""));
+        Name.MAX_LENGTH = config.getInt("MyPet.Name.MaxLength", Name.MAX_LENGTH);
+        Name.Tag.SHOW = config.getBoolean("MyPet.Name.Tag.Show", Name.Tag.SHOW);
+        Name.Tag.PREFIX = Colorizer.setColors(config.getString("MyPet.Name.Tag.Prefix", Name.Tag.PREFIX));
+        Name.Tag.SUFFIX = Colorizer.setColors(config.getString("MyPet.Name.Tag.Suffix", Name.Tag.SUFFIX));
 
         Repository.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         Repository.CONVERT_FROM = config.getString("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
@@ -475,6 +475,12 @@ public class ConfigurationLoader {
             Hooks.MobArena.RESPECT_PVP_RULE = config.getBoolean("MyPet.Hooks.MobArena.PvP", true);
             config.getConfigurationSection("MyPet.Hooks.MobArena").set("DisablePetsInArena", null);
             config.getConfigurationSection("MyPet.Hooks.MobArena").set("PvP", null);
+        }
+        if (config.contains("MyPet.Name.OverHead")) {
+            Name.Tag.SHOW = config.getBoolean("MyPet.Name.OverHead.Visible", Name.Tag.SHOW);
+            Name.Tag.PREFIX = config.getString("MyPet.Name.OverHead.Prefix", Name.Tag.PREFIX);
+            Name.Tag.SUFFIX = config.getString("MyPet.Name.OverHead.Suffix", Name.Tag.SUFFIX);
+            config.getConfigurationSection("MyPet.Name").set("OverHead", null);
         }
 
         MyPetApi.getPlugin().saveConfig();

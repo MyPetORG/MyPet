@@ -276,7 +276,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
         this.petName = newName;
         if (status == PetState.Here) {
-            if (Configuration.Name.OVERHEAD_NAME) {
+            if (Configuration.Name.Tag.SHOW) {
                 getEntity().get().getHandle().updateNameTag();
             }
         }
