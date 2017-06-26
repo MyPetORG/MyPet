@@ -251,6 +251,8 @@ public class Configuration {
         public static boolean DISABLE_PETS_IN_ARENA = true;
         public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
         public static boolean DISABLE_PETS_IN_HUNGER_GAMES = true;
+        @Deprecated
+        @Since("26.06.2017")
         public static boolean DISABLE_PETS_IN_MOB_ARENA = true;
         public static boolean DISABLE_MYTHIC_MOB_LEASHING = true;
         public static boolean USE_Towny = true;
@@ -258,6 +260,8 @@ public class Configuration {
         public static boolean USE_WorldGuard = true;
         public static boolean USE_Citizens = true;
         public static boolean USE_Heroes = true;
+        @Deprecated
+        @Since("26.06.2017")
         public static boolean USE_MobArena = true;
         public static boolean USE_McMMO = true;
         public static boolean USE_Residence = true;
@@ -274,6 +278,12 @@ public class Configuration {
             public static boolean GRANT_EXP = true;
             public static boolean DISABLE_VANILLA_EXP = false;
             public static int EXP_PERCENT = 100;
+        }
+
+        public static class MobArena {
+            public static boolean ENABLED = true;
+            public static boolean ALLOW_PETS = true;
+            public static boolean RESPECT_PVP_RULE = true;
         }
     }
 }
