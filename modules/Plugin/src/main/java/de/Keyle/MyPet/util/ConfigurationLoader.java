@@ -22,7 +22,6 @@ package de.Keyle.MyPet.util;
 
 import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.LeashFlag;
@@ -68,7 +67,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.RetainEquipmentOnTame", Misc.RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
-        config.addDefault("MyPet.Max-Stored-Pet-Count", Configuration.Misc.MAX_STORED_PET_COUNT);
+        config.addDefault("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
         config.addDefault("MyPet.Update-Check", true);
         config.addDefault("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
@@ -220,18 +219,18 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", Material.LEASH.getId());
         }
 
-        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", Configuration.MyPet.Chicken.CAN_LAY_EGGS);
-        config.addDefault("MyPet.Pets.Cow.CanGiveMilk", Configuration.MyPet.Cow.CAN_GIVE_MILK);
-        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", Configuration.MyPet.Sheep.CAN_BE_SHEARED);
-        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", Configuration.MyPet.Sheep.CAN_REGROW_WOOL);
-        config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", Configuration.MyPet.IronGolem.CAN_THROW_UP);
-        config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", Configuration.MyPet.Snowman.FIX_SNOW_TRACK);
+        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
+        config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
+        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
+        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
+        config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", MyPet.IronGolem.CAN_THROW_UP);
+        config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MyPet.Snowman.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
         config.addDefault("MyPet.Pets.Llama.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP);
+        config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId());
@@ -415,26 +414,26 @@ public class ConfigurationLoader {
                 e.printStackTrace();
             }
         }
-        Configuration.MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
-        Configuration.MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
-        Configuration.MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
-        Configuration.MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
-        Configuration.MyPet.IronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
-        Configuration.MyPet.Snowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
-        Configuration.MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Cow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + Material.BREAD.getId()));
-        Configuration.MyPet.Llama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Llama.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
-        Configuration.MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "" + Material.POTION.getId()));
-        Configuration.MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
+        MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
+        MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
+        MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
+        MyPet.IronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
+        MyPet.Snowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
+        MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Cow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + Material.BREAD.getId()));
+        MyPet.Llama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Llama.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
+        MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "" + Material.POTION.getId()));
 
         for (MyPetType petType : MyPetType.values()) {
             DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
@@ -465,9 +464,9 @@ public class ConfigurationLoader {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
         if (config.contains("MyPet.Skilltree.SwitchPenalty.Fixed")) {
-            Configuration.Skilltree.SWITCH_FEE_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenalty.Fixed", 0.0);
-            Configuration.Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenalty.Percent", 5);
-            Configuration.Skilltree.SWITCH_FEE_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenalty.Admin", false);
+            Skilltree.SWITCH_FEE_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenalty.Fixed", 0.0);
+            Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenalty.Percent", 5);
+            Skilltree.SWITCH_FEE_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenalty.Admin", false);
             config.getConfigurationSection("MyPet.Skilltree").set("SwitchPenalty", null);
         }
         if (config.contains("MyPet.Hooks.MobArena.DisablePetsInArena")) {
