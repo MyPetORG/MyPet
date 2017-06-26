@@ -5,6 +5,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.PluginHook;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -89,17 +90,24 @@ public class PlaceholderApiHook extends PluginHook {
             }
         });
 
+        placeHolders.put("behavior", new PlaceHolder<MyPet>(MyPet.class) {
+            @Override
+            public String getValue(MyPet pet) {
+                return pet.getSkills().hasSkill(Behavior.class) ? pet.getSkills().getSkill(Behavior.class).get().getBehavior().name() : "Normal";
+            }
+        });
+
         placeHolders.put("skilltree_display", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
-                return pet.getSkilltree() != null ? pet.getSkilltree().getDisplayName() : null;
+                return pet.getSkilltree() != null ? pet.getSkilltree().getDisplayName() : "";
             }
         });
 
         placeHolders.put("skilltree_name", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
-                return pet.getSkilltree() != null ? pet.getSkilltree().getName() : null;
+                return pet.getSkilltree() != null ? pet.getSkilltree().getName() : "";
             }
         });
 
@@ -206,7 +214,7 @@ public class PlaceholderApiHook extends PluginHook {
 
             @Override
             public String getVersion() {
-                return "1.0.1";
+                return "1.0.2";
             }
 
             /**
