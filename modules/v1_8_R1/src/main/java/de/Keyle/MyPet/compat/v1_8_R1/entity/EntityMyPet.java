@@ -225,8 +225,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public void updateNameTag() {
         try {
             if (getCustomNameVisible()) {
-                String prefix = Configuration.Name.OVERHEAD_PREFIX;
-                String suffix = Configuration.Name.OVERHEAD_SUFFIX;
+                String prefix = Configuration.Name.Tag.PREFIX;
+                String suffix = Configuration.Name.Tag.SUFFIX;
                 prefix = prefix.replace("<owner>", getOwner().getName());
                 prefix = prefix.replace("<level>", "" + getMyPet().getExperience().getLevel());
                 suffix = suffix.replace("<owner>", getOwner().getName());
@@ -250,12 +250,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     @Override
     public boolean getCustomNameVisible() {
-        return Configuration.Name.OVERHEAD_NAME;
+        return Configuration.Name.Tag.SHOW;
     }
 
     @Override
     public void setCustomNameVisible(boolean ignored) {
-        super.setCustomNameVisible(Configuration.Name.OVERHEAD_NAME);
+        super.setCustomNameVisible(Configuration.Name.Tag.SHOW);
     }
 
     public boolean canMove() {
