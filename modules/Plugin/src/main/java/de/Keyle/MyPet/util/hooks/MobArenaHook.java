@@ -48,7 +48,7 @@ public class MobArenaHook extends PluginHook implements PlayerVersusPlayerHook, 
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_MobArena) {
+        if (Configuration.Hooks.MobArena.ENABLED) {
             Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
             mobArenaHandler = new MobArenaHandler();
             return true;
@@ -72,25 +72,26 @@ public class MobArenaHook extends PluginHook implements PlayerVersusPlayerHook, 
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
-        try {
-            if (mobArenaHandler == null) {
-                mobArenaHandler = new MobArenaHandler();
+        if (Configuration.Hooks.MobArena.RESPECT_PVP_RULE) {
+            try {
+                if (mobArenaHandler.isPlayerInArena(defender)) {
+                    return mobArenaHandler.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
+                }
+            } catch (Throwable ignored) {
             }
-            if (mobArenaHandler.isPlayerInArena(defender)) {
-                return mobArenaHandler.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
-            }
-        } catch (Throwable ignored) {
         }
         return true;
     }
 
     @EventHandler
     public void onJoinPvPArena(ArenaPlayerJoinEvent event) {
-        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
-            MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
-                player.getMyPet().removePet();
-                player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
+        if (!Configuration.Hooks.MobArena.ALLOW_PETS) {
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+                MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
+                if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
+                    player.getMyPet().removePet();
+                    player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
+                }
             }
         }
     }
@@ -113,8 +114,10 @@ public class MobArenaHook extends PluginHook implements PlayerVersusPlayerHook, 
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (isInArena(event.getOwner())) {
-            event.setCancelled(true);
+        if (!Configuration.Hooks.MobArena.ALLOW_PETS) {
+            if (isInArena(event.getOwner())) {
+                event.setCancelled(true);
+            }
         }
     }
 }

@@ -126,8 +126,9 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.WorldGuard", Hooks.USE_WorldGuard);
         config.addDefault("MyPet.Hooks.Citizens", Hooks.USE_Citizens);
         config.addDefault("MyPet.Hooks.mcMMO", Hooks.USE_McMMO);
-        config.addDefault("MyPet.Hooks.MobArena.PvP", Hooks.USE_MobArena);
-        config.addDefault("MyPet.Hooks.MobArena.DisablePetsInArena", Hooks.DISABLE_PETS_IN_MOB_ARENA);
+        config.addDefault("MyPet.Hooks.MobArena.Enabled", Hooks.MobArena.ENABLED);
+        config.addDefault("MyPet.Hooks.MobArena.AllowPets", Hooks.MobArena.ALLOW_PETS);
+        config.addDefault("MyPet.Hooks.MobArena.RespectPvPRule", Hooks.MobArena.RESPECT_PVP_RULE);
         config.addDefault("MyPet.Hooks.Residence", Hooks.USE_Residence);
         config.addDefault("MyPet.Hooks.AncientRPG", Hooks.USE_AncientRPG);
         config.addDefault("MyPet.Hooks.GriefPrevention", Hooks.USE_GriefPrevention);
@@ -346,7 +347,6 @@ public class ConfigurationLoader {
         Hooks.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Hooks.PvPArena.DisablePetsInArena", true);
         Hooks.DISABLE_PETS_IN_SURVIVAL_GAMES = config.getBoolean("MyPet.Hooks.SurvivalGames.DisablePetsInGames", true);
         Hooks.DISABLE_PETS_IN_HUNGER_GAMES = config.getBoolean("MyPet.Hooks.MyHungerGames.DisablePetsInGames", true);
-        Hooks.DISABLE_PETS_IN_MOB_ARENA = config.getBoolean("MyPet.Hooks.MobArena.DisablePetsInArena", false);
         Hooks.SkillAPI.GRANT_EXP = config.getBoolean("MyPet.Hooks.SkillAPI.GrantExp", true);
         Hooks.SkillAPI.DISABLE_VANILLA_EXP = config.getBoolean("MyPet.Hooks.SkillAPI.Disable-Vanilla-Exp", false);
         Hooks.SkillAPI.EXP_PERCENT = config.getInt("MyPet.Hooks.SkillAPI.ExpPercent", 100);
@@ -357,7 +357,9 @@ public class ConfigurationLoader {
         Hooks.USE_Citizens = config.getBoolean("MyPet.Hooks.Citizens", true);
         Hooks.USE_Heroes = config.getBoolean("MyPet.Hooks.Heroes", true);
         Hooks.USE_McMMO = config.getBoolean("MyPet.Hooks.mcMMO", true);
-        Hooks.USE_MobArena = config.getBoolean("MyPet.Hooks.MobArena.PvP", true);
+        Hooks.MobArena.ENABLED = config.getBoolean("MyPet.Hooks.MobArena.Enabled", true);
+        Hooks.MobArena.ALLOW_PETS = config.getBoolean("MyPet.Hooks.MobArena.AllowPets", true);
+        Hooks.MobArena.RESPECT_PVP_RULE = config.getBoolean("MyPet.Hooks.MobArena.RespectPvPRule", true);
         Hooks.USE_SurvivalGame = config.getBoolean("MyPet.Hooks.SurvivalGames.PvP", true);
         Hooks.USE_Residence = config.getBoolean("MyPet.Hooks.Residence", true);
         Hooks.USE_AncientRPG = config.getBoolean("MyPet.Hooks.AncientRPG", true);
@@ -467,6 +469,12 @@ public class ConfigurationLoader {
             Configuration.Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenalty.Percent", 5);
             Configuration.Skilltree.SWITCH_FEE_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenalty.Admin", false);
             config.getConfigurationSection("MyPet.Skilltree").set("SwitchPenalty", null);
+        }
+        if (config.contains("MyPet.Hooks.MobArena.DisablePetsInArena")) {
+            Hooks.MobArena.ALLOW_PETS = !config.getBoolean("MyPet.Hooks.MobArena.DisablePetsInArena", false);
+            Hooks.MobArena.RESPECT_PVP_RULE = config.getBoolean("MyPet.Hooks.MobArena.PvP", true);
+            config.getConfigurationSection("MyPet.Hooks.MobArena").set("DisablePetsInArena", null);
+            config.getConfigurationSection("MyPet.Hooks.MobArena").set("PvP", null);
         }
 
         MyPetApi.getPlugin().saveConfig();
