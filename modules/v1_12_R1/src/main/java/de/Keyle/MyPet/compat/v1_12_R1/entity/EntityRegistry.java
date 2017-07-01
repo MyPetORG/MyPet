@@ -28,12 +28,14 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.types.*;
 import net.minecraft.server.v1_12_R1.EntityTypes;
 import net.minecraft.server.v1_12_R1.MinecraftKey;
+import net.minecraft.server.v1_12_R1.RegistryMaterials;
 import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,9 +129,39 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @Override
     @SuppressWarnings("unchecked")
     public void registerEntityTypes() {
+        RegistryMaterials registry = getRegistry();
+        
         for (MyPetType type : entityClasses.keySet()) {
-            EntityTypes.b.a(type.getTypeID(), new MinecraftKey("My" + type.name()), entityClasses.get(type));
+            registry.a(type.getTypeID(), new MinecraftKey("My" + type.name()), entityClasses.get(type));
         }
+    }
+
+    protected RegistryMaterials getRegistry() {
+        if (EntityTypes.b.getClass() != RegistryMaterials.class) {
+            return getCustomRegistry(EntityTypes.b);
+        }
+        return EntityTypes.b;
+    }
+
+    public RegistryMaterials getCustomRegistry(RegistryMaterials registryMaterials) {
+        MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
+        for (Field field : registryMaterials.getClass().getDeclaredFields()) {
+            if (field.getType() == RegistryMaterials.class) {
+                field.setAccessible(true);
+                try {
+                    RegistryMaterials reg = (RegistryMaterials) field.get(registryMaterials);
+
+                    if (reg.getClass() != RegistryMaterials.class) {
+                        reg = getCustomRegistry(reg);
+                    }
+
+                    return reg;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return registryMaterials;
     }
 
     @Override
