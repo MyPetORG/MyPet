@@ -52,7 +52,7 @@ public class ConfigurationLoader {
                 "########################################################\n" +
                 "       This is the main configuration of MyPet         #\n" +
                 "         You can find more info in the wiki:           #\n" +
-                "https://wiki.mypet-plugin.de/doku.php?id=en:configfile #\n" +
+                "       https://wiki.mypet-plugin.de/configfile         #\n" +
                 "########################################################\n");
         config.options().copyHeader(true);
 
@@ -175,7 +175,7 @@ public class ConfigurationLoader {
                 "#######################################################\n" +
                 "       This is the pet configuration of MyPet         #\n" +
                 "         You can find more info in the wiki:          #\n" +
-                "https://wiki.mypet-plugin.de/doku.php?id=en:petconfig #\n" +
+                "       https://wiki.mypet-plugin.de/petconfig         #\n" +
                 "#######################################################\n");
         config.options().copyHeader(true);
 
