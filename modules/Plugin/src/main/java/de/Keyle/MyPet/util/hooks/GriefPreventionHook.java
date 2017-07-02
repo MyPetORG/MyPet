@@ -54,7 +54,7 @@ public class GriefPreventionHook extends PluginHook implements PlayerVersusEntit
                 return true;
             }
 
-            if (defender instanceof Creature && griefPrevention.config_claims_protectCreatures) {
+            if (!(defender instanceof Monster) && griefPrevention.config_claims_protectCreatures) {
                 if (defender instanceof Tameable) {
                     final Tameable tameable = (Tameable) defender;
                     if (tameable.isTamed() && tameable.getOwner() != null) {
