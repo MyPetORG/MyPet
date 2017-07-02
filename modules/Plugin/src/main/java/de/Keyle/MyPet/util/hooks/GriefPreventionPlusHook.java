@@ -29,8 +29,8 @@ import net.kaikk.mc.gpp.Claim;
 import net.kaikk.mc.gpp.DataStore;
 import net.kaikk.mc.gpp.GriefPreventionPlus;
 import net.kaikk.mc.gpp.PlayerData;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 
@@ -59,7 +59,7 @@ public class GriefPreventionPlusHook extends PluginHook implements PlayerVersusE
 
             DataStore dataStore = griefPrevention.getDataStore();
 
-            if (defender instanceof Creature && griefPrevention.config.claims_protectCreatures) {
+            if (!(defender instanceof Monster) && griefPrevention.config.claims_protectCreatures) {
                 if (defender instanceof Tameable && !griefPrevention.config.pvp_enabledWorlds.contains(defender.getWorld().getUID())) {
                     final Tameable tameable = (Tameable) defender;
                     if (tameable.isTamed() && (tameable.getOwner() != null)) {
