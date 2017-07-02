@@ -25,15 +25,19 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.types.*;
 import net.minecraft.server.v1_11_R1.EntityTypes;
-import net.minecraft.server.v1_11_R1.MinecraftKey;
+import net.minecraft.server.v1_11_R1.RegistryID;
+import net.minecraft.server.v1_11_R1.RegistryMaterials;
 import net.minecraft.server.v1_11_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +47,11 @@ import static de.Keyle.MyPet.api.entity.MyPetType.*;
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     protected static Map<MyPetType, Class<? extends EntityMyPet>> entityClasses = new HashMap<>();
+
+    Field RegistryMaterials_a = ReflectionUtil.getField(RegistryMaterials.class, "a");
+    Field RegistryID_b = ReflectionUtil.getField(RegistryID.class, "b");
+    Field RegistryID_c = ReflectionUtil.getField(RegistryID.class, "c");
+    Field RegistryID_d = ReflectionUtil.getField(RegistryID.class, "d");
 
     public EntityRegistry() {
         entityClasses.put(Bat, EntityMyBat.class);
@@ -125,14 +134,85 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @Override
     @SuppressWarnings("unchecked")
     public void registerEntityTypes() {
+        RegistryMaterials registry = getRegistry();
+        Object[] backup = backupRegistryID(registry);
+
         for (MyPetType type : entityClasses.keySet()) {
-            EntityTypes.b.a(type.getTypeID(), new MinecraftKey("My" + type.name()), entityClasses.get(type));
+            try {
+                registry.a(type.getTypeID(), null, entityClasses.get(type));
+            } catch (NullPointerException ignored) {
+                // NPE means that the entity was registered successfully but the key was not
+            }
         }
+        restoreRegistryID(registry, backup);
+    }
+
+    protected Object[] backupRegistryID(RegistryMaterials registry) {
+        RegistryID a = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials_a, registry);
+        Object[] d = (Object[]) ReflectionUtil.getFieldValue(RegistryID_d, a);
+
+        return Arrays.copyOf(d, d.length);
+    }
+
+    protected void restoreRegistryID(RegistryMaterials registry, Object[] backup) {
+        RegistryID a = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials_a, registry);
+        Object[] d = (Object[]) ReflectionUtil.getFieldValue(RegistryID_d, a);
+
+        if (d != null) {
+            for (int i = 0; i < backup.length; i++) {
+                if (backup[i] != null) {
+                    d[i] = backup[i];
+                }
+            }
+        }
+    }
+
+    protected RegistryMaterials getRegistry() {
+        if (EntityTypes.b.getClass() != RegistryMaterials.class) {
+            return getCustomRegistry(EntityTypes.b);
+        }
+        return EntityTypes.b;
+    }
+
+    protected RegistryMaterials getCustomRegistry(RegistryMaterials registryMaterials) {
+        MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
+        for (Field field : registryMaterials.getClass().getDeclaredFields()) {
+            if (field.getType() == RegistryMaterials.class) {
+                field.setAccessible(true);
+                try {
+                    RegistryMaterials reg = (RegistryMaterials) field.get(registryMaterials);
+
+                    if (reg.getClass() != RegistryMaterials.class) {
+                        reg = getCustomRegistry(reg);
+                    }
+
+                    return reg;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return registryMaterials;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void unregisterEntityTypes() {
-        // There is not much I can do to undo the registration
+        RegistryMaterials registry = getRegistry();
+
+        RegistryID registryID = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials_a, registry);
+        Object[] entityClasses = (Object[]) ReflectionUtil.getFieldValue(RegistryID_b, registryID);
+        int[] entityIDs = (int[]) ReflectionUtil.getFieldValue(RegistryID_c, registryID);
+
+        if (entityClasses != null && entityIDs != null) {
+            for (int i = 0; i < entityClasses.length; i++) {
+                if (entityClasses[i] != null) {
+                    if (EntityMyPet.class.isAssignableFrom((Class<?>) entityClasses[i])) {
+                        entityClasses[i] = null;
+                        entityIDs[i] = 0;
+                    }
+                }
+            }
+        }
     }
 }

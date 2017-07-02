@@ -103,4 +103,12 @@ public class ReflectionUtil {
 
         field.set(null, newValue);
     }
+
+    public static boolean isTypeOf(Class<?> clazz, Class<?> superClass) {
+        if (!clazz.equals(superClass)) {
+            clazz = clazz.getSuperclass();
+            return !clazz.equals(Object.class) && isTypeOf(clazz, superClass);
+        }
+        return true;
+    }
 }
