@@ -75,6 +75,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Update.Check", Update.CHECK);
         config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
         config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+        config.addDefault("MyPet.Update.Token", Update.TOKEN);
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
@@ -261,6 +262,7 @@ public class ConfigurationLoader {
         Update.CHECK = config.getBoolean("MyPet.Update.Check", Update.CHECK);
         Update.DOWNLOAD = config.getBoolean("MyPet.Update.Download", Update.DOWNLOAD);
         Update.REPLACE_OLD = config.getBoolean("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+        Update.TOKEN = config.getString("MyPet.Update.Token", Update.TOKEN);
 
         Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);

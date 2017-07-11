@@ -127,6 +127,7 @@ public class Updater {
         } else {
             url += "release";
         }
+        url += "?api_token=" + Configuration.Update.TOKEN;
         File pluginFile;
         if (Configuration.Update.REPLACE_OLD) {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/" + MyPetApi.getPlugin().getFile().getName());
@@ -152,7 +153,11 @@ public class Updater {
                 }
                 MyPetApi.getLogger().info(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                if (e.getMessage().contains("403")) {
+                    MyPetApi.getLogger().warning(ChatColor.RED + "You are not allowed to download MyPet-Premium. Please check/set your download token in the config.");
+                } else {
+                    e.printStackTrace();
+                }
             }
         });
         thread.start();
