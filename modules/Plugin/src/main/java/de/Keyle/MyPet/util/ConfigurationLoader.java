@@ -67,9 +67,11 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
         config.addDefault("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
-        config.addDefault("MyPet.Update-Check", true);
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
+        config.addDefault("MyPet.Update.Check", Update.CHECK);
+        config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
+        config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", Respawn.TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", Respawn.TIME_PLAYER_FACTOR);
@@ -230,6 +232,10 @@ public class ConfigurationLoader {
         Misc.ALLOW_RANGED_LEASHING = config.getBoolean("MyPet.Leash.AllowRanged", true);
         Misc.MAX_STORED_PET_COUNT = config.getInt("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
 
+        Update.CHECK = config.getBoolean("MyPet.Update.Check", Update.CHECK);
+        Update.DOWNLOAD = config.getBoolean("MyPet.Update.Download", Update.DOWNLOAD);
+        Update.REPLACE_OLD = config.getBoolean("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+
         Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Skilltree.Skill.Beacon.PARTY_SUPPORT = config.getBoolean("MyPet.Skill.Beacon.Party-Support", true);
@@ -237,7 +243,6 @@ public class ConfigurationLoader {
         Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
         Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
         Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
-
 
         Skilltree.SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchFee.Fixed", 0.0);
         Skilltree.SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchFee.Percent", 5);
@@ -426,6 +431,10 @@ public class ConfigurationLoader {
             Name.Tag.PREFIX = config.getString("MyPet.Name.OverHead.Prefix", Name.Tag.PREFIX);
             Name.Tag.SUFFIX = config.getString("MyPet.Name.OverHead.Suffix", Name.Tag.SUFFIX);
             config.getConfigurationSection("MyPet.Name").set("OverHead", null);
+        }
+        if (config.contains("MyPet.Update-Check")) {
+            Update.CHECK = config.getBoolean("MyPet.Update-Check", Update.CHECK);
+            config.getConfigurationSection("MyPet").set("Update-Check", null);
         }
 
         MyPetApi.getPlugin().saveConfig();

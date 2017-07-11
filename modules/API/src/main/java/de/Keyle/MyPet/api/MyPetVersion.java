@@ -39,7 +39,7 @@ public class MyPetVersion {
     private static List<String> bukkitPackets = new ArrayList<>();
     private static boolean premium = false;
 
-    private static void getManifestVersion() {
+    private static void loadData() {
         try {
             String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
             Attributes attr = getClassLoaderForExtraModule(path).getMainAttributes();
@@ -76,15 +76,19 @@ public class MyPetVersion {
 
     public static String getVersion() {
         if (!updated) {
-            getManifestVersion();
+            loadData();
             updated = true;
         }
         return version;
     }
 
+    public static boolean isDevBuild() {
+        return getVersion().contains("SNAPSHOT");
+    }
+
     public static String getBuild() {
         if (!updated) {
-            getManifestVersion();
+            loadData();
             updated = true;
         }
         return build;
@@ -92,7 +96,7 @@ public class MyPetVersion {
 
     public static String getMinecraftVersion() {
         if (!updated) {
-            getManifestVersion();
+            loadData();
             updated = true;
         }
         return minecraftVersion;
@@ -100,7 +104,7 @@ public class MyPetVersion {
 
     public static boolean isValidBukkitPacket(String p1) {
         if (!updated) {
-            getManifestVersion();
+            loadData();
             updated = true;
         }
         for (String p2 : bukkitPackets) {
@@ -113,7 +117,7 @@ public class MyPetVersion {
 
     public static List<String> getBukkitPackets() {
         if (!updated) {
-            getManifestVersion();
+            loadData();
             updated = true;
         }
         return Collections.unmodifiableList(bukkitPackets);
@@ -121,7 +125,7 @@ public class MyPetVersion {
 
     public static boolean isPremium() {
         if (!updated) {
-            getManifestVersion();
+            loadData();
             updated = true;
         }
         return premium;
