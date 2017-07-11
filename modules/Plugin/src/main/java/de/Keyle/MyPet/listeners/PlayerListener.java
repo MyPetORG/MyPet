@@ -39,7 +39,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ResourcePackManager;
-import de.Keyle.MyPet.util.UpdateCheck;
+import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -213,8 +213,8 @@ public class PlayerListener implements Listener {
             }
         }.runTaskLater(MyPetApi.getPlugin(), delay);
 
-        if (event.getPlayer().isOp() && UpdateCheck.getLatest() != null) {
-            event.getPlayer().sendMessage(Util.formatText(Translation.getString("Message.Update.Available", event.getPlayer())) + " " + UpdateCheck.getLatest());
+        if (event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
+            event.getPlayer().sendMessage(Util.formatText(Translation.getString("Message.Update.Available", event.getPlayer())) + " " + Updater.getLatest());
             event.getPlayer().sendMessage(ChatColor.DARK_GREEN + "    https://mypet-plugin.de/download");
 
         }

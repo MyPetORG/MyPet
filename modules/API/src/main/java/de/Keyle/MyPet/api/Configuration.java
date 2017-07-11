@@ -50,6 +50,13 @@ public class Configuration {
         public static String LEVEL = "INFO";
     }
 
+    public static class Update {
+        public static boolean CHECK = true;
+        public static boolean DOWNLOAD = false;
+        public static boolean REPLACE_OLD = false;
+        public static String TOKEN = "";
+    }
+
     public static class Repository {
         public static long EXTERNAL_LOAD_DELAY = 20L;
 

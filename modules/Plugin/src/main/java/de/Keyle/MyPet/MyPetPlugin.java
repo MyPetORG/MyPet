@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.*;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -50,15 +49,15 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.ResourcePackManager;
-import de.Keyle.MyPet.util.UpdateCheck;
+import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.util.shop.ShopManager;
-import org.apache.commons.lang.StringUtils;
 import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -139,17 +138,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     public void onEnable() {
         this.isReady = false;
 
-        UpdateCheck.reset();
-        if (getConfig().getBoolean("MyPet.Update-Check", true)) {
-            Optional<String> message = UpdateCheck.checkForUpdate("MyPet-Premium");
-            if (message.isPresent()) {
-                String m = "#  A new version is available: " + message.get() + "  #";
-                MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
-                MyPetApi.getLogger().info(m);
-                MyPetApi.getLogger().info("   https://mypet-plugin.de/download");
-                MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
-            }
-        }
+        Updater updater = new Updater("MyPet-Premium");
+        updater.update();
 
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
             getLogger().warning(ChatColor.RED + "This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + "\". Is MyPet up to date?");
@@ -344,6 +334,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 return MyPetVersion.getBuild();
             }
         });
+
+        updater.waitForDownload();
 
         if (MyPetVersion.isPremium()) {
             getLogger().info("Thank you for buying MyPet-" + ChatColor.YELLOW + "Premium" + ChatColor.RESET + "!");
@@ -562,7 +554,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             List<String> worldNames = new ArrayList<>();
             WorldGroup defaultGroup = new WorldGroup("default");
             defaultGroup.registerGroup();
-            for (org.bukkit.World world : this.getServer().getWorlds()) {
+            for (World world : this.getServer().getWorlds()) {
                 getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                 worldNames.add(world.getName());
                 defaultGroup.addWorld(world.getName());
@@ -591,7 +583,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             }
 
             boolean saveConfig = false;
-            for (org.bukkit.World world : getServer().getWorlds()) {
+            for (World world : getServer().getWorlds()) {
                 if (WorldGroup.getGroupByWorld(world.getName()) == null) {
                     getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                     defaultGroup.addWorld(world.getName());
