@@ -26,7 +26,6 @@
     <version>1</version>
     <packaging>jar</packaging>
     <name>MyPet-Premium-Plugin</name>
-    <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
 
     <parent>
         <groupId>de.keyle</groupId>
