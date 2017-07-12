@@ -23,24 +23,24 @@ package de.Keyle.MyPet.api.skill.skills;
 import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillProperties;
+import de.Keyle.MyPet.api.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
 
-@SkillName(value = "Ride", translationNode = "Name.Skill.Ride")
+@SkillName(value = "Shield", translationNode = "Name.Skill.Shield")
 @SkillProperties(
-        parameterNames = {"speed_percent", "addset_speed", "jump_height", "addset_jump_height", "can_fly"},
-        parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String, SkillProperties.NBTdatatypes.Double, SkillProperties.NBTdatatypes.String, SkillProperties.NBTdatatypes.Boolean},
-        parameterDefaultValues = {"5", "add", "1.25", "set", "false"})
-public class RideInfo extends SkillTreeSkill implements SkillInfo {
-    protected int speedPercent = 0;
-    protected double jumpHeigth = 0D;
-    protected boolean canFly = false;
+        parameterNames = {"chance", "addset_chance", "redirection", "addset_redirection"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
+        parameterDefaultValues = {"5", "add", "15", "add"})
+public class ShieldInfo extends SkillTreeSkill implements SkillInfo {
+    protected int chance = 0;
+    protected int redirectedDamagePercent = 0;
 
-    public RideInfo(boolean addedByInheritance) {
+    public ShieldInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
     public SkillInfo cloneSkill() {
-        RideInfo newSkill = new RideInfo(this.isAddedByInheritance());
+        ShieldInfo newSkill = new ShieldInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
     }

@@ -200,7 +200,11 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 }
                 if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
                     infoShown = true;
-                    sender.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
+                    String donationMessage = "" + ChatColor.GOLD;
+                    donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                    donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), player) + " ";
+                    donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                    sender.sendMessage("   " + donationMessage);
                 }
                 if (!infoShown) {
                     sender.sendMessage(Translation.getString("Message.CantViewPetInfo", player));

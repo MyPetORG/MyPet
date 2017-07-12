@@ -27,6 +27,7 @@ import org.bukkit.Location;
 
 public abstract class Animation {
     int taskID = -1;
+    protected int framesPerTick = 1;
     protected int frame = 0;
     protected int length = 0;
     protected int loops = 0;
@@ -43,15 +44,26 @@ public abstract class Animation {
         frame = 0;
     }
 
+    public int getFramesPerTick() {
+        return framesPerTick;
+    }
+
+    public void setFramesPerTick(int framesPerTick) {
+        this.framesPerTick = Math.max(1, framesPerTick);
+    }
+
     public void once() {
         if (!running()) {
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
                 @Override
                 public void run() {
                     if (locationHolder.isValid()) {
-                        tick(frame, locationHolder.getLocation());
-                        if (++frame >= length) {
-                            stop();
+                        for (int i = 0; i < framesPerTick; i++) {
+                            tick(frame, locationHolder.getLocation());
+                            if (++frame >= length) {
+                                stop();
+                                break;
+                            }
                         }
                     } else {
                         stop();
@@ -79,9 +91,12 @@ public abstract class Animation {
                 @Override
                 public void run() {
                     if (locationHolder.isValid()) {
-                        tick(frame, locationHolder.getLocation());
-                        if (++frame >= length) {
-                            reset();
+                        for (int i = 0; i < framesPerTick; i++) {
+                            tick(frame, locationHolder.getLocation());
+                            if (++frame >= length) {
+                                reset();
+                                break;
+                            }
                         }
                     } else {
                         stop();
@@ -98,12 +113,15 @@ public abstract class Animation {
                 @Override
                 public void run() {
                     if (locationHolder.isValid()) {
-                        tick(frame, locationHolder.getLocation());
-                        if (++frame >= length) {
-                            if (--Animation.this.loops > 0) {
-                                reset();
-                            } else {
-                                stop();
+                        for (int i = 0; i < framesPerTick; i++) {
+                            tick(frame, locationHolder.getLocation());
+                            if (++frame >= length) {
+                                if (--Animation.this.loops > 0) {
+                                    reset();
+                                } else {
+                                    stop();
+                                }
+                                break;
                             }
                         }
                     } else {

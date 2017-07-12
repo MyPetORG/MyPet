@@ -11,4 +11,6 @@ public interface ShopService extends ServiceContainer {
     void open(Player player);
 
     Set<String> getShopNames();
+
+    String getDefaultShopName();
 }

@@ -23,7 +23,9 @@ package de.Keyle.MyPet.api;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.Since;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Configuration {
@@ -59,6 +61,7 @@ public class Configuration {
         public static long EXTERNAL_LOAD_DELAY = 20L;
 
         public static String REPOSITORY_TYPE = "SQLite";
+        public static String CONVERT_FROM = "";
 
         @Deprecated
         @Since("24.11.2016")
@@ -93,6 +96,25 @@ public class Configuration {
             @Deprecated
             @Since("24.11.2016")
             public static String DATE_FORMAT = "yyyy_MM_dd_HH.mm";
+        }
+
+        public static class MySQL {
+            public static String DATABASE = "mypet";
+            public static String PREFIX = "";
+            public static String HOST = "localhost";
+            public static String PASSWORD = "";
+            public static String USER = "root";
+            public static int PORT = 3306;
+            public static int POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
+        }
+
+        public static class MongoDB {
+            public static String DATABASE = "mypet";
+            public static String PREFIX = "";
+            public static String HOST = "localhost";
+            public static String PASSWORD = "";
+            public static String USER = "";
+            public static int PORT = 27017;
         }
     }
 
@@ -183,6 +205,7 @@ public class Configuration {
             public static class Ride {
                 public static ConfigItem RIDE_ITEM;
                 public static double HUNGER_PER_METER = 0.01;
+                public static Map<String, Boolean> FLY_ZONES = new HashMap<>();
             }
 
             public static class Beacon {

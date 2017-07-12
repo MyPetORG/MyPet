@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.*;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -83,6 +84,11 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     @Since("24.11.2016")
     public boolean canUseMyPet(MyPetPlayer player) {
         return isInArena(player);
+    }
+
+    @Override
+    public boolean canMyPetFlyAt(Location location) {
+        return false;
     }
 
     @Override

@@ -141,6 +141,15 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         this.showHealthBar = showHealthBar;
     }
 
+    @Override
+    public void setUsesResourcePack(boolean flag) {
+    }
+
+    @Override
+    public boolean isUsingResourcePack() {
+        return false;
+    }
+
     public boolean isCaptureHelperActive() {
         return captureHelperMode;
     }

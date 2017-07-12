@@ -21,26 +21,25 @@
 package de.Keyle.MyPet.api.player;
 
 import de.Keyle.MyPet.api.Util;
-import org.bukkit.ChatColor;
 
 public class DonateCheck {
     public enum DonationRank {
-        Creator(ChatColor.GOLD + "☣ " + ChatColor.UNDERLINE + "Creator of MyPet" + ChatColor.RESET + ChatColor.GOLD + " ☣" + ChatColor.RESET),
-        Donator(ChatColor.GOLD + "❤ " + ChatColor.UNDERLINE + "Donator" + ChatColor.RESET + ChatColor.GOLD + " ❤" + ChatColor.RESET),
-        Translator(ChatColor.GOLD + "✈ " + ChatColor.UNDERLINE + "Translator" + ChatColor.RESET + ChatColor.GOLD + " ✈" + ChatColor.RESET),
-        Developer(ChatColor.GOLD + "✪ " + ChatColor.UNDERLINE + "Developer" + ChatColor.RESET + ChatColor.GOLD + " ✪" + ChatColor.RESET),
-        Helper(ChatColor.GOLD + "☘ " + ChatColor.UNDERLINE + "Helper" + ChatColor.RESET + ChatColor.GOLD + " ☘" + ChatColor.RESET),
-        Premium(ChatColor.GOLD + "$ " + ChatColor.UNDERLINE + "Premium" + ChatColor.RESET + ChatColor.GOLD + " $" + ChatColor.RESET),
+        Creator("☣"),
+        Donator("❤"),
+        Translator("✈"),
+        Developer("✪"),
+        Helper("☘"),
+        Premium("$"),
         None("");
 
-        String displayText;
+        String defaultIcon;
 
-        DonationRank(String displayText) {
-            this.displayText = displayText;
+        DonationRank(String defaultIcon) {
+            this.defaultIcon = defaultIcon;
         }
 
-        public String getDisplayText() {
-            return displayText;
+        public String getDefaultIcon() {
+            return defaultIcon;
         }
     }
 

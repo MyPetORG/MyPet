@@ -262,7 +262,11 @@ public class EntityListener implements Listener {
                     }
                     if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
                         infoShown = true;
-                        damager.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
+                        String donationMessage = "" + ChatColor.GOLD;
+                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                        donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), damager) + " ";
+                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
+                        damager.sendMessage("   " + donationMessage);
                     }
 
                     if (!infoShown) {

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.util.hooks;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -44,9 +45,8 @@ public abstract class HookHelper {
 
     /**
      * Return if a player can hurt another player.
-     *
      * @param attacker attacking player
-     * @param victim   attacked player
+     * @param victim attacked player
      * @return if the attacker can hurt the attacked player
      */
     public abstract boolean canHurt(Player attacker, Player victim);
@@ -69,6 +69,14 @@ public abstract class HookHelper {
     @Deprecated
     @Since("24.11.2016")
     public abstract boolean canUseMyPet(MyPetPlayer player);
+
+    /**
+     * Returns if a player can fly a pet at a certain location
+     *
+     * @param location checked location
+     * @return if a player can fly the pet
+     */
+    public abstract boolean canMyPetFlyAt(Location location);
 
     /**
      * Returns if a player is in a party (Ancient, mcMMO, Heroes)

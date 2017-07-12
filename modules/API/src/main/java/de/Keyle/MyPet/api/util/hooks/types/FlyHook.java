@@ -21,26 +21,17 @@
 package de.Keyle.MyPet.api.util.hooks.types;
 
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
-import org.bukkit.entity.Player;
-
-import java.util.List;
+import org.bukkit.Location;
 
 /**
- * This interface defines that the hook handles party checks
+ * This interface defines that the hook checks if a player can fly his pet at a certain location
  */
-public interface PartyHook extends PluginHook {
+public interface FlyHook extends PluginHook {
     /**
-     * Returns if a player is in a party (Ancient, mcMMO, Heroes)
+     * Returns if a players can fly their pets at a certain location
      *
-     * @param player checked player
-     * @return if a player is in a party
+     * @param location checked location
+     * @return if pets can be ridden
      */
-    boolean isInParty(Player player);
-
-    /**
-     * Returns all members of a party if the player is in one (Ancient, mcMMO, Heroes)
-     * @param player members of the party
-     * @return all members of the party
-     */
-    List<Player> getPartyMembers(Player player);
+    boolean canFly(Location location);
 }

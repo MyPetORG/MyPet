@@ -37,7 +37,6 @@ public class CompatUtil {
     private static final Pattern VERSION_MATCHER = Pattern.compile("\\d\\.\\d+(?:\\.\\d+)?");
 
     private String internalVersion = null;
-    //TODO remove
     private String minecraftVersion = "0.0.0";
 
     private Map<String, Integer> compareCache = new HashMap<>();

@@ -32,7 +32,8 @@ public abstract class SpiralAnimation extends ParticleAnimation {
     protected double factor = 15;
 
     public SpiralAnimation(double radius, double height, LocationHolder location) {
-        super(30, location);
+        super(90, location);
+        this.setFramesPerTick(3);
         this.radius = radius;
         this.height = height;
         this.stepY = height / this.length;
@@ -42,13 +43,8 @@ public abstract class SpiralAnimation extends ParticleAnimation {
     @Override
     public void tick(int frame, Location location) {
         double y = location.getY() + (frame * stepY);
-        double x;
-        double z;
-        for (double offset = 0; offset < 1; offset += 0.3) {
-            x = location.getX() + (radius * Math.cos(((frame - offset) * stepRadius) * factor));
-            z = location.getZ() + (radius * Math.sin(((frame - offset) * stepRadius) * factor));
-
-            playParticleEffect(new Location(location.getWorld(), x, y, z));
-        }
+        double x = location.getX() + (radius * Math.cos(frame * stepRadius * factor));
+        double z = location.getZ() + (radius * Math.sin(frame * stepRadius * factor));
+        playParticleEffect(new Location(location.getWorld(), x, y, z));
     }
 }
