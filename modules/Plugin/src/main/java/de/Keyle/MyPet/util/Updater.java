@@ -89,7 +89,10 @@ public class Updater {
         try {
             String parameter = "";
             parameter += "&package=" + MyPetApi.getCompatUtil().getInternalVersion();
-            parameter += "&build=" + 1;//MyPetVersion.getBuild();
+            parameter += "&build=" + MyPetVersion.getBuild();
+            parameter += "&premium=" + MyPetVersion.isPremium();
+            parameter += "&version=" + "%%__USER__%%";
+            parameter += "&checksum=" + "%%__NONCE__%%";
             parameter += "&dev=" + MyPetVersion.isDevBuild();
 
             String url = "http://update.mypet-plugin.de/" + plugin + "?" + parameter;
