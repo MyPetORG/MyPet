@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.MyPet;
-import de.Keyle.MyPet.util.PluginHook;
 import me.maker56.survivalgames.events.UserLobbyJoinedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -37,7 +36,7 @@ import org.bukkit.event.HandlerList;
 import static me.maker56.survivalgames.SurvivalGames.getUserManager;
 
 @PluginHookName(value = "SurvivalGames", classPath = "me.maker56.survivalgames.SurvivalGames")
-public class UltimateSurvivalGamesHook extends PluginHook implements ArenaHook {
+public class UltimateSurvivalGamesHook implements ArenaHook {
 
     @Override
     public boolean onEnable() {

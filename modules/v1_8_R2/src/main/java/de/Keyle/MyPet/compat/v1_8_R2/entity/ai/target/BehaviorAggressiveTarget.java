@@ -38,7 +38,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 @Compat("v1_8_R2")
-public class BehaviorAggressiveTarget extends AIGoal {
+public class BehaviorAggressiveTarget implements AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityPlayer petOwnerEntity;

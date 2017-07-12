@@ -4,9 +4,9 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.skill.skills.Behavior;
-import de.Keyle.MyPet.util.PluginHook;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @PluginHookName("PlaceholderAPI")
-public class PlaceholderApiHook extends PluginHook {
+public class PlaceholderApiHook implements PluginHook {
     Map<String, PlaceHolder> placeHolders = new HashMap<>();
 
     @Override

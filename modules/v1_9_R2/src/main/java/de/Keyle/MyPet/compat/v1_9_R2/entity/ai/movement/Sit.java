@@ -27,7 +27,7 @@ import de.Keyle.MyPet.compat.v1_9_R2.entity.types.EntityMyOcelot;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.types.EntityMyWolf;
 
 @Compat("v1_9_R2")
-public class Sit extends AIGoal {
+public class Sit implements AIGoal {
     private EntityMyPet entityMyPet;
     private boolean sitting = false;
 

@@ -33,8 +33,8 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -45,7 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @PluginHookName("ProtocolLib")
-public class ProtocolLibHook extends PluginHook {
+public class ProtocolLibHook implements PluginHook {
 
     @Override
     public boolean onEnable() {

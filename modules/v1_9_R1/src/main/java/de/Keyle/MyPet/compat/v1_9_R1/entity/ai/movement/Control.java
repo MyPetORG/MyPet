@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.util.Timer;
 import org.bukkit.Location;
 
 @Compat("v1_9_R1")
-public class Control extends AIGoal implements Scheduler {
+public class Control implements AIGoal, Scheduler {
     private MyPet myPet;
     private float speedModifier;
     public Location moveTo = null;

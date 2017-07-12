@@ -27,21 +27,30 @@ import org.bukkit.event.Listener;
  */
 public interface PluginHook extends Listener {
     /**
-     * Enables the hook and returns if activation was successfull
+     * Method that is called when the hook gets enabled
      *
      * @return if activation was successfull
      */
-    boolean onEnable();
+    default boolean onEnable() {
+        return false;
+    }
 
     /**
-     * Disables the hook
+     * Method that is called when the hook gets disabled
      */
-    void onDisable();
+    default void onDisable() {
+    }
 
     /**
      * Returns the name of the hooked plugin
      *
      * @return name of the plugin
      */
-    String getPluginName();
+    default String getPluginName() {
+        if (this.getClass().isAnnotationPresent(PluginHookName.class)) {
+            PluginHookName hookNameAnnotation = this.getClass().getAnnotation(PluginHookName.class);
+            return hookNameAnnotation.value();
+        }
+        return "INVALID HOOK";
+    }
 }

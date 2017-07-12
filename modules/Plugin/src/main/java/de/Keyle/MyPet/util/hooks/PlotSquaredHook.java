@@ -31,11 +31,10 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.entity.*;
 
 @PluginHookName("PlotSquared")
-public class PlotSquaredHook extends PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
+public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
 
     protected PlayerEvents playerEvents;
 

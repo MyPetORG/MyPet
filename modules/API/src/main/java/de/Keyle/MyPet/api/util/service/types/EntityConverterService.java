@@ -13,18 +13,4 @@ public abstract class EntityConverterService implements ServiceContainer {
     public abstract TagCompound convertEntity(LivingEntity entity);
 
     public abstract void convertEntity(MyPet myPet, LivingEntity normalEntity);
-
-    @Override
-    public boolean onEnable() {
-        return true;
-    }
-
-    @Override
-    public void onDisable() {
-    }
-
-    @Override
-    public String getServiceName() {
-        return "EntityConverterService";
-    }
 }

@@ -29,7 +29,6 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.PluginHook;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
@@ -38,7 +37,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 @PluginHookName("pvparena")
-public class PvPArenaHook extends PluginHook implements PlayerVersusPlayerHook, ArenaHook {
+public class PvPArenaHook implements PlayerVersusPlayerHook, ArenaHook {
 
     @Override
     public boolean onEnable() {

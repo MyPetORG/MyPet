@@ -26,7 +26,7 @@ import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import net.minecraft.server.v1_7_R4.Entity;
 
 @Compat("v1_7_R4")
-public class LookAtPlayer extends AIGoal {
+public class LookAtPlayer implements AIGoal {
     private EntityMyPet petEntity;
     protected Entity targetPlayer;
     private float range;

@@ -31,17 +31,22 @@ public interface ServiceContainer extends Listener {
      *
      * @return if activation was successfull
      */
-    boolean onEnable();
+    default boolean onEnable() {
+        return true;
+    }
 
     /**
      * Disables the service
      */
-    void onDisable();
+    default void onDisable() {
+    }
 
     /**
      * Returns the name of the service
      *
      * @return name of the service
      */
-    String getServiceName();
+    default String getServiceName() {
+        return getClass().getName();
+    }
 }

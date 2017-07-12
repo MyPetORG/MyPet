@@ -35,7 +35,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 @Compat("v1_7_R4")
-public class HurtByTarget extends AIGoal {
+public class HurtByTarget implements AIGoal {
     EntityMyPet petEntity;
     MyPet myPet;
     EntityLiving target = null;

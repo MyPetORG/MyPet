@@ -23,14 +23,13 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
-import de.Keyle.MyPet.util.PluginHook;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("MythicMobs")
-public class MythicMobsHook extends PluginHook implements PlayerLeashEntityHook {
+public class MythicMobsHook implements PlayerLeashEntityHook {
 
     @Override
     public boolean onEnable() {

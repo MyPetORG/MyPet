@@ -23,12 +23,11 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import me.NoChance.PvPManager.PvPlayer;
 import org.bukkit.entity.Player;
 
 @PluginHookName("PvPManager")
-public class PvPManagerHook extends PluginHook implements PlayerVersusPlayerHook {
+public class PvPManagerHook implements PlayerVersusPlayerHook {
 
     @Override
     public boolean onEnable() {

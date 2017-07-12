@@ -30,7 +30,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 
 @Compat("v1_12_R1")
-public class FollowOwner extends AIGoal {
+public class FollowOwner implements AIGoal {
     private EntityMyPet petEntity;
     private AbstractNavigation nav;
     private int setPathTimer = 0;

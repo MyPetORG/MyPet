@@ -28,14 +28,13 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @PluginHookName("Heroes")
-public class HeroesHook extends PluginHook implements PlayerVersusPlayerHook, PartyHook {
+public class HeroesHook implements PlayerVersusPlayerHook, PartyHook {
 
     protected Heroes heroes;
 

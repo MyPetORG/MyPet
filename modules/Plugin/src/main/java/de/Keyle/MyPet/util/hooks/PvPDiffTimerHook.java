@@ -24,12 +24,11 @@ import br.net.fabiozumbi12.PvPDiffTimer.Worlds;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 @PluginHookName("PvPDiffTimer")
-public class PvPDiffTimerHook extends PluginHook implements PlayerVersusPlayerHook {
+public class PvPDiffTimerHook implements PlayerVersusPlayerHook {
     @Override
     public boolean onEnable() {
         return Configuration.Hooks.USE_PvPDiffTimer;

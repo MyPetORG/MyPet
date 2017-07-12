@@ -31,7 +31,7 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_10_R1.event.CraftEventFactory;
 
 @Compat("v1_10_R1")
-public class EatGrass extends AIGoal {
+public class EatGrass implements AIGoal {
     private EntityMySheep entityMySheep;
     private World world;
     int eatTicks = 0;

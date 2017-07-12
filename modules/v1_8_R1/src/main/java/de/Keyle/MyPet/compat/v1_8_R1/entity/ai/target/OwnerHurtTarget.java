@@ -31,7 +31,7 @@ import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 
 @Compat("v1_8_R1")
-public class OwnerHurtTarget extends AIGoal {
+public class OwnerHurtTarget implements AIGoal {
 
     EntityMyPet petEntity;
     EntityLiving target;

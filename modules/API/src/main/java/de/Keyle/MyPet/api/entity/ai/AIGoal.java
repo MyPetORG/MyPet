@@ -20,19 +20,19 @@
 
 package de.Keyle.MyPet.api.entity.ai;
 
-public abstract class AIGoal {
-    public abstract boolean shouldStart();
+public interface AIGoal {
+    boolean shouldStart();
 
-    public boolean shouldFinish() {
+    default boolean shouldFinish() {
         return !shouldStart();
     }
 
-    public void start() {
+    default void start() {
     }
 
-    public void finish() {
+    default void finish() {
     }
 
-    public void tick() {
+    default void tick() {
     }
 }
