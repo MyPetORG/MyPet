@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import net.kaikk.mc.gpp.Claim;
 import net.kaikk.mc.gpp.DataStore;
 import net.kaikk.mc.gpp.GriefPreventionPlus;
@@ -37,7 +36,7 @@ import org.bukkit.entity.Tameable;
 import java.util.UUID;
 
 @PluginHookName("GriefPreventionPlus")
-public class GriefPreventionPlusHook extends PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
+public class GriefPreventionPlusHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
     protected GriefPreventionPlus griefPrevention;
 

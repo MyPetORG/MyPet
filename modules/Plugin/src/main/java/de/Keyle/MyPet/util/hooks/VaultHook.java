@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
-import de.Keyle.MyPet.util.PluginHook;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -33,7 +32,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import java.util.UUID;
 
 @PluginHookName("Vault")
-public class VaultHook extends PluginHook implements EconomyHook {
+public class VaultHook implements EconomyHook {
     private Economy economy = null;
 
     @Override

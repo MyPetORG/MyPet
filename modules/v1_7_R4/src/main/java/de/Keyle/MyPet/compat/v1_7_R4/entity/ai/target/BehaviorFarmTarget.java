@@ -36,7 +36,7 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 
 @Compat("v1_7_R4")
-public class BehaviorFarmTarget extends AIGoal {
+public class BehaviorFarmTarget implements AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityPlayer petOwnerEntity;

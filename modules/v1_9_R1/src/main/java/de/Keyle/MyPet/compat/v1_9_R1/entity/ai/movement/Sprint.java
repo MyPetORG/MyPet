@@ -31,7 +31,7 @@ import org.bukkit.craftbukkit.v1_9_R1.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Compat("v1_9_R1")
-public class Sprint extends AIGoal {
+public class Sprint implements AIGoal {
     private MyPet myPet;
     private final EntityMyPet petEntity;
     private float walkSpeedModifier;

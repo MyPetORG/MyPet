@@ -22,9 +22,9 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.PluginHook;
 import de.Keyle.MyPet.util.ResourcePackManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ import org.bukkit.event.HandlerList;
 import org.inventivetalent.rpapi.ResourcePackStatusEvent;
 
 @PluginHookName("ResourcePackApi")
-public class ResourcePackApiHook extends PluginHook {
+public class ResourcePackApiHook implements PluginHook {
 
     @Override
     public boolean onEnable() {

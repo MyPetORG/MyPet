@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 
 @Compat("v1_8_R3")
-public class RandomLookaround extends AIGoal {
+public class RandomLookaround implements AIGoal {
     private EntityMyPet petEntity;
     private double directionX;
     private double directionZ;

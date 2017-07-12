@@ -25,14 +25,13 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @PluginHookName("mcMMO")
-public class McMMOHook extends PluginHook implements PlayerVersusPlayerHook, PartyHook {
+public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
 
     @Override
     public boolean onEnable() {

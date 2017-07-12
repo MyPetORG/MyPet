@@ -33,7 +33,7 @@ import net.minecraft.server.v1_10_R1.*;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 
 @Compat("v1_10_R1")
-public class RangedAttack extends AIGoal {
+public class RangedAttack implements AIGoal {
     private MyPet myPet;
     private final EntityMyPet entityMyPet;
     private EntityLiving target;

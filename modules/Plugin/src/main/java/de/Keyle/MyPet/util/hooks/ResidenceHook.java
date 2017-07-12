@@ -32,7 +32,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Residence")
-public class ResidenceHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
+public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
 
     @Override
     public boolean onEnable() {

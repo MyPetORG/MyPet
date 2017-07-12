@@ -32,7 +32,7 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 @Compat("v1_10_R1")
-public class MeleeAttack extends AIGoal {
+public class MeleeAttack implements AIGoal {
     MyPet myPet;
     EntityMyPet petEntity;
     EntityLiving targetEntity;

@@ -25,15 +25,6 @@ public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.
     }
 
     @Override
-    public void onDisable() {
-    }
-
-    @Override
-    public String getServiceName() {
-        return "RepositoryMyPetConverterService";
-    }
-
-    @Override
     public void convert(StoredMyPet pet) {
         Version fromVersion = Version.v1_7_R4;
 

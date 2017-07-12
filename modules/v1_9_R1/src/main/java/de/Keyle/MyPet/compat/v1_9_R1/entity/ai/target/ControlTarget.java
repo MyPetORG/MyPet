@@ -39,7 +39,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 @Compat("v1_9_R1")
-public class ControlTarget extends AIGoal {
+public class ControlTarget implements AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityLiving target;

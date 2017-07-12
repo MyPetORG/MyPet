@@ -25,7 +25,6 @@ import com.massivecraft.factions.engine.EngineMain;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -33,7 +32,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import java.lang.reflect.Method;
 
 @PluginHookName("Factions")
-public class FactionsHook extends PluginHook implements PlayerVersusPlayerHook {
+public class FactionsHook implements PlayerVersusPlayerHook {
 
     enum AccessMethod {
         Reflektion, Normal

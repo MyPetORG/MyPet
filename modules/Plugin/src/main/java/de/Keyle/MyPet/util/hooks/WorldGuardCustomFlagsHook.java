@@ -31,13 +31,12 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("WGCustomFlags")
-public class WorldGuardCustomFlagsHook extends PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
+public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
 
     protected WorldGuardPlugin wgPlugin = null;
 

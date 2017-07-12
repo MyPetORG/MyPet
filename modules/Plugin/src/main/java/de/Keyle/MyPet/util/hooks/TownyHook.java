@@ -31,7 +31,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Towny")
-public class TownyHook extends de.Keyle.MyPet.util.PluginHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
+public class TownyHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
     Towny towny;
 

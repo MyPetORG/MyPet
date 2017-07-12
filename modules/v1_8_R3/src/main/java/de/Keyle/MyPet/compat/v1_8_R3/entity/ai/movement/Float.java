@@ -28,7 +28,7 @@ import net.minecraft.server.v1_8_R3.Navigation;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 
 @Compat("v1_8_R3")
-public class Float extends AIGoal {
+public class Float implements AIGoal {
     private EntityMyPet entityMyPet;
     private EntityPlayer owner;
 

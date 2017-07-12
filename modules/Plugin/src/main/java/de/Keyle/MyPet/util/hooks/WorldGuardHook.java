@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.util.PluginHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -42,7 +41,7 @@ import java.util.Map;
 import java.util.Set;
 
 @PluginHookName("WorldGuard")
-public class WorldGuardHook extends PluginHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
+public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
 

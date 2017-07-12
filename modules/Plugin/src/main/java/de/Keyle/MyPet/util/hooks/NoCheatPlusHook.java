@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.util.PluginHook;
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.checks.access.IViolationInfo;
 import fr.neatmonster.nocheatplus.hooks.NCPHook;
@@ -30,7 +30,7 @@ import fr.neatmonster.nocheatplus.hooks.NCPHookManager;
 import org.bukkit.entity.Player;
 
 @PluginHookName("NoCheatPlus")
-public class NoCheatPlusHook extends PluginHook {
+public class NoCheatPlusHook implements PluginHook {
     int hookId;
 
     @Override

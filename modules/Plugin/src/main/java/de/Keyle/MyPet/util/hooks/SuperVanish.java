@@ -4,8 +4,8 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.util.PluginHook;
 import de.myzelyam.api.vanish.PlayerHideEvent;
 import de.myzelyam.api.vanish.PlayerShowEvent;
 import de.myzelyam.api.vanish.VanishAPI;
@@ -16,7 +16,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 @PluginHookName("SuperVanish")
-public class SuperVanish extends PluginHook implements Listener {
+public class SuperVanish implements PluginHook, Listener {
 
     @Override
     public boolean onEnable() {
