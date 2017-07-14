@@ -158,6 +158,8 @@ public class Updater {
             } catch (IOException e) {
                 if (e.getMessage().contains("403")) {
                     MyPetApi.getLogger().warning(ChatColor.RED + "You are not allowed to download MyPet-Premium. Please check/set your download token in the config.");
+                    MyPetApi.getLogger().warning(ChatColor.RED + "You can find your token here (requires login): ");
+                    MyPetApi.getLogger().warning(ChatColor.RED + "   https://mypet-plugin.de/download");
                 } else {
                     e.printStackTrace();
                 }
