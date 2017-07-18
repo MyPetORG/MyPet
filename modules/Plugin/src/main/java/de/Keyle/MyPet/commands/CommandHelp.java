@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.skill.skills.Beacon;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.skill.skills.Pickup;
@@ -42,30 +43,31 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             player.sendMessage("-------------------- " + ChatColor.GOLD + "MyPet - " + Translation.getString("Name.Help", player) + ChatColor.RESET + " --------------------");
+            if (Permissions.has(player, "MyPet.admin", false)) {
+                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Admin", player), "/petadmin"));
+            }
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Info", player), "/petinfo"));
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Type", player), "/pettype"));
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Options", player), "/petoptions"));
             if (Permissions.hasLegacy(player, "MyPet.command.capturehelper")) {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.CaptureHelper", player), "/petcapturehelper"));
             }
-            if (Permissions.has(player, "MyPet.admin", false)) {
-                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Admin", player), "/petadmin"));
-            }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Call", player), "/petcall"));
+                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.SendAway", player), "/petsendaway"));
+                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Stop", player), "/petstop"));
                 if (Permissions.hasLegacy(player, "MyPet.command.name")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Name", player), "/petname"));
                 }
                 if (Permissions.hasLegacy(player, "MyPet.command.release")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Release", player), "/petrelease"));
                 }
-                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Stop", player), "/petstop"));
-                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Call", player), "/petcall"));
-                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.SendAway", player), "/petsendaway"));
                 if (Permissions.hasLegacy(player, "MyPet.command.respawn")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Respawn", player), "/petrespawn"));
                 }
                 if (Permissions.hasLegacy(player, "MyPet.command.switch")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Switch", player), "/petswitch"));
+                    player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Store", player), "/petstore"));
                 }
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Skill", player), "/petskill"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.ChooseSkilltree", player), "/petchooseskilltree"));
@@ -78,6 +80,9 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 }
                 if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Behavior.class)) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Behavior", player), "/petbehavior"));
+                }
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Beacon.class)) {
+                    player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Beacon", player), "/petbeacon"));
                 }
             }
             player.sendMessage("");
