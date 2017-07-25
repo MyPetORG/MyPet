@@ -973,7 +973,27 @@ public class EntityListener implements Listener {
                         if (myPet.isPassiv() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
                             if (myPet.getStatus() == PetState.Here) {
                                 if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
-                                    myPet.getExperience().addExp(deadEntity.getType(), Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER);
+                                    int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity));
+                                    myPet.getExperience().addExp(deadEntity.getType(), percentage);
+                                }
+                            }
+                        }
+                    }
+                } else if (entity instanceof Tameable) {
+                    Tameable tameable = (Tameable) entity;
+                    if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player) {
+                        Player owner = (Player) tameable.getOwner();
+                        if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
+                            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
+                            if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
+                                continue;
+                            }
+                            if (myPet.isPassiv() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                                if (myPet.getStatus() == PetState.Here) {
+                                    if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
+                                        int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity));
+                                        myPet.getExperience().addExp(deadEntity.getType(), percentage);
+                                    }
                                 }
                             }
                         }
@@ -1008,6 +1028,24 @@ public class EntityListener implements Listener {
                         if (myPet.getStatus() == PetState.Here) {
                             if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
                                 myPet.getExperience().addExp(deadEntity.getType(), Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER);
+                            }
+                        }
+                    }
+                }
+            } else if (damager instanceof Tameable) {
+                Tameable tameable = (Tameable) damager;
+                if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player) {
+                    Player owner = (Player) tameable.getOwner();
+                    if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
+                        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
+                        if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
+                            return;
+                        }
+                        if (myPet.isPassiv() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                            if (myPet.getStatus() == PetState.Here) {
+                                if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
+                                    myPet.getExperience().addExp(deadEntity.getType(), Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER);
+                                }
                             }
                         }
                     }
