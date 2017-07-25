@@ -31,6 +31,7 @@ public abstract class Animation {
     protected int frame = 0;
     protected int length = 0;
     protected int loops = 0;
+    protected int tickRate = 1;
     protected LocationHolder locationHolder;
 
     public Animation(int length, LocationHolder locationHolder) {
@@ -69,7 +70,7 @@ public abstract class Animation {
                         stop();
                     }
                 }
-            }, 0, 1);
+            }, 0, tickRate);
         }
     }
 
@@ -102,7 +103,7 @@ public abstract class Animation {
                         stop();
                     }
                 }
-            }, 0, 1);
+            }, 0, tickRate);
         }
     }
 
@@ -128,7 +129,7 @@ public abstract class Animation {
                         stop();
                     }
                 }
-            }, 0, 1);
+            }, 0, tickRate);
         }
     }
 
