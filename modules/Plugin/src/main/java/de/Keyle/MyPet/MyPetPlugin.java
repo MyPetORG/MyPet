@@ -334,6 +334,22 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 return MyPetVersion.getBuild();
             }
         });
+        metrics.addCustomChart(new Metrics.SimplePie("update_mode") {
+            @Override
+            public String getValue() {
+                String mode = "Disabled";
+                if (Configuration.Update.CHECK) {
+                    mode = "Check";
+                    if (Configuration.Update.DOWNLOAD) {
+                        mode += " & Download";
+                        if (Configuration.Update.TOKEN.equals("")) {
+                            mode += " (Missing Token)";
+                        }
+                    }
+                }
+                return mode;
+            }
+        });
 
         updater.waitForDownload();
 
