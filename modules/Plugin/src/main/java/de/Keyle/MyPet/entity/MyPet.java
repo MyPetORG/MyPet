@@ -78,6 +78,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected double saturation = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
+    protected TagCompound storage = new TagCompound();
 
     @Override
     public void setExp(double exp) {
@@ -86,12 +87,26 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     @Override
     public TagCompound getInfo() {
-        return writeExtendedInfo();
+        TagCompound tag = writeExtendedInfo();
+
+        // TODO replace with proper storage
+        storage.put("level", new TagInt(getExperience().getLevel()));
+        tag.put("storage", storage);
+
+        return tag;
     }
 
     @Override
     public void setInfo(TagCompound info) {
         readExtendedInfo(info);
+
+        // TODO replace with proper storage
+        if (info.containsKey("storage")) {
+            TagCompound storage = info.getAs("storage", TagCompound.class).clone();
+            for (String key : storage.getCompoundData().keySet()) {
+                this.storage.put(key, storage.get(key));
+            }
+        }
     }
 
     @Override
