@@ -46,8 +46,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
     protected UUID mojangUUID = null;
     protected final UUID internalUUID;
     protected boolean onlineMode = false;
-
-    protected boolean captureHelperMode = false;
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
     protected int autoRespawnMin = 1;
@@ -92,8 +90,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
 
     public boolean hasCustomData() {
         if (autoRespawn || autoRespawnMin != 1) {
-            return true;
-        } else if (captureHelperMode) {
             return true;
         } else if (extendedInfo.getCompoundData().size() > 0) {
             return true;
@@ -151,11 +147,10 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
     }
 
     public boolean isCaptureHelperActive() {
-        return captureHelperMode;
+        return false;
     }
 
     public void setCaptureHelperActive(boolean captureHelperMode) {
-        this.captureHelperMode = captureHelperMode;
     }
 
     public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID) {
@@ -315,7 +310,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         TagCompound settingsTag = new TagCompound();
         settingsTag.getCompoundData().put("AutoRespawn", new TagByte(hasAutoRespawnEnabled()));
         settingsTag.getCompoundData().put("AutoRespawnMin", new TagInt(getAutoRespawnMin()));
-        settingsTag.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
         settingsTag.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
         settingsTag.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
         playerNBT.getCompoundData().put("Settings", settingsTag);
@@ -360,9 +354,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
             if (settingsTag.getCompoundData().containsKey("AutoRespawnMin")) {
                 setAutoRespawnMin(settingsTag.getAs("AutoRespawnMin", TagInt.class).getIntData());
             }
-            if (settingsTag.containsKeyAs("CaptureMode", TagByte.class)) {
-                setCaptureHelperActive(settingsTag.getAs("CaptureMode", TagByte.class).getBooleanData());
-            }
             if (settingsTag.getCompoundData().containsKey("HealthBar")) {
                 setHealthBarActive(settingsTag.getAs("HealthBar", TagByte.class).getBooleanData());
             }
@@ -378,13 +369,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
             }
             if (myplayerNBT.getCompoundData().containsKey("AutoRespawnMin")) {
                 setAutoRespawnMin(myplayerNBT.getAs("AutoRespawnMin", TagInt.class).getIntData());
-            }
-            if (myplayerNBT.containsKeyAs("CaptureMode", TagString.class)) {
-                if (!myplayerNBT.getAs("CaptureMode", TagString.class).getStringData().equals("Deactivated")) {
-                    setCaptureHelperActive(true);
-                }
-            } else if (myplayerNBT.containsKeyAs("CaptureMode", TagByte.class)) {
-                setCaptureHelperActive(myplayerNBT.getAs("CaptureMode", TagByte.class).getBooleanData());
             }
             if (myplayerNBT.getCompoundData().containsKey("HealthBar")) {
                 setHealthBarActive(myplayerNBT.getAs("HealthBar", TagByte.class).getBooleanData());

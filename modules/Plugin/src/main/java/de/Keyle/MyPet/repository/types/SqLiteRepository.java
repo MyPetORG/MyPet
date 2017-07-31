@@ -329,7 +329,7 @@ public class SqLiteRepository implements Repository {
                 statement.setString(2, player.getName());
                 statement.setBoolean(3, player.hasAutoRespawnEnabled());
                 statement.setInt(4, player.getAutoRespawnMin());
-                statement.setBoolean(5, player.isCaptureHelperActive());
+                statement.setBoolean(5, false);
                 statement.setBoolean(6, player.isHealthBarActive());
                 statement.setFloat(7, player.getPetLivingSoundVolume());
                 statement.setBoolean(8, false);
@@ -745,7 +745,6 @@ public class SqLiteRepository implements Repository {
 
                 petPlayer.setAutoRespawnEnabled(resultSet.getBoolean("auto_respawn"));
                 petPlayer.setAutoRespawnMin(resultSet.getInt("auto_respawn_min"));
-                petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
                 petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
                 petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBytes("extended_info"), true));
@@ -897,7 +896,7 @@ public class SqLiteRepository implements Repository {
             statement.setString(2, player.getName());
             statement.setBoolean(3, player.hasAutoRespawnEnabled());
             statement.setInt(4, player.getAutoRespawnMin());
-            statement.setBoolean(5, player.isCaptureHelperActive());
+            statement.setBoolean(5, false);
             statement.setBoolean(6, player.isHealthBarActive());
             statement.setFloat(7, player.getPetLivingSoundVolume());
             statement.setBoolean(8, false);
@@ -947,7 +946,7 @@ public class SqLiteRepository implements Repository {
                     statement.setString(3, player.getName());
                     statement.setBoolean(4, player.hasAutoRespawnEnabled());
                     statement.setInt(5, player.getAutoRespawnMin());
-                    statement.setBoolean(6, player.isCaptureHelperActive());
+                    statement.setBoolean(6, false);
                     statement.setBoolean(7, player.isHealthBarActive());
                     statement.setFloat(8, player.getPetLivingSoundVolume());
                     statement.setBoolean(9, false);
@@ -1012,7 +1011,7 @@ public class SqLiteRepository implements Repository {
                 statement.setString(3, playerName);
                 statement.setBoolean(4, player.hasAutoRespawnEnabled());
                 statement.setInt(5, player.getAutoRespawnMin());
-                statement.setBoolean(6, player.isCaptureHelperActive());
+                statement.setBoolean(6, false);
                 statement.setBoolean(7, player.isHealthBarActive());
                 statement.setFloat(8, player.getPetLivingSoundVolume());
                 statement.setBoolean(9, false);

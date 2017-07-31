@@ -53,7 +53,6 @@ import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
-import de.Keyle.MyPet.util.CaptureHelper;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.bukkit.Bukkit;
@@ -472,9 +471,6 @@ public class EntityListener implements Listener {
                             return;
                         }
                     }
-                    if (Permissions.has(player, "MyPet.user.capturehelper") && MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPlayerManager().getMyPetPlayer(player).isCaptureHelperActive()) {
-                        CaptureHelper.checkTamable(leashTarget, event.getDamage(), player);
-                    }
 
                     boolean willBeLeashed = true;
 
@@ -600,11 +596,6 @@ public class EntityListener implements Listener {
                                     myPet.get().createEntity();
 
                                     getPluginManager().callEvent(new MyPetLeashEvent(myPet.get()));
-
-                                    if (owner.isCaptureHelperActive()) {
-                                        owner.setCaptureHelperActive(false);
-                                        owner.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", owner), Translation.getString("Name.Disabled", owner)));
-                                    }
                                 }
                             }
                         });

@@ -92,9 +92,6 @@ commands:
   pettype:
     description: Shows info about the pet-types.
     usage: '/<command> <pet type>'
-  petcapturehelper:
-    aliases: [pch]
-    description: Toogles the CaptureHelper on/off
   petoptions:
     aliases: [po, peto, petoption]
     description: Player options
@@ -169,15 +166,12 @@ permissions:
       MyPet.leash.*: true
       MyPet.command.respawn: true
       MyPet.command.release: true
-      MyPet.command.capturehelper: true
       MyPet.command.name: true
       MyPet.command.name.color: true
       MyPet.command.options: true
       MyPet.command.list: true
   MyPet.command.release:
     description: Allows usage of /petrelease
-  MyPet.command.capturehelper:
-    description: Gives access to the CaptureHelper
   MyPet.command.respawn:
     description: Allows usage of /petrespawn
   MyPet.command.name:

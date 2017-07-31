@@ -33,7 +33,6 @@ public class Permissions {
 
     static {
         legacy.put("MyPet.command.info.other", "MyPet.user.command.info.other");
-        legacy.put("MyPet.command.capturehelper", "MyPet.user.command.capturehelper");
         legacy.put("MyPet.command.release", "MyPet.user.command.release");
         legacy.put("MyPet.command.respawn", "MyPet.user.command.respawn");
         legacy.put("MyPet.command.name", "MyPet.user.command.name");
