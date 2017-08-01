@@ -36,6 +36,7 @@ public class CommandOptionReload implements CommandOption {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         MyPetApi.getPlugin().reloadConfig();
         ConfigurationLoader.loadConfiguration();
+        ConfigurationLoader.loadCompatConfiguration();
 
         if (MyPetApi.getLogger() instanceof MyPetLogger) {
             ((MyPetLogger) MyPetApi.getLogger()).updateDebugLoggerLogLevel();
