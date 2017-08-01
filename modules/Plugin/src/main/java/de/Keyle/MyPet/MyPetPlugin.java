@@ -276,28 +276,37 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 repo = null;
             }
         } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+            MyPetApi.getLogger().info("Connect to MySQL database...");
             repo = new MySqlRepository();
             try {
                 repo.init();
+                MyPetApi.getLogger().info("MySQL connection successful.");
             } catch (RepositoryInitException e) {
+                MyPetApi.getLogger().warning("MySQL connection failed!");
                 e.printStackTrace();
                 repo = null;
             }
         } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
+            MyPetApi.getLogger().info("Connect to MongoDB database...");
             repo = new MongoDbRepository();
             try {
                 repo.init();
+                MyPetApi.getLogger().info("MongoDB connection successful.");
             } catch (RepositoryInitException e) {
+                MyPetApi.getLogger().warning("MongoDB connection failed!");
                 e.printStackTrace();
                 repo = null;
             }
         }
 
         if (repo == null) {
+            MyPetApi.getLogger().info("Connect to SQLite database...");
             repo = new SqLiteRepository();
             try {
                 repo.init();
+                MyPetApi.getLogger().info("SQLite connection successful.");
             } catch (RepositoryInitException ignored) {
+                MyPetApi.getLogger().warning("SQLite connection failed!");
             }
         }
 
