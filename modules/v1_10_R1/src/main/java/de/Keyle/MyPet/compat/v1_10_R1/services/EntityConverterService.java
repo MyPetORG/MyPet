@@ -138,8 +138,15 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MySlime) {
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
         } else if (myPet instanceof MyZombie) {
-            Villager.Profession profession = Villager.Profession.values()[((MyZombie) myPet).getType()];
-            ((Zombie) normalEntity).setVillagerProfession(profession);
+            switch (((MyZombie) myPet).getZombieType()) {
+                case HUSK:
+                    ((Zombie) normalEntity).setVillagerProfession(Villager.Profession.HUSK);
+                    break;
+                case VILLAGER:
+                    Villager.Profession profession = Villager.Profession.values()[((MyZombie) myPet).getProfession() + 1];
+                    ((Zombie) normalEntity).setVillagerProfession(profession);
+                    break;
+            }
         } else if (myPet instanceof MySkeleton) {
             ((Skeleton) normalEntity).setSkeletonType(Skeleton.SkeletonType.values()[((MySkeleton) myPet).getType()]);
             if (((MySkeleton) myPet).isWither()) {

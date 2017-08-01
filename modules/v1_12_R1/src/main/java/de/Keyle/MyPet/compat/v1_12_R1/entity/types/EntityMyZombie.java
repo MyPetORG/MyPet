@@ -36,7 +36,7 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 public class EntityMyZombie extends EntityMyPet {
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> unusedWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
 
     public EntityMyZombie(World world, MyPet myPet) {
         super(world, myPet);
@@ -129,21 +129,19 @@ public class EntityMyZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);    // is baby
-        getDataWatcher().register(typeWatcher, 0);       // type
-        getDataWatcher().register(watcher, false);       // N/A
+        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(typeWatcher, 0);
+        getDataWatcher().register(unusedWatcher, false);
     }
 
     @Override
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
 
-        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
-            public void run() {
-                if (getMyPet().getStatus() == MyPet.PetState.Here) {
-                    for (EquipmentSlot slot : EquipmentSlot.values()) {
-                        setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
-                    }
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
                 }
             }
         }, 5L);

@@ -37,7 +37,7 @@ public class EntityMyZombie extends EntityMyPet {
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Boolean> shiverWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> unusedWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
 
     public EntityMyZombie(World world, MyPet myPet) {
         super(world, myPet);
@@ -128,23 +128,25 @@ public class EntityMyZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);    // is baby
-        getDataWatcher().register(professionWatcher, 0); // profession
-        getDataWatcher().register(shiverWatcher, false); // does shiver
-        getDataWatcher().register(watcher, false);       // N/A
+        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(professionWatcher, 0);
+        getDataWatcher().register(shiverWatcher, false);
+        getDataWatcher().register(unusedWatcher, false);
     }
 
     @Override
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(professionWatcher, getMyPet().getType());
+        if (getMyPet().isVillager()) {
+            this.datawatcher.set(professionWatcher, 1 + (getMyPet().getProfession() % 5));
+        } else {
+            this.datawatcher.set(professionWatcher, 0);
+        }
 
-        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
-            public void run() {
-                if (getMyPet().getStatus() == MyPet.PetState.Here) {
-                    for (EquipmentSlot slot : EquipmentSlot.values()) {
-                        setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
-                    }
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
                 }
             }
         }, 5L);

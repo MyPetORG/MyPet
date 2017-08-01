@@ -41,10 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombie {
-    private enum Type {
-        NORMAL, HUSK, VILLAGER
-    }
-
     protected boolean isBaby = false;
     protected Type type = Type.NORMAL;
     protected int profession = 0;
@@ -92,13 +88,13 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
             if (!info.getCompoundData().containsKey("Version")) {
                 if (type == 6) {
                     setHusk(true);
+                } else if (type > 0 && type < 6) {
+                    setVillager(true);
+                    setProfession(type);
                 }
-            } else if (type > 0 && type < 6) {
-                setVillager(true);
-                setProfession(type);
-
+            } else {
+                setType(type);
             }
-            setType(type);
         }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
@@ -155,8 +151,8 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         }
     }
 
-    public void setProfession(int type) {
-        this.profession = type + 1;
+    public void setProfession(int profession) {
+        this.profession = profession;
         if (status == PetState.Here) {
             getEntity().get().getHandle().updateVisuals();
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
@@ -168,7 +164,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public int getProfession() {
-        return profession - 1;
+        return profession;
     }
 
     @Override
@@ -184,6 +180,16 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
                 getEntity().get().getHandle().updateVisuals();
             }
         }
+    }
+
+    @Override
+    public Type getZombieType() {
+        return type;
+    }
+
+    @Override
+    public void setZombieType(Type type) {
+        this.type = type;
     }
 
     public ItemStack[] getEquipment() {
