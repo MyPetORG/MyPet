@@ -113,10 +113,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         ConfigurationLoader.upgradeConfig();
         ConfigurationLoader.setDefault();
-        try {
-            ConfigurationLoader.loadConfiguration();
-        } catch (Exception ignored) {
-        }
+        ConfigurationLoader.loadConfiguration();
 
         compatUtil = new CompatUtil();
         serviceManager = new ServiceManager();
@@ -132,6 +129,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
+
+        ConfigurationLoader.loadCompatConfiguration();
 
         registerServices();
         compatUtil.getComapatInstance(CompatManager.class, "", "CompatManager").init();
