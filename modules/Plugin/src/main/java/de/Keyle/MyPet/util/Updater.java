@@ -116,7 +116,7 @@ public class Updater {
         m += " is available: " + latest + " #";
         MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
         MyPetApi.getLogger().info(m);
-        MyPetApi.getLogger().info("#  https://mypet-plugin.de/download" + StringUtils.repeat(" ", m.length() - 35) + "#");
+        MyPetApi.getLogger().info("#  https://mypet-plugin.de/download" + StringUtils.repeat(" ", m.length() - 36) + "#");
         MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
     }
 

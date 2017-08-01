@@ -105,7 +105,20 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         // load version from manifest
         MyPetVersion.reset();
 
+        ConfigurationLoader.upgradeConfig();
+        ConfigurationLoader.setDefault();
+        try {
+            ConfigurationLoader.loadConfiguration();
+        } catch (Exception ignored) {
+        }
+
         compatUtil = new CompatUtil();
+        serviceManager = new ServiceManager();
+        pluginHookManager = new PluginHookManager();
+
+        if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
+            return;
+        }
 
         petInfo = compatUtil.getComapatInstance(MyPetInfo.class, "entity", "MyPetInfo");
         platformHelper = compatUtil.getComapatInstance(PlatformHelper.class, "", "PlatformHelper");
@@ -114,18 +127,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
 
-        serviceManager = new ServiceManager();
-        pluginHookManager = new PluginHookManager();
-
-        ConfigurationLoader.upgradeConfig();
-        ConfigurationLoader.setDefault();
-        ConfigurationLoader.loadConfiguration();
-
         registerServices();
         compatUtil.getComapatInstance(CompatManager.class, "", "CompatManager").init();
-
         serviceManager.activate(Load.State.OnLoad);
-
         registerHooks();
     }
 
@@ -137,6 +141,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
             getLogger().warning(ChatColor.RED + "This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + "\". Is MyPet up to date?");
+            updater.waitForDownload();
             setEnabled(false);
             return;
         }

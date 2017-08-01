@@ -56,6 +56,10 @@ public class ConfigurationLoader {
                 "########################################################\n");
         config.options().copyHeader(true);
 
+        config.addDefault("MyPet.Update.Check", Update.CHECK);
+        config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
+        config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+
         config.addDefault("MyPet.Leash.Consume", Misc.CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.AllowRanged", Misc.ALLOW_RANGED_LEASHING);
         config.addDefault("MyPet.OwnerCanAttackPet", Misc.OWNER_CAN_ATTACK_PET);
@@ -69,9 +73,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
-        config.addDefault("MyPet.Update.Check", Update.CHECK);
-        config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
-        config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", Respawn.TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", Respawn.TIME_PLAYER_FACTOR);
