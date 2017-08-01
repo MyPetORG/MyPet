@@ -27,7 +27,7 @@
     <version>2.3.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MyPet-Premium</name>
-    <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
+    <url>https://www.spigotmc.org/resources/mypet-premium.17566/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
