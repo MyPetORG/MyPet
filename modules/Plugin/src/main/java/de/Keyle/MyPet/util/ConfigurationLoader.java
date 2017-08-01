@@ -57,6 +57,11 @@ public class ConfigurationLoader {
                 "########################################################\n");
         config.options().copyHeader(true);
 
+        config.addDefault("MyPet.Update.Check", Update.CHECK);
+        config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
+        config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+        config.addDefault("MyPet.Update.Token", Update.TOKEN);
+
         config.addDefault("MyPet.Leash.Consume", Misc.CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.AllowRanged", Misc.ALLOW_RANGED_LEASHING);
         config.addDefault("MyPet.OwnerCanAttackPet", Misc.OWNER_CAN_ATTACK_PET);
@@ -71,10 +76,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
-        config.addDefault("MyPet.Update.Check", Update.CHECK);
-        config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
-        config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
-        config.addDefault("MyPet.Update.Token", Update.TOKEN);
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
