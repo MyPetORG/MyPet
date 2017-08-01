@@ -296,7 +296,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             } else if (arg.equalsIgnoreCase("angry")) {
                 compound.getCompoundData().put("Angry", new TagByte(true));
             } else if (arg.equalsIgnoreCase("villager")) {
-                compound.getCompoundData().put("Type", new TagInt(1));
+                compound.getCompoundData().put("Villager", new TagByte(true));
             } else if (arg.equalsIgnoreCase("chest")) {
                 compound.getCompoundData().put("Chest", new TagByte(true));
             } else if (arg.equalsIgnoreCase("elder")) {
@@ -359,7 +359,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     if (petType == MyPetType.Villager) {
                         compound.getCompoundData().put("Profession", new TagInt(profession));
                     } else if (petType == MyPetType.Zombie) {
-                        compound.getCompoundData().put("Type", new TagInt(profession + 1));
+                        compound.getCompoundData().put("Villager", new TagByte(true));
+                        compound.getCompoundData().put("Profession", new TagInt(profession));
                     }
                 }
             } else if (arg.startsWith("color:")) {

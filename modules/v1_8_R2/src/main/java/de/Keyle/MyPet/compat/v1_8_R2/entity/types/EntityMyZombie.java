@@ -125,9 +125,9 @@ public class EntityMyZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().a(12, new Byte((byte) 0));     // is baby
-        getDataWatcher().a(13, new Byte((byte) 0));     // is villager
-        getDataWatcher().a(14, Byte.valueOf((byte) 0)); // N/A
+        getDataWatcher().a(12, (byte) 0); // is baby
+        getDataWatcher().a(13, (byte) 0); // is villager
+        getDataWatcher().a(14, (byte) 0); // unused
     }
 
     @Override
@@ -135,16 +135,13 @@ public class EntityMyZombie extends EntityMyPet {
         this.datawatcher.watch(12, (byte) (getMyPet().isBaby() ? 1 : 0));
         this.datawatcher.watch(13, (byte) (getMyPet().isVillager() ? 1 : 0));
 
-
-        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
-            public void run() {
-                if (getMyPet().getStatus() == MyPet.PetState.Here) {
-                    for (EquipmentSlot slot : EquipmentSlot.values()) {
-                        if (slot == EquipmentSlot.OffHand) {
-                            continue;
-                        }
-                        setPetEquipment(slot.getSlotId(), CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    if (slot == EquipmentSlot.OffHand) {
+                        continue;
                     }
+                    setPetEquipment(slot.getSlotId(), CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
                 }
             }
         }, 5L);

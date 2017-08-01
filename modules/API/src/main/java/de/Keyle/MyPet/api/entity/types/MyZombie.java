@@ -29,6 +29,10 @@ import static org.bukkit.Material.ROTTEN_FLESH;
 
 @DefaultInfo(food = {ROTTEN_FLESH})
 public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
+    enum Type {
+        NORMAL, HUSK, VILLAGER
+    }
+
     boolean isHusk();
 
     void setHusk(boolean flag);
@@ -44,4 +48,8 @@ public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
     int getType();
 
     void setType(int type);
+
+    Type getZombieType();
+
+    void setZombieType(Type type);
 }
