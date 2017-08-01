@@ -142,7 +142,7 @@
         <supervanish.version>5.8.4</supervanish.version>
 
         <bstats.version>1.1</bstats.version>
-        <mongodb.version>3.2.1</mongodb.version>
+        <mongodb.version>3.4.2</mongodb.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <json.version>1.1.1</json.version>
         <gson.version>2.6.1</gson.version>

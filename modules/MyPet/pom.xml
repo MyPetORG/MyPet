@@ -107,7 +107,8 @@
                     <jarName>${project.name}-${project.version}</jarName>
                     <archive>
                         <manifestEntries>
-                            <Class-Path>MyPet/rhino.jar MyPet/mongo-java-driver-3.2.1.jar</Class-Path>
+                            <Class-Path>MyPet/rhino.jar MyPet/mongo-java-driver.jar MyPet/mongo-java-driver-3.4.2.jar
+                            </Class-Path>
                             <Main-Class>de.Keyle.MyPet.gui.GuiMain</Main-Class>
                             <Premium>true</Premium>
                             <Project-Author>Keyle</Project-Author>
