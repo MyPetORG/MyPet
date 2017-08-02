@@ -60,7 +60,7 @@ public class Life extends LifeInfo implements SkillInstance {
                 upgrade.getProperties().getCompoundData().put("hp_double", TagDouble);
             }
             if (upgrade.getProperties().getCompoundData().containsKey("hp_double")) {
-                if (!upgrade.getProperties().getCompoundData().containsKey("addset_hp") || ((TagString) upgrade.getProperties().getAs("addset_hp", TagString.class)).getStringData().equals("add")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_hp") || upgrade.getProperties().getAs("addset_hp", TagString.class).getStringData().equals("add")) {
                     hpIncrease += upgrade.getProperties().getAs("hp_double", TagDouble.class).getDoubleData();
                 } else {
                     hpIncrease = upgrade.getProperties().getAs("hp_double", TagDouble.class).getDoubleData();
@@ -83,6 +83,9 @@ public class Life extends LifeInfo implements SkillInstance {
 
     public void reset() {
         hpIncrease = 0;
+        if (getMyPet().getStatus() == PetState.Here) {
+            getMyPet().getEntity().get().setMaxHealth(getMyPet().getMaxHealth());
+        }
     }
 
     public double getHpIncrease() {
