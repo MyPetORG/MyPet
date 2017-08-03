@@ -42,9 +42,9 @@ public class PreciousStonesHook implements PlayerVersusPlayerHook, PlayerVersusE
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
         if (defender instanceof Villager) {
-            return !PreciousStones.API().flagAppliesToPlayer(attacker, FieldFlag.PROTECT_VILLAGERS, defender.getLocation());
+            return !PreciousStones.API().isFieldProtectingArea(FieldFlag.PROTECT_VILLAGERS, defender.getLocation());
         } else if (defender instanceof Ageable) {
-            return !PreciousStones.API().flagAppliesToPlayer(attacker, FieldFlag.PROTECT_ANIMALS, defender.getLocation());
+            return !PreciousStones.API().isFieldProtectingArea(FieldFlag.PROTECT_ANIMALS, defender.getLocation());
         } else {
             return !PreciousStones.API().isFieldProtectingArea(FieldFlag.PROTECT_MOBS, defender.getLocation());
         }
