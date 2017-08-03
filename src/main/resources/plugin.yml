@@ -21,6 +21,7 @@ softdepend:
   - NoCheatPlus
   - PlayeholderAPI
   - PlotSquared
+  - PreciousStones
   - ProtocolLib
   - pvparena
   - PvPDiffTimer

@@ -138,6 +138,9 @@
         <!-- https://www.spigotmc.org/resources/supervanish-be-invisible.1331/ -->
         <supervanish.version>5.8.4</supervanish.version>
 
+        <!-- https://www.spigotmc.org/resources/preciousstones.5270/ -->
+        <preciousstones.version>10.6.0</preciousstones.version>
+
         <bstats.version>1.1</bstats.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
@@ -429,6 +432,11 @@
             <version>${supervanish.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>net.sacredlabyrinth.Phaed</groupId>
+            <artifactId>PreciousStones</artifactId>
+            <version>${preciousstones.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij</groupId>

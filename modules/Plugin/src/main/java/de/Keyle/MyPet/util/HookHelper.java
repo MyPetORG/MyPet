@@ -36,8 +36,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     public boolean canHurt(Player attacker, Player defender, boolean viceversa) {
         if (!attacker.getWorld().getPVP()) {
             return false;
-        }
-        if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
+        } else if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
             return false;
         }
         return true;
@@ -104,8 +103,8 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean isInParty(Player player) {
-        List<PartyHook> arenaHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
-        for (PartyHook hook : arenaHooks) {
+        List<PartyHook> partyHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
+        for (PartyHook hook : partyHooks) {
             if (!hook.isInParty(player)) {
                 return false;
             }
@@ -115,8 +114,8 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public List<Player> getPartyMembers(Player player) {
-        List<PartyHook> arenaHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
-        for (PartyHook hook : arenaHooks) {
+        List<PartyHook> partyHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
+        for (PartyHook hook : partyHooks) {
             List<Player> members = hook.getPartyMembers(player);
             if (members != null) {
                 return members;
@@ -126,10 +125,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     }
 
     public EconomyHook getEconomy() {
-        List<EconomyHook> arenaHooks = MyPetApi.getPluginHookManager().getHooks(EconomyHook.class);
-        for (EconomyHook hook : arenaHooks) {
-            return hook;
-        }
-        return null;
+        List<EconomyHook> economyHooks = MyPetApi.getPluginHookManager().getHooks(EconomyHook.class);
+        return economyHooks.stream().findFirst().orElse(null);
     }
 }
