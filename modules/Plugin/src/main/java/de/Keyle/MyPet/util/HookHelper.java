@@ -36,8 +36,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     public boolean canHurt(Player attacker, Player defender, boolean viceversa) {
         if (!attacker.getWorld().getPVP()) {
             return false;
-        }
-        if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
+        } else if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
             return false;
         }
         return true;
@@ -133,9 +132,6 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     public EconomyHook getEconomy() {
         List<EconomyHook> economyHooks = MyPetApi.getPluginHookManager().getHooks(EconomyHook.class);
-        for (EconomyHook hook : economyHooks) {
-            return hook;
-        }
-        return null;
+        return economyHooks.stream().findFirst().orElse(null);
     }
 }
