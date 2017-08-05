@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util.inventory;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
@@ -86,6 +87,10 @@ public class IconMenu implements Listener {
     }
 
     public void open(HumanEntity player) {
+        if (player.isSleeping()) {
+            player.sendMessage(Translation.getString("Message.No.CanUse", player));
+            return;
+        }
         if (inventory == null) {
             inventory = MyPetApi.getCompatUtil().getComapatInstance(IconMenuInventory.class, "util.iconmenu","IconMenuInventory");
         }
