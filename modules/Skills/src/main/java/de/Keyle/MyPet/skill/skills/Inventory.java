@@ -93,6 +93,10 @@ public class Inventory extends InventoryInfo implements SkillInstance, NBTStorag
 
     public boolean activate() {
         if (rows > 0) {
+            if (myPet.getOwner().getPlayer().isSleeping()) {
+                myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()));
+                return false;
+            }
             if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Inventory.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
                 myPet.getOwner().sendMessage(Translation.getString("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
