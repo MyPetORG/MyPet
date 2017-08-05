@@ -61,7 +61,7 @@
         <plotsquared.version>3.4.4</plotsquared.version>
 
         <!-- http://dev.bukkit.org/bukkit-plugins/vault/ -->
-        <vaultapi.version>1.5</vaultapi.version>
+        <vaultapi.version>1.6.1</vaultapi.version>
 
         <!-- https://www.spigotmc.org/resources/minigames.19687/ -->
         <minigames.version>1.8.0</minigames.version>
@@ -169,16 +169,10 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
-        <!--
-        <repository>
-            <id>citizens-repo</id>
-            <url>http://repo.citizensnpcs.co/</url>
-        </repository>
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+            <url>https://repo.natrolite.org/repository/maven-public/</url>
         </repository>
-        -->
         <repository>
             <id>protocollib-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public</url>
@@ -241,8 +235,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
+            <groupId>org.natrolite</groupId>
+            <artifactId>vault-api</artifactId>
             <version>${vaultapi.version}</version>
             <type>jar</type>
             <scope>provided</scope>
