@@ -53,4 +53,8 @@ public interface PluginHook extends Listener {
         }
         return "INVALID HOOK";
     }
+
+    default String getActivationMessage() {
+        return "";
+    }
 }

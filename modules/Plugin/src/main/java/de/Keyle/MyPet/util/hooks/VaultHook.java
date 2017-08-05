@@ -48,6 +48,11 @@ public class VaultHook implements EconomyHook {
     }
 
     @Override
+    public String getActivationMessage() {
+        return " (Economy: " + economy.getName() + ")";
+    }
+
+    @Override
     public boolean canPay(MyPetPlayer petOwner, double costs) {
         return canPay(petOwner.getPlayer(), costs);
     }

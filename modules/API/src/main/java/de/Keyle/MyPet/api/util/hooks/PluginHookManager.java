@@ -104,8 +104,9 @@ public class PluginHookManager {
                     String message = hook.getPluginName();
                     message += " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ")";
                     if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
-                        message += "(" + hookNameAnnotation.classPath() + ")";
+                        message += " (" + hookNameAnnotation.classPath() + ")";
                     }
+                    message += hook.getActivationMessage();
                     MyPetApi.getLogger().info(message + " hook activated.");
                 }
             } catch (Throwable e) {
