@@ -80,11 +80,11 @@ public class PluginHookManager {
                 PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
                 if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
                     if (!isPluginUsable(hook.getPluginName(), hookNameAnnotation.classPath())) {
-                        return;
+                        continue;
                     }
                 } else {
                     if (!isPluginUsable(hook.getPluginName())) {
-                        return;
+                        continue;
                     }
                 }
                 if (hook.onEnable()) {
