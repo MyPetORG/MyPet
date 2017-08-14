@@ -124,7 +124,11 @@ public class Updater {
     }
 
     public void download() {
-        String url = "https://mypet-plugin.de/download/" + plugin + "/";
+        String url = "http";
+        if (Util.getJavaUpdate() >= 101) {
+            url = "https";
+        }
+        url += "://mypet-plugin.de/download/" + plugin + "/";
         if (MyPetVersion.isDevBuild()) {
             url += "dev";
         } else {
