@@ -349,4 +349,13 @@ public class Util {
         }
         return trace;
     }
+
+    public static int getJavaUpdate() {
+        try {
+            String[] javaVersionElements = System.getProperty("java.runtime.version").split("\\.|_|-b");
+            return Integer.parseInt(javaVersionElements[3]);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
 }
