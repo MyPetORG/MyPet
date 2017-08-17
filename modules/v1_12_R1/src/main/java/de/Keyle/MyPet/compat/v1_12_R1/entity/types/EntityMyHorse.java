@@ -210,17 +210,18 @@ public class EntityMyHorse extends EntityMyPet {
             if (this.world.getType(pos.up()).getBlock() == Blocks.SNOW_LAYER) {
                 soundeffecttype = Blocks.SNOW_LAYER.getStepSound();
             }
-            if (isVehicle()) {
-                this.soundCounter += 1;
-                if (this.soundCounter % 3 != 0) {
-                    if (this.soundCounter <= 5) {
-                        a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
-                    }
+            if (this.isVehicle()) {
+                ++this.soundCounter;
+                if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
+                    this.a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                } else if (this.soundCounter <= 5) {
+                    this.a(SoundEffects.cR, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                 }
-            } else if (soundeffecttype == SoundEffectType.a) {
-                a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+            } else if (!block.getBlockData().getMaterial().isLiquid()) {
+                this.soundCounter += 1;
+                a(SoundEffects.cR, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             } else {
-                a(SoundEffects.cK, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                a(SoundEffects.cQ, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             }
         }
     }

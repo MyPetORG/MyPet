@@ -38,6 +38,7 @@ public class EntityMyDonkey extends EntityMyPet {
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.m);
     private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.h);
 
+    int soundCounter = 0;
     int rearCounter = -1;
 
     public EntityMyDonkey(World world, MyPet myPet) {
@@ -185,12 +186,18 @@ public class EntityMyDonkey extends EntityMyPet {
         if (this.world.getType(pos) == Blocks.SNOW) {
             soundeffecttype = Blocks.SNOW_LAYER.getStepSound();
         }
-        if (!block.getBlockData().getMaterial().isLiquid()) {
-            if (soundeffecttype == SoundEffectType.a) {
-                a(SoundEffects.cB, soundeffecttype.a() * 0.15F, soundeffecttype.b());
-            } else {
-                a(SoundEffects.cA, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+        if (this.isVehicle()) {
+            ++this.soundCounter;
+            if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
+                this.a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+            } else if (this.soundCounter <= 5) {
+                this.a(SoundEffects.cR, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             }
+        } else if (!block.getBlockData().getMaterial().isLiquid()) {
+            this.soundCounter += 1;
+            a(SoundEffects.cR, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+        } else {
+            a(SoundEffects.cQ, soundeffecttype.a() * 0.15F, soundeffecttype.b());
         }
     }
 

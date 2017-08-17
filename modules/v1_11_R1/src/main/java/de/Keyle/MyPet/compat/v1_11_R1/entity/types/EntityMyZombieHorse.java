@@ -179,13 +179,17 @@ public class EntityMyZombieHorse extends EntityMyPet {
         if (this.world.getType(pos) == Blocks.SNOW) {
             soundeffecttype = Blocks.SNOW_LAYER.getStepSound();
         }
-        if (!block.getBlockData().getMaterial().isLiquid()) {
+        if (isVehicle()) {
             this.soundCounter += 1;
-            if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0)) {
-                a(SoundEffects.cv, soundeffecttype.a() * 0.15F, soundeffecttype.b());
-            } else if (this.soundCounter <= 5) {
-                a(SoundEffects.cB, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+            if (this.soundCounter % 3 != 0) {
+                if (this.soundCounter <= 5) {
+                    a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                }
             }
+        } else if (soundeffecttype == SoundEffectType.a) {
+            a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+        } else {
+            a(SoundEffects.cK, soundeffecttype.a() * 0.15F, soundeffecttype.b());
         }
     }
 
