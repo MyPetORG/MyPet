@@ -952,6 +952,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.r();
         this.g(this.be, this.bf);
         this.world.methodProfiler.b();
+        this.world.methodProfiler.a("push");
+        this.ct();
+        this.world.methodProfiler.b();
     }
 
     /**
