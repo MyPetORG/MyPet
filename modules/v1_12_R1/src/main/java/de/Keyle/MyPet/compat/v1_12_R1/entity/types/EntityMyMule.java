@@ -32,7 +32,7 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
-public class EntityMyMule extends EntityMyPet {
+public class EntityMyMule extends EntityMyPet implements IJumpable {
     protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.h);
     protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.a);
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.m);
@@ -203,5 +203,20 @@ public class EntityMyMule extends EntityMyPet {
 
     public MyMule getMyPet() {
         return (MyMule) myPet;
+    }
+
+    /* Jump power methods */
+    @Override
+    public boolean a() {
+        return true;
+    }
+
+    @Override
+    public void b_(int i) {
+        this.jumpPower = i;
+    }
+
+    @Override
+    public void r_() {
     }
 }

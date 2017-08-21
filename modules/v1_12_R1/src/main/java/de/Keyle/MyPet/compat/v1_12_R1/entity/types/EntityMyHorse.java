@@ -33,7 +33,7 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
-public class EntityMyHorse extends EntityMyPet {
+public class EntityMyHorse extends EntityMyPet implements IJumpable {
     protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.h);
     protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.m);
@@ -179,6 +179,11 @@ public class EntityMyHorse extends EntityMyPet {
         this.datawatcher.register(armorWatcher, 0);
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeMap().b(EntityHorseAbstract.attributeJumpStrength);
+    }
+
     @Override
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
@@ -228,5 +233,20 @@ public class EntityMyHorse extends EntityMyPet {
 
     public MyHorse getMyPet() {
         return (MyHorse) myPet;
+    }
+
+    /* Jump power methods */
+    @Override
+    public boolean a() {
+        return true;
+    }
+
+    @Override
+    public void b_(int i) {
+        this.jumpPower = i;
+    }
+
+    @Override
+    public void r_() {
     }
 }

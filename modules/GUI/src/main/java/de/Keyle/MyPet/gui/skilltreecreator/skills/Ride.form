@@ -140,7 +140,7 @@
               <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="The MyPet will take fall-damage when it jumps higher than 3 blocks!"/>
+              <text value="The MyPet will take fall-damage when it jumps higher than 3 blocks! (Max: 10 blocks)"/>
             </properties>
           </component>
         </children>
