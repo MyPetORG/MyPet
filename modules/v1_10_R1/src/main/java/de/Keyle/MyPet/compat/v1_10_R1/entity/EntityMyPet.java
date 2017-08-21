@@ -23,10 +23,7 @@ package de.Keyle.MyPet.compat.v1_10_R1.entity;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.EntitySize;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
+import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -85,7 +82,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected AbstractNavigation petNavigation;
     protected Ride rideSkill = null;
     protected Sit sitPathfinder;
-
+    protected float jumpPower = 0;
     int donatorParticleCounter = 0;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "be");
@@ -924,18 +921,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         this.world.methodProfiler.a("ai");
-        if (this.cj()) {
-            this.be = false;
-            this.bf = 0.0F;
-            this.bg = 0.0F;
-            this.bh = 0.0F;
-        } else if (this.ct()) {
-            this.world.methodProfiler.a("newAi");
-            this.doMyPetTick();
-            this.world.methodProfiler.b();
-        }
-
+        this.world.methodProfiler.a("newAi");
+        this.doMyPetTick();
         this.world.methodProfiler.b();
+        this.world.methodProfiler.b();
+
         this.world.methodProfiler.a("jump");
         if (this.be) {
             if (this.isInWater() || this.ao()) {
@@ -966,8 +956,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     protected void o(Entity entity) {
         // don't allow anything but the owner to ride this entity
-        if (entity instanceof EntityPlayer && getOwner().equals(entity)) {
+        if (rideSkill != null && entity instanceof EntityPlayer && getOwner().equals(entity)) {
             super.o(entity);
+            if (this instanceof IJumpable) {
+                double factor = 1;
+                if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+                    factor = Math.log10(myPet.getSaturation()) / 2;
+                }
+                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F))) * factor);
+            }
         }
     }
 
@@ -976,7 +973,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     protected void p(Entity entity) {
         super.p(entity);
-        entity.setPosition(locX, locY, locZ);
+        if (!(this instanceof IJumpable)) {
+            entity.setPosition(locX, locY, locZ);
+        }
     }
 
     /**
@@ -1047,6 +1046,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         EntityLiving passenger = (EntityLiving) this.bw();
 
+        if (rideSkill == null) {
+            passenger.stopRiding();
+            return;
+        }
+
         //apply pitch & yaw
         this.lastYaw = (this.yaw = passenger.yaw);
         this.pitch = passenger.pitch * 0.5F;
@@ -1064,13 +1068,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         // sideways is slower too but not as slow as backwards
         motionSideways *= 0.85F;
 
-        float speed = 0.22222F;
-        double jumpHeight = 0.3D;
-
-        if (rideSkill != null) {
-            speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
-            jumpHeight = rideSkill.getJumpHeight() * 0.18D;
-        }
+        float speed = 0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F));
+        double jumpHeight = Util.clamp(rideSkill.getJumpHeight(), 0, 10);
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             double factor = Math.log10(myPet.getSaturation()) / 2;
@@ -1087,7 +1086,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             if (delta > 0.00390625D || deltaAngle > 10.0F) {
                 Location to = getBukkitEntity().getLocation();
                 Location from = new Location(world.getWorld(), this.lastX, this.lastY, this.lastZ, this.lastYaw, this.lastPitch);
-                if (from.getX() != 1.7976931348623157E+308D) {
+                if (from.getX() != Double.MAX_VALUE) {
                     Location oldTo = to.clone();
                     PlayerMoveEvent event = new PlayerMoveEvent((Player) passenger.getBukkitEntity(), from, to);
                     Bukkit.getPluginManager().callEvent(event);
@@ -1103,13 +1102,29 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
         }
 
-        // jump when the player jumps
-        if (jump != null && onGround) {
-            try {
-                if (jump.getBoolean(passenger)) {
-                    this.motY = Math.sqrt(jumpHeight);
+        boolean doJump = false;
+        if (this instanceof IJumpable) {
+            if (this.jumpPower > 0.0F) {
+                doJump = true;
+                this.jumpPower = 0.0F;
+            }
+        } else {
+            if (jump != null) {
+                try {
+                    doJump = jump.getBoolean(passenger);
+                } catch (IllegalAccessException ignored) {
                 }
-            } catch (IllegalAccessException ignored) {
+            }
+        }
+
+        if (doJump) {
+            if (onGround) {
+                String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
+                double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                if (this instanceof IJumpable) {
+                    getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(jumpVelocity);
+                }
+                this.motY = jumpVelocity;
             }
         }
 
@@ -1120,6 +1135,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             if (dX != 0 || dY != 0 || dZ != 0) {
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
                 myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
+                double factor = Math.log10(myPet.getSaturation()) / 2;
+                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F))) * factor);
             }
         }
     }
