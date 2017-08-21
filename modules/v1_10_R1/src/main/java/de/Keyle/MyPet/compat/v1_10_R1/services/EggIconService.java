@@ -103,7 +103,7 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 entityTag.put("id", new TagString("Sheep"));
                 break;
             case Silverfish:
-                entityTag.put("id", new TagString("Mooshroom"));
+                entityTag.put("id", new TagString("Silverfish"));
                 break;
             case Skeleton:
                 entityTag.put("id", new TagString("Skeleton"));
