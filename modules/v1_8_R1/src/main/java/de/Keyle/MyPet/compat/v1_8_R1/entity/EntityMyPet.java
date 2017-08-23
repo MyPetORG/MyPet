@@ -1031,13 +1031,20 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         ride(motionSideways, motionForward, speed); // apply motion
 
-        // jump when the player jumps
-        if (jump != null && onGround) {
+        boolean doJump = false;
+        if (jump != null) {
             try {
-                if (jump.getBoolean(this.passenger)) {
-                    this.motY = Math.sqrt(jumpHeight);
-                }
+                doJump = jump.getBoolean(passenger);
             } catch (IllegalAccessException ignored) {
+            }
+        }
+
+        if (doJump) {
+            if (onGround) {
+                String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
+                Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
+                this.motY = jumpVelocity;
             }
         }
 
