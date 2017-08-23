@@ -23,10 +23,7 @@ package de.Keyle.MyPet.compat.v1_7_R4.entity;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.EntitySize;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
+import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -985,20 +982,20 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             ascenSpeed *= factor;
         }
 
-        //i(speed);
-        //super.e(motionSideways, motionForward);
         ride(motionSideways, motionForward, speed);
 
-        // jump when the player jumps
+        boolean doJump = false;
         if (jump != null) {
-            boolean doJump = false;
             try {
                 doJump = jump.getBoolean(this.passenger);
             } catch (IllegalAccessException ignored) {
             }
             if (doJump) {
                 if (onGround) {
-                    this.motY = Math.sqrt(jumpHeight);
+                    String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
+                    Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                    jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
+                    this.motY = jumpVelocity;
                 } else if (rideSkill != null && rideSkill.canFly()) {
                     if (flyCheckCounter-- <= 0) {
                         canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
@@ -1015,7 +1012,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
         }
 
-        // decrease hunger
+        // decrease saturation
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER > 0) {
             double dX = locX - lastX;
             double dY = Math.max(0, locY - lastY);

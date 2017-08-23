@@ -1146,7 +1146,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (doJump) {
             if (onGround) {
                 String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
-                double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
                 if (this instanceof IJumpable) {
                     getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).setValue(jumpVelocity);
                 }

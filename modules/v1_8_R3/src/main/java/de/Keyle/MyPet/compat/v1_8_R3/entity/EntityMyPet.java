@@ -774,7 +774,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.aC += this.aB;
     }
 
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     /**
@@ -1042,7 +1041,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
             if (doJump) {
                 if (onGround) {
-                    this.motY = Math.sqrt(jumpHeight);
+                    String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
+                    Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                    jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
+                    this.motY = jumpVelocity;
                 } else if (rideSkill != null && rideSkill.canFly()) {
                     if (flyCheckCounter-- <= 0) {
                         canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
