@@ -28,12 +28,14 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -78,6 +80,9 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     }
                 }
                 if (ChatColor.stripColor(myPet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
+                    MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Release);
+                    Bukkit.getServer().getPluginManager().callEvent(removeEvent);
+
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
                         myPet.getSkills().getSkill(Inventory.class).get().getInventory().dropContentAt(myPet.getLocation().get());
                     }
