@@ -30,8 +30,8 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.event.MyPetActiveTargetSkillEvent;
+import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
-import de.Keyle.MyPet.api.event.MyPetLeashEvent;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -81,8 +81,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.bukkit.Bukkit.getPluginManager;
 
 public class EntityListener implements Listener {
     Map<UUID, ItemStack> usedItems = new HashMap<>();
@@ -595,6 +593,9 @@ public class EntityListener implements Listener {
                             }
                         }
 
+                        MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.Leash);
+                        Bukkit.getServer().getPluginManager().callEvent(createEvent);
+
                         MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
@@ -606,13 +607,10 @@ public class EntityListener implements Listener {
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                                 if (myPet.isPresent()) {
                                     myPet.get().createEntity();
-
-                                    getPluginManager().callEvent(new MyPetLeashEvent(myPet.get()));
-
-                                    if (owner.isCaptureHelperActive()) {
-                                        owner.setCaptureHelperActive(false);
-                                        owner.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", owner), Translation.getString("Name.Disabled", owner)));
-                                    }
+                                }
+                                if (owner.isCaptureHelperActive()) {
+                                    owner.setCaptureHelperActive(false);
+                                    owner.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", owner), Translation.getString("Name.Disabled", owner)));
                                 }
                             }
                         });
@@ -719,7 +717,7 @@ public class EntityListener implements Listener {
                     return;
                 }
 
-                // fix influence of other plugins
+                // fix influence of other plugins for this event and throw damage event
                 if (event.getDamager() instanceof Projectile) {
                     MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
                     Bukkit.getPluginManager().callEvent(petDamageEvent);
