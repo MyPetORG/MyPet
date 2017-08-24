@@ -51,6 +51,7 @@ public class Configuration {
     }
 
     public static class Update {
+        public static boolean ASYNC = false;
         public static boolean CHECK = true;
         public static boolean DOWNLOAD = false;
         public static boolean REPLACE_OLD = false;

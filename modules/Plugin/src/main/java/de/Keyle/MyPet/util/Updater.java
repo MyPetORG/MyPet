@@ -72,15 +72,24 @@ public class Updater {
 
     public void update() {
         if (Configuration.Update.CHECK) {
-            Optional<Update> update = check();
-            if (update.isPresent()) {
-                latest = update.get();
+            Runnable updateRunner = () -> {
+                Optional<Update> update = check();
+                if (update.isPresent()) {
+                    latest = update.get();
 
-                notifyVersion();
+                    notifyVersion();
 
-                if (Configuration.Update.DOWNLOAD) {
-                    download();
+                    if (Configuration.Update.DOWNLOAD) {
+                        download();
+                    }
+                } else {
+                    MyPetApi.getLogger().info("No Update available.");
                 }
+            };
+            if (Configuration.Update.ASYNC) {
+                new Thread(updateRunner).start();
+            } else {
+                updateRunner.run();
             }
         }
     }
@@ -143,7 +152,7 @@ public class Updater {
         }
 
         String finalUrl = url;
-        thread = new Thread(() -> {
+        Runnable downloadRunner = () -> {
             try {
                 MyPetApi.getLogger().info(ChatColor.RED + "Start update download: " + ChatColor.RESET + latest);
                 URL website = new URL(finalUrl);
@@ -168,12 +177,17 @@ public class Updater {
                     e.printStackTrace();
                 }
             }
-        });
-        thread.start();
+        };
+        if (Configuration.Update.ASYNC) {
+            downloadRunner.run();
+        } else {
+            thread = new Thread(downloadRunner);
+            thread.start();
+        }
     }
 
     public void waitForDownload() {
-        if (thread != null && thread.isAlive()) {
+        if (!Configuration.Update.ASYNC && thread != null && thread.isAlive()) {
             MyPetApi.getLogger().info("Wait for the update download to finish...");
             try {
                 thread.join();
