@@ -59,6 +59,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Update.Check", Update.CHECK);
         config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
         config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+        config.addDefault("MyPet.Update.In-Background", Update.ASYNC);
 
         config.addDefault("MyPet.Leash.Consume", Misc.CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.AllowRanged", Misc.ALLOW_RANGED_LEASHING);
@@ -233,6 +234,7 @@ public class ConfigurationLoader {
         Misc.ALLOW_RANGED_LEASHING = config.getBoolean("MyPet.Leash.AllowRanged", true);
         Misc.MAX_STORED_PET_COUNT = config.getInt("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
 
+        Update.ASYNC = config.getBoolean("MyPet.Update.In-Background", Update.ASYNC);
         Update.CHECK = config.getBoolean("MyPet.Update.Check", Update.CHECK);
         Update.DOWNLOAD = config.getBoolean("MyPet.Update.Download", Update.DOWNLOAD);
         Update.REPLACE_OLD = config.getBoolean("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
