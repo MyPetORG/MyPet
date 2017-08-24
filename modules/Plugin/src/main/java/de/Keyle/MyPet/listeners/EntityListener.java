@@ -29,10 +29,7 @@ import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
-import de.Keyle.MyPet.api.event.MyPetActiveTargetSkillEvent;
-import de.Keyle.MyPet.api.event.MyPetCreateEvent;
-import de.Keyle.MyPet.api.event.MyPetDamageEvent;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -838,6 +835,9 @@ public class EntityListener implements Listener {
             final MyPetPlayer owner = myPet.getOwner();
 
             if (Configuration.Misc.RELEASE_PETS_ON_DEATH && !owner.isMyPetAdmin()) {
+                MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Death);
+                Bukkit.getServer().getPluginManager().callEvent(removeEvent);
+
                 if (myPet.getSkills().isSkillActive(Inventory.class)) {
                     CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).get().getInventory();
                     inv.dropContentAt(myPet.getLocation().get());

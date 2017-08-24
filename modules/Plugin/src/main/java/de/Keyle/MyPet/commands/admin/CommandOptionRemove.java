@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandAdmin;
@@ -50,11 +51,14 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
                 if (petOwner.hasMyPet()) {
                     MyPet myPet = petOwner.getMyPet();
 
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
+                    MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.AdminCommand);
+                    Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
                     MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
                     MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
+
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
                 }
             }
         }
