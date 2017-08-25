@@ -220,6 +220,11 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
         this.datawatcher.register(armorWatcher, 0);                 // armor
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeMap().b(EntityHorse.attributeJumpStrength);
+    }
+
     @Override
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
