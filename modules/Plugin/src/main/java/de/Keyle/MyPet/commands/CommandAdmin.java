@@ -37,30 +37,29 @@ import java.util.*;
 public class CommandAdmin implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<>();
     public final static List<String> EMPTY_LIST = Collections.unmodifiableList(new ArrayList<String>());
-    private static Map<String, CommandOption> commandOptions = new HashMap<>();
+    public static final Map<String, CommandOption> COMMAND_OPTIONS = new HashMap<>();
 
     public CommandAdmin() {
-        commandOptions.put("name", new CommandOptionName());
-        commandOptions.put("exp", new CommandOptionExp());
-        commandOptions.put("respawn", new CommandOptionRespawn());
-        commandOptions.put("reload", new CommandOptionReload());
-        commandOptions.put("reloadskills", new CommandOptionReloadSkilltrees());
-        commandOptions.put("skilltree", new CommandOptionSkilltree());
-        commandOptions.put("create", new CommandOptionCreate());
-        commandOptions.put("clone", new CommandOptionClone());
-        commandOptions.put("remove", new CommandOptionRemove());
-        commandOptions.put("cleanup", new CommandOptionCleanup());
-        commandOptions.put("ticket", new CommandOptionTicket());
-        commandOptions.put("switch", new CommandOptionSwitch());
-        commandOptions.put("update", new CommandOptionUpdate());
-        //commandOptions.put("test", new CommandOptionTest());
+        COMMAND_OPTIONS.clear();
 
-        commandOptions.put("build", new CommandOption() {
-            @Override
-            public boolean onCommandOption(CommandSender sender, String[] parameter) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet-" + MyPetVersion.getVersion() + "-b#" + MyPetVersion.getBuild());
-                return true;
-            }
+        COMMAND_OPTIONS.put("name", new CommandOptionName());
+        COMMAND_OPTIONS.put("exp", new CommandOptionExp());
+        COMMAND_OPTIONS.put("respawn", new CommandOptionRespawn());
+        COMMAND_OPTIONS.put("reload", new CommandOptionReload());
+        COMMAND_OPTIONS.put("reloadskills", new CommandOptionReloadSkilltrees());
+        COMMAND_OPTIONS.put("skilltree", new CommandOptionSkilltree());
+        COMMAND_OPTIONS.put("create", new CommandOptionCreate());
+        COMMAND_OPTIONS.put("clone", new CommandOptionClone());
+        COMMAND_OPTIONS.put("remove", new CommandOptionRemove());
+        COMMAND_OPTIONS.put("cleanup", new CommandOptionCleanup());
+        COMMAND_OPTIONS.put("ticket", new CommandOptionTicket());
+        COMMAND_OPTIONS.put("switch", new CommandOptionSwitch());
+        COMMAND_OPTIONS.put("update", new CommandOptionUpdate());
+        //COMMAND_OPTIONS.put("test", new CommandOptionTest());
+
+        COMMAND_OPTIONS.put("build", (sender, parameter) -> {
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet-" + MyPetVersion.getVersion() + "-b#" + MyPetVersion.getBuild());
+            return true;
         });
     }
 
@@ -76,7 +75,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
         }
 
         String[] parameter = Arrays.copyOfRange(args, 1, args.length);
-        CommandOption option = commandOptions.get(args[0].toLowerCase());
+        CommandOption option = COMMAND_OPTIONS.get(args[0].toLowerCase());
 
         if (option != null) {
             return option.onCommandOption(sender, parameter);
@@ -91,13 +90,13 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
             return EMPTY_LIST;
         }
         if (strings.length == 1) {
-            if (optionsList.size() != commandOptions.keySet().size()) {
-                optionsList = new ArrayList<>(commandOptions.keySet());
+            if (optionsList.size() != COMMAND_OPTIONS.keySet().size()) {
+                optionsList = new ArrayList<>(COMMAND_OPTIONS.keySet());
                 Collections.sort(optionsList);
             }
             return optionsList;
         } else if (strings.length >= 1) {
-            CommandOption co = commandOptions.get(strings[0]);
+            CommandOption co = COMMAND_OPTIONS.get(strings[0]);
             if (co != null) {
                 if (co instanceof CommandOptionTabCompleter) {
                     return ((CommandOptionTabCompleter) co).onTabComplete(commandSender, strings);
