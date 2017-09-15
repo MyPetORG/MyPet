@@ -127,7 +127,7 @@
         <magicspells.version>3.4.2</magicspells.version>
 
         <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
-        <protocol-lib.version>3.7.0-SNAPSHOT</protocol-lib.version>
+        <protocol-lib.version>4.3.0</protocol-lib.version>
 
         <!-- https://www.spigotmc.org/resources/placeholderapi.6245/ -->
         <playceholder-api.version>2.5.1</playceholder-api.version>
