@@ -146,6 +146,9 @@ public class Updater {
         } else {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/MyPet-" + latest.getVersion() + ".jar");
         }
+        if (!pluginFile.getParentFile().exists()) {
+            pluginFile.getParentFile().mkdirs();
+        }
 
         String finalUrl = url;
         Runnable downloadRunner = () -> {
