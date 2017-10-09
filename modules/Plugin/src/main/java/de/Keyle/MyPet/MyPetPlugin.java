@@ -71,6 +71,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private PlatformHelper platformHelper;
     private EntityRegistry entityRegistry;
     private CompatUtil compatUtil;
+    private CompatManager compatManager;
     private PlayerManager playerManager;
     private MyPetManager myPetManager;
     private HookHelper hookHelper;
@@ -127,7 +128,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         ConfigurationLoader.loadCompatConfiguration();
 
         registerServices();
-        compatUtil.getComapatInstance(CompatManager.class, "", "CompatManager").init();
+        compatManager = compatUtil.getComapatInstance(CompatManager.class, "", "CompatManager");
+        compatManager.init();
         serviceManager.activate(Load.State.OnLoad);
         registerHooks();
     }
@@ -155,6 +157,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             ((MyPetLogger) getLogger()).updateDebugLoggerLogLevel();
         }
 
+        compatManager.enable();
         getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
 
         // register event listener
