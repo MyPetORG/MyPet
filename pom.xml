@@ -177,10 +177,6 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>vault-repo</id>
-            <url>https://repo.natrolite.org/repository/maven-public/</url>
-        </repository>
-        <repository>
             <id>protocollib-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public</url>
         </repository>
