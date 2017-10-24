@@ -608,7 +608,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             msg += Translation.getString("Name.Dead", getOwner());
         }
 
-        MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
+        if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
+            MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
+        }
     }
 
     protected void initDatawatcher() {
