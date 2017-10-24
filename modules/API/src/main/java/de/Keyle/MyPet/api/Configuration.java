@@ -41,6 +41,7 @@ public class Configuration {
         public static boolean INVISIBLE_LIKE_OWNER = true;
         public static boolean ACTIVATE_RESOURCEPACK_BY_DEFAULT = false;
         public static boolean THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = true;
+        public static boolean DISABLE_ALL_ACTIONBAR_MESSAGES = false;
         public static String OVERWRITE_LANGUAGE = "";
         public static String WIKI_URL = "https://wiki.mypet-plugin.de";
         public static int MAX_STORED_PET_COUNT = 45;

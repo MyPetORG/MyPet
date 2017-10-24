@@ -437,7 +437,7 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
                 }
 
-                if (showHealthBar) {
+                if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
                     String msg = myPet.getPetName() + ChatColor.RESET + ": ";
                     if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
                         msg += org.bukkit.ChatColor.GREEN;
