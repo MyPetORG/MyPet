@@ -64,6 +64,13 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("exp", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
+                return "" + String.format("%.2f", pet.getExp());
+            }
+        });
+
+        placeHolders.put("exp_long", new PlaceHolder<MyPet>(MyPet.class) {
+            @Override
+            public String getValue(MyPet pet) {
                 return "" + pet.getExp();
             }
         });
