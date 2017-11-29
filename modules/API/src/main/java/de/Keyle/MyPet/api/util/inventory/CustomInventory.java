@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.util.inventory;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public interface CustomInventory {
@@ -45,4 +46,6 @@ public interface CustomInventory {
     void dropContentAt(Location location);
 
     int addItem(ItemStack itemStack);
+
+    Inventory getBukkitInventory();
 }
