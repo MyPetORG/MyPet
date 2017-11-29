@@ -31,12 +31,14 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     private int size = 0;
     private int stackSize = 64;
     private List<HumanEntity> transaction = new ArrayList<>();
+    private CraftInventory bukkitInventory = null;
 
     public CustomInventory() {
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
@@ -141,6 +144,14 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
             }
         }
         return itemAdd.getAmount();
+    }
+
+    @Override
+    public Inventory getBukkitInventory() {
+        if (bukkitInventory == null) {
+            bukkitInventory = new CraftInventory(this);
+        }
+        return bukkitInventory;
     }
 
     public void dropContentAt(Location loc) {
