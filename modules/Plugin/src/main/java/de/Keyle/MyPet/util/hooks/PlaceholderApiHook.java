@@ -64,7 +64,7 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("exp", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
-                return "" + String.format("%.2f", pet.getExp());
+                return String.format("%.2f", pet.getExp());
             }
         });
 
@@ -92,6 +92,13 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("health", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
+                return String.format("%.2f", pet.getHealth());
+            }
+        });
+
+        placeHolders.put("health_long", new PlaceHolder<MyPet>(MyPet.class) {
+            @Override
+            public String getValue(MyPet pet) {
                 return "" + pet.getHealth();
             }
         });
@@ -99,11 +106,25 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("health_max", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
+                return String.format("%.2f", pet.getMaxHealth());
+            }
+        });
+
+        placeHolders.put("health_max_long", new PlaceHolder<MyPet>(MyPet.class) {
+            @Override
+            public String getValue(MyPet pet) {
                 return "" + pet.getMaxHealth();
             }
         });
 
         placeHolders.put("saturation", new PlaceHolder<MyPet>(MyPet.class) {
+            @Override
+            public String getValue(MyPet pet) {
+                return String.format("%.2f", pet.getSaturation());
+            }
+        });
+
+        placeHolders.put("saturation_long", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getSaturation();
@@ -241,7 +262,7 @@ public class PlaceholderApiHook implements PluginHook {
 
             @Override
             public String getVersion() {
-                return "1.0.2";
+                return "1.0.3";
             }
 
             /**
