@@ -19,7 +19,7 @@ softdepend:
   - Multiverse-Core
   - MythicMobs
   - NoCheatPlus
-  - PlayeholderAPI
+  - PlaceholderAPI
   - PlotSquared
   - PreciousStones
   - ProtocolLib
