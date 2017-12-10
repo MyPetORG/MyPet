@@ -27,8 +27,12 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.skill.skills.Behavior;
+import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +40,7 @@ import java.util.Map;
 @PluginHookName("PlaceholderAPI")
 public class PlaceholderApiHook implements PluginHook {
     Map<String, PlaceHolder> placeHolders = new HashMap<>();
+    PlaceholderExpansion myPetExpansion;
 
     @Override
     public boolean onEnable() {
@@ -43,7 +48,21 @@ public class PlaceholderApiHook implements PluginHook {
         if (loaded) {
             registerPlaceholder();
         }
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
         return loaded;
+    }
+
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+        myPetExpansion = null;
+    }
+
+    @EventHandler
+    public void on(PlaceholderHookUnloadEvent event) {
+        if (event.getHook() == myPetExpansion) {
+            Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> myPetExpansion.register(), 0);
+        }
     }
 
     public void registerPlaceholder() {
@@ -237,9 +256,8 @@ public class PlaceholderApiHook implements PluginHook {
         });
     }
 
-
     public boolean registerParentPlaceHolder() {
-        PlaceholderExpansion myPetExpansion = new PlaceholderExpansion() {
+        myPetExpansion = new PlaceholderExpansion() {
             @Override
             public boolean canRegister() {
                 return true;
