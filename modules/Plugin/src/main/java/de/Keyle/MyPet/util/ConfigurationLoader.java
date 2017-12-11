@@ -109,6 +109,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.WorldGuard", Hooks.USE_WorldGuard);
         config.addDefault("MyPet.Hooks.Citizens", Hooks.USE_Citizens);
         config.addDefault("MyPet.Hooks.mcMMO", Hooks.USE_McMMO);
+        config.addDefault("MyPet.Hooks.SimpleClans", Hooks.USE_SimpleClans);
         config.addDefault("MyPet.Hooks.MobArena.Enabled", Hooks.MobArena.ENABLED);
         config.addDefault("MyPet.Hooks.MobArena.AllowPets", Hooks.MobArena.ALLOW_PETS);
         config.addDefault("MyPet.Hooks.MobArena.RespectPvPRule", Hooks.MobArena.RESPECT_PVP_RULE);
@@ -310,6 +311,7 @@ public class ConfigurationLoader {
         Hooks.USE_Citizens = config.getBoolean("MyPet.Hooks.Citizens", true);
         Hooks.USE_Heroes = config.getBoolean("MyPet.Hooks.Heroes", true);
         Hooks.USE_McMMO = config.getBoolean("MyPet.Hooks.mcMMO", true);
+        Hooks.USE_SimpleClans = config.getBoolean("MyPet.Hooks.SimpleClans", true);
         Hooks.MobArena.ENABLED = config.getBoolean("MyPet.Hooks.MobArena.Enabled", true);
         Hooks.MobArena.ALLOW_PETS = config.getBoolean("MyPet.Hooks.MobArena.AllowPets", true);
         Hooks.MobArena.RESPECT_PVP_RULE = config.getBoolean("MyPet.Hooks.MobArena.RespectPvPRule", true);

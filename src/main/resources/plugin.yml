@@ -27,6 +27,7 @@ softdepend:
   - PvPDiffTimer
   - PvPManager
   - Residence
+  - SimpleClans
   - SkillAPI
   - SuperVanish
   - SurvivalGames

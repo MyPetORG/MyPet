@@ -348,6 +348,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>2.7.7</version>
+        </dependency>
+        <dependency>
             <groupId>me.ryanhamshire</groupId>
             <artifactId>GriefPrevention</artifactId>
             <version>${griefprevention.version}</version>
