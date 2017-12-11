@@ -28,6 +28,7 @@ softdepend:
   - PvPManager
   - Residence
   - ResourcePackApi
+  - SimpleClans
   - SkillAPI
   - SuperVanish
   - SurvivalGames

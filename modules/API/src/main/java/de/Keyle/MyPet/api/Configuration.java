@@ -309,6 +309,7 @@ public class Configuration {
         @Since("26.06.2017")
         public static boolean USE_MobArena = true;
         public static boolean USE_McMMO = true;
+        public static boolean USE_SimpleClans = true;
         public static boolean USE_Residence = true;
         public static boolean USE_AncientRPG = true;
         public static boolean USE_GriefPrevention = true;
