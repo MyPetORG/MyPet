@@ -26,6 +26,7 @@ softdepend:
   - pvparena
   - PvPDiffTimer
   - PvPManager
+  - RedProtect
   - Residence
   - SimpleClans
   - SkillAPI
