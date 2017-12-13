@@ -310,6 +310,7 @@ public class Configuration {
         public static boolean USE_MobArena = true;
         public static boolean USE_McMMO = true;
         public static boolean USE_SimpleClans = true;
+        public static boolean USE_RedProtect = true;
         public static boolean USE_Residence = true;
         public static boolean USE_AncientRPG = true;
         public static boolean USE_GriefPrevention = true;
