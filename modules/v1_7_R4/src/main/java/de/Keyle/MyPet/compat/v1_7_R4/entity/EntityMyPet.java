@@ -79,8 +79,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected AbstractNavigation petNavigation;
     protected Ride rideSkill = null;
     protected Sit sitPathfinder;
-
-    int donatorParticleCounter = 0;
+    protected int donatorParticleCounter = 0;
+    protected float limitCounter = 0;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "bc");
 
@@ -913,6 +913,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             getControllerMove().c(); // move
             getControllerLook().a(); // look
             getControllerJump().b(); // jump
+
+            if (this.onGround && rideSkill.getFlyLimit() > 0) {
+                limitCounter += rideSkill.getFlyRegenRate();
+                if (limitCounter > rideSkill.getFlyLimit()) {
+                    limitCounter = rideSkill.getFlyLimit();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -997,7 +1004,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
                     this.motY = jumpVelocity;
                 } else if (rideSkill != null && rideSkill.canFly()) {
-                    if (flyCheckCounter-- <= 0) {
+                    if (limitCounter <= 0 && rideSkill.getFlyLimit() > 0) {
+                        canFly = false;
+                    } else if (flyCheckCounter-- <= 0) {
                         canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
                         flyCheckCounter = 5;
                     }
@@ -1019,6 +1028,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double dZ = locZ - lastZ;
             if (dX != 0 || dY != 0 || dZ != 0) {
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
+                if (isFlying && rideSkill.getFlyLimit() > 0) {
+                    limitCounter -= distance;
+                }
                 myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
             }
         }

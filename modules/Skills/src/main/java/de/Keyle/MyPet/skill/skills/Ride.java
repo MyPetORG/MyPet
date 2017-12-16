@@ -26,10 +26,7 @@ import de.Keyle.MyPet.api.skill.SkillInfo;
 import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.skills.RideInfo;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagDouble;
-import de.keyle.knbt.TagInt;
-import de.keyle.knbt.TagString;
+import de.keyle.knbt.*;
 import org.bukkit.ChatColor;
 
 public class Ride extends RideInfo implements SkillInstance {
@@ -68,6 +65,20 @@ public class Ride extends RideInfo implements SkillInstance {
                     jumpHeigth = upgrade.getProperties().getAs("jump_height", TagDouble.class).getDoubleData();
                 }
             }
+            if (upgrade.getProperties().getCompoundData().containsKey("fly_regen_rate")) {
+                if (upgrade.getProperties().containsKeyAs("addset_fly_regen_rate", TagString.class) && upgrade.getProperties().getAs("addset_fly_regen_rate", TagString.class).getStringData().equals("add")) {
+                    flyRegenRate += upgrade.getProperties().getAs("fly_regen_rate", TagFloat.class).getFloatData();
+                } else {
+                    flyRegenRate = upgrade.getProperties().getAs("fly_regen_rate", TagFloat.class).getFloatData();
+                }
+            }
+            if (upgrade.getProperties().getCompoundData().containsKey("fly_limit")) {
+                if (upgrade.getProperties().containsKeyAs("addset_fly_limit", TagString.class) && upgrade.getProperties().getAs("addset_fly_limit", TagString.class).getStringData().equals("add")) {
+                    flyLimit += upgrade.getProperties().getAs("fly_limit", TagFloat.class).getFloatData();
+                } else {
+                    flyLimit = upgrade.getProperties().getAs("fly_limit", TagFloat.class).getFloatData();
+                }
+            }
             if (upgrade.getProperties().getCompoundData().containsKey("can_fly")) {
                 canFly = upgrade.getProperties().getAs("can_fly", TagByte.class).getBooleanData();
             }
@@ -96,6 +107,14 @@ public class Ride extends RideInfo implements SkillInstance {
 
     public double getJumpHeight() {
         return jumpHeigth;
+    }
+
+    public float getFlyLimit() {
+        return flyLimit;
+    }
+
+    public float getFlyRegenRate() {
+        return flyRegenRate;
     }
 
     public boolean canFly() {

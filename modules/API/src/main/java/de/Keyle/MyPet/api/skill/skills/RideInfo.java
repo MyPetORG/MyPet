@@ -27,12 +27,32 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
 
 @SkillName(value = "Ride", translationNode = "Name.Skill.Ride")
 @SkillProperties(
-        parameterNames = {"speed_percent", "addset_speed", "jump_height", "addset_jump_height", "can_fly"},
-        parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String, SkillProperties.NBTdatatypes.Double, SkillProperties.NBTdatatypes.String, SkillProperties.NBTdatatypes.Boolean},
-        parameterDefaultValues = {"5", "add", "1.25", "set", "false"})
+        parameterNames = {
+                "speed_percent", "addset_speed",
+                "jump_height", "addset_jump_height",
+                "can_fly",
+                "fly_regen_rate", "addset_fly_regen_rate",
+                "fly_limit", "addset_fly_limit"
+        },
+        parameterTypes = {
+                SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String,
+                SkillProperties.NBTdatatypes.Double, SkillProperties.NBTdatatypes.String,
+                SkillProperties.NBTdatatypes.Boolean,
+                SkillProperties.NBTdatatypes.Float, SkillProperties.NBTdatatypes.String,
+                SkillProperties.NBTdatatypes.Float, SkillProperties.NBTdatatypes.String
+        },
+        parameterDefaultValues = {
+                "5", "add",
+                "1.25", "set",
+                "false",
+                "0.2", "set",
+                "20.0", "set"
+        })
 public class RideInfo extends SkillTreeSkill implements SkillInfo {
     protected int speedPercent = 0;
     protected double jumpHeigth = 0D;
+    protected float flyRegenRate = 0F;
+    protected float flyLimit = 0F;
     protected boolean canFly = false;
 
     public RideInfo(boolean addedByInheritance) {
