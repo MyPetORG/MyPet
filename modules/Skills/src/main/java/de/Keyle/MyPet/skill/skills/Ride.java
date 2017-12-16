@@ -93,6 +93,18 @@ public class Ride extends RideInfo implements SkillInstance {
         return jumpHeigth;
     }
 
+    public float getFlyLimit() {
+        return flyLimit;
+    }
+
+    public float getFlyRegenRate() {
+        return flyRegenRate;
+    }
+
+    public boolean canFly() {
+        return canFly;
+    }
+
     @Override
     public SkillInstance cloneSkill() {
         Ride newSkill = new Ride(this.isAddedByInheritance());
