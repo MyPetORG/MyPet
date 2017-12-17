@@ -45,7 +45,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeSkill;
                 "5", "add",
                 "1.25", "set",
                 "false",
-                "0.2", "set",
+                "0.1", "set",
                 "20.0", "set"
         })
 public class RideInfo extends SkillTreeSkill implements SkillInfo {
