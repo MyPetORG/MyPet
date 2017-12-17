@@ -39,6 +39,8 @@ public class Configuration {
         public static boolean RELEASE_PETS_ON_DEATH = false;
         public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
         public static boolean INVISIBLE_LIKE_OWNER = true;
+        @Deprecated
+        @Since("17.12.2017")
         public static boolean ACTIVATE_RESOURCEPACK_BY_DEFAULT = false;
         public static boolean THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = true;
         public static boolean DISABLE_ALL_ACTIONBAR_MESSAGES = false;

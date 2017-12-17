@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
@@ -138,10 +139,14 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         this.showHealthBar = showHealthBar;
     }
 
+    @Deprecated
+    @Since("17.12.2017")
     @Override
     public void setUsesResourcePack(boolean flag) {
     }
 
+    @Deprecated
+    @Since("17.12.2017")
     @Override
     public boolean isUsingResourcePack() {
         return false;
