@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.util;
 
+@Deprecated
+@Since("17.12.2017")
 public enum ResourcePackIcons {
     // http://unicode-table.com/en/#A800
 

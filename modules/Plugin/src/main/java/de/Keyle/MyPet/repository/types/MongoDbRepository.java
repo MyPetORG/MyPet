@@ -530,7 +530,6 @@ public class MongoDbRepository implements Repository {
                 document = (Document) document.get("settings");
             }
 
-            petPlayer.setUsesResourcePack(document.getBoolean("resource_pack", Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT));
             petPlayer.setAutoRespawnEnabled(document.getBoolean("auto_respawn"));
             petPlayer.setAutoRespawnMin(document.getInteger("auto_respawn_min"));
             petPlayer.setCaptureHelperActive(document.getBoolean("capture_mode"));
@@ -661,7 +660,6 @@ public class MongoDbRepository implements Repository {
         settingsDocument.append("capture_mode", player.isCaptureHelperActive());
         settingsDocument.append("health_bar", player.isHealthBarActive());
         settingsDocument.append("pet_idle_volume", player.getPetLivingSoundVolume());
-        settingsDocument.append("resource_pack", player.isUsingResourcePack());
 
         playerDocument.append("settings", settingsDocument);
 

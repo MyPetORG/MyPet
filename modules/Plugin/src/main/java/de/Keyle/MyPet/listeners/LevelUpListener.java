@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
-import de.Keyle.MyPet.util.ResourcePackManager;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
@@ -100,11 +99,7 @@ public class LevelUpListener implements Listener {
                 }.loop(2);
 
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    if (ResourcePackManager.get().usesResourcePack(myPet.getOwner().getPlayer())) {
-                        entity.getWorld().playSound(entity.getLocation(), "mypet.levelup", 1F, 1F);
-                    } else {
-                        entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
-                    }
+                    entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
                 } else {
                     entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("LEVEL_UP"), 1F, 0.7F);
                 }

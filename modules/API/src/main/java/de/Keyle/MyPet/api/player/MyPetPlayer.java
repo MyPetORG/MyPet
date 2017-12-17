@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
+import de.Keyle.MyPet.api.util.Since;
 import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.entity.Player;
@@ -55,8 +56,12 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     void setHealthBarActive(boolean showHealthBar);
 
+    @Deprecated
+    @Since("17.12.2017")
     void setUsesResourcePack(boolean flag);
 
+    @Deprecated
+    @Since("17.12.2017")
     boolean isUsingResourcePack();
 
     boolean isCaptureHelperActive();

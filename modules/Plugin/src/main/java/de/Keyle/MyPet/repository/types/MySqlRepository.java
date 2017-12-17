@@ -54,7 +54,7 @@ import java.util.*;
 
 public class MySqlRepository implements Repository {
     private HikariDataSource dataSource;
-    private int version = 9;
+    private int version = 10;
 
     @Override
     public void disable() {
@@ -116,6 +116,9 @@ public class MySqlRepository implements Repository {
                     case 6:
                     case 7:
                         updateToV8();
+                    case 8:
+                    case 9:
+                        updateToV10();
                 }
             }
         } catch (SQLException e) {
@@ -156,7 +159,6 @@ public class MySqlRepository implements Repository {
                     "capture_mode BOOLEAN, " +
                     "health_bar INTEGER, " +
                     "pet_idle_volume FLOAT, " +
-                    "resource_pack BOOLEAN NULL DEFAULT NULL, " +
                     "extended_info BLOB, " +
                     "multi_world VARCHAR(2000), " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
@@ -249,6 +251,16 @@ public class MySqlRepository implements Repository {
 
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN resource_pack BOOLEAN NULL DEFAULT NULL AFTER `pet_idle_volume`;");
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY name VARBINARY (1024)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateToV10() {
+        try (Connection connection = dataSource.getConnection();
+             Statement update = connection.createStatement()) {
+
+            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players DROP COLUMN resource_pack;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -392,7 +404,6 @@ public class MySqlRepository implements Repository {
                                  "capture_mode=?, " +
                                  "health_bar=?, " +
                                  "pet_idle_volume=?, " +
-                                 "resource_pack=?, " +
                                  "extended_info=?, " +
                                  "multi_world=? " +
                                  "WHERE internal_uuid=?;")) {
@@ -403,15 +414,14 @@ public class MySqlRepository implements Repository {
                 statement.setBoolean(5, player.isCaptureHelperActive());
                 statement.setBoolean(6, player.isHealthBarActive());
                 statement.setFloat(7, player.getPetLivingSoundVolume());
-                statement.setBoolean(8, player.isUsingResourcePack());
-                statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+                statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
 
                 JSONObject multiWorldObject = new JSONObject();
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                     multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                 }
-                statement.setString(10, multiWorldObject.toJSONString());
-                statement.setString(11, player.getInternalUUID().toString());
+                statement.setString(9, multiWorldObject.toJSONString());
+                statement.setString(10, player.getInternalUUID().toString());
 
                 int result = statement.executeUpdate();
 
@@ -823,9 +833,6 @@ public class MySqlRepository implements Repository {
                 petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
                 petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
-                if (resultSet.getObject("resource_pack") != null) {
-                    petPlayer.setUsesResourcePack(resultSet.getBoolean("resource_pack"));
-                }
                 petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBlob("extended_info").getBinaryStream(), true));
 
                 ResultSetMetaData metaData = resultSet.getMetaData();
@@ -982,7 +989,6 @@ public class MySqlRepository implements Repository {
                              "capture_mode=?, " +
                              "health_bar=?, " +
                              "pet_idle_volume=?, " +
-                             "resource_pack=?, " +
                              "extended_info=?, " +
                              "multi_world=? " +
                              "WHERE internal_uuid=?;")) {
@@ -993,15 +999,14 @@ public class MySqlRepository implements Repository {
             statement.setBoolean(5, player.isCaptureHelperActive());
             statement.setBoolean(6, player.isHealthBarActive());
             statement.setFloat(7, player.getPetLivingSoundVolume());
-            statement.setBoolean(8, player.isUsingResourcePack());
-            statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+            statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
 
             JSONObject multiWorldObject = new JSONObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                 multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
             }
-            statement.setString(10, multiWorldObject.toJSONString());
-            statement.setString(11, player.getInternalUUID().toString());
+            statement.setString(9, multiWorldObject.toJSONString());
+            statement.setString(10, player.getInternalUUID().toString());
 
             int result = statement.executeUpdate();
 
@@ -1031,7 +1036,6 @@ public class MySqlRepository implements Repository {
                                      "capture_mode, " +
                                      "health_bar, " +
                                      "pet_idle_volume, " +
-                                     "resource_pack, " +
                                      "extended_info, " +
                                      "multi_world) " +
                                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
@@ -1043,9 +1047,8 @@ public class MySqlRepository implements Repository {
                     statement.setBoolean(6, player.isCaptureHelperActive());
                     statement.setBoolean(7, player.isHealthBarActive());
                     statement.setFloat(8, player.getPetLivingSoundVolume());
-                    statement.setBoolean(9, player.isUsingResourcePack());
                     try {
-                        statement.setBlob(10, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+                        statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -1054,7 +1057,7 @@ public class MySqlRepository implements Repository {
                     for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                         multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                     }
-                    statement.setString(11, multiWorldObject.toJSONString());
+                    statement.setString(10, multiWorldObject.toJSONString());
 
 
                     boolean result = statement.executeUpdate() > 0;
@@ -1083,7 +1086,6 @@ public class MySqlRepository implements Repository {
                              "capture_mode, " +
                              "health_bar, " +
                              "pet_idle_volume, " +
-                             "resource_pack, " +
                              "extended_info, " +
                              "multi_world) " +
                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
@@ -1107,14 +1109,13 @@ public class MySqlRepository implements Repository {
                 statement.setBoolean(6, player.isCaptureHelperActive());
                 statement.setBoolean(7, player.isHealthBarActive());
                 statement.setFloat(8, player.getPetLivingSoundVolume());
-                statement.setBoolean(9, player.isUsingResourcePack());
-                statement.setBlob(10, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+                statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
 
                 JSONObject multiWorldObject = new JSONObject();
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                     multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                 }
-                statement.setString(11, multiWorldObject.toJSONString());
+                statement.setString(10, multiWorldObject.toJSONString());
 
                 statement.addBatch();
                 if (++i % 500 == 0 && i != players.size()) {

@@ -74,7 +74,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
         config.addDefault("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
-        config.addDefault("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
         config.addDefault("MyPet.Disable-All-Actionbar-Messages", Misc.DISABLE_ALL_ACTIONBAR_MESSAGES);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
@@ -347,7 +346,6 @@ public class ConfigurationLoader {
         Repository.MongoDB.PORT = config.getInt("MyPet.Repository.MongoDB.Port", Repository.MongoDB.PORT);
 
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
-        Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT = config.getBoolean("MyPet.Activate-Resourcepack-By-Default", Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT);
 
         Permissions.EXTENDED = config.getBoolean("MyPet.Permissions.Extended", false);
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);

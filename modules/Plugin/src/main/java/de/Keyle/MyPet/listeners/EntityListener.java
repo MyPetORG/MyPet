@@ -40,7 +40,6 @@ import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.ResourcePackIcons;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
@@ -51,7 +50,6 @@ import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
-import de.Keyle.MyPet.util.ResourcePackManager;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.bukkit.Bukkit;
@@ -259,19 +257,9 @@ public class EntityListener implements Listener {
                     if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
                         infoShown = true;
                         String donationMessage = "" + ChatColor.GOLD;
-                        if (ResourcePackManager.get().usesResourcePack(damager)) {
-                            donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
-                        } else {
-                            donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        }
-
+                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
                         donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), damager) + " ";
-
-                        if (ResourcePackManager.get().usesResourcePack(damager)) {
-                            donationMessage += ChatColor.RESET + ResourcePackIcons.valueOf("Title_" + myPet.getOwner().getDonationRank().name()).getCode() + ChatColor.GOLD;
-                        } else {
-                            donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        }
+                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
                         damager.sendMessage("   " + donationMessage);
                     }
 

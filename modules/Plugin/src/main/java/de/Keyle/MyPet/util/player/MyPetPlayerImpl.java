@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.CaptureHelper;
@@ -60,7 +61,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
     protected int captureHelperTimer = 90;
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
-    protected boolean useResourcePack = Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT;
     protected int autoRespawnMin = 1;
     protected float petLivingSoundVolume = 1f;
 
@@ -152,14 +152,17 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         this.showHealthBar = showHealthBar;
     }
 
+    @Deprecated
+    @Since("17.12.2017")
     @Override
     public void setUsesResourcePack(boolean flag) {
-        useResourcePack = flag;
     }
 
+    @Deprecated
+    @Since("17.12.2017")
     @Override
     public boolean isUsingResourcePack() {
-        return useResourcePack;
+        return false;
     }
 
     public boolean isCaptureHelperActive() {
@@ -333,7 +336,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
         settingsTag.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
         settingsTag.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
         settingsTag.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
-        settingsTag.getCompoundData().put("ResourcePack", new TagByte(isUsingResourcePack()));
         playerNBT.getCompoundData().put("Settings", settingsTag);
 
         playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
@@ -381,9 +383,6 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
             }
             if (settingsTag.getCompoundData().containsKey("HealthBar")) {
                 setHealthBarActive(settingsTag.getAs("HealthBar", TagByte.class).getBooleanData());
-            }
-            if (settingsTag.getCompoundData().containsKey("ResourcePack")) {
-                setUsesResourcePack(settingsTag.getAs("ResourcePack", TagByte.class).getBooleanData());
             }
             if (settingsTag.getCompoundData().containsKey("PetLivingSoundVolume")) {
                 setPetLivingSoundVolume(settingsTag.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());

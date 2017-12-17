@@ -48,7 +48,6 @@ import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
-import de.Keyle.MyPet.util.ResourcePackManager;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -177,8 +176,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getServer().getPluginManager().registerEvents(levelupListener, this);
         WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
-        ResourcePackManager resourcePackManager = new ResourcePackManager();
-        getServer().getPluginManager().registerEvents(resourcePackManager, this);
 
         // register commands
         getCommand("petname").setExecutor(new CommandName());
@@ -451,30 +448,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                         }
                     });
                 }
-
-                new BukkitRunnable() {
-                    public void run() {
-                        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.8.8") < 0) {
-                            if (!MyPetApi.getPluginHookManager().isHookActive(ResourcePackApiHook.class)) {
-                                return;
-                            }
-                        }
-                        for (final Player player : getServer().getOnlinePlayers()) {
-                            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-                                MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-                                if (myPetPlayer.isUsingResourcePack()) {
-                                    myPetPlayer.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", player));
-                                    ResourcePackManager.get().installResourcePack(player);
-                                }
-                            } else {
-                                if (Configuration.Misc.ACTIVATE_RESOURCEPACK_BY_DEFAULT) {
-                                    player.sendMessage(Translation.getString("Message.Command.Options.ResourcePack.Prompt", player));
-                                    ResourcePackManager.get().installResourcePack(player);
-                                }
-                            }
-                        }
-                    }
-                }.runTaskLater(MyPetApi.getPlugin(), 30L);
             }
         }.runTaskLater(this, 0);
     }
@@ -508,7 +481,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         pluginHookManager.registerHook(PvPManagerHook.class);
         pluginHookManager.registerHook(RedProtectHook.class);
         pluginHookManager.registerHook(ResidenceHook.class);
-        pluginHookManager.registerHook(ResourcePackApiHook.class);
         pluginHookManager.registerHook(SimpleClansHook.class);
         pluginHookManager.registerHook(SkillApiHook.class);
         pluginHookManager.registerHook(SuperVanish.class);
