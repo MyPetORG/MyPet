@@ -516,6 +516,9 @@ public class ConfigurationLoader {
             Update.CHECK = config.getBoolean("MyPet.Update-Check", Update.CHECK);
             config.getConfigurationSection("MyPet").set("Update-Check", null);
         }
+        if (config.contains("MyPet.Activate-Resourcepack-By-Default")) {
+            config.getConfigurationSection("MyPet").set("Activate-Resourcepack-By-Default", null);
+        }
 
         MyPetApi.getPlugin().saveConfig();
 
