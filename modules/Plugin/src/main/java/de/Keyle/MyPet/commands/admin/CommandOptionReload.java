@@ -36,7 +36,6 @@ import org.bukkit.permissions.Permission;
 public class CommandOptionReload implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        MyPetApi.getPlugin().reloadConfig();
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
 
