@@ -64,7 +64,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, ArenaHook {
     public boolean isInArena(MyPetPlayer owner) {
         try {
             return mobArenaHandler.isPlayerInArena(owner.getPlayer());
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return false;
     }

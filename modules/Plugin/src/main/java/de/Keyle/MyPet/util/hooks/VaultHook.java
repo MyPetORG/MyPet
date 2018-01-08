@@ -66,7 +66,7 @@ public class VaultHook implements EconomyHook {
     public boolean canPay(OfflinePlayer player, double costs) {
         try {
             return economy.has(player, costs);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return false;
     }
@@ -86,7 +86,7 @@ public class VaultHook implements EconomyHook {
         if (economy.has(from, costs)) {
             try {
                 return economy.withdrawPlayer(from, costs).transactionSuccess() && economy.depositPlayer(to, costs).transactionSuccess();
-            } catch (Exception ignored) {
+            } catch (Throwable ignored) {
             }
         }
         return false;
@@ -104,11 +104,10 @@ public class VaultHook implements EconomyHook {
 
     @Override
     public boolean pay(OfflinePlayer player, double costs) {
-
         if (economy.has(player, costs)) {
             try {
                 return economy.withdrawPlayer(player, costs).transactionSuccess();
-            } catch (Exception ignored) {
+            } catch (Throwable ignored) {
             }
         }
         return false;
@@ -116,12 +115,20 @@ public class VaultHook implements EconomyHook {
 
     @Override
     public String currencyNameSingular() {
-        return economy.currencyNameSingular();
+        try {
+            return economy.currencyNameSingular();
+        }catch (Throwable ignored) {
+        }
+        return "";
     }
 
     @Override
     public String format(double amount) {
-        return economy.format(amount);
+        try {
+            return economy.format(amount);
+        } catch (Throwable ignored) {
+        }
+        return "" + amount;
     }
 
     public Economy getEconomy() {

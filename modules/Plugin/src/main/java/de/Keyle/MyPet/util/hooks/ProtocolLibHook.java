@@ -70,7 +70,7 @@ public class ProtocolLibHook implements PluginHook {
             }
 
             return true;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return false;
         }
     }

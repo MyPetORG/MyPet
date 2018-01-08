@@ -56,7 +56,7 @@ public class BattleArenaHook implements ArenaHook {
         try {
             Player p = owner.getPlayer();
             return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return false;
     }

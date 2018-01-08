@@ -51,7 +51,7 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
     public boolean isInParty(Player player) {
         try {
             return PartyAPI.inParty(player);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return false;
     }
@@ -67,7 +67,7 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
                 }
                 return members;
             }
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return null;
     }

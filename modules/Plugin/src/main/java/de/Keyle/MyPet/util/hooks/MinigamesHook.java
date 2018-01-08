@@ -61,7 +61,7 @@ public class MinigamesHook implements ArenaHook {
         try {
             Player p = owner.getPlayer();
             return minigames.pdata.getMinigamePlayer(p).isInMinigame();
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return false;
     }
