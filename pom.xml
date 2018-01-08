@@ -132,14 +132,11 @@
         <!-- https://www.spigotmc.org/resources/placeholderapi.6245/ -->
         <playceholder-api.version>2.5.1</playceholder-api.version>
 
-        <!-- https://www.spigotmc.org/resources/api-resourcepackapi-1-7-1-8-1-9-1-10.2397/ -->
-        <resourcepackapi.version>2.2.1</resourcepackapi.version>
-
         <!-- https://www.spigotmc.org/resources/nocheatplus2015-07-25.26/ -->
         <nocheatplus.version>3.15.0-SNAPSHOT</nocheatplus.version>
 
         <!-- https://www.spigotmc.org/resources/supervanish-be-invisible.1331/ -->
-        <supervanish.version>5.8.4</supervanish.version>
+        <supervanish.version>6.0.4</supervanish.version>
 
         <!-- https://www.spigotmc.org/resources/preciousstones.5270/ -->
         <preciousstones.version>10.6.0</preciousstones.version>
@@ -446,11 +443,6 @@
             <version>${supervanish.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.inventivetalent.resourcepackapi</groupId>
-            <artifactId>api</artifactId>
-            <version>${resourcepackapi.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sacredlabyrinth.Phaed</groupId>
