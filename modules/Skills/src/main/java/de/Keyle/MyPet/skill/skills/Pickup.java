@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
+import de.Keyle.MyPet.api.event.MyPetPickupItemEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillInfo;
@@ -143,12 +144,21 @@ public class Pickup extends PickupInfo implements SkillInstance, Scheduler, NBTS
                         ItemStack itemStack = itemEntity.getItemStack();
 
                         if (itemEntity.getPickupDelay() <= 0 && itemStack.getAmount() > 0) {
-                            PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemStack.getAmount());
+                            MyPetPickupItemEvent petPickupEvent = new MyPetPickupItemEvent(myPet, itemEntity);
+                            Bukkit.getServer().getPluginManager().callEvent(petPickupEvent);
+
+                            if (petPickupEvent.isCancelled()) {
+                                continue;
+                            }
+
+                            PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, 0);
                             Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
 
                             if (playerPickupEvent.isCancelled()) {
                                 continue;
                             }
+
+                            itemStack = itemEntity.getItemStack();
 
                             CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).get().getInventory();
                             int itemAmount = inv.addItem(itemStack);
