@@ -70,7 +70,7 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, ArenaHook {
     public boolean isInArena(MyPetPlayer owner) {
         try {
             return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return false;
     }

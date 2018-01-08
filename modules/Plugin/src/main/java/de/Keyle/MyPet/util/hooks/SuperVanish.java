@@ -51,8 +51,11 @@ public class SuperVanish implements PluginHook, Listener {
 
     @EventHandler
     public void on(MyPetCallEvent e) {
-        if (VanishAPI.isInvisible(e.getOwner().getPlayer())) {
-            e.setCancelled(true);
+        try {
+            if (VanishAPI.isInvisible(e.getOwner().getPlayer())) {
+                e.setCancelled(true);
+            }
+        } catch (Throwable ignored) {
         }
     }
 
