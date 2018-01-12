@@ -24,19 +24,19 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.myzelyam.api.vanish.PlayerHideEvent;
 import de.myzelyam.api.vanish.PlayerShowEvent;
 import de.myzelyam.api.vanish.VanishAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 
 @PluginHookName("SuperVanish")
-public class SuperVanish implements PluginHook, Listener {
+public class SuperVanish implements PlayerVersusPlayerHook {
 
     @Override
     public boolean onEnable() {
@@ -47,6 +47,15 @@ public class SuperVanish implements PluginHook, Listener {
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        try {
+            return !VanishAPI.isInvisible(defender);
+        } catch (Throwable ignored) {
+        }
+        return true;
     }
 
     @EventHandler
