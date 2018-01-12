@@ -354,8 +354,6 @@ public class ConfigurationLoader {
             if (MonsterExperience.mobExp.containsKey(entityType.name())) {
                 double max = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Max", 0.);
                 double min = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Min", 0.);
-                System.out.println("max: " + max);
-                System.out.println("min: " + min);
                 if (min == max) {
                     MonsterExperience.getMonsterExperience(entityType).setExp(max);
                 } else {
