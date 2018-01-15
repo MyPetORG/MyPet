@@ -314,7 +314,7 @@ public class Beacon implements SkillPropertiesPanel {
         if (speedBoostChangeCheckBox.isSelected()) {
             tagCompound.getCompoundData().put("buff_speed_boost_enable", new TagByte(speedBostEnableCheckBox.isSelected()));
             if (speedBostEnableCheckBox.isSelected()) {
-                tagCompound.getCompoundData().put("buff_speed_boost_level", new TagInt(((Number) jumpBoostSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_speed_boost_level", new TagInt(((Number) speedBoostSpinner.getValue()).intValue()));
             }
         } else {
             tagCompound.getCompoundData().remove("buff_speed_boost_enable");
