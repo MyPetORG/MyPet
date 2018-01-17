@@ -175,6 +175,7 @@ public class Configuration {
             public static int PASSIVE_PERCENT_PER_MONSTER = 25;
             public static int LEVEL_CAP = 100;
             public static Set<String> PREVENT_FROM_SPAWN_REASON = new HashSet<>();
+            public static Set<String> DISABLED_WORLDS = new HashSet<>();
         }
     }
 

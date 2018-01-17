@@ -919,6 +919,9 @@ public class EntityListener implements Listener {
         if (Configuration.Hooks.SkillAPI.DISABLE_VANILLA_EXP) {
             return;
         }
+        if (Configuration.LevelSystem.Experience.DISABLED_WORLDS.contains(deadEntity.getWorld().getName())) {
+            return;
+        }
         if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0 && event.getEntity().hasMetadata("SpawnReason")) {
             for (MetadataValue value : event.getEntity().getMetadata("SpawnReason")) {
                 if (value.getOwningPlugin().getName().equals(MyPetApi.getPlugin().getName())) {
