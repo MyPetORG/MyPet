@@ -167,6 +167,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.Loss.Drop", LevelSystem.Experience.DROP_LOST_EXP);
         config.addDefault("MyPet.Exp.Gain.PreventFromSpawnReason", new ArrayList<>());
         config.addDefault("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
+        config.addDefault("MyPet.Exp.Disabled-Worlds", new String[0]);
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
         config.addDefault("MyPet.Skill.Inventory.Creative", Skilltree.Skill.Inventory.OPEN_IN_CREATIVE);
@@ -389,6 +390,8 @@ public class ConfigurationLoader {
         LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.Exp.Passive.PercentPerMonster", 25);
         LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP = config.getBoolean("MyPet.Exp.Passive.Always-Grant-Passive-XP", true);
         LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", true);
+        LevelSystem.Experience.DISABLED_WORLDS.clear();
+        LevelSystem.Experience.DISABLED_WORLDS.addAll(config.getStringList("MyPet.Exp.Disabled-Worlds"));
 
         if (config.contains("MyPet.Exp.Gain.PreventFromSpawnReason")) {
             LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.clear();
