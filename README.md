@@ -1,5 +1,5 @@
-[![MyPet on BukkitDev][Banner]][Homepage]
-## MyPet - Take mobs on a lead!
+[![MyPet on BukkitDev][Logo]][Homepage]
+## MyPet - The extensive pet plugin
 
 Do you like MyPet? Feel free to donate or buy [MyPet-Premium][Premium]!<br />
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)][Donate]
@@ -26,7 +26,6 @@ Download the latest builds from the official [MyPet-Site][Builds].
 
 [Logo]: http://dl.keyle.de/images/logo.png
 [License]: http://www.gnu.org/licenses/lgpl.html
-[Banner]: http://dl.keyle.de/images/banner.png
 [ionicons]: http://ionicons.com/
 [resources/images]: https://github.com/xXKeyleXx/MyPet/tree/master/src/main/resources/images
 [Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
@@ -40,4 +39,4 @@ Download the latest builds from the official [MyPet-Site][Builds].
 [Spigot]: https://www.spigotmc.org/resources/mypet.12725/
 [SpigotImage]: http://dl.keyle.de/images/spigot.png
 [Premium]: https://www.spigotmc.org/resources/mypet-premium.17566/
-[PremiumImage]: http://dl.keyle.de/images/mypet-premium.png
+[PremiumImage]: http://dl.keyle.de/images/mypet_premium.png
