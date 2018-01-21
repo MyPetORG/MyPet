@@ -22,10 +22,10 @@ package de.Keyle.MyPet.commands;
 
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.gui.IconMenu;
+import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.inventory.IconMenu;
-import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.shop.ShopManager;

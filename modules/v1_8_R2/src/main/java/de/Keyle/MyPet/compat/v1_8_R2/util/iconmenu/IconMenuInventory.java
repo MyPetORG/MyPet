@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_8_R2.util.iconmenu;
 
+import de.Keyle.MyPet.api.gui.IconMenu;
+import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.api.util.inventory.IconMenu;
-import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.Keyle.MyPet.compat.v1_8_R2.util.inventory.CustomInventory;
 import de.Keyle.MyPet.compat.v1_8_R2.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Compat("v1_8_R2")
-public class IconMenuInventory implements de.Keyle.MyPet.api.util.inventory.IconMenuInventory {
+public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInventory {
     private static Method applyToItemMethhod = null;
 
     static {

@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_9_R1.services;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagString;
 import org.bukkit.Material;

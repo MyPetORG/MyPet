@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.selectionmenu.MyPetSelectionGui;
+import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

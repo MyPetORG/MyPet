@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_7_R4.services;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.inventory.IconMenuItem;
 import org.bukkit.Material;
 
 @Compat("v1_8_R3")
