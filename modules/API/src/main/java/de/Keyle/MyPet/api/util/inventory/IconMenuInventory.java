@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,21 +20,9 @@
 
 package de.Keyle.MyPet.api.util.inventory;
 
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.Inventory;
+import de.Keyle.MyPet.api.util.Since;
 
-import java.util.List;
-
-public interface IconMenuInventory {
-    void open(IconMenu menu, HumanEntity player);
-
-    void update(IconMenu menu);
-
-    void close();
-
-    boolean isMenuInventory(Inventory inv);
-
-    List<HumanEntity> getViewers();
-
-    int getSize();
+@Deprecated
+@Since("21.02.2018")
+public interface IconMenuInventory extends de.Keyle.MyPet.api.gui.IconMenuInventory {
 }

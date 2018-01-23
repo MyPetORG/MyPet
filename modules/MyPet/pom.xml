@@ -108,7 +108,7 @@
                     <archive>
                         <manifestEntries>
                             <Class-Path>MyPet/rhino.jar</Class-Path>
-                            <Main-Class>de.Keyle.MyPet.gui.GuiMain</Main-Class>
+                            <Main-Class>de.Keyle.MyPet.skilltreecreator.GuiMain</Main-Class>
                             <Project-Author>Keyle</Project-Author>
                             <Project-Name>${project.name}</Project-Name>
                             <Project-Version>${project.version}</Project-Version>
