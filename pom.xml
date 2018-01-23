@@ -359,12 +359,13 @@
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
             <version>2.7.7</version>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>br.net.fabiozumbi12.RedProtect</groupId>
             <artifactId>RedProtect</artifactId>
-            <version>7.2.2</version>
-            <classifier>b435</classifier>
+            <version>7.3.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

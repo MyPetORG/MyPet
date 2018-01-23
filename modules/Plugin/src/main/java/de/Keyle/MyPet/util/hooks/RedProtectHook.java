@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
+import br.net.fabiozumbi12.RedProtect.Bukkit.RedProtect;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -37,7 +37,7 @@ public class RedProtectHook implements PlayerVersusPlayerHook {
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            return RedProtectAPI.getRegion(defender.getLocation()).canPVP(attacker, defender);
+            return RedProtect.get().getAPI().getRegion(defender.getLocation()).canPVP(attacker, defender);
         } catch (Throwable ignored) {
         }
         return true;
