@@ -36,6 +36,7 @@ import org.bukkit.permissions.Permission;
 public class CommandOptionReload implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
+        int oldMaxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
 
@@ -50,10 +51,19 @@ public class CommandOptionReload implements CommandOption {
             MyPetApi.getServiceManager().getService(ShopManager.class).get().onEnable(); //TODO reload method?
         }
 
-        for (int i = 0; i < Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
-            try {
-                Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
-            } catch (Exception ignored) {
+        if (Configuration.Misc.MAX_STORED_PET_COUNT > oldMaxPetCount) {
+            for (int i = oldMaxPetCount + 1; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
+                try {
+                    Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
+                } catch (Exception ignored) {
+                }
+            }
+        } else if (oldMaxPetCount > Configuration.Misc.MAX_STORED_PET_COUNT) {
+            for (int i = oldMaxPetCount; i > Configuration.Misc.MAX_STORED_PET_COUNT; i--) {
+                try {
+                    Bukkit.getPluginManager().removePermission("MyPet.petstorage.limit." + i);
+                } catch (Exception ignored) {
+                }
             }
         }
 
