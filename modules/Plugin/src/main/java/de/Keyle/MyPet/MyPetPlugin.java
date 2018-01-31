@@ -245,7 +245,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             } catch (Exception ignored) {
             }
         }
-        for (int i = 0; i < Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
+        for (int i = 0; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
             try {
                 Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
             } catch (Exception ignored) {
