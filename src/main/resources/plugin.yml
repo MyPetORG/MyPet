@@ -29,7 +29,6 @@ softdepend:
   - PvPManager
   - RedProtect
   - Residence
-  - ResourcePackApi
   - SimpleClans
   - SkillAPI
   - SuperVanish
@@ -102,7 +101,7 @@ commands:
     description: Toogles the CaptureHelper on/off
   petsettings:
     aliases: [po, peto, petoption, petoptions, psettings]
-    description: Player options
+    description: Settings command
   petswitch:
     aliases: [pswitch, psw]
     description: Opens a pet selection GUI
