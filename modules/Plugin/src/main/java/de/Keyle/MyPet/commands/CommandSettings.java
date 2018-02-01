@@ -22,8 +22,8 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.commands.options.CommandOptionHealthbar;
-import de.Keyle.MyPet.commands.options.CommandOptionPetLivingSound;
+import de.Keyle.MyPet.commands.settings.CommandSettingHealthbar;
+import de.Keyle.MyPet.commands.settings.CommandSettingsPetLivingSound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,13 +32,13 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CommandOptions implements CommandExecutor, TabCompleter {
+public class CommandSettings implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<>();
     private static Map<String, CommandOption> commandOptions = new HashMap<>();
 
-    public CommandOptions() {
-        commandOptions.put("healthbar", new CommandOptionHealthbar());
-        commandOptions.put("idle-volume", new CommandOptionPetLivingSound());
+    public CommandSettings() {
+        commandOptions.put("healthbar", new CommandSettingHealthbar());
+        commandOptions.put("idle-volume", new CommandSettingsPetLivingSound());
 
         if (optionsList.size() != commandOptions.keySet().size()) {
             optionsList = new ArrayList<>(commandOptions.keySet());

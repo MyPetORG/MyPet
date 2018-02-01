@@ -100,8 +100,8 @@ commands:
   petcapturehelper:
     aliases: [pch]
     description: Toogles the CaptureHelper on/off
-  petoptions:
-    aliases: [po, peto, petoption]
+  petsettings:
+    aliases: [po, peto, petoption, petoptions, psettings]
     description: Player options
   petswitch:
     aliases: [pswitch, psw]
