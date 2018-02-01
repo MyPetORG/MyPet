@@ -96,9 +96,9 @@ commands:
   pettype:
     description: Shows info about the pet-types.
     usage: '/<command> <pet type>'
-  petoptions:
-    aliases: [po, peto, petoption]
-    description: Player options
+  petsettings:
+    aliases: [po, peto, petoption, petoptions, psettings]
+    description: Settings command
   petswitch:
     aliases: [pswitch, psw]
     description: Opens a pet selection GUI

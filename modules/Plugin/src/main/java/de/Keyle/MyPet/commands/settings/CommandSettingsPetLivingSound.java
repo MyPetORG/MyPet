@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.commands.options;
+package de.Keyle.MyPet.commands.settings;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
@@ -31,10 +31,10 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandOptionPetLivingSound implements CommandOptionTabCompleter {
+public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter {
     private List<String> presetVolumes = new ArrayList<>();
 
-    public CommandOptionPetLivingSound() {
+    public CommandSettingsPetLivingSound() {
         presetVolumes.add("100");
         presetVolumes.add("75");
         presetVolumes.add("50");

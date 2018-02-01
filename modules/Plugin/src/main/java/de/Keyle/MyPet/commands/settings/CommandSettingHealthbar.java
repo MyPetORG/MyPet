@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.commands.options;
+package de.Keyle.MyPet.commands.settings;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandOptionHealthbar implements CommandOption {
+public class CommandSettingHealthbar implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
