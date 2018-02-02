@@ -99,8 +99,8 @@
         <!-- https://www.spigotmc.org/resources/survival-games.17740/ -->
         <survivalgames.version>0.6.0</survivalgames.version>
 
-        <!-- http://dev.bukkit.org/bukkit-plugins/residence/ -->
-        <residence.version>2.6.6.6</residence.version>
+        <!-- http://ltcraft.lt/Residence/ -->
+        <residence.version>4.7.4.1</residence.version>
 
         <!-- http://towny.palmergames.com/ -->
         <towny.version>0.91.1.0</towny.version>
