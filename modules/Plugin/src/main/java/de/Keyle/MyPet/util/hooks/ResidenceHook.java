@@ -21,7 +21,9 @@
 package de.Keyle.MyPet.util.hooks;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
@@ -34,19 +36,25 @@ import org.bukkit.entity.Player;
 @PluginHookName("Residence")
 public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
 
+    Residence residence;
+
     @Override
     public boolean onEnable() {
-        FlagPermissions.addFlag("mypet-fly");
-        FlagPermissions.addFlag("mypet-damage");
+        if (Configuration.Hooks.USE_Residence) {
+            residence = MyPetApi.getPluginHookManager().getPluginInstance(Residence.class).get();
 
-        return Configuration.Hooks.USE_Residence;
+            FlagPermissions.addFlag("mypet-fly");
+            FlagPermissions.addFlag("mypet-damage");
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            FlagPermissions flagPermissions = Residence.getPermsByLoc(defender.getLocation());
-            return flagPermissions.has("pvp", true) && flagPermissions.has("mypet-damage", true);
+            FlagPermissions flagPermissions = residence.getPermsByLoc(defender.getLocation());
+            return flagPermissions.has(Flags.pvp, true) && flagPermissions.has("mypet-damage", true);
         } catch (Throwable ignored) {
         }
         return true;
@@ -55,7 +63,7 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
     @Override
     public boolean canFly(Location location) {
         try {
-            FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
+            FlagPermissions flagPermissions = residence.getPermsByLoc(location);
             return flagPermissions.has("mypet-fly", true);
         } catch (Throwable ignored) {
         }
@@ -65,7 +73,7 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
         try {
-            FlagPermissions flagPermissions = Residence.getPermsByLoc(defender.getLocation());
+            FlagPermissions flagPermissions = residence.getPermsByLoc(defender.getLocation());
             return flagPermissions.has("mypet-damage", true);
         } catch (Throwable ignored) {
         }
