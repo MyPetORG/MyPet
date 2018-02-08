@@ -22,7 +22,7 @@ package de.Keyle.MyPet.compat.v1_7_R4;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
+import de.Keyle.MyPet.compat.v1_7_R4.services.EntityConverterService;
 import de.Keyle.MyPet.compat.v1_7_R4.services.EggIconService;
 
 @Compat("v1_8_R3")
