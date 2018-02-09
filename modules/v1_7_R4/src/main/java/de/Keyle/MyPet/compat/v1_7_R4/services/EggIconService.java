@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.Material;
 
-@Compat("v1_8_R3")
+@Compat("v1_7_R4")
 public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIconService {
     @Override
     public void updateIcon(MyPetType type, IconMenuItem icon) {
