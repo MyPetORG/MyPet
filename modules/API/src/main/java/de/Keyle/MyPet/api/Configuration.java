@@ -108,6 +108,7 @@ public class Configuration {
             public static String HOST = "localhost";
             public static String PASSWORD = "";
             public static String USER = "root";
+            public static String CHARACTER_ENCODING = "utf8mb4";
             public static int PORT = 3306;
             public static int POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
         }
