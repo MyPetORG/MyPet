@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -73,9 +73,11 @@ public class MyPetWitherSkull extends EntityWitherSkull implements EntityMyPetPr
     }
 
     @Override
-    protected void a(MovingObjectPosition movingobjectposition) {
-        if (movingobjectposition.entity != null) {
-            movingobjectposition.entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
+    protected void a(MovingObjectPosition movingObjectPosition) {
+        if (movingObjectPosition.entity != null) {
+            if (movingObjectPosition.entity instanceof EntityLiving) {
+                movingObjectPosition.entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
+            }
         }
         die();
     }
