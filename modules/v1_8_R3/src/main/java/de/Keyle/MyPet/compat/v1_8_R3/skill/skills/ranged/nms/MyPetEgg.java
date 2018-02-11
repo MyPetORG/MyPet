@@ -61,9 +61,11 @@ public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
     }
 
     @Override
-    protected void a(MovingObjectPosition paramMovingObjectPosition) {
-        if (paramMovingObjectPosition.entity != null) {
-            paramMovingObjectPosition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+    protected void a(MovingObjectPosition movingObjectPosition) {
+        if (movingObjectPosition.entity != null) {
+            if (movingObjectPosition.entity instanceof EntityLiving) {
+                movingObjectPosition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+            }
         }
         for (int i = 0; i < 8; ++i) {
             this.world.addParticle(EnumParticle.ITEM_CRACK, this.locX, this.locY, this.locZ, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, Item.getId(Items.EGG));
