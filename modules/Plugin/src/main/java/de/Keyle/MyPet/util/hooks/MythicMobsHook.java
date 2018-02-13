@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -39,7 +40,15 @@ public class MythicMobsHook implements PlayerLeashEntityHook {
     @Override
     public boolean canLeash(Player attacker, Entity defender) {
         try {
-            return !MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender));
+            if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender))) {
+                MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(defender).getType();
+                for (MythicMob m : MythicMobs.inst().getMobManager().getVanillaTypes()) {
+                    if (m.equals(defenderType)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         } catch (Throwable ignored) {
         }
         return true;
