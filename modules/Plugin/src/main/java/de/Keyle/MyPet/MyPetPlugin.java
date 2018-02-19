@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
-import org.bstats.Metrics;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -278,21 +278,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         // init Metrics
         Metrics metrics = new Metrics(this);
-        metrics.addCustomChart(new Metrics.SingleLineChart("active_pets") {
-            @Override
-            public int getValue() {
-                return myPetManager.countActiveMyPets();
-            }
-        });
-        metrics.addCustomChart(new Metrics.SimplePie("build") {
-            @Override
-            public String getValue() {
-                return MyPetVersion.getBuild();
-            }
-        });
-        metrics.addCustomChart(new Metrics.SimplePie("update_mode") {
-            @Override
-            public String getValue() {
+        metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
+        metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
+        metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
                 String mode = "Disabled";
                 if (Configuration.Update.CHECK) {
                     mode = "Check";
@@ -302,7 +290,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 }
                 return mode;
             }
-        });
+        ));
 
         updater.waitForDownload();
 
