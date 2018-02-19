@@ -1,7 +1,7 @@
 <!--
   ~ This file is part of MyPet
   ~
-  ~ Copyright © 2011-2017 Keyle
+  ~ Copyright © 2011-2018 Keyle
   ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
   ~ MyPet is free software: you can redistribute it and/or modify
@@ -302,8 +302,8 @@
                                     <shadedPattern>de.Keyle.MyPet.util.chat.fanciful</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.bstats</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util</shadedPattern>
+                                    <pattern>org.bstats.bukkit</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.metrics</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.json.simple</pattern>

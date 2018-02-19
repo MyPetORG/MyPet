@@ -1,7 +1,7 @@
 <!--
   ~ This file is part of MyPet
   ~
-  ~ Copyright © 2011-2017 Keyle
+  ~ Copyright © 2011-2018 Keyle
   ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
   ~ MyPet is free software: you can redistribute it and/or modify
@@ -141,7 +141,7 @@
         <!-- https://www.spigotmc.org/resources/preciousstones.5270/ -->
         <preciousstones.version>10.6.0</preciousstones.version>
 
-        <bstats.version>1.1</bstats.version>
+        <bstats.version>1.2</bstats.version>
         <mongodb.version>3.4.2</mongodb.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <json.version>1.1.1</json.version>
