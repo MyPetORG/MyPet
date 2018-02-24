@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -538,11 +538,14 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
         if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;
 
-            double range = this.range * (Math.log10(myPet.getSaturation()) / 2);
+            double range = this.range;
+
+            if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_BEACON_RANGE) {
+                range *= (Math.log10(myPet.getSaturation()) / 2);
+            }
 
             if (range < 0.7) {
-                active = false;
-                selectedBuffs.clear();
+                return;
             }
 
             range = range * range;
@@ -619,7 +622,7 @@ public class Beacon extends BeaconInfo implements SkillInstance, Scheduler, NBTS
                 }
             }
 
-            if (Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
+            if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
                 myPet.decreaseSaturation(1);
                 hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
             }

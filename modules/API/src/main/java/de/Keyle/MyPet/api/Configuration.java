@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -183,7 +183,12 @@ public class Configuration {
     public static class HungerSystem {
         public static boolean USE_HUNGER_SYSTEM = true;
         public static int HUNGER_SYSTEM_TIME = 60;
+        @Deprecated
+        @Since("24.02.2018")
         public static double HUNGER_SYSTEM_POINTS_PER_FEED = 6.0;
+        public static double HUNGER_SYSTEM_SATURATION_PER_FEED = 6.0;
+        public static boolean AFFECT_RIDE_SPEED = true;
+        public static boolean AFFECT_BEACON_RANGE = true;
     }
 
     public static class Skilltree {

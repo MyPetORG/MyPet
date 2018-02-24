@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -465,7 +465,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         }
                     }
                     boolean used = false;
-                    double saturation = Configuration.HungerSystem.HUNGER_SYSTEM_POINTS_PER_FEED;
+                    double saturation = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
                     if (saturation > 0) {
                         if (myPet.getSaturation() < 100) {
                             MyPetFeedEvent feedEvent = new MyPetFeedEvent(getMyPet(), CraftItemStack.asCraftMirror(itemStack), saturation, MyPetFeedEvent.Result.Eat);
@@ -964,7 +964,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             super.o(entity);
             if (this instanceof IJumpable) {
                 double factor = 1;
-                if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+                if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
                     factor = Math.log10(myPet.getSaturation()) / 2;
                 }
                 getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F))) * factor);
@@ -1097,7 +1097,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         double jumpHeight = Util.clamp(rideSkill.getJumpHeight(), 0, 10);
         float ascenSpeed = 0.2f;
 
-        if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+        if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
             double factor = Math.log10(myPet.getSaturation()) / 2;
             speed *= factor;
             jumpHeight *= factor;
