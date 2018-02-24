@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Location;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -67,7 +68,12 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                 Location location = defender.getLocation();
                 RegionManager mgr = wgp.getRegionManager(location.getWorld());
                 ApplicableRegionSet set = mgr.getApplicableRegions(location);
-                StateFlag.State s = set.queryState(null, DAMAGE_FLAG);
+                StateFlag.State s;
+                if (defender instanceof Animals) {
+                    s = set.queryState(null, DefaultFlag.DAMAGE_ANIMALS, DAMAGE_FLAG);
+                } else {
+                    s = set.queryState(null, DAMAGE_FLAG);
+                }
                 return s == null || s == StateFlag.State.ALLOW;
             } catch (Throwable ignored) {
             }
