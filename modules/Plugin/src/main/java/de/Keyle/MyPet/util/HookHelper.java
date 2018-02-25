@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -68,8 +68,8 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             return canHurt(attacker, (Player) defender);
         }
         if (attacker != null && defender != null && attacker != defender) {
-            List<PlayerVersusEntityHook> pvpHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusEntityHook.class);
-            for (PlayerVersusEntityHook hook : pvpHooks) {
+            List<PlayerVersusEntityHook> pveHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusEntityHook.class);
+            for (PlayerVersusEntityHook hook : pveHooks) {
                 if (!hook.canHurt(attacker, defender)) {
                     return false;
                 }
@@ -82,23 +82,28 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     @Deprecated
     @Since("24.11.2016")
     public boolean canUseMyPet(MyPetPlayer player) {
-        return isInArena(player);
+        return isPetAllowed(player);
+    }
+
+    @Deprecated
+    @Since("25.02.2018")
+    public boolean isInArena(MyPetPlayer player) {
+        return !isPetAllowed(player);
+    }
+
+    public boolean isPetAllowed(MyPetPlayer player) {
+        List<AllowedHook> allowedHooks = MyPetApi.getPluginHookManager().getHooks(AllowedHook.class);
+        for (AllowedHook hook : allowedHooks) {
+            if (!hook.isPetAllowed(player)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean canMyPetFlyAt(Location location) {
         return false;
-    }
-
-    @Override
-    public boolean isInArena(MyPetPlayer player) {
-        List<ArenaHook> arenaHooks = MyPetApi.getPluginHookManager().getHooks(ArenaHook.class);
-        for (ArenaHook hook : arenaHooks) {
-            if (!hook.isInArena(player)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @Override

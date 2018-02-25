@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
+import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
@@ -41,7 +41,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 @PluginHookName(value = "MobArena", classPath = "com.garbagemule.MobArena.MobArena")
-public class MobArenaHook implements PlayerVersusPlayerHook, ArenaHook {
+public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
     protected MobArenaHandler mobArenaHandler;
 
@@ -61,9 +61,9 @@ public class MobArenaHook implements PlayerVersusPlayerHook, ArenaHook {
     }
 
     @Override
-    public boolean isInArena(MyPetPlayer owner) {
+    public boolean isPetAllowed(MyPetPlayer owner) {
         try {
-            return mobArenaHandler.isPlayerInArena(owner.getPlayer());
+            return !mobArenaHandler.isPlayerInArena(owner.getPlayer());
         } catch (Throwable ignored) {
         }
         return false;
@@ -106,7 +106,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, ArenaHook {
         } else {
             return;
         }
-        if (isInArena(damager.getOwner())) {
+        if (!isPetAllowed(damager.getOwner())) {
             event.setCancelled(false);
         }
     }
@@ -114,7 +114,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, ArenaHook {
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
         if (!Configuration.Hooks.MobArena.ALLOW_PETS) {
-            if (isInArena(event.getOwner())) {
+            if (!isPetAllowed(event.getOwner())) {
                 event.setCancelled(true);
             }
         }

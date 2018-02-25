@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
+import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.MyPet;
 import me.maker56.survivalgames.events.UserLobbyJoinedEvent;
@@ -36,7 +36,7 @@ import org.bukkit.event.HandlerList;
 import static me.maker56.survivalgames.SurvivalGames.getUserManager;
 
 @PluginHookName(value = "SurvivalGames", classPath = "me.maker56.survivalgames.SurvivalGames")
-public class UltimateSurvivalGamesHook implements ArenaHook {
+public class UltimateSurvivalGamesHook implements AllowedHook {
 
     @Override
     public boolean onEnable() {
@@ -53,9 +53,9 @@ public class UltimateSurvivalGamesHook implements ArenaHook {
     }
 
     @Override
-    public boolean isInArena(MyPetPlayer owner) {
+    public boolean isPetAllowed(MyPetPlayer owner) {
         try {
-            return getUserManager().isPlaying(owner.getPlayer().getName()) || getUserManager().isSpectator(owner.getPlayer().getName());
+            return !getUserManager().isPlaying(owner.getPlayer().getName()) && !getUserManager().isSpectator(owner.getPlayer().getName());
         } catch (Throwable ignored) {
         }
         return false;
@@ -74,7 +74,7 @@ public class UltimateSurvivalGamesHook implements ArenaHook {
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (isInArena(event.getOwner())) {
+        if (!isPetAllowed(event.getOwner())) {
             event.setCancelled(true);
         }
     }

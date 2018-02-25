@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
+import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.slipcor.pvparena.api.PVPArenaAPI;
@@ -37,7 +37,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 @PluginHookName("pvparena")
-public class PvPArenaHook implements PlayerVersusPlayerHook, ArenaHook {
+public class PvPArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
     @Override
     public boolean onEnable() {
@@ -67,9 +67,9 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, ArenaHook {
     }
 
     @Override
-    public boolean isInArena(MyPetPlayer owner) {
+    public boolean isPetAllowed(MyPetPlayer owner) {
         try {
-            return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
+            return PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
         } catch (Throwable ignored) {
         }
         return false;
@@ -88,7 +88,7 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, ArenaHook {
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (isInArena(event.getOwner())) {
+        if (!isPetAllowed(event.getOwner())) {
                 event.setCancelled(true);
             }
     }
