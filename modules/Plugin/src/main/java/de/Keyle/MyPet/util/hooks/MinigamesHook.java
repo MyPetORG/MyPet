@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.ArenaHook;
+import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 @PluginHookName(value = "Minigames", classPath = "au.com.mineauz.minigames.Minigames")
-public class MinigamesHook implements ArenaHook {
+public class MinigamesHook implements AllowedHook {
 
     protected Minigames minigames;
 
@@ -57,10 +57,10 @@ public class MinigamesHook implements ArenaHook {
     }
 
     @Override
-    public boolean isInArena(MyPetPlayer owner) {
+    public boolean isPetAllowed(MyPetPlayer owner) {
         try {
             Player p = owner.getPlayer();
-            return minigames.pdata.getMinigamePlayer(p).isInMinigame();
+            return !minigames.pdata.getMinigamePlayer(p).isInMinigame();
         } catch (Throwable ignored) {
         }
         return false;
@@ -90,7 +90,7 @@ public class MinigamesHook implements ArenaHook {
 
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
-        if (isInArena(event.getOwner())) {
+        if (!isPetAllowed(event.getOwner())) {
             event.setCancelled(true);
         }
     }

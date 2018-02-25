@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -64,6 +64,16 @@ public abstract class HookHelper {
      * @param player the MyPet player
      * @return if player is in arena
      */
+    public abstract boolean isPetAllowed(MyPetPlayer player);
+
+    /**
+     * Return if a MyPet player is in any type of arena (Minigames, Survival Games, PvP Arena, etc.)
+     *
+     * @param player the MyPet player
+     * @return if player is in arena
+     */
+    @Deprecated
+    @Since("25.02.2018")
     public abstract boolean isInArena(MyPetPlayer player);
 
     @Deprecated

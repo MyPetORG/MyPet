@@ -21,23 +21,17 @@
 package de.Keyle.MyPet.api.util.hooks.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.Since;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 
 /**
- * This interface defines that the hook checks if a player is in an arena
+ * This interface defines that the hook checks if a player is in any a place where he is allowed to have a pet
  */
-@Deprecated
-@Since("25.02.2018")
-public interface ArenaHook extends AllowedHook {
+public interface AllowedHook extends PluginHook {
     /**
-     * Return if a MyPet player is in any type of arena (Minigames, Survival Games, PvP Arena, etc.)
+     * Return if a MyPet player is in any a place where he is allowed to have a pet
      *
      * @param player the MyPet player
-     * @return if player is in arena
+     * @return if player is in any a place where he is allowed to have a pet
      */
-    @Deprecated
-    @Since("25.02.2018")
-    default boolean isInArena(MyPetPlayer player) {
-        return !isPetAllowed(player);
-    }
+    boolean isPetAllowed(MyPetPlayer player);
 }
