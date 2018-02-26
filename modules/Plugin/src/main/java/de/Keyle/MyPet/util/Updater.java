@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -32,9 +32,9 @@ import org.json.simple.parser.JSONParser;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Optional;
 
 public class Updater {
@@ -155,18 +155,31 @@ public class Updater {
             try {
                 MyPetApi.getLogger().info(ChatColor.RED + "Start update download: " + ChatColor.RESET + latest);
                 URL website = new URL(finalUrl);
-                ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-                FileOutputStream fos = new FileOutputStream(pluginFile);
-                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                fos.close();
-                rbc.close();
-                String message = "Finished update download.";
-                if (Configuration.Update.REPLACE_OLD || MyPetApi.getPlugin().getFile().getName().equals("MyPet-" + latest.getVersion() + ".jar")) {
-                    message += " The update will be loaded on the next server start.";
-                } else {
-                    message += " The file was stored in the \"update\" folder.";
+                HttpURLConnection httpConn = (HttpURLConnection) website.openConnection();
+                int responseCode = httpConn.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    InputStream inputStream = httpConn.getInputStream();
+                    FileOutputStream outputStream = new FileOutputStream(pluginFile);
+
+                    int bytesRead;
+                    byte[] buffer = new byte[4096];
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+
+                    outputStream.close();
+                    inputStream.close();
+
+                    String message = "Finished update download.";
+                    if (Configuration.Update.REPLACE_OLD || MyPetApi.getPlugin().getFile().getName().equals("MyPet-" + latest.getVersion() + ".jar")) {
+                        message += " The update will be loaded on the next server start.";
+                    } else {
+                        message += " The file was stored in the \"update\" folder.";
+                    }
+                    MyPetApi.getLogger().info(message);
                 }
-                MyPetApi.getLogger().info(message);
+                httpConn.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
             }
