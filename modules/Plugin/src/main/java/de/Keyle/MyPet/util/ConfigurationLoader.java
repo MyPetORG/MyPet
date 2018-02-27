@@ -474,6 +474,9 @@ public class ConfigurationLoader {
             HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED = config.getDouble("MyPet.HungerSystem.HungerPointsPerFeed", HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED);
             config.getConfigurationSection("MyPet.HungerSystem").set("HungerPointsPerFeed", null);
         }
+        if (config.contains("MyPet.Backup")) {
+            config.getConfigurationSection("MyPet").set("Backup", null);
+        }
 
         MyPetApi.getPlugin().saveConfig();
 
