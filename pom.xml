@@ -469,11 +469,6 @@
         </dependency>
     </dependencies>
 
-    <ciManagement>
-        <system>jenkins</system>
-        <url>http://build.keyle.de</url>
-    </ciManagement>
-
     <scm>
         <connection>scm:git:git@github.com:xXKeyleXx/MyPet.git</connection>
         <developerConnection>scm:git:git@github.com:xXKeyleXx/MyPet.git</developerConnection>
