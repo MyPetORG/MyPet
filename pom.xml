@@ -170,10 +170,6 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>protocollib-repo</id>
-            <url>http://repo.dmulloy2.net/content/groups/public</url>
-        </repository>
-        <repository>
             <id>placeholderapi-repo</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
