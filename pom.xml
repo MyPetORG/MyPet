@@ -140,7 +140,8 @@
 
         <bstats.version>1.2</bstats.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
-        <forms_rt.version>7.0.3</forms_rt.version>
+        <json.version>1.1.1</json.version>
+        <gson.version>2.6.1</gson.version>
         <fanciful-chat.version>0.0.4</fanciful-chat.version>
 
         <download.translations>prepare-package</download.translations>
@@ -444,13 +445,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.intellij</groupId>
-            <artifactId>forms_rt</artifactId>
-            <version>${forms_rt.version}</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>${bstats.version}</version>
@@ -467,6 +461,11 @@
             <artifactId>fanciful-chat</artifactId>
             <version>${fanciful-chat.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.nanohttpd</groupId>
+            <artifactId>nanohttpd</artifactId>
+            <version>2.3.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

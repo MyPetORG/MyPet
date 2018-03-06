@@ -15,10 +15,8 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Premium][PremiumImage]][Premium]
 
 ## The License
-Copyright (c) 2011-2016, Keyle<br />
+Copyright (c) 2011-2018, Keyle<br />
 MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
-
-All icons (except logo.png) in the [resources/images] folder are from the [ionicons] icon pack and that is MIT licensed.
 
 ## Builds
 Download the latest builds from the official [MyPet-Site][Builds].
@@ -26,8 +24,6 @@ Download the latest builds from the official [MyPet-Site][Builds].
 
 [Logo]: http://dl.keyle.de/images/logo.png
 [License]: http://www.gnu.org/licenses/lgpl.html
-[ionicons]: http://ionicons.com/
-[resources/images]: https://github.com/xXKeyleXx/MyPet/tree/master/src/main/resources/images
 [Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
 [MCStats]: http://mcstats.org/plugin/MyPet
 [MCStatsImage]: http://dl.keyle.de/images/metrics.png

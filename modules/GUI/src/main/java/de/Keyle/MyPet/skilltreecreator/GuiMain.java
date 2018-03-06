@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,75 +20,15 @@
 
 package de.Keyle.MyPet.skilltreecreator;
 
-import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.skill.SkillsInfo;
-import de.Keyle.MyPet.api.skill.skills.*;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 public class GuiMain {
-    public static LevelCreator levelCreator;
-    public static SkilltreeCreator skilltreeCreator;
-    public static SkillPropertyEditor skillPropertyEditor;
     public static String configPath;
-
-    public static String[] petTypes = new String[]{
-            "default",
-            "Bat",
-            "Blaze",
-            "CaveSpider",
-            "Chicken",
-            "Cow",
-            "Creeper",
-            "Donkey",
-            "ElderGuardian",
-            "EnderDragon",
-            "Enderman",
-            "Endermite",
-            "Evoker",
-            "Ghast",
-            "Giant",
-            "Guardian",
-            "Horse",
-            "Husk",
-            "Illusioner",
-            "IronGolem",
-            "Llama",
-            "MagmaCube",
-            "Mooshroom",
-            "Mule",
-            "Ocelot",
-            "Parrot",
-            "Pig",
-            "PigZombie",
-            "PolarBear",
-            "Rabbit",
-            "Sheep",
-            "Silverfish",
-            "Skeleton",
-            "SkeletonHorse",
-            "Slime",
-            "Snowman",
-            "Spider",
-            "Squid",
-            "Stray",
-            "Witch",
-            "Wither",
-            "WitherSkeleton",
-            "Wolf",
-            "Vex",
-            "Villager",
-            "Vindicator",
-            "Zombie",
-            "ZombieHorse",
-            "ZombieVillager"
-    };
 
     public static void main(String[] args) {
         String path = "";
@@ -101,138 +41,38 @@ public class GuiMain {
         path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
         File pluginDirFile = new File(path);
         configPath = pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator;
+        File defaultSkilltreePath = new File(configPath + "skilltrees" + File.separator);
+
+
+        //SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
+        //SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
         }
-        Image logoImage = new ImageIcon(ClassLoader.getSystemResource("images/logo.png")).getImage();
-
-        registerSkillsInfo();
-
-        Configuration.LevelSystem.Experience.LEVEL_CAP = Integer.MAX_VALUE;
-
-        new File(configPath + "skilltrees" + File.separator).mkdirs();
-
-        SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
-
-        skilltreeCreator = new SkilltreeCreator();
-        final JFrame skilltreeCreatorFrame = skilltreeCreator.getFrame();
-        skilltreeCreatorFrame.setContentPane(skilltreeCreator.getMainPanel());
-        skilltreeCreatorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        skilltreeCreatorFrame.setIconImage(logoImage);
-        skilltreeCreatorFrame.pack();
-        skilltreeCreatorFrame.setVisible(true);
-        skilltreeCreatorFrame.setLocationRelativeTo(null);
-        skilltreeCreatorFrame.addWindowListener(new WindowListener() {
-            public void windowOpened(WindowEvent e) {
+        Image logoImage = new ImageIcon(ClassLoader.getSystemResource("gui/assets/img/logo_100.png")).getImage();
+        final JFileChooser fc = new JFileChooser() {
+            @Override
+            protected JDialog createDialog(Component parent) throws HeadlessException {
+                JDialog dialog = super.createDialog(parent);
+                dialog.setIconImage(logoImage);
+                return dialog;
             }
+        };
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (defaultSkilltreePath.exists()) {
+            fc.setCurrentDirectory(defaultSkilltreePath);
+        }
+        int returnVal = fc.showOpenDialog(null);
 
-            public void windowClosing(WindowEvent e) {
-                int result = JOptionPane.showConfirmDialog(skilltreeCreatorFrame, "Are you sure that you want to close the SkilltreeCreator?", "Skilltree-Creator", JOptionPane.OK_CANCEL_OPTION);
-                if (result == 0) {
-                    System.exit(0);
-                }
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                new WebServer(fc.getSelectedFile());
+                Desktop.getDesktop().browse(new URI("http://localhost:64712"));
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
             }
-
-            public void windowClosed(WindowEvent e) {
-            }
-
-            public void windowIconified(WindowEvent e) {
-            }
-
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            public void windowActivated(WindowEvent e) {
-            }
-
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-
-        levelCreator = new LevelCreator();
-        final JFrame levelCreatorFrame = levelCreator.getFrame();
-        levelCreatorFrame.setContentPane(levelCreator.getMainPanel());
-        levelCreatorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        levelCreatorFrame.setIconImage(logoImage);
-        levelCreatorFrame.pack();
-        levelCreatorFrame.setLocationRelativeTo(null);
-        levelCreatorFrame.addWindowListener(new WindowListener() {
-            public void windowOpened(WindowEvent e) {
-            }
-
-            public void windowClosing(WindowEvent e) {
-                skilltreeCreatorFrame.setEnabled(true);
-            }
-
-            public void windowClosed(WindowEvent e) {
-            }
-
-            public void windowIconified(WindowEvent e) {
-            }
-
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            public void windowActivated(WindowEvent e) {
-            }
-
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-
-        skillPropertyEditor = new SkillPropertyEditor();
-        final JFrame skillPropertyEditorFrame = skillPropertyEditor.getFrame();
-        skillPropertyEditorFrame.setContentPane(skillPropertyEditor.getMainPanel());
-        skillPropertyEditorFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        skillPropertyEditorFrame.setIconImage(logoImage);
-        skillPropertyEditorFrame.pack();
-        skillPropertyEditorFrame.setLocationRelativeTo(null);
-        skillPropertyEditorFrame.addWindowListener(new WindowListener() {
-            public void windowOpened(WindowEvent e) {
-            }
-
-            public void windowClosing(WindowEvent e) {
-                levelCreatorFrame.setEnabled(true);
-            }
-
-            public void windowClosed(WindowEvent e) {
-            }
-
-            public void windowIconified(WindowEvent e) {
-            }
-
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            public void windowActivated(WindowEvent e) {
-            }
-
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-    }
-
-    public static void registerSkillsInfo() {
-        SkillsInfo.registerSkill(BeaconInfo.class);
-        SkillsInfo.registerSkill(BehaviorInfo.class);
-        SkillsInfo.registerSkill(ControlInfo.class);
-        SkillsInfo.registerSkill(DamageInfo.class);
-        SkillsInfo.registerSkill(FireInfo.class);
-        SkillsInfo.registerSkill(LifeInfo.class);
-        SkillsInfo.registerSkill(HealInfo.class);
-        SkillsInfo.registerSkill(InventoryInfo.class);
-        SkillsInfo.registerSkill(KnockbackInfo.class);
-        SkillsInfo.registerSkill(LightningInfo.class);
-        SkillsInfo.registerSkill(PickupInfo.class);
-        SkillsInfo.registerSkill(PoisonInfo.class);
-        SkillsInfo.registerSkill(RangedInfo.class);
-        SkillsInfo.registerSkill(RideInfo.class);
-        SkillsInfo.registerSkill(SlowInfo.class);
-        SkillsInfo.registerSkill(SprintInfo.class);
-        SkillsInfo.registerSkill(ThornsInfo.class);
-        SkillsInfo.registerSkill(WitherInfo.class);
-        SkillsInfo.registerSkill(StompInfo.class);
+        }
     }
 }
