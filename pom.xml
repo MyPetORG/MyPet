@@ -146,7 +146,6 @@
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <json.version>1.1.1</json.version>
         <gson.version>2.6.1</gson.version>
-        <forms_rt.version>7.0.3</forms_rt.version>
         <fanciful-chat.version>0.0.4</fanciful-chat.version>
 
         <download.translations>prepare-package</download.translations>
@@ -457,13 +456,6 @@
             <version>${mongodb.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.intellij</groupId>
-            <artifactId>forms_rt</artifactId>
-            <version>${forms_rt.version}</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>knbt</artifactId>
             <version>${knbt.version}</version>
@@ -488,6 +480,11 @@
             <artifactId>fanciful-chat</artifactId>
             <version>${fanciful-chat.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.nanohttpd</groupId>
+            <artifactId>nanohttpd</artifactId>
+            <version>2.3.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
