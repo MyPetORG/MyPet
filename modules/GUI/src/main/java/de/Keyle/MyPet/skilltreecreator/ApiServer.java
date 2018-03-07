@@ -81,7 +81,7 @@ public class ApiServer {
                             }
                             for (Object o : jsonArray) {
                                 JSONObject jsonSkilltree = (JSONObject) o;
-                                String filename = jsonSkilltree.get("id").toString() + ".st.json";
+                                String filename = jsonSkilltree.get("ID").toString() + ".st.json";
                                 saveJsonObject(new File(skilltreeDir, filename), jsonSkilltree);
                             }
                         }
