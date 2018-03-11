@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.Keyle.MyPet.MyPetApi;
-import org.bukkit.ChatColor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -60,7 +59,7 @@ public class ConfigurationJSON {
             Object obj = parser.parse(reader);
             config = (JSONObject) obj;
         } catch (ParseException e) {
-            MyPetApi.getLogger().warning(ChatColor.RED + "Could not parse/load " + jsonFile.getName());
+            MyPetApi.getLogger().warning("Could not parse/load " + jsonFile.getName());
             return false;
         } catch (Exception e) {
             e.printStackTrace();

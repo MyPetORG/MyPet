@@ -216,7 +216,7 @@ public class EntityListener implements Listener {
                                     m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is) + ".name");
                                 } catch (Exception e) {
                                     MyPetApi.getLogger().warning("A food item for \"" + myPet.getPetType().name() + "\" caused an error. If you think this is a bug please report it to the MyPet developer.");
-                                    MyPetApi.getLogger().warning("" + is);
+                                    MyPetApi.getLogger().warning(is.toString());
                                     e.printStackTrace();
                                     continue;
                                 }

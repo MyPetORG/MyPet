@@ -78,6 +78,9 @@ public class MyPetLogger extends PluginLogger {
 
         String message = logRecord.getMessage();
         if (message != null) {
+            if (logRecord.getLevel() == Level.WARNING || logRecord.getLevel() == Level.SEVERE) {
+                message = ChatColor.RED + message;
+            }
             if (AnsiSupported) {
                 message = applyStyles(message);
             }

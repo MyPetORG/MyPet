@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
-import org.bukkit.ChatColor;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class SkillManager implements ServiceContainer {
 
     public void registerSkill(Class<? extends Skill> clazz) {
         if (!Skill.class.isAssignableFrom(clazz)) {
-            MyPetApi.getLogger().warning(ChatColor.RED + clazz.getName() + " doesn't implements Skill!");
+            MyPetApi.getLogger().warning(clazz.getName() + " doesn't implements Skill!");
             return;
         }
         try {
@@ -61,13 +60,13 @@ public class SkillManager implements ServiceContainer {
                     registeredSkillsNames.put(clazz, skillName);
                     registeredNamesSkills.put(skillName, clazz);
                 } else {
-                    MyPetApi.getLogger().warning(ChatColor.RED + "There is already a skill registered with the the name " + skillName);
+                    MyPetApi.getLogger().warning("There is already a skill registered with the the name " + skillName);
                 }
                 return;
             }
-            MyPetApi.getLogger().warning(ChatColor.RED + clazz.getName() + " is not annotated with @SkillName!");
+            MyPetApi.getLogger().warning(clazz.getName() + " is not annotated with @SkillName!");
         } catch (Exception e) {
-            MyPetApi.getLogger().warning(ChatColor.RED + clazz.getName() + " is not a valid skill!");
+            MyPetApi.getLogger().warning(clazz.getName() + " is not a valid skill!");
         }
     }
 
@@ -129,7 +128,7 @@ public class SkillManager implements ServiceContainer {
             Object obj = ctor.newInstance(myPet);
             return (Skill) obj;
         } catch (Exception e) {
-            MyPetApi.getLogger().warning(ChatColor.RED + clazz.getName() + " is not a valid skill)!");
+            MyPetApi.getLogger().warning(clazz.getName() + " is not a valid skill)!");
             e.printStackTrace();
         }
         return null;

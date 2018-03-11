@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.experience;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.experience.Experience;
-import org.bukkit.ChatColor;
 import org.mozilla.javascript.*;
 
 import java.io.File;
@@ -67,7 +66,7 @@ public class JavaScript extends Experience {
             try {
                 return lastLevel = jsExp.getLevel(exp, scriptInfo);
             } catch (Exception e) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error:");
+                MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error:");
                 MyPetApi.getLogger().warning("   " + e.getLocalizedMessage());
                 e.printStackTrace();
                 isUsable = false;
@@ -86,7 +85,7 @@ public class JavaScript extends Experience {
             try {
                 return lastRequiredExp = jsExp.getRequiredExp(exp, scriptInfo);
             } catch (Exception e) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
+                MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error.");
                 MyPetApi.getLogger().warning("   " + e.getLocalizedMessage());
                 e.printStackTrace();
                 isUsable = false;
@@ -106,7 +105,7 @@ public class JavaScript extends Experience {
             try {
                 return lastCurrentExp = jsExp.getCurrentExp(exp, scriptInfo);
             } catch (Exception e) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
+                MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error.");
                 MyPetApi.getLogger().warning("   " + e.getLocalizedMessage());
                 e.printStackTrace();
                 isUsable = false;
@@ -125,7 +124,7 @@ public class JavaScript extends Experience {
             try {
                 return jsExp.getExpByLevel(level, scriptInfo);
             } catch (Exception e) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
+                MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error.");
                 MyPetApi.getLogger().warning("   " + e.getLocalizedMessage());
                 e.printStackTrace();
                 isUsable = false;
@@ -180,19 +179,19 @@ public class JavaScript extends Experience {
         public boolean init() {
             boolean usable = true;
             if (!scope.has("getRequiredExp", scope)) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getRequiredExp(exp, mypet)\" function:");
+                MyPetApi.getLogger().warning("Your levelscript (exp.js) lacks the \"getRequiredExp(exp, mypet)\" function:");
                 usable = false;
             }
             if (!scope.has("getLevel", scope)) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getLevel(exp, mypet)\" function:");
+                MyPetApi.getLogger().warning("Your levelscript (exp.js) lacks the \"getLevel(exp, mypet)\" function:");
                 usable = false;
             }
             if (!scope.has("getCurrentExp", scope)) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getCurrentExp(exp, mypet)\" function:");
+                MyPetApi.getLogger().warning("Your levelscript (exp.js) lacks the \"getCurrentExp(exp, mypet)\" function:");
                 usable = false;
             }
             if (!scope.has("getExpByLevel", scope)) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getExpByLevel(level, mypet)\" function:");
+                MyPetApi.getLogger().warning("Your levelscript (exp.js) lacks the \"getExpByLevel(level, mypet)\" function:");
                 usable = false;
             }
             if (!usable) {

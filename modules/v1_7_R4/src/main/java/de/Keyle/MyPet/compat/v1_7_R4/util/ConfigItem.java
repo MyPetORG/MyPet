@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -100,7 +100,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
             try {
                 nbtBase = MojangsonParser.parse(tagString);
             } catch (Exception e) {
-                MyPetApi.getLogger().warning(ChatColor.RED + "Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+                MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
                 MyPetApi.getLogger().warning(data + tagString);
             }
         }
