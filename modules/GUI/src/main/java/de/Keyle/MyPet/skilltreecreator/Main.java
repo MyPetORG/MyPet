@@ -31,6 +31,11 @@ public class Main {
     public static String configPath;
 
     public static void main(String[] args) {
+        if (GraphicsEnvironment.isHeadless()) {
+            System.out.println("You can not run this without a graphical interface!");
+            return;
+        }
+
         String path = "";
         try {
             path = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
