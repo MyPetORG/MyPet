@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R1.skill.skills.ranged.nms;
 
-import de.Keyle.MyPet.api.skill.skills.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_8_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R1.skill.skills.ranged.bukkit.CraftMyPetSmallFireball;
