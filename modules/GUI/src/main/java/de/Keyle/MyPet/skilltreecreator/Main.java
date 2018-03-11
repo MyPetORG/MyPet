@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.skilltreecreator;
 
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -29,13 +27,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class GuiMain {
+public class Main {
     public static String configPath;
 
     public static void main(String[] args) {
         String path = "";
         try {
-            path = GuiMain.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            path = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -66,8 +64,6 @@ public class GuiMain {
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                SkillTreeLoaderJSON.loadSkilltrees(fc.getSelectedFile());
-
                 new WebServer(fc.getSelectedFile());
                 Desktop.getDesktop().browse(new URI("http://localhost:64712"));
             } catch (IOException | URISyntaxException e) {
