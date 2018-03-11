@@ -21,14 +21,16 @@
 package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.api.*;
-import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.EntityRegistry;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.*;
-import de.Keyle.MyPet.api.skill.Skills;
-import de.Keyle.MyPet.api.skill.SkillsInfo;
-import de.Keyle.MyPet.api.skill.skills.*;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
-import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoader;
+import de.Keyle.MyPet.api.skill.SkillManager;
+import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
@@ -45,8 +47,6 @@ import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.skills.*;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
@@ -205,46 +205,44 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getCommand("petshop").setExecutor(new CommandShop());
 
         // register skills
-        registerSkillsInfo();
         registerSkills();
 
         // create folders
         File skilltreeFolder = new File(getDataFolder().getPath(), "skilltrees");
         getDataFolder().mkdirs();
         boolean createDefaultSkilltree = skilltreeFolder.mkdirs();
-        new File(getDataFolder(), "locale").mkdirs();
+        boolean createLocaleReadme = new File(getDataFolder(), "locale").mkdirs();
         new File(getDataFolder(), "logs").mkdirs();
 
+        if (!createDefaultSkilltree) {
+            File legacyDefaultSKilltree = new File(skilltreeFolder, "default.st");
+            createDefaultSkilltree = legacyDefaultSKilltree.exists();
+            if (createDefaultSkilltree) {
+                if (Util.getSha256FromFile(legacyDefaultSKilltree) == -4323392001800132707L) {
+                    legacyDefaultSKilltree.delete();
+                }
+            }
+        }
+
         if (createDefaultSkilltree) {
-            platformHelper.copyResource(this, "skilltrees/default.st", new File(skilltreeFolder, "default.st"));
-            getLogger().info("Default skilltree file created (default.st).");
+            //platformHelper.copyResource(this, "skilltrees/ride.st.json", new File(skilltreeFolder, "ride.st.json"));
+            //platformHelper.copyResource(this, "skilltrees/pvp.st.json", new File(skilltreeFolder, "pvp.st.json"));
+            //platformHelper.copyResource(this, "skilltrees/combat.st.json", new File(skilltreeFolder, "combat.st.json"));
+            //platformHelper.copyResource(this, "skilltrees/utility.st.json", new File(skilltreeFolder, "utility.st.json"));
+            MyPetApi.getLogger().info("Default skilltree files created.");
         }
 
         // load skilltrees
-        List<String> petTypes = new LinkedList<>();
-        petTypes.add("default");
-        for (MyPetType type : MyPetType.all()) {
-            petTypes.add(type.name());
-        }
-
-        SkillTreeMobType.clearMobTypes();
-        SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
-        SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
-
-        Set<String> skilltreeNames = new LinkedHashSet<>();
-        for (MyPetType mobType : MyPetType.values()) {
-            SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(mobType);
-            SkillTreeLoader.addDefault(skillTreeMobType);
-            SkillTreeLoader.manageInheritance(skillTreeMobType);
-            skilltreeNames.addAll(skillTreeMobType.getSkillTreeNames());
-        }
+        MyPetApi.getSkilltreeManager().clearSkilltrees();
+        SkillTreeLoaderJSON.loadSkilltrees(new File(getDataFolder(), "skilltrees"));
         // register skilltree permissions
-        for (String skilltreeName : skilltreeNames) {
+        for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
             try {
-                Bukkit.getPluginManager().addPermission(new Permission("MyPet.skilltree." + skilltreeName));
+                Bukkit.getPluginManager().addPermission(new Permission(skilltree.getPermission()));
             } catch (Exception ignored) {
             }
         }
+
         for (int i = 0; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
             try {
                 Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
@@ -252,9 +250,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             }
         }
 
-        File translationReadme = new File(getDataFolder(), "locale" + File.separator + "readme.txt");
-        if (!translationReadme.exists()) {
-            platformHelper.copyResource(this, "locale-readme.txt", translationReadme);
+        if (createLocaleReadme) {
+            platformHelper.copyResource(this, "locale-readme.txt", new File(getDataFolder(), "locale" + File.separator + "readme.txt"));
         }
         Translation.init();
 
@@ -441,6 +438,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     private void registerServices() {
         serviceManager.registerService(RepositoryMyPetConverterService.class);
+        serviceManager.registerService(SkillManager.class);
+        serviceManager.registerService(SkilltreeManager.class);
         serviceManager.registerService(ShopManager.class);
     }
 
@@ -481,49 +480,26 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     }
 
     public static void registerSkills() {
-        Skills.registerSkill(Inventory.class);
-        Skills.registerSkill(Heal.class);
-        Skills.registerSkill(Pickup.class);
-        Skills.registerSkill(Behavior.class);
-        Skills.registerSkill(Damage.class);
-        Skills.registerSkill(Control.class);
-        Skills.registerSkill(Life.class);
-        Skills.registerSkill(Poison.class);
-        Skills.registerSkill(Ride.class);
-        Skills.registerSkill(Thorns.class);
-        Skills.registerSkill(Fire.class);
-        Skills.registerSkill(Beacon.class);
-        Skills.registerSkill(Wither.class);
-        Skills.registerSkill(Lightning.class);
-        Skills.registerSkill(Slow.class);
-        Skills.registerSkill(Knockback.class);
-        Skills.registerSkill(Ranged.class);
-        Skills.registerSkill(Sprint.class);
-        Skills.registerSkill(Stomp.class);
-        Skills.registerSkill(Shield.class);
-    }
-
-    public static void registerSkillsInfo() {
-        SkillsInfo.registerSkill(InventoryInfo.class);
-        SkillsInfo.registerSkill(HealInfo.class);
-        SkillsInfo.registerSkill(PickupInfo.class);
-        SkillsInfo.registerSkill(BehaviorInfo.class);
-        SkillsInfo.registerSkill(DamageInfo.class);
-        SkillsInfo.registerSkill(ControlInfo.class);
-        SkillsInfo.registerSkill(LifeInfo.class);
-        SkillsInfo.registerSkill(PoisonInfo.class);
-        SkillsInfo.registerSkill(RideInfo.class);
-        SkillsInfo.registerSkill(ThornsInfo.class);
-        SkillsInfo.registerSkill(FireInfo.class);
-        SkillsInfo.registerSkill(BeaconInfo.class);
-        SkillsInfo.registerSkill(WitherInfo.class);
-        SkillsInfo.registerSkill(LightningInfo.class);
-        SkillsInfo.registerSkill(SlowInfo.class);
-        SkillsInfo.registerSkill(KnockbackInfo.class);
-        SkillsInfo.registerSkill(RangedInfo.class);
-        SkillsInfo.registerSkill(SprintInfo.class);
-        SkillsInfo.registerSkill(StompInfo.class);
-        SkillsInfo.registerSkill(ShieldInfo.class);
+        MyPetApi.getSkillManager().registerSkill(BackpackImpl.class);
+        MyPetApi.getSkillManager().registerSkill(HealImpl.class);
+        MyPetApi.getSkillManager().registerSkill(PickupImpl.class);
+        MyPetApi.getSkillManager().registerSkill(BehaviorImpl.class);
+        MyPetApi.getSkillManager().registerSkill(DamageImpl.class);
+        MyPetApi.getSkillManager().registerSkill(ControlImpl.class);
+        MyPetApi.getSkillManager().registerSkill(LifeImpl.class);
+        MyPetApi.getSkillManager().registerSkill(PoisonImpl.class);
+        MyPetApi.getSkillManager().registerSkill(RideImpl.class);
+        MyPetApi.getSkillManager().registerSkill(ThornsImpl.class);
+        MyPetApi.getSkillManager().registerSkill(FireImpl.class);
+        MyPetApi.getSkillManager().registerSkill(BeaconImpl.class);
+        MyPetApi.getSkillManager().registerSkill(WitherImpl.class);
+        MyPetApi.getSkillManager().registerSkill(LightningImpl.class);
+        MyPetApi.getSkillManager().registerSkill(SlowImpl.class);
+        MyPetApi.getSkillManager().registerSkill(KnockbackImpl.class);
+        MyPetApi.getSkillManager().registerSkill(RangedImpl.class);
+        MyPetApi.getSkillManager().registerSkill(SprintImpl.class);
+        MyPetApi.getSkillManager().registerSkill(StompImpl.class);
+        MyPetApi.getSkillManager().registerSkill(ShieldImpl.class);
     }
 
     private int loadGroups(File f) {

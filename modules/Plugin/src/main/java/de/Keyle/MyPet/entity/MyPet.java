@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -34,11 +33,10 @@ import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
-import de.Keyle.MyPet.api.skill.SkillInstance;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.experience.Experience;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -47,10 +45,10 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
-import de.Keyle.MyPet.skill.skills.Damage;
-import de.Keyle.MyPet.skill.skills.Inventory;
-import de.Keyle.MyPet.skill.skills.Life;
-import de.Keyle.MyPet.skill.skills.Ranged;
+import de.Keyle.MyPet.skill.skills.BackpackImpl;
+import de.Keyle.MyPet.skill.skills.DamageImpl;
+import de.Keyle.MyPet.skill.skills.LifeImpl;
+import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.keyle.knbt.*;
 import org.apache.commons.lang.RandomStringUtils;
@@ -71,7 +69,7 @@ import static org.bukkit.Bukkit.getServer;
 public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
     protected final MyPetPlayer petOwner;
     protected MyPetBukkitEntity bukkitEntity;
-    protected String petName = "Pet";
+    protected String petName;
     protected double health;
     protected int respawnTime = 0;
     protected int hungerTime = 0;
@@ -79,6 +77,12 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected UUID uuid = null;
     protected String worldGroup = "";
     protected TagCompound storage = new TagCompound();
+    protected PetState status = PetState.Despawned;
+    protected boolean wantsToRespawn = false;
+    protected Skilltree skilltree = null;
+    protected Skills skills;
+    protected MyPetExperience experience;
+    protected long lastUsed = -1;
 
     @Override
     public void setExp(double exp) {
@@ -123,13 +127,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void setSkills(TagCompound skills) {
     }
 
-    protected PetState status = PetState.Despawned;
-    protected boolean wantsToRespawn = false;
-    protected SkillTree skillTree = null;
-    protected Skills skills;
-    protected MyPetExperience experience;
-    protected long lastUsed = -1;
-
     protected MyPet(MyPetPlayer petOwner) {
         if (petOwner == null) {
             throw new IllegalArgumentException("Owner must not be null.");
@@ -155,24 +152,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petName = Translation.getString("Name." + getPetType().name(), this.petOwner);
     }
 
-    public Optional<MyPetBukkitEntity> getEntity() {
+    public java.util.Optional<MyPetBukkitEntity> getEntity() {
         if (getStatus() == PetState.Here) {
-            return Optional.of(bukkitEntity);
+            return java.util.Optional.of(bukkitEntity);
         }
-        return Optional.absent();
+        return java.util.Optional.empty();
     }
 
     public double getYSpawnOffset() {
         return 0;
     }
 
-    public Optional<Location> getLocation() {
+    public java.util.Optional<Location> getLocation() {
         if (status == PetState.Here) {
-            return Optional.of(bukkitEntity.getLocation());
+            return java.util.Optional.of(bukkitEntity.getLocation());
         } else if (petOwner.isOnline()) {
-            return Optional.of(petOwner.getPlayer().getLocation());
+            return java.util.Optional.of(petOwner.getPlayer().getLocation());
         } else {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
     }
 
@@ -183,11 +180,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getDamage() {
-        return getSkills().hasSkill(Damage.class) ? getSkills().getSkill(Damage.class).get().getDamage() : 0;
+        return getSkills().has(DamageImpl.class) ? getSkills().get(DamageImpl.class).getDamage() : 0;
     }
 
     public double getRangedDamage() {
-        return getSkills().hasSkill(Ranged.class) ? getSkills().getSkill(Ranged.class).get().getDamage() : 0;
+        return getSkills().has(RangedImpl.class) ? getSkills().get(RangedImpl.class).getDamage() : 0;
     }
 
     public boolean isPassiv() {
@@ -216,7 +213,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getMaxHealth() {
-        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isSkillActive(Life.class) ? skills.getSkill(Life.class).get().getHpIncrease() : 0);
+        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isActive(LifeImpl.class) ? skills.get(LifeImpl.class).getExtraLife() : 0);
     }
 
     public double getHealth() {
@@ -312,41 +309,35 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public boolean autoAssignSkilltree() {
-        if (skillTree == null && this.petOwner.isOnline()) {
-            if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
-                if (SkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0) {
-                    List<SkillTree> skilltrees = SkillTreeMobType.getSkillTrees(this.getPetType());
-                    if (Configuration.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT) {
-                        Collections.shuffle(skilltrees);
-                    }
-                    for (SkillTree skillTree : skilltrees) {
-                        if (Permissions.hasLegacy(this.petOwner.getPlayer(), "MyPet.skilltree.", skillTree.getPermission())) {
-                            return setSkilltree(skillTree);
-                        }
-                    }
-                }
-            } else {
-                for (SkillTree skillTree : SkillTreeMobType.getSkillTrees(this.getPetType())) {
-                    if (Permissions.hasLegacy(this.petOwner.getPlayer(), "MyPet.skilltree.", skillTree.getPermission())) {
+        if (skilltree == null && this.petOwner.isOnline()) {
+            List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getSkilltrees());
+            if (Configuration.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT) {
+                Collections.shuffle(skilltrees);
+            }
+
+            for (Skilltree skilltree : skilltrees) {
+                if (Permissions.has(this.petOwner.getPlayer(), skilltree.getPermission())) {
+                    if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
+                        return setSkilltree(skilltree);
+                    } else {
                         getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
                         break;
                     }
                 }
-                return false;
             }
         }
         return true;
     }
 
-    public SkillTree getSkilltree() {
-        return skillTree;
+    public Skilltree getSkilltree() {
+        return skilltree;
     }
 
     public TagCompound getSkillInfo() {
         TagCompound skillsNBT = new TagCompound();
-        Collection<SkillInstance> skillList = this.getSkills().getSkills();
+        Collection<Skill> skillList = this.getSkills().all();
         if (skillList.size() > 0) {
-            for (SkillInstance skill : skillList) {
+            for (Skill skill : skillList) {
                 if (skill instanceof NBTStorage) {
                     NBTStorage storageSkill = (NBTStorage) skill;
                     TagCompound s = storageSkill.save();
@@ -562,10 +553,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             bukkitEntity.removeEntity();
             bukkitEntity = null;
 
-            Optional<Inventory> invSkill = getSkills().getSkill(Inventory.class);
-            if (invSkill.isPresent()) {
-                invSkill.get().closeInventory();
-            }
+            getSkills().get(BackpackImpl.class).closeInventory();
         }
     }
 
@@ -614,7 +602,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void schedule() {
         if (status != PetState.Despawned && getOwner().isOnline()) {
-            for (SkillInstance skill : skills.getSkills()) {
+            for (Skill skill : skills.all()) {
                 if (skill instanceof Scheduler) {
                     ((Scheduler) skill).schedule();
                 }
@@ -674,13 +662,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petNBT.getCompoundData().put("Info", writeExtendedInfo());
         petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
         petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(wantsToRespawn));
-        if (this.skillTree != null) {
-            petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
+        if (this.skilltree != null) {
+            petNBT.getCompoundData().put("Skilltree", new TagString(skilltree.getName()));
         }
         TagCompound skillsNBT = new TagCompound();
-        Collection<SkillInstance> skillList = this.getSkills().getSkills();
+        Collection<Skill> skillList = this.getSkills().all();
         if (skillList.size() > 0) {
-            for (SkillInstance skill : skillList) {
+            for (Skill skill : skillList) {
                 if (skill instanceof NBTStorage) {
                     NBTStorage storageSkill = (NBTStorage) skill;
                     TagCompound s = storageSkill.save();
@@ -697,7 +685,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     @Override
     public String toString() {
-        return "MyPet{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", worldgroup=" + worldGroup + "}";
+        return "MyPet{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skilltree.getName() + ", worldgroup=" + worldGroup + "}";
     }
 
     public static float[] getEntitySize(Class<? extends MyPetMinecraftEntity> entityMyPetClass) {
@@ -709,15 +697,15 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
 
-    public boolean setSkilltree(SkillTree skillTree) {
-        if (skillTree == null || this.skillTree == skillTree) {
+    public boolean setSkilltree(Skilltree skilltree) {
+        if (skilltree == null || this.skilltree == skilltree) {
             return false;
         }
-        if (skillTree.getRequiredLevel() > 1 && getExperience().getLevel() < skillTree.getRequiredLevel()) {
+        if (skilltree.getRequiredLevel() > 1 && getExperience().getLevel() < skilltree.getRequiredLevel()) {
             return false;
         }
-        skills.reset();
-        this.skillTree = skillTree;
+        this.skilltree = skilltree;
+        this.skills = new Skills(this); //TODO fix old instances
         getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, experience.getLevel(), 0, true));
         return true;
     }

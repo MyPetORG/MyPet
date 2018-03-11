@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.skill.skills.ControlImpl;
 import org.bukkit.Location;
 
 @Compat("v1_11_R1")
@@ -38,21 +39,21 @@ public class Control implements AIGoal, Scheduler {
     private int timeToMove = 0;
     private AbstractNavigation nav;
     private boolean stopControl = false;
-    private de.Keyle.MyPet.skill.skills.Control controlSkill;
     private boolean isRunning = false;
 
     public Control(MyPetMinecraftEntity entity, float speedModifier) {
         this.myPet = entity.getMyPet();
         this.speedModifier = speedModifier;
         nav = entity.getPetNavigation();
-        controlSkill = this.myPet.getSkills().getSkill(de.Keyle.MyPet.skill.skills.Control.class).get();
     }
 
     @Override
     public boolean shouldStart() {
         if (!this.myPet.getEntity().get().canMove()) {
             return false;
-        } else if (controlSkill == null || !controlSkill.isActive()) {
+        }
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        if (controlSkill == null || !controlSkill.isActive()) {
             return false;
         }
         return controlSkill.getLocation(false) != null;
@@ -63,6 +64,7 @@ public class Control implements AIGoal, Scheduler {
         if (!this.myPet.getEntity().get().canMove()) {
             return true;
         }
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
         if (!controlSkill.isActive()) {
             return true;
         }
@@ -84,6 +86,7 @@ public class Control implements AIGoal, Scheduler {
     @Override
     public void start() {
         nav.getParameters().addSpeedModifier("Control", speedModifier);
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
         moveTo = controlSkill.getLocation();
         if (moveTo.getWorld() != myPet.getLocation().get().getWorld()) {
             stopControl = true;
@@ -117,6 +120,7 @@ public class Control implements AIGoal, Scheduler {
 
     @Override
     public void schedule() {
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
         if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false)) {
             start();
         }

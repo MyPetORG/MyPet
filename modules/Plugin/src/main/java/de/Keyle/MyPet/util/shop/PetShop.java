@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.shop;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -263,9 +262,7 @@ public class PetShop {
                 pet.load(pets.getConfigurationSection(name));
 
                 Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                if (converter.isPresent()) {
-                    converter.get().convert(pet);
-                }
+                converter.ifPresent(service -> service.convert(pet));
 
                 if (Util.isBetween(0, 53, pet.getPosition())) {
                     this.pets.put(pet.getPosition(), pet);

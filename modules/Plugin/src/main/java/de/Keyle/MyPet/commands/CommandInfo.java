@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,8 +31,8 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.skill.skills.Behavior;
-import de.Keyle.MyPet.skill.skills.Damage;
+import de.Keyle.MyPet.skill.skills.BehaviorImpl;
+import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.bukkit.Bukkit;
@@ -123,7 +123,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     }
                 }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, player, myPet)) {
-                    double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).get().getDamage() : 0);
+                    double damage = (myPet.getSkills().isActive(DamageImpl.class) ? myPet.getSkills().get(DamageImpl.class).getDamage() : 0);
                     player.sendMessage("   " + Translation.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }
@@ -176,8 +176,8 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.Behavior.adminOnly, player, myPet)) {
-                    if (myPet.getSkills().hasSkill(Behavior.class)) {
-                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class).get();
+                    if (myPet.getSkills().has(BehaviorImpl.class)) {
+                        BehaviorImpl behavior = myPet.getSkills().get(BehaviorImpl.class);
                         player.sendMessage("   " + Translation.getString("Name.Skill.Behavior", player) + ": " + Translation.getString("Name." + behavior.getBehavior().name(), player));
                         infoShown = true;
                     }

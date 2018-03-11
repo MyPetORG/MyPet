@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,12 +31,16 @@ import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
+import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
+import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.skill.skills.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
-import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.skill.skills.BackpackImpl;
+import de.Keyle.MyPet.skill.skills.ControlImpl;
+import de.Keyle.MyPet.skill.skills.ShieldImpl;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
@@ -65,15 +69,15 @@ public class PlayerListener implements Listener {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
             if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().get().canMove()) {
-                if (myPet.getSkills().isSkillActive(Control.class)) {
-                    if (myPet.getSkills().isSkillActive(Behavior.class)) {
-                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class).get();
-                        if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm) {
+                if (myPet.getSkills().isActive(ControlImpl.class)) {
+                    if (myPet.getSkills().isActive(Behavior.class)) {
+                        Behavior behavior = myPet.getSkills().get(Behavior.class);
+                        if (behavior.getBehavior() == BehaviorMode.Aggressive || behavior.getBehavior() == BehaviorMode.Farm) {
                             event.getPlayer().sendMessage(Util.formatText(Translation.getString("Message.Skill.Control.AggroFarm", event.getPlayer()), myPet.getPetName(), behavior.getBehavior().name()));
                             return;
                         }
                     }
-                    if (myPet.getSkills().isSkillActive(Ride.class)) {
+                    if (myPet.getSkills().isActive(Ride.class)) {
                         if (myPet.getEntity().get().getHandle().hasRider()) {
                             event.getPlayer().sendMessage(Util.formatText(Translation.getString("Message.Skill.Control.Ride", event.getPlayer()), myPet.getPetName()));
                             return;
@@ -88,7 +92,7 @@ public class PlayerListener implements Listener {
                         if (!block.getType().isSolid()) {
                             block = block.getRelative(BlockFace.DOWN);
                         }
-                        myPet.getSkills().getSkill(Control.class).get().setMoveTo(block.getLocation());
+                        myPet.getSkills().get(ControlImpl.class).setMoveTo(block.getLocation());
                     }
                 }
             }
@@ -240,12 +244,11 @@ public class PlayerListener implements Listener {
                     MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
                     if (myPetPlayerDamagee.hasMyPet()) {
                         MyPet myPet = myPetPlayerDamagee.getMyPet();
-                        if (myPet.getSkills().hasSkill(Shield.class)) {
-                            Shield shield = myPet.getSkills().getSkill(Shield.class).get();
+                        if (myPet.getSkills().has(ShieldImpl.class)) {
+                            ShieldImpl shield = myPet.getSkills().get(ShieldImpl.class);
 
-                            if (shield.activate()) {
-                                double redirected = shield.redirectDamage(event.getDamage());
-                                event.setDamage(event.getDamage() - redirected);
+                            if (shield.trigger()) {
+                                shield.apply(event);
                             }
                         }
                     }
@@ -399,8 +402,8 @@ public class PlayerListener implements Listener {
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here && Configuration.Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES) {
-                    if (myPet.getSkills().isSkillActive(Inventory.class)) {
-                        CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).get().getInventory();
+                    if (myPet.getSkills().isActive(BackpackImpl.class)) {
+                        CustomInventory inv = myPet.getSkills().get(BackpackImpl.class).getInventory();
                         inv.dropContentAt(myPet.getLocation().get());
                     }
                 }

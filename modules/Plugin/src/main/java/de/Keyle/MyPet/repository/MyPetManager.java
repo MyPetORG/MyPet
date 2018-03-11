@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,11 +20,10 @@
 
 package de.Keyle.MyPet.repository;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetLoadEvent;
-import de.Keyle.MyPet.api.skill.SkillInstance;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.entity.MyPetClass;
@@ -32,6 +31,7 @@ import de.keyle.knbt.TagCompound;
 import org.bukkit.Bukkit;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
@@ -61,12 +61,12 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
     public Optional<MyPet> activateMyPet(StoredMyPet storedMyPet) {
         if (!storedMyPet.getOwner().isOnline()) {
-            return Optional.absent();
+            return Optional.empty();
         }
 
         if (storedMyPet.getOwner().hasMyPet()) {
             if (!deactivateMyPet(storedMyPet.getOwner(), true)) {
-                return Optional.absent();
+                return Optional.empty();
             }
         }
 
@@ -84,9 +84,9 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
         myPet.getExperience().setExp(storedMyPet.getExp());
         myPet.setSkilltree(storedMyPet.getSkilltree());
-        Collection<SkillInstance> skills = myPet.getSkills().getSkills();
+        Collection<Skill> skills = myPet.getSkills().all();
         if (skills.size() > 0) {
-            for (SkillInstance skill : skills) {
+            for (Skill skill : skills) {
                 if (skill instanceof NBTStorage) {
                     NBTStorage storageSkill = (NBTStorage) skill;
                     if (storedMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.skill.skills.Inventory;
+import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -55,8 +55,8 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
                         myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", player));
                         return true;
                     }
-                    if (myPet.getSkills().hasSkill(Inventory.class)) {
-                        myPet.getSkills().getSkill(Inventory.class).get().activate();
+                    if (myPet.getSkills().has(BackpackImpl.class)) {
+                        myPet.getSkills().get(BackpackImpl.class).activate();
                     }
                 } else {
                     sender.sendMessage(Translation.getString("Message.No.HasPet", player));
@@ -68,8 +68,8 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
                 } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-                    if (myPet.getSkills().isSkillActive(Inventory.class)) {
-                        myPet.getSkills().getSkill(Inventory.class).get().openInventory(player);
+                    if (myPet.getSkills().isActive(BackpackImpl.class)) {
+                        myPet.getSkills().get(BackpackImpl.class).openInventory(player);
                     }
                 }
             }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
@@ -50,7 +51,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.UUID;
 
-public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
+public class MyPetPlayerImpl implements MyPetPlayer {
     protected String lastKnownPlayerName;
     protected String lastLanguage = "en_US";
     protected UUID mojangUUID = null;
@@ -439,13 +440,13 @@ public class MyPetPlayerImpl implements de.Keyle.MyPet.api.player.MyPetPlayer {
                 if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
                     String msg = myPet.getPetName() + ChatColor.RESET + ": ";
                     if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
-                        msg += org.bukkit.ChatColor.GREEN;
+                        msg += ChatColor.GREEN;
                     } else if (myPet.getHealth() > myPet.getMaxHealth() / 3) {
-                        msg += org.bukkit.ChatColor.YELLOW;
+                        msg += ChatColor.YELLOW;
                     } else {
-                        msg += org.bukkit.ChatColor.RED;
+                        msg += ChatColor.RED;
                     }
-                    msg += String.format("%1.2f", myPet.getHealth()) + org.bukkit.ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
+                    msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                     MyPetApi.getPlatformHelper().sendMessageActionBar(getPlayer(), msg);
                 }
             } else if (myPet.getStatus() == PetState.Despawned) {

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,10 +24,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
+import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_10_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.skill.skills.Behavior;
 import net.minecraft.server.v1_10_R1.EntityArmorStand;
 import net.minecraft.server.v1_10_R1.EntityLiving;
 import net.minecraft.server.v1_10_R1.EntityPlayer;
@@ -42,15 +42,11 @@ public class OwnerHurtByTarget implements AIGoal {
     private EntityMyPet petEntity;
     private EntityLiving lastDamager;
     private MyPet myPet;
-    private Behavior behaviorSkill = null;
     private EntityPlayer owner;
 
     public OwnerHurtByTarget(EntityMyPet entityMyPet) {
         this.petEntity = entityMyPet;
         myPet = entityMyPet.getMyPet();
-        if (myPet.getSkills().hasSkill(Behavior.class)) {
-            behaviorSkill = myPet.getSkills().getSkill(Behavior.class).get();
-        }
         owner = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
     }
 
@@ -100,11 +96,12 @@ public class OwnerHurtByTarget implements AIGoal {
         if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), lastDamager.getBukkitEntity())) {
             return false;
         }
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
         if (behaviorSkill != null && behaviorSkill.isActive()) {
-            if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
+            if (behaviorSkill.getBehavior() == BehaviorMode.Friendly) {
                 return false;
             }
-            if (behaviorSkill.getBehavior() == BehaviorState.Raid) {
+            if (behaviorSkill.getBehavior() == BehaviorMode.Raid) {
                 if (lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal) lastDamager).isTamed()) {
                     return false;
                 }

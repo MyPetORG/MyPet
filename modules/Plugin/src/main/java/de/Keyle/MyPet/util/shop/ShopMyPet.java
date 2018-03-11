@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,14 +20,12 @@
 
 package de.Keyle.MyPet.util.shop;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.NotImplemented;
 import de.Keyle.MyPet.api.util.Since;
@@ -40,6 +38,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ShopMyPet implements StoredMyPet {
@@ -54,7 +53,7 @@ public class ShopMyPet implements StoredMyPet {
     protected String worldGroup = "";
     protected double exp = 0;
     protected MyPetType petType = MyPetType.Wolf;
-    protected SkillTree skillTree = null;
+    protected Skilltree skilltree = null;
     protected TagCompound NBTSkills;
     protected TagCompound NBTextendetInfo;
 
@@ -75,9 +74,7 @@ public class ShopMyPet implements StoredMyPet {
         IconMenuItem icon = this.icon.clone();
         if (icon.getMaterial() == Material.MONSTER_EGG) {
             Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
-            if (egg.isPresent()) {
-                egg.get().updateIcon(petType, icon);
-            }
+            egg.ifPresent(eggIconService -> eggIconService.updateIcon(petType, icon));
         }
         icon.setTitle(ChatColor.AQUA + Colorizer.setColors(getPetName()));
 
@@ -190,12 +187,12 @@ public class ShopMyPet implements StoredMyPet {
     public void setRespawnTime(int respawnTime) {
     }
 
-    public SkillTree getSkilltree() {
-        return skillTree;
+    public Skilltree getSkilltree() {
+        return skilltree;
     }
 
-    public boolean setSkilltree(SkillTree skillTree) {
-        this.skillTree = skillTree;
+    public boolean setSkilltree(Skilltree skilltree) {
+        this.skilltree = skilltree;
         return true;
     }
 
@@ -247,7 +244,10 @@ public class ShopMyPet implements StoredMyPet {
         petType = MyPetType.byName(config.getString("PetType", "Pig"));
         exp = config.getDouble("EXP");
         petName = config.getString("Name", null);
-        skillTree = SkillTreeMobType.byPetType(petType).getSkillTree(config.getString("Skilltree", null));
+        Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(config.getString("Skilltree", null));
+        if (skilltree != null && skilltree.getMobTypes().contains(petType)) {
+            this.skilltree = skilltree;
+        }
         for (String line : config.getStringList("Description")) {
             icon.addLoreLine(ChatColor.RESET + Colorizer.setColors(line));
         }
@@ -262,6 +262,6 @@ public class ShopMyPet implements StoredMyPet {
 
     @Override
     public String toString() {
-        return "ShopMyPet{type=" + getPetType().name() + ", exp=" + getExp() + ", worldgroup=" + worldGroup + (skillTree != null ? ", skilltree=" + skillTree.getName() : "") + "}";
+        return "ShopMyPet{type=" + getPetType().name() + ", exp=" + getExp() + ", worldgroup=" + worldGroup + (skilltree != null ? ", skilltree=" + skilltree.getName() : "") + "}";
     }
 }

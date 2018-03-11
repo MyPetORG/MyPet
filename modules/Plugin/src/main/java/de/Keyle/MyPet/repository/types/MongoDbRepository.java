@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.repository.types;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.mongodb.*;
 import com.mongodb.client.FindIterable;
@@ -35,7 +34,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -269,12 +268,9 @@ public class MongoDbRepository implements Repository {
 
             String skillTreeName = document.getString("skilltree");
             if (skillTreeName != null) {
-                if (SkillTreeMobType.byPetType(pet.getPetType()) != null) {
-                    SkillTreeMobType mobType = SkillTreeMobType.byPetType(pet.getPetType());
-
-                    if (mobType.hasSkillTree(skillTreeName)) {
-                        pet.setSkilltree(mobType.getSkillTree(skillTreeName));
-                    }
+                Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
+                if (skilltree != null) {
+                    pet.setSkilltree(skilltree);
                 }
             }
 
@@ -282,9 +278,7 @@ public class MongoDbRepository implements Repository {
             pet.setInfo(TagStream.readTag(((Binary) document.get("info")).getData(), true));
 
             Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-            if (converter.isPresent()) {
-                converter.get().convert(pet);
-            }
+            converter.ifPresent(service -> service.convert(pet));
 
             return pet;
         } catch (IOException e) {

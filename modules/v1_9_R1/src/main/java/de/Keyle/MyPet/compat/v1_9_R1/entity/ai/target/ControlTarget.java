@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,11 +24,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
+import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_9_R1.entity.ai.movement.Control;
-import de.Keyle.MyPet.skill.skills.Behavior;
 import net.minecraft.server.v1_9_R1.EntityArmorStand;
 import net.minecraft.server.v1_9_R1.EntityLiving;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
@@ -66,10 +66,9 @@ public class ControlTarget implements AIGoal {
             return false;
         }
         if (controlPathfinderGoal.moveTo != null && petEntity.canMove()) {
-            Behavior behaviorSkill = null;
-            if (myPet.getSkills().isSkillActive(Behavior.class)) {
-                behaviorSkill = myPet.getSkills().getSkill(Behavior.class).get();
-                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
+            Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+            if (behaviorSkill.isActive()) {
+                if (behaviorSkill.getBehavior() == BehaviorMode.Friendly) {
                     return false;
                 }
             }
@@ -103,15 +102,13 @@ public class ControlTarget implements AIGoal {
                     if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
                         continue;
                     }
-                    if (behaviorSkill != null) {
-                        if (behaviorSkill.getBehavior() == BehaviorState.Raid) {
-                            if (entityLiving instanceof EntityTameableAnimal) {
-                                continue;
-                            } else if (entityLiving instanceof EntityMyPet) {
-                                continue;
-                            } else if (entityLiving instanceof EntityPlayer) {
-                                continue;
-                            }
+                    if (behaviorSkill.getBehavior() == BehaviorMode.Raid) {
+                        if (entityLiving instanceof EntityTameableAnimal) {
+                            continue;
+                        } else if (entityLiving instanceof EntityMyPet) {
+                            continue;
+                        } else if (entityLiving instanceof EntityPlayer) {
+                            continue;
                         }
                     }
                     controlPathfinderGoal.stopControl();
