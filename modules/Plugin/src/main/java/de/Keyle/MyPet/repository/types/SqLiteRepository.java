@@ -362,7 +362,7 @@ public class SqLiteRepository implements Repository {
                 pet.setPetName(new String(resultSet.getBytes("name"), StandardCharsets.UTF_8));
                 pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
                 pet.setLastUsed(resultSet.getLong("last_used"));
-                pet.setHungerValue(resultSet.getDouble("hunger"));
+                pet.setSaturation(resultSet.getDouble("hunger"));
                 pet.setWorldGroup(resultSet.getString("world_group"));
                 pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
 
@@ -415,7 +415,7 @@ public class SqLiteRepository implements Repository {
                 pet.setPetName(resultSet.getString("name"));
                 pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
                 pet.setLastUsed(resultSet.getLong("last_used"));
-                pet.setHungerValue(resultSet.getInt("hunger"));
+                pet.setSaturation(resultSet.getInt("hunger"));
                 pet.setWorldGroup(resultSet.getString("world_group"));
                 pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
 

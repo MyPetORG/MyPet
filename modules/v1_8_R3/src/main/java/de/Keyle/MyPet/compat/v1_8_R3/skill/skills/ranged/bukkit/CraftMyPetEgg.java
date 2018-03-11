@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.DoNotUse;
 import net.minecraft.server.v1_8_R3.EntityEgg;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEgg;
@@ -36,12 +37,12 @@ public class CraftMyPetEgg extends CraftEgg implements CraftMyPetProjectile {
         super(server, entity);
     }
 
-    @Deprecated
+    @DoNotUse
     public LivingEntity _INVALID_getShooter() {
         return (LivingEntity) super.getShooter();
     }
 
-    @Deprecated
+    @DoNotUse
     public void _INVALID_setShooter(LivingEntity shooter) {
         super.setShooter(shooter);
     }

@@ -18,15 +18,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.util.inventory;
+package de.Keyle.MyPet.api.util;
 
-import de.Keyle.MyPet.api.util.Since;
-import org.bukkit.plugin.Plugin;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Deprecated
-@Since("21.02.2018")
-public class IconMenu extends de.Keyle.MyPet.api.gui.IconMenu {
-    public IconMenu(String title, OptionClickEventHandler handler, Plugin plugin) {
-        super(title, handler, plugin);
-    }
+import static java.lang.annotation.ElementType.*;
+
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value = {CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE})
+public @interface DoNotUse {
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -190,7 +190,7 @@ public class EntityMyHorse extends EntityMyPet {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
-                getMyPet().setAge(getMyPet().getAge() + 3000);
+                getMyPet().setBaby(false);
                 return true;
             }
             if (itemStack.getItem() == Items.BREAD ||
@@ -228,7 +228,7 @@ public class EntityMyHorse extends EntityMyPet {
     @Override
     public void updateVisuals() {
         if (getMyPet().isBaby()) {
-            this.datawatcher.watch(12, MathHelper.a(getMyPet().getAge(), -1, 1));
+            this.datawatcher.watch(12, MathHelper.a(-24000, -1, 1));
         } else {
             this.datawatcher.watch(12, 0);
         }
@@ -246,7 +246,7 @@ public class EntityMyHorse extends EntityMyPet {
             rearCounter = -1;
         }
         if (ageCounter > -1 && ageCounter-- == 0) {
-            this.datawatcher.watch(12, MathHelper.a(getMyPet().getAge() + ageFailCounter++, -1, 1));
+            this.datawatcher.watch(12, MathHelper.a(ageFailCounter++, -1, 1));
             ageCounter = -1;
             ageFailCounter %= 1000;
         }

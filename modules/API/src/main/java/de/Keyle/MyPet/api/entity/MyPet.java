@@ -23,7 +23,6 @@ package de.Keyle.MyPet.api.entity;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.util.Scheduler;
-import de.Keyle.MyPet.api.util.Since;
 import org.bukkit.Location;
 
 import java.util.Optional;
@@ -66,10 +65,6 @@ public interface MyPet extends StoredMyPet, Scheduler {
     boolean isPassiv();
 
     boolean hasTarget();
-
-    @Deprecated
-    @Since("24.11.2016")
-    void decreaseHunger(double value);
 
     void decreaseSaturation(double value);
 }

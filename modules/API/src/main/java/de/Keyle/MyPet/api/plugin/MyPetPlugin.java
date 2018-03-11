@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.CompatUtil;
-import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
@@ -53,10 +52,6 @@ public interface MyPetPlugin extends Plugin {
     MyPetManager getMyPetManager();
 
     HookHelper getHookHelper();
-
-    @Deprecated
-    @Since("24.11.2016")
-    boolean isInOnlineMode();
 
     PluginHookManager getPluginHookManager();
 

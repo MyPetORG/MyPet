@@ -90,10 +90,6 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         }
     }
 
-    public void setHungerValue(double value) {
-        setSaturation(value);
-    }
-
     public TagCompound getInfo() {
         if (NBTextendetInfo == null) {
             NBTextendetInfo = new TagCompound();

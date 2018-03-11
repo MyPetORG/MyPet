@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -65,20 +64,6 @@ public abstract class HookHelper {
      * @return if player is in arena
      */
     public abstract boolean isPetAllowed(MyPetPlayer player);
-
-    /**
-     * Return if a MyPet player is in any type of arena (Minigames, Survival Games, PvP Arena, etc.)
-     *
-     * @param player the MyPet player
-     * @return if player is in arena
-     */
-    @Deprecated
-    @Since("25.02.2018")
-    public abstract boolean isInArena(MyPetPlayer player);
-
-    @Deprecated
-    @Since("24.11.2016")
-    public abstract boolean canUseMyPet(MyPetPlayer player);
 
     /**
      * Returns if a player can fly a pet at a certain location

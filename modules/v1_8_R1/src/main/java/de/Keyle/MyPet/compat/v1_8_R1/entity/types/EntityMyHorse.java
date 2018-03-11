@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -221,7 +221,6 @@ public class EntityMyHorse extends EntityMyPet {
         } else {
             this.datawatcher.watch(12, new Byte((byte) 0));
         }
-        this.datawatcher.watch(12, Byte.valueOf((byte) MathHelper.clamp(getMyPet().getAge(), -1, 1)));
         this.datawatcher.watch(22, Integer.valueOf(getHorseArmorId(getMyPet().getArmor())));
         this.datawatcher.watch(19, Byte.valueOf(getMyPet().getHorseType()));
         this.datawatcher.watch(20, Integer.valueOf(getMyPet().getVariant()));

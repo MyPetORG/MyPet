@@ -510,12 +510,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         return 0;
     }
 
-    @Deprecated
-    @Since("24.11.2016")
-    public boolean isInOnlineMode() {
-        return Bukkit.getOnlineMode();
-    }
-
     @Override
     public PluginHookManager getPluginHookManager() {
         return pluginHookManager;

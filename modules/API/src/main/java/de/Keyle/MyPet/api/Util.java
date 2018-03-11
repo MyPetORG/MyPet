@@ -25,7 +25,6 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.fanciful.ItemTooltip;
 import org.apache.commons.lang.Validate;
@@ -34,8 +33,6 @@ import org.bukkit.Material;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -46,20 +43,6 @@ import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RESET;
 
 public class Util {
-    @Deprecated
-    public static Method getMethod(Class<?> clazz, String method, Class<?>... parameterTypes) {
-        return ReflectionUtil.getMethod(clazz, method, parameterTypes);
-    }
-
-    @Deprecated
-    public static Field getField(Class<?> clazz, String field) {
-        return ReflectionUtil.getField(clazz, field);
-    }
-
-    @Deprecated
-    public static boolean setFieldValue(Field field, Object object, Object value) {
-        return ReflectionUtil.setFieldValue(field, object, value);
-    }
 
     public static boolean isInt(String number) {
         try {
