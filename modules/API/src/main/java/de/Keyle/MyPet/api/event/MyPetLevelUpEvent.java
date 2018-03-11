@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,20 +30,20 @@ public class MyPetLevelUpEvent extends Event {
 
     private final MyPet myPet;
     private final int level;
-    private final int lastLevel;
+    private final int fromLevel;
     private final boolean beQuiet;
 
-    public MyPetLevelUpEvent(MyPet myPet, int Level, int lastLevel) {
+    public MyPetLevelUpEvent(MyPet myPet, int Level, int fromLevel) {
         this.myPet = myPet;
         this.level = Level;
-        this.lastLevel = lastLevel;
+        this.fromLevel = fromLevel;
         this.beQuiet = false;
     }
 
-    public MyPetLevelUpEvent(MyPet myPet, int level, int lastLevel, boolean beQuiet) {
+    public MyPetLevelUpEvent(MyPet myPet, int level, int fromLevel, boolean beQuiet) {
         this.myPet = myPet;
         this.level = level;
-        this.lastLevel = lastLevel;
+        this.fromLevel = fromLevel;
         this.beQuiet = beQuiet;
     }
 
@@ -63,8 +63,8 @@ public class MyPetLevelUpEvent extends Event {
         return level;
     }
 
-    public int getLastLevel() {
-        return lastLevel;
+    public int fromLevel() {
+        return fromLevel;
     }
 
     public HandlerList getHandlers() {

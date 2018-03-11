@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.event.MyPetSitEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -42,7 +43,8 @@ import de.Keyle.MyPet.compat.v1_7_R4.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.ai.target.*;
-import de.Keyle.MyPet.skill.skills.Ride;
+import de.Keyle.MyPet.skill.skills.ControlImpl;
+import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -75,7 +77,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected int idleSoundTimer = 0;
     protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
-    protected Ride rideSkill = null;
     protected Sit sitPathfinder;
 
     int donatorParticleCounter = 0;
@@ -89,7 +90,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             setSize();
 
             this.myPet = myPet;
-            this.rideSkill = myPet.getSkills().getSkill(Ride.class).get();
             this.petPathfinderSelector = new AIGoalSelector();
             this.petTargetSelector = new AIGoalSelector();
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
@@ -408,7 +408,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
-                if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
+                if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
                     if (Permissions.hasExtendedLegacy(owner, "MyPet.extended.ride")) {
                         ((CraftPlayer) owner).getHandle().mount(this);
                         return true;
@@ -418,7 +418,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
             if (Configuration.Skilltree.Skill.CONTROL_ITEM.compare(itemStack)) {
-                if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.Control.class)) {
+                if (myPet.getSkills().isActive(ControlImpl.class)) {
                     return true;
                 }
             }
@@ -956,8 +956,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         // sideways is slower too but not as slow as backwards
         motionSideways *= 0.85F;
 
-        float speed = 0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F));
-        double jumpHeight = Util.clamp(1 + rideSkill.getJumpHeight(), 0, 10);
+        float speed = 0.22222F;
+        double jumpHeight = 0.3D;
+
+        Ride rideSkill = myPet.getSkills().get(RideImpl.class);
+        if (rideSkill != null) {
+            speed *= (1.0F + rideSkill.getSpeedIncrease() / 100.0F);
+            jumpHeight = rideSkill.getJumpHeight() * 0.18D;
+        }
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
             double factor = Math.log10(myPet.getSaturation()) / 2;

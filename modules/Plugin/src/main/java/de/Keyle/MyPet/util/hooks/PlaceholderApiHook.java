@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -166,7 +166,7 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("behavior", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
-                return pet.getSkills().hasSkill(Behavior.class) ? pet.getSkills().getSkill(Behavior.class).get().getBehavior().name() : "Normal";
+                return pet.getSkills().has(BehaviorImpl.class) ? pet.getSkills().get(BehaviorImpl.class).getBehavior().name() : "Normal";
             }
         });
 

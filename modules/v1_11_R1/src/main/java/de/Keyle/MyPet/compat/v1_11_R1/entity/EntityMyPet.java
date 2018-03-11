@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.event.MyPetSitEvent;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -43,7 +44,8 @@ import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.types.EntityMyHorse;
-import de.Keyle.MyPet.skill.skills.Ride;
+import de.Keyle.MyPet.skill.skills.ControlImpl;
+import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -82,7 +84,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected int flyCheckCounter = 0;
     protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
-    protected Ride rideSkill = null;
     protected Sit sitPathfinder;
     protected float jumpPower = 0;
     int donatorParticleCounter = 0;
@@ -97,7 +98,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
             this.myPet = myPet;
             this.isMyPet = true;
-            this.rideSkill = myPet.getSkills().getSkill(Ride.class).get();
             this.petPathfinderSelector = new AIGoalSelector();
             this.petTargetSelector = new AIGoalSelector();
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
@@ -419,7 +419,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
-                if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
+                if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
                     if (Permissions.hasExtendedLegacy(owner, "MyPet.extended.ride")) {
                         ((CraftPlayer) owner).getHandle().startRiding(this);
                         return true;
@@ -429,7 +429,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
             if (Configuration.Skilltree.Skill.CONTROL_ITEM.compare(itemStack)) {
-                if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.Control.class)) {
+                if (myPet.getSkills().isActive(ControlImpl.class)) {
                     return true;
                 }
             }
@@ -589,14 +589,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         String msg = myPet.getPetName() + ChatColor.RESET + ": ";
         if (getHealth() > myPet.getMaxHealth() / 3 * 2) {
-            msg += org.bukkit.ChatColor.GREEN;
+            msg += ChatColor.GREEN;
         } else if (getHealth() > myPet.getMaxHealth() / 3) {
-            msg += org.bukkit.ChatColor.YELLOW;
+            msg += ChatColor.YELLOW;
         } else {
-            msg += org.bukkit.ChatColor.RED;
+            msg += ChatColor.RED;
         }
         if (getHealth() > 0) {
-            msg += String.format("%1.2f", getHealth()) + org.bukkit.ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
+            msg += String.format("%1.2f", getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
 
             if (!myPet.getOwner().isHealthBarActive()) {
                 if (deltaGealth > 0) {
@@ -962,6 +962,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     protected void o(Entity entity) {
         // don't allow anything but the owner to ride this entity
+        Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill != null && entity instanceof EntityPlayer && getOwner().equals(entity)) {
             super.o(entity);
             if (this instanceof IJumpable) {
@@ -969,7 +970,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
                     factor = Math.log10(myPet.getSaturation()) / 2;
                 }
-                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F))) * factor);
+                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease() / 100F))) * factor);
             }
         }
     }
@@ -1052,6 +1053,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         EntityLiving passenger = (EntityLiving) this.bw();
 
+        Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill == null) {
             passenger.stopRiding();
             return;
@@ -1074,7 +1076,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         // sideways is slower too but not as slow as backwards
         motionSideways *= 0.85F;
 
-        float speed = 0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F));
+        float speed = 0.22222F * (1F + (rideSkill.getSpeedIncrease() / 100F));
         double jumpHeight = Util.clamp(1 + rideSkill.getJumpHeight(), 0, 10);
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
@@ -1146,7 +1148,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
                 myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
                 double factor = Math.log10(myPet.getSaturation()) / 2;
-                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F))) * factor);
+                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease() / 100F))) * factor);
             }
         }
     }

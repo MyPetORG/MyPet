@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -27,6 +27,8 @@ import de.Keyle.MyPet.api.plugin.MyPetPlugin;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.Repository;
+import de.Keyle.MyPet.api.skill.SkillManager;
+import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -130,5 +132,19 @@ public class MyPetApi {
      */
     public static ServiceManager getServiceManager() {
         return plugin.getServiceManager();
+    }
+
+    /**
+     * @return instance of the skilltree manager
+     */
+    public static SkilltreeManager getSkilltreeManager() {
+        return getServiceManager().getService(SkilltreeManager.class).get();
+    }
+
+    /**
+     * @return instance of the skill manager
+     */
+    public static SkillManager getSkillManager() {
+        return getServiceManager().getService(SkillManager.class).get();
     }
 }

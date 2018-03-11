@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.repository.types;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.Keyle.MyPet.MyPetApi;
@@ -155,9 +154,7 @@ public class NbtRepository implements Repository {
                     myPet.load(petTags.get(petUUID));
 
                     Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                    if (converter.isPresent()) {
-                        converter.get().convert(myPet);
-                    }
+                    converter.ifPresent(service -> service.convert(myPet));
 
                     petList.add(myPet);
                 }
@@ -186,9 +183,7 @@ public class NbtRepository implements Repository {
                     myPet.load(petTag);
 
                     Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                    if (converter.isPresent()) {
-                        converter.get().convert(myPet);
-                    }
+                    converter.ifPresent(service -> service.convert(myPet));
 
                     callback.run(myPet);
                 }

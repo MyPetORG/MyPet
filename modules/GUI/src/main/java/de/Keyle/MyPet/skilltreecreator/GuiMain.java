@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.skilltreecreator;
 
+import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -43,10 +45,6 @@ public class GuiMain {
         configPath = pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator;
         File defaultSkilltreePath = new File(configPath + "skilltrees" + File.separator);
 
-
-        //SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
-        //SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
-
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
@@ -68,6 +66,8 @@ public class GuiMain {
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
+                SkillTreeLoaderJSON.loadSkilltrees(fc.getSelectedFile());
+
                 new WebServer(fc.getSelectedFile());
                 Desktop.getDesktop().browse(new URI("http://localhost:64712"));
             } catch (IOException | URISyntaxException e) {

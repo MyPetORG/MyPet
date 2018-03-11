@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,12 +41,9 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
     private static List<String> behaviorList = new ArrayList<>();
 
     static {
-        behaviorList.add("normal");
-        behaviorList.add("friendly");
-        behaviorList.add("aggressive");
-        behaviorList.add("raid");
-        behaviorList.add("farm");
-        behaviorList.add("duel");
+        for (BehaviorMode mode : BehaviorMode.values()) {
+            behaviorList.add(mode.name());
+        }
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -62,41 +59,41 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                 if (myPet.getStatus() == PetState.Dead) {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.No.CanUse", petOwner), myPet.getPetName()));
                     return true;
-                } else if (myPet.getSkills().hasSkill(Behavior.class)) {
-                    Behavior behaviorSkill = myPet.getSkills().getSkill(Behavior.class).get();
+                } else if (myPet.getSkills().has(BehaviorImpl.class)) {
+                    BehaviorImpl behaviorSkill = myPet.getSkills().get(BehaviorImpl.class);
                     if (args.length == 1) {
                         if ((args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend"))) {
-                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "friendly") || !behaviorSkill.isModeUsable(BehaviorState.Friendly)) {
+                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "friendly") || !behaviorSkill.isModeUsable(BehaviorMode.Friendly)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
+                            behaviorSkill.enableBehavior(BehaviorMode.Friendly);
                         } else if ((args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("Aggro"))) {
-                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "aggressive") || !behaviorSkill.isModeUsable(BehaviorState.Aggressive)) {
+                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "aggressive") || !behaviorSkill.isModeUsable(BehaviorMode.Aggressive)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
+                            behaviorSkill.enableBehavior(BehaviorMode.Aggressive);
                         } else if (args[0].equalsIgnoreCase("farm")) {
-                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "farm") || !behaviorSkill.isModeUsable(BehaviorState.Farm)) {
+                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "farm") || !behaviorSkill.isModeUsable(BehaviorMode.Farm)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.activateBehavior(BehaviorState.Farm);
+                            behaviorSkill.enableBehavior(BehaviorMode.Farm);
                         } else if (args[0].equalsIgnoreCase("raid")) {
-                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "raid") || !behaviorSkill.isModeUsable(BehaviorState.Raid)) {
+                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "raid") || !behaviorSkill.isModeUsable(BehaviorMode.Raid)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
+                            behaviorSkill.enableBehavior(BehaviorMode.Raid);
                         } else if (args[0].equalsIgnoreCase("duel")) {
-                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "duel") || !behaviorSkill.isModeUsable(BehaviorState.Duel)) {
+                            if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "duel") || !behaviorSkill.isModeUsable(BehaviorMode.Duel)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Duel);
+                            behaviorSkill.enableBehavior(BehaviorMode.Duel);
                         } else if (args[0].equalsIgnoreCase("normal")) {
-                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Normal);
+                            behaviorSkill.enableBehavior(BehaviorMode.Normal);
                         } else {
                             behaviorSkill.activate();
                             return false;

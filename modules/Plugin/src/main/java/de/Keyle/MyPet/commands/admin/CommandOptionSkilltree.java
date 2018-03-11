@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,8 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import org.bukkit.Bukkit;
@@ -55,11 +54,10 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
-        SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
-        if (skillTreeMobType.hasSkillTree(args[1])) {
-            SkillTree skillTree = skillTreeMobType.getSkillTree(args[1]);
-            if (myPet.setSkilltree(skillTree)) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), skillTree.getName()));
+        if (MyPetApi.getSkilltreeManager().hasSkilltree(args[1])) {
+            Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(args[1]);
+            if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree)) {
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), skilltree.getName()));
             } else {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.Skilltree.NotSwitched", lang));
             }
@@ -81,11 +79,11 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
-                SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(myPet.getPetType());
-
                 List<String> skilltreeList = new ArrayList<>();
-                for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
-                    skilltreeList.add(skillTree.getName());
+                for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
+                    if (skilltree.getMobTypes().contains(myPet.getPetType())) {
+                        skilltreeList.add(skilltree.getName());
+                    }
                 }
                 return skilltreeList;
             }

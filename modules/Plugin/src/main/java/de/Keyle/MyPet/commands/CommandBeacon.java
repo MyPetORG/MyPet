@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.skill.skills.Beacon;
+import de.Keyle.MyPet.skill.skills.BeaconImpl;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -53,8 +53,8 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                if (myPet.getSkills().isSkillActive(Beacon.class)) {
-                    myPet.getSkills().getSkill(Beacon.class).get().activate();
+                if (myPet.getSkills().isActive(BeaconImpl.class)) {
+                    myPet.getSkills().get(BeaconImpl.class).activate();
                 } else {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.No.Skill", player), myPet.getPetName(), Translation.getString("Name.Skill.Beacon", player)));
                 }

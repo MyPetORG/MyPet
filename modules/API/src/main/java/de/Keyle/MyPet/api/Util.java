@@ -21,6 +21,8 @@
 package de.Keyle.MyPet.api;
 
 import com.google.common.base.Charsets;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
@@ -31,6 +33,7 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
@@ -384,5 +387,62 @@ public class Util {
         }
 
         return extension;
+    }
+
+    public static long getSha256FromFile(File file) {
+        try {
+            Hasher hasher = Hashing.sha256().newHasher();
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            byte[] buf = new byte[1024];
+            int numRead;
+            while ((numRead = bis.read(buf)) != -1) {
+                hasher.putBytes(buf, 0, numRead);
+            }
+            bis.close();
+            return hasher.hash().asLong();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static <T> void getClassParents(Class clazz, Class<T> type, Set<Class<? extends T>> result) {
+        if (type != null && clazz != null && result != null && clazz != type) {
+            if (clazz == Object.class) {
+                return;
+            }
+            if (type.isAssignableFrom(clazz)) {
+                result.add(clazz);
+            }
+            getClassParents(clazz.getSuperclass(), type, result);
+            for (Class c : clazz.getInterfaces()) {
+                getClassParents(c, type, result);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Annotation> T getClassAnnotation(Class clazz, Class<T> annotation) {
+        if (annotation != null && clazz != null) {
+            if (clazz == Object.class) {
+                return null;
+            }
+
+            T a = (T) clazz.getAnnotation(annotation);
+            if (a != null) {
+                return a;
+            }
+            a = getClassAnnotation(clazz.getSuperclass(), annotation);
+            if (a != null) {
+                return a;
+            }
+            for (Class c : clazz.getInterfaces()) {
+                a = getClassAnnotation(c, annotation);
+                if (a != null) {
+                    return a;
+                }
+            }
+        }
+        return null;
     }
 }

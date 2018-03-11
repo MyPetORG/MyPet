@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.commands;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -30,9 +29,9 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
-import de.Keyle.MyPet.skill.skills.Inventory;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import org.bukkit.Bukkit;
@@ -48,6 +47,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RESET;
@@ -83,8 +83,8 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Release);
                     Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
-                    if (myPet.getSkills().isSkillActive(Inventory.class)) {
-                        myPet.getSkills().getSkill(Inventory.class).get().getInventory().dropContentAt(myPet.getLocation().get());
+                    if (myPet.getSkills().isActive(Backpack.class)) {
+                        myPet.getSkills().get(Backpack.class).getInventory().dropContentAt(myPet.getLocation().get());
                     }
 
                     if (myPet instanceof MyPetEquipment) {
@@ -96,9 +96,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
 
                         Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
-                        if (converter.isPresent()) {
-                            converter.get().convertEntity(myPet, normalEntity);
-                        }
+                        converter.ifPresent(entityConverterService -> entityConverterService.convertEntity(myPet, normalEntity));
                     }
                     myPet.removePet();
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);

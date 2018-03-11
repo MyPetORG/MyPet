@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -186,7 +186,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 ReflectionUtil.setFieldValue("trades", villager, new MerchantRecipeList(nbttaglist));
             }
 
-            NBTTagList invTag = vanillaNBT.getList("Inventory", 10);
+            NBTTagList invTag = vanillaNBT.getList("BackpackImpl", 10);
 
             for (int i = 0; i < invTag.size(); ++i) {
                 ItemStack itemstack = ItemStack.createStack(invTag.get(i));

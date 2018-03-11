@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,12 +21,7 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.skill.SkillInfo;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
-import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 
@@ -35,44 +30,27 @@ import java.util.List;
 public class CommandShowSkillTree implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof ConsoleCommandSender) {
-            SkillTreeMobType mobType;
             if (args.length >= 1) {
-                if (args[0].equalsIgnoreCase("default")) {
-                    mobType = SkillTreeMobType.DEFAULT;
-                } else {
-                    MyPetType type = MyPetType.byName(args[0]);
-                    if (type != null) {
-                        mobType = SkillTreeMobType.byPetType(type);
-                    } else {
-                        MyPetApi.getLogger().info("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
-                        return true;
-                    }
-                }
-
-                if (args.length >= 2) {
-                    if (mobType.hasSkillTree(args[1])) {
-                        SkillTree skillTree = mobType.getSkillTree(args[1]);
-                        MyPetApi.getLogger().info("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : ChatColor.DARK_GRAY + "none" + ChatColor.RESET) + " -----");
-                        for (SkillTreeLevel lvl : skillTree.getLevelList()) {
-                            MyPetApi.getLogger().info(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ": (" + (lvl.hasLevelupMessage() ? Colorizer.setColors(lvl.getLevelupMessage()) + ChatColor.RESET : "-") + ")");
-                            for (SkillInfo skill : lvl.getSkills()) {
-                                if (skill.isAddedByInheritance()) {
-                                    MyPetApi.getLogger().info("   " + ChatColor.DARK_GRAY + skill.getName());
-                                } else {
-                                    MyPetApi.getLogger().info("   " + skill.getName());
-                                }
+                if (MyPetApi.getSkilltreeManager().hasSkilltree(args[1])) {
+                    Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(args[1]);
+                    MyPetApi.getLogger().info("----- MyPet Skilltree: " + ChatColor.AQUA + skilltree.getName() + ChatColor.RESET + " -----");
+                    /*
+                    for (LevelRule lvl : skilltree.get()) {
+                        MyPetApi.getLogger().info(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ": (" + (lvl.hasLevelupMessage() ? Colorizer.setColors(lvl.getLevelupMessage()) + ChatColor.RESET : "-") + ")");
+                        for (SkillInfo skill : lvl.all()) {
+                            if (skill.isAddedByInheritance()) {
+                                MyPetApi.getLogger().info("   " + ChatColor.DARK_GRAY + skill.getName());
+                            } else {
+                                MyPetApi.getLogger().info("   " + skill.getName());
                             }
                         }
-                        MyPetApi.getLogger().info("----- MyPet Skilltree " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " end -----");
-                    } else {
-                        MyPetApi.getLogger().info("There is " + ChatColor.RED + "no" + ChatColor.RESET + " skilltree with the name: " + ChatColor.AQUA + args[1]);
                     }
+                    */
+                    MyPetApi.getLogger().info("----- MyPet Skilltree " + ChatColor.AQUA + skilltree.getName() + ChatColor.RESET + " end -----");
                 } else {
-                    MyPetApi.getLogger().info("----- MyPet Skilltrees for: " + ChatColor.GREEN + args[0]);
-                    for (String skillTreeName : mobType.getSkillTreeNames()) {
-                        MyPetApi.getLogger().info("   " + skillTreeName);
-                    }
+                    MyPetApi.getLogger().info("There is " + ChatColor.RED + "no" + ChatColor.RESET + " skilltree with the name: " + ChatColor.AQUA + args[1]);
                 }
+
             } else {
                 return false;
             }

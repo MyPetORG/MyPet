@@ -20,15 +20,11 @@
 
 package de.Keyle.MyPet.api.util.service;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
 import org.apache.commons.lang.ClassUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The {@link ServiceManager} manages all interactions with other plugins. Services are stored by class and by the
@@ -144,7 +140,7 @@ public class ServiceManager {
      */
     @SuppressWarnings("unchecked")
     public <T extends ServiceContainer> Optional<T> getService(Class<? extends T> serviceClass) {
-        return Optional.fromNullable((T) services.get(serviceClass));
+        return Optional.ofNullable((T) services.get(serviceClass));
     }
 
     /**
@@ -154,7 +150,7 @@ public class ServiceManager {
      * @return instance of a service class associated with the plugin name
      */
     public Optional<ServiceContainer> getService(String name) {
-        return Optional.fromNullable(serviceByName.get(name));
+        return Optional.ofNullable(serviceByName.get(name));
     }
 
     /**

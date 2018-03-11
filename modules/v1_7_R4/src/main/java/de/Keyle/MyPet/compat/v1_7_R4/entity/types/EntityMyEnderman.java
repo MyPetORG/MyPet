@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,14 +20,13 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
-import de.Keyle.MyPet.api.skill.skills.BehaviorInfo;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
-import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 
@@ -111,17 +110,15 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void doMyPetTick() {
         super.doMyPetTick();
-        Optional<Behavior> skill = getMyPet().getSkills().getSkill(Behavior.class);
-        if (skill.isPresent()) {
-            BehaviorInfo.BehaviorState behavior = skill.get().getBehavior();
-            if (behavior == BehaviorInfo.BehaviorState.Aggressive) {
-                if (!getMyPet().isScreaming()) {
-                    getMyPet().setScreaming(true);
-                }
-            } else {
-                if (getMyPet().isScreaming()) {
-                    getMyPet().setScreaming(false);
-                }
+        BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
+        Behavior.BehaviorMode behavior = skill.getBehavior();
+        if (behavior == Behavior.BehaviorMode.Aggressive) {
+            if (!getMyPet().isScreaming()) {
+                getMyPet().setScreaming(true);
+            }
+        } else {
+            if (getMyPet().isScreaming()) {
+                getMyPet().setScreaming(false);
             }
         }
     }

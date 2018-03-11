@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,10 +25,10 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
-import de.Keyle.MyPet.api.skill.SkillInfo;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLevel;
-import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.Upgrade;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
@@ -41,10 +41,11 @@ import java.util.List;
 
 public class LevelUpListener implements Listener {
     @EventHandler
+    @SuppressWarnings("unchecked")
     public void on(MyPetLevelUpEvent event) {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
-        int lastLvl = event.getLastLevel();
+        int fromLvl = event.fromLevel();
 
         if (!event.isQuiet()) {
             int maxlevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
@@ -54,23 +55,17 @@ public class LevelUpListener implements Listener {
                 myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelUp", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
             }
         }
-        SkillTree skillTree = myPet.getSkilltree();
-        if (skillTree != null) {
-            if (skillTree.getLastLevelWithSkills() < lvl) {
-                lvl = skillTree.getLastLevelWithSkills();
-            }
-            for (int i = lastLvl + 1; i <= lvl; i++) {
-                if (skillTree.hasLevel(i)) {
-                    SkillTreeLevel level = skillTree.getLevel(i);
-                    if (!event.isQuiet()) {
-                        if (level.hasLevelupMessage()) {
-                            myPet.getOwner().sendMessage(Colorizer.setColors(level.getLevelupMessage()));
+        Skilltree skilltree = myPet.getSkilltree();
+        if (skilltree != null) {
+            for (int i = fromLvl + 1; i <= lvl; i++) {
+                List<Upgrade> upgrades = skilltree.getUpgrades(i);
+                for (Upgrade upgrade : upgrades) {
+                    SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
+                    if (sn != null) {
+                        Skill skill = myPet.getSkills().get(sn.value());
+                        if (skill != null) {
+                            upgrade.apply(skill);
                         }
-                    }
-
-                    List<SkillInfo> skillList = level.getSkills();
-                    for (SkillInfo skill : skillList) {
-                        myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
                     }
                 }
             }
@@ -94,7 +89,6 @@ public class LevelUpListener implements Listener {
                             MyPetApi.getPlatformHelper().playParticleEffect(location, "CRIT_MAGIC", 0, 0, 0, 0, 1, 32);
 
                         }
-                        //MyPetApi.getPlatformHelper().playParticleEffect(location, "flame", 0, 0, 0, 0, 1, 32);
                     }
                 }.loop(2);
 

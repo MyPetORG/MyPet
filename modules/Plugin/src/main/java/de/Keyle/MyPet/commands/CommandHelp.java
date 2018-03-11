@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,10 +25,10 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.skill.skills.Beacon;
-import de.Keyle.MyPet.skill.skills.Behavior;
-import de.Keyle.MyPet.skill.skills.Inventory;
-import de.Keyle.MyPet.skill.skills.Pickup;
+import de.Keyle.MyPet.skill.skills.BackpackImpl;
+import de.Keyle.MyPet.skill.skills.BeaconImpl;
+import de.Keyle.MyPet.skill.skills.BehaviorImpl;
+import de.Keyle.MyPet.skill.skills.PickupImpl;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -69,16 +69,16 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Skill", player), "/petskill"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.ChooseSkilltree", player), "/petchooseskilltree"));
 
-                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Inventory.class)) {
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BackpackImpl.class)) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Inventory", player), "/petinventory"));
                 }
-                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Pickup.class)) {
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(PickupImpl.class)) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Pickup", player), "/petpickup"));
                 }
-                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Behavior.class)) {
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BehaviorImpl.class)) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Behavior", player), "/petbehavior"));
                 }
-                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isSkillActive(Beacon.class)) {
+                if (MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BeaconImpl.class)) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Beacon", player), "/petbeacon"));
                 }
             }

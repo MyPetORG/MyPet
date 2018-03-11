@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,10 +24,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.skill.skills.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
+import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_10_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.server.v1_10_R1.EntityLiving;
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
@@ -41,21 +42,18 @@ public class BehaviorDuelTarget implements AIGoal {
     private MyPetMinecraftEntity target;
     private MyPetMinecraftEntity duelOpponent = null;
     private float range;
-    private Behavior behaviorSkill = null;
 
     public BehaviorDuelTarget(EntityMyPet petEntity, float range) {
         this.petEntity = petEntity;
         this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
         this.range = range;
-        if (myPet.getSkills().hasSkill(Behavior.class)) {
-            behaviorSkill = myPet.getSkills().getSkill(Behavior.class).get();
-        }
     }
 
     @Override
     public boolean shouldStart() {
-        if (behaviorSkill == null || !behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorState.Duel) {
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Duel) {
             return false;
         }
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
@@ -77,11 +75,11 @@ public class BehaviorDuelTarget implements AIGoal {
             MyPet targetMyPet = entityMyPet.getMyPet();
 
             if (entityMyPet != petEntity && entityMyPet.isAlive()) {
-                if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !targetMyPet.getEntity().get().canMove()) {
+                if (!targetMyPet.getSkills().isActive(BehaviorImpl.class) || !targetMyPet.getEntity().get().canMove()) {
                     continue;
                 }
-                Behavior targetbehavior = targetMyPet.getSkills().getSkill(Behavior.class).get();
-                if (targetbehavior.getBehavior() != BehaviorState.Duel) {
+                BehaviorImpl targetbehavior = targetMyPet.getSkills().get(BehaviorImpl.class);
+                if (targetbehavior.getBehavior() != BehaviorMode.Duel) {
                     continue;
                 }
                 if (targetMyPet.getDamage() == 0) {
@@ -104,7 +102,8 @@ public class BehaviorDuelTarget implements AIGoal {
 
         EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
 
-        if (behaviorSkill.getBehavior() != BehaviorState.Duel) {
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill.getBehavior() != BehaviorMode.Duel) {
             return true;
         } else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return true;

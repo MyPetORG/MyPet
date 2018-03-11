@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,9 +25,8 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.skill.SkillInstance;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.keyle.knbt.*;
 
@@ -45,7 +44,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private double exp = 0;
     protected long lastUsed = -1;
     private MyPetType petType = MyPetType.Wolf;
-    private SkillTree skillTree = null;
+    private Skilltree skilltree = null;
     private TagCompound NBTSkills;
     private TagCompound NBTextendetInfo;
     public boolean wantsToRespawn = false;
@@ -150,12 +149,12 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         this.respawnTime = respawnTime;
     }
 
-    public SkillTree getSkilltree() {
-        return skillTree;
+    public Skilltree getSkilltree() {
+        return skilltree;
     }
 
-    public boolean setSkilltree(SkillTree skillTree) {
-        this.skillTree = skillTree;
+    public boolean setSkilltree(Skilltree skilltree) {
+        this.skilltree = skilltree;
         return true;
     }
 
@@ -229,12 +228,9 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         if (myPetNBT.getCompoundData().containsKey("Skilltree")) {
             String skillTreeName = myPetNBT.getAs("Skilltree", TagString.class).getStringData();
             if (skillTreeName != null) {
-                if (SkillTreeMobType.byPetType(petType) != null) {
-                    SkillTreeMobType mobType = SkillTreeMobType.byPetType(petType);
-
-                    if (mobType.hasSkillTree(skillTreeName)) {
-                        this.skillTree = mobType.getSkillTree(skillTreeName);
-                    }
+                Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
+                if (skilltree.getMobTypes().contains(getPetType())) {
+                    this.skilltree = skilltree;
                 }
             }
         }
@@ -273,19 +269,19 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         petNBT.getCompoundData().put("Info", getInfo());
         petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
         petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(wantsToRespawn));
-        if (this.skillTree != null) {
-            petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
+        if (this.skilltree != null) {
+            petNBT.getCompoundData().put("Skilltree", new TagString(skilltree.getName()));
         }
         petNBT.getCompoundData().put("Skills", getSkillInfo());
 
         return petNBT;
     }
 
-    public void setSkills(Collection<SkillInstance> skills) {
+    public void setSkills(Collection<Skill> skills) {
         if (NBTSkills == null) {
             NBTSkills = new TagCompound();
         }
-        for (SkillInstance skill : skills) {
+        for (Skill skill : skills) {
             if (skill instanceof NBTStorage) {
                 NBTStorage storageSkill = (NBTStorage) skill;
                 TagCompound s = storageSkill.save();
@@ -298,6 +294,6 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
 
     @Override
     public String toString() {
-        return "InactiveMyPet{type=" + getPetType().name() + ", owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + ", worldgroup=" + worldGroup + (skillTree != null ? ", skilltree=" + skillTree.getName() : "") + "}";
+        return "InactiveMyPet{type=" + getPetType().name() + ", owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + ", worldgroup=" + worldGroup + (skilltree != null ? ", skilltree=" + skilltree.getName() : "") + "}";
     }
 }

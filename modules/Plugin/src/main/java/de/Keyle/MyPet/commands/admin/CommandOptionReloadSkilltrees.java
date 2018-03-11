@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,77 +24,51 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.skill.SkillInstance;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeMobType;
-import de.Keyle.MyPet.api.skill.skilltreeloader.SkillTreeLoader;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 public class CommandOptionReloadSkilltrees implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        SkillTreeMobType.clearMobTypes();
-        String[] petTypes = new String[MyPetType.values().length + 1];
-        petTypes[0] = "default";
-        for (int i = 1; i <= MyPetType.values().length; i++) {
-            petTypes[i] = MyPetType.values()[i - 1].name();
-        }
-        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            myPet.getSkills().reset();
-        }
+        MyPetApi.getSkilltreeManager().clearSkilltrees();
 
-        SkillTreeMobType.clearMobTypes();
-        SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
+        SkillTreeLoaderJSON.loadSkilltrees(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"));
 
-        Set<String> skilltreeNames = new LinkedHashSet<>();
-        for (MyPetType mobType : MyPetType.values()) {
-            SkillTreeMobType skillTreeMobType = SkillTreeMobType.byPetType(mobType);
-            SkillTreeLoader.addDefault(skillTreeMobType);
-            SkillTreeLoader.manageInheritance(skillTreeMobType);
-            skilltreeNames.addAll(skillTreeMobType.getSkillTreeNames());
-        }
         // register skilltree permissions
-        for (String skilltreeName : skilltreeNames) {
+        for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
             try {
-                Bukkit.getPluginManager().addPermission(new Permission("MyPet.custom.skilltree." + skilltreeName));
+                Bukkit.getPluginManager().addPermission(new Permission(skilltree.getPermission()));
             } catch (Exception ignored) {
             }
         }
 
         for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            myPet.getSkills().reset();
-
-            SkillTree skillTree = myPet.getSkilltree();
-            if (skillTree != null) {
-                String skilltreeName = skillTree.getName();
-                if (SkillTreeMobType.hasMobType(myPet.getPetType())) {
-                    SkillTreeMobType mobType = SkillTreeMobType.byPetType(myPet.getPetType());
-
-                    if (mobType.hasSkillTree(skilltreeName)) {
-                        skillTree = mobType.getSkillTree(skilltreeName);
-                    } else {
-                        skillTree = null;
+            Skilltree skilltree = myPet.getSkilltree();
+            if (skilltree != null) {
+                String skilltreeName = skilltree.getName();
+                if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
+                    skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
+                    if (!skilltree.getMobTypes().contains(myPet.getPetType())) {
+                        skilltree = null;
                     }
                 } else {
-                    skillTree = null;
+                    skilltree = null;
                 }
             }
-            myPet.setSkilltree(skillTree);
-            if (skillTree != null) {
+            myPet.setSkilltree(skilltree);
+            if (skilltree != null) {
                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", myPet.getOwner()), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
-                for (SkillInstance skill : myPet.getSkills().getSkills()) {
+                for (Skill skill : myPet.getSkills().all()) {
                     if (skill.isActive()) {
-                        myPet.getOwner().sendMessage("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.getFormattedValue());
+                        myPet.getOwner().sendMessage("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.toPrettyString());
                     }
                 }
             }

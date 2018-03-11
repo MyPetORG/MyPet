@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPig;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.EntityMyPet;
-import de.Keyle.MyPet.skill.skills.Ride;
+import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -79,7 +79,7 @@ public class EntityMyPig extends EntityMyPet {
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
-                if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
+                if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
                     if (itemStack != null && itemStack.getItem() == Items.LEAD) {
                         ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
                         entityhuman.a(EnumHand.MAIN_HAND, null);

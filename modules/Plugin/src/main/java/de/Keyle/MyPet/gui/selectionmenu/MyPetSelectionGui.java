@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.gui.selectionmenu;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -147,9 +146,7 @@ public class MyPetSelectionGui {
                 icon.setTitle(RESET + mypet.getPetName());
                 icon.addLore(lore);
                 Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
-                if (egg.isPresent()) {
-                    egg.get().updateIcon(mypet.getPetType(), icon);
-                }
+                egg.ifPresent(service -> service.updateIcon(mypet.getPetType(), icon));
 
                 int pos = menu.addOption(icon);
                 petSlotList.put(pos, mypet);
