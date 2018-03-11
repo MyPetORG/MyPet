@@ -29,6 +29,8 @@ import java.net.URISyntaxException;
 
 public class Main {
     public static String configPath;
+    public static WebServer webServer = null;
+    public static TrayIcon trayIcon = null;
 
     public static void main(String[] args) {
         if (GraphicsEnvironment.isHeadless()) {
@@ -52,7 +54,9 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
         }
-        Image logoImage = new ImageIcon(ClassLoader.getSystemResource("gui/assets/img/logo_100.png")).getImage();
+        Image logoImage = Toolkit
+                .getDefaultToolkit()
+                .getImage(ClassLoader.getSystemResource("gui/assets/img/logo_16.png"));
         final JFileChooser fc = new JFileChooser() {
             @Override
             protected JDialog createDialog(Component parent) throws HeadlessException {
@@ -69,11 +73,33 @@ public class Main {
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                new WebServer(fc.getSelectedFile());
+                webServer = new WebServer(fc.getSelectedFile());
                 Desktop.getDesktop().browse(new URI("http://localhost:64712"));
+                if (SystemTray.isSupported()) {
+                    createTraymenu(logoImage);
+                }
             } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void createTraymenu(Image logoImage) {
+        trayIcon = new TrayIcon(logoImage);
+        MenuItem exitItem = new MenuItem("Exit");
+        exitItem.addActionListener(e -> {
+            webServer.stop();
+            System.exit(0);
+        });
+        PopupMenu popup = new PopupMenu();
+        popup.add(exitItem);
+        trayIcon.setPopupMenu(popup);
+        trayIcon.setToolTip("MyPet - SkilltreeCreator");
+        try {
+            SystemTray.getSystemTray().add(trayIcon);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        trayIcon.displayMessage("MyPet - SkilltreeCreator", "The SkilltreeCreator is running. You can exit it via the tray icon.", TrayIcon.MessageType.INFO);
     }
 }
