@@ -140,7 +140,7 @@ public class ApiServer {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonParser jp = new JsonParser();
         JsonElement je = jp.parse(jsonObject.toJSONString());
-        String prettyJsonString = gson.toJson(je);
+        String prettyJsonString = gson.toJson(je).replace("\\u003c", "<").replace("\\u003e", ">");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
             writer.write(prettyJsonString);
