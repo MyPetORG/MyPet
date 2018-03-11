@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -91,16 +91,6 @@ public class CompatUtil {
 
     public String getInternalVersion() {
         return internalVersion;
-    }
-
-    @Deprecated
-    @Since("24.11.2016")
-    public int getMinecraftVersion() {
-        String version = minecraftVersion.replace(".", "");
-        if (Util.isInt(version)) {
-            return Integer.parseInt(version);
-        }
-        return 0;
     }
 
     public int compareWithMinecraftVersion(String version) {

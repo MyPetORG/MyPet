@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.CaptureHelper;
@@ -151,19 +150,6 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public void setHealthBarActive(boolean showHealthBar) {
         this.showHealthBar = showHealthBar;
-    }
-
-    @Deprecated
-    @Since("17.12.2017")
-    @Override
-    public void setUsesResourcePack(boolean flag) {
-    }
-
-    @Deprecated
-    @Since("17.12.2017")
-    @Override
-    public boolean isUsingResourcePack() {
-        return false;
     }
 
     public boolean isCaptureHelperActive() {

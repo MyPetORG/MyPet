@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.NotImplemented;
-import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
@@ -114,20 +113,8 @@ public class ShopMyPet implements StoredMyPet {
         return 100;
     }
 
-    @Deprecated
-    @Since("24.11.2016")
-    public double getHungerValue() {
-        return getSaturation();
-    }
-
     @NotImplemented
     public void setSaturation(double value) {
-    }
-
-    @Deprecated
-    @Since("24.11.2016")
-    public void setHungerValue(double value) {
-        setSaturation(value);
     }
 
     public TagCompound getInfo() {

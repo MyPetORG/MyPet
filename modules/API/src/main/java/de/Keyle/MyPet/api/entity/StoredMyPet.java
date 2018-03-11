@@ -37,13 +37,7 @@ public interface StoredMyPet {
 
     double getSaturation();
 
-    @Deprecated
-    double getHungerValue();
-
     void setSaturation(double value);
-
-    @Deprecated
-    void setHungerValue(double value);
 
     TagCompound getInfo();
 

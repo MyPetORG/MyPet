@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api;
 
 import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.Since;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,9 +38,6 @@ public class Configuration {
         public static boolean RELEASE_PETS_ON_DEATH = false;
         public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
         public static boolean INVISIBLE_LIKE_OWNER = true;
-        @Deprecated
-        @Since("17.12.2017")
-        public static boolean ACTIVATE_RESOURCEPACK_BY_DEFAULT = false;
         public static boolean THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = true;
         public static boolean DISABLE_ALL_ACTIONBAR_MESSAGES = false;
         public static String OVERWRITE_LANGUAGE = "";
@@ -66,41 +62,6 @@ public class Configuration {
 
         public static String REPOSITORY_TYPE = "SQLite";
         public static String CONVERT_FROM = "";
-
-        @Deprecated
-        @Since("24.11.2016")
-        public static class NBT {
-            @Deprecated
-            @Since("24.11.2016")
-            public static int AUTOSAVE_TIME = 60;
-            @Deprecated
-            @Since("24.11.2016")
-            public static boolean SAVE_ON_PET_ADD = true;
-            @Deprecated
-            @Since("24.11.2016")
-            public static boolean SAVE_ON_PET_UPDATE = true;
-            @Deprecated
-            @Since("24.11.2016")
-            public static boolean SAVE_ON_PET_REMOVE = true;
-            @Deprecated
-            @Since("24.11.2016")
-            public static boolean SAVE_ON_PLAYER_ADD = true;
-            @Deprecated
-            @Since("24.11.2016")
-            public static boolean SAVE_ON_PLAYER_UPDATE = true;
-            @Deprecated
-            @Since("24.11.2016")
-            public static boolean SAVE_ON_PLAYER_REMOVE = true;
-            @Deprecated
-            @Since("24.11.2016")
-            public static boolean MAKE_BACKUPS = true;
-            @Deprecated
-            @Since("24.11.2016")
-            public static int SAVE_INTERVAL = 1440;
-            @Deprecated
-            @Since("24.11.2016")
-            public static String DATE_FORMAT = "yyyy_MM_dd_HH.mm";
-        }
 
         public static class MySQL {
             public static String DATABASE = "mypet";
@@ -140,16 +101,6 @@ public class Configuration {
             public static String PREFIX = "<aqua>";
             public static String SUFFIX = "";
         }
-
-        @Deprecated
-        @Since("24.11.2016")
-        public static String OVERHEAD_PREFIX = "<aqua>";
-        @Deprecated
-        @Since("24.11.2016")
-        public static String OVERHEAD_SUFFIX = "";
-        @Deprecated
-        @Since("24.11.2016")
-        public static boolean OVERHEAD_NAME = true;
     }
 
     public static class Permissions {
@@ -160,12 +111,6 @@ public class Configuration {
 
     public static class LevelSystem {
         public static String CALCULATION_MODE = "Default";
-        @Deprecated
-        @Since("24.11.2016")
-        public static boolean FIREWORK = true;
-        @Deprecated
-        @Since("24.11.2016")
-        public static int FIREWORK_COLOR = 0x00FF00;
 
         public static class Experience {
             public static int LOSS_PERCENT = 0;
@@ -183,24 +128,12 @@ public class Configuration {
     public static class HungerSystem {
         public static boolean USE_HUNGER_SYSTEM = true;
         public static int HUNGER_SYSTEM_TIME = 60;
-        @Deprecated
-        @Since("24.02.2018")
-        public static double HUNGER_SYSTEM_POINTS_PER_FEED = 6.0;
         public static double HUNGER_SYSTEM_SATURATION_PER_FEED = 6.0;
         public static boolean AFFECT_RIDE_SPEED = true;
         public static boolean AFFECT_BEACON_RANGE = true;
     }
 
     public static class Skilltree {
-        @Deprecated
-        @Since("17.06.2017")
-        public static int SWITCH_PENALTY_PERCENT = 5;
-        @Deprecated
-        @Since("17.06.2017")
-        public static double SWITCH_PENALTY_FIXED = 0.0;
-        @Deprecated
-        @Since("17.06.2017")
-        public static boolean SWITCH_PENALTY_ADMIN = false;
         public static int SWITCH_FEE_PERCENT = 5;
         public static double SWITCH_FEE_FIXED = 0.0;
         public static boolean SWITCH_FEE_ADMIN = false;
@@ -305,18 +238,12 @@ public class Configuration {
         public static boolean DISABLE_PETS_IN_ARENA = true;
         public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
         public static boolean DISABLE_PETS_IN_HUNGER_GAMES = true;
-        @Deprecated
-        @Since("26.06.2017")
-        public static boolean DISABLE_PETS_IN_MOB_ARENA = true;
         public static boolean DISABLE_MYTHIC_MOB_LEASHING = true;
         public static boolean USE_Towny = true;
         public static boolean USE_Factions = true;
         public static boolean USE_WorldGuard = true;
         public static boolean USE_Citizens = true;
         public static boolean USE_Heroes = true;
-        @Deprecated
-        @Since("26.06.2017")
-        public static boolean USE_MobArena = true;
         public static boolean USE_McMMO = true;
         public static boolean USE_SimpleClans = true;
         public static boolean USE_RedProtect = true;

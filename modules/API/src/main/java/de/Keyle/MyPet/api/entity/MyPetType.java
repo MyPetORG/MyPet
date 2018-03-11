@@ -140,7 +140,6 @@ public enum MyPetType {
         return byEntityTypeName(name, true);
     }
 
-    @Deprecated
     public static MyPetType byEntityTypeName(String name, boolean versionCheck) {
         for (MyPetType t : values()) {
             if (t.getBukkitName().equalsIgnoreCase(name)) {

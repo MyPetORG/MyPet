@@ -40,7 +40,6 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
-import de.Keyle.MyPet.api.util.Since;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.experience.Default;
@@ -235,24 +234,12 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
     }
 
-    @Deprecated
-    @Since("24.11.2016")
-    public double getHungerValue() {
-        return getSaturation();
-    }
-
     public double getSaturation() {
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             return saturation;
         } else {
             return 100;
         }
-    }
-
-    @Deprecated
-    @Since("24.11.2016")
-    public void setHungerValue(double value) {
-        setSaturation(value);
     }
 
     public void setSaturation(double value) {
@@ -262,12 +249,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         } else {
             MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + Util.stackTraceToString());
         }
-    }
-
-    @Deprecated
-    @Since("24.11.2016")
-    public void decreaseHunger(double value) {
-        decreaseSaturation(value);
     }
 
     public void decreaseSaturation(double value) {

@@ -262,7 +262,7 @@ public class MongoDbRepository implements Repository {
             pet.setPetName(document.getString("name"));
             pet.setPetType(MyPetType.valueOf(document.getString("type")));
             pet.setLastUsed(document.getLong("last_used"));
-            pet.setHungerValue(((Number) document.get("hunger")).doubleValue());
+            pet.setSaturation(((Number) document.get("hunger")).doubleValue());
             pet.setWorldGroup(document.getString("world_group"));
             pet.wantsToRespawn = document.getBoolean("wants_to_spawn");
 
