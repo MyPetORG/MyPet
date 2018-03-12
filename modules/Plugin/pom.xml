@@ -274,6 +274,7 @@
                                     <include>org.slf4j:slf4j-api:*</include>
                                     <include>org.slf4j:slf4j-nop:*</include>
                                     <include>org.nanohttpd:nanohttpd:*</include>
+                                    <include>org.nanohttpd:nanohttpd-websocket:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>

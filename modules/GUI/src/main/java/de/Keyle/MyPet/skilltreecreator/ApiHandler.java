@@ -36,16 +36,16 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ApiServer {
+public class ApiHandler {
 
     private File skilltreeDir;
 
-    public ApiServer(File skilltreeDir) {
+    public ApiHandler(File skilltreeDir) {
         this.skilltreeDir = skilltreeDir;
     }
 
     @SuppressWarnings("unchecked")
-    public Response serve(IHTTPSession session) {
+    public Response handle(IHTTPSession session) {
         String uri = session.getUri();
 
         switch (session.getMethod()) {
