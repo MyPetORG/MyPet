@@ -25,30 +25,63 @@ import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
+import org.nanohttpd.protocols.websockets.CloseCode;
+import org.nanohttpd.protocols.websockets.NanoWSD;
+import org.nanohttpd.protocols.websockets.WebSocket;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class WebServer extends NanoHTTPD {
+public class WebServer extends NanoWSD {
 
     static Map<String, String> MIME_TYPES = new HashMap<>();
     static Response NOT_FOUND = Response.newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "Not Found");
 
-    ApiServer apiServer;
+    ApiHandler apiHandler;
+    List<WebsocketHandler> websocketHandlers = new ArrayList<>();
 
     public WebServer(File skilltreeDir) throws IOException {
         super(64712);
-        apiServer = new ApiServer(skilltreeDir);
+        apiHandler = new ApiHandler(skilltreeDir);
 
         setTempFileManagerFactory(new FileManager());
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
     }
 
     @Override
+    protected WebSocket openWebSocket(IHTTPSession ihttpSession) {
+        if (ihttpSession.getUri().equals("/websocket")) {
+            WebsocketHandler websocketHandler = new WebsocketHandler(ihttpSession) {
+                @Override
+                protected void onClose(CloseCode code, String reason, boolean initiatedByRemote) {
+                    websocketHandlers.remove(this);
+                    super.onClose(code, reason, initiatedByRemote);
+                }
+            };
+            websocketHandlers.add(websocketHandler);
+            return websocketHandler;
+        }
+        return null;
+    }
+
+    public void sendToWebsockets(String message) {
+        for (WebsocketHandler handler : websocketHandlers) {
+            try {
+                handler.send(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
 
@@ -59,10 +92,24 @@ public class WebServer extends NanoHTTPD {
         System.out.println(session.getMethod().name() + ": " + uri);
 
         if (uri.startsWith("/api/")) {
-            return apiServer.serve(session);
+            return apiHandler.handle(session);
         } else {
             return serveFile(uri);
         }
+    }
+
+    @Override
+    public void stop() {
+        sendToWebsockets("{\"action\": \"server_stop\", \"message\": \"Server stopped\"}");
+
+        for (WebsocketHandler handler : websocketHandlers) {
+            try {
+                handler.close(CloseCode.GoingAway, "Server stopped", false);
+            } catch (IOException ignored) {
+            }
+        }
+
+        super.stop();
     }
 
     public Response serveFile(String uri) {
@@ -78,7 +125,7 @@ public class WebServer extends NanoHTTPD {
         return NOT_FOUND;
     }
 
-    public String getMimeType(String fileName) {
+    public static String getMimeType(String fileName) {
         String extension = Util.getFileExtension(fileName);
         if (MIME_TYPES.containsKey(extension)) {
             return MIME_TYPES.get(extension);
@@ -97,7 +144,7 @@ public class WebServer extends NanoHTTPD {
     }
 
     public static Response newResourceResponse(String file) throws FileNotFoundException {
-        String mime = getMimeTypeForFile(file);
+        String mime = getMimeType(file);
         Response res;
         try {
             res = Response.newChunkedResponse(Status.OK, mime, ClassLoader.getSystemResource(file).openStream());

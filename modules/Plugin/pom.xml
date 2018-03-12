@@ -249,6 +249,7 @@
                                     <include>com.googlecode.json-simple:json-simple:*</include>
                                     <include>com.google.code.gson:gson:*</include>
                                     <include>org.nanohttpd:nanohttpd:*</include>
+                                    <include>org.nanohttpd:nanohttpd-websocket:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
