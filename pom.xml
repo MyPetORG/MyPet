@@ -47,109 +47,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
-        <citizensapi.version>2.0.22</citizensapi.version>
-
-        <!-- https://www.spigotmc.org/resources/day-night-pvp-difficulty-cycle.21979/ -->
-        <pvpdifftimer.version>1.4.1</pvpdifftimer.version>
-
-        <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
-        <mcmmo.version>1.5.00</mcmmo.version>
-
-        <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
-        <plotsquared.version>3.4.4</plotsquared.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/vault/ -->
-        <vaultapi.version>1.6.1</vaultapi.version>
-
-        <!-- https://www.spigotmc.org/resources/minigames.19687/ -->
-        <minigames.version>1.8.0</minigames.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/worldguard/ -->
-        <worldguard.version>6.1.3-SNAPSHOT</worldguard.version>
-
-        <!-- https://dev.bukkit.org/projects/mythicmobs -->
-        <mythic-mobs.version>4.0.1</mythic-mobs.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/worldguard-custom-flags/ -->
-        <worldguard-custom-flags.version>1.9</worldguard-custom-flags.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/ancient-rpg/ -->
-        <ancient.version>1.1.0</ancient.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/factions/ -->
-        <factions.version>2.8.20</factions.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/mcore/ -->
-        <massivecore.version>2.8.6</massivecore.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/mobarena/ -->
-        <mobarena.version>0.97.1</mobarena.version>
-
-        <!-- https://www.spigotmc.org/resources/battle-arena.2164/ -->
-        <battlearena.version>3.9.9.10.5</battlearena.version>
-
-        <!-- https://www.spigotmc.org/resources/pvp-arena.16584/ -->
-        <pvparena.version>1.3.2.59</pvparena.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/ -->
-        <ultimatesurvivalgames.version>1.9.4</ultimatesurvivalgames.version>
-
-        <!-- https://www.spigotmc.org/resources/survival-games.17740/ -->
-        <survivalgames.version>0.6.0</survivalgames.version>
-
-        <!-- http://ltcraft.lt/Residence/ -->
-        <residence.version>4.7.4.1</residence.version>
-
-        <!-- http://towny.palmergames.com/ -->
-        <towny.version>0.91.1.0</towny.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
-        <griefprevention.version>15.0.1</griefprevention.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
-        <griefpreventionplus.version>12.28</griefpreventionplus.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/pvpmanager/ -->
-        <pvpmanager.version>3.1.8</pvpmanager.version>
-
-        <!-- https://www.spigotmc.org/resources/kingdoms-plugin-demo.6392/ -->
-        <kingdoms.version>8.5.4</kingdoms.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/heroes/ -->
-        <heroes.version>1.5.5.7</heroes.version>
-
-        <!-- https://www.spigotmc.org/resources/skillapi.4824/ -->
-        <skill-api.version>3.52</skill-api.version>
-
-        <!-- http://dev.bukkit.org/bukkit-plugins/magicspells/ -->
-        <magicspells.version>3.4.2</magicspells.version>
-
-        <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
-        <protocol-lib.version>4.3.0</protocol-lib.version>
-
-        <!-- https://www.spigotmc.org/resources/placeholderapi.6245/ -->
-        <playceholder-api.version>2.5.1</playceholder-api.version>
-
-        <!-- https://www.spigotmc.org/resources/nocheatplus2015-07-25.26/ -->
-        <nocheatplus.version>3.15.0-SNAPSHOT</nocheatplus.version>
-
-        <!-- https://www.spigotmc.org/resources/supervanish-be-invisible.1331/ -->
-        <supervanish.version>6.0.4</supervanish.version>
-
-        <!-- https://www.spigotmc.org/resources/preciousstones.5270/ -->
-        <preciousstones.version>10.6.0</preciousstones.version>
-
-        <bstats.version>1.2</bstats.version>
-        <mongodb.version>3.4.2</mongodb.version>
-        <knbt.version>0.0.3-SNAPSHOT</knbt.version>
-        <json.version>1.1.1</json.version>
-        <gson.version>2.6.1</gson.version>
-        <fanciful-chat.version>0.0.4</fanciful-chat.version>
-
         <download.translations>prepare-package</download.translations>
-        <remove.donator>none</remove.donator>
     </properties>
 
     <repositories>
@@ -199,44 +97,50 @@
 
     <dependencies>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
-            <version>${citizensapi.version}</version>
+            <version>2.0.22</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/day-night-pvp-difficulty-cycle.21979/ -->
             <groupId>br.net.fabiozumbi12</groupId>
             <artifactId>PvPDiffTimer</artifactId>
-            <version>${pvpdifftimer.version}</version>
+            <version>1.4.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/minigames.19687/ -->
             <groupId>com.pauldavdesign.mineauz</groupId>
             <artifactId>Minigames</artifactId>
-            <version>${minigames.version}</version>
+            <version>1.8.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
             <groupId>com.plotsquared.bukkit</groupId>
             <artifactId>PlotSquared</artifactId>
-            <version>${plotsquared.version}</version>
+            <version>3.4.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://dev.bukkit.org/projects/mythicmobs -->
             <groupId>io.lumine.xikage.mythicmobs</groupId>
             <artifactId>MythicMobs</artifactId>
-            <version>${mythic-mobs.version}</version>
+            <version>4.0.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/vault/ -->
             <groupId>org.natrolite</groupId>
             <artifactId>vault-api</artifactId>
-            <version>${vaultapi.version}</version>
+            <version>1.6.1</version>
             <type>jar</type>
             <scope>provided</scope>
             <optional>true</optional>
@@ -248,9 +152,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>${mcmmo.version}</version>
+            <version>1.5.00</version>
             <scope>provided</scope>
             <optional>true</optional>
             <exclusions>
@@ -261,9 +166,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/worldguard/ -->
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-legacy</artifactId>
-            <version>${worldguard.version}</version>
+            <version>6.2</version>
             <scope>provided</scope>
             <optional>true</optional>
             <exclusions>
@@ -274,83 +180,95 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/worldguard-custom-flags/ -->
             <groupId>com.mewin</groupId>
             <artifactId>WGCustomFlags</artifactId>
-            <version>${worldguard-custom-flags.version}</version>
+            <version>1.9</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/ancient-rpg/ -->
             <groupId>com.ancientshores</groupId>
             <artifactId>ancient</artifactId>
-            <version>${ancient.version}</version>
+            <version>1.1.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/factions/ -->
             <groupId>com.massivecraft</groupId>
             <artifactId>Factions</artifactId>
-            <version>${factions.version}</version>
+            <version>2.8.20</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/mcore/ -->
             <groupId>com.massivecraft</groupId>
             <artifactId>MassiveCore</artifactId>
-            <version>${massivecore.version}</version>
+            <version>2.8.6</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/mobarena/ -->
             <groupId>com.garbagemule</groupId>
             <artifactId>MobArena</artifactId>
-            <version>${mobarena.version}</version>
+            <version>0.97.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/battle-arena.2164/ -->
             <groupId>mc.alk</groupId>
             <artifactId>BattleArena</artifactId>
-            <version>${battlearena.version}</version>
+            <version>3.9.9.10.5</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/pvp-arena.16584/ -->
             <groupId>net.slipcor</groupId>
             <artifactId>pvparena</artifactId>
-            <version>${pvparena.version}</version>
+            <version>1.3.2.59</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/ -->
             <groupId>me.maker56.survivalgames</groupId>
             <artifactId>SurvivalGames</artifactId>
-            <version>${ultimatesurvivalgames.version}</version>
+            <version>1.9.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/survival-games.17740/ -->
             <groupId>org.mcsg</groupId>
             <artifactId>survivalgames</artifactId>
-            <version>${survivalgames.version}</version>
+            <version>0.6.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://ltcraft.lt/Residence/ -->
             <groupId>com.bekvon.bukkit</groupId>
             <artifactId>residence</artifactId>
-            <version>${residence.version}</version>
+            <version>4.7.4.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://towny.palmergames.com/ -->
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>Towny</artifactId>
-            <version>${towny.version}</version>
+            <version>0.91.1.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://104.236.246.108:8080/job/SimpleClans/ -->
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
             <version>2.7.7</version>
@@ -358,6 +276,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/redprotect-for-all-versions-anti-grief-server-protection.15841/ -->
             <groupId>br.net.fabiozumbi12.RedProtect</groupId>
             <artifactId>RedProtect</artifactId>
             <version>7.3.0</version>
@@ -365,120 +284,132 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
             <groupId>me.ryanhamshire</groupId>
             <artifactId>GriefPrevention</artifactId>
-            <version>${griefprevention.version}</version>
+            <version>15.0.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
             <groupId>net.kaikk.mc</groupId>
             <artifactId>GriefPreventionPlus</artifactId>
-            <version>${griefpreventionplus.version}</version>
+            <version>12.28</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/pvpmanager/ -->
             <groupId>me.NoChance.PvPManager</groupId>
             <artifactId>PvPManager</artifactId>
-            <version>${pvpmanager.version}</version>
+            <version>3.1.8</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/kingdoms-plugin-demo.6392/ -->
             <groupId>org.kingdoms</groupId>
             <artifactId>kingdoms</artifactId>
-            <version>${kingdoms.version}</version>
+            <version>8.5.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/heroes/ -->
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
-            <version>${heroes.version}</version>
+            <version>1.5.5.7</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/skillapi.4824/ -->
             <groupId>com.sucy.skill</groupId>
             <artifactId>SkillAPI</artifactId>
-            <version>${skill-api.version}</version>
+            <version>3.52</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/magicspells/ -->
             <groupId>com.nisovin.magicspells</groupId>
             <artifactId>MagicSpells</artifactId>
-            <version>${magicspells.version}</version>
+            <version>3.4.2</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>${protocol-lib.version}</version>
+            <version>4.3.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/placeholderapi.6245/ -->
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>${playceholder-api.version}</version>
+            <version>2.5.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/nocheatplus2015-07-25.26/ -->
             <groupId>fr.neatmonster</groupId>
             <artifactId>nocheatplus</artifactId>
-            <version>${nocheatplus.version}</version>
+            <version>3.15.0-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/supervanish-be-invisible.1331/ -->
             <groupId>de.myzelyam</groupId>
             <artifactId>supervanish</artifactId>
-            <version>${supervanish.version}</version>
+            <version>6.0.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/preciousstones.5270/ -->
             <groupId>net.sacredlabyrinth.Phaed</groupId>
             <artifactId>PreciousStones</artifactId>
-            <version>${preciousstones.version}</version>
+            <version>10.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>${bstats.version}</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
-            <version>${mongodb.version}</version>
+            <version>3.4.2</version>
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>knbt</artifactId>
-            <version>${knbt.version}</version>
+            <version>0.0.3-SNAPSHOT</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>${json.version}</version>
+            <version>1.1.1</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <version>2.6.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>fanciful-chat</artifactId>
-            <version>${fanciful-chat.version}</version>
+            <version>0.0.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

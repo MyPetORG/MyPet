@@ -1,7 +1,7 @@
 <!--
   ~ This file is part of MyPet
   ~
-  ~ Copyright © 2011-2017 Keyle
+  ~ Copyright © 2011-2018 Keyle
   ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
   ~ MyPet is free software: you can redistribute it and/or modify
@@ -36,11 +36,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <minecraft.version>1.7.10</minecraft.version>
-        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-
-        <remove.donator>none</remove.donator>
     </properties>
 
     <dependencies>
@@ -58,21 +53,6 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.spigotmc</groupId>
-                    <artifactId>sneaky-throw</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        -->
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-api</artifactId>

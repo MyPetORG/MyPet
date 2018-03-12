@@ -24,3 +24,4 @@ build.number
 # Maven
 /target
 /modules/*/target
+dependency-reduced-pom.xml
