@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skilltreecreator;
 
+import de.Keyle.MyPet.api.MyPetVersion;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.nanohttpd.protocols.http.IHTTPSession;
@@ -38,6 +39,12 @@ public class WebsocketHandler extends WebSocket {
     @Override
     protected void onOpen() {
         System.out.println("WS: Open connection");
+        if (!MyPetVersion.isPremium()) {
+            try {
+                this.send("{\"action\": \"toggle_premium\", \"message\": \"Plugin is not premium.\"}");
+            } catch (IOException e) {
+            }
+        }
     }
 
     @Override
