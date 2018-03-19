@@ -1137,52 +1137,54 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
         }
 
-        boolean doJump = false;
-        if (this instanceof IJumpable) {
-            if (this.jumpPower > 0.0F) {
-                doJump = true;
-                this.jumpPower = 0.0F;
-            } else if (!this.onGround && jump != null) {
-                try {
-                    doJump = jump.getBoolean(passenger);
-                } catch (IllegalAccessException ignored) {
+        if (jump != null && this.isVehicle()) {
+            boolean doJump = false;
+            if (this instanceof IJumpable) {
+                if (this.jumpPower > 0.0F) {
+                    doJump = true;
+                    this.jumpPower = 0.0F;
+                } else if (!this.onGround && jump != null) {
+                    try {
+                        doJump = jump.getBoolean(passenger);
+                    } catch (IllegalAccessException ignored) {
+                    }
                 }
-            }
-        } else {
-            if (jump != null) {
-                try {
-                    doJump = jump.getBoolean(passenger);
-                } catch (IllegalAccessException ignored) {
-                }
-            }
-        }
-
-        if (doJump) {
-            if (onGround) {
-                String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
-                Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
-                jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
-                if (this instanceof IJumpable) {
-                    getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).setValue(jumpVelocity);
-                }
-                this.motY = jumpVelocity;
-            } else if (rideSkill != null && rideSkill.canFly()) {
-                if (limitCounter <= 0 && rideSkill.getFlyLimit() > 0) {
-                    canFly = false;
-                } else if (flyCheckCounter-- <= 0) {
-                    canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
-                    flyCheckCounter = 5;
-                }
-                if (canFly) {
-                    if (this.motY < ascenSpeed) {
-                        this.motY = ascenSpeed;
-                        this.fallDistance = 0;
-                        this.isFlying = true;
+            } else {
+                if (jump != null) {
+                    try {
+                        doJump = jump.getBoolean(passenger);
+                    } catch (IllegalAccessException ignored) {
                     }
                 }
             }
-        } else {
-            flyCheckCounter = 0;
+
+            if (doJump) {
+                if (onGround) {
+                    String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
+                    Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                    jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
+                    if (this instanceof IJumpable) {
+                        getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).setValue(jumpVelocity);
+                    }
+                    this.motY = jumpVelocity;
+                } else if (rideSkill != null && rideSkill.canFly()) {
+                    if (limitCounter <= 0 && rideSkill.getFlyLimit() > 0) {
+                        canFly = false;
+                    } else if (flyCheckCounter-- <= 0) {
+                        canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
+                        flyCheckCounter = 5;
+                    }
+                    if (canFly) {
+                        if (this.motY < ascenSpeed) {
+                            this.motY = ascenSpeed;
+                            this.fallDistance = 0;
+                            this.isFlying = true;
+                        }
+                    }
+                }
+            } else {
+                flyCheckCounter = 0;
+            }
         }
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER > 0) {

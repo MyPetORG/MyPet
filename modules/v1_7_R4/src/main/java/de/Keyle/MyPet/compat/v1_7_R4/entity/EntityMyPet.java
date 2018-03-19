@@ -995,7 +995,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         ride(motionSideways, motionForward, speed);
 
         boolean doJump = false;
-        if (jump != null) {
+        if (jump != null && this.passenger != null) {
             try {
                 doJump = jump.getBoolean(this.passenger);
             } catch (IllegalAccessException ignored) {
