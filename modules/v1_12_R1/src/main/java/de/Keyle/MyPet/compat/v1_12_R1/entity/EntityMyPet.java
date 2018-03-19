@@ -1106,30 +1106,32 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
         }
 
-        boolean doJump = false;
-        if (this instanceof IJumpable) {
-            if (this.jumpPower > 0.0F) {
-                doJump = true;
-                this.jumpPower = 0.0F;
-            }
-        } else {
-            if (jump != null) {
-                try {
-                    doJump = jump.getBoolean(passenger);
-                } catch (IllegalAccessException ignored) {
+        if (jump != null && this.isVehicle()) {
+            boolean doJump = false;
+            if (this instanceof IJumpable) {
+                if (this.jumpPower > 0.0F) {
+                    doJump = true;
+                    this.jumpPower = 0.0F;
+                }
+            } else {
+                if (jump != null) {
+                    try {
+                        doJump = jump.getBoolean(passenger);
+                    } catch (IllegalAccessException ignored) {
+                    }
                 }
             }
-        }
 
-        if (doJump) {
-            if (onGround) {
-                String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
-                Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
-                jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
-                if (this instanceof IJumpable) {
-                    getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(jumpVelocity);
+            if (doJump) {
+                if (onGround) {
+                    String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
+                    Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
+                    jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
+                    if (this instanceof IJumpable) {
+                        getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(jumpVelocity);
+                    }
+                    this.motY = jumpVelocity;
                 }
-                this.motY = jumpVelocity;
             }
         }
 
