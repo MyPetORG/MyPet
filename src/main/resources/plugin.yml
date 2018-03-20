@@ -1,6 +1,6 @@
 name: MyPet
 main: de.Keyle.MyPet.MyPetPlugin
-version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
+version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}
 author: Keyle
 website: ${project.url}
 softdepend:
