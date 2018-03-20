@@ -351,11 +351,13 @@ public class SkillTreeLoaderJSON {
     private static UpgradeNumberModifier parseNumberModifier(Object modifierObject) {
         if (modifierObject instanceof String) {
             String modifierString = modifierObject.toString();
-            UpgradeNumberModifier.Type type = UpgradeNumberModifier.Type.Set;
+            UpgradeNumberModifier.Type type;
             if (modifierString.startsWith("+")) {
                 type = UpgradeNumberModifier.Type.Add;
             } else if (modifierString.startsWith("-")) {
                 type = UpgradeNumberModifier.Type.Subtract;
+            } else {
+                return null;
             }
             BigDecimal value = new BigDecimal(modifierString.substring(1));
             return new UpgradeNumberModifier(value, type);

@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 
 public class UpgradeNumberModifier {
     public enum Type {
-        Add, Set, Subtract
+        Add, Subtract
     }
 
     Number value;
