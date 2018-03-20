@@ -41,4 +41,11 @@ public class LifeUpgrade implements Upgrade<Heal> {
             skill.setIncreaseHpBy(extraLifeModifier.modify(skill.getIncreaseHpBy()).doubleValue());
         }
     }
+
+    @Override
+    public void invert(Heal skill) {
+        if (extraLifeModifier != null) {
+            skill.setIncreaseHpBy(extraLifeModifier.invert(skill.getIncreaseHpBy()).doubleValue());
+        }
+    }
 }

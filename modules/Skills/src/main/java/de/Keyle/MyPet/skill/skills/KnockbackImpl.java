@@ -45,6 +45,11 @@ public class KnockbackImpl implements Knockback {
         return chance > 0;
     }
 
+    @Override
+    public void reset() {
+        chance = 0;
+    }
+
     public String toPrettyString() {
         return "" + ChatColor.GOLD + chance + ChatColor.RESET + "%";
     }

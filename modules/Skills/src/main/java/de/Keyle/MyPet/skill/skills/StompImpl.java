@@ -54,6 +54,12 @@ public class StompImpl implements Stomp {
         return chance > 0 && damage > 0;
     }
 
+    @Override
+    public void reset() {
+        chance = 0;
+        damage = 0;
+    }
+
     public String toPrettyString() {
         return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }

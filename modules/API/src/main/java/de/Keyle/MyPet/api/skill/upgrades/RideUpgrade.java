@@ -62,4 +62,23 @@ public class RideUpgrade implements Upgrade<Ride> {
             skill.setCanFly(canFlyModifier.getBoolean());
         }
     }
+
+    @Override
+    public void invert(Ride skill) {
+        if (speedIncreaseModifier != null) {
+            skill.setSpeedIncrease(speedIncreaseModifier.invert(skill.getSpeedIncrease()).intValue());
+        }
+        if (jumpHeightModifier != null) {
+            skill.setJumpHeight(jumpHeightModifier.invert(skill.getJumpHeight()).doubleValue());
+        }
+        if (flyLimitModifier != null) {
+            skill.setFlyLimit(flyLimitModifier.invert(skill.getFlyLimit()).floatValue());
+        }
+        if (flyRegenRateModifier != null) {
+            skill.setFlyRegenRate(flyRegenRateModifier.invert(skill.getFlyRegenRate()).floatValue());
+        }
+        if (canFlyModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setCanFly(canFlyModifier.getInvertedBoolean());
+        }
+    }
 }

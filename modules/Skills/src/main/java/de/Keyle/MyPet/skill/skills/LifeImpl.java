@@ -40,6 +40,11 @@ public class LifeImpl implements Life {
         return extraLife > 0;
     }
 
+    @Override
+    public void reset() {
+        extraLife = 0;
+    }
+
     public String toPrettyString() {
         return "+" + ChatColor.GOLD + extraLife;
     }

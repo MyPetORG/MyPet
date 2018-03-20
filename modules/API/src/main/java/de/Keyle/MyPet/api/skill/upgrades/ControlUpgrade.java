@@ -41,4 +41,11 @@ public class ControlUpgrade implements Upgrade<Control> {
             skill.setActive(activeModifier.getBoolean());
         }
     }
+
+    @Override
+    public void invert(Control skill) {
+        if (activeModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setActive(activeModifier.getInvertedBoolean());
+        }
+    }
 }

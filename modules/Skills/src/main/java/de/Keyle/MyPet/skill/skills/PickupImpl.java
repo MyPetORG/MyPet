@@ -60,6 +60,12 @@ public class PickupImpl implements Pickup {
         return range > 0;
     }
 
+    @Override
+    public void reset() {
+        range = 0;
+        expPickup = false;
+    }
+
     public String toPrettyString() {
         return Translation.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + ChatColor.GOLD + String.format("%1.2f", range) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }

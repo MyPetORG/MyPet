@@ -50,6 +50,12 @@ public class ThornsImpl implements Thorns {
         return chance > 0;
     }
 
+    @Override
+    public void reset() {
+        chance = 0;
+        reflectedDamage = 0;
+    }
+
     public String toPrettyString() {
         return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + reflectedDamage + ChatColor.RESET + "% " + Translation.getString("Name.Damage", myPet.getOwner().getLanguage());
     }

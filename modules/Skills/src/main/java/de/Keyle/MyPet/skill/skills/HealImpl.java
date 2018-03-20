@@ -46,6 +46,12 @@ public class HealImpl implements Heal {
         return increaseHpBy > 0;
     }
 
+    @Override
+    public void reset() {
+        regenTime = 0;
+        increaseHpBy = 0;
+    }
+
     public String toPrettyString() {
         return "+" + ChatColor.GOLD + increaseHpBy + ChatColor.RESET + Translation.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + ChatColor.GOLD + regenTime + ChatColor.RESET + "sec";
     }

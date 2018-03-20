@@ -81,4 +81,43 @@ public class BehaviorUpgrade implements Upgrade<Behavior> {
             }
         }
     }
+
+    @Override
+    public void invert(Behavior skill) {
+        if (aggroModifier != UpgradeBooleanModifier.DontChange) {
+            if (aggroModifier.getInvertedBoolean()) {
+                skill.enableBehavior(Behavior.BehaviorMode.Aggressive);
+            } else {
+                skill.disableBehavior(Behavior.BehaviorMode.Aggressive);
+            }
+        }
+        if (duelModifier != UpgradeBooleanModifier.DontChange) {
+            if (duelModifier.getInvertedBoolean()) {
+                skill.enableBehavior(Behavior.BehaviorMode.Duel);
+            } else {
+                skill.disableBehavior(Behavior.BehaviorMode.Duel);
+            }
+        }
+        if (farmModifier != UpgradeBooleanModifier.DontChange) {
+            if (farmModifier.getInvertedBoolean()) {
+                skill.enableBehavior(Behavior.BehaviorMode.Farm);
+            } else {
+                skill.disableBehavior(Behavior.BehaviorMode.Farm);
+            }
+        }
+        if (friendModifier != UpgradeBooleanModifier.DontChange) {
+            if (friendModifier.getInvertedBoolean()) {
+                skill.enableBehavior(Behavior.BehaviorMode.Friendly);
+            } else {
+                skill.disableBehavior(Behavior.BehaviorMode.Friendly);
+            }
+        }
+        if (raidModifier != UpgradeBooleanModifier.DontChange) {
+            if (raidModifier.getInvertedBoolean()) {
+                skill.enableBehavior(Behavior.BehaviorMode.Raid);
+            } else {
+                skill.disableBehavior(Behavior.BehaviorMode.Raid);
+            }
+        }
+    }
 }

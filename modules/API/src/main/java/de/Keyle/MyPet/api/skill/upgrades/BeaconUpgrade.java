@@ -109,4 +109,51 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
             skill.setBuffLevel(Beacon.Buff.WaterBreathing, waterBreathingModifier.getBoolean() ? 1 : 0);
         }
     }
+
+    @Override
+    public void invert(Beacon skill) {
+        if (rangeModifier != null) {
+            skill.setRange(rangeModifier.invert(skill.getRange()).intValue());
+        }
+        if (durationModifier != null) {
+            skill.setDuration(durationModifier.invert(skill.getDuration()).intValue());
+        }
+        if (numberOfBuffsModifier != null) {
+            skill.setNumberOfBuffs(numberOfBuffsModifier.invert(skill.getNumberOfBuffs()).intValue());
+        }
+
+        if (absorptionModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.Absorption, absorptionModifier.invert(skill.getBuffLevel(Beacon.Buff.Absorption)).intValue());
+        }
+        if (fireResistanceModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.FireResistance, fireResistanceModifier.invert(skill.getBuffLevel(Beacon.Buff.FireResistance)).intValue());
+        }
+        if (hasteModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.Haste, hasteModifier.invert(skill.getBuffLevel(Beacon.Buff.Haste)).intValue());
+        }
+        if (healthBoostModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.HealthBoost, healthBoostModifier.invert(skill.getBuffLevel(Beacon.Buff.HealthBoost)).intValue());
+        }
+        if (jumpBoostModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.JumpBoost, jumpBoostModifier.invert(skill.getBuffLevel(Beacon.Buff.JumpBoost)).intValue());
+        }
+        if (resistanceModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.Resistance, resistanceModifier.invert(skill.getBuffLevel(Beacon.Buff.Resistance)).intValue());
+        }
+        if (speedModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.Speed, speedModifier.invert(skill.getBuffLevel(Beacon.Buff.Speed)).intValue());
+        }
+        if (strengthModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.Strength, strengthModifier.invert(skill.getBuffLevel(Beacon.Buff.Strength)).intValue());
+        }
+        if (luckModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setBuffLevel(Beacon.Buff.Luck, luckModifier.getInvertedBoolean() ? 1 : 0);
+        }
+        if (nightVisionModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setBuffLevel(Beacon.Buff.NightVision, nightVisionModifier.getInvertedBoolean() ? 1 : 0);
+        }
+        if (waterBreathingModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setBuffLevel(Beacon.Buff.WaterBreathing, waterBreathingModifier.getInvertedBoolean() ? 1 : 0);
+        }
+    }
 }

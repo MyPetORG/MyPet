@@ -24,11 +24,14 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
+import de.Keyle.MyPet.api.event.MyPetLevelEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.animation.particle.FixedCircleAnimation;
 import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
@@ -39,7 +42,7 @@ import org.bukkit.event.Listener;
 
 import java.util.List;
 
-public class LevelUpListener implements Listener {
+public class LevelListener implements Listener {
     @EventHandler
     @SuppressWarnings("unchecked")
     public void on(MyPetLevelUpEvent event) {
@@ -95,7 +98,93 @@ public class LevelUpListener implements Listener {
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                     entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
                 } else {
-                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("LEVEL_UP"), 1F, 0.7F);
+                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("ENTITY_PLAYER_LEVELUP"), 1F, 0.7F);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    @SuppressWarnings("unchecked")
+    public void on(MyPetLevelDownEvent event) {
+        MyPet myPet = event.getPet();
+        int lvl = event.getLevel();
+        int fromLvl = event.fromLevel();
+
+        if (!event.isQuiet()) {
+            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelDown", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
+        }
+        Skilltree skilltree = myPet.getSkilltree();
+        if (skilltree != null) {
+            for (int i = fromLvl; i > lvl; i--) {
+                List<Upgrade> upgrades = skilltree.getUpgrades(i);
+                for (Upgrade upgrade : upgrades) {
+                    SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
+                    if (sn != null) {
+                        Skill skill = myPet.getSkills().get(sn.value());
+                        if (skill != null) {
+                            upgrade.invert(skill);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (myPet.getStatus() == MyPet.PetState.Here) {
+            MyPetBukkitEntity entity = myPet.getEntity().get();
+            entity.getHandle().updateNameTag();
+            if (!event.isQuiet()) {
+                myPet.setHealth(myPet.getMaxHealth());
+                myPet.setSaturation(100);
+
+                final boolean version17 = MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.8") < 0;
+
+                new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, new EntityLocationHolder(entity)) {
+                    @Override
+                    protected void playParticleEffect(Location location) {
+                        if (version17) {
+                            MyPetApi.getPlatformHelper().playParticleEffect(location, "blockcrack", 0, 0, 0, 0, 1, 32, 152);
+                        } else {
+                            MyPetApi.getPlatformHelper().playParticleEffect(location, "BLOCK_CRACK", 0, 0, 0, 0, 1, 32, 152);
+
+                        }
+                    }
+                }.once();
+
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                    entity.getWorld().playSound(entity.getLocation(), "random.anvil_break", 1F, 0.7F);
+                } else {
+                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("ENTITY_WITHER_BREAK_BLOCK"), 1F, 0.7F);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    @SuppressWarnings("unchecked")
+    public void on(MyPetLevelEvent event) {
+        if (event instanceof MyPetLevelUpEvent || event instanceof MyPetLevelDownEvent) {
+            return;
+        }
+        MyPet myPet = event.getPet();
+        int lvl = event.getLevel();
+
+        for (Skill skill : myPet.getSkills().all()) {
+            skill.reset();
+        }
+
+        Skilltree skilltree = myPet.getSkilltree();
+        if (skilltree != null) {
+            for (int i = 1; i <= lvl; i++) {
+                List<Upgrade> upgrades = skilltree.getUpgrades(i);
+                for (Upgrade upgrade : upgrades) {
+                    SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
+                    if (sn != null) {
+                        Skill skill = myPet.getSkills().get(sn.value());
+                        if (skill != null) {
+                            upgrade.apply(skill);
+                        }
+                    }
                 }
             }
         }

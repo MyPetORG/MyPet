@@ -29,7 +29,7 @@ import org.bukkit.ChatColor;
 public class RangedImpl implements Ranged {
     protected Projectile selectedProjectile = Projectile.Arrow;
     protected double damage = 0;
-    protected int rateOfFire = 0;
+    protected int rateOfFire = 1;
     private MyPet myPet;
 
     public RangedImpl(MyPet myPet) {
@@ -46,6 +46,12 @@ public class RangedImpl implements Ranged {
 
     public boolean isActive() {
         return damage > 0;
+    }
+
+    @Override
+    public void reset() {
+        damage = 0;
+        rateOfFire = 1;
     }
 
     public String toPrettyString() {

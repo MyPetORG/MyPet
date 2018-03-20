@@ -18,48 +18,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill.skills;
+package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.skill.skills.Sprint;
+import org.bukkit.event.HandlerList;
 
-public class SprintImpl implements Sprint {
-    private boolean active = false;
-    private MyPet myPet;
+public class MyPetLevelDownEvent extends MyPetLevelEvent {
+    private static final HandlerList handlers = new HandlerList();
+    private final int fromLevel;
 
-    public SprintImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public MyPetLevelDownEvent(MyPet myPet, int level, int fromLevel, boolean beQuiet) {
+        super(myPet, level, beQuiet);
+        this.fromLevel = fromLevel;
     }
 
-    public void setMyPet(MyPet myPet) {
-        this.myPet = myPet;
+    public int fromLevel() {
+        return fromLevel;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    @Override
-    public void reset() {
-        active = false;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String toPrettyString() {
-        return "";
-    }
-
-    @Override
-    public String toString() {
-        return "SprintImpl{" +
-                "active=" + active +
-                '}';
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

@@ -54,6 +54,17 @@ public class UpgradeNumberModifier {
         }
     }
 
+    public Number invert(Number n) {
+        switch (type) {
+            case Add:
+                return new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
+            case Subtract:
+                return new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
+            default:
+                return value;
+        }
+    }
+
     @Override
     public String toString() {
         return "{" + type.name() + ": " + value + '}';

@@ -46,4 +46,14 @@ public class ShieldUpgrade implements Upgrade<Shield> {
             skill.setRedirectedDamage(redirectedDamageModifier.modify(skill.getRedirectedDamage()).intValue());
         }
     }
+
+    @Override
+    public void invert(Shield skill) {
+        if (chanceModifier != null) {
+            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
+        }
+        if (redirectedDamageModifier != null) {
+            skill.setRedirectedDamage(redirectedDamageModifier.invert(skill.getRedirectedDamage()).intValue());
+        }
+    }
 }

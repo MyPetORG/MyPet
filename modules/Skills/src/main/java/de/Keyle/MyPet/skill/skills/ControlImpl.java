@@ -43,6 +43,11 @@ public class ControlImpl implements Control {
         return active;
     }
 
+    @Override
+    public void reset() {
+        active = false;
+    }
+
     public void setActive(boolean active) {
         this.active = active;
     }

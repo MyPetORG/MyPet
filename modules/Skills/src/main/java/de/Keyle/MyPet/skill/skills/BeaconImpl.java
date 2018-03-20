@@ -81,6 +81,14 @@ public class BeaconImpl implements Beacon {
         return false;
     }
 
+    @Override
+    public void reset() {
+        duration = 0;
+        range = 0;
+        selectableBuffs = 0;
+        buffLevel.clear();
+    }
+
     public boolean activate() {
         final Player owner = myPet.getOwner().getPlayer();
 
