@@ -77,9 +77,9 @@ public class SkillTreeLoaderJSON {
         Skilltree skilltree;
         String skilltreeID = get(skilltreeObject, "ID").toString();
 
-        //if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeID)) {
-        //    return;
-        //}
+        if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeID)) {
+            return;
+        }
 
         skilltree = new Skilltree(skilltreeID);
 
