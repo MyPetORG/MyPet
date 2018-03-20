@@ -33,6 +33,7 @@ import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,7 +125,7 @@ public class ApiHandler {
     }
 
     public JSONObject loadJsonObject(File jsonFile) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(reader);
             if (obj instanceof JSONObject) {
@@ -142,7 +143,7 @@ public class ApiHandler {
         JsonElement je = jp.parse(jsonObject.toJSONString());
         String prettyJsonString = gson.toJson(je).replace("\\u003c", "<").replace("\\u003e", ">");
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8));
             writer.write(prettyJsonString);
             writer.close();
         } catch (IOException e) {
