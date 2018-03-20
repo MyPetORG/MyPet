@@ -43,11 +43,6 @@ public class SkillManager implements ServiceContainer {
         registeredSkillsNames.clear();
     }
 
-    @Override
-    public String getServiceName() {
-        return "SkillManager";
-    }
-
     public void registerSkill(Class<? extends Skill> clazz) {
         if (!Skill.class.isAssignableFrom(clazz)) {
             MyPetApi.getLogger().warning(clazz.getName() + " doesn't implements Skill!");

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.util.service;
 
+import de.Keyle.MyPet.api.Util;
 import org.bukkit.event.Listener;
 
 /**
@@ -47,6 +48,10 @@ public interface ServiceContainer extends Listener {
      * @return name of the service
      */
     default String getServiceName() {
+        ServiceName sn = Util.getClassAnnotation(this.getClass(), ServiceName.class);
+        if (sn != null) {
+            return sn.value();
+        }
         return getClass().getName();
     }
 }

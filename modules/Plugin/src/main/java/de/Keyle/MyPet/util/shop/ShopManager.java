@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@ServiceName("ShopService")
+@ServiceName("ShopManager")
 @Load(Load.State.OnReady)
 public class ShopManager implements ShopService {
     YamlConfiguration config;
@@ -77,11 +77,6 @@ public class ShopManager implements ShopService {
     @Override
     public void onDisable() {
         //TODO close all shops
-    }
-
-    @Override
-    public String getServiceName() {
-        return "ShopService";
     }
 
     public void open(String name, Player player) {
