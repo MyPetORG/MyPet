@@ -42,10 +42,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,10 +104,39 @@ public class SkillTreeLoaderJSON {
         if (containsKey(skilltreeObject, "MobTypes")) {
             JSONArray mobTypeArray = (JSONArray) get(skilltreeObject, "MobTypes");
             Set<MyPetType> mobTypes = new HashSet<>();
-            for (Object o : mobTypeArray) {
-                MyPetType mobType = MyPetType.byName(o.toString());
-                if (mobType != null) {
-                    mobTypes.add(mobType);
+            if (mobTypeArray.size() == 0) {
+                Collections.addAll(mobTypes, MyPetType.values());
+            } else {
+                boolean allNegative = true;
+                for (Object o : mobTypeArray) {
+                    String type = o.toString();
+                    if (!type.startsWith("-")) {
+                        allNegative = false;
+                        break;
+                    }
+                }
+                if (allNegative) {
+                    Collections.addAll(mobTypes, MyPetType.values());
+                }
+                for (Object o : mobTypeArray) {
+                    String type = o.toString();
+                    if (type.equals("*")) {
+                        Collections.addAll(mobTypes, MyPetType.values());
+                    } else {
+                        boolean negative = false;
+                        if (type.startsWith("-")) {
+                            type = type.substring(1);
+                            negative = true;
+                        }
+                        MyPetType mobType = MyPetType.byName(type);
+                        if (mobType != null) {
+                            if (negative) {
+                                mobTypes.remove(mobType);
+                            } else {
+                                mobTypes.add(mobType);
+                            }
+                        }
+                    }
                 }
             }
             skilltree.setMobTypes(mobTypes);
