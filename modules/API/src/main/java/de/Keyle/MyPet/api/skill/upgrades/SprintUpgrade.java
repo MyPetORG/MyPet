@@ -41,4 +41,11 @@ public class SprintUpgrade implements Upgrade<Sprint> {
             skill.setActive(activeModifier.getBoolean());
         }
     }
+
+    @Override
+    public void invert(Sprint skill) {
+        if (activeModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setActive(activeModifier.getInvertedBoolean());
+        }
+    }
 }

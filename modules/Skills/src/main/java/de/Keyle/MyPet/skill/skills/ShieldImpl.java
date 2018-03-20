@@ -52,6 +52,12 @@ public class ShieldImpl implements Shield {
         return chance > 0 && redirectedDamage > 0;
     }
 
+    @Override
+    public void reset() {
+        chance = 0;
+        redirectedDamage = 0;
+    }
+
     public String toPrettyString() {
         return Util.formatText(Translation.getString("Message.Skill.Shield.Format", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, redirectedDamage);
     }

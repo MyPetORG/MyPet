@@ -111,6 +111,12 @@ public class BackpackImpl implements Backpack {
         return rows > 0;
     }
 
+    @Override
+    public void reset() {
+        rows = 0;
+        dropOnDeath = false;
+    }
+
     public boolean getDropOnDeath() {
         return dropOnDeath;
     }

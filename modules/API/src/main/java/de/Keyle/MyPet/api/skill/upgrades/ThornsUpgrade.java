@@ -46,4 +46,14 @@ public class ThornsUpgrade implements Upgrade<Thorns> {
             skill.setReflectedDamage(reflectedDamageModifier.modify(skill.getReflectedDamage()).intValue());
         }
     }
+
+    @Override
+    public void invert(Thorns skill) {
+        if (chanceModifier != null) {
+            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
+        }
+        if (reflectedDamageModifier != null) {
+            skill.setReflectedDamage(reflectedDamageModifier.invert(skill.getReflectedDamage()).intValue());
+        }
+    }
 }

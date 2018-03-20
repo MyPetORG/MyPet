@@ -46,4 +46,14 @@ public class StompUpgrade implements Upgrade<Stomp> {
             skill.setDamage(damageModifier.modify(skill.getDamage()).doubleValue());
         }
     }
+
+    @Override
+    public void invert(Stomp skill) {
+        if (chanceModifier != null) {
+            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
+        }
+        if (damageModifier != null) {
+            skill.setDamage(damageModifier.invert(skill.getDamage()).doubleValue());
+        }
+    }
 }

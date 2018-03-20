@@ -46,6 +46,15 @@ public class RideImpl implements Ride {
         return active;
     }
 
+    @Override
+    public void reset() {
+        speedPercent = 0;
+        jumpHeight = 0;
+        flyRegenRate = 0;
+        flyLimit = 0;
+        canFly = false;
+    }
+
     public String toPrettyString() {
         return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + ChatColor.RESET + "%";
     }

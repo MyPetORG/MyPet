@@ -41,4 +41,11 @@ public class KnockbackUpgrade implements Upgrade<Knockback> {
             skill.setChance(chanceModifier.modify(skill.getChance()).intValue());
         }
     }
+
+    @Override
+    public void invert(Knockback skill) {
+        if (chanceModifier != null) {
+            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
+        }
+    }
 }

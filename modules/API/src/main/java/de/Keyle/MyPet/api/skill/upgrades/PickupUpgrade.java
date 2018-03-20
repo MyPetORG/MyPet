@@ -47,4 +47,14 @@ public class PickupUpgrade implements Upgrade<Pickup> {
             skill.setExpPickup(pickupExpModifier.getBoolean());
         }
     }
+
+    @Override
+    public void invert(Pickup skill) {
+        if (rangeModifier != null) {
+            skill.setRange(rangeModifier.invert(skill.getRange()).doubleValue());
+        }
+        if (pickupExpModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setExpPickup(pickupExpModifier.getInvertedBoolean());
+        }
+    }
 }

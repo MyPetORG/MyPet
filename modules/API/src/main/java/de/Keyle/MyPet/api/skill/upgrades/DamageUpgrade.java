@@ -41,4 +41,11 @@ public class DamageUpgrade implements Upgrade<Damage> {
             skill.setDamage(damageModifier.modify(skill.getDamage()).doubleValue());
         }
     }
+
+    @Override
+    public void invert(Damage skill) {
+        if (damageModifier != null) {
+            skill.setDamage(damageModifier.invert(skill.getDamage()).doubleValue());
+        }
+    }
 }

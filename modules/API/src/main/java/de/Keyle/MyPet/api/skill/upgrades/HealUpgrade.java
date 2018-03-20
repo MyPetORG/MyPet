@@ -46,4 +46,14 @@ public class HealUpgrade implements Upgrade<Heal> {
             skill.setRegenTime(regenTimeyModifier.modify(skill.getRegenTime()).intValue());
         }
     }
+
+    @Override
+    public void invert(Heal skill) {
+        if (increaseHpByModifier != null) {
+            skill.setIncreaseHpBy(increaseHpByModifier.invert(skill.getIncreaseHpBy()).doubleValue());
+        }
+        if (regenTimeyModifier != null) {
+            skill.setRegenTime(regenTimeyModifier.invert(skill.getRegenTime()).intValue());
+        }
+    }
 }

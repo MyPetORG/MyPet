@@ -21,19 +21,43 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetLevelUpEvent extends MyPetLevelEvent {
+public class MyPetLevelEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private final int fromLevel;
 
-    public MyPetLevelUpEvent(MyPet myPet, int level, int fromLevel, boolean beQuiet) {
-        super(myPet, level, beQuiet);
-        this.fromLevel = fromLevel;
+    private final MyPet myPet;
+    private final int level;
+    private final boolean beQuiet;
+
+    public MyPetLevelEvent(MyPet myPet, int Level) {
+        this.myPet = myPet;
+        this.level = Level;
+        this.beQuiet = true;
     }
 
-    public int fromLevel() {
-        return fromLevel;
+    public MyPetLevelEvent(MyPet myPet, int level, boolean beQuiet) {
+        this.myPet = myPet;
+        this.level = level;
+        this.beQuiet = beQuiet;
+    }
+
+    public MyPetPlayer getOwner() {
+        return myPet.getOwner();
+    }
+
+    public boolean isQuiet() {
+        return beQuiet;
+    }
+
+    public MyPet getPet() {
+        return myPet;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public HandlerList getHandlers() {

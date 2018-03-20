@@ -172,7 +172,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getServer().getPluginManager().registerEvents(vehicleListener, this);
         EntityListener entityListener = new EntityListener();
         getServer().getPluginManager().registerEvents(entityListener, this);
-        LevelUpListener levelupListener = new LevelUpListener();
+        LevelListener levelupListener = new LevelListener();
         getServer().getPluginManager().registerEvents(levelupListener, this);
         WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);

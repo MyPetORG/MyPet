@@ -57,6 +57,11 @@ public class BehaviorImpl implements Behavior {
         return activeBehaviors.size() > 0;
     }
 
+    @Override
+    public void reset() {
+        activeBehaviors.clear();
+    }
+
     public void setBehavior(BehaviorMode mode) {
         selectedBehavior = mode;
     }

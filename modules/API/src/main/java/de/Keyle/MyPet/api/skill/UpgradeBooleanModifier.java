@@ -33,6 +33,10 @@ public enum UpgradeBooleanModifier {
         return value;
     }
 
+    public boolean getInvertedBoolean() {
+        return !value;
+    }
+
     @Override
     public String toString() {
         return "{" + name() + '}';

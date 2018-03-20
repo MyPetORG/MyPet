@@ -56,5 +56,7 @@ public interface Skill {
 
     boolean isActive();
 
+    void reset();
+
     String toPrettyString();
 }

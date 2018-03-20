@@ -41,6 +41,11 @@ public class DamageImpl implements Damage {
         return damage > 0;
     }
 
+    @Override
+    public void reset() {
+        damage = 0;
+    }
+
     public String toPrettyString() {
         return "" + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }

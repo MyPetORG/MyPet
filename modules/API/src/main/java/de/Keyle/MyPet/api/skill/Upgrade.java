@@ -23,5 +23,8 @@ package de.Keyle.MyPet.api.skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 public interface Upgrade<T extends Skill> {
+
     void apply(T skill);
+
+    void invert(T skill);
 }

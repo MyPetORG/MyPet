@@ -52,4 +52,15 @@ public class RangedUpgrade implements Upgrade<Ranged> {
             skill.setSelectedProjectile(projectileModifier.getValue());
         }
     }
+
+    @Override
+    public void invert(Ranged skill) {
+        if (damageModifier != null) {
+            skill.setDamage(damageModifier.invert(skill.getDamage()).doubleValue());
+        }
+        if (rateOfFireModifier != null) {
+            skill.setRateOfFire(rateOfFireModifier.invert(skill.getRateOfFire()).intValue());
+        }
+        //TODO invert projectile
+    }
 }

@@ -47,4 +47,14 @@ public class BackpackUpgrade implements Upgrade<Backpack> {
             skill.setDropOnDeath(dropOnDeathModifier.getBoolean());
         }
     }
+
+    @Override
+    public void invert(Backpack skill) {
+        if (rowsModifier != null) {
+            skill.setRows(rowsModifier.invert(skill.getRows()).intValue());
+        }
+        if (dropOnDeathModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setDropOnDeath(dropOnDeathModifier.getInvertedBoolean());
+        }
+    }
 }

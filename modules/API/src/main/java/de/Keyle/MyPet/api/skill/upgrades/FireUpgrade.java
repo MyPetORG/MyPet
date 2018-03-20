@@ -46,4 +46,14 @@ public class FireUpgrade implements Upgrade<Fire> {
             skill.setDuration(durationModifier.modify(skill.getDuration()).intValue());
         }
     }
+
+    @Override
+    public void invert(Fire skill) {
+        if (chanceModifier != null) {
+            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
+        }
+        if (durationModifier != null) {
+            skill.setDuration(durationModifier.invert(skill.getDuration()).intValue());
+        }
+    }
 }

@@ -46,6 +46,12 @@ public class FireImpl implements Fire {
         return chance > 0 && duration > 0;
     }
 
+    @Override
+    public void reset() {
+        chance = 0;
+        duration = 0;
+    }
+
     public String toPrettyString() {
         return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + duration + ChatColor.RESET + "sec";
     }

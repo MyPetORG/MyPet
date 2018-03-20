@@ -71,7 +71,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             value = value.substring(0, value.length() - 1);
         }
 
-        if (args.length == 2 || (args.length >= 3 && args[2].equalsIgnoreCase("set"))) {
+        if (args.length == 2 || args[2].equalsIgnoreCase("set")) {
             if (level) {
                 if (Util.isInt(value)) {
                     exp = myPet.getExperience().getExpByLevel(Math.min(Integer.parseInt(value), Configuration.LevelSystem.Experience.LEVEL_CAP));
@@ -81,7 +81,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
                     exp = Math.min(Double.parseDouble(value), myPet.getExperience().getMaxExp());
                 }
             }
-        } else if (args.length >= 3 && args[2].equalsIgnoreCase("add")) {
+        } else if (args[2].equalsIgnoreCase("add")) {
             if (level) {
                 if (Util.isInt(value)) {
                     int newLevel = Math.min(myPet.getExperience().getLevel() + Integer.parseInt(value), Configuration.LevelSystem.Experience.LEVEL_CAP);
@@ -93,7 +93,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
                     exp = Math.min(Double.parseDouble(value) + exp, myPet.getExperience().getMaxExp());
                 }
             }
-        } else if (args.length >= 3 && args[2].equalsIgnoreCase("remove")) {
+        } else if (args[2].equalsIgnoreCase("remove")) {
             if (level) {
                 if (Util.isInt(value)) {
                     int oldLevel = myPet.getExperience().getLevel();
@@ -110,11 +110,6 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             }
         }
 
-        exp = exp < 0 ? 0 : exp;
-
-        if (myPet.getExp() > exp) {
-            myPet.getExperience().reset();
-        }
         myPet.getExperience().setExp(exp);
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".");
 
