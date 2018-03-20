@@ -37,11 +37,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -344,7 +342,7 @@ public class SkillTreeLoaderJSON {
     }
 
     private static JSONObject loadJsonObject(File jsonFile) throws IOException, ParseException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(reader);
             if (obj instanceof JSONObject) {
