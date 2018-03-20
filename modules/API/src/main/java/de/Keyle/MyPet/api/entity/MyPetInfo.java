@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.entity;
 
 import com.google.common.collect.ArrayListMultimap;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import org.bukkit.entity.EntityType;
 
@@ -32,7 +33,7 @@ public abstract class MyPetInfo {
     private Map<MyPetType, Double> startHP = new HashMap<>();
     private Map<MyPetType, Double> startSpeed = new HashMap<>();
     private ArrayListMultimap<MyPetType, ConfigItem> food = ArrayListMultimap.create();
-    private ArrayListMultimap<MyPetType, LeashFlag> leashFlags = ArrayListMultimap.create();
+    private ArrayListMultimap<MyPetType, LeashFlagSettings> leashFlagSettings = ArrayListMultimap.create();
     private Map<MyPetType, Integer> customRespawnTimeFactor = new HashMap<>();
     private Map<MyPetType, Integer> customRespawnTimeFixed = new HashMap<>();
     private Map<MyPetType, ConfigItem> leashItem = new HashMap<>();
@@ -72,17 +73,19 @@ public abstract class MyPetInfo {
         food.put(type, foodToAdd);
     }
 
-    public boolean hasLeashFlag(MyPetType type, LeashFlag flag) {
-        return leashFlags.get(type).contains(flag);
+    public List<LeashFlagSettings> getLeashFlagSettings(MyPetType type) {
+        return leashFlagSettings.get(type);
     }
 
-    public List<LeashFlag> getLeashFlags(MyPetType type) {
-        return leashFlags.get(type);
+    public void addLeashFlagSetting(MyPetType type, LeashFlagSettings setting) {
+        if (!leashFlagSettings.get(type).contains(setting)) {
+            leashFlagSettings.put(type, setting);
+        }
     }
 
-    public void setLeashFlags(MyPetType type, LeashFlag leashFlagToAdd) {
-        if (!leashFlags.get(type).contains(leashFlagToAdd)) {
-            leashFlags.put(type, leashFlagToAdd);
+    public void clearLeashFlagSettings(MyPetType petType) {
+        if (leashFlagSettings.containsKey(petType)) {
+            leashFlagSettings.get(petType).clear();
         }
     }
 

@@ -27,6 +27,8 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
@@ -471,63 +473,11 @@ public class EntityListener implements Listener {
 
                     boolean willBeLeashed = true;
 
-                    flagLoop:
-                    for (LeashFlag flag : MyPetApi.getMyPetInfo().getLeashFlags(petType)) {
-                        switch (flag) {
-                            case Adult:
-                                if (leashTarget instanceof Ageable) {
-                                    willBeLeashed = ((Ageable) leashTarget).isAdult();
-                                } else if (leashTarget instanceof Zombie) {
-                                    willBeLeashed = !((Zombie) leashTarget).isBaby();
-                                }
-                                break;
-                            case Baby:
-                                if (leashTarget instanceof Ageable) {
-                                    willBeLeashed = !((Ageable) leashTarget).isAdult();
-                                } else if (leashTarget instanceof Zombie) {
-                                    willBeLeashed = ((Zombie) leashTarget).isBaby();
-                                }
-                                break;
-                            case LowHp:
-                                willBeLeashed = ((leashTarget.getHealth() - event.getDamage()) * 100) / leashTarget.getMaxHealth() <= 10;
-                                break;
-                            case UserCreated:
-                                if (leashTarget instanceof IronGolem) {
-                                    willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
-                                }
-                                break;
-                            case Wild:
-                                if (leashTarget instanceof IronGolem) {
-                                    willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
-                                } else if (leashTarget instanceof Tameable) {
-                                    willBeLeashed = !((Tameable) leashTarget).isTamed();
-                                } else if (leashTarget instanceof Horse) {
-                                    willBeLeashed = !((Horse) leashTarget).isTamed();
-                                }
-                                break;
-                            case Tamed:
-                                if (leashTarget instanceof Tameable) {
-                                    willBeLeashed = ((Tameable) leashTarget).isTamed() && ((Tameable) leashTarget).getOwner() == player;
-                                } else if (leashTarget instanceof Horse) {
-                                    willBeLeashed = ((Horse) leashTarget).isTamed() && ((Horse) leashTarget).getOwner() == player;
-                                }
-                                break;
-                            case CanBreed:
-                                if (leashTarget instanceof Ageable) {
-                                    willBeLeashed = ((Ageable) leashTarget).canBreed();
-                                }
-                                break;
-                            case Angry:
-                                if (leashTarget instanceof Wolf) {
-                                    willBeLeashed = ((Wolf) leashTarget).isAngry();
-                                }
-                                break;
-                            case Impossible:
-                                willBeLeashed = false;
-                                break flagLoop;
-                            case None:
-                                willBeLeashed = true;
-                                break flagLoop;
+                    for (LeashFlagSettings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
+                        String flagName = flagSettings.getFlagName();
+                        LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
+                        if (!flag.check(player, leashTarget, event.getDamage(), flagSettings)) {
+                            willBeLeashed = false;
                         }
                         if (!willBeLeashed) {
                             break;

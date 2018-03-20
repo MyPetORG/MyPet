@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,17 +18,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity;
+package de.Keyle.MyPet.entity.leashing;
 
-public enum LeashFlag {
-    Baby, Adult, LowHp, Tamed, UserCreated, Wild, CanBreed, Angry, None, Impossible;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 
-    public static LeashFlag getLeashFlagByName(String name) {
-        for (LeashFlag leashFlags : LeashFlag.values()) {
-            if (leashFlags.name().equalsIgnoreCase(name)) {
-                return leashFlags;
-            }
+@LeashFlagName("Angry")
+public class AngryFlag implements LeashFlag {
+    @Override
+    public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        if (entity instanceof Wolf) {
+            return ((Wolf) entity).isAngry();
         }
-        return null;
+        return true;
     }
 }

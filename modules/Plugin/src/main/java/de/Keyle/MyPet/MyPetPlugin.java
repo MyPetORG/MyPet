@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.EntityRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.SkillManager;
@@ -40,6 +41,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.commands.*;
+import de.Keyle.MyPet.entity.leashing.*;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
@@ -164,6 +166,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         compatManager.enable();
         getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
+
+        //register leash flags
+        registerLeashFlags();
 
         // register event listener
         PlayerListener playerListener = new PlayerListener();
@@ -438,6 +443,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     private void registerServices() {
         serviceManager.registerService(RepositoryMyPetConverterService.class);
+        serviceManager.registerService(LeashFlagManager.class);
         serviceManager.registerService(SkillManager.class);
         serviceManager.registerService(SkilltreeManager.class);
         serviceManager.registerService(ShopManager.class);
@@ -500,6 +506,19 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetApi.getSkillManager().registerSkill(SprintImpl.class);
         MyPetApi.getSkillManager().registerSkill(StompImpl.class);
         MyPetApi.getSkillManager().registerSkill(ShieldImpl.class);
+    }
+
+    public static void registerLeashFlags() {
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new AdultFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new AngryFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new BabyFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new BelowHpFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new CanBreedFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new ImpossibleFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new LowHpFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new TamedFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new UserCreatedFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new WildFlag());
     }
 
     private int loadGroups(File f) {

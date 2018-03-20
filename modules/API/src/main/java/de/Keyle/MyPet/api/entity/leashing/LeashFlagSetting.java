@@ -18,17 +18,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity.types;
+package de.Keyle.MyPet.api.entity.leashing;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPet;
+public class LeashFlagSetting {
+    String key;
+    String value = null;
 
-import static org.bukkit.Material.COOKIE;
-import static org.bukkit.Material.SEEDS;
+    public LeashFlagSetting(String key) {
+        this.key = key;
+    }
 
-@DefaultInfo(food = {SEEDS, COOKIE}, leashFlags = {"Tamed"})
-public interface MyParrot extends MyPet {
-    int getVariant();
+    public LeashFlagSetting(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
 
-    void setVariant(int variant);
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value != null ? value : key;
+    }
 }

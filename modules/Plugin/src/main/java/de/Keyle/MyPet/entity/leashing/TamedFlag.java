@@ -18,24 +18,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util;
+package de.Keyle.MyPet.entity.leashing;
 
-
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 
-public class CaptureHelper {
-    public static boolean checkTamable(LivingEntity leashTarget, Player p) {
-        for (LeashFlagSettings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(MyPetType.byEntityTypeName(leashTarget.getType().name()))) {
-            String flagName = flagSettings.getFlagName();
-            LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
-            if (flag != null && !flag.check(p, leashTarget, 0, flagSettings)) {
-                return false;
-            }
+@LeashFlagName("Tamed")
+public class TamedFlag implements LeashFlag {
+    @Override
+    public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        if (entity instanceof Horse) {
+            return ((Horse) entity).isTamed() && ((Horse) entity).getOwner() == player;
+        } else if (entity instanceof Tameable) {
+            return ((Tameable) entity).isTamed() && ((Tameable) entity).getOwner() == player;
         }
         return true;
     }

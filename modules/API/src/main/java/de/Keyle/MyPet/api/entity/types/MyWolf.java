@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,11 +25,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.DyeColor;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.Tamed;
 import static org.bukkit.Material.RAW_BEEF;
 import static org.bukkit.Material.RAW_CHICKEN;
 
-@DefaultInfo(food = {RAW_BEEF, RAW_CHICKEN}, leashFlags = {Tamed})
+@DefaultInfo(food = {RAW_BEEF, RAW_CHICKEN}, leashFlags = {"Tamed"})
 public interface MyWolf extends MyPet, MyPetBaby {
     DyeColor getCollarColor();
 

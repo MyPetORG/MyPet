@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,10 +21,20 @@
 package de.Keyle.MyPet.util.hooks;
 
 import com.gmail.nossr50.api.PartyAPI;
+import com.gmail.nossr50.datatypes.player.McMMOPlayer;
+import com.gmail.nossr50.datatypes.skills.SkillType;
+import com.gmail.nossr50.util.player.UserManager;
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -35,7 +45,16 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
 
     @Override
     public boolean onEnable() {
-        return Configuration.Hooks.USE_McMMO;
+        if (Configuration.Hooks.USE_McMMO) {
+            MyPetApi.getLeashFlagManager().registerLeashFlag(new JobLevelFlag());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDisable() {
+        MyPetApi.getLeashFlagManager().removeFlag("mcMMO");
     }
 
     @Override
@@ -70,5 +89,26 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
         } catch (Throwable ignored) {
         }
         return null;
+    }
+
+    @LeashFlagName("mcMMO")
+    class JobLevelFlag implements LeashFlag {
+        @Override
+        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+            for (SkillType skillType : SkillType.values()) {
+                if (settings.map().containsKey(skillType.getName().toLowerCase())) {
+                    LeashFlagSetting setting = settings.map().get(skillType.getName().toLowerCase());
+                    if (Util.isInt(setting.getValue())) {
+                        int requiredLevel = Integer.parseInt(setting.getValue());
+                        McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
+                        if (mmoPlayer.getSkillLevel(skillType) < requiredLevel) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 }

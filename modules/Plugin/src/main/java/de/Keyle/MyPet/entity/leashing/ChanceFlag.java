@@ -18,25 +18,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util;
+package de.Keyle.MyPet.entity.leashing;
 
-
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-public class CaptureHelper {
-    public static boolean checkTamable(LivingEntity leashTarget, Player p) {
-        for (LeashFlagSettings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(MyPetType.byEntityTypeName(leashTarget.getType().name()))) {
-            String flagName = flagSettings.getFlagName();
-            LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
-            if (flag != null && !flag.check(p, leashTarget, 0, flagSettings)) {
-                return false;
+import java.util.Random;
+
+@LeashFlagName("Chance")
+public class ChanceFlag implements LeashFlag {
+    Random random = new Random();
+
+    @Override
+    public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        if (settings.map().containsKey("chance")) {
+            LeashFlagSetting chanceSetting = settings.map().get("chance");
+            if (Util.isInt(chanceSetting.getValue())) {
+                int chance = Integer.parseInt(chanceSetting.getValue());
+                return random.nextInt(100) <= chance;
             }
         }
+        return true;
+    }
+
+    @Override
+    public boolean ignoredByHelper() {
         return true;
     }
 }
