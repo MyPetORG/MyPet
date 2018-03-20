@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 import java.util.*;
 
 @Load(Load.State.OnLoad)
-@ServiceName("ShopService")
+@ServiceName("SkilltreeManager")
 public class SkilltreeManager implements ServiceContainer {
     Map<String, Skilltree> skilltrees = new HashMap<>();
 
@@ -70,10 +70,5 @@ public class SkilltreeManager implements ServiceContainer {
     @Override
     public void onDisable() {
         clearSkilltrees();
-    }
-
-    @Override
-    public String getServiceName() {
-        return "SkilltreeManager";
     }
 }

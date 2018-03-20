@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,7 +22,9 @@ package de.Keyle.MyPet.api.util.service.types;
 
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 
+@ServiceName("RepositoryMyPetConverterService")
 public interface RepositoryMyPetConverterService extends ServiceContainer {
     enum Version {
         UNKNOWN,
