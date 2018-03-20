@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.skill.skilltree.levelrule.DynamicLevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.StaticLevelRule;
 import de.Keyle.MyPet.api.skill.upgrades.*;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -139,11 +140,11 @@ public class SkillTreeLoaderJSON {
             }
             skilltree.setMobTypes(mobTypes);
         }
-        /*
         if (containsKey(skilltreeObject, "IconItem")) {
-            skillTree.setIconItem(loadIcon((JSONObject) skilltreeObject.get("IconItem")));
+            String itemString = get(skilltreeObject, "Permission").toString();
+            ConfigItem item = ConfigItem.createConfigItem(itemString);
+            skilltree.setIconItem(item);
         }
-        */
         if (containsKey(skilltreeObject, "Description")) {
             JSONArray descriptionArray = (JSONArray) get(skilltreeObject, "Description");
             for (Object lvl_object : descriptionArray) {

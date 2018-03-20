@@ -24,10 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagShort;
+import de.Keyle.MyPet.api.util.ConfigItem;
 
 import java.util.*;
 
@@ -35,7 +32,7 @@ public class Skilltree {
 
     protected String skillTreeName;
     protected List<String> description = new ArrayList<>();
-    protected TagCompound iconItem = null;
+    protected ConfigItem iconItem = null;
     protected String permission = null;
     protected String displayName = null;
     protected int maxLevel = 0;
@@ -74,43 +71,11 @@ public class Skilltree {
         description.clear();
     }
 
-    public void setIconItem(TagCompound iconItem) {
-        iconItem = new TagCompound(iconItem.getCompoundData());
+    public void setIconItem(ConfigItem iconItem) {
         this.iconItem = iconItem;
-        getIconItem();
     }
 
-    public void setIconItem(short id, short damage, boolean enchantetGlow) {
-        getIconItem();
-
-        if (id > 0) {
-            iconItem.getCompoundData().put("id", new TagShort(id));
-        }
-        if (damage >= 0) {
-            iconItem.getCompoundData().put("Damage", new TagShort(damage));
-        }
-        if (!iconItem.getCompoundData().containsKey("tag")) {
-            iconItem.getCompoundData().put("tag", new TagCompound());
-        }
-        TagCompound tagCompound = iconItem.getAs("tag", TagCompound.class);
-        if (enchantetGlow) {
-            tagCompound.getCompoundData().put("ench", new TagList());
-        } else {
-            tagCompound.getCompoundData().remove("ench");
-        }
-    }
-
-    public TagCompound getIconItem() {
-        if (iconItem == null) {
-            iconItem = new TagCompound();
-        }
-        iconItem.getCompoundData().put("Count", new TagByte((byte) 1));
-        if (!iconItem.getCompoundData().containsKey("id")) {
-            iconItem.getCompoundData().put("id", new TagShort((short) 6));
-        }
-        if (!iconItem.getCompoundData().containsKey("Damage")) {
-            iconItem.getCompoundData().put("Damage", new TagShort((short) 0));
-        }
+    public ConfigItem getIconItem() {
         return iconItem;
     }
 
