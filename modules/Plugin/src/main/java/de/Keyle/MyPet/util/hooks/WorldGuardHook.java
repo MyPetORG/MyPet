@@ -29,6 +29,9 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -40,6 +43,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -49,6 +53,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, AllowedHook {
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
     public static final StateFlag DENY_FLAG = new StateFlag("mypet-deny", false);
+    public static final StateFlag LEASH_FLAG = new StateFlag("mypet-leash", true);
 
     protected WorldGuardPlugin wgp = null;
     protected boolean customFlags = false;
@@ -61,6 +66,9 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                 FlagRegistry flagRegistry = wgp.getFlagRegistry();
                 flagRegistry.register(DAMAGE_FLAG);
                 flagRegistry.register(DENY_FLAG);
+                flagRegistry.register(LEASH_FLAG);
+
+                MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
                 customFlags = true;
             } catch (NoSuchMethodError ignored) {
             }
@@ -78,6 +86,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
+        MyPetApi.getLeashFlagManager().removeFlag("WorldGuard");
     }
 
     @Override
@@ -152,6 +161,19 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                     }
                 }
             }
+        }
+    }
+
+    @LeashFlagName("WorldGuard")
+    class RegionFlag implements LeashFlag {
+        @Override
+        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+            Location loc = entity.getLocation();
+            RegionManager mgr = wgp.getRegionManager(loc.getWorld());
+            ApplicableRegionSet regions = mgr.getApplicableRegions(loc);
+            StateFlag.State s = regions.queryState(null, LEASH_FLAG);
+
+            return s == null || s == StateFlag.State.ALLOW;
         }
     }
 }

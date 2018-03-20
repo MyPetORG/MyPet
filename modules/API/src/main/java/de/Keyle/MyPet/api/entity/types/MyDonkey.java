@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,10 +25,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.inventory.ItemStack;
 
-import static de.Keyle.MyPet.api.entity.LeashFlag.Tamed;
 import static org.bukkit.Material.*;
 
-@DefaultInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {Tamed})
+@DefaultInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {"Tamed"})
 public interface MyDonkey extends MyPet, MyPetBaby {
     ItemStack getChest();
 

@@ -23,6 +23,7 @@ package de.Keyle.MyPet;
 import de.Keyle.MyPet.api.PlatformHelper;
 import de.Keyle.MyPet.api.entity.EntityRegistry;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.plugin.MyPetPlugin;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
@@ -146,5 +147,12 @@ public class MyPetApi {
      */
     public static SkillManager getSkillManager() {
         return getServiceManager().getService(SkillManager.class).get();
+    }
+
+    /**
+     * @return instance of the leashflag manager
+     */
+    public static LeashFlagManager getLeashFlagManager() {
+        return getServiceManager().getService(LeashFlagManager.class).get();
     }
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands;
 
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.LeashFlag;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.ConfigItem;
@@ -59,13 +58,6 @@ public class CommandPetType implements CommandExecutor, TabCompleter {
 
         try {
             MyPetType myPetType = MyPetType.byName(args[0]);
-
-            String leashFlagString = "";
-            for (LeashFlag leashFlag : MyPetApi.getMyPetInfo().getLeashFlags(myPetType)) {
-                leashFlagString += leashFlag.name() + ", ";
-            }
-            leashFlagString = leashFlagString.substring(0, leashFlagString.lastIndexOf(","));
-            commandSender.sendMessage(Translation.getString("Name.LeashFlag", lang) + ": " + leashFlagString);
 
             String foodString = "";
             for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPetType)) {

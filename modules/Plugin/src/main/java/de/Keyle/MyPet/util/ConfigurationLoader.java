@@ -24,13 +24,12 @@ import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.LeashFlag;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.NameFilter;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -40,8 +39,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ConfigurationLoader {
 
@@ -198,7 +196,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".HP", pi.hp());
             config.addDefault("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed());
             config.addDefault("MyPet.Pets." + petType.name() + ".Food", linkFood(pi.food()));
-            config.addDefault("MyPet.Pets." + petType.name() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
+            config.addDefault("MyPet.Pets." + petType.name() + ".LeashRequirements", pi.leashFlags());
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", Material.LEASH.getId());
@@ -435,7 +433,7 @@ public class ConfigurationLoader {
             } else {
                 seperateFood(petType, config.getString("MyPet.Pets." + petType.name() + ".Food", "0"));
             }
-            seperateLeashFlags(petType, config.getString("MyPet.Pets." + petType + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
+            loadLeashFlags(petType, config.getStringList("MyPet.Pets." + petType + ".LeashRequirements"));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
             MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "" + Material.LEASH.getId())));
@@ -487,7 +485,15 @@ public class ConfigurationLoader {
             }
         }
 
-        // upgrade petconfig here
+        for (MyPetType petType : MyPetType.values()) {
+            if (config.contains("MyPet.Pets." + petType.name() + ".LeashFlags")) {
+                String[] flagString = config.getString("MyPet.Pets." + petType.name() + ".LeashFlags").split(",");
+                Set<String> flags = new HashSet<>(Arrays.asList(flagString));
+                flags.remove("None");
+                config.set("MyPet.Pets." + petType.name() + ".LeashRequirements", flags);
+                config.getConfigurationSection("MyPet.Pets." + petType).set("LeashFlags", null);
+            }
+        }
 
         try {
             config.save(petConfigFile);
@@ -536,33 +542,16 @@ public class ConfigurationLoader {
         }
     }
 
-    public static String linkLeashFlags(LeashFlag[] leashFlags) {
-        String linkedLeashFlags = "";
-        for (LeashFlag leashFlag : leashFlags) {
-            if (!linkedLeashFlags.equalsIgnoreCase("")) {
-                linkedLeashFlags += ",";
+    public static void loadLeashFlags(MyPetType type, List<String> leashFlagStrings) {
+        MyPetApi.getMyPetInfo().clearLeashFlagSettings(type);
+        for (String leashFlagString : leashFlagStrings) {
+            boolean hasParameter = leashFlagString.contains(":");
+            String[] data = leashFlagString.split(":", 1);
+            LeashFlagSettings settings = new LeashFlagSettings(data[0]);
+            if (hasParameter) {
+                settings.load(data[1]);
             }
-            linkedLeashFlags += leashFlag.name();
-        }
-        return linkedLeashFlags;
-    }
-
-    public static void seperateLeashFlags(MyPetType type, String leashFlagString) {
-        leashFlagString = leashFlagString.replaceAll("\\s", "");
-        if (leashFlagString.contains(",")) {
-            for (String leashFlagSplit : leashFlagString.split(",")) {
-                if (LeashFlag.getLeashFlagByName(leashFlagSplit) != null) {
-                    MyPetApi.getMyPetInfo().setLeashFlags(type, LeashFlag.getLeashFlagByName(leashFlagSplit));
-                } else {
-                    MyPetApi.getLogger().info(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
-                }
-            }
-        } else {
-            if (LeashFlag.getLeashFlagByName(leashFlagString) != null) {
-                MyPetApi.getMyPetInfo().setLeashFlags(type, LeashFlag.getLeashFlagByName(leashFlagString));
-            } else {
-                MyPetApi.getLogger().info(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
-            }
+            MyPetApi.getMyPetInfo().addLeashFlagSetting(type, settings);
         }
     }
 }

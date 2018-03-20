@@ -18,17 +18,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity.types;
+package de.Keyle.MyPet.api.entity.leashing;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
-import static org.bukkit.Material.COOKIE;
-import static org.bukkit.Material.SEEDS;
+public interface LeashFlag {
 
-@DefaultInfo(food = {SEEDS, COOKIE}, leashFlags = {"Tamed"})
-public interface MyParrot extends MyPet {
-    int getVariant();
+    boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings);
 
-    void setVariant(int variant);
+    default boolean ignoredByHelper() {
+        return false;
+    }
 }

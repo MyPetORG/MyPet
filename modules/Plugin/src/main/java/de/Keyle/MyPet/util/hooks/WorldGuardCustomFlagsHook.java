@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -47,6 +47,8 @@ public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, Player
                     wgPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
                     WGCustomFlagsPlugin wgcfPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WGCustomFlagsPlugin.class).get();
                     wgcfPlugin.addCustomFlag(WorldGuardHook.DAMAGE_FLAG);
+                    wgcfPlugin.addCustomFlag(WorldGuardHook.DENY_FLAG);
+                    wgcfPlugin.addCustomFlag(WorldGuardHook.LEASH_FLAG);
                     return true;
                 }
             } catch (Throwable ignored) {

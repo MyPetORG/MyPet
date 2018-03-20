@@ -18,17 +18,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity.types;
+package de.Keyle.MyPet.entity.leashing;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 
-import static org.bukkit.Material.COOKIE;
-import static org.bukkit.Material.SEEDS;
-
-@DefaultInfo(food = {SEEDS, COOKIE}, leashFlags = {"Tamed"})
-public interface MyParrot extends MyPet {
-    int getVariant();
-
-    void setVariant(int variant);
+@LeashFlagName("Adult")
+public class AdultFlag implements LeashFlag {
+    @Override
+    public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        if (entity instanceof Ageable) {
+            return ((Ageable) entity).isAdult();
+        } else if (entity instanceof Zombie) {
+            return !((Zombie) entity).isBaby();
+        }
+        return true;
+    }
 }

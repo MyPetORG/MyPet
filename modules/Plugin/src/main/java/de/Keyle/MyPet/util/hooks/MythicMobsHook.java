@@ -20,13 +20,19 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("MythicMobs")
@@ -34,23 +40,49 @@ public class MythicMobsHook implements PlayerLeashEntityHook {
 
     @Override
     public boolean onEnable() {
-        return Configuration.Hooks.DISABLE_MYTHIC_MOB_LEASHING;
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new MythicMobFlag());
+        return true;
+    }
+
+    @Override
+    public void onDisable() {
+        MyPetApi.getLeashFlagManager().removeFlag("MythicMobs");
     }
 
     @Override
     public boolean canLeash(Player attacker, Entity defender) {
-        try {
-            if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender))) {
-                MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(defender).getType();
-                for (MythicMob m : MythicMobs.inst().getMobManager().getVanillaTypes()) {
-                    if (m.equals(defenderType)) {
+        if (Configuration.Hooks.DISABLE_MYTHIC_MOB_LEASHING) {
+            try {
+                if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender))) {
+                    MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(defender).getType();
+                    for (MythicMob m : MythicMobs.inst().getMobManager().getVanillaTypes()) {
+                        if (m.equals(defenderType)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            } catch (Throwable ignored) {
+            }
+        }
+        return true;
+    }
+
+    @LeashFlagName("MythicMobs")
+    class MythicMobFlag implements LeashFlag {
+        @Override
+        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+            if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
+                String name = MythicMobs.inst().getMobManager().getMythicMobInstance(entity).getType().getInternalName();
+                for (LeashFlagSetting setting : settings.all()) {
+                    if (setting.getValue().equalsIgnoreCase(name)) {
                         return true;
                     }
                 }
                 return false;
             }
-        } catch (Throwable ignored) {
+
+            return true;
         }
-        return true;
     }
 }
