@@ -64,11 +64,8 @@ public class ItemDatabase implements ServiceContainer {
         if (name.startsWith("minecraft:")) {
             name = name.substring(name.indexOf(':') + 1);
         }
-        MyPetApi.getLogger().info("name: " + name);
-        MyPetApi.getLogger().info("name2id: " + name2id.containsKey(name));
         if (name2id.containsKey(name)) {
             int id = name2id.get(name);
-            MyPetApi.getLogger().info("id: " + id);
             return Material.getMaterial(id);
         }
         return null;
