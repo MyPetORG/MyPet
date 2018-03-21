@@ -1,0 +1,96 @@
+{
+  "Order": 4,
+  "Description": [
+    "- <red><bold>Melee<r> + <red><bold>Ranged Attack",
+    "- <yellow><bold>Inventory",
+    "- <red><bold>Thorns",
+    "- <red><bold>Poison",
+    "- <blue><bold>Control"
+  ],
+  "Skills": {
+    "Ranged": {
+      "Upgrades": {
+        "7": {
+          "Rate": "+35",
+          "Damage": "+2",
+          "Projectile": "Arrow"
+        }
+      }
+    },
+    "Backpack": {
+      "Upgrades": {
+        "1": {
+          "drop": false,
+          "rows": "+1"
+        },
+        "5": {
+          "drop": false,
+          "rows": "+1"
+        }
+      }
+    },
+    "Control": {
+      "Upgrades": {
+        "8": {
+          "Active": true
+        }
+      }
+    },
+    "Pickup": {
+      "Upgrades": {
+        "2": {
+          "Range": "+1",
+          "Exp": false
+        },
+        "10": {
+          "Range": "+5",
+          "Exp": false
+        }
+      }
+    },
+    "Thorns": {
+      "Upgrades": {
+        "6": {
+          "Reflection": "+10",
+          "Chance": "+20"
+        }
+      }
+    },
+    "Poison": {
+      "Upgrades": {
+        "9": {
+          "Duration": "+2",
+          "Chance": "+20"
+        }
+      }
+    },
+    "Behavior": {
+      "Upgrades": {
+        "4": {
+          "Friend": true,
+          "Farm": true,
+          "Duel": true,
+          "Aggro": true,
+          "Raid": true
+        }
+      }
+    },
+    "Damage": {
+      "Upgrades": {
+        "3": {
+          "Damage": "+2"
+        },
+        "5": {
+          "Damage": "+0.5"
+        }
+      }
+    }
+  },
+  "MobTypes": [
+    "*"
+  ],
+  "ID": "Farm",
+  "Icon": {
+    "Material": "minecraft:writable_book"
+  }
+}

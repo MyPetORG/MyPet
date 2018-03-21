@@ -187,7 +187,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                             description.add(reqLevelMessage);
                         }
                         for (String line : addedSkilltree.getDescription()) {
-                            description.add(Colorizer.setColors(line));
+                            description.add(ChatColor.RESET + Colorizer.setColors(line));
                         }
 
                         option.addLore(description);

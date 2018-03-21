@@ -1,0 +1,112 @@
+{
+  "Order": 2,
+  "Description": [
+    "- <red><bold>Damage",
+    "- <blue><bold>Sprint",
+    "- <red><bold>Slow",
+    "- <red><bold>Fire",
+    "- <yellow><bold>Beacon"
+  ],
+  "Skills": {
+    "Backpack": {
+      "Upgrades": {
+        "6": {
+          "drop": false,
+          "rows": "+1"
+        }
+      }
+    },
+    "Control": {
+      "Upgrades": {
+        "3": {
+          "Active": true
+        }
+      }
+    },
+    "Slow": {
+      "Upgrades": {
+        "4": {
+          "Duration": "+2",
+          "Chance": "+10"
+        },
+        "9": {
+          "Duration": "+1",
+          "Chance": "+5"
+        }
+      }
+    },
+    "Fire": {
+      "Upgrades": {
+        "5": {
+          "Duration": "+3",
+          "Chance": "+15"
+        }
+      }
+    },
+    "Beacon": {
+      "Upgrades": {
+        "7": {
+          "Duration": "+8",
+          "Range": "+5"
+        },
+        "10": {
+          "Duration": "+8",
+          "Range": "+5"
+        }
+      }
+    },
+    "Life": {
+      "Upgrades": {
+        "9": {
+          "Health": "+5"
+        }
+      }
+    },
+    "Heal": {
+      "Upgrades": {
+        "8": {
+          "Timer": "+60",
+          "Health": "+4"
+        }
+      }
+    },
+    "Behavior": {
+      "Upgrades": {
+        "3": {
+          "Friend": true,
+          "Farm": false,
+          "Duel": true,
+          "Aggro": false,
+          "Raid": false
+        }
+      }
+    },
+    "Sprint": {
+      "Upgrades": {
+        "4": {
+          "Active": true
+        }
+      }
+    },
+    "Damage": {
+      "Upgrades": {
+        "1": {
+          "Damage": "+1.5"
+        },
+        "2": {
+          "Damage": "+1.5"
+        },
+        "5": {
+          "Damage": "+0.5"
+        }
+      }
+    }
+  },
+  "MobTypes": [
+    "*"
+  ],
+  "ID": "PvP",
+  "Icon": {
+    "Material": "minecraft:diamond_sword"
+  }
+}
