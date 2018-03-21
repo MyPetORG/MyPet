@@ -1,0 +1,99 @@
+{
+  "Order": 0,
+  "Description": [
+    "- <red><bold>Damage",
+    "- <green><bold>Hp Regeneration",
+    "- <red><bold>Thorns",
+    "- <blue><bold>Knockback"
+  ],
+  "Skills": {
+    "Backpack": {
+      "Upgrades": {
+        "6": {
+          "drop": false,
+          "rows": "+1"
+        }
+      }
+    },
+    "Control": {
+      "Upgrades": {
+        "7": {
+          "Active": true
+        }
+      }
+    },
+    "Life": {
+      "Upgrades": {
+        "4": {
+          "Health": "+2"
+        }
+      }
+    },
+    "Thorns": {
+      "Upgrades": {
+        "5": {
+          "Reflection": "+15",
+          "Chance": "+10"
+        },
+        "9": {
+          "Chance": "+8"
+        }
+      }
+    },
+    "Knockback": {
+      "Upgrades": {
+        "10": {
+          "Chance": "+15"
+        }
+      }
+    },
+    "Heal": {
+      "Upgrades": {
+        "2": {
+          "Health": "+1"
+        }
+      }
+    },
+    "Behavior": {
+      "Upgrades": {
+        "1": {
+          "Friend": false,
+          "Farm": false,
+          "Duel": true,
+          "Aggro": false,
+          "Raid": false
+        },
+        "3": {
+          "Friend": true,
+          "Farm": false,
+          "Duel": true,
+          "Aggro": true,
+          "Raid": false
+        }
+      }
+    },
+    "Damage": {
+      "Upgrades": {
+        "1": {
+          "Damage": "+1.5"
+        },
+        "3": {
+          "Damage": "+1.5"
+        },
+        "6": {
+          "Damage": "+1.5"
+        },
+        "8": {
+          "Damage": "+1.5"
+        }
+      }
+    }
+  },
+  "MobTypes": [
+    "*"
+  ],
+  "ID": "Combat",
+  "Icon": {
+    "Material": "minecraft:stone_axe"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "Order": 3,
+  "Description": [
+    "- <yellow><bold>Ride",
+    "- <red><bold>Ranged Attacks",
+    "- Small <yellow><bold>Inventory <r>+ <yellow><bold>Pickup",
+    "- <blue><bold>Sprint",
+    "- <red><bold>Thorns",
+    "- <yellow><bold>Beacon<r> (Speed)"
+  ],
+  "Skills": {
+    "Ranged": {
+      "Upgrades": {
+        "2": {
+          "Rate": "+35",
+          "Damage": "+2",
+          "Projectile": "Snowball"
+        }
+      }
+    },
+    "Backpack": {
+      "Upgrades": {
+        "3": {
+          "drop": false,
+          "rows": "+2"
+        },
+        "5": {
+          "drop": false,
+          "rows": "+1"
+        }
+      }
+    },
+    "Control": {
+      "Upgrades": {
+        "6": {
+          "Active": true
+        }
+      }
+    },
+    "Pickup": {
+      "Upgrades": {
+        "4": {
+          "Range": "+1",
+          "Exp": false
+        }
+      }
+    },
+    "Thorns": {
+      "Upgrades": {
+        "9": {
+          "Reflection": "+20",
+          "Chance": "+50"
+        }
+      }
+    },
+    "Beacon": {
+      "Upgrades": {
+        "10": {
+          "Duration": "+8",
+          "Range": "+10"
+        }
+      }
+    },
+    "Behavior": {
+      "Upgrades": {
+        "2": {
+          "Friend": false,
+          "Farm": false,
+          "Duel": true,
+          "Aggro": false,
+          "Raid": false
+        },
+        "7": {
+          "Friend": true,
+          "Farm": false,
+          "Duel": true,
+          "Aggro": false,
+          "Raid": false
+        }
+      }
+    },
+    "Sprint": {
+      "Upgrades": {
+        "8": {
+          "Active": true
+        }
+      }
+    },
+    "Ride": {
+      "Upgrades": {
+        "1": {
+          "Speed": "+5",
+          "JumpHeight": "+1.25"
+        },
+        "10": {
+          "CanFly": true
+        }
+      }
+    }
+  },
+  "MobTypes": [
+    "*"
+  ],
+  "ID": "Ride",
+  "Icon": {
+    "Material": "minecraft:saddle",
+    "Glowing": true
+  }
+}
