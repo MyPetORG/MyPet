@@ -52,7 +52,14 @@ public class DynamicLevelRule implements LevelRule {
 
     @Override
     public boolean check(int level) {
-        return level % modulo == 0 && (start <= 0 || level >= start) && (end <= 0 || level <= end);
+        if (start > 0 && level < start) {
+            return false;
+        }
+        if (end > 0 && level > end) {
+            return false;
+        }
+        level -= start;
+        return level % modulo == 0;
     }
 
     @Override
