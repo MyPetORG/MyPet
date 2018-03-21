@@ -140,8 +140,8 @@ public class SkillTreeLoaderJSON {
             }
             skilltree.setMobTypes(mobTypes);
         }
-        if (containsKey(skilltreeObject, "IconItem")) {
-            String itemString = get(skilltreeObject, "Permission").toString();
+        if (containsKey(skilltreeObject, "Icon")) {
+            String itemString = get(skilltreeObject, "Icon").toString();
             ConfigItem item = ConfigItem.createConfigItem(itemString);
             skilltree.setIconItem(item);
         }

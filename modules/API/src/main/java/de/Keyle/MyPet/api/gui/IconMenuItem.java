@@ -21,7 +21,8 @@
 package de.Keyle.MyPet.api.gui;
 
 import de.Keyle.MyPet.api.util.inventory.meta.IconMeta;
-import de.keyle.knbt.*;
+import de.keyle.knbt.TagBase;
+import de.keyle.knbt.TagCompound;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -215,38 +216,6 @@ public class IconMenuItem implements Cloneable {
         icon.setAmount(itemStack.getAmount());
         if (itemStack.hasItemMeta()) {
             icon.setMeta(itemStack.getItemMeta(), true, true);
-        }
-        return icon;
-    }
-
-    public static IconMenuItem fromTagCompund(TagCompound tag) {
-        IconMenuItem icon = new IconMenuItem();
-        int id = tag.getAs("id", TagShort.class).getShortData();
-        int count = tag.getAs("Count", TagByte.class).getByteData();
-        short damage = tag.getAs("Damage", TagShort.class).getShortData();
-
-        icon.setMaterial(Material.getMaterial(id));
-        icon.setAmount(count);
-        icon.setData(damage);
-
-        if (tag.containsKeyAs("tag", TagCompound.class)) {
-            TagCompound metaTag = tag.get("tag");
-            if (metaTag.containsKey("ench")) {
-                icon.setGlowing(true);
-            }
-            if (metaTag.containsKey("display")) {
-                TagCompound displayTag = metaTag.get("display");
-                if (displayTag.containsKey("Name")) {
-                    icon.setTitle(displayTag.getAs("Name", TagString.class).getStringData());
-                }
-                if (displayTag.containsKey("Lame")) {
-                    TagList loreList = displayTag.getAs("Lame", TagList.class);
-                    List<TagString> lines = loreList.getListAs(TagString.class);
-                    for (TagString line : lines) {
-                        icon.addLoreLine(line.getStringData());
-                    }
-                }
-            }
         }
         return icon;
     }
