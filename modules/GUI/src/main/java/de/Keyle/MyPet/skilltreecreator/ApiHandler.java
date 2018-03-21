@@ -99,7 +99,7 @@ public class ApiHandler {
     }
 
     public JSONArray loadJsonArray(File jsonFile) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(reader);
             if (obj instanceof JSONArray) {
