@@ -45,6 +45,7 @@ public class ItemDatabase implements ServiceContainer {
     }
 
     protected void loadFile() {
+        // source: http://minecraft-ids.grahamedgecombe.com/items.tsv
         // remove diplicate lines from CSV: ^(.*?)$\s+?^(?=.*^\1$)
         String items = Util.convertStreamToString(MyPetApi.getPlugin().getResource("items.csv"));
         for (String line : items.split("\n")) {
