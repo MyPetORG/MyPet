@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
-import de.Keyle.MyPet.api.util.ConfigItem;
 
 import java.util.*;
 
@@ -32,7 +31,7 @@ public class Skilltree {
 
     protected String skillTreeName;
     protected List<String> description = new ArrayList<>();
-    protected ConfigItem iconItem = null;
+    protected SkilltreeIcon icon = null;
     protected String permission = null;
     protected String displayName = null;
     protected int maxLevel = 0;
@@ -71,12 +70,12 @@ public class Skilltree {
         description.clear();
     }
 
-    public void setIconItem(ConfigItem iconItem) {
-        this.iconItem = iconItem;
+    public void setIcon(SkilltreeIcon icon) {
+        this.icon = icon;
     }
 
-    public ConfigItem getIconItem() {
-        return iconItem;
+    public SkilltreeIcon getIcon() {
+        return icon;
     }
 
     public int getMaxLevel() {

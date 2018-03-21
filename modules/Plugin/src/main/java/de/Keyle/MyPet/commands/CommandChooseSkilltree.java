@@ -29,8 +29,9 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,7 +40,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,14 +155,18 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     for (int i = 0; i < availableSkilltrees.size(); i++) {
                         Skilltree addedSkilltree = availableSkilltrees.get(i);
 
-                        ConfigItem tag = addedSkilltree.getIconItem();
-                        ItemStack is;
-                        if (tag == null) {
-                            is = new ItemStack(Material.SAPLING);
-                        } else {
-                            is = tag.getItem();
+                        SkilltreeIcon icon = addedSkilltree.getIcon();
+                        Material material;
+                        material = Material.matchMaterial(icon.getMaterial());
+                        if (material == null) {
+                            ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+                            material = itemDatabase.getMaterial(icon.getMaterial());
                         }
-                        IconMenuItem option = IconMenuItem.fromItemStack(is);
+                        if (material == null) {
+                            material = Material.SAPLING;
+                        }
+
+                        IconMenuItem option = new IconMenuItem().setMaterial(material).setData(icon.getData()).setGlowing(icon.isGlowing());
                         option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + Colorizer.setColors(addedSkilltree.getDisplayName()) + ChatColor.RESET + "  ❰❰❰");
 
                         boolean selectable = false;

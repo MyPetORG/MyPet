@@ -443,6 +443,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     private void registerServices() {
         serviceManager.registerService(RepositoryMyPetConverterService.class);
+        serviceManager.registerService(ItemDatabase.class);
         serviceManager.registerService(LeashFlagManager.class);
         serviceManager.registerService(SkillManager.class);
         serviceManager.registerService(SkilltreeManager.class);

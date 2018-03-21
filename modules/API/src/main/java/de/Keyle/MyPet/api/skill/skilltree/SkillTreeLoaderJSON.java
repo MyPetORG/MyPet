@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.skill.skilltree.levelrule.DynamicLevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.StaticLevelRule;
 import de.Keyle.MyPet.api.skill.upgrades.*;
-import de.Keyle.MyPet.api.util.ConfigItem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -141,9 +140,18 @@ public class SkillTreeLoaderJSON {
             skilltree.setMobTypes(mobTypes);
         }
         if (containsKey(skilltreeObject, "Icon")) {
-            String itemString = get(skilltreeObject, "Icon").toString();
-            ConfigItem item = ConfigItem.createConfigItem(itemString);
-            skilltree.setIconItem(item);
+            JSONObject iconObject = (JSONObject) get(skilltreeObject, "Icon");
+            SkilltreeIcon icon = new SkilltreeIcon();
+            if (containsKey(iconObject, "Material")) {
+                icon.setMaterial(get(iconObject, "Material").toString());
+            }
+            if (containsKey(iconObject, "Data")) {
+                icon.setData(((Number) get(iconObject, "Data")).byteValue());
+            }
+            if (containsKey(iconObject, "Glowing")) {
+                icon.setGlowing((Boolean) get(iconObject, "Glowing"));
+            }
+            skilltree.setIcon(icon);
         }
         if (containsKey(skilltreeObject, "Description")) {
             JSONArray descriptionArray = (JSONArray) get(skilltreeObject, "Description");
