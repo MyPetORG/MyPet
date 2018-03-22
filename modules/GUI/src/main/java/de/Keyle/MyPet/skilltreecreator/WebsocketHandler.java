@@ -29,6 +29,7 @@ import org.nanohttpd.protocols.websockets.WebSocket;
 import org.nanohttpd.protocols.websockets.WebSocketFrame;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 public class WebsocketHandler extends WebSocket {
 
@@ -41,8 +42,15 @@ public class WebsocketHandler extends WebSocket {
         System.out.println("WS: Open connection");
         if (!MyPetVersion.isPremium()) {
             try {
-                this.send("{\"action\": \"toggle_premium\", \"message\": \"Plugin is not premium.\"}");
-            } catch (IOException e) {
+                this.send("{\"action\": \"TOGGLE_PREMIUM\", \"data\": \"Plugin is not premium.\"}");
+            } catch (IOException ignored) {
+            }
+        }
+        String lang = Preferences.userNodeForPackage(Main.MyPetPlugin.class).get("Language", "NO-Language");
+        if (!lang.equals("NO-Language")) {
+            try {
+                this.send("{\"action\": \"CHANGE_LANGUAGE\", \"data\": \"" + lang + "\"}");
+            } catch (IOException ignored) {
             }
         }
     }
@@ -61,6 +69,9 @@ public class WebsocketHandler extends WebSocket {
         if (message != null && message.containsKey("action")) {
             switch ("" + message.get("action")) {
                 case "PING":
+                    break;
+                case "CHANGE_LANGUAGE":
+                    Preferences.userNodeForPackage(Main.MyPetPlugin.class).put("Language", message.get("data").toString());
                     break;
                 default:
                     System.out.println(message);
