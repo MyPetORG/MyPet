@@ -220,11 +220,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         new File(getDataFolder(), "logs").mkdirs();
 
         if (!createDefaultSkilltree) {
-            File legacyDefaultSKilltree = new File(skilltreeFolder, "default.st");
-            createDefaultSkilltree = legacyDefaultSKilltree.exists();
+            File legacyDefaultSkilltree = new File(skilltreeFolder, "default.st");
+            createDefaultSkilltree = legacyDefaultSkilltree.exists();
             if (createDefaultSkilltree) {
-                if (Util.getSha256FromFile(legacyDefaultSKilltree) == -4323392001800132707L) {
-                    legacyDefaultSKilltree.delete();
+                if (Util.getSha256FromFile(legacyDefaultSkilltree) == -4323392001800132707L) {
+                    legacyDefaultSkilltree.delete();
                 }
             }
         }
@@ -310,6 +310,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 MyPetApi.getLogger().info("SQLite connection successful.");
             } catch (RepositoryInitException ignored) {
                 MyPetApi.getLogger().warning("SQLite connection failed!");
+                setEnabled(false);
+                return;
             }
         }
 
