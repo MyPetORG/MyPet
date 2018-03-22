@@ -26,11 +26,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.prefs.Preferences;
 
 public class Main {
     public static String configPath;
     public static WebServer webServer = null;
     public static TrayIcon trayIcon = null;
+
+    static class MyPetPlugin {
+    }
 
     public static void main(String[] args) {
         if (GraphicsEnvironment.isHeadless()) {
@@ -68,11 +72,18 @@ public class Main {
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (defaultSkilltreePath.exists()) {
             fc.setCurrentDirectory(defaultSkilltreePath);
+        } else {
+            String lastPath = Preferences.userNodeForPackage(MyPetPlugin.class).get("LastOpenedPath", "NO-PATH");
+            if (!lastPath.equals("NO-PATH")) {
+                defaultSkilltreePath = new File(lastPath);
+                fc.setCurrentDirectory(defaultSkilltreePath);
+            }
         }
         int returnVal = fc.showOpenDialog(null);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
+                Preferences.userNodeForPackage(MyPetPlugin.class).put("LastOpenedPath", fc.getSelectedFile().getAbsolutePath());
                 webServer = new WebServer(fc.getSelectedFile());
                 Desktop.getDesktop().browse(new URI("http://localhost:64712"));
                 if (SystemTray.isSupported()) {

@@ -100,7 +100,7 @@ public class WebServer extends NanoWSD {
 
     @Override
     public void stop() {
-        sendToWebsockets("{\"action\": \"server_stop\", \"message\": \"Server stopped\"}");
+        sendToWebsockets("{\"action\": \"SERVER_STOP\", \"message\": \"Server stopped\"}");
 
         for (WebsocketHandler handler : websocketHandlers) {
             try {
