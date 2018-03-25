@@ -102,7 +102,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     }
                 } else {
                     List<Skilltree> availableSkilltrees = new ArrayList<>();
-                    for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
+                    for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
                         if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getPermission())) {
                             availableSkilltrees.add(skilltree);
                         }
@@ -215,7 +215,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     return CommandAdmin.EMPTY_LIST;
                 } else {
                     List<String> skilltreeList = new ArrayList<>();
-                    for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
+                    for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
                         if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getPermission())) {
                             skilltreeList.add(skilltree.getName());
                         }
