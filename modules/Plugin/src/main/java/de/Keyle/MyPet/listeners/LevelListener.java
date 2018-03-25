@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.animation.particle.FixedCircleAnimation;
 import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -42,9 +43,10 @@ import org.bukkit.event.Listener;
 
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class LevelListener implements Listener {
+
     @EventHandler
-    @SuppressWarnings("unchecked")
     public void on(MyPetLevelUpEvent event) {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
@@ -61,6 +63,16 @@ public class LevelListener implements Listener {
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {
             for (int i = fromLvl + 1; i <= lvl; i++) {
+                if (!event.isQuiet()) {
+                    List<String> notifications = skilltree.getNotifications(i);
+                    for (String notification : notifications) {
+                        notification = notification
+                                .replace("{{owner}}", myPet.getOwner().getName())
+                                .replace("{{level}}", "" + lvl)
+                                .replace("{{pet}}", myPet.getPetName());
+                        myPet.getOwner().sendMessage(Colorizer.setColors(notification));
+                    }
+                }
                 List<Upgrade> upgrades = skilltree.getUpgrades(i);
                 for (Upgrade upgrade : upgrades) {
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
@@ -105,7 +117,6 @@ public class LevelListener implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unchecked")
     public void on(MyPetLevelDownEvent event) {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
@@ -161,7 +172,6 @@ public class LevelListener implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unchecked")
     public void on(MyPetLevelEvent event) {
         if (event instanceof MyPetLevelUpEvent || event instanceof MyPetLevelDownEvent) {
             return;

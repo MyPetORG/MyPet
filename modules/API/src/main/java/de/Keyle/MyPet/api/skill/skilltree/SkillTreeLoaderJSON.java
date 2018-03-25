@@ -159,6 +159,15 @@ public class SkillTreeLoaderJSON {
                 skilltree.addDescriptionLine(String.valueOf(lvl_object));
             }
         }
+        if (containsKey(skilltreeObject, "Notifications")) {
+            JSONObject notificationsObject = (JSONObject) get(skilltreeObject, "Notifications");
+            for (Object ooo : notificationsObject.keySet()) {
+                String levelRuleString = ooo.toString();
+                LevelRule levelRule = loadLevelRule(levelRuleString);
+                String message = notificationsObject.get(ooo).toString();
+                skilltree.addNotification(levelRule, message);
+            }
+        }
         if (containsKey(skilltreeObject, "Skills")) {
             JSONObject skillsObject = (JSONObject) get(skilltreeObject, "Skills");
             for (Object oo : skillsObject.keySet()) {
@@ -170,32 +179,7 @@ public class SkillTreeLoaderJSON {
 
                     for (Object ooo : upgradesObject.keySet()) {
                         String levelRuleString = ooo.toString();
-                        LevelRule levelRule;
-                        if (levelRuleString.contains("%")) {
-                            int modulo = 1;
-                            int min = 0;
-                            int max = 0;
-                            Matcher matcher = LEVEL_RULE_REGEX.matcher(levelRuleString);
-                            while (matcher.find()) {
-                                if (matcher.group(0).startsWith("%")) {
-                                    modulo = Integer.parseInt(matcher.group(1));
-                                } else if (matcher.group(0).startsWith(">")) {
-                                    min = Integer.parseInt(matcher.group(3));
-                                } else if (matcher.group(0).startsWith("<")) {
-                                    max = Integer.parseInt(matcher.group(2));
-                                }
-                            }
-                            levelRule = new DynamicLevelRule(modulo, min, max);
-                        } else {
-                            String[] levelStrings = levelRuleString.split(",");
-                            List<Integer> levels = new ArrayList<>();
-                            for (String levelString : levelStrings) {
-                                if (Util.isInt(levelString.trim())) {
-                                    levels.add(Integer.parseInt(levelString.trim()));
-                                }
-                            }
-                            levelRule = new StaticLevelRule(levels);
-                        }
+                        LevelRule levelRule = loadLevelRule(levelRuleString);
 
                         JSONObject upgradeObject = (JSONObject) upgradesObject.get(ooo);
                         Upgrade upgrade = loadUpgrade(skillName, upgradeObject);
@@ -207,6 +191,36 @@ public class SkillTreeLoaderJSON {
         }
 
         MyPetApi.getSkilltreeManager().registerSkilltree(skilltree);
+    }
+
+    private static LevelRule loadLevelRule(String levelRuleString) {
+        LevelRule levelRule;
+        if (levelRuleString.contains("%")) {
+            int modulo = 1;
+            int min = 0;
+            int max = 0;
+            Matcher matcher = LEVEL_RULE_REGEX.matcher(levelRuleString);
+            while (matcher.find()) {
+                if (matcher.group(0).startsWith("%")) {
+                    modulo = Integer.parseInt(matcher.group(1));
+                } else if (matcher.group(0).startsWith(">")) {
+                    min = Integer.parseInt(matcher.group(3));
+                } else if (matcher.group(0).startsWith("<")) {
+                    max = Integer.parseInt(matcher.group(2));
+                }
+            }
+            levelRule = new DynamicLevelRule(modulo, min, max);
+        } else {
+            String[] levelStrings = levelRuleString.split(",");
+            List<Integer> levels = new ArrayList<>();
+            for (String levelString : levelStrings) {
+                if (Util.isInt(levelString.trim())) {
+                    levels.add(Integer.parseInt(levelString.trim()));
+                }
+            }
+            levelRule = new StaticLevelRule(levels);
+        }
+        return levelRule;
     }
 
     private static Upgrade loadUpgrade(String skillName, JSONObject upgradeObject) {

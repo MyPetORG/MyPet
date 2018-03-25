@@ -39,6 +39,7 @@ public class Skilltree {
     protected int order = 0;
     protected Set<MyPetType> mobTypes = new HashSet<>();
     protected Map<LevelRule, Upgrade> upgrades = new HashMap<>();
+    protected Map<LevelRule, String> notifications = new HashMap<>();
 
     public Skilltree(String name) {
         this.skillTreeName = name;
@@ -146,6 +147,22 @@ public class Skilltree {
 
     public void addUpgrade(LevelRule levelRule, Upgrade upgrade) {
         this.upgrades.put(levelRule, upgrade);
+    }
+
+    public List<String> getNotifications(int level) {
+        List<String> notifications = new ArrayList<>();
+        List<LevelRule> rules = new ArrayList<>(this.notifications.keySet());
+        rules.sort(Comparator.comparingInt(LevelRule::getPriority));
+        for (LevelRule rule : rules) {
+            if (rule.check(level)) {
+                notifications.add(this.notifications.get(rule));
+            }
+        }
+        return notifications;
+    }
+
+    public void addNotification(LevelRule levelRule, String notification) {
+        this.notifications.put(levelRule, notification);
     }
 
     public Set<MyPetType> getMobTypes() {
