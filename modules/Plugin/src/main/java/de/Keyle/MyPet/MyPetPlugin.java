@@ -230,11 +230,26 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
 
         if (createDefaultSkilltree) {
-            platformHelper.copyResource(this, "skilltrees/Combat.st.json", new File(skilltreeFolder, "Combat.st.json"));
-            platformHelper.copyResource(this, "skilltrees/Farm.st.json", new File(skilltreeFolder, "Farm.st.json"));
-            platformHelper.copyResource(this, "skilltrees/PvP.st.json", new File(skilltreeFolder, "PvP.st.json"));
-            platformHelper.copyResource(this, "skilltrees/Ride.st.json", new File(skilltreeFolder, "Ride.st.json"));
-            platformHelper.copyResource(this, "skilltrees/Utility.st.json", new File(skilltreeFolder, "Utility.st.json"));
+            File skilltreeFile = new File(skilltreeFolder, "Combat.st.json");
+            if (!skilltreeFile.exists()) {
+                platformHelper.copyResource(this, "skilltrees/Combat.st.json", new File(skilltreeFolder, "Combat.st.json"));
+            }
+            skilltreeFile = new File(skilltreeFolder, "Farm.st.json");
+            if (!skilltreeFile.exists()) {
+                platformHelper.copyResource(this, "skilltrees/Farm.st.json", new File(skilltreeFolder, "Farm.st.json"));
+            }
+            skilltreeFile = new File(skilltreeFolder, "PvP.st.json");
+            if (!skilltreeFile.exists()) {
+                platformHelper.copyResource(this, "skilltrees/PvP.st.json", new File(skilltreeFolder, "PvP.st.json"));
+            }
+            skilltreeFile = new File(skilltreeFolder, "Ride.st.json");
+            if (!skilltreeFile.exists()) {
+                platformHelper.copyResource(this, "skilltrees/Ride.st.json", new File(skilltreeFolder, "Ride.st.json"));
+            }
+            skilltreeFile = new File(skilltreeFolder, "Utility.st.json");
+            if (!skilltreeFile.exists()) {
+                platformHelper.copyResource(this, "skilltrees/Utility.st.json", new File(skilltreeFolder, "Utility.st.json"));
+            }
             MyPetApi.getLogger().info("Default skilltree files created.");
         }
 
