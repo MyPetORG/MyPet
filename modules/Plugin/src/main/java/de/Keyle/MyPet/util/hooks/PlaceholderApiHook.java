@@ -21,12 +21,14 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -48,7 +50,11 @@ public class PlaceholderApiHook implements PluginHook {
         if (loaded) {
             registerPlaceholder();
         }
-        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+
+        PlaceholderAPIPlugin plugin = MyPetApi.getPluginHookManager().getPluginInstance(PlaceholderAPIPlugin.class).get();
+        if (Util.versionCompare(plugin.getDescription().getVersion(), "2.8.5") < 0) {
+            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        }
         return loaded;
     }
 
@@ -260,6 +266,10 @@ public class PlaceholderApiHook implements PluginHook {
         myPetExpansion = new PlaceholderExpansion() {
             @Override
             public boolean canRegister() {
+                return true;
+            }
+
+            public boolean persist() {
                 return true;
             }
 
