@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -285,7 +285,10 @@ public class Util {
             i++;
         }
         if (i < vals1.length) {
-            return Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
+            try {
+                return Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
+            } catch (NumberFormatException ignored) {
+            }
         }
         return 0;
     }
