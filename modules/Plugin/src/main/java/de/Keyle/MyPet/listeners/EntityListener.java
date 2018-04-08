@@ -400,6 +400,10 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final EntityDamageByEntityEvent event) {
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (!event.getEntity().isDead() && !(event.getEntity() instanceof MyPetBukkitEntity)) {
             if (MyPetApi.getMyPetInfo().isLeashableEntityType(event.getEntity().getType())) {
                 ItemStack leashItem = null;
