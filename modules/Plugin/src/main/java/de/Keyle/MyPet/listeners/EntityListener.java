@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -396,6 +396,10 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final EntityDamageByEntityEvent event) {
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (!event.getEntity().isDead() && !(event.getEntity() instanceof MyPetBukkitEntity)) {
             if (MyPetApi.getMyPetInfo().isLeashableEntityType(event.getEntity().getType())) {
                 ItemStack leashItem = null;
