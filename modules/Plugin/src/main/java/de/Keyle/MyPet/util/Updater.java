@@ -103,7 +103,11 @@ public class Updater {
             parameter += "&checksum=" + "%%__NONCE__%%";
             parameter += "&dev=" + MyPetVersion.isDevBuild();
 
-            String url = "http://update.mypet-plugin.de/" + plugin + "?" + parameter;
+            String url = "http";
+            if (Util.getJavaUpdate() >= 101) {
+                url = "https";
+            }
+            url += "://update.mypet-plugin.de/" + plugin + "?" + parameter;
 
             // no data will be saved on the server
             String content = Util.readUrlContent(url);
@@ -116,7 +120,6 @@ public class Updater {
                 return Optional.of(new Update(version, build));
             }
         } catch (Exception ignored) {
-            ignored.printStackTrace();
         }
         return Optional.empty();
     }
@@ -188,8 +191,6 @@ public class Updater {
                     MyPetApi.getLogger().warning("You are not allowed to download MyPet-Premium. Please check/set your download token in the config.");
                     MyPetApi.getLogger().warning("You can find your token here (requires login): ");
                     MyPetApi.getLogger().warning("   https://mypet-plugin.de/download");
-                } else {
-                    e.printStackTrace();
                 }
             }
 
@@ -212,7 +213,6 @@ public class Updater {
                     inputStream.close();
                 }
             } catch (IOException ignored) {
-                ignored.printStackTrace();
             }
 
             if (remoteHash.isEmpty() || (!localHash.isEmpty() && localHash.equalsIgnoreCase(remoteHash))) {
