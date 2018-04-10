@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -245,6 +245,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getSaturation() {
+        //TODO remove when interaction is fixed
+        switch (getPetType()) {
+            case EnderDragon:
+            case Giant:
+            case Ghast:
+                return 100;
+        }
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             return saturation;
         } else {
@@ -259,6 +266,14 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void setSaturation(double value) {
+        //TODO remove when interaction is fixed
+        switch (getPetType()) {
+            case EnderDragon:
+            case Giant:
+            case Ghast:
+                saturation = 100;
+                return;
+        }
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             saturation = Math.max(1, Math.min(100, value));
             hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
@@ -274,6 +289,14 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void decreaseSaturation(double value) {
+        //TODO remove when interaction is fixed
+        switch (getPetType()) {
+            case EnderDragon:
+            case Giant:
+            case Ghast:
+                saturation = 100;
+                return;
+        }
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             saturation = Math.max(1, Math.min(100, saturation - value));
         } else {
