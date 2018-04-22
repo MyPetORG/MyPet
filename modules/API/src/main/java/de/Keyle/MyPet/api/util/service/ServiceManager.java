@@ -96,7 +96,7 @@ public class ServiceManager {
 
     public void disableServices() {
         for (ServiceContainer service : serviceByName.values()) {
-            service.onEnable();
+            service.onDisable();
         }
     }
 
