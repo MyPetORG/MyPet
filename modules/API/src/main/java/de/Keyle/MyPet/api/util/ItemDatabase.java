@@ -49,17 +49,18 @@ public class ItemDatabase implements ServiceContainer {
         // remove diplicate lines from CSV: ^(.*?)$\s+?^(?=.*^\1$)
         String items = Util.convertStreamToString(MyPetApi.getPlugin().getResource("items.csv"));
         for (String line : items.split("\n")) {
-            if (line.startsWith("#")) {
+            if (line.startsWith("#") || !line.contains(",")) {
                 continue;
             }
             String data[] = line.split(",");
-            String name = data[1];
-            int id = Integer.parseInt(data[0]);
+            String name = data[1].toLowerCase().trim();
+            int id = Integer.parseInt(data[0].trim());
             name2id.put(name, id);
         }
     }
 
     public Material getMaterial(String name) {
+        name = name.toLowerCase().trim();
         if (name.startsWith("minecraft:")) {
             name = name.substring(name.indexOf(':') + 1);
         }
@@ -71,6 +72,7 @@ public class ItemDatabase implements ServiceContainer {
     }
 
     public int getID(String name) {
+        name = name.toLowerCase().trim();
         if (name.startsWith("minecraft:")) {
             name = name.substring(name.indexOf(':'));
         }
