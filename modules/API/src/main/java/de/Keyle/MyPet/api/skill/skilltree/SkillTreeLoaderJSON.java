@@ -318,6 +318,7 @@ public class SkillTreeLoaderJSON {
             }
             case "ride": {
                 upgrade = new RideUpgrade()
+                        .setActiveModifier(parseBooleanModifier(get(upgradeObject, "active")))
                         .setSpeedIncreaseModifier(parseNumberModifier(get(upgradeObject, "speed")))
                         .setJumpHeightModifier(parseNumberModifier(get(upgradeObject, "jumpheight")))
                         .setFlyLimitModifier(parseNumberModifier(get(upgradeObject, "flylimit")))

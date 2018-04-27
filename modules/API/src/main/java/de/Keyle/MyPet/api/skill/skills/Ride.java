@@ -26,6 +26,8 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 @SkillName(value = "Ride", translationNode = "Name.Skill.Ride")
 public interface Ride extends Skill {
 
+    void setActive(boolean active);
+
     int getSpeedIncrease();
 
     void setSpeedIncrease(int speedPercent);

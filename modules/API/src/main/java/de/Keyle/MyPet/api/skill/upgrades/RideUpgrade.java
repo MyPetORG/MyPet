@@ -33,6 +33,9 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Ride")
 public class RideUpgrade implements Upgrade<Ride> {
+
+    @Getter @Setter @Accessors(chain = true)
+    protected UpgradeBooleanModifier activeModifier = UpgradeBooleanModifier.DontChange;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier speedIncreaseModifier = null;
     @Getter @Setter @Accessors(chain = true)
@@ -46,6 +49,9 @@ public class RideUpgrade implements Upgrade<Ride> {
 
     @Override
     public void apply(Ride skill) {
+        if (activeModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setActive(activeModifier.getBoolean());
+        }
         if (speedIncreaseModifier != null) {
             skill.setSpeedIncrease(speedIncreaseModifier.modify(skill.getSpeedIncrease()).intValue());
         }
@@ -65,6 +71,9 @@ public class RideUpgrade implements Upgrade<Ride> {
 
     @Override
     public void invert(Ride skill) {
+        if (activeModifier != UpgradeBooleanModifier.DontChange) {
+            skill.setActive(activeModifier.getInvertedBoolean());
+        }
         if (speedIncreaseModifier != null) {
             skill.setSpeedIncrease(speedIncreaseModifier.invert(skill.getSpeedIncrease()).intValue());
         }
