@@ -42,10 +42,6 @@ public class RideImpl implements Ride {
         return myPet;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
     @Override
     public void reset() {
         speedPercent = 0;
@@ -57,6 +53,15 @@ public class RideImpl implements Ride {
 
     public String toPrettyString() {
         return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + ChatColor.RESET + "%";
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public int getSpeedIncrease() {
