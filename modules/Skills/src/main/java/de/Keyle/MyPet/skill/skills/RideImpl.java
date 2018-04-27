@@ -44,6 +44,7 @@ public class RideImpl implements Ride {
 
     @Override
     public void reset() {
+        active = false;
         speedPercent = 0;
         jumpHeight = 0;
         flyRegenRate = 0;

@@ -89,6 +89,7 @@
     "Ride": {
       "Upgrades": {
         "1": {
+          "Active": true,
           "Speed": "+5",
           "JumpHeight": "+1.25"
         },
