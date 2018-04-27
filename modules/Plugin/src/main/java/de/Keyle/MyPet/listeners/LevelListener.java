@@ -179,9 +179,7 @@ public class LevelListener implements Listener {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
 
-        for (Skill skill : myPet.getSkills().all()) {
-            skill.reset();
-        }
+        myPet.getSkills().all().forEach(Skill::reset);
 
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {
