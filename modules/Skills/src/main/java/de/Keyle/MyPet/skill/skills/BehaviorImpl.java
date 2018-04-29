@@ -30,10 +30,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.json.simple.JSONObject;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
 
@@ -46,7 +43,8 @@ public class BehaviorImpl implements Behavior {
 
     public BehaviorImpl(MyPet myPet) {
         this.myPet = myPet;
-        behaviorCycler = Iterables.cycle(activeBehaviors).iterator();
+        activeBehaviors.add(BehaviorMode.Normal);
+        updateCycler();
     }
 
     public MyPet getMyPet() {
@@ -54,24 +52,46 @@ public class BehaviorImpl implements Behavior {
     }
 
     public boolean isActive() {
-        return activeBehaviors.size() > 0;
+        return activeBehaviors.size() > 1;
     }
 
     @Override
     public void reset() {
         activeBehaviors.clear();
+        activeBehaviors.add(BehaviorMode.Normal);
+        selectedBehavior = BehaviorMode.Normal;
+        updateCycler();
+    }
+
+    protected void updateCycler() {
+        List<BehaviorMode> activeBehaviors = new ArrayList<>(this.activeBehaviors);
+        Collections.sort(activeBehaviors);
+        behaviorCycler = Iterables.cycle(activeBehaviors).iterator();
+        //noinspection StatementWithEmptyBody
+        while (behaviorCycler.next() != selectedBehavior) {
+            ;
+        }
     }
 
     public void setBehavior(BehaviorMode mode) {
         selectedBehavior = mode;
+        //noinspection StatementWithEmptyBody
+        while (behaviorCycler.next() != selectedBehavior) {
+            ;
+        }
     }
 
     public void enableBehavior(BehaviorMode mode) {
         activeBehaviors.add(mode);
+        updateCycler();
     }
 
     public void disableBehavior(BehaviorMode mode) {
         activeBehaviors.remove(mode);
+        if (mode == selectedBehavior) {
+            selectedBehavior = BehaviorMode.Normal;
+        }
+        updateCycler();
     }
 
     public BehaviorMode getBehavior() {
