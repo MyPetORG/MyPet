@@ -24,6 +24,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.prefs.Preferences;
@@ -62,6 +64,14 @@ public class Main {
         Image logoImage = Toolkit
                 .getDefaultToolkit()
                 .getImage(ClassLoader.getSystemResource("gui/assets/img/logo_16.png"));
+
+        if (!portAvailable(64712)) {
+            String message = "Can't start the SkilltreeCreator. Another instance might be running.";
+            System.out.println(message);
+            JOptionPane.showMessageDialog(null, message, "SkilltreeCreator", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+
         final JFileChooser fc = new JFileChooser() {
             @Override
             protected JDialog createDialog(Component parent) throws HeadlessException {
@@ -113,5 +123,30 @@ public class Main {
             e.printStackTrace();
         }
         trayIcon.displayMessage("MyPet - SkilltreeCreator", "The SkilltreeCreator is running. You can exit it via the tray icon.", TrayIcon.MessageType.INFO);
+    }
+
+    public static boolean portAvailable(int port) {
+        ServerSocket ss = null;
+        DatagramSocket ds = null;
+        //noinspection TryFinallyCanBeTryWithResources
+        try {
+            ss = new ServerSocket(port);
+            ss.setReuseAddress(true);
+            ds = new DatagramSocket(port);
+            ds.setReuseAddress(true);
+            return true;
+        } catch (IOException ignored) {
+        } finally {
+            if (ds != null) {
+                ds.close();
+            }
+            if (ss != null) {
+                try {
+                    ss.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+        return false;
     }
 }
