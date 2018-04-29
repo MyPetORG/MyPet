@@ -71,7 +71,7 @@ public class LevelListener implements Listener {
                                 .replace("{{level}}", "" + lvl)
                                 .replace("{{pet}}", myPet.getPetName());
                         notification = Colorizer.setColors(notification);
-                        String[] lines = notification.split("(<br>|\\\\n|\n|<br />)");
+                        String[] lines = notification.split("(<br>|\\\\n|\n|<br\\s?/>)");
                         for (String line : lines) {
                             myPet.getOwner().sendMessage(line);
                         }
