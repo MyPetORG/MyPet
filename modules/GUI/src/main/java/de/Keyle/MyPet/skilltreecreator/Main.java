@@ -113,7 +113,16 @@ public class Main {
             webServer.stop();
             System.exit(0);
         });
+        MenuItem reopenItem = new MenuItem("Reopen");
+        reopenItem.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI("http://localhost:64712"));
+            } catch (URISyntaxException | IOException e2) {
+                e2.printStackTrace();
+            }
+        });
         PopupMenu popup = new PopupMenu();
+        popup.add(reopenItem);
         popup.add(exitItem);
         trayIcon.setPopupMenu(popup);
         trayIcon.setToolTip("MyPet - SkilltreeCreator");
