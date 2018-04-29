@@ -40,4 +40,9 @@ public class LeashFlagSetting {
     public String getValue() {
         return value != null ? value : key;
     }
+
+    @Override
+    public String toString() {
+        return "LeashFlagSetting{" + getKey() + "='" + getValue() + "'}";
+    }
 }

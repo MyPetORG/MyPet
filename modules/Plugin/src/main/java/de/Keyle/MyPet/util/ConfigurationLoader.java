@@ -605,7 +605,7 @@ public class ConfigurationLoader {
         MyPetApi.getMyPetInfo().clearLeashFlagSettings(type);
         for (String leashFlagString : leashFlagStrings) {
             boolean hasParameter = leashFlagString.contains(":");
-            String[] data = leashFlagString.split(":", 1);
+            String[] data = leashFlagString.split(":", 2);
             LeashFlagSettings settings = new LeashFlagSettings(data[0]);
             if (hasParameter) {
                 settings.load(data[1]);
