@@ -134,6 +134,7 @@ public class BackpackImpl implements Backpack {
     @Override
     public void setRows(int rows) {
         this.rows = rows;
+        this.inv.setSize(rows * 9);
     }
 
     @Override
