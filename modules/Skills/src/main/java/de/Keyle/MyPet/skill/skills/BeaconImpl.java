@@ -109,7 +109,7 @@ public class BeaconImpl implements Beacon {
         String title = RESET + Translation.getString("Name.Skill.Beacon", myPet.getOwner());
         IconMenu menu = new IconMenu(title, new IconMenu.OptionClickEventHandler() {
 
-            Set<Buff> selectedBuffs = new HashSet<>();
+            Set<Buff> selectedBuffs = new HashSet<>(beacon.selectedBuffs);
             boolean active = beacon.active;
             private BuffReceiver receiver = beacon.receiver;
 
