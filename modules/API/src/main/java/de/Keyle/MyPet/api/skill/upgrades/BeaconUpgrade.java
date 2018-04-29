@@ -62,6 +62,8 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
     protected UpgradeBooleanModifier nightVisionModifier = UpgradeBooleanModifier.DontChange;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeBooleanModifier waterBreathingModifier = UpgradeBooleanModifier.DontChange;
+    @Getter @Setter @Accessors(chain = true)
+    protected UpgradeNumberModifier regenerationModifier = null;
 
     @Override
     public void apply(Beacon skill) {
@@ -98,6 +100,9 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
         }
         if (strengthModifier != null) {
             skill.setBuffLevel(Beacon.Buff.Strength, strengthModifier.modify(skill.getBuffLevel(Beacon.Buff.Strength)).intValue());
+        }
+        if (regenerationModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.Regeneration, regenerationModifier.modify(skill.getBuffLevel(Beacon.Buff.Regeneration)).intValue());
         }
         if (luckModifier != UpgradeBooleanModifier.DontChange) {
             skill.setBuffLevel(Beacon.Buff.Luck, luckModifier.getBoolean() ? 1 : 0);
@@ -145,6 +150,9 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
         }
         if (strengthModifier != null) {
             skill.setBuffLevel(Beacon.Buff.Strength, strengthModifier.invert(skill.getBuffLevel(Beacon.Buff.Strength)).intValue());
+        }
+        if (regenerationModifier != null) {
+            skill.setBuffLevel(Beacon.Buff.Regeneration, regenerationModifier.invert(skill.getBuffLevel(Beacon.Buff.Regeneration)).intValue());
         }
         if (luckModifier != UpgradeBooleanModifier.DontChange) {
             skill.setBuffLevel(Beacon.Buff.Luck, luckModifier.getInvertedBoolean() ? 1 : 0);
