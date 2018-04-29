@@ -21,12 +21,13 @@
 package de.Keyle.MyPet.api.skill.skilltree;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 public class SkilltreeIcon {
-    @Getter @Setter @Accessors(chain = true)
-    protected String material = null;
+    @Getter @Setter @Accessors(chain = true) @NonNull
+    protected String material = "Sapling";
     @Getter @Setter @Accessors(chain = true)
     protected byte data = 0;
     @Getter @Setter @Accessors(chain = true)
