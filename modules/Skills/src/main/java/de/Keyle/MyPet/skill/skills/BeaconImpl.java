@@ -30,10 +30,11 @@ import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.api.util.inventory.meta.SkullMeta;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -58,11 +59,23 @@ public class BeaconImpl implements Beacon {
     protected BuffReceiver receiver = BuffReceiver.Owner;
     protected Map<Buff, Integer> buffLevel = new HashMap<>();
     protected int beaconTimer = 0;
-    protected List<Buff> selectedBuffs = new ArrayList<>();
+    protected Set<Buff> selectedBuffs = new HashSet<>();
 
     public BeaconImpl(MyPet myPet) {
         this.myPet = myPet;
         hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
+
+        disabledMeta.setOwner("NeverUsed0000001");
+        disabledMeta.setTexture("http://textures.minecraft.net/texture/de9b8aae7f9cc76d625ccb8abc686f30d38f9e6c42533098b9ad577f91c333c");
+        // globe
+        everyoneMeta.setOwner("NeverUsed0000002");
+        everyoneMeta.setTexture("http://textures.minecraft.net/texture/b1dd4fe4a429abd665dfdb3e21321d6efa6a6b5e7b956db9c5d59c9efab25");
+        // beachball
+        partyMeta.setOwner("NeverUsed0000003");
+        partyMeta.setTexture("http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
+        // owner skin
+        ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(Material.SKULL_ITEM).getItemMeta();
+        ownerMeta.setOwner(myPet.getOwner().getName());
     }
 
     public MyPet getMyPet() {
@@ -95,6 +108,11 @@ public class BeaconImpl implements Beacon {
         final BeaconImpl beacon = this;
         String title = RESET + Translation.getString("Name.Skill.Beacon", myPet.getOwner());
         IconMenu menu = new IconMenu(title, new IconMenu.OptionClickEventHandler() {
+
+            Set<Buff> selectedBuffs = new HashSet<>();
+            boolean active = beacon.active;
+            private BuffReceiver receiver = beacon.receiver;
+
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
                 event.setWillClose(false);
@@ -171,22 +189,32 @@ public class BeaconImpl implements Beacon {
                         if (selectedBuff != null) {
 
                             if (selectableBuffs > 1) {
-                                if (selectedBuffs.indexOf(selectedBuff) != -1) {
+                                if (selectedBuffs.contains(selectedBuff)) {
                                     selectedBuffs.remove(selectedBuff);
                                     menu.getOption(selectedBuff.getPosition()).setGlowing(false);
                                     if (selectableBuffs > selectedBuffs.size()) {
-                                        menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                                        menu.setOption(13, new IconMenuItem()
+                                                .setMaterial(POTION)
+                                                .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
+                                                .setAmount(selectableBuffs - selectedBuffs.size()));
                                     } else {
-                                        menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                                        menu.setOption(13, new IconMenuItem()
+                                                .setMaterial(GLASS_BOTTLE)
+                                                .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
                                     }
                                     menu.update();
                                 } else if (selectableBuffs > selectedBuffs.size()) {
                                     selectedBuffs.add(selectedBuff);
                                     menu.getOption(selectedBuff.getPosition()).setGlowing(true);
                                     if (selectableBuffs > selectedBuffs.size()) {
-                                        menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                                        menu.setOption(13, new IconMenuItem()
+                                                .setMaterial(POTION)
+                                                .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
+                                                .setAmount(selectableBuffs - selectedBuffs.size()));
                                     } else {
-                                        menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                                        menu.setOption(13, new IconMenuItem()
+                                                .setMaterial(GLASS_BOTTLE)
+                                                .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
                                     }
                                     menu.update();
                                 } else {
@@ -194,14 +222,21 @@ public class BeaconImpl implements Beacon {
                                 }
 
                                 if (selectableBuffs > selectedBuffs.size()) {
-                                    menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                                    menu.setOption(13, new IconMenuItem()
+                                            .setMaterial(POTION)
+                                            .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
+                                            .setAmount(selectableBuffs - selectedBuffs.size()));
                                 } else {
-                                    menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                                    menu.setOption(13, new IconMenuItem()
+                                            .setMaterial(GLASS_BOTTLE)
+                                            .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
                                 }
                             } else {
                                 if (!selectedBuffs.contains(selectedBuff)) {
                                     if (selectedBuffs.size() != 0 && menu.getOption(selectedBuff.getPosition()) != null) {
-                                        menu.getOption(selectedBuffs.get(0).getPosition()).setGlowing(false);
+                                        for (Buff buff : selectedBuffs) {
+                                            menu.getOption(buff.getPosition()).setGlowing(false);
+                                        }
                                         selectedBuffs.clear();
                                     }
                                     selectedBuffs.add(selectedBuff);
@@ -228,69 +263,138 @@ public class BeaconImpl implements Beacon {
             );
         }
 
-        menu.setOption(3, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(5).setTitle(GREEN + Translation.getString("Name.Done", myPet.getOwner().getLanguage())));
-        menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Translation.getString("Name.Cancel", myPet.getOwner().getLanguage())));
+        menu.setOption(3, new IconMenuItem()
+                .setMaterial(STAINED_GLASS_PANE)
+                .setData(5)
+                .setTitle(GREEN + Translation.getString("Name.Done", myPet.getOwner().getLanguage())));
+        menu.setOption(5, new IconMenuItem()
+                .setMaterial(STAINED_GLASS_PANE)
+                .setData(14)
+                .setTitle(RED + Translation.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
         if (receiver == BuffReceiver.Owner) {
-            menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setMeta(ownerMeta, false, false));
+            menu.setOption(21, new IconMenuItem()
+                    .setMaterial(SKULL_ITEM)
+                    .setData(3)
+                    .setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage()))
+                    .setMeta(ownerMeta, false, false));
         } else {
-            menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
+            menu.setOption(21, new IconMenuItem()
+                    .setMaterial(SKULL_ITEM)
+                    .setData(3)
+                    .setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage()))
+                    .setMeta(disabledMeta));
         }
         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookHelper().isInParty(getMyPet().getOwner().getPlayer())) {
             if (receiver != BuffReceiver.Party) {
-                menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setMeta(partyMeta));
+                menu.setOption(22, new IconMenuItem()
+                        .setMaterial(SKULL_ITEM)
+                        .setData(3)
+                        .setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage()))
+                        .setMeta(partyMeta));
             } else {
-                menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
+                menu.setOption(22, new IconMenuItem()
+                        .setMaterial(SKULL_ITEM)
+                        .setData(3)
+                        .setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage()))
+                        .setMeta(disabledMeta));
             }
         }
         if (receiver == BuffReceiver.Everyone) {
-            menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setMeta(everyoneMeta));
+            menu.setOption(23, new IconMenuItem()
+                    .setMaterial(SKULL_ITEM)
+                    .setData(3)
+                    .setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage()))
+                    .setMeta(everyoneMeta));
         } else {
-            menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage())).setMeta(disabledMeta));
+            menu.setOption(23, new IconMenuItem()
+                    .setMaterial(SKULL_ITEM)
+                    .setData(3)
+                    .setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage()))
+                    .setMeta(disabledMeta));
         }
 
-        if (buffLevel.get(1) > 0) {
-            menu.setOption(0, new IconMenuItem().setMaterial(LEATHER_BOOTS).setAmount(buffLevel.get(1)).setTitle(GOLD + Translation.getString("Name." + Buff.Speed.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(1))));
+        if (getBuffLevel(Buff.Speed) > 0) {
+            menu.setOption(0, new IconMenuItem()
+                    .setMaterial(LEATHER_BOOTS)
+                    .setAmount(getBuffLevel(Buff.Speed))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.Speed.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Speed))));
         }
-        if (buffLevel.get(3) > 0) {
-            menu.setOption(9, new IconMenuItem().setMaterial(GOLD_PICKAXE).setAmount(buffLevel.get(3)).setTitle(GOLD + Translation.getString("Name." + Buff.Haste.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(3))));
+        if (getBuffLevel(Buff.Haste) > 0) {
+            menu.setOption(9, new IconMenuItem()
+                    .setMaterial(GOLD_PICKAXE)
+                    .setAmount(getBuffLevel(Buff.Haste))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.Haste.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Haste))));
         }
-        if (buffLevel.get(5) > 0) {
-            menu.setOption(18, new IconMenuItem().setMaterial(DIAMOND_SWORD).setAmount(buffLevel.get(5)).setTitle(GOLD + Translation.getString("Name." + Buff.Strength.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(5))));
+        if (getBuffLevel(Buff.Strength) > 0) {
+            menu.setOption(18, new IconMenuItem()
+                    .setMaterial(DIAMOND_SWORD)
+                    .setAmount(getBuffLevel(Buff.Strength))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.Strength.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Strength))));
         }
-        if (buffLevel.get(8) > 0) {
-            menu.setOption(1, new IconMenuItem().setMaterial(FIREWORK).setAmount(buffLevel.get(8)).setTitle(GOLD + Translation.getString("Name." + Buff.JumpBoost.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(8))));
+        if (getBuffLevel(Buff.JumpBoost) > 0) {
+            menu.setOption(1, new IconMenuItem()
+                    .setMaterial(FIREWORK)
+                    .setAmount(getBuffLevel(Buff.JumpBoost))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.JumpBoost.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.JumpBoost))));
         }
-        if (buffLevel.get(10) > 0) {
-            menu.setOption(10, new IconMenuItem().setMaterial(APPLE).setAmount(buffLevel.get(10)).setTitle(GOLD + Translation.getString("Name." + Buff.Regeneration.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(10))));
+        if (getBuffLevel(Buff.Regeneration) > 0) {
+            menu.setOption(10, new IconMenuItem()
+                    .setMaterial(APPLE)
+                    .setAmount(getBuffLevel(Buff.Regeneration))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.Regeneration.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Regeneration))));
         }
-        if (buffLevel.get(11) > 0) {
-            menu.setOption(19, new IconMenuItem().setMaterial(DIAMOND_CHESTPLATE).setAmount(buffLevel.get(11)).setTitle(GOLD + Translation.getString("Name." + Buff.Resistance.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(11))));
+        if (getBuffLevel(Buff.Resistance) > 0) {
+            menu.setOption(19, new IconMenuItem()
+                    .setMaterial(DIAMOND_CHESTPLATE)
+                    .setAmount(getBuffLevel(Buff.Resistance))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.Resistance.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Resistance))));
         }
-        if (buffLevel.get(12) > 0) {
-            menu.setOption(7, new IconMenuItem().setMaterial(LAVA_BUCKET).setAmount(buffLevel.get(12)).setTitle(GOLD + Translation.getString("Name." + Buff.FireResistance.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(12))));
+        if (getBuffLevel(Buff.FireResistance) > 0) {
+            menu.setOption(7, new IconMenuItem()
+                    .setMaterial(LAVA_BUCKET)
+                    .setAmount(getBuffLevel(Buff.FireResistance))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.FireResistance.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.FireResistance))));
         }
-        if (buffLevel.get(13) > 0) {
-            menu.setOption(16, new IconMenuItem().setMaterial(RAW_FISH).setAmount(buffLevel.get(13)).setTitle(GOLD + Translation.getString("Name." + Buff.WaterBreathing.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(13))));
+        if (getBuffLevel(Buff.WaterBreathing) > 0) {
+            menu.setOption(16, new IconMenuItem()
+                    .setMaterial(RAW_FISH)
+                    .setAmount(getBuffLevel(Buff.WaterBreathing))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.WaterBreathing.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.WaterBreathing))));
         }
-        if (buffLevel.get(14) > 0) {
-            menu.setOption(25, new IconMenuItem().setMaterial(EYE_OF_ENDER).setAmount(buffLevel.get(14)).setTitle(GOLD + Translation.getString("Name." + Buff.Invisibility.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(14))));
+        if (getBuffLevel(Buff.Invisibility) > 0) {
+            menu.setOption(25, new IconMenuItem()
+                    .setMaterial(EYE_OF_ENDER)
+                    .setAmount(getBuffLevel(Buff.Invisibility))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.Invisibility.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Invisibility))));
         }
-        if (buffLevel.get(16) > 0) {
-            menu.setOption(8, new IconMenuItem().setMaterial(TORCH).setAmount(buffLevel.get(16)).setTitle(GOLD + Translation.getString("Name." + Buff.NightVision.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(16))));
+        if (getBuffLevel(Buff.NightVision) > 0) {
+            menu.setOption(8, new IconMenuItem()
+                    .setMaterial(TORCH)
+                    .setAmount(getBuffLevel(Buff.NightVision))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.NightVision.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.NightVision))));
         }
         if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-            if (buffLevel.get(26) > 0) {
-                menu.setOption(17, new IconMenuItem().setMaterial(DIAMOND).setAmount(buffLevel.get(26)).setTitle(GOLD + Translation.getString("Name." + Buff.Luck.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(26))));
+            if (getBuffLevel(Buff.Luck) > 0) {
+                menu.setOption(17, new IconMenuItem()
+                        .setMaterial(DIAMOND)
+                        .setAmount(getBuffLevel(Buff.Luck))
+                        .setTitle(GOLD + Translation.getString("Name." + Buff.Luck.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Luck))));
             }
         }
         /*
         if (buffLevel.get(21) > 0) {
-            menu.setOption(17, new IconMenuItem().setMaterial(GOLDEN_APPLE).setAmount(buffLevel.get(21)).setTitle(GOLD + Translation.getString("Name." + buffNames.get(21), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(21))));
+            menu.setOption(17, new IconMenuItem()
+                        .setMaterial(GOLDEN_APPLE)
+                        .setAmount(buffLevel.get(21))
+                        .setTitle(GOLD + Translation.getString("Name." + buffNames.get(21), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(21))));
         }
         */
-        if (buffLevel.get(22) > 0) {
-            menu.setOption(26, new IconMenuItem().setMaterial(SPONGE).setAmount(buffLevel.get(22)).setTitle(GOLD + Translation.getString("Name." + Buff.Absorption.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(22))));
+        if (getBuffLevel(Buff.Absorption) > 0) {
+            menu.setOption(26, new IconMenuItem()
+                    .setMaterial(SPONGE)
+                    .setAmount(getBuffLevel(Buff.Absorption))
+                    .setTitle(GOLD + Translation.getString("Name." + Buff.Absorption.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Absorption))));
         }
 
         Iterator<Buff> iterator = selectedBuffs.iterator();
@@ -305,9 +409,14 @@ public class BeaconImpl implements Beacon {
 
         if (selectableBuffs > 1) {
             if (selectableBuffs > selectedBuffs.size()) {
-                menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                menu.setOption(13, new IconMenuItem()
+                        .setMaterial(POTION)
+                        .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
+                        .setAmount(selectableBuffs - selectedBuffs.size()));
             } else {
-                menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                menu.setOption(13, new IconMenuItem()
+                        .setMaterial(GLASS_BOTTLE)
+                        .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
             }
         }
 
@@ -431,8 +540,8 @@ public class BeaconImpl implements Beacon {
     }
 
     @Override
-    public void setNumberOfBuffs(int n) {
-        this.selectableBuffs = n;
+    public void setNumberOfBuffs(int selectableBuffs) {
+        this.selectableBuffs = selectableBuffs;
     }
 
     @Override
@@ -441,7 +550,7 @@ public class BeaconImpl implements Beacon {
     }
 
     @Override
-    public void setRange(int n) {
+    public void setRange(int range) {
         this.range = range;
     }
 
@@ -458,7 +567,7 @@ public class BeaconImpl implements Beacon {
     @Override
     public TagCompound save() {
         TagCompound nbtTagCompound = new TagCompound();
-        nbtTagCompound.getCompoundData().put("Buffs", new TagIntArray(ArrayUtils.toPrimitive(selectedBuffs.toArray(new Integer[selectedBuffs.size()]))));
+        nbtTagCompound.getCompoundData().put("Buffs", new TagIntArray(selectedBuffs.stream().mapToInt(Buff::getId).toArray()));
         nbtTagCompound.getCompoundData().put("Active", new TagByte(this.active));
         nbtTagCompound.getCompoundData().put("Reciever", new TagString(this.receiver.name()));
         return nbtTagCompound;
