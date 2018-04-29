@@ -43,6 +43,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PickupImpl implements Pickup {
+
     protected double range = 0;
     protected boolean expPickup = false;
     private boolean pickup = false;
@@ -73,7 +74,6 @@ public class PickupImpl implements Pickup {
     public boolean activate() {
         if (range > 0) {
             if (myPet.getSkills().isActive(BackpackImpl.class)) {
-
                 if (pickup) {
                     pickup = false;
                 } else {
@@ -150,8 +150,7 @@ public class PickupImpl implements Pickup {
                                 itemEntity.setItemStack(itemStack);
                             }
                         }
-                    }
-                    if (expPickup && entity instanceof ExperienceOrb) {
+                    } else if (expPickup && entity instanceof ExperienceOrb) {
                         ExperienceOrb expEntity = (ExperienceOrb) entity;
                         myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
                         MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity().get(), expEntity);
