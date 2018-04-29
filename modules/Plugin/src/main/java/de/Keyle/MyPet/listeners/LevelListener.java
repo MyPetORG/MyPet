@@ -70,7 +70,11 @@ public class LevelListener implements Listener {
                                 .replace("{{owner}}", myPet.getOwner().getName())
                                 .replace("{{level}}", "" + lvl)
                                 .replace("{{pet}}", myPet.getPetName());
-                        myPet.getOwner().sendMessage(Colorizer.setColors(notification));
+                        notification = Colorizer.setColors(notification);
+                        String[] lines = notification.split("(<br>|\\\\n|\n|<br />)");
+                        for (String line : lines) {
+                            myPet.getOwner().sendMessage(line);
+                        }
                     }
                 }
                 List<Upgrade> upgrades = skilltree.getUpgrades(i);
