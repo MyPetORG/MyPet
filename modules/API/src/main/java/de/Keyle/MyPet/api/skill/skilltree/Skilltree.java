@@ -76,6 +76,9 @@ public class Skilltree {
     }
 
     public SkilltreeIcon getIcon() {
+        if (icon == null) {
+            icon = new SkilltreeIcon();
+        }
         return icon;
     }
 
