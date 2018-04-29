@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -43,11 +43,11 @@ public class PreciousStonesHook implements PlayerVersusPlayerHook, PlayerVersusE
     public boolean canHurt(Player attacker, Entity defender) {
         try {
             if (defender instanceof Villager) {
-                return !PreciousStones.API().isFieldProtectingArea(FieldFlag.PROTECT_VILLAGERS, defender.getLocation());
+                return !PreciousStones.API().flagAppliesToPlayer(attacker, FieldFlag.PROTECT_VILLAGERS, defender.getLocation());
             } else if (defender instanceof Ageable) {
-                return !PreciousStones.API().isFieldProtectingArea(FieldFlag.PROTECT_ANIMALS, defender.getLocation());
+                return !PreciousStones.API().flagAppliesToPlayer(attacker, FieldFlag.PROTECT_ANIMALS, defender.getLocation());
             } else {
-                return !PreciousStones.API().isFieldProtectingArea(FieldFlag.PROTECT_MOBS, defender.getLocation());
+                return !PreciousStones.API().flagAppliesToPlayer(attacker, FieldFlag.PROTECT_MOBS, defender.getLocation());
             }
         } catch (Throwable ignored) {
         }
