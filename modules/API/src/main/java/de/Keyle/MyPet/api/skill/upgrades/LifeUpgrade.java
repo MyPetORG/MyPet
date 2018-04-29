@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
-import de.Keyle.MyPet.api.skill.skills.Heal;
+import de.Keyle.MyPet.api.skill.skills.Life;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,21 +31,21 @@ import lombok.experimental.Accessors;
 
 @ToString
 @SkillName("Life")
-public class LifeUpgrade implements Upgrade<Heal> {
+public class LifeUpgrade implements Upgrade<Life> {
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier extraLifeModifier = null;
 
     @Override
-    public void apply(Heal skill) {
+    public void apply(Life skill) {
         if (extraLifeModifier != null) {
-            skill.setIncreaseHpBy(extraLifeModifier.modify(skill.getIncreaseHpBy()).doubleValue());
+            skill.setExtraLife(extraLifeModifier.modify(skill.getExtraLife()).doubleValue());
         }
     }
 
     @Override
-    public void invert(Heal skill) {
+    public void invert(Life skill) {
         if (extraLifeModifier != null) {
-            skill.setIncreaseHpBy(extraLifeModifier.invert(skill.getIncreaseHpBy()).doubleValue());
+            skill.setExtraLife(extraLifeModifier.invert(skill.getExtraLife()).doubleValue());
         }
     }
 }
