@@ -247,7 +247,8 @@ public class SkillTreeLoaderJSON {
                         .setResistanceModifier(parseNumberModifier(get(buffsObject, "resistance")))
                         .setSpeedModifier(parseNumberModifier(get(buffsObject, "speed")))
                         .setStrengthModifier(parseNumberModifier(get(buffsObject, "strength")))
-                        .setWaterBreathingModifier(parseBooleanModifier(get(buffsObject, "waterbreathing")));
+                        .setWaterBreathingModifier(parseBooleanModifier(get(buffsObject, "waterbreathing")))
+                        .setRegenerationModifier(parseNumberModifier(get(buffsObject, "regeneration")));
                 break;
             }
             case "behavior": {
