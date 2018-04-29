@@ -35,7 +35,7 @@ public class LeashFlagSettings {
         String[] settingStrings = settingsString.split(":");
         for (String settingString : settingStrings) {
             if (settingString.contains("=")) {
-                String[] keyValue = settingString.split("=", 1);
+                String[] keyValue = settingString.split("=", 2);
                 LeashFlagSetting setting = new LeashFlagSetting(keyValue[0], keyValue[1]);
                 this.settingsMap.put(setting.key.toLowerCase(), setting);
                 settings.add(setting);
