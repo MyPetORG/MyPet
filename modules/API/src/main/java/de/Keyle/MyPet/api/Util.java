@@ -25,8 +25,10 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.fanciful.ItemTooltip;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
@@ -337,6 +339,12 @@ public class Util {
             lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
         }
         lore.add(RESET + Translation.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+        if (mypet.getInfo().containsKey("storage")) {
+            TagCompound storage = mypet.getInfo().getAs("storage", TagCompound.class);
+            if (storage.containsKey("level")) {
+                lore.add(RESET + Translation.getString("Name.Level", lang) + ": " + GOLD + storage.getAs("level", TagInt.class).getIntData());
+            }
+        }
         lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().name());
         lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
