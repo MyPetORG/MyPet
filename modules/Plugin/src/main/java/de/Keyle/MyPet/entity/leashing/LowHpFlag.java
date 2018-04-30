@@ -30,9 +30,6 @@ import org.bukkit.entity.Player;
 public class LowHpFlag implements LeashFlag {
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
-        if (entity instanceof LivingEntity) {
-            return (entity.getHealth() - damage) / entity.getMaxHealth() <= 0.1;
-        }
-        return true;
+        return (entity.getHealth() - damage) / entity.getMaxHealth() <= 0.1;
     }
 }

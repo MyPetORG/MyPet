@@ -471,6 +471,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetApi.getLeashFlagManager().registerLeashFlag(new BabyFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new BelowHpFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new CanBreedFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new ChanceFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new ImpossibleFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new LowHpFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new SizeFlag());
