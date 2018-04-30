@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,13 +23,22 @@ package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.ai.attack.MeleeAttack;
+import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.World;
 
 @EntitySize(width = 8.F, height = 8.F)
 public class EntityMyEnderDragon extends EntityMyPet {
+
+    public EntityMyPetPart[] children = new EntityMyPetPart[8];
+
     public EntityMyEnderDragon(World world, MyPet myPet) {
         super(world, myPet);
+
+        for (int i = 0; i < 8; i++) {
+            this.children[i] = new EntityMyPetPart(this);
+        }
     }
 
     @Override
@@ -59,10 +68,13 @@ public class EntityMyEnderDragon extends EntityMyPet {
         }
     }
 
-
     /**
      * -> disable falldamage
      */
     public void b(float f) {
+    }
+
+    public Entity[] at() {
+        return this.children;
     }
 }

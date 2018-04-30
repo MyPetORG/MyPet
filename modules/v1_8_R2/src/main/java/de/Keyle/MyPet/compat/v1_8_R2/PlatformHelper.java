@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -253,6 +253,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutCollect(target.getEntityId(), entity.getEntityId()));
             }
         }
+    }
+
+    @Override
+    public Entity getEntity(int id, World world) {
+        net.minecraft.server.v1_8_R2.Entity e = ((CraftWorld) world).getHandle().a(id);
+        return e != null ? e.getBukkitEntity() : null;
     }
 
     public org.bukkit.inventory.ItemStack asBukkitItemStack(ItemStack itemStack) {

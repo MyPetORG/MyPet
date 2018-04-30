@@ -237,7 +237,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public double getSaturation() {
         //TODO remove when interaction is fixed
         switch (getPetType()) {
-            case EnderDragon:
             case Giant:
             case Ghast:
                 return 100;
@@ -252,7 +251,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void setSaturation(double value) {
         //TODO remove when interaction is fixed
         switch (getPetType()) {
-            case EnderDragon:
             case Giant:
             case Ghast:
                 saturation = 100;
@@ -269,7 +267,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void decreaseSaturation(double value) {
         //TODO remove when interaction is fixed
         switch (getPetType()) {
-            case EnderDragon:
             case Giant:
             case Ghast:
                 saturation = 100;
