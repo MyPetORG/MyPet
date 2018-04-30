@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
@@ -50,11 +51,13 @@ public class ProtocolLibHook implements PluginHook {
     @Override
     public boolean onEnable() {
         try {
+            registerEnderDragonInteractionFix();
+
             // reverse dragon facing direction
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                registerEnderDragonFix_post_1_9();
+                registerEnderDragonRotationFix19();
             } else {
-                registerEnderDragonFix();
+                registerEnderDragonRotationFix();
             }
 
             if (MyPetApi.getCompatUtil().getInternalVersion().equals("v1_7_R4")) {
@@ -80,42 +83,71 @@ public class ProtocolLibHook implements PluginHook {
         ProtocolLibrary.getProtocolManager().removePacketListeners(MyPetApi.getPlugin());
     }
 
-    private static void registerEnderDragonFix_post_1_9() {
+    private void registerEnderDragonInteractionFix() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Client.USE_ENTITY) {
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+                PacketContainer packet = event.getPacket();
+                if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
+
+                    int id = packet.getIntegers().read(0);
+
+                    Entity entity = packet.getEntityModifier(event).readSafely(0);
+
+                    if (entity == null) {
+                        entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                        if (entity instanceof MyPetBukkitPart) {
+                            entity = ((MyPetBukkitPart) entity).getPetOwner();
+                            packet.getIntegers().write(0, entity.getEntityId());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void registerEnderDragonRotationFix19() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
-                new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
+                new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
                         PacketContainer packet = event.getPacket();
 
                         final Entity entity = packet.getEntityModifier(event).readSafely(0);
 
-                        if (entity != null && entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
+                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
 
                             if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {
-                                //MyPetLogger.write("ENTITY_LOOK: " + packet.getBytes().getValues());
+                                //MyPetApi.getLogger().info("ENTITY_LOOK: " + packet.getBytes().getValues());
 
                                 byte angle = packet.getBytes().read(0);
                                 angle += Byte.MAX_VALUE;
                                 packet.getBytes().write(0, angle);
                             } else if (packet.getType() == PacketType.Play.Server.ENTITY_MOVE_LOOK) {
-                                //MyPetLogger.write("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
+                                //MyPetApi.getLogger().info("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
 
                                 byte angle = packet.getBytes().read(0);
                                 angle += Byte.MAX_VALUE;
                                 packet.getBytes().write(0, angle);
                             } else if (packet.getType() == PacketType.Play.Server.ENTITY_TELEPORT) {
-                                //MyPetLogger.write("ENTITY_TELEPORT: " + packet.getBytes().getValues());
+                                //MyPetApi.getLogger().info("ENTITY_TELEPORT: " + packet.getBytes().getValues());
 
                                 byte angle = packet.getBytes().read(1);
                                 angle += Byte.MAX_VALUE;
                                 packet.getBytes().write(1, angle);
+                            } else if (packet.getType() == PacketType.Play.Server.REL_ENTITY_MOVE_LOOK) {
+                                //MyPetApi.getLogger().info("REL_ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(0);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(0, angle);
                             }
                         }
                     }
                 });
     }
 
-    private static void registerEnderDragonFix() {
+    private void registerEnderDragonRotationFix() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT) {
                     @Override
@@ -125,33 +157,39 @@ public class ProtocolLibHook implements PluginHook {
                         final Entity entity = packet.getEntityModifier(event).readSafely(0);
 
                         // Now - are we dealing with an invisible slime?
-                        if (entity != null && entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
+                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
 
                             if (packet.getType() == PacketType.Play.Server.ENTITY_LOOK) {
-                                //MyPetLogger.write("ENTITY_LOOK: " + packet.getBytes().getValues());
+                                //MyPetApi.getLogger().info("ENTITY_LOOK: " + packet.getBytes().getValues());
 
                                 byte angle = packet.getBytes().read(3);
                                 angle += Byte.MAX_VALUE;
                                 packet.getBytes().write(3, angle);
                             } else if (packet.getType() == PacketType.Play.Server.ENTITY_MOVE_LOOK) {
-                                //MyPetLogger.write("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
+                                //MyPetApi.getLogger().info("ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
 
                                 byte angle = packet.getBytes().read(3);
                                 angle += Byte.MAX_VALUE;
                                 packet.getBytes().write(3, angle);
                             } else if (packet.getType() == PacketType.Play.Server.ENTITY_TELEPORT) {
-                                //MyPetLogger.write("ENTITY_TELEPORT: " + packet.getBytes().getValues());
+                                //MyPetApi.getLogger().info("ENTITY_TELEPORT: " + packet.getBytes().getValues());
 
-                                byte angle = packet.getBytes().read(1);
+                                byte angle = packet.getBytes().read(0);
                                 angle += Byte.MAX_VALUE;
-                                packet.getBytes().write(1, angle);
+                                packet.getBytes().write(0, angle);
+                            } else if (packet.getType() == PacketType.Play.Server.REL_ENTITY_MOVE_LOOK) {
+                                //MyPetApi.getLogger().info("REL_ENTITY_MOVE_LOOK: " + packet.getBytes().getValues());
+
+                                byte angle = packet.getBytes().read(3);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(3, angle);
                             }
                         }
                     }
                 });
     }
 
-    private static void registerCompatFix_1_8() {
+    private void registerCompatFix_1_8() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(MyPetApi.getPlugin(), ListenerPriority.HIGHEST, PacketType.Play.Server.SPAWN_ENTITY_LIVING, PacketType.Play.Server.ENTITY_METADATA) {
 
@@ -196,7 +234,7 @@ public class ProtocolLibHook implements PluginHook {
                         if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY_LIVING) {
 
                             Entity entity = newPacketContainer.getEntityModifier(event).readSafely(0);
-                            if (entity != null && entity instanceof MyPetBukkitEntity) {
+                            if (entity instanceof MyPetBukkitEntity) {
                                 MyPetBukkitEntity petEntity = (MyPetBukkitEntity) entity;
                                 List<WrappedWatchableObject> wrappedWatchableObjectList = newPacketContainer.getDataWatcherModifier().read(0).getWatchableObjects();
                                 newPacketContainer.getDataWatcherModifier().write(0, new WrappedDataWatcher(fixMetadata(petEntity, wrappedWatchableObjectList)));
@@ -204,7 +242,7 @@ public class ProtocolLibHook implements PluginHook {
                         } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA) {
 
                             Entity entity = newPacketContainer.getEntityModifier(event).read(0);
-                            if (entity != null && entity instanceof MyPetBukkitEntity) {
+                            if (entity instanceof MyPetBukkitEntity) {
                                 MyPetBukkitEntity petEntity = (MyPetBukkitEntity) entity;
 
                                 List<WrappedWatchableObject> wrappedWatchableObjectList = newPacketContainer.getWatchableCollectionModifier().read(0);

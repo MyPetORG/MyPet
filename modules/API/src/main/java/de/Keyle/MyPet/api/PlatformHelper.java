@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -137,6 +138,8 @@ public abstract class PlatformHelper {
     public abstract String getVanillaName(ItemStack itemStack);
 
     public abstract void doPickupAnimation(Entity entity, Entity target);
+
+    public abstract Entity getEntity(int id, World world);
 
     public double distanceSquared(Location a, Location b) {
         if (!a.getWorld().equals(b.getWorld())) {

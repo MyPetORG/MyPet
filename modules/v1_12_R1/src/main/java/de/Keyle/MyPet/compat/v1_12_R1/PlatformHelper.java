@@ -288,6 +288,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         }
     }
 
+    @Override
+    public Entity getEntity(int id, World world) {
+        net.minecraft.server.v1_12_R1.Entity e = ((CraftWorld) world).getHandle().getEntity(id);
+        return e != null ? e.getBukkitEntity() : null;
+    }
+
     public org.bukkit.inventory.ItemStack asBukkitItemStack(ItemStack itemStack) {
         return CraftItemStack.asBukkitCopy(itemStack);
     }
