@@ -167,6 +167,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.Loss.Percent", LevelSystem.Experience.LOSS_PERCENT);
         config.addDefault("MyPet.Exp.Loss.Fixed", LevelSystem.Experience.LOSS_FIXED);
         config.addDefault("MyPet.Exp.Loss.Drop", LevelSystem.Experience.DROP_LOST_EXP);
+        config.addDefault("MyPet.Exp.Loss.Allow-Level-Drowngrade", LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE);
         config.addDefault("MyPet.Exp.Gain.PreventFromSpawnReason", new ArrayList<>());
         config.addDefault("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         config.addDefault("MyPet.Exp.Disabled-Worlds", new String[0]);
@@ -390,6 +391,7 @@ public class ConfigurationLoader {
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
         LevelSystem.Experience.LOSS_FIXED = config.getDouble("MyPet.Exp.Loss.Fixed", 0.0);
         LevelSystem.Experience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
+        LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE = config.getBoolean("MyPet.Exp.Loss.Allow-Level-Drowngrade", false);
         LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.Exp.Passive.PercentPerMonster", 25);
         LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP = config.getBoolean("MyPet.Exp.Passive.Always-Grant-Passive-XP", true);
         LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", true);
