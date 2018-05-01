@@ -259,6 +259,8 @@ public class Configuration {
         public static boolean USE_PreciousStones = true;
 
         public static class SkillAPI {
+
+            public static boolean ALLOW_LEVEL_DOWNGRADE = true;
             public static boolean GRANT_EXP = true;
             public static boolean DISABLE_VANILLA_EXP = false;
             public static int EXP_PERCENT = 100;

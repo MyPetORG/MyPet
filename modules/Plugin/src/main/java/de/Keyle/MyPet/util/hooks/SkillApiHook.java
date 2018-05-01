@@ -94,8 +94,11 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
                             return;
                         }
                     }
-                    //TODO -> removeExp
-                    myPet.getExperience().removeCurrentExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                    if (Configuration.Hooks.SkillAPI.ALLOW_LEVEL_DOWNGRADE) {
+                        myPet.getExperience().removeExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                    } else {
+                        myPet.getExperience().removeCurrentExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                    }
                 }
             }
         }

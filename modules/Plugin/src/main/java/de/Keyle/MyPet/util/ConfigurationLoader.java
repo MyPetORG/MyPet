@@ -129,6 +129,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.BattleArena.DisablePetsInArena", Hooks.DISABLE_PETS_IN_ARENA);
         config.addDefault("MyPet.Hooks.Vault.Economy", Hooks.USE_ECONOMY);
         config.addDefault("MyPet.Hooks.SkillAPI.GrantExp", Hooks.SkillAPI.GRANT_EXP);
+        config.addDefault("MyPet.Hooks.SkillAPI.Allow-Level-Downgrade", Hooks.SkillAPI.ALLOW_LEVEL_DOWNGRADE);
         config.addDefault("MyPet.Hooks.SkillAPI.Disable-Vanilla-Exp", Hooks.SkillAPI.DISABLE_VANILLA_EXP);
         config.addDefault("MyPet.Hooks.MythicMobs.Disable-Leashing", Hooks.DISABLE_MYTHIC_MOB_LEASHING);
 
@@ -303,6 +304,7 @@ public class ConfigurationLoader {
         Hooks.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Hooks.PvPArena.DisablePetsInArena", true);
         Hooks.DISABLE_PETS_IN_SURVIVAL_GAMES = config.getBoolean("MyPet.Hooks.SurvivalGames.DisablePetsInGames", true);
         Hooks.DISABLE_PETS_IN_HUNGER_GAMES = config.getBoolean("MyPet.Hooks.MyHungerGames.DisablePetsInGames", true);
+        Hooks.SkillAPI.ALLOW_LEVEL_DOWNGRADE = config.getBoolean("MyPet.Hooks.SkillAPI.Allow-Level-Downgrade", true);
         Hooks.SkillAPI.GRANT_EXP = config.getBoolean("MyPet.Hooks.SkillAPI.GrantExp", true);
         Hooks.SkillAPI.DISABLE_VANILLA_EXP = config.getBoolean("MyPet.Hooks.SkillAPI.Disable-Vanilla-Exp", false);
         Hooks.SkillAPI.EXP_PERCENT = config.getInt("MyPet.Hooks.SkillAPI.ExpPercent", 100);
