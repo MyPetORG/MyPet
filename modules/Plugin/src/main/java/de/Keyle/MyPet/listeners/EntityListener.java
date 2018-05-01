@@ -771,7 +771,11 @@ public class EntityListener implements Listener {
                 if (Configuration.LevelSystem.Experience.DROP_LOST_EXP) {
                     event.setDroppedExp((int) (lostExpirience + 0.5));
                 }
-                myPet.getExperience().removeCurrentExp(lostExpirience);
+                if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE) {
+                    myPet.getExperience().removeExp(lostExpirience);
+                } else {
+                    myPet.getExperience().removeCurrentExp(lostExpirience);
+                }
             }
             if (myPet.getSkills().isActive(Backpack.class)) {
                 BackpackImpl inventorySkill = myPet.getSkills().get(BackpackImpl.class);

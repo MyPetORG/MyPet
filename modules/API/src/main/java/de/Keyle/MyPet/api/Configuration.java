@@ -115,6 +115,7 @@ public class Configuration {
         public static class Experience {
             public static int LOSS_PERCENT = 0;
             public static double LOSS_FIXED = 0;
+            public static boolean ALLOW_LEVEL_DOWNGRADE = false;
             public static boolean DROP_LOST_EXP = true;
             public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = true;
             public static boolean ALWAYS_GRANT_PASSIVE_XP = true;

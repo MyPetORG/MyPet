@@ -84,7 +84,11 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                                         double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
                                         switchPenalty = myPet.getExp() - switchPenalty < minExp ? myPet.getExp() - minExp : switchPenalty;
                                     }
-                                    myPet.getExperience().removeExp(switchPenalty);
+                                    if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE) {
+                                        myPet.getExperience().removeExp(switchPenalty);
+                                    } else {
+                                        myPet.getExperience().removeCurrentExp(switchPenalty);
+                                    }
                                 }
                             } else {
                                 sender.sendMessage(Translation.getString("Message.Skilltree.NotSwitched", player));
@@ -133,7 +137,11 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                                                 double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
                                                 switchPenalty = myPet.getExp() - switchPenalty < minExp ? myPet.getExp() - minExp : switchPenalty;
                                             }
-                                            myPet.getExperience().removeExp(switchPenalty);
+                                            if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE) {
+                                                myPet.getExperience().removeExp(switchPenalty);
+                                            } else {
+                                                myPet.getExperience().removeCurrentExp(switchPenalty);
+                                            }
                                         }
                                     } else {
                                         myPet.getOwner().sendMessage(Translation.getString("Message.Skilltree.NotSwitched", myPetOwner));

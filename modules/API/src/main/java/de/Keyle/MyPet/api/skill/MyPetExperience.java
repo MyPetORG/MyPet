@@ -180,7 +180,17 @@ public class MyPetExperience {
         if (expEvent.isCancelled()) {
             return;
         }
+
+        int oldLvl = getLevel();
         this.exp = expEvent.getExp();
+        int newLvl = getLevel();
+        if (oldLvl != newLvl) {
+            if (oldLvl < newLvl) {
+                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, newLvl, oldLvl, false));
+            } else {
+                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, newLvl, oldLvl, false));
+            }
+        }
     }
 
     public double getCurrentExp() {
