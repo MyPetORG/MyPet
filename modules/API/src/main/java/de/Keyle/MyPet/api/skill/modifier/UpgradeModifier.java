@@ -18,17 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.skills;
+package de.Keyle.MyPet.api.skill.modifier;
 
-import de.Keyle.MyPet.api.skill.OnDamageByEntitySkill;
-import de.Keyle.MyPet.api.skill.SkillName;
-import de.Keyle.MyPet.api.skill.UpgradeComputer;
-import de.Keyle.MyPet.api.skill.skilltree.Skill;
+public interface UpgradeModifier<T> {
 
-@SkillName(value = "Thorns", translationNode = "Name.Skill.Thorns")
-public interface Thorns extends Skill, OnDamageByEntitySkill {
+    T getValue();
 
-    UpgradeComputer<Integer> getReflectedDamage();
-
-    UpgradeComputer<Integer> getChance();
+    T modify(T value);
 }

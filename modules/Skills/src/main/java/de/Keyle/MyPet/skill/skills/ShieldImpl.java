@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Shield;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -31,9 +32,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import java.util.Random;
 
 public class ShieldImpl implements Shield {
-    protected int chance = 0;
-    protected int redirectedDamage = 0;
+
     private static Random random = new Random();
+
+    protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Integer> redirectedDamage = new UpgradeComputer<>(0);
     private MyPet myPet;
 
     public ShieldImpl(MyPet myPet) {
@@ -49,13 +52,13 @@ public class ShieldImpl implements Shield {
     }
 
     public boolean isActive() {
-        return chance > 0 && redirectedDamage > 0;
+        return chance.getValue() > 0 && redirectedDamage.getValue() > 0;
     }
 
     @Override
     public void reset() {
-        chance = 0;
-        redirectedDamage = 0;
+        chance.removeAllUpgrades();
+        redirectedDamage.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -63,11 +66,11 @@ public class ShieldImpl implements Shield {
     }
 
     public boolean trigger() {
-        return random.nextDouble() < chance / 100.;
+        return random.nextDouble() < chance.getValue() / 100.;
     }
 
     protected double calculateRedirectedDamage(double damage) {
-        return damage * redirectedDamage / 100.;
+        return damage * redirectedDamage.getValue() / 100.;
     }
 
     public void apply(EntityDamageEvent event) {
@@ -85,27 +88,19 @@ public class ShieldImpl implements Shield {
         }
     }
 
-    public int getChance() {
+    public UpgradeComputer<Integer> getChance() {
         return chance;
     }
 
-    public void setChance(int chance) {
-        this.chance = chance;
-    }
-
-    public int getRedirectedDamage() {
+    public UpgradeComputer<Integer> getRedirectedDamage() {
         return redirectedDamage;
-    }
-
-    public void setRedirectedDamage(int redirectedDamage) {
-        this.redirectedDamage = redirectedDamage;
     }
 
     @Override
     public String toString() {
         return "ShieldImpl{" +
                 "chance=" + chance +
-                ", redirectedDamage=" + redirectedDamage +
+                ", redirectedDamage=" + redirectedDamage.getValue() +
                 '}';
     }
 }

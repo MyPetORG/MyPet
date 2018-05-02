@@ -18,9 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill;
+package de.Keyle.MyPet.api.skill.modifier;
 
-public class UpgradeEnumModifier<T extends Enum> {
+public class UpgradeEnumModifier<T extends Enum> implements UpgradeModifier<T> {
     T value;
 
     public UpgradeEnumModifier(T value) {
@@ -29,6 +29,11 @@ public class UpgradeEnumModifier<T extends Enum> {
 
     public T getValue() {
         return value;
+    }
+
+    @Override
+    public T modify(T value) {
+        return this.value;
     }
 
     @Override

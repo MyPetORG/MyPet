@@ -21,11 +21,13 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Life;
 import org.bukkit.ChatColor;
 
 public class LifeImpl implements Life {
-    protected double extraLife = 0;
+
+    protected UpgradeComputer<Number> life = new UpgradeComputer<>(0);
     private MyPet myPet;
 
     public LifeImpl(MyPet myPet) {
@@ -37,30 +39,26 @@ public class LifeImpl implements Life {
     }
 
     public boolean isActive() {
-        return extraLife > 0;
+        return life.getValue().doubleValue() > 0;
     }
 
     @Override
     public void reset() {
-        extraLife = 0;
+        life.removeAllUpgrades();
     }
 
     public String toPrettyString() {
-        return "+" + ChatColor.GOLD + extraLife;
+        return "+" + ChatColor.GOLD + life;
     }
 
-    public double getExtraLife() {
-        return extraLife;
-    }
-
-    public void setExtraLife(double extraLife) {
-        this.extraLife = extraLife;
+    public UpgradeComputer<Number> getLife() {
+        return life;
     }
 
     @Override
     public String toString() {
         return "LifeImpl{" +
-                "extraLife=" + extraLife +
+                "life=" + life.getValue().doubleValue() +
                 '}';
     }
 }

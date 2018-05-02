@@ -53,7 +53,7 @@ public class Control implements AIGoal, Scheduler {
             return false;
         }
         ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
-        if (controlSkill == null || !controlSkill.isActive()) {
+        if (controlSkill == null || !controlSkill.getActive().getValue()) {
             return false;
         }
         return controlSkill.getLocation(false) != null;
@@ -65,7 +65,7 @@ public class Control implements AIGoal, Scheduler {
             return true;
         }
         ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
-        if (!controlSkill.isActive()) {
+        if (!controlSkill.getActive().getValue()) {
             return true;
         }
         if (moveTo == null) {

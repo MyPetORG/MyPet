@@ -25,6 +25,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
@@ -41,10 +42,22 @@ public class BehaviorImpl implements Behavior {
     protected static Random random = new Random();
     Iterator<BehaviorMode> behaviorCycler;
 
+    UpgradeComputer<Boolean> farmBehavior = new UpgradeComputer<>(false);
+    UpgradeComputer<Boolean> raidBehavior = new UpgradeComputer<>(false);
+    UpgradeComputer<Boolean> duelBehavior = new UpgradeComputer<>(false);
+    UpgradeComputer<Boolean> aggressiceBehavior = new UpgradeComputer<>(false);
+    UpgradeComputer<Boolean> friendlyBehavior = new UpgradeComputer<>(false);
+
     public BehaviorImpl(MyPet myPet) {
         this.myPet = myPet;
         activeBehaviors.add(BehaviorMode.Normal);
         updateCycler();
+
+        farmBehavior.addCallback((newValue, reason) -> setBehaviorMode(Farm, newValue));
+        raidBehavior.addCallback((newValue, reason) -> setBehaviorMode(Raid, newValue));
+        duelBehavior.addCallback((newValue, reason) -> setBehaviorMode(Duel, newValue));
+        aggressiceBehavior.addCallback((newValue, reason) -> setBehaviorMode(Aggressive, newValue));
+        friendlyBehavior.addCallback((newValue, reason) -> setBehaviorMode(Friendly, newValue));
     }
 
     public MyPet getMyPet() {
@@ -77,19 +90,17 @@ public class BehaviorImpl implements Behavior {
         selectedBehavior = mode;
         //noinspection StatementWithEmptyBody
         while (behaviorCycler.next() != selectedBehavior) {
-            ;
         }
     }
 
-    public void enableBehavior(BehaviorMode mode) {
-        activeBehaviors.add(mode);
-        updateCycler();
-    }
-
-    public void disableBehavior(BehaviorMode mode) {
-        activeBehaviors.remove(mode);
-        if (mode == selectedBehavior) {
-            selectedBehavior = BehaviorMode.Normal;
+    protected void setBehaviorMode(BehaviorMode mode, boolean value) {
+        if (value) {
+            activeBehaviors.add(mode);
+        } else {
+            activeBehaviors.remove(mode);
+            if (mode == selectedBehavior) {
+                selectedBehavior = BehaviorMode.Normal;
+            }
         }
         updateCycler();
     }
@@ -100,6 +111,26 @@ public class BehaviorImpl implements Behavior {
 
     public boolean isModeUsable(BehaviorMode mode) {
         return activeBehaviors.contains(mode);
+    }
+
+    public UpgradeComputer<Boolean> getFarmBehavior() {
+        return farmBehavior;
+    }
+
+    public UpgradeComputer<Boolean> getRaidBehavior() {
+        return raidBehavior;
+    }
+
+    public UpgradeComputer<Boolean> getDuelBehavior() {
+        return duelBehavior;
+    }
+
+    public UpgradeComputer<Boolean> getAggressiveBehavior() {
+        return aggressiceBehavior;
+    }
+
+    public UpgradeComputer<Boolean> getFriendlyBehavior() {
+        return friendlyBehavior;
     }
 
     public String toPrettyString() {

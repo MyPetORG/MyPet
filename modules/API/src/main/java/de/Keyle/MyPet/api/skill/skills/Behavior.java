@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.JsonStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -34,9 +35,15 @@ public interface Behavior extends Skill, Scheduler, JsonStorage, ActiveSkill {
 
     void setBehavior(BehaviorMode mode);
 
-    void enableBehavior(BehaviorMode mode);
-
-    void disableBehavior(BehaviorMode mode);
-
     BehaviorMode getBehavior();
+
+    UpgradeComputer<Boolean> getFarmBehavior();
+
+    UpgradeComputer<Boolean> getRaidBehavior();
+
+    UpgradeComputer<Boolean> getDuelBehavior();
+
+    UpgradeComputer<Boolean> getAggressiveBehavior();
+
+    UpgradeComputer<Boolean> getFriendlyBehavior();
 }

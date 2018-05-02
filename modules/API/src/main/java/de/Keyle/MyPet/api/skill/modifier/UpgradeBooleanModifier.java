@@ -18,10 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill;
+package de.Keyle.MyPet.api.skill.modifier;
 
-public enum UpgradeBooleanModifier {
-    True(true), DontChange(null), False(false);
+public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
+    True(true), False(false);
 
     private Boolean value;
 
@@ -33,8 +33,13 @@ public enum UpgradeBooleanModifier {
         return value;
     }
 
-    public boolean getInvertedBoolean() {
-        return !value;
+    public Boolean getValue() {
+        return value;
+    }
+
+    @Override
+    public Boolean modify(Boolean value) {
+        return this.value;
     }
 
     @Override

@@ -22,8 +22,8 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,25 +36,17 @@ public class BackpackUpgrade implements Upgrade<Backpack> {
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier rowsModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier dropOnDeathModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier dropOnDeathModifier = null;
 
     @Override
     public void apply(Backpack skill) {
-        if (rowsModifier != null) {
-            skill.setRows(rowsModifier.modify(skill.getRows()).intValue());
-        }
-        if (dropOnDeathModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setDropOnDeath(dropOnDeathModifier.getBoolean());
-        }
+        skill.getRows().addUpgrade(rowsModifier);
+        skill.getDropOnDeath().addUpgrade(dropOnDeathModifier);
     }
 
     @Override
     public void invert(Backpack skill) {
-        if (rowsModifier != null) {
-            skill.setRows(rowsModifier.invert(skill.getRows()).intValue());
-        }
-        if (dropOnDeathModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setDropOnDeath(dropOnDeathModifier.getInvertedBoolean());
-        }
+        skill.getRows().removeUpgrade(rowsModifier);
+        skill.getDropOnDeath().removeUpgrade(dropOnDeathModifier);
     }
 }

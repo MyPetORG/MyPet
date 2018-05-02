@@ -22,15 +22,13 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.OnHitSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Wither", translationNode = "Name.Skill.Wither")
 public interface Wither extends Skill, OnHitSkill {
-    int getDuration();
 
-    void setDuration(int duration);
+    UpgradeComputer<Integer> getDuration();
 
-    int getChance();
-
-    void setChance(int chance);
+    UpgradeComputer<Integer> getChance();
 }

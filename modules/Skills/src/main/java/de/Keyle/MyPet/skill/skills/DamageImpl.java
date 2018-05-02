@@ -21,13 +21,14 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Damage;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 
 public class DamageImpl implements Damage {
     protected MyPet myPet;
-    protected double damage = 0;
+    protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
 
     public DamageImpl(MyPet myPet) {
         this.myPet = myPet;
@@ -38,30 +39,26 @@ public class DamageImpl implements Damage {
     }
 
     public boolean isActive() {
-        return damage > 0;
+        return damage.getValue().doubleValue() > 0;
     }
 
     @Override
     public void reset() {
-        damage = 0;
+        damage.removeAllUpgrades();
     }
 
     public String toPrettyString() {
         return "" + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
-    public double getDamage() {
+    public UpgradeComputer<Number> getDamage() {
         return damage;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
     }
 
     @Override
     public String toString() {
         return "DamageImpl{" +
-                "damage=" + damage +
+                "damage=" + damage.getValue().doubleValue() +
                 '}';
     }
 }

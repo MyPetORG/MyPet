@@ -22,6 +22,7 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Fire;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -29,9 +30,11 @@ import org.bukkit.entity.LivingEntity;
 import java.util.Random;
 
 public class FireImpl implements Fire {
-    protected int chance = 0;
-    protected int duration = 0;
+
     private static Random random = new Random();
+
+    protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
     private MyPet myPet;
 
     public FireImpl(MyPet myPet) {
@@ -43,13 +46,13 @@ public class FireImpl implements Fire {
     }
 
     public boolean isActive() {
-        return chance > 0 && duration > 0;
+        return chance.getValue() > 0 && duration.getValue() > 0;
     }
 
     @Override
     public void reset() {
-        chance = 0;
-        duration = 0;
+        chance.removeAllUpgrades();
+        duration.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -57,27 +60,19 @@ public class FireImpl implements Fire {
     }
 
     public boolean trigger() {
-        return random.nextDouble() <= chance / 100.;
+        return random.nextDouble() <= chance.getValue() / 100.;
     }
 
-    public int getDuration() {
+    public UpgradeComputer<Integer> getDuration() {
         return duration;
     }
 
-    public int getChance() {
+    public UpgradeComputer<Integer> getChance() {
         return chance;
     }
 
-    public void setChance(int chance) {
-        this.chance = chance;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
     public void apply(LivingEntity target) {
-        target.setFireTicks(getDuration() * 20);
+        target.setFireTicks(getDuration().getValue().intValue() * 20);
         MyPetApi.getPlatformHelper().playParticleEffect(target.getLocation(), "SMOKE_LARGE", .5f, .5f, .5f, 0.02f, 20, 20);
     }
 

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeBooleanModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,91 +33,31 @@ import lombok.experimental.Accessors;
 @SkillName("Behavior")
 public class BehaviorUpgrade implements Upgrade<Behavior> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier aggroModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier aggroModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier duelModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier duelModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier farmModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier farmModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier friendModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier friendlyModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier raidModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier raidModifier = null;
 
     @Override
     public void apply(Behavior skill) {
-        if (aggroModifier != UpgradeBooleanModifier.DontChange) {
-            if (aggroModifier.getBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Aggressive);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Aggressive);
-            }
-        }
-        if (duelModifier != UpgradeBooleanModifier.DontChange) {
-            if (duelModifier.getBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Duel);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Duel);
-            }
-        }
-        if (farmModifier != UpgradeBooleanModifier.DontChange) {
-            if (farmModifier.getBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Farm);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Farm);
-            }
-        }
-        if (friendModifier != UpgradeBooleanModifier.DontChange) {
-            if (friendModifier.getBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Friendly);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Friendly);
-            }
-        }
-        if (raidModifier != UpgradeBooleanModifier.DontChange) {
-            if (raidModifier.getBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Raid);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Raid);
-            }
-        }
+        skill.getAggressiveBehavior().addUpgrade(aggroModifier);
+        skill.getDuelBehavior().addUpgrade(duelModifier);
+        skill.getFarmBehavior().addUpgrade(farmModifier);
+        skill.getFriendlyBehavior().addUpgrade(friendlyModifier);
+        skill.getRaidBehavior().addUpgrade(raidModifier);
     }
 
     @Override
     public void invert(Behavior skill) {
-        if (aggroModifier != UpgradeBooleanModifier.DontChange) {
-            if (aggroModifier.getInvertedBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Aggressive);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Aggressive);
-            }
-        }
-        if (duelModifier != UpgradeBooleanModifier.DontChange) {
-            if (duelModifier.getInvertedBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Duel);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Duel);
-            }
-        }
-        if (farmModifier != UpgradeBooleanModifier.DontChange) {
-            if (farmModifier.getInvertedBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Farm);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Farm);
-            }
-        }
-        if (friendModifier != UpgradeBooleanModifier.DontChange) {
-            if (friendModifier.getInvertedBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Friendly);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Friendly);
-            }
-        }
-        if (raidModifier != UpgradeBooleanModifier.DontChange) {
-            if (raidModifier.getInvertedBoolean()) {
-                skill.enableBehavior(Behavior.BehaviorMode.Raid);
-            } else {
-                skill.disableBehavior(Behavior.BehaviorMode.Raid);
-            }
-        }
+        skill.getAggressiveBehavior().removeUpgrade(aggroModifier);
+        skill.getDuelBehavior().removeUpgrade(duelModifier);
+        skill.getFarmBehavior().removeUpgrade(farmModifier);
+        skill.getFriendlyBehavior().removeUpgrade(friendlyModifier);
+        skill.getRaidBehavior().removeUpgrade(raidModifier);
     }
 }

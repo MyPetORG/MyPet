@@ -184,7 +184,7 @@ public class EntityListener implements Listener {
                         infoShown = true;
                     }
                     if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
-                        double damage = (myPet.getSkills().isActive(Damage.class) ? myPet.getSkills().get(Damage.class).getDamage() : 0);
+                        double damage = (myPet.getSkills().isActive(Damage.class) ? myPet.getSkills().get(Damage.class).getDamage().getValue().doubleValue() : 0);
                         damager.sendMessage("   " + Translation.getString("Name.Damage", damager) + ": " + String.format("%1.2f", damage));
                         infoShown = true;
                     }
@@ -780,7 +780,7 @@ public class EntityListener implements Listener {
             if (myPet.getSkills().isActive(Backpack.class)) {
                 BackpackImpl inventorySkill = myPet.getSkills().get(BackpackImpl.class);
                 inventorySkill.closeInventory();
-                if (inventorySkill.getDropOnDeath() && !owner.isMyPetAdmin()) {
+                if (inventorySkill.getDropOnDeath().getValue() && !owner.isMyPetAdmin()) {
                     inventorySkill.getInventory().dropContentAt(myPet.getLocation().get());
                 }
             }

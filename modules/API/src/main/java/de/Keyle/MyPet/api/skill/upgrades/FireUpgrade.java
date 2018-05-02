@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.skills.Fire;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,27 +33,19 @@ import lombok.experimental.Accessors;
 @SkillName("Fire")
 public class FireUpgrade implements Upgrade<Fire> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier chanceModifier = null;
+    protected UpgradeIntegerModifier chanceModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier durationModifier = null;
+    protected UpgradeIntegerModifier durationModifier = null;
 
     @Override
     public void apply(Fire skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.modify(skill.getChance()).intValue());
-        }
-        if (durationModifier != null) {
-            skill.setDuration(durationModifier.modify(skill.getDuration()).intValue());
-        }
+        skill.getChance().addUpgrade(chanceModifier);
+        skill.getDuration().addUpgrade(durationModifier);
     }
 
     @Override
     public void invert(Fire skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
-        }
-        if (durationModifier != null) {
-            skill.setDuration(durationModifier.invert(skill.getDuration()).intValue());
-        }
+        skill.getChance().removeUpgrade(chanceModifier);
+        skill.getDuration().removeUpgrade(durationModifier);
     }
 }

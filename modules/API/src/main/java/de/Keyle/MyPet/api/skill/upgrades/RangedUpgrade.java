@@ -22,8 +22,9 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeEnumModifier;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeEnumModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,31 +37,21 @@ public class RangedUpgrade implements Upgrade<Ranged> {
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier damageModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier rateOfFireModifier = null;
+    protected UpgradeIntegerModifier rateOfFireModifier = null;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeEnumModifier<Ranged.Projectile> projectileModifier = null;
 
     @Override
     public void apply(Ranged skill) {
-        if (damageModifier != null) {
-            skill.setDamage(damageModifier.modify(skill.getDamage()).doubleValue());
-        }
-        if (rateOfFireModifier != null) {
-            skill.setRateOfFire(rateOfFireModifier.modify(skill.getRateOfFire()).intValue());
-        }
-        if (projectileModifier != null) {
-            skill.setSelectedProjectile(projectileModifier.getValue());
-        }
+        skill.getDamage().addUpgrade(damageModifier);
+        skill.getRateOfFire().addUpgrade(rateOfFireModifier);
+        skill.getProjectile().addUpgrade(projectileModifier);
     }
 
     @Override
     public void invert(Ranged skill) {
-        if (damageModifier != null) {
-            skill.setDamage(damageModifier.invert(skill.getDamage()).doubleValue());
-        }
-        if (rateOfFireModifier != null) {
-            skill.setRateOfFire(rateOfFireModifier.invert(skill.getRateOfFire()).intValue());
-        }
-        //TODO invert projectile
+        skill.getDamage().removeUpgrade(damageModifier);
+        skill.getRateOfFire().removeUpgrade(rateOfFireModifier);
+        skill.getProjectile().removeUpgrade(projectileModifier);
     }
 }

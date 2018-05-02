@@ -961,8 +961,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill != null) {
-            speed *= (1.0F + rideSkill.getSpeedIncrease() / 100.0F);
-            jumpHeight = rideSkill.getJumpHeight() * 0.18D;
+            speed *= (1.0F + rideSkill.getSpeedIncrease().getValue() / 100.0F);
+            jumpHeight = rideSkill.getJumpHeight().getValue().doubleValue() * 0.18D;
         }
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {

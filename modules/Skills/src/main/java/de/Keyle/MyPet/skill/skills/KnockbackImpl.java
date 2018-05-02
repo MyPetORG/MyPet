@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -29,8 +30,10 @@ import org.bukkit.util.Vector;
 import java.util.Random;
 
 public class KnockbackImpl implements Knockback {
-    protected int chance = 0;
+
     private static Random random = new Random();
+
+    protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     private MyPet myPet;
 
     public KnockbackImpl(MyPet myPet) {
@@ -42,12 +45,12 @@ public class KnockbackImpl implements Knockback {
     }
 
     public boolean isActive() {
-        return chance > 0;
+        return chance.getValue() > 0;
     }
 
     @Override
     public void reset() {
-        chance = 0;
+        chance.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -55,7 +58,7 @@ public class KnockbackImpl implements Knockback {
     }
 
     public boolean trigger() {
-        return random.nextDouble() < chance / 100.;
+        return random.nextDouble() < chance.getValue() / 100.;
     }
 
     public void apply(LivingEntity target) {
@@ -66,12 +69,8 @@ public class KnockbackImpl implements Knockback {
         ));
     }
 
-    public int getChance() {
+    public UpgradeComputer<Integer> getChance() {
         return chance;
-    }
-
-    public void setChance(int chance) {
-        this.chance = chance;
     }
 
     @Override

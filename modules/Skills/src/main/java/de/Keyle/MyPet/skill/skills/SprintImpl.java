@@ -21,10 +21,12 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Sprint;
 
 public class SprintImpl implements Sprint {
-    private boolean active = false;
+
+    protected UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
     private MyPet myPet;
 
     public SprintImpl(MyPet myPet) {
@@ -40,16 +42,16 @@ public class SprintImpl implements Sprint {
     }
 
     public boolean isActive() {
+        return active.getValue();
+    }
+
+    public UpgradeComputer<Boolean> getActive() {
         return active;
     }
 
     @Override
     public void reset() {
-        active = false;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+        active.removeAllUpgrades();
     }
 
     public String toPrettyString() {

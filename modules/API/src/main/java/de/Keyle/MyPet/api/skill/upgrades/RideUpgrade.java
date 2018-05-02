@@ -22,8 +22,9 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,9 +36,9 @@ import lombok.experimental.Accessors;
 public class RideUpgrade implements Upgrade<Ride> {
 
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier activeModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier activeModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier speedIncreaseModifier = null;
+    protected UpgradeIntegerModifier speedIncreaseModifier = null;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier jumpHeightModifier = null;
     @Getter @Setter @Accessors(chain = true)
@@ -45,49 +46,25 @@ public class RideUpgrade implements Upgrade<Ride> {
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier flyRegenRateModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier canFlyModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier canFlyModifier = null;
 
     @Override
     public void apply(Ride skill) {
-        if (activeModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setActive(activeModifier.getBoolean());
-        }
-        if (speedIncreaseModifier != null) {
-            skill.setSpeedIncrease(speedIncreaseModifier.modify(skill.getSpeedIncrease()).intValue());
-        }
-        if (jumpHeightModifier != null) {
-            skill.setJumpHeight(jumpHeightModifier.modify(skill.getJumpHeight()).doubleValue());
-        }
-        if (flyLimitModifier != null) {
-            skill.setFlyLimit(flyLimitModifier.modify(skill.getFlyLimit()).floatValue());
-        }
-        if (flyRegenRateModifier != null) {
-            skill.setFlyRegenRate(flyRegenRateModifier.modify(skill.getFlyRegenRate()).floatValue());
-        }
-        if (canFlyModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setCanFly(canFlyModifier.getBoolean());
-        }
+        skill.getActive().addUpgrade(activeModifier);
+        skill.getSpeedIncrease().addUpgrade(speedIncreaseModifier);
+        skill.getJumpHeight().addUpgrade(jumpHeightModifier);
+        skill.getFlyLimit().addUpgrade(flyLimitModifier);
+        skill.getFlyRegenRate().addUpgrade(flyRegenRateModifier);
+        skill.getCanFly().addUpgrade(canFlyModifier);
     }
 
     @Override
     public void invert(Ride skill) {
-        if (activeModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setActive(activeModifier.getInvertedBoolean());
-        }
-        if (speedIncreaseModifier != null) {
-            skill.setSpeedIncrease(speedIncreaseModifier.invert(skill.getSpeedIncrease()).intValue());
-        }
-        if (jumpHeightModifier != null) {
-            skill.setJumpHeight(jumpHeightModifier.invert(skill.getJumpHeight()).doubleValue());
-        }
-        if (flyLimitModifier != null) {
-            skill.setFlyLimit(flyLimitModifier.invert(skill.getFlyLimit()).floatValue());
-        }
-        if (flyRegenRateModifier != null) {
-            skill.setFlyRegenRate(flyRegenRateModifier.invert(skill.getFlyRegenRate()).floatValue());
-        }
-        if (canFlyModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setCanFly(canFlyModifier.getInvertedBoolean());
-        }
+        skill.getActive().removeUpgrade(activeModifier);
+        skill.getSpeedIncrease().removeUpgrade(speedIncreaseModifier);
+        skill.getJumpHeight().removeUpgrade(jumpHeightModifier);
+        skill.getFlyLimit().removeUpgrade(flyLimitModifier);
+        skill.getFlyRegenRate().removeUpgrade(flyRegenRateModifier);
+        skill.getCanFly().removeUpgrade(canFlyModifier);
     }
 }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Wither;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -30,9 +31,11 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Random;
 
 public class WitherImpl implements Wither {
-    protected int chance = 0;
-    protected int duration = 0;
+
     private static Random random = new Random();
+
+    protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
     private MyPet myPet;
 
     public WitherImpl(MyPet myPet) {
@@ -44,13 +47,13 @@ public class WitherImpl implements Wither {
     }
 
     public boolean isActive() {
-        return chance > 0 && duration > 0;
+        return chance.getValue() > 0 && duration.getValue() > 0;
     }
 
     @Override
     public void reset() {
-        chance = 0;
-        duration = 0;
+        chance.removeAllUpgrades();
+        duration.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -58,27 +61,19 @@ public class WitherImpl implements Wither {
     }
 
     public boolean trigger() {
-        return random.nextDouble() <= chance / 100.;
+        return random.nextDouble() <= chance.getValue() / 100.;
     }
 
-    public int getDuration() {
+    public UpgradeComputer<Integer> getDuration() {
         return duration;
     }
 
-    public int getChance() {
+    public UpgradeComputer<Integer> getChance() {
         return chance;
     }
 
-    public void setChance(int chance) {
-        this.chance = chance;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
     public void apply(LivingEntity target) {
-        PotionEffect effect = new PotionEffect(PotionEffectType.WITHER, getDuration() * 20, 1, false);
+        PotionEffect effect = new PotionEffect(PotionEffectType.WITHER, duration.getValue() * 20, 1, false);
         target.addPotionEffect(effect);
     }
 

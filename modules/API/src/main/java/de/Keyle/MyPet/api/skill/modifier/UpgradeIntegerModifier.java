@@ -18,24 +18,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill;
+package de.Keyle.MyPet.api.skill.modifier;
+
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier.Type;
 
 import java.math.BigDecimal;
 
-public class UpgradeNumberModifier {
-    public enum Type {
-        Add, Subtract
-    }
+public class UpgradeIntegerModifier implements UpgradeModifier<Integer> {
 
-    Number value;
+    Integer value;
     Type type;
 
-    public UpgradeNumberModifier(Number value, Type type) {
+    public UpgradeIntegerModifier(Integer value, Type type) {
         this.value = value;
         this.type = type;
     }
 
-    public Number getValue() {
+    public Integer getValue() {
         return value;
     }
 
@@ -43,23 +42,12 @@ public class UpgradeNumberModifier {
         return type;
     }
 
-    public Number modify(Number n) {
+    public Integer modify(Integer n) {
         switch (type) {
             case Add:
-                return new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
+                return new BigDecimal(n.toString()).add(new BigDecimal(value.toString())).intValue();
             case Subtract:
-                return new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
-            default:
-                return value;
-        }
-    }
-
-    public Number invert(Number n) {
-        switch (type) {
-            case Add:
-                return new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
-            case Subtract:
-                return new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
+                return new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString())).intValue();
             default:
                 return value;
         }

@@ -21,17 +21,19 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 
 public class RideImpl implements Ride {
-    protected int speedPercent = 0;
-    protected double jumpHeight = 0D;
-    protected float flyRegenRate = 0F;
-    protected float flyLimit = 0F;
-    protected boolean canFly = false;
-    private boolean active = false;
+
+    protected UpgradeComputer<Integer> speed = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Number> jumpHeight = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Number> flyRegenRate = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Number> flyLimit = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Boolean> canFly = new UpgradeComputer<>(false);
+    protected UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
     private MyPet myPet;
 
     public RideImpl(MyPet myPet) {
@@ -44,75 +46,54 @@ public class RideImpl implements Ride {
 
     @Override
     public void reset() {
-        active = false;
-        speedPercent = 0;
-        jumpHeight = 0;
-        flyRegenRate = 0;
-        flyLimit = 0;
-        canFly = false;
+        active.removeAllUpgrades();
+        speed.removeAllUpgrades();
+        jumpHeight.removeAllUpgrades();
+        flyRegenRate.removeAllUpgrades();
+        flyLimit.removeAllUpgrades();
+        canFly.removeAllUpgrades();
     }
 
     public String toPrettyString() {
-        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + ChatColor.RESET + "%";
+        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speed + ChatColor.RESET + "%";
     }
 
     public boolean isActive() {
+        return active.getValue();
+    }
+
+    public UpgradeComputer<Boolean> getActive() {
         return active;
     }
 
-    @Override
-    public void setActive(boolean active) {
-        this.active = active;
+    public UpgradeComputer<Integer> getSpeedIncrease() {
+        return speed;
     }
 
-    public int getSpeedIncrease() {
-        return speedPercent;
-    }
-
-    public double getJumpHeight() {
+    public UpgradeComputer<Number> getJumpHeight() {
         return jumpHeight;
     }
 
-    public float getFlyLimit() {
+    public UpgradeComputer<Number> getFlyLimit() {
         return flyLimit;
     }
 
-    public float getFlyRegenRate() {
+    public UpgradeComputer<Number> getFlyRegenRate() {
         return flyRegenRate;
     }
 
-    public boolean canFly() {
+    public UpgradeComputer<Boolean> getCanFly() {
         return canFly;
-    }
-
-    public void setSpeedIncrease(int speedPercent) {
-        this.speedPercent = speedPercent;
-    }
-
-    public void setJumpHeight(double jumpHeigth) {
-        this.jumpHeight = jumpHeigth;
-    }
-
-    public void setFlyRegenRate(float flyRegenRate) {
-        this.flyRegenRate = flyRegenRate;
-    }
-
-    public void setFlyLimit(float flyLimit) {
-        this.flyLimit = flyLimit;
-    }
-
-    public void setCanFly(boolean canFly) {
-        this.canFly = canFly;
     }
 
     @Override
     public String toString() {
         return "RideImpl{" +
-                "speedPercent=" + speedPercent +
-                ", jumpHeight=" + jumpHeight +
-                ", flyRegenRate=" + flyRegenRate +
-                ", flyLimit=" + flyLimit +
-                ", canFly=" + canFly +
+                "speed=" + speed +
+                ", jumpHeight=" + jumpHeight.getValue().doubleValue() +
+                ", flyRegenRate=" + flyRegenRate.getValue().doubleValue() +
+                ", flyLimit=" + flyLimit.getValue().doubleValue() +
+                ", getCanFly=" + canFly +
                 ", active=" + active +
                 '}';
     }

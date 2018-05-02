@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.MyPetPickupItemEvent;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -44,8 +45,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class PickupImpl implements Pickup {
 
-    protected double range = 0;
-    protected boolean expPickup = false;
+    protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Boolean> expPickup = new UpgradeComputer<>(false);
     private boolean pickup = false;
     private MyPet myPet;
 
@@ -58,13 +59,13 @@ public class PickupImpl implements Pickup {
     }
 
     public boolean isActive() {
-        return range > 0;
+        return range.getValue().doubleValue() > 0;
     }
 
     @Override
     public void reset() {
-        range = 0;
-        expPickup = false;
+        range.removeAllUpgrades();
+        expPickup.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -72,7 +73,7 @@ public class PickupImpl implements Pickup {
     }
 
     public boolean activate() {
-        if (range > 0) {
+        if (isActive()) {
             if (myPet.getSkills().isActive(BackpackImpl.class)) {
                 if (pickup) {
                     pickup = false;
@@ -110,7 +111,8 @@ public class PickupImpl implements Pickup {
             pickup = false;
             return;
         }
-        if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isActive(BackpackImpl.class)) {
+        if (isActive() && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isActive(BackpackImpl.class)) {
+            double range = this.range.getValue().doubleValue();
             for (Entity entity : myPet.getEntity().get().getNearbyEntities(range, range, range)) {
                 if (!entity.isDead()) {
                     if (entity instanceof Item) {
@@ -150,7 +152,7 @@ public class PickupImpl implements Pickup {
                                 itemEntity.setItemStack(itemStack);
                             }
                         }
-                    } else if (expPickup && entity instanceof ExperienceOrb) {
+                    } else if (expPickup.getValue() && entity instanceof ExperienceOrb) {
                         ExperienceOrb expEntity = (ExperienceOrb) entity;
                         myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
                         MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity().get(), expEntity);
@@ -173,26 +175,18 @@ public class PickupImpl implements Pickup {
 
     }
 
-    public double getRange() {
+    public UpgradeComputer<Number> getRange() {
         return range;
     }
 
-    public void setRange(double range) {
-        this.range = range;
-    }
-
-    public boolean isExpPickup() {
+    public UpgradeComputer<Boolean> getExpPickup() {
         return expPickup;
-    }
-
-    public void setExpPickup(boolean expPickup) {
-        this.expPickup = expPickup;
     }
 
     @Override
     public String toString() {
         return "PickupImpl{" +
-                "range=" + range +
+                "range=" + range.getValue().doubleValue() +
                 ", expPickup=" + expPickup +
                 ", pickup=" + pickup +
                 '}';

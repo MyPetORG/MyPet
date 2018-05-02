@@ -21,16 +21,13 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Shield", translationNode = "Name.Skill.Shield")
 public interface Shield extends Skill {
 
-    int getChance();
+    UpgradeComputer<Integer> getChance();
 
-    void setChance(int chance);
-
-    int getRedirectedDamage();
-
-    void setRedirectedDamage(int redirectedDamage);
+    UpgradeComputer<Integer> getRedirectedDamage();
 }

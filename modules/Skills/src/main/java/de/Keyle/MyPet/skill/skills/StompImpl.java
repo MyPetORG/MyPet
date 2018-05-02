@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Stomp;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.*;
@@ -33,9 +34,11 @@ import org.bukkit.util.Vector;
 import java.util.Random;
 
 public class StompImpl implements Stomp {
-    protected int chance = 0;
-    protected double damage = 0;
+
     private static Random random = new Random();
+
+    protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
     private MyPet myPet;
 
     public StompImpl(MyPet myPet) {
@@ -51,13 +54,13 @@ public class StompImpl implements Stomp {
     }
 
     public boolean isActive() {
-        return chance > 0 && damage > 0;
+        return chance.getValue() > 0 && damage.getValue().doubleValue() > 0;
     }
 
     @Override
     public void reset() {
-        chance = 0;
-        damage = 0;
+        chance.removeAllUpgrades();
+        damage.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -65,7 +68,7 @@ public class StompImpl implements Stomp {
     }
 
     public boolean trigger() {
-        return random.nextDouble() < chance / 100.;
+        return random.nextDouble() < chance.getValue() / 100.;
     }
 
     public void apply(LivingEntity target) {
@@ -114,7 +117,7 @@ public class StompImpl implements Stomp {
                     continue;
                 }
 
-                ((LivingEntity) e).damage(this.damage, myPet.getEntity().get());
+                ((LivingEntity) e).damage(this.damage.getValue().doubleValue(), myPet.getEntity().get());
 
                 double distancePercent = MyPetApi.getPlatformHelper().distance(livingEntity.getLocation(), new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
                 if (distancePercent <= 1.0D) {
@@ -138,27 +141,19 @@ public class StompImpl implements Stomp {
         }
     }
 
-    public int getChance() {
+    public UpgradeComputer<Integer> getChance() {
         return chance;
     }
 
-    public void setChance(int chance) {
-        this.chance = chance;
-    }
-
-    public double getDamage() {
+    public UpgradeComputer<Number> getDamage() {
         return damage;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
     }
 
     @Override
     public String toString() {
         return "StompImpl{" +
                 "chance=" + chance +
-                ", damage=" + damage +
+                ", damage=" + damage.getValue().doubleValue() +
                 '}';
     }
 }

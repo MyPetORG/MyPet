@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,27 +33,19 @@ import lombok.experimental.Accessors;
 @SkillName("Thorns")
 public class ThornsUpgrade implements Upgrade<Thorns> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier chanceModifier = null;
+    protected UpgradeIntegerModifier chanceModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier reflectedDamageModifier = null;
+    protected UpgradeIntegerModifier reflectedDamageModifier = null;
 
     @Override
     public void apply(Thorns skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.modify(skill.getChance()).intValue());
-        }
-        if (reflectedDamageModifier != null) {
-            skill.setReflectedDamage(reflectedDamageModifier.modify(skill.getReflectedDamage()).intValue());
-        }
+        skill.getChance().addUpgrade(chanceModifier);
+        skill.getReflectedDamage().addUpgrade(reflectedDamageModifier);
     }
 
     @Override
     public void invert(Thorns skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
-        }
-        if (reflectedDamageModifier != null) {
-            skill.setReflectedDamage(reflectedDamageModifier.invert(skill.getReflectedDamage()).intValue());
-        }
+        skill.getChance().removeUpgrade(chanceModifier);
+        skill.getReflectedDamage().removeUpgrade(reflectedDamageModifier);
     }
 }

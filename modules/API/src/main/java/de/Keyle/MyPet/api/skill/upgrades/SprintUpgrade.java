@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeBooleanModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
 import de.Keyle.MyPet.api.skill.skills.Sprint;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,19 +33,15 @@ import lombok.experimental.Accessors;
 @SkillName("Sprint")
 public class SprintUpgrade implements Upgrade<Sprint> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier activeModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier activeModifier = null;
 
     @Override
     public void apply(Sprint skill) {
-        if (activeModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setActive(activeModifier.getBoolean());
-        }
+        skill.getActive().addUpgrade(activeModifier);
     }
 
     @Override
     public void invert(Sprint skill) {
-        if (activeModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setActive(activeModifier.getInvertedBoolean());
-        }
+        skill.getActive().removeUpgrade(activeModifier);
     }
 }

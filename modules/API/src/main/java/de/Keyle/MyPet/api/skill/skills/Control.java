@@ -21,12 +21,11 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Control", translationNode = "Name.Skill.Control")
 public interface Control extends Skill {
 
-    boolean isActive();
-
-    void setActive(boolean active);
+    UpgradeComputer<Boolean> getActive();
 }

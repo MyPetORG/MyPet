@@ -22,7 +22,8 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Stomp;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,27 +34,19 @@ import lombok.experimental.Accessors;
 @SkillName("Stomp")
 public class StompUpgrade implements Upgrade<Stomp> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier chanceModifier = null;
+    protected UpgradeIntegerModifier chanceModifier = null;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier damageModifier = null;
 
     @Override
     public void apply(Stomp skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.modify(skill.getChance()).intValue());
-        }
-        if (damageModifier != null) {
-            skill.setDamage(damageModifier.modify(skill.getDamage()).doubleValue());
-        }
+        skill.getChance().addUpgrade(chanceModifier);
+        skill.getDamage().addUpgrade(damageModifier);
     }
 
     @Override
     public void invert(Stomp skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
-        }
-        if (damageModifier != null) {
-            skill.setDamage(damageModifier.invert(skill.getDamage()).doubleValue());
-        }
+        skill.getChance().removeUpgrade(chanceModifier);
+        skill.getDamage().removeUpgrade(damageModifier);
     }
 }

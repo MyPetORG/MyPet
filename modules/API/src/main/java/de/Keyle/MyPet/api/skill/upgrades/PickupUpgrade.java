@@ -22,8 +22,8 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,25 +36,17 @@ public class PickupUpgrade implements Upgrade<Pickup> {
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeNumberModifier rangeModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeBooleanModifier pickupExpModifier = UpgradeBooleanModifier.DontChange;
+    protected UpgradeBooleanModifier pickupExpModifier = null;
 
     @Override
     public void apply(Pickup skill) {
-        if (rangeModifier != null) {
-            skill.setRange(rangeModifier.modify(skill.getRange()).doubleValue());
-        }
-        if (pickupExpModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setExpPickup(pickupExpModifier.getBoolean());
-        }
+        skill.getRange().addUpgrade(rangeModifier);
+        skill.getExpPickup().addUpgrade(pickupExpModifier);
     }
 
     @Override
     public void invert(Pickup skill) {
-        if (rangeModifier != null) {
-            skill.setRange(rangeModifier.invert(skill.getRange()).doubleValue());
-        }
-        if (pickupExpModifier != UpgradeBooleanModifier.DontChange) {
-            skill.setExpPickup(pickupExpModifier.getInvertedBoolean());
-        }
+        skill.getRange().removeUpgrade(rangeModifier);
+        skill.getExpPickup().removeUpgrade(pickupExpModifier);
     }
 }

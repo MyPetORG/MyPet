@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
@@ -32,11 +33,13 @@ import org.bukkit.entity.Player;
 import java.util.Random;
 
 public class LightningImpl implements Lightning {
+
     private static Random random = new Random();
+
     private MyPet myPet;
     private boolean isStriking = false;
-    protected int chance = 0;
-    protected double damage = 0;
+    protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
 
     public LightningImpl(MyPet myPet) {
         this.myPet = myPet;
@@ -47,13 +50,13 @@ public class LightningImpl implements Lightning {
     }
 
     public boolean isActive() {
-        return chance > 0 && damage > 0;
+        return chance.getValue() > 0 && damage.getValue().doubleValue() > 0;
     }
 
     @Override
     public void reset() {
-        damage = 0;
-        chance = 0;
+        damage.removeAllUpgrades();
+        chance.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -61,7 +64,7 @@ public class LightningImpl implements Lightning {
     }
 
     public boolean trigger() {
-        return !isStriking && random.nextDouble() <= chance / 100.;
+        return !isStriking && random.nextDouble() <= chance.getValue() / 100.;
     }
 
     public void apply(LivingEntity target) {
@@ -71,33 +74,25 @@ public class LightningImpl implements Lightning {
         loc.getWorld().strikeLightningEffect(loc);
         for (Entity entity : myPet.getEntity().get().getNearbyEntities(1.5, 1.5, 1.5)) {
             if (entity instanceof LivingEntity && entity != owner) {
-                ((LivingEntity) entity).damage(damage, myPet.getEntity().get());
+                ((LivingEntity) entity).damage(damage.getValue().doubleValue(), myPet.getEntity().get());
             }
         }
         isStriking = false;
     }
 
-    public int getChance() {
+    public UpgradeComputer<Integer> getChance() {
         return chance;
     }
 
-    public void setChance(int chance) {
-        this.chance = chance;
-    }
-
-    public double getDamage() {
+    public UpgradeComputer<Number> getDamage() {
         return damage;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
     }
 
     @Override
     public String toString() {
         return "LightningImpl{" +
                 "chance=" + chance +
-                ", damage=" + damage +
+                ", damage=" + damage.getValue().doubleValue() +
                 '}';
     }
 }
