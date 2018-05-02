@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,19 +33,15 @@ import lombok.experimental.Accessors;
 @SkillName("Knockback")
 public class KnockbackUpgrade implements Upgrade<Knockback> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier chanceModifier = null;
+    protected UpgradeIntegerModifier chanceModifier = null;
 
     @Override
     public void apply(Knockback skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.modify(skill.getChance()).intValue());
-        }
+        skill.getChance().addUpgrade(chanceModifier);
     }
 
     @Override
     public void invert(Knockback skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
-        }
+        skill.getChance().removeUpgrade(chanceModifier);
     }
 }

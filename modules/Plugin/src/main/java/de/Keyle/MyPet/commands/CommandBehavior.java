@@ -67,33 +67,33 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.enableBehavior(BehaviorMode.Friendly);
+                            behaviorSkill.setBehavior(BehaviorMode.Friendly);
                         } else if ((args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("Aggro"))) {
                             if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "aggressive") || !behaviorSkill.isModeUsable(BehaviorMode.Aggressive)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.enableBehavior(BehaviorMode.Aggressive);
+                            behaviorSkill.setBehavior(BehaviorMode.Aggressive);
                         } else if (args[0].equalsIgnoreCase("farm")) {
                             if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "farm") || !behaviorSkill.isModeUsable(BehaviorMode.Farm)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.enableBehavior(BehaviorMode.Farm);
+                            behaviorSkill.setBehavior(BehaviorMode.Farm);
                         } else if (args[0].equalsIgnoreCase("raid")) {
                             if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "raid") || !behaviorSkill.isModeUsable(BehaviorMode.Raid)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.enableBehavior(BehaviorMode.Raid);
+                            behaviorSkill.setBehavior(BehaviorMode.Raid);
                         } else if (args[0].equalsIgnoreCase("duel")) {
                             if (!Permissions.hasExtendedLegacy(petOwner, "MyPet.extended.behavior.", "duel") || !behaviorSkill.isModeUsable(BehaviorMode.Duel)) {
                                 myPet.getOwner().sendMessage(Translation.getString("Message.No.Allowed", petOwner));
                                 return true;
                             }
-                            behaviorSkill.enableBehavior(BehaviorMode.Duel);
+                            behaviorSkill.setBehavior(BehaviorMode.Duel);
                         } else if (args[0].equalsIgnoreCase("normal")) {
-                            behaviorSkill.enableBehavior(BehaviorMode.Normal);
+                            behaviorSkill.setBehavior(BehaviorMode.Normal);
                         } else {
                             behaviorSkill.activate();
                             return false;

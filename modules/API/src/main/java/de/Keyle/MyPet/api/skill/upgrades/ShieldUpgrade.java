@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.skills.Shield;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,27 +33,19 @@ import lombok.experimental.Accessors;
 @SkillName("Shield")
 public class ShieldUpgrade implements Upgrade<Shield> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier chanceModifier = null;
+    protected UpgradeIntegerModifier chanceModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier redirectedDamageModifier = null;
+    protected UpgradeIntegerModifier redirectedDamageModifier = null;
 
     @Override
     public void apply(Shield skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.modify(skill.getChance()).intValue());
-        }
-        if (redirectedDamageModifier != null) {
-            skill.setRedirectedDamage(redirectedDamageModifier.modify(skill.getRedirectedDamage()).intValue());
-        }
+        skill.getChance().addUpgrade(chanceModifier);
+        skill.getRedirectedDamage().addUpgrade(redirectedDamageModifier);
     }
 
     @Override
     public void invert(Shield skill) {
-        if (chanceModifier != null) {
-            skill.setChance(chanceModifier.invert(skill.getChance()).intValue());
-        }
-        if (redirectedDamageModifier != null) {
-            skill.setRedirectedDamage(redirectedDamageModifier.invert(skill.getRedirectedDamage()).intValue());
-        }
+        skill.getChance().removeUpgrade(chanceModifier);
+        skill.getRedirectedDamage().removeUpgrade(redirectedDamageModifier);
     }
 }

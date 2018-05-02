@@ -21,30 +21,21 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Ride", translationNode = "Name.Skill.Ride")
 public interface Ride extends Skill {
 
-    void setActive(boolean active);
+    UpgradeComputer<Boolean> getActive();
 
-    int getSpeedIncrease();
+    UpgradeComputer<Integer> getSpeedIncrease();
 
-    void setSpeedIncrease(int speedPercent);
+    UpgradeComputer<Number> getJumpHeight();
 
-    double getJumpHeight();
+    UpgradeComputer<Number> getFlyLimit();
 
-    void setJumpHeight(double jumpHeight);
+    UpgradeComputer<Number> getFlyRegenRate();
 
-    float getFlyLimit();
-
-    void setFlyLimit(float flyLimit);
-
-    float getFlyRegenRate();
-
-    void setFlyRegenRate(float flyRegenRate);
-
-    boolean canFly();
-
-    void setCanFly(boolean canFly);
+    UpgradeComputer<Boolean> getCanFly();
 }

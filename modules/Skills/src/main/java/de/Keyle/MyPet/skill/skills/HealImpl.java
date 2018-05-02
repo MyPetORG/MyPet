@@ -22,14 +22,16 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Heal;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 
 public class HealImpl implements Heal {
-    protected double increaseHpBy = 0;
-    protected int regenTime = 0;
+
+    protected UpgradeComputer<Number> heal = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Integer> timer = new UpgradeComputer<>(0);
     private int timeCounter = 0;
     private MyPet myPet;
     protected boolean particles = false;
@@ -43,31 +45,31 @@ public class HealImpl implements Heal {
     }
 
     public boolean isActive() {
-        return increaseHpBy > 0;
+        return heal.getValue().doubleValue() > 0;
     }
 
     @Override
     public void reset() {
-        regenTime = 0;
-        increaseHpBy = 0;
+        timer.removeAllUpgrades();
+        heal.removeAllUpgrades();
     }
 
     public String toPrettyString() {
-        return "+" + ChatColor.GOLD + increaseHpBy + ChatColor.RESET + Translation.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + ChatColor.GOLD + regenTime + ChatColor.RESET + "sec";
+        return "+" + ChatColor.GOLD + heal + ChatColor.RESET + Translation.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + ChatColor.GOLD + timer + ChatColor.RESET + "sec";
     }
 
     public void schedule() {
         if (myPet.getStatus() == PetState.Here) {
-            if (increaseHpBy > 0) {
+            if (heal.getValue().doubleValue() > 0) {
                 if (timeCounter-- <= 0) {
                     if (myPet.getHealth() < myPet.getMaxHealth()) {
                         if (!particles) {
                             particles = true;
                             myPet.getEntity().get().getHandle().showPotionParticles(Color.LIME);
                         }
-                        myPet.getEntity().get().setHealth(myPet.getHealth() + increaseHpBy);
+                        myPet.getEntity().get().setHealth(myPet.getHealth() + heal.getValue().doubleValue());
                     }
-                    timeCounter = regenTime;
+                    timeCounter = timer.getValue();
                 } else {
                     particles = false;
                 }
@@ -81,27 +83,19 @@ public class HealImpl implements Heal {
         }
     }
 
-    public double getIncreaseHpBy() {
-        return increaseHpBy;
+    public UpgradeComputer<Number> getHeal() {
+        return heal;
     }
 
-    public void setIncreaseHpBy(double increaseHpBy) {
-        this.increaseHpBy = increaseHpBy;
-    }
-
-    public int getRegenTime() {
-        return regenTime;
-    }
-
-    public void setRegenTime(int regenTime) {
-        this.regenTime = regenTime;
+    public UpgradeComputer<Integer> getTimer() {
+        return timer;
     }
 
     @Override
     public String toString() {
         return "HealImpl{" +
-                "increaseHpBy=" + increaseHpBy +
-                ", regenTime=" + regenTime +
+                "heal=" + heal.getValue().doubleValue() +
+                ", timer=" + timer +
                 '}';
     }
 }

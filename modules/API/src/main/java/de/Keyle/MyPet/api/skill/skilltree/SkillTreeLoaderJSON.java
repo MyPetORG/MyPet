@@ -24,9 +24,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.UpgradeEnumModifier;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeEnumModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.DynamicLevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
@@ -237,18 +238,18 @@ public class SkillTreeLoaderJSON {
                 JSONObject buffsObject = (JSONObject) get(upgradeObject, "buffs");
                 upgrade = new BeaconUpgrade()
                         .setRangeModifier(parseNumberModifier(get(upgradeObject, "range")))
-                        .setDurationModifier(parseNumberModifier(get(upgradeObject, "duration")))
-                        .setNumberOfBuffsModifier(parseNumberModifier(get(upgradeObject, "count")))
-                        .setAbsorptionModifier(parseNumberModifier(get(buffsObject, "absorption")))
-                        .setFireResistanceModifier(parseNumberModifier(get(buffsObject, "fireresistance")))
-                        .setHasteModifier(parseNumberModifier(get(buffsObject, "haste")))
+                        .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")))
+                        .setNumberOfBuffsModifier(parseIntegerModifier(get(upgradeObject, "count")))
+                        .setAbsorptionModifier(parseIntegerModifier(get(buffsObject, "absorption")))
+                        .setFireResistanceModifier(parseIntegerModifier(get(buffsObject, "fireresistance")))
+                        .setHasteModifier(parseIntegerModifier(get(buffsObject, "haste")))
                         .setLuckModifier(parseBooleanModifier(get(buffsObject, "luck")))
                         .setNightVisionModifier(parseBooleanModifier(get(buffsObject, "nightvision")))
-                        .setResistanceModifier(parseNumberModifier(get(buffsObject, "resistance")))
-                        .setSpeedModifier(parseNumberModifier(get(buffsObject, "speed")))
-                        .setStrengthModifier(parseNumberModifier(get(buffsObject, "strength")))
+                        .setResistanceModifier(parseIntegerModifier(get(buffsObject, "resistance")))
+                        .setSpeedModifier(parseIntegerModifier(get(buffsObject, "speed")))
+                        .setStrengthModifier(parseIntegerModifier(get(buffsObject, "strength")))
                         .setWaterBreathingModifier(parseBooleanModifier(get(buffsObject, "waterbreathing")))
-                        .setRegenerationModifier(parseNumberModifier(get(buffsObject, "regeneration")));
+                        .setRegenerationModifier(parseIntegerModifier(get(buffsObject, "regeneration")));
                 break;
             }
             case "behavior": {
@@ -256,7 +257,7 @@ public class SkillTreeLoaderJSON {
                         .setAggroModifier(parseBooleanModifier(get(upgradeObject, "aggro")))
                         .setDuelModifier(parseBooleanModifier(get(upgradeObject, "duel")))
                         .setFarmModifier(parseBooleanModifier(get(upgradeObject, "farm")))
-                        .setFriendModifier(parseBooleanModifier(get(upgradeObject, "friend")))
+                        .setFriendlyModifier(parseBooleanModifier(get(upgradeObject, "friend")))
                         .setRaidModifier(parseBooleanModifier(get(upgradeObject, "raid")));
                 break;
             }
@@ -272,29 +273,29 @@ public class SkillTreeLoaderJSON {
             }
             case "fire": {
                 upgrade = new FireUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
-                        .setDurationModifier(parseNumberModifier(get(upgradeObject, "duration")));
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
+                        .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
                 break;
             }
             case "heal": {
                 upgrade = new HealUpgrade()
-                        .setIncreaseHpByModifier(parseNumberModifier(get(upgradeObject, "health")))
-                        .setRegenTimeyModifier(parseNumberModifier(get(upgradeObject, "timer")));
+                        .setHealModifier(parseNumberModifier(get(upgradeObject, "health")))
+                        .setTimerModifier(parseIntegerModifier(get(upgradeObject, "timer")));
                 break;
             }
             case "knockback": {
                 upgrade = new KnockbackUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")));
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")));
                 break;
             }
             case "life": {
                 upgrade = new LifeUpgrade()
-                        .setExtraLifeModifier(parseNumberModifier(get(upgradeObject, "health")));
+                        .setLifeModifier(parseNumberModifier(get(upgradeObject, "health")));
                 break;
             }
             case "lightning": {
                 upgrade = new LightningUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
                         .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")));
                 break;
             }
@@ -306,21 +307,21 @@ public class SkillTreeLoaderJSON {
             }
             case "poison": {
                 upgrade = new PoisonUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
-                        .setDurationModifier(parseNumberModifier(get(upgradeObject, "duration")));
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
+                        .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
                 break;
             }
             case "ranged": {
                 upgrade = new RangedUpgrade()
                         .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")))
-                        .setRateOfFireModifier(parseNumberModifier(get(upgradeObject, "rate")))
+                        .setRateOfFireModifier(parseIntegerModifier(get(upgradeObject, "rate")))
                         .setProjectileModifier(parseEnumModifier(get(upgradeObject, "projectile"), Ranged.Projectile.class));
                 break;
             }
             case "ride": {
                 upgrade = new RideUpgrade()
                         .setActiveModifier(parseBooleanModifier(get(upgradeObject, "active")))
-                        .setSpeedIncreaseModifier(parseNumberModifier(get(upgradeObject, "speed")))
+                        .setSpeedIncreaseModifier(parseIntegerModifier(get(upgradeObject, "speed")))
                         .setJumpHeightModifier(parseNumberModifier(get(upgradeObject, "jumpheight")))
                         .setFlyLimitModifier(parseNumberModifier(get(upgradeObject, "flylimit")))
                         .setFlyRegenRateModifier(parseNumberModifier(get(upgradeObject, "flyregenrate")))
@@ -329,14 +330,14 @@ public class SkillTreeLoaderJSON {
             }
             case "shield": {
                 upgrade = new ShieldUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
-                        .setRedirectedDamageModifier(parseNumberModifier(get(upgradeObject, "redirect")));
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
+                        .setRedirectedDamageModifier(parseIntegerModifier(get(upgradeObject, "redirect")));
                 break;
             }
             case "slow": {
                 upgrade = new SlowUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
-                        .setDurationModifier(parseNumberModifier(get(upgradeObject, "duration")));
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
+                        .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
                 break;
             }
             case "sprint": {
@@ -346,20 +347,20 @@ public class SkillTreeLoaderJSON {
             }
             case "stomp": {
                 upgrade = new StompUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
                         .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")));
                 break;
             }
             case "thorns": {
                 upgrade = new ThornsUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
-                        .setReflectedDamageModifier(parseNumberModifier(get(upgradeObject, "reflection")));
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
+                        .setReflectedDamageModifier(parseIntegerModifier(get(upgradeObject, "reflection")));
                 break;
             }
             case "wither": {
                 upgrade = new WitherUpgrade()
-                        .setChanceModifier(parseNumberModifier(get(upgradeObject, "chance")))
-                        .setDurationModifier(parseNumberModifier(get(upgradeObject, "duration")));
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
+                        .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
                 break;
             }
         }
@@ -414,6 +415,23 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
+    private static UpgradeIntegerModifier parseIntegerModifier(Object modifierObject) {
+        if (modifierObject instanceof String) {
+            String modifierString = modifierObject.toString();
+            UpgradeNumberModifier.Type type;
+            if (modifierString.startsWith("+")) {
+                type = UpgradeNumberModifier.Type.Add;
+            } else if (modifierString.startsWith("-")) {
+                type = UpgradeNumberModifier.Type.Subtract;
+            } else {
+                return null;
+            }
+            BigDecimal value = new BigDecimal(modifierString.substring(1));
+            return new UpgradeIntegerModifier(value.intValue(), type);
+        }
+        return null;
+    }
+
     private static UpgradeBooleanModifier parseBooleanModifier(Object modifierObject) {
         if (modifierObject instanceof Boolean) {
             if ((Boolean) modifierObject) {
@@ -422,7 +440,7 @@ public class SkillTreeLoaderJSON {
                 return UpgradeBooleanModifier.False;
             }
         }
-        return UpgradeBooleanModifier.DontChange;
+        return null;
     }
 
     private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(Object modifierObject, Class<T> e) {

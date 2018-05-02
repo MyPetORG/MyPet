@@ -22,13 +22,14 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Control;
 import org.bukkit.Location;
 
 public class ControlImpl implements Control {
     private Location moveTo;
     private Location prevMoveTo;
-    private boolean active = false;
+    private UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
     private MyPet myPet;
 
     public ControlImpl(MyPet myPet) {
@@ -39,17 +40,18 @@ public class ControlImpl implements Control {
         return myPet;
     }
 
+    @Override
     public boolean isActive() {
+        return this.active.getValue();
+    }
+
+    public UpgradeComputer<Boolean> getActive() {
         return active;
     }
 
     @Override
     public void reset() {
-        active = false;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+        this.active.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -71,7 +73,7 @@ public class ControlImpl implements Control {
     }
 
     public void setMoveTo(Location loc) {
-        if (!active) {
+        if (!active.getValue()) {
             return;
         }
         if (prevMoveTo != null) {

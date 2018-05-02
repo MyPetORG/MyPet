@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Life", translationNode = "Name.Skill.Hitpoints")
 public interface Life extends Skill {
-    double getExtraLife();
 
-    void setExtraLife(double extraLife);
+    UpgradeComputer<Number> getLife();
 }

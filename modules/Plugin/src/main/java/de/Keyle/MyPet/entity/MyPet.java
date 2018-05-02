@@ -179,11 +179,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getDamage() {
-        return getSkills().has(DamageImpl.class) ? getSkills().get(DamageImpl.class).getDamage() : 0;
+        return getSkills().has(DamageImpl.class) ? getSkills().get(DamageImpl.class).getDamage().getValue().doubleValue() : 0;
     }
 
     public double getRangedDamage() {
-        return getSkills().has(RangedImpl.class) ? getSkills().get(RangedImpl.class).getDamage() : 0;
+        return getSkills().has(RangedImpl.class) ? getSkills().get(RangedImpl.class).getDamage().getValue().doubleValue() : 0;
     }
 
     public boolean isPassiv() {
@@ -212,7 +212,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getMaxHealth() {
-        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isActive(LifeImpl.class) ? skills.get(LifeImpl.class).getExtraLife() : 0);
+        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isActive(LifeImpl.class) ? skills.get(LifeImpl.class).getLife().getValue().doubleValue() : 0);
     }
 
     public double getHealth() {

@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -36,8 +37,9 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 public class BackpackImpl implements Backpack {
-    protected int rows = 0;
-    protected boolean dropOnDeath = false;
+
+    protected UpgradeComputer<Number> rows = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Boolean> dropOnDeath = new UpgradeComputer<>(false);
 
     protected CustomInventory inv;
     protected MyPet myPet;
@@ -45,6 +47,8 @@ public class BackpackImpl implements Backpack {
     public BackpackImpl(MyPet myPet) {
         this.myPet = myPet;
         inv = MyPetApi.getCompatUtil().getComapatInstance(CustomInventory.class, "util.inventory", "CustomInventory");
+        rows.addCallback((newValue, reason) -> this.inv.setSize(newValue.intValue() * 9));
+        ;
     }
 
     public CustomInventory getInventory() {
@@ -60,7 +64,7 @@ public class BackpackImpl implements Backpack {
     }
 
     public boolean activate() {
-        if (rows > 0) {
+        if (rows.getValue().intValue() > 0) {
             if (myPet.getOwner().getPlayer().isSleeping()) {
                 myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()));
                 return false;
@@ -108,33 +112,22 @@ public class BackpackImpl implements Backpack {
     }
 
     public boolean isActive() {
-        return rows > 0;
+        return rows.getValue().intValue() > 0;
     }
 
     @Override
     public void reset() {
-        rows = 0;
-        dropOnDeath = false;
+        rows.removeAllUpgrades();
+        dropOnDeath.removeAllUpgrades();
     }
 
-    public boolean getDropOnDeath() {
+    public UpgradeComputer<Boolean> getDropOnDeath() {
         return dropOnDeath;
     }
 
     @Override
-    public void setDropOnDeath(boolean drop) {
-        dropOnDeath = drop;
-    }
-
-    @Override
-    public int getRows() {
+    public UpgradeComputer<Number> getRows() {
         return rows;
-    }
-
-    @Override
-    public void setRows(int rows) {
-        this.rows = rows;
-        this.inv.setSize(rows * 9);
     }
 
     @Override

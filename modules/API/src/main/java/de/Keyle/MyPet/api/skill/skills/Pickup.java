@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -29,11 +30,7 @@ import de.Keyle.MyPet.api.util.Scheduler;
 @SkillName(value = "Pickup", translationNode = "Name.Skill.Pickup")
 public interface Pickup extends Skill, Scheduler, NBTStorage, ActiveSkill {
 
-    double getRange();
+    UpgradeComputer<Number> getRange();
 
-    void setRange(double range);
-
-    boolean isExpPickup();
-
-    void setExpPickup(boolean expPickup);
+    UpgradeComputer<Boolean> getExpPickup();
 }

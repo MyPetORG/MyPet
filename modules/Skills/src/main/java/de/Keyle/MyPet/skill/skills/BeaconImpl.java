@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.api.util.inventory.meta.SkullMeta;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -50,14 +51,14 @@ public class BeaconImpl implements Beacon {
     SkullMeta everyoneMeta = new SkullMeta();
     org.bukkit.inventory.meta.SkullMeta ownerMeta;
 
-    protected int duration = 0;
-    protected int range = 0;
-    protected int selectableBuffs = 0;
+    protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Integer> selectableBuffs = new UpgradeComputer<>(0);
+    protected Map<Buff, UpgradeComputer> buffLevel = new HashMap<>();
     protected MyPet myPet;
     protected boolean active = false;
     protected int hungerDecreaseTimer;
     protected BuffReceiver receiver = BuffReceiver.Owner;
-    protected Map<Buff, Integer> buffLevel = new HashMap<>();
     protected int beaconTimer = 0;
     protected Set<Buff> selectedBuffs = new HashSet<>();
 
@@ -76,6 +77,14 @@ public class BeaconImpl implements Beacon {
         // owner skin
         ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(Material.SKULL_ITEM).getItemMeta();
         ownerMeta.setOwner(myPet.getOwner().getName());
+
+        for (Buff buff : Buff.values()) {
+            if (buff.hasMoreThanOneLevel()) {
+                buffLevel.put(buff, new UpgradeComputer<>(0));
+            } else {
+                buffLevel.put(buff, new UpgradeComputer<>(false));
+            }
+        }
     }
 
     public MyPet getMyPet() {
@@ -83,12 +92,18 @@ public class BeaconImpl implements Beacon {
     }
 
     public boolean isActive() {
-        if (selectableBuffs == 0 || range == 0) {
+        if (selectableBuffs.getValue() == 0 || range.getValue().doubleValue() == 0) {
             return false;
         }
-        for (int amp : buffLevel.values()) {
-            if (amp > 0) {
-                return duration > 0 && range > 0;
+        for (UpgradeComputer amp : buffLevel.values()) {
+            if (amp.getValue() instanceof Boolean) {
+                if ((Boolean) amp.getValue()) {
+                    return duration.getValue() > 0;
+                }
+            } else if (amp.getValue() instanceof Boolean) {
+                if ((Integer) amp.getValue() > 0) {
+                    return duration.getValue() > 0;
+                }
             }
         }
         return false;
@@ -96,10 +111,10 @@ public class BeaconImpl implements Beacon {
 
     @Override
     public void reset() {
-        duration = 0;
-        range = 0;
-        selectableBuffs = 0;
-        buffLevel.clear();
+        duration.removeAllUpgrades();
+        range.removeAllUpgrades();
+        selectableBuffs.removeAllUpgrades();
+        buffLevel.values().forEach(UpgradeComputer::removeAllUpgrades);
     }
 
     public boolean activate() {
@@ -188,29 +203,29 @@ public class BeaconImpl implements Beacon {
                         Buff selectedBuff = Buff.getBuffAtPosition(event.getPosition());
                         if (selectedBuff != null) {
 
-                            if (selectableBuffs > 1) {
+                            if (selectableBuffs.getValue() > 1) {
                                 if (selectedBuffs.contains(selectedBuff)) {
                                     selectedBuffs.remove(selectedBuff);
                                     menu.getOption(selectedBuff.getPosition()).setGlowing(false);
-                                    if (selectableBuffs > selectedBuffs.size()) {
+                                    if (selectableBuffs.getValue() > selectedBuffs.size()) {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(POTION)
-                                                .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
-                                                .setAmount(selectableBuffs - selectedBuffs.size()));
+                                                .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs.getValue() - selectedBuffs.size()))
+                                                .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
                                     } else {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(GLASS_BOTTLE)
                                                 .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
                                     }
                                     menu.update();
-                                } else if (selectableBuffs > selectedBuffs.size()) {
+                                } else if (selectableBuffs.getValue() > selectedBuffs.size()) {
                                     selectedBuffs.add(selectedBuff);
                                     menu.getOption(selectedBuff.getPosition()).setGlowing(true);
-                                    if (selectableBuffs > selectedBuffs.size()) {
+                                    if (selectableBuffs.getValue() > selectedBuffs.size()) {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(POTION)
-                                                .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
-                                                .setAmount(selectableBuffs - selectedBuffs.size()));
+                                                .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs.getValue() - selectedBuffs.size()))
+                                                .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
                                     } else {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(GLASS_BOTTLE)
@@ -221,11 +236,11 @@ public class BeaconImpl implements Beacon {
                                     break;
                                 }
 
-                                if (selectableBuffs > selectedBuffs.size()) {
+                                if (selectableBuffs.getValue() > selectedBuffs.size()) {
                                     menu.setOption(13, new IconMenuItem()
                                             .setMaterial(POTION)
-                                            .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
-                                            .setAmount(selectableBuffs - selectedBuffs.size()));
+                                            .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs.getValue() - selectedBuffs.size()))
+                                            .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
                                 } else {
                                     menu.setOption(13, new IconMenuItem()
                                             .setMaterial(GLASS_BOTTLE)
@@ -400,19 +415,19 @@ public class BeaconImpl implements Beacon {
         Iterator<Buff> iterator = selectedBuffs.iterator();
         while (iterator.hasNext()) {
             Buff buff = iterator.next();
-            if (buffLevel.containsKey(buff) && buffLevel.get(buff) > 0) {
+            if (buffLevel.containsKey(buff) && getBuffLevel(buff) > 0) {
                 menu.getOption(buff.getPosition()).setGlowing(true);
             } else {
                 iterator.remove();
             }
         }
 
-        if (selectableBuffs > 1) {
-            if (selectableBuffs > selectedBuffs.size()) {
+        if (selectableBuffs.getValue() > 1) {
+            if (selectableBuffs.getValue() > selectedBuffs.size()) {
                 menu.setOption(13, new IconMenuItem()
                         .setMaterial(POTION)
-                        .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size()))
-                        .setAmount(selectableBuffs - selectedBuffs.size()));
+                        .setTitle(BLUE + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs.getValue() - selectedBuffs.size()))
+                        .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
             } else {
                 menu.setOption(13, new IconMenuItem()
                         .setMaterial(GLASS_BOTTLE)
@@ -428,12 +443,12 @@ public class BeaconImpl implements Beacon {
     public String toPrettyString() {
         String availableBuffs = "";
         for (Buff buff : buffLevel.keySet()) {
-            if (buffLevel.get(buff) > 0) {
+            if (getBuffLevel(buff) > 0) {
                 if (!availableBuffs.equalsIgnoreCase("")) {
                     availableBuffs += ", ";
                 }
                 availableBuffs += GOLD + Translation.getString("Name." + buff.getName(), myPet.getOwner().getLanguage());
-                availableBuffs += GRAY + " " + Util.decimal2roman(buffLevel.get(buff));
+                availableBuffs += GRAY + " " + Util.decimal2roman(getBuffLevel(buff));
                 availableBuffs += ChatColor.RESET;
             }
         }
@@ -444,7 +459,7 @@ public class BeaconImpl implements Beacon {
         if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;
 
-            double range = this.range;
+            double range = this.range.getValue().doubleValue();
 
             if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_BEACON_RANGE) {
                 range *= (Math.log10(myPet.getSaturation()) / 2);
@@ -458,7 +473,7 @@ public class BeaconImpl implements Beacon {
             if (selectedBuffs.size() == 0) {
                 return;
             }
-            if (selectedBuffs.size() > selectableBuffs) {
+            if (selectedBuffs.size() > selectableBuffs.getValue()) {
                 selectedBuffs.clear();
             }
 
@@ -469,11 +484,11 @@ public class BeaconImpl implements Beacon {
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BuffReceiver.Party) {
                 members = MyPetApi.getHookHelper().getPartyMembers(getMyPet().getOwner().getPlayer());
             }
-            int duration = this.duration * 20;
+            int duration = this.duration.getValue() * 20;
 
             List<PotionEffect> potionEffects = new ArrayList<>();
             for (Buff buff : selectedBuffs) {
-                int amplification = buffLevel.get(buff) - 1;
+                int amplification = getBuffLevel(buff) - 1;
                 PotionEffect effect = new PotionEffect(PotionEffectType.getById(buff.getId()), duration, amplification, true, true);
                 potionEffects.add(effect);
             }
@@ -525,43 +540,33 @@ public class BeaconImpl implements Beacon {
         }
     }
 
-    public int getDuration() {
+    public UpgradeComputer<Integer> getDuration() {
         return duration;
     }
 
     @Override
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    @Override
-    public int getNumberOfBuffs() {
+    public UpgradeComputer<Integer> getNumberOfBuffs() {
         return selectableBuffs;
     }
 
     @Override
-    public void setNumberOfBuffs(int selectableBuffs) {
-        this.selectableBuffs = selectableBuffs;
-    }
-
-    @Override
-    public int getRange() {
+    public UpgradeComputer<Number> getRange() {
         return range;
     }
 
     @Override
-    public void setRange(int range) {
-        this.range = range;
+    public UpgradeComputer getBuff(Buff buff) {
+        return this.buffLevel.get(buff);
     }
 
-    @Override
-    public void setBuffLevel(Buff buff, int level) {
-        this.buffLevel.put(buff, level);
-    }
-
-    @Override
     public int getBuffLevel(Buff buff) {
-        return this.buffLevel.getOrDefault(buff, 0);
+        UpgradeComputer buffLevel = this.buffLevel.get(buff);
+        if (buffLevel.getValue() instanceof Boolean) {
+            return (Boolean) buffLevel.getValue() ? 1 : 0;
+        } else if (buffLevel.getValue() instanceof Boolean) {
+            return (Integer) buffLevel.getValue();
+        }
+        return 0;
     }
 
     @Override

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
@@ -31,11 +32,7 @@ public interface Backpack extends Skill, NBTStorage, ActiveSkill {
 
     CustomInventory getInventory();
 
-    boolean getDropOnDeath();
+    UpgradeComputer<Boolean> getDropOnDeath();
 
-    void setDropOnDeath(boolean drop);
-
-    void setRows(int rows);
-
-    int getRows();
+    UpgradeComputer<Number> getRows();
 }

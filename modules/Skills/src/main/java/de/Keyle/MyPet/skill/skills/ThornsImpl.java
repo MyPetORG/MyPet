@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
@@ -33,9 +34,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import java.util.Random;
 
 public class ThornsImpl implements Thorns {
-    protected int chance = 0;
-    protected int reflectedDamage = 0;
+
     private static Random random = new Random();
+
+    protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Integer> reflectedDamage = new UpgradeComputer<>(0);
     private MyPet myPet;
 
     public ThornsImpl(MyPet myPet) {
@@ -47,13 +50,13 @@ public class ThornsImpl implements Thorns {
     }
 
     public boolean isActive() {
-        return chance > 0;
+        return chance.getValue() > 0 && reflectedDamage.getValue() > 0;
     }
 
     @Override
     public void reset() {
-        chance = 0;
-        reflectedDamage = 0;
+        chance.removeAllUpgrades();
+        reflectedDamage.removeAllUpgrades();
     }
 
     public String toPrettyString() {
@@ -61,28 +64,20 @@ public class ThornsImpl implements Thorns {
     }
 
     protected double calculateReflectedDamage(double damage) {
-        return damage * reflectedDamage / 100.;
+        return damage * reflectedDamage.getValue() / 100.;
     }
 
-    public int getReflectedDamage() {
+    public UpgradeComputer<Integer> getReflectedDamage() {
         return reflectedDamage;
     }
 
-    public void setReflectedDamage(int reflectedDamage) {
-        this.reflectedDamage = reflectedDamage;
-    }
-
-    public int getChance() {
+    public UpgradeComputer<Integer> getChance() {
         return chance;
-    }
-
-    public void setChance(int chance) {
-        this.chance = chance;
     }
 
     @Override
     public boolean trigger() {
-        return random.nextDouble() < chance / 100.;
+        return random.nextDouble() < chance.getValue() / 100.;
     }
 
     @Override

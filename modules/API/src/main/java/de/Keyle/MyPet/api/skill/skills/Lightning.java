@@ -22,16 +22,13 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.OnHitSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Lightning", translationNode = "Name.Skill.Lightning")
 public interface Lightning extends Skill, OnHitSkill {
 
-    int getChance();
+    UpgradeComputer<Integer> getChance();
 
-    void setChance(int chance);
-
-    double getDamage();
-
-    void setDamage(double damage);
+    UpgradeComputer<Number> getDamage();
 }

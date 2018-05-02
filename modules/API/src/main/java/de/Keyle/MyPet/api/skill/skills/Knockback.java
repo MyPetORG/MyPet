@@ -22,11 +22,11 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.OnHitSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Knockback", translationNode = "Name.Skill.Knockback")
 public interface Knockback extends Skill, OnHitSkill {
-    int getChance();
 
-    void setChance(int chance);
+    UpgradeComputer<Integer> getChance();
 }

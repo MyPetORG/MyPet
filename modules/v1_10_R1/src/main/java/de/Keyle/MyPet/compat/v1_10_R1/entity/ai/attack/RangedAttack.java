@@ -70,7 +70,7 @@ public class RangedAttack implements AIGoal {
         double meleeDamage = myPet.getDamage();
         if (meleeDamage > 0 && this.entityMyPet.f(target.locX, target.getBoundingBox().b, target.locZ) < 4) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
-            if (meleeDamage > rangedSkill.getDamage()) {
+            if (meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return false;
             }
         }
@@ -89,7 +89,7 @@ public class RangedAttack implements AIGoal {
         double meleeDamage = myPet.getDamage();
         if (meleeDamage > 0 && this.entityMyPet.f(target.locX, target.getBoundingBox().b, target.locZ) < 4) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
-            if (meleeDamage > rangedSkill.getDamage()) {
+            if (meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return true;
             }
         }
@@ -129,13 +129,13 @@ public class RangedAttack implements AIGoal {
         if (--this.shootTimer <= 0) {
             if (distanceToTarget < this.range && canSee) {
                 shootProjectile(this.target, (float) myPet.getRangedDamage(), getProjectile());
-                this.shootTimer = myPet.getSkills().get(Ranged.class).getRateOfFire();
+                this.shootTimer = myPet.getSkills().get(Ranged.class).getRateOfFire().getValue();
             }
         }
     }
 
     private Projectile getProjectile() {
-        return myPet.getSkills().get(RangedImpl.class).getProjectile();
+        return myPet.getSkills().get(RangedImpl.class).getProjectile().getValue();
     }
 
     public void shootProjectile(EntityLiving target, float damage, Projectile projectile) {

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Damage;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,15 +37,11 @@ public class DamageUpgrade implements Upgrade<Damage> {
 
     @Override
     public void apply(Damage skill) {
-        if (damageModifier != null) {
-            skill.setDamage(damageModifier.modify(skill.getDamage()).doubleValue());
-        }
+        skill.getDamage().addUpgrade(damageModifier);
     }
 
     @Override
     public void invert(Damage skill) {
-        if (damageModifier != null) {
-            skill.setDamage(damageModifier.invert(skill.getDamage()).doubleValue());
-        }
+        skill.getDamage().removeUpgrade(damageModifier);
     }
 }

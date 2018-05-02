@@ -21,12 +21,11 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Sprint", translationNode = "Name.Skill.Sprint")
 public interface Sprint extends Skill {
 
-    boolean isActive();
-
-    void setActive(boolean active);
+    UpgradeComputer<Boolean> getActive();
 }

@@ -123,7 +123,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     }
                 }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, player, myPet)) {
-                    double damage = (myPet.getSkills().isActive(DamageImpl.class) ? myPet.getSkills().get(DamageImpl.class).getDamage() : 0);
+                    double damage = (myPet.getSkills().isActive(DamageImpl.class) ? myPet.getSkills().get(DamageImpl.class).getDamage().getValue().doubleValue() : 0);
                     player.sendMessage("   " + Translation.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Ranged", translationNode = "Name.Skill.Ranged")
@@ -30,17 +31,9 @@ public interface Ranged extends Skill {
         Arrow, Snowball, LargeFireball, SmallFireball, WitherSkull, Egg
     }
 
-    int getRateOfFire();
+    UpgradeComputer<Integer> getRateOfFire();
 
-    double getDamage();
+    UpgradeComputer<Number> getDamage();
 
-    Projectile getProjectile();
-
-    Projectile getSelectedProjectile();
-
-    void setSelectedProjectile(Projectile selectedProjectile);
-
-    void setDamage(double damage);
-
-    void setRateOfFire(int rateOfFire);
+    UpgradeComputer<Projectile> getProjectile();
 }

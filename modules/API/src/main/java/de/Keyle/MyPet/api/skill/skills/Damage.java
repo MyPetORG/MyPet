@@ -21,12 +21,11 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
 @SkillName(value = "Damage", translationNode = "Name.Skill.Damage")
 public interface Damage extends Skill {
 
-    double getDamage();
-
-    void setDamage(double damage);
+    UpgradeComputer<Number> getDamage();
 }

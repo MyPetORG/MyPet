@@ -22,14 +22,16 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 
 public class RangedImpl implements Ranged {
-    protected Projectile selectedProjectile = Projectile.Arrow;
-    protected double damage = 0;
-    protected int rateOfFire = 1;
+
+    protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
+    protected UpgradeComputer<Integer> rateOfFire = new UpgradeComputer<>(1);
+    protected UpgradeComputer<Projectile> projectile = new UpgradeComputer<>(Projectile.Arrow);
     private MyPet myPet;
 
     public RangedImpl(MyPet myPet) {
@@ -45,54 +47,36 @@ public class RangedImpl implements Ranged {
     }
 
     public boolean isActive() {
-        return damage > 0;
+        return damage.getValue().doubleValue() > 0;
     }
 
     @Override
     public void reset() {
-        damage = 0;
-        rateOfFire = 1;
+        damage.removeAllUpgrades();
+        rateOfFire.removeAllUpgrades();
+        projectile.removeAllUpgrades();
     }
 
     public String toPrettyString() {
-        return Util.formatText(Translation.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
+        return Util.formatText(Translation.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((rateOfFire.getValue() * 50.) / 1000.)) * 60.)) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
-    public int getRateOfFire() {
-        if (rateOfFire == 0) {
-            rateOfFire = 1;
-        }
+    public UpgradeComputer<Integer> getRateOfFire() {
         return rateOfFire;
     }
 
-    public double getDamage() {
+    public UpgradeComputer<Number> getDamage() {
         return damage;
     }
 
-    public Projectile getProjectile() {
-        return selectedProjectile;
-    }
-
-    public Projectile getSelectedProjectile() {
-        return selectedProjectile;
-    }
-
-    public void setSelectedProjectile(Projectile selectedProjectile) {
-        this.selectedProjectile = selectedProjectile;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
-
-    public void setRateOfFire(int rateOfFire) {
-        this.rateOfFire = rateOfFire;
+    public UpgradeComputer<Projectile> getProjectile() {
+        return projectile;
     }
 
     @Override
     public String toString() {
         return "RangedImpl{" +
-                "selectedProjectile=" + selectedProjectile +
+                "projectile=" + projectile +
                 ", damage=" + damage +
                 ", rateOfFire=" + rateOfFire +
                 '}';

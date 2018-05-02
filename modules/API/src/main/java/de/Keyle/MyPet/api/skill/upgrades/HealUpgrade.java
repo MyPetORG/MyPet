@@ -22,7 +22,8 @@ package de.Keyle.MyPet.api.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Heal;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,27 +34,19 @@ import lombok.experimental.Accessors;
 @SkillName("Heal")
 public class HealUpgrade implements Upgrade<Heal> {
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier increaseHpByModifier = null;
+    protected UpgradeNumberModifier healModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeNumberModifier regenTimeyModifier = null;
+    protected UpgradeIntegerModifier timerModifier = null;
 
     @Override
     public void apply(Heal skill) {
-        if (increaseHpByModifier != null) {
-            skill.setIncreaseHpBy(increaseHpByModifier.modify(skill.getIncreaseHpBy()).doubleValue());
-        }
-        if (regenTimeyModifier != null) {
-            skill.setRegenTime(regenTimeyModifier.modify(skill.getRegenTime()).intValue());
-        }
+        skill.getHeal().addUpgrade(healModifier);
+        skill.getTimer().addUpgrade(timerModifier);
     }
 
     @Override
     public void invert(Heal skill) {
-        if (increaseHpByModifier != null) {
-            skill.setIncreaseHpBy(increaseHpByModifier.invert(skill.getIncreaseHpBy()).doubleValue());
-        }
-        if (regenTimeyModifier != null) {
-            skill.setRegenTime(regenTimeyModifier.invert(skill.getRegenTime()).intValue());
-        }
+        skill.getHeal().removeUpgrade(healModifier);
+        skill.getTimer().removeUpgrade(timerModifier);
     }
 }

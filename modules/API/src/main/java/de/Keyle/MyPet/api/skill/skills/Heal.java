@@ -21,16 +21,14 @@
 package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.Scheduler;
 
 @SkillName(value = "Heal", translationNode = "Name.Skill.Heal")
 public interface Heal extends Skill, Scheduler {
-    double getIncreaseHpBy();
 
-    void setIncreaseHpBy(double increaseHpBy);
+    UpgradeComputer<Number> getHeal();
 
-    int getRegenTime();
-
-    void setRegenTime(int regenTime);
+    UpgradeComputer<Integer> getTimer();
 }

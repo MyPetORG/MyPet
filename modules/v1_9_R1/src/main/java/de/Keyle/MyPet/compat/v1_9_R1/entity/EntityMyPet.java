@@ -968,7 +968,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
                     factor = Math.log10(myPet.getSaturation()) / 2;
                 }
-                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease() / 100F))) * factor);
+                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
             }
         }
     }
@@ -1016,10 +1016,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
 
                 Ride rideSkill = myPet.getSkills().get(RideImpl.class);
-                if (this.onGround && rideSkill.getFlyLimit() > 0) {
-                    limitCounter += rideSkill.getFlyRegenRate();
-                    if (limitCounter > rideSkill.getFlyLimit()) {
-                        limitCounter = rideSkill.getFlyLimit();
+                if (this.onGround && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
+                    limitCounter += rideSkill.getFlyRegenRate().getValue().doubleValue();
+                    if (limitCounter > rideSkill.getFlyLimit().getValue().doubleValue()) {
+                        limitCounter = rideSkill.getFlyLimit().getValue().floatValue();
                     }
                 }
             }
@@ -1096,8 +1096,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         // sideways is slower too but not as slow as backwards
         motionSideways *= 0.85F;
 
-        float speed = 0.22222F * (1F + (rideSkill.getSpeedIncrease() / 100F));
-        double jumpHeight = Util.clamp(rideSkill.getJumpHeight(), 0, 10);
+        float speed = 0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F));
+        double jumpHeight = Util.clamp(rideSkill.getJumpHeight().getValue().doubleValue(), 0, 10);
         float ascenSpeed = 0.2f;
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
@@ -1162,8 +1162,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(jumpVelocity);
                     }
                     this.motY = jumpVelocity;
-                } else if (rideSkill != null && rideSkill.canFly()) {
-                    if (limitCounter <= 0 && rideSkill.getFlyLimit() > 0) {
+                } else if (rideSkill != null && rideSkill.getCanFly().getValue()) {
+                    if (limitCounter <= 0 && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
                         canFly = false;
                     } else if (flyCheckCounter-- <= 0) {
                         canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
@@ -1188,12 +1188,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double dZ = locZ - lastZ;
             if (dX != 0 || dY != 0 || dZ != 0) {
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
-                if (isFlying && rideSkill.getFlyLimit() > 0) {
+                if (isFlying && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
                     limitCounter -= distance;
                 }
                 myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
                 double factor = Math.log10(myPet.getSaturation()) / 2;
-                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease() / 100F))) * factor);
+                getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
             }
         }
     }
