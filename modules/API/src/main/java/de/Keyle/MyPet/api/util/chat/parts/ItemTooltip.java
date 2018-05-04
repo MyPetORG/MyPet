@@ -133,7 +133,7 @@ public class ItemTooltip {
                     if (i > 0) {
                         jsonString += ",";
                     }
-                    if (lore.get(i).contains(":")) {
+                    if (minorVersion == 7 && lore.get(i).contains(":")) {
                         jsonString += "a:";
                     }
                     jsonString += "\"" + lore.get(i).replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'") + "\"";
