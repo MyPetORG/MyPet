@@ -442,7 +442,7 @@ public class BeaconImpl implements Beacon {
 
     public String toPrettyString() {
         String availableBuffs = "";
-        for (Buff buff : buffLevel.keySet()) {
+        for (Buff buff : Buff.values()) {
             if (getBuffLevel(buff) > 0) {
                 if (!availableBuffs.equalsIgnoreCase("")) {
                     availableBuffs += ", ";

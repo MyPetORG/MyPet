@@ -55,7 +55,9 @@ public class HealImpl implements Heal {
     }
 
     public String toPrettyString() {
-        return "+" + ChatColor.GOLD + heal + ChatColor.RESET + Translation.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + ChatColor.GOLD + timer + ChatColor.RESET + "sec";
+        return "+" + ChatColor.GOLD + heal.getValue().doubleValue() + ChatColor.RESET
+                + Translation.getString("Name.HP", myPet.getOwner().getLanguage())
+                + " ->" + ChatColor.GOLD + timer.getValue() + ChatColor.RESET + "sec";
     }
 
     public void schedule() {

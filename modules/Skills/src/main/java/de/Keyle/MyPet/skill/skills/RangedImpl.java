@@ -58,7 +58,9 @@ public class RangedImpl implements Ranged {
     }
 
     public String toPrettyString() {
-        return Util.formatText(Translation.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((rateOfFire.getValue() * 50.) / 1000.)) * 60.)) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
+        return Util.formatText(Translation.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((rateOfFire.getValue() * 50.) / 1000.)) * 60.))
+                + " -> " + ChatColor.GOLD + damage.getValue().doubleValue() + ChatColor.RESET
+                + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
     public UpgradeComputer<Integer> getRateOfFire() {

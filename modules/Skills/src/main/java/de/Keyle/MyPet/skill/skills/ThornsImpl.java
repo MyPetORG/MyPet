@@ -60,7 +60,9 @@ public class ThornsImpl implements Thorns {
     }
 
     public String toPrettyString() {
-        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + reflectedDamage + ChatColor.RESET + "% " + Translation.getString("Name.Damage", myPet.getOwner().getLanguage());
+        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET
+                + "% -> " + ChatColor.GOLD + reflectedDamage.getValue() + ChatColor.RESET
+                + "% " + Translation.getString("Name.Damage", myPet.getOwner().getLanguage());
     }
 
     protected double calculateReflectedDamage(double damage) {
