@@ -60,7 +60,7 @@ public class BackpackImpl implements Backpack {
     }
 
     public String toPrettyString() {
-        return "" + ChatColor.GOLD + rows + ChatColor.RESET + " " + Translation.getString("Name.Rows", myPet.getOwner());
+        return "" + ChatColor.GOLD + rows.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Rows", myPet.getOwner());
     }
 
     public boolean activate() {

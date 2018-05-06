@@ -57,7 +57,8 @@ public class WitherImpl implements Wither {
     }
 
     public String toPrettyString() {
-        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + duration + ChatColor.RESET + "sec";
+        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET
+                + "% -> " + ChatColor.GOLD + duration.getValue() + ChatColor.RESET + "sec";
     }
 
     public boolean trigger() {

@@ -69,7 +69,7 @@ public class PickupImpl implements Pickup {
     }
 
     public String toPrettyString() {
-        return Translation.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + ChatColor.GOLD + String.format("%1.2f", range) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
+        return Translation.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + ChatColor.GOLD + String.format("%1.2f", range.getValue().doubleValue()) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }
 
     public boolean activate() {

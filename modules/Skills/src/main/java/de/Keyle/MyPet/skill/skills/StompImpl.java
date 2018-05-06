@@ -64,7 +64,9 @@ public class StompImpl implements Stomp {
     }
 
     public String toPrettyString() {
-        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
+        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET
+                + "% -> " + ChatColor.GOLD + damage.getValue().doubleValue() + ChatColor.RESET
+                + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
     public boolean trigger() {

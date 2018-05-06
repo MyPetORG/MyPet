@@ -48,7 +48,7 @@ public class DamageImpl implements Damage {
     }
 
     public String toPrettyString() {
-        return "" + ChatColor.GOLD + damage + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
+        return "" + ChatColor.GOLD + damage.getValue().doubleValue() + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
     public UpgradeComputer<Number> getDamage() {

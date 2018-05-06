@@ -56,7 +56,7 @@ public class FireImpl implements Fire {
     }
 
     public String toPrettyString() {
-        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + duration + ChatColor.RESET + "sec";
+        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "% -> " + ChatColor.GOLD + duration.getValue().doubleValue() + ChatColor.RESET + "sec";
     }
 
     public boolean trigger() {

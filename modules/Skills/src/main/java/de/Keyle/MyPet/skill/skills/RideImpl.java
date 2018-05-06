@@ -55,7 +55,8 @@ public class RideImpl implements Ride {
     }
 
     public String toPrettyString() {
-        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speed + ChatColor.RESET + "%";
+        return Translation.getString("Name.Speed", myPet.getOwner().getLanguage())
+                + " +" + ChatColor.GOLD + speed.getValue() + ChatColor.RESET + "%";
     }
 
     public boolean isActive() {

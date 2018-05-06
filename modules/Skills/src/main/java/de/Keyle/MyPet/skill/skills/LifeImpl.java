@@ -48,7 +48,7 @@ public class LifeImpl implements Life {
     }
 
     public String toPrettyString() {
-        return "+" + ChatColor.GOLD + life;
+        return "+" + ChatColor.GOLD + life.getValue().doubleValue();
     }
 
     public UpgradeComputer<Number> getLife() {

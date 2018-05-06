@@ -54,7 +54,7 @@ public class KnockbackImpl implements Knockback {
     }
 
     public String toPrettyString() {
-        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "%";
+        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "%";
     }
 
     public boolean trigger() {
