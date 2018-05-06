@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,9 +20,10 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.massivecraft.factions.engine.EngineCombat;
-import com.massivecraft.factions.engine.EngineMain;
+import com.massivecraft.factions.Factions;
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.Player;
@@ -34,30 +35,50 @@ import java.lang.reflect.Method;
 @PluginHookName("Factions")
 public class FactionsHook implements PlayerVersusPlayerHook {
 
-    enum AccessMethod {
-        Reflektion, Normal
+    enum ApiVersion {
+        V1, V2, V3
     }
 
-    AccessMethod accessMethod = AccessMethod.Normal;
+    ApiVersion apiVersion = ApiVersion.V2;
     Method engineMethod;
+    Object engine;
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean onEnable() {
         if (Configuration.Hooks.USE_Factions) {
             try {
-                EngineMain engineMain = EngineMain.get();
-                engineMethod = engineMain.getClass().getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+                Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineMain");
+                Method getMethod = engineClass.getDeclaredMethod("get");
+                engine = getMethod.invoke(null);
+                engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
                 engineMethod.setAccessible(true);
-                accessMethod = AccessMethod.Reflektion;
+                apiVersion = ApiVersion.V1;
                 return true;
             } catch (Throwable ignored) {
             }
             try {
-                EngineCombat engineCombat = EngineCombat.get();
-                engineCombat.getClass().getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+                Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineCombat");
+                Method getMethod = engineClass.getDeclaredMethod("get");
+                engine = getMethod.invoke(null);
+                engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+                engineMethod.setAccessible(true);
+                apiVersion = ApiVersion.V2;
                 return true;
             } catch (Throwable ignored) {
             }
+            try {
+                Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineCanCombatHappen");
+                Method getMethod = engineClass.getDeclaredMethod("get");
+                engine = getMethod.invoke(null);
+                engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+                engineMethod.setAccessible(true);
+                apiVersion = ApiVersion.V3;
+                return true;
+            } catch (Throwable ignored) {
+            }
+            MyPetApi.getLogger().warning("Factions was found but no suitable MyPet hook was provided. Please report this to the MyPet developer.");
+            MyPetApi.getLogger().warning("Factions version: " + MyPetApi.getPluginHookManager().getPluginInstance(Factions.class).get().getDescription().getVersion());
         }
         return false;
     }
@@ -66,10 +87,11 @@ public class FactionsHook implements PlayerVersusPlayerHook {
     public boolean canHurt(Player attacker, Player defender) {
         try {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
-            if (accessMethod == AccessMethod.Reflektion) {
-                return engineMethod.invoke("canCombatDamageHappen", sub, false).equals(true);
-            } else {
-                return EngineCombat.get().canCombatDamageHappen(sub, false);
+            switch (apiVersion) {
+                case V1:
+                case V2:
+                case V3:
+                    return engineMethod.invoke(engine, sub, false).equals(true);
             }
         } catch (Throwable ignored) {
         }
