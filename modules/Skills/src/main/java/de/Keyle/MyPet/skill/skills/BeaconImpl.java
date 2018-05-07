@@ -100,7 +100,7 @@ public class BeaconImpl implements Beacon {
                 if ((Boolean) amp.getValue()) {
                     return duration.getValue() > 0;
                 }
-            } else if (amp.getValue() instanceof Boolean) {
+            } else if (amp.getValue() instanceof Integer) {
                 if ((Integer) amp.getValue() > 0) {
                     return duration.getValue() > 0;
                 }
@@ -563,7 +563,7 @@ public class BeaconImpl implements Beacon {
         UpgradeComputer buffLevel = this.buffLevel.get(buff);
         if (buffLevel.getValue() instanceof Boolean) {
             return (Boolean) buffLevel.getValue() ? 1 : 0;
-        } else if (buffLevel.getValue() instanceof Boolean) {
+        } else if (buffLevel.getValue() instanceof Integer) {
             return (Integer) buffLevel.getValue();
         }
         return 0;
