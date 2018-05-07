@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.commands.CommandAdmin;
@@ -38,6 +39,7 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -47,10 +49,15 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class CommandOptionCreate implements CommandOptionTabCompleter {
+
     private static List<String> petTypeList = new ArrayList<>();
     private static Map<String, List<String>> petTypeOptionMap = new HashMap<>();
+    private static List<String> commonTypeOptionList = new ArrayList<>();
 
     static {
+        commonTypeOptionList.add("skilltree:");
+        commonTypeOptionList.add("name:");
+
         List<String> petTypeOptionList = new ArrayList<>();
 
         petTypeOptionList.add("fire");
@@ -208,6 +215,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
                 TagCompound compound = inactiveMyPet.getInfo();
                 createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);
+                updateData(inactiveMyPet, Arrays.copyOfRange(args, 2 + forceOffset, args.length));
 
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
 
@@ -266,10 +274,36 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         }
         if (strings.length >= 4 + forceOffset) {
             if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase())) {
-                return petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
+                List<String> options = petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
+                if (!options.contains(commonTypeOptionList.get(0))) {
+                    options.addAll(commonTypeOptionList);
+                }
+                return options;
+            } else {
+                return commonTypeOptionList;
             }
         }
         return CommandAdmin.EMPTY_LIST;
+    }
+
+    public static void updateData(InactiveMyPet inactiveMyPet, String[] args) {
+        for (String arg : args) {
+            if (arg.startsWith("skilltree:")) {
+                String skilltreeName = arg.replace("skilltree:", "");
+                Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
+                if (skilltree != null) {
+                    inactiveMyPet.setSkilltree(skilltree);
+                }
+            } else if (arg.startsWith("name:")) {
+                String name = arg.replace("name:", "");
+                int index = ArrayUtils.indexOf(args, arg);
+                if (args.length > index + 1) {
+                    name += " " + String.join(" ", Arrays.copyOfRange(args, index + 1, args.length));
+                }
+                inactiveMyPet.setPetName(name);
+                break;
+            }
+        }
     }
 
     public static void createInfo(MyPetType petType, String[] args, TagCompound compound) {
