@@ -256,6 +256,7 @@ public class MongoDbRepository implements Repository {
         try {
             InactiveMyPet pet = new InactiveMyPet(owner);
             pet.setUUID(UUID.fromString(document.getString("uuid")));
+            pet.setWorldGroup(document.getString("world_group"));
             pet.setExp(document.getDouble("exp"));
             pet.setHealth(document.getDouble("health"));
             pet.setRespawnTime(document.getInteger("respawn_time"));
@@ -263,7 +264,6 @@ public class MongoDbRepository implements Repository {
             pet.setPetType(MyPetType.valueOf(document.getString("type")));
             pet.setLastUsed(document.getLong("last_used"));
             pet.setSaturation(((Number) document.get("hunger")).doubleValue());
-            pet.setWorldGroup(document.getString("world_group"));
             pet.wantsToRespawn = document.getBoolean("wants_to_spawn");
 
             String skillTreeName = document.getString("skilltree");

@@ -42,6 +42,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         InactiveMyPet inactiveMyPet = new InactiveMyPet(myPet.getOwner());
         inactiveMyPet.setUUID(myPet.getUUID());
         inactiveMyPet.setPetName(myPet.getPetName());
+        inactiveMyPet.setWorldGroup(myPet.getWorldGroup());
         inactiveMyPet.setExp(myPet.getExp());
         inactiveMyPet.setHealth(myPet.getHealth());
         inactiveMyPet.setSaturation(myPet.getSaturation());
@@ -50,7 +51,6 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         inactiveMyPet.setInfo(myPet.getInfo());
         inactiveMyPet.setPetType(myPet.getPetType());
         inactiveMyPet.setSkilltree(myPet.getSkilltree());
-        inactiveMyPet.setWorldGroup(myPet.getWorldGroup());
         inactiveMyPet.setLastUsed(myPet.getLastUsed());
         inactiveMyPet.wantsToRespawn = myPet.wantsToRespawn();
 
@@ -81,7 +81,6 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         myPet.setInfo(storedMyPet.getInfo());
         myPet.setLastUsed(storedMyPet.getLastUsed());
         myPet.setWantsToRespawn(storedMyPet.wantsToRespawn());
-
         myPet.getExperience().setExp(storedMyPet.getExp());
         myPet.setSkilltree(storedMyPet.getSkilltree());
         Collection<Skill> skills = myPet.getSkills().all();

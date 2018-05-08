@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -67,6 +68,9 @@ public class CommandOptionReload implements CommandOption {
                 }
             }
         }
+
+        ExperienceCalculatorManager calculatorManager = MyPetApi.getServiceManager().getService(ExperienceCalculatorManager.class).get();
+        calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE);
 
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config loaded!");
 

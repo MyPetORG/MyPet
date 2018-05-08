@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,24 +22,34 @@ package de.Keyle.MyPet.api.skill.experience;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 
-public abstract class Experience {
-    private MyPet myPet;
+public class DefaultExperienceCalculator implements ExperienceCalculator {
 
-    public Experience(MyPet myPet) {
-        this.myPet = myPet;
+    public double getExpByLevel(MyPet myPet, int level) {
+        if (level <= 1) {
+            return 0;
+        }
+        double tmpExp = 0;
+        int tmpLvl = 1;
+
+        while (tmpLvl < level) {
+            tmpExp += 7 + Math.floor((tmpLvl - 1) * 3.5);
+            tmpLvl++;
+        }
+        return tmpExp;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    @Override
+    public long getVersion() {
+        return 1;
     }
 
-    public abstract int getLevel(double exp);
+    @Override
+    public boolean isUsable() {
+        return true;
+    }
 
-    public abstract double getRequiredExp(double exp);
-
-    public abstract double getCurrentExp(double exp);
-
-    public abstract double getExpByLevel(int level);
-
-    public abstract boolean isUsable();
+    @Override
+    public String getIdentifier() {
+        return "MyPet";
+    }
 }

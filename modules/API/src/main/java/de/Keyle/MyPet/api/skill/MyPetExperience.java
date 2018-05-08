@@ -21,14 +21,15 @@
 package de.Keyle.MyPet.api.skill;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetExpEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
-import de.Keyle.MyPet.api.event.MyPetLevelEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
-import de.Keyle.MyPet.api.skill.experience.Experience;
+import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
+import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
+import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -42,95 +43,43 @@ import java.util.WeakHashMap;
 
 public class MyPetExperience {
 
-    private Experience expMode;
-    private final MyPet myPet;
-    private double exp = 0;
-    private double levelCapExp = 0;
+    @Getter protected final MyPet myPet;
+    @Getter protected int level = 1;
+    @Getter protected double exp = 0;
+    @Getter protected double maxExp = Double.MAX_VALUE;
+    protected ExperienceCache cache;
+    protected ExperienceCalculator expCalculator;
 
-    public MyPetExperience(MyPet pet, Experience expMode) {
+    public MyPetExperience(MyPet pet) {
         this.myPet = pet;
-        this.expMode = expMode;
-
-        reset();
+        this.expCalculator = MyPetApi.getServiceManager()
+                .getService(ExperienceCalculatorManager.class).get()
+                .getCalculator();
+        cache = MyPetApi.getServiceManager().getService(ExperienceCache.class).get();
     }
 
-    public void reset() {
-        levelCapExp = getExpByLevel(Configuration.LevelSystem.Experience.LEVEL_CAP);
-        exp = 0;
-        Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelEvent(myPet, getLevel()));
-    }
-
-    public void setExp(double exp) {
-        exp = Math.max(0, exp);
-        exp = Math.min(levelCapExp, exp);
-        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp);
-        Bukkit.getServer().getPluginManager().callEvent(expEvent);
-        if (expEvent.isCancelled()) {
-            return;
+    public double setMaxLevel(int level) {
+        this.maxExp = getExpByLevel(level);
+        if (this.exp > this.maxExp) {
+            return setExp(this.maxExp);
         }
-
-        int oldLvl = getLevel();
-        this.exp = expEvent.getExp();
-        int newLvl = getLevel();
-        if (oldLvl != newLvl) {
-            if (oldLvl < newLvl) {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, newLvl, oldLvl, true));
-            } else {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, newLvl, oldLvl, true));
-            }
-        }
+        return 0;
     }
 
-    public double getMaxExp() {
-        return levelCapExp;
-    }
-
-    public double getExp() {
-        return this.exp;
+    public double setExp(double exp) {
+        exp = exp - this.exp;
+        return uppdateExp(exp, true);
     }
 
     public double addExp(double exp) {
-        MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, Math.min(levelCapExp, this.exp + exp));
-        Bukkit.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return 0;
-        }
-
-        int oldLvl = getLevel();
-        this.exp = event.getExp();
-        int newLvl = getLevel();
-        if (oldLvl != newLvl) {
-            if (oldLvl < newLvl) {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, newLvl, oldLvl, false));
-            } else {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, newLvl, oldLvl, false));
-            }
-        }
-
-        return event.getNewExp() - event.getOldExp();
+        return uppdateExp(exp, false);
     }
 
     public double addExp(EntityType type) {
         MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(type);
         if (monsterExperience.getEntityType() != EntityType.UNKNOWN) {
-            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, Math.min(levelCapExp, monsterExperience.getRandomExp() + this.exp));
-            Bukkit.getServer().getPluginManager().callEvent(expEvent);
-            if (expEvent.isCancelled()) {
-                return 0;
-            }
-
-            int oldLvl = getLevel();
-            this.exp = expEvent.getExp();
-            int newLvl = getLevel();
-            if (oldLvl != newLvl) {
-                if (oldLvl < newLvl) {
-                    Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, newLvl, oldLvl, false));
-                } else {
-                    Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, newLvl, oldLvl, false));
-                }
-            }
-
-            return expEvent.getNewExp() - expEvent.getOldExp();
+            double exp = monsterExperience.getRandomExp();
+            return uppdateExp(exp, false);
         }
         return 0;
     }
@@ -139,98 +88,89 @@ public class MyPetExperience {
         MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(type);
         if (monsterExperience.getEntityType() != EntityType.UNKNOWN) {
             double exp = monsterExperience.getRandomExp() / 100. * percent;
-            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, Math.min(levelCapExp, this.exp + exp));
-            Bukkit.getServer().getPluginManager().callEvent(expEvent);
-            if (expEvent.isCancelled()) {
-                return 0;
-            }
-
-            int oldLvl = getLevel();
-            this.exp = expEvent.getExp();
-            int newLvl = getLevel();
-            if (oldLvl != newLvl) {
-                if (oldLvl < newLvl) {
-                    Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, newLvl, oldLvl, false));
-                } else {
-                    Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, newLvl, oldLvl, false));
-                }
-            }
-
-            return expEvent.getNewExp() - expEvent.getOldExp();
+            return uppdateExp(exp, false);
         }
         return 0;
     }
 
-    public void removeCurrentExp(double exp) {
+    public double removeCurrentExp(double exp) {
         if (exp > getCurrentExp()) {
             exp = getCurrentExp();
         }
-        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
-        Bukkit.getServer().getPluginManager().callEvent(expEvent);
-        if (expEvent.isCancelled()) {
-            return;
-        }
-        this.exp = expEvent.getExp();
+        return uppdateExp(-exp, false);
     }
 
-    public void removeExp(double exp) {
+    public double removeExp(double exp) {
         exp = this.exp - exp < 0 ? this.exp : exp;
-        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
+        return uppdateExp(-exp, false);
+    }
+
+    protected double uppdateExp(double exp, boolean quiet) {
+        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, exp);
         Bukkit.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
-            return;
+            return 0;
         }
 
-        int oldLvl = getLevel();
-        this.exp = expEvent.getExp();
-        int newLvl = getLevel();
-        if (oldLvl != newLvl) {
-            if (oldLvl < newLvl) {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, newLvl, oldLvl, false));
+        int oldLvl = this.level;
+        double oldExp = this.exp;
+        this.exp += expEvent.getExp();
+        this.exp = Math.max(0, Math.min(maxExp, this.exp));
+        int lvl = cache.getLevel(myPet.getWorldGroup(), myPet.getPetType(), this.exp);
+        if (lvl != 0) {
+            this.level = lvl;
+        } else {
+            this.level = calculateLevel();
+        }
+        if (oldLvl != this.level) {
+            if (oldLvl < this.level) {
+                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, this.level, oldLvl, quiet));
             } else {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, newLvl, oldLvl, false));
+                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, this.level, oldLvl, quiet));
             }
         }
+        return this.exp - oldExp;
     }
 
-    public double getCurrentExp() {
-        double currentExp = expMode.getCurrentExp(this.exp);
-        if (!expMode.isUsable()) {
-            return 0;
-        }
-        int skilltreeMaxLevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
-        if (skilltreeMaxLevel != 0 && getLevel() >= skilltreeMaxLevel) {
-            return 0;
-        }
-        return currentExp;
-    }
+    protected int calculateLevel() {
+        int currentLevel = this.level;
 
-    public int getLevel() {
-        int currentLevel = expMode.getLevel(this.exp);
-        if (!expMode.isUsable()) {
-            return 1;
-        }
-        int skilltreeMaxLevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
-        if (skilltreeMaxLevel != 0 && currentLevel > skilltreeMaxLevel) {
-            return skilltreeMaxLevel;
+        if (this.exp >= getExpByLevel(currentLevel + 1)) {
+            double expForNextLevel = getExpByLevel(currentLevel + 1);
+            while (this.exp >= expForNextLevel) {
+                expForNextLevel = getExpByLevel(++currentLevel + 1);
+            }
+        } else {
+            double expForCurrentLevel = getExpByLevel(currentLevel);
+            if (this.exp < expForCurrentLevel) {
+                while (this.exp < expForCurrentLevel) {
+                    expForCurrentLevel = getExpByLevel(--currentLevel);
+                }
+            }
         }
         return currentLevel;
     }
 
+    public double getCurrentExp() {
+        double currentLevelExp = this.getExpByLevel(level);
+        return exp - currentLevelExp;
+    }
+
     public double getRequiredExp() {
-        double requiredExp = expMode.getRequiredExp(this.exp);
-        if (!expMode.isUsable()) {
-            return 0;
-        }
-        int skilltreeMaxLevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
-        if (skilltreeMaxLevel != 0 && getLevel() >= skilltreeMaxLevel) {
-            return 0;
-        }
-        return requiredExp;
+        double requiredExp = this.getExpByLevel(level + 1);
+        double prevRequiredExp = this.getExpByLevel(level);
+        return requiredExp - prevRequiredExp;
     }
 
     public double getExpByLevel(int level) {
-        return expMode.getExpByLevel(level);
+        double exp;
+        try {
+            exp = cache.getExp(myPet.getWorldGroup(), myPet.getPetType(), level);
+        } catch (ExperienceCache.LevelNotCalculatedException e) {
+            exp = expCalculator.getExpByLevel(this.getMyPet(), level);
+            cache.insertExp(myPet.getWorldGroup(), myPet.getPetType(), level, exp);
+        }
+        return exp;
     }
 
     @SuppressWarnings("unchecked")

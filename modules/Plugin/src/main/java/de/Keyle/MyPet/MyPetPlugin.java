@@ -29,6 +29,8 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.SkillManager;
+import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
+import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
@@ -48,6 +50,7 @@ import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
+import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.Updater;
@@ -72,6 +75,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin.MyPetPlugin {
+
     private boolean isReady = false;
     private Repository repo;
     private MyPetInfo petInfo;
@@ -169,6 +173,15 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         //register leash flags
         registerLeashFlags();
+
+        //register exp calculators
+        if (!new File(getDataFolder(), "exp.js").exists()) {
+            platformHelper.copyResource(this, "exp.js", new File(getDataFolder(), "exp.js"));
+        }
+        ExperienceCalculatorManager calculatorManager = serviceManager.getService(ExperienceCalculatorManager.class).get();
+        calculatorManager.registerCalculator("JS", JavaScriptExperienceCalculator.class);
+        calculatorManager.registerCalculator("JavaScript", JavaScriptExperienceCalculator.class);
+        calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE.toLowerCase());
 
         // register event listener
         PlayerListener playerListener = new PlayerListener();
@@ -463,6 +476,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         serviceManager.registerService(RepositoryMyPetConverterService.class);
         serviceManager.registerService(ItemDatabase.class);
         serviceManager.registerService(LeashFlagManager.class);
+        serviceManager.registerService(ExperienceCache.class);
+        serviceManager.registerService(ExperienceCalculatorManager.class);
         serviceManager.registerService(SkillManager.class);
         serviceManager.registerService(SkilltreeManager.class);
         serviceManager.registerService(ShopManager.class);

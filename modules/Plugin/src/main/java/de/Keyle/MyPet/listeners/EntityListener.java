@@ -767,8 +767,8 @@ public class EntityListener implements Listener {
             if (Configuration.LevelSystem.Experience.LOSS_FIXED > 0 || Configuration.LevelSystem.Experience.LOSS_PERCENT > 0) {
                 double lostExpirience = Configuration.LevelSystem.Experience.LOSS_FIXED;
                 lostExpirience += myPet.getExperience().getRequiredExp() * Configuration.LevelSystem.Experience.LOSS_PERCENT / 100;
-                if (lostExpirience > myPet.getExperience().getCurrentExp()) {
-                    lostExpirience = myPet.getExperience().getCurrentExp();
+                if (lostExpirience > myPet.getExp()) {
+                    lostExpirience = myPet.getExp();
                 }
                 if (myPet.getSkilltree() != null) {
                     int requiredLevel = myPet.getSkilltree().getRequiredLevel();
@@ -777,13 +777,13 @@ public class EntityListener implements Listener {
                         lostExpirience = myPet.getExp() - lostExpirience < minExp ? myPet.getExp() - minExp : lostExpirience;
                     }
                 }
-                if (Configuration.LevelSystem.Experience.DROP_LOST_EXP) {
-                    event.setDroppedExp((int) (lostExpirience + 0.5));
-                }
                 if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE) {
-                    myPet.getExperience().removeExp(lostExpirience);
+                    lostExpirience = myPet.getExperience().removeExp(lostExpirience);
                 } else {
-                    myPet.getExperience().removeCurrentExp(lostExpirience);
+                    lostExpirience = myPet.getExperience().removeCurrentExp(lostExpirience);
+                }
+                if (Configuration.LevelSystem.Experience.DROP_LOST_EXP && lostExpirience < 0) {
+                    event.setDroppedExp((int) (Math.abs(lostExpirience)));
                 }
             }
             if (myPet.getSkills().isActive(Backpack.class)) {

@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
-import de.Keyle.MyPet.api.skill.experience.Experience;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
@@ -42,8 +41,6 @@ import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
-import de.Keyle.MyPet.skill.experience.Default;
-import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.Keyle.MyPet.skill.skills.LifeImpl;
@@ -60,7 +57,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scoreboard.Team;
 
-import java.io.File;
 import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
@@ -71,7 +67,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected String petName;
     protected double health;
     protected int respawnTime = 0;
-    protected int hungerTime = 0;
+    protected int hungerTime;
     protected double saturation = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
@@ -132,21 +128,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
         this.petOwner = petOwner;
         skills = new Skills(this);
-
-        Experience expMode = null;
-        if (Configuration.LevelSystem.CALCULATION_MODE.equalsIgnoreCase("JS") || Configuration.LevelSystem.CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
-            if (!new File(MyPetApi.getPlugin().getDataFolder(), "rhino.jar").exists()) {
-                MyPetApi.getLogger().warning("rhino.jar is missing. Please download it here (https://github.com/mozilla/rhino/releases) and put it into the MyPet folder.");
-            } else {
-                expMode = new JavaScript(this);
-            }
-        }
-        if (expMode == null || !expMode.isUsable()) {
-            expMode = new Default(this);
-            Configuration.LevelSystem.CALCULATION_MODE = "Default";
-        }
-
-        experience = new MyPetExperience(this, expMode);
+        experience = new MyPetExperience(this);
         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
         petName = Translation.getString("Name." + getPetType().name(), this.petOwner);
     }
@@ -415,6 +397,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             worldGroup = "default";
         }
         this.worldGroup = worldGroup;
+        experience.setMaxLevel(Configuration.LevelSystem.Experience.LEVEL_CAP);
     }
 
     public SpawnFlags createEntity() {

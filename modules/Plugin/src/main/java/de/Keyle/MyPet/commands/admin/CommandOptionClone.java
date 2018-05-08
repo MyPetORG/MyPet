@@ -85,6 +85,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         MyPet oldPet = oldPetOwner.getMyPet();
         final InactiveMyPet newPet = new InactiveMyPet(newPetOwner);
         newPet.setPetName(oldPet.getPetName());
+        newPet.setWorldGroup(oldPet.getWorldGroup());
         newPet.setExp(oldPet.getExperience().getExp());
         newPet.setHealth(oldPet.getHealth());
         newPet.setSaturation(oldPet.getSaturation());
@@ -92,7 +93,6 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         newPet.setInfo(oldPet.getInfo());
         newPet.setPetType(oldPet.getPetType());
         newPet.setSkilltree(oldPet.getSkilltree());
-        newPet.setWorldGroup(oldPet.getWorldGroup());
         newPet.setSkills(oldPet.getSkillInfo());
 
         MyPetSaveEvent event = new MyPetSaveEvent(newPet);
