@@ -356,6 +356,7 @@ public class SqLiteRepository implements Repository {
                 next = true;
                 InactiveMyPet pet = new InactiveMyPet(owner);
                 pet.setUUID(UUID.fromString(resultSet.getString("uuid")));
+                pet.setWorldGroup(resultSet.getString("world_group"));
                 pet.setExp(resultSet.getDouble("exp"));
                 pet.setHealth(resultSet.getDouble("health"));
                 pet.setRespawnTime(resultSet.getInt("respawn_time"));
@@ -363,7 +364,6 @@ public class SqLiteRepository implements Repository {
                 pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
                 pet.setLastUsed(resultSet.getLong("last_used"));
                 pet.setSaturation(resultSet.getDouble("hunger"));
-                pet.setWorldGroup(resultSet.getString("world_group"));
                 pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
 
                 String skillTreeName = resultSet.getString("skilltree");
@@ -409,6 +409,7 @@ public class SqLiteRepository implements Repository {
 
                 InactiveMyPet pet = new InactiveMyPet(owner);
                 pet.setUUID(UUID.fromString(resultSet.getString("uuid")));
+                pet.setWorldGroup(resultSet.getString("world_group"));
                 pet.setExp(resultSet.getDouble("exp"));
                 pet.setHealth(resultSet.getDouble("health"));
                 pet.setRespawnTime(resultSet.getInt("respawn_time"));
@@ -416,7 +417,6 @@ public class SqLiteRepository implements Repository {
                 pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
                 pet.setLastUsed(resultSet.getLong("last_used"));
                 pet.setSaturation(resultSet.getInt("hunger"));
-                pet.setWorldGroup(resultSet.getString("world_group"));
                 pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
 
                 String skillTreeName = resultSet.getString("skilltree");

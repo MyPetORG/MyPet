@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,13 +31,11 @@ public class MyPetExpEvent extends Event implements Cancellable {
 
     private final MyPet myPet;
     private boolean isCancelled = false;
-    private double oldExp;
-    private double newExp;
+    private double exp;
 
-    public MyPetExpEvent(MyPet myPet, double oldExp, double newExp) {
+    public MyPetExpEvent(MyPet myPet, double exp) {
         this.myPet = myPet;
-        this.oldExp = oldExp;
-        this.newExp = newExp;
+        this.exp = exp;
     }
 
     public MyPetPlayer getOwner() {
@@ -48,24 +46,12 @@ public class MyPetExpEvent extends Event implements Cancellable {
         return myPet;
     }
 
-    public double getOldExp() {
-        return oldExp;
-    }
-
-    public double getNewExp() {
-        return newExp;
-    }
-
-    public void setNewEXP(double newExp) {
-        this.newExp = newExp;
+    public void setExp(double exp) {
+        this.exp = exp;
     }
 
     public double getExp() {
-        if (isCancelled) {
-            return oldExp;
-        } else {
-            return newExp;
-        }
+        return exp;
     }
 
     public boolean isCancelled() {
