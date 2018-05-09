@@ -44,7 +44,6 @@ import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
-import de.Keyle.MyPet.api.skill.skills.Damage;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
@@ -183,14 +182,12 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Translation.getString("Name.Respawntime", damager) + ": " + myPet.getRespawnTime());
                         infoShown = true;
                     }
-                    if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
-                        double damage = (myPet.getSkills().isActive(Damage.class) ? myPet.getSkills().get(Damage.class).getDamage().getValue().doubleValue() : 0);
-                        damager.sendMessage("   " + Translation.getString("Name.Damage", damager) + ": " + String.format("%1.2f", damage));
+                    if (myPet.getDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
+                        damager.sendMessage("   " + Translation.getString("Name.Damage", damager) + ": " + String.format("%1.2f", myPet.getDamage()));
                         infoShown = true;
                     }
                     if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet)) {
-                        double damage = myPet.getRangedDamage();
-                        damager.sendMessage("   " + Translation.getString("Name.RangedDamage", damager) + ": " + String.format("%1.2f", damage));
+                        damager.sendMessage("   " + Translation.getString("Name.RangedDamage", damager) + ": " + String.format("%1.2f", myPet.getRangedDamage()));
                         infoShown = true;
                     }
                     if (myPet.getSkills().has(Behavior.class) && CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {

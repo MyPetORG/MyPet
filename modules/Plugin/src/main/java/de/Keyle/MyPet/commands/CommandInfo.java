@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import de.Keyle.MyPet.skill.skills.DamageImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -122,14 +121,12 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         infoShown = true;
                     }
                 }
-                if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, player, myPet)) {
-                    double damage = (myPet.getSkills().isActive(DamageImpl.class) ? myPet.getSkills().get(DamageImpl.class).getDamage().getValue().doubleValue() : 0);
-                    player.sendMessage("   " + Translation.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
+                if (myPet.getDamage() > 0 && canSee(PetInfoDisplay.Damage.adminOnly, player, myPet)) {
+                    player.sendMessage("   " + Translation.getString("Name.Damage", player) + ": " + String.format("%1.2f", myPet.getDamage()));
                     infoShown = true;
                 }
-                if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, player, myPet)) {
-                    double damage = myPet.getRangedDamage();
-                    player.sendMessage("   " + Translation.getString("Name.RangedDamage", player) + ": " + String.format("%1.2f", damage));
+                if (myPet.getRangedDamage() > 0 && canSee(PetInfoDisplay.RangedDamage.adminOnly, player, myPet)) {
+                    player.sendMessage("   " + Translation.getString("Name.RangedDamage", player) + ": " + String.format("%1.2f", myPet.getRangedDamage()));
                     infoShown = true;
                 }
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, player, myPet)) {
