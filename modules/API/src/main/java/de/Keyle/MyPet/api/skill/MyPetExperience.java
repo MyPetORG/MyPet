@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -75,18 +74,18 @@ public class MyPetExperience {
         return uppdateExp(exp, false);
     }
 
-    public double addExp(EntityType type) {
-        MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(type);
-        if (monsterExperience.getEntityType() != EntityType.UNKNOWN) {
+    public double addExp(Entity entity) {
+        MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(entity);
+        if (monsterExperience != MonsterExperience.UNKNOWN) {
             double exp = monsterExperience.getRandomExp();
             return uppdateExp(exp, false);
         }
         return 0;
     }
 
-    public double addExp(EntityType type, int percent) {
-        MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(type);
-        if (monsterExperience.getEntityType() != EntityType.UNKNOWN) {
+    public double addExp(Entity entity, int percent) {
+        MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(entity);
+        if (monsterExperience != MonsterExperience.UNKNOWN) {
             double exp = monsterExperience.getRandomExp() / 100. * percent;
             return uppdateExp(exp, false);
         }
