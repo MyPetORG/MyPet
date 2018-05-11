@@ -186,15 +186,37 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
+
+        config.options().copyDefaults(true);
+        MyPetApi.getPlugin().saveConfig();
+
+        File expConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "exp-config.yml");
+        config = new YamlConfiguration();
+
+        if (expConfigFile.exists()) {
+            try {
+                config.load(expConfigFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            config.addDefault("Custom.Big Boss.Max", 300.0);
+            config.addDefault("Custom.Big Boss.Min", 150.0);
+        }
+
         for (EntityType entityType : EntityType.values()) {
             if (MonsterExperience.mobExp.containsKey(entityType.name())) {
-                config.addDefault("MyPet.Exp.Active." + entityType.name() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
-                config.addDefault("MyPet.Exp.Active." + entityType.name() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
+                config.addDefault("Default." + entityType.name() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
+                config.addDefault("Default." + entityType.name() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
             }
         }
 
         config.options().copyDefaults(true);
-        MyPetApi.getPlugin().saveConfig();
+        try {
+            config.save(expConfigFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         File petConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
         config = new YamlConfiguration();
@@ -412,16 +434,44 @@ public class ConfigurationLoader {
             }
         }
 
+        File expConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath(), "exp-config.yml");
+        if (expConfigFile.exists()) {
+            YamlConfiguration ymlcnf = new YamlConfiguration();
+            try {
+                ymlcnf.load(expConfigFile);
+                config = ymlcnf;
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
+
         for (EntityType entityType : EntityType.values()) {
             if (MonsterExperience.mobExp.containsKey(entityType.name())) {
-                double max = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Max", 0.);
-                double min = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Min", 0.);
+                double max = config.getDouble("Default." + entityType.name() + ".Max", 0.);
+                double min = config.getDouble("Default." + entityType.name() + ".Min", 0.);
                 if (min == max) {
-                    MonsterExperience.getMonsterExperience(entityType).setExp(max);
+                    MonsterExperience.getMonsterExperience(entityType.name()).setExp(max);
                 } else {
                     MonsterExperience.getMonsterExperience(entityType).setMin(min);
                     MonsterExperience.getMonsterExperience(entityType).setMax(max);
                 }
+            }
+        }
+        ConfigurationSection customExpSection = config.getConfigurationSection("Custom");
+        MonsterExperience.customMobExp.clear();
+        if (customExpSection != null) {
+            for (String name : customExpSection.getKeys(false)) {
+                MyPetApi.getLogger().info("custom entity name: " + name);
+                MonsterExperience exp = new MonsterExperience(0, 0, name);
+                double max = config.getDouble("Custom." + name + ".Max", 0.);
+                double min = config.getDouble("Custom." + name + ".Min", 0.);
+                if (min == max) {
+                    exp.setExp(max);
+                } else {
+                    exp.setMin(min);
+                    exp.setMax(max);
+                }
+                MonsterExperience.addCustomExperience(exp);
             }
         }
 
@@ -534,6 +584,21 @@ public class ConfigurationLoader {
         }
         if (config.contains("MyPet.Backup")) {
             config.getConfigurationSection("MyPet").set("Backup", null);
+        }
+        if (config.contains("MyPet.Exp.Active")) {
+            for (EntityType entityType : EntityType.values()) {
+                if (MonsterExperience.mobExp.containsKey(entityType.name())) {
+                    double max = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Max", 0.);
+                    double min = config.getDouble("MyPet.Exp.Active." + entityType.name() + ".Min", 0.);
+                    if (min == max) {
+                        MonsterExperience.getMonsterExperience(entityType).setExp(max);
+                    } else {
+                        MonsterExperience.getMonsterExperience(entityType).setMin(min);
+                        MonsterExperience.getMonsterExperience(entityType).setMax(max);
+                    }
+                }
+            }
+            config.getConfigurationSection("MyPet.Exp").set("Active", null);
         }
 
         MyPetApi.getPlugin().saveConfig();

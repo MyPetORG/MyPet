@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,14 +20,17 @@
 
 package de.Keyle.MyPet.api.skill.experience;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MonsterExperience {
+
     public static final Map<String, MonsterExperience> mobExp = new HashMap<>();
-    private static MonsterExperience unknown = new MonsterExperience(0., "UNKNOWN");
+    public static final Map<String, MonsterExperience> customMobExp = new HashMap<>();
+    public static MonsterExperience UNKNOWN = new MonsterExperience(0., "UNKNOWN");
 
     static {
         mobExp.put("SKELETON", new MonsterExperience(5., "SKELETON"));
@@ -79,12 +82,12 @@ public class MonsterExperience {
         mobExp.put("HUSK", new MonsterExperience(5, "HUSK"));
         mobExp.put("STRAY", new MonsterExperience(5, "STRAY"));
     }
-    
+
     private double min;
     private double max;
-    private String entityType;
+    private String identifier;
 
-    public MonsterExperience(double min, double max, String entityType) {
+    public MonsterExperience(double min, double max, String identifier) {
         if (max >= min) {
             this.max = max;
             this.min = min;
@@ -92,13 +95,13 @@ public class MonsterExperience {
             this.max = min;
             this.min = max;
         }
-        this.entityType = entityType;
+        this.identifier = identifier;
     }
 
-    public MonsterExperience(double exp, String entityType) {
+    public MonsterExperience(double exp, String identifier) {
         this.max = exp;
         this.min = exp;
-        this.entityType = entityType;
+        this.identifier = identifier;
     }
 
     public double getRandomExp() {
@@ -113,8 +116,8 @@ public class MonsterExperience {
         return max;
     }
 
-    public EntityType getEntityType() {
-        return EntityType.valueOf(entityType);
+    public String getIdentifier() {
+        return identifier;
     }
 
     public void setMin(double min) {
@@ -135,19 +138,46 @@ public class MonsterExperience {
         max = (min = exp);
     }
 
+    public static void addCustomExperience(MonsterExperience experience) {
+        customMobExp.put(experience.identifier, experience);
+    }
+
     private static double doubleRandom(double low, double high) {
         return Math.random() * (high - low) + low;
     }
 
     @Override
     public String toString() {
-        return entityType + "{min=" + min + ", max=" + max + "}";
+        return identifier + "{min=" + min + ", max=" + max + "}";
+    }
+
+    public static MonsterExperience getMonsterExperience(Entity entity) {
+        String name = entity.getCustomName();
+        if (name != null) {
+            if (customMobExp.containsKey(name)) {
+                return customMobExp.get(name);
+            }
+        }
+        if (mobExp.containsKey(entity.getType().name())) {
+            return mobExp.get(entity.getType().name());
+        }
+        return UNKNOWN;
     }
 
     public static MonsterExperience getMonsterExperience(EntityType type) {
         if (mobExp.containsKey(type.name())) {
             return mobExp.get(type.name());
         }
-        return unknown;
+        return UNKNOWN;
+    }
+
+    public static MonsterExperience getMonsterExperience(String identifier) {
+        if (customMobExp.containsKey(identifier)) {
+            return customMobExp.get(identifier);
+        }
+        if (mobExp.containsKey(identifier)) {
+            return mobExp.get(identifier);
+        }
+        return UNKNOWN;
     }
 }
