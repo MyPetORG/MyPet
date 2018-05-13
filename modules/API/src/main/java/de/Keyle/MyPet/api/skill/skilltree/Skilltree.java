@@ -120,12 +120,15 @@ public class Skilltree {
         return permission;
     }
 
-    public boolean hasCustomPermissions() {
-        return permission != null;
-    }
-
     public void setPermission(String permission) {
         this.permission = permission;
+    }
+
+    public String getFullPermission() {
+        if (permission == null) {
+            return "MyPet.skilltree." + skillTreeName;
+        }
+        return "MyPet.skilltree." + permission;
     }
 
     public int getOrder() {
