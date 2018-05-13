@@ -272,7 +272,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         // register skilltree permissions
         for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
             try {
-                Bukkit.getPluginManager().addPermission(new Permission(skilltree.getPermission()));
+                Bukkit.getPluginManager().addPermission(new Permission(skilltree.getFullPermission()));
             } catch (Exception ignored) {
             }
         }

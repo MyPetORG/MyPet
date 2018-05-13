@@ -74,7 +74,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         skilltreeName = skilltreeName.substring(0, skilltreeName.length() - 1);
                         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
                             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
-                            if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getPermission())) {
+                            if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getFullPermission())) {
                                 int requiredLevel = skilltree.getRequiredLevel();
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
@@ -107,7 +107,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                 } else {
                     List<Skilltree> availableSkilltrees = new ArrayList<>();
                     for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
-                        if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getPermission())) {
+                        if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getFullPermission())) {
                             availableSkilltrees.add(skilltree);
                         }
                     }
