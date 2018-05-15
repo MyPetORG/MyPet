@@ -43,12 +43,10 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Zombie;
 import org.json.simple.JSONObject;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 @Compat("v1_12_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
-    Field EntityPlayer_locale_FIELD = ReflectionUtil.getField(EntityPlayer.class, "locale");
 
     /**
      * @param location   the {@link Location} around which players must be to see the effect
