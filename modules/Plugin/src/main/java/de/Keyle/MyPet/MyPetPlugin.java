@@ -113,11 +113,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         // load version from manifest
         MyPetVersion.reset();
 
+        compatUtil = new CompatUtil();
+
         ConfigurationLoader.upgradeConfig();
         ConfigurationLoader.setDefault();
         ConfigurationLoader.loadConfiguration();
 
-        compatUtil = new CompatUtil();
         serviceManager = new ServiceManager();
         pluginHookManager = new PluginHookManager();
 

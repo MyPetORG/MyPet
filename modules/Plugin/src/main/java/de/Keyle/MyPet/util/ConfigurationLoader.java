@@ -212,6 +212,9 @@ public class ConfigurationLoader {
         config.options().copyHeader(true);
 
         for (MyPetType petType : MyPetType.values()) {
+            if (!petType.checkMinecraftVersion()) {
+                continue;
+            }
             DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
             if (pi == null) {
                 continue;
@@ -235,7 +238,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
-        config.addDefault("MyPet.Pets.Llama.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
@@ -245,7 +247,12 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", Material.POTION.getId());
+        if (MyPetType.Rabbit.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", Material.POTION.getId());
+        }
+        if (MyPetType.Llama.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Llama.GrowUpItem", Material.POTION.getId());
+        }
 
         config.options().copyDefaults(true);
         try {
