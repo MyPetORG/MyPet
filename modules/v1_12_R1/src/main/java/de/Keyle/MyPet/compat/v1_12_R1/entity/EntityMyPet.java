@@ -37,6 +37,7 @@ import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.compat.v1_12_R1.PlatformHelper;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.ai.attack.RangedAttack;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.ai.movement.*;
@@ -69,6 +70,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
+
     protected static final DataWatcherObject<Byte> potionParticleWatcher = at;
 
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
@@ -979,7 +981,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      */
     protected void p(Entity entity) {
         super.p(entity);
-        if (!(this instanceof IJumpable)) {
+        PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
+        if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), entity.getBoundingBox())) {
+            entity.a(this, true);
+        } else {
             entity.setPosition(locX, locY, locZ);
         }
     }
