@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.NameFilter;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -174,8 +175,8 @@ public class ConfigurationLoader {
                 e.printStackTrace();
             }
         } else {
-            config.addDefault("Custom.Big Boss.Max", 300.0);
-            config.addDefault("Custom.Big Boss.Min", 150.0);
+            config.addDefault("Custom." + ChatColor.RED + "Big Boss.Max", 300.0);
+            config.addDefault("Custom." + ChatColor.RED + "Big Boss.Min", 150.0);
         }
 
         for (EntityType entityType : EntityType.values()) {
@@ -412,7 +413,6 @@ public class ConfigurationLoader {
         MonsterExperience.customMobExp.clear();
         if (customExpSection != null) {
             for (String name : customExpSection.getKeys(false)) {
-                MyPetApi.getLogger().info("custom entity name: " + name);
                 MonsterExperience exp = new MonsterExperience(0, 0, name);
                 double max = config.getDouble("Custom." + name + ".Max", 0.);
                 double min = config.getDouble("Custom." + name + ".Min", 0.);
