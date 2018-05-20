@@ -82,7 +82,6 @@ public class BehaviorImpl implements Behavior {
         behaviorCycler = Iterables.cycle(activeBehaviors).iterator();
         //noinspection StatementWithEmptyBody
         while (behaviorCycler.next() != selectedBehavior) {
-            ;
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -143,12 +143,10 @@ public class EntityMyZombieVillager extends EntityMyPet {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
         this.datawatcher.set(professionWatcher, getMyPet().getProfession());
 
-        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), new Runnable() {
-            public void run() {
-                if (getMyPet().getStatus() == MyPet.PetState.Here) {
-                    for (EquipmentSlot slot : EquipmentSlot.values()) {
-                        setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
-                    }
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
                 }
             }
         }, 5L);

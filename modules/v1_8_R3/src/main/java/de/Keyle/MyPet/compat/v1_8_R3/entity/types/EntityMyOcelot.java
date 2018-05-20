@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -106,18 +106,18 @@ public class EntityMyOcelot extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Byte((byte) 0));     // age
-        this.datawatcher.a(16, new Byte((byte) 0)); // tamed/sitting
+        this.datawatcher.a(12, (byte) 0);     // age
+        this.datawatcher.a(16, (byte) 0); // tamed/sitting
         this.datawatcher.a(17, "");                 // ownername
-        this.datawatcher.a(18, new Byte((byte) 0)); // cat type
+        this.datawatcher.a(18, (byte) 0); // cat type
     }
 
     @Override
     public void updateVisuals() {
         if (getMyPet().isBaby()) {
-            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.MIN_VALUE);
         } else {
-            this.datawatcher.watch(12, new Byte((byte) 0));
+            this.datawatcher.watch(12, (byte) 0);
         }
         this.datawatcher.watch(18, (byte) getMyPet().getCatType().ordinal());
     }

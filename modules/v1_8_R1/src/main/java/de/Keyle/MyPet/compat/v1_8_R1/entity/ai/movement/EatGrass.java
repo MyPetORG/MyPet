@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -62,6 +62,7 @@ public class EatGrass implements AIGoal {
 
         BlockPosition blockposition = new BlockPosition(blockLocX, blockLocY, blockLocZ);
 
+        //noinspection unchecked
         return TALL_GRASS.apply(this.world.getType(blockposition)) || this.world.getType(blockposition.down()).getBlock() == Blocks.GRASS;
     }
 
@@ -90,6 +91,7 @@ public class EatGrass implements AIGoal {
             int blockLocZ = MathHelper.floor(this.entityMySheep.locZ);
 
             BlockPosition blockAt = new BlockPosition(blockLocX, blockLocY, blockLocZ);
+            //noinspection unchecked
             if (TALL_GRASS.apply(this.world.getType(blockAt))) {
                 if (!CraftEventFactory.callEntityChangeBlockEvent(
                         this.entityMySheep,

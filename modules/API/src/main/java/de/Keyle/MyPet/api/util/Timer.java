@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -47,25 +47,19 @@ public class Timer {
     public static void startTimer() {
         stopTimer();
 
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
-            public void run() {
-                for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-                    myPet.schedule();
-                }
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+            for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
+                myPet.schedule();
             }
         }, 0L, 20L));
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
-            public void run() {
-                for (Scheduler task : tasksToSchedule) {
-                    task.schedule();
-                }
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+            for (Scheduler task : tasksToSchedule) {
+                task.schedule();
             }
         }, 5L, 20L));
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
-            public void run() {
-                for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-                    player.schedule();
-                }
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+            for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
+                player.schedule();
             }
         }, 10L, 20L));
     }

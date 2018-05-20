@@ -900,12 +900,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         if (this.bi > 0 && !this.bA()) {
-            double d0 = this.locX + (this.bj - this.locX) / (double) this.bi;
-            double d1 = this.locY + (this.bk - this.locY) / (double) this.bi;
-            double d2 = this.locZ + (this.bl - this.locZ) / (double) this.bi;
+            double d0 = this.locX + (this.bj - this.locX) / this.bi;
+            double d1 = this.locY + (this.bk - this.locY) / this.bi;
+            double d2 = this.locZ + (this.bl - this.locZ) / this.bi;
             double d3 = MathHelper.g(this.bm - (double) this.yaw);
-            this.yaw = (float) ((double) this.yaw + d3 / (double) this.bi);
-            this.pitch = (float) ((double) this.pitch + (this.bm - (double) this.pitch) / (double) this.bi);
+            this.yaw = (float) ((double) this.yaw + d3 / this.bi);
+            this.pitch = (float) ((double) this.pitch + (this.bm - (double) this.pitch) / this.bi);
             --this.bi;
             this.setPosition(d0, d1, d2);
             this.setYawPitch(this.yaw, this.pitch);

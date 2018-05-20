@@ -403,6 +403,7 @@ public class Util {
                 return;
             }
             if (type.isAssignableFrom(clazz)) {
+                //noinspection unchecked
                 result.add(clazz);
             }
             getClassParents(clazz.getSuperclass(), type, result);

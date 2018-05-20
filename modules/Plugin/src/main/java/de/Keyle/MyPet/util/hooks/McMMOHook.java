@@ -37,7 +37,6 @@ import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @PluginHookName("mcMMO")
@@ -79,12 +78,8 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
     public List<Player> getPartyMembers(Player player) {
         try {
             if (PartyAPI.inParty(player)) {
-                List<Player> members = new ArrayList<>();
                 String partyName = PartyAPI.getPartyName(player);
-                for (Player member : PartyAPI.getOnlineMembers(partyName)) {
-                    members.add(member);
-                }
-                return members;
+                return PartyAPI.getOnlineMembers(partyName);
             }
         } catch (Throwable ignored) {
         }

@@ -49,9 +49,9 @@ public class EntityMyHorse extends EntityMyPet {
     private void applyVisual(int value, boolean flag) {
         int i = this.datawatcher.getInt(16);
         if (flag) {
-            this.datawatcher.watch(16, Integer.valueOf(i | value));
+            this.datawatcher.watch(16, i | value);
         } else {
-            this.datawatcher.watch(16, Integer.valueOf(i & (~value)));
+            this.datawatcher.watch(16, i & (~value));
         }
     }
 
@@ -206,24 +206,24 @@ public class EntityMyHorse extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, Byte.valueOf((byte) 0)); // age
-        this.datawatcher.a(16, Integer.valueOf(0));     // saddle & chest
-        this.datawatcher.a(19, Byte.valueOf((byte) 0)); // horse type
-        this.datawatcher.a(20, Integer.valueOf(0));     // variant
+        this.datawatcher.a(12, (byte) 0); // age
+        this.datawatcher.a(16, 0);     // saddle & chest
+        this.datawatcher.a(19, (byte) 0); // horse type
+        this.datawatcher.a(20, 0);     // variant
         this.datawatcher.a(21, String.valueOf(""));     // N/A
-        this.datawatcher.a(22, Integer.valueOf(0));     // armor
+        this.datawatcher.a(22, 0);     // armor
     }
 
     @Override
     public void updateVisuals() {
         if (getMyPet().isBaby()) {
-            this.datawatcher.watch(12, Byte.valueOf((byte) MathHelper.clamp(-24000, -1, 1)));
+            this.datawatcher.watch(12, (byte) MathHelper.clamp(-24000, -1, 1));
         } else {
-            this.datawatcher.watch(12, new Byte((byte) 0));
+            this.datawatcher.watch(12, (byte) 0);
         }
-        this.datawatcher.watch(22, Integer.valueOf(getHorseArmorId(getMyPet().getArmor())));
-        this.datawatcher.watch(19, Byte.valueOf(getMyPet().getHorseType()));
-        this.datawatcher.watch(20, Integer.valueOf(getMyPet().getVariant()));
+        this.datawatcher.watch(22, getHorseArmorId(getMyPet().getArmor()));
+        this.datawatcher.watch(19, getMyPet().getHorseType());
+        this.datawatcher.watch(20, getMyPet().getVariant());
         applyVisual(8, getMyPet().hasChest());
         applyVisual(4, getMyPet().hasSaddle());
     }

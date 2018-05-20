@@ -108,14 +108,12 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         }
 
         Item item = null;
-        if (splitData.length >= 1) {
-            if (Util.isInt(splitData[0])) {
-                int itemId = Integer.parseInt(splitData[0]);
-                item = Item.getById(itemId);
-            } else {
-                MinecraftKey key = new MinecraftKey(splitData[0]);
-                item = Item.REGISTRY.get(key);
-            }
+        if (Util.isInt(splitData[0])) {
+            int itemId = Integer.parseInt(splitData[0]);
+            item = Item.getById(itemId);
+        } else {
+            MinecraftKey key = new MinecraftKey(splitData[0]);
+            item = Item.REGISTRY.get(key);
         }
         if (item != null) {
             int itemDamage = 0;

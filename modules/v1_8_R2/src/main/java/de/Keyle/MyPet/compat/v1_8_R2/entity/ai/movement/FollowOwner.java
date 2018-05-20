@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -155,7 +155,7 @@ public class FollowOwner implements AIGoal {
             if (owner.getAttributeMap().a(GenericAttributes.d) != null) {
                 walkSpeed += owner.getAttributeMap().a(GenericAttributes.d).getValue();
             }
-        } else if (owner.vehicle != null && owner.vehicle instanceof EntityLiving) {
+        } else if (owner.vehicle instanceof EntityLiving) {
             // adjust the speed to the pet can catch up with the vehicle the player is in
             AttributeInstance vehicleSpeedAttribute = ((EntityLiving) owner.vehicle).getAttributeMap().a(GenericAttributes.d);
             if (vehicleSpeedAttribute != null) {

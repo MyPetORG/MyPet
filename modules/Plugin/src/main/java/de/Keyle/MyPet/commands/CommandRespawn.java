@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -69,38 +69,36 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                if (args.length >= 1) {
-                    if (args[0].equalsIgnoreCase("AUTO")) {
-                        if (args.length >= 2) {
-                            if (Util.isInt(args[1])) {
-                                myPet.getOwner().setAutoRespawnMin(Integer.parseInt(args[1]));
-                                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.AutoMin", petOwner), args[1]));
-                            }
-                        } else {
-                            myPet.getOwner().setAutoRespawnEnabled(!myPet.getOwner().hasAutoRespawnEnabled());
-                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Auto", petOwner), Translation.getString("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
+                if (args[0].equalsIgnoreCase("AUTO")) {
+                    if (args.length >= 2) {
+                        if (Util.isInt(args[1])) {
+                            myPet.getOwner().setAutoRespawnMin(Integer.parseInt(args[1]));
+                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.AutoMin", petOwner), args[1]));
                         }
-                    } else if (args[0].equalsIgnoreCase("pay")) {
-                        if (myPet.getStatus() == PetState.Dead) {
-                            if (MyPetApi.getHookHelper().getEconomy().canPay(myPet.getOwner(), costs)) {
-                                MyPetApi.getHookHelper().getEconomy().pay(myPet.getOwner(), costs);
-                                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
-                                myPet.setRespawnTime(1);
-                            } else {
-                                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
-                            }
-                        } else {
-                            myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
-                        }
-                    } else if (args[0].equalsIgnoreCase("show")) {
-                        String costsString;
-                        if (myPet.getStatus() != PetState.Dead) {
-                            costsString = "-";
-                        } else {
-                            costsString = costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
-                        }
-                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
+                    } else {
+                        myPet.getOwner().setAutoRespawnEnabled(!myPet.getOwner().hasAutoRespawnEnabled());
+                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Auto", petOwner), Translation.getString("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
                     }
+                } else if (args[0].equalsIgnoreCase("pay")) {
+                    if (myPet.getStatus() == PetState.Dead) {
+                        if (MyPetApi.getHookHelper().getEconomy().canPay(myPet.getOwner(), costs)) {
+                            MyPetApi.getHookHelper().getEconomy().pay(myPet.getOwner(), costs);
+                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                            myPet.setRespawnTime(1);
+                        } else {
+                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                        }
+                    } else {
+                        myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
+                    }
+                } else if (args[0].equalsIgnoreCase("show")) {
+                    String costsString;
+                    if (myPet.getStatus() != PetState.Dead) {
+                        costsString = "-";
+                    } else {
+                        costsString = costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
+                    }
+                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
                 }
             } else {
                 sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));

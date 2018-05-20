@@ -942,6 +942,7 @@ public class SqLiteRepository implements Repository {
 
                     JSONObject multiWorldObject = new JSONObject();
                     for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
+                        //noinspection unchecked
                         multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                     }
                     statement.setString(10, multiWorldObject.toJSONString());

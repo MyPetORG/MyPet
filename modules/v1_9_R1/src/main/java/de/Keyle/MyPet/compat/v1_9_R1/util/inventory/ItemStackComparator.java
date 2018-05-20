@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -129,7 +129,7 @@ public class ItemStackComparator {
         if (i1.hasItemMeta() && i2.hasItemMeta()) {
             NBTTagCompound tag1 = CraftItemStack.asNMSCopy(i1).getTag();
             NBTTagCompound tag2 = CraftItemStack.asNMSCopy(i2).getTag();
-            return tag1 != null && tag2 != null && tag1.equals(tag2);
+            return tag1 != null && tag1.equals(tag2);
         }
         return i1.hasItemMeta() == i2.hasItemMeta();
     }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(16, new Byte((byte) 1)); //size
+        this.datawatcher.a(16, (byte) 1); //size
     }
 
     public void onLivingUpdate() {
@@ -70,7 +70,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
     @Override
     public void updateVisuals() {
         int size = Math.max(1, getMyPet().getSize());
-        this.datawatcher.watch(16, new Byte((byte) size));
+        this.datawatcher.watch(16, (byte) size);
         EntitySize es = EntityMyMagmaCube.class.getAnnotation(EntitySize.class);
         if (es != null) {
             this.a(es.width() * size, es.width() * size);

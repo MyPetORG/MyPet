@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ import java.util.*;
 
 public class CommandAdmin implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<>();
-    public final static List<String> EMPTY_LIST = Collections.unmodifiableList(new ArrayList<String>());
+    public final static List<String> EMPTY_LIST = Collections.unmodifiableList(new ArrayList<>());
     public static final Map<String, CommandOption> COMMAND_OPTIONS = new HashMap<>();
 
     public CommandAdmin() {

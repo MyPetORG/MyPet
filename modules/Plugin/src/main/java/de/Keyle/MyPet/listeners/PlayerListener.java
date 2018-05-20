@@ -60,7 +60,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
@@ -87,7 +86,7 @@ public class PlayerListener implements Listener {
                         myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                         return;
                     }
-                    Block block = event.getPlayer().getTargetBlock((Set<Material>) null, 100);
+                    Block block = event.getPlayer().getTargetBlock(null, 100);
                     if (block != null && block.getType() != Material.AIR) {
                         if (!block.getType().isSolid()) {
                             block = block.getRelative(BlockFace.DOWN);

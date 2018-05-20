@@ -111,13 +111,11 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         }
 
         Item item = null;
-        if (splitData.length >= 1) {
-            if (Util.isInt(splitData[0])) {
-                int itemId = Integer.parseInt(splitData[0]);
-                item = Item.getById(itemId);
-            } else {
-                item = (Item) Item.REGISTRY.get(splitData[0]);
-            }
+        if (Util.isInt(splitData[0])) {
+            int itemId = Integer.parseInt(splitData[0]);
+            item = Item.getById(itemId);
+        } else {
+            item = (Item) Item.REGISTRY.get(splitData[0]);
         }
         if (item != null) {
             int itemDamage = 0;
