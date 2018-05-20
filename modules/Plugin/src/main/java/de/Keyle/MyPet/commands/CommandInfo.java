@@ -50,7 +50,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
     public enum PetInfoDisplay {
         Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);
 
-        public boolean adminOnly = false;
+        public boolean adminOnly;
 
         PetInfoDisplay(boolean adminOnly) {
             this.adminOnly = adminOnly;
@@ -162,7 +162,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                                 it.setTitle(is.getItemMeta().getDisplayName());
                             }
                             if (is.getItemMeta().hasLore()) {
-                                it.setLore(is.getItemMeta().getLore().toArray(new String[is.getItemMeta().getLore().size()]));
+                                it.setLore(is.getItemMeta().getLore().toArray(new String[0]));
                             }
                         }
                         m.itemTooltip(it);

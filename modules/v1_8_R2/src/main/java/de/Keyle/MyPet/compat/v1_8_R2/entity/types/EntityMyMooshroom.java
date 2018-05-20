@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -66,12 +66,7 @@ public class EntityMyMooshroom extends EntityMyPet {
                     ItemStack is = new ItemStack(Items.MUSHROOM_STEW);
                     final ItemStack oldIs = entityhuman.inventory.getItem(itemInHandIndex);
                     entityhuman.inventory.setItem(itemInHandIndex, is);
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), new Runnable() {
-                        @Override
-                        public void run() {
-                            entityhuman.inventory.setItem(itemInHandIndex, oldIs);
-                        }
-                    }, 2L);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.inventory.setItem(itemInHandIndex, oldIs), 2L);
 
                 } else {
                     if (--itemStack.count <= 0) {
@@ -101,15 +96,15 @@ public class EntityMyMooshroom extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Byte((byte) 0)); // age
+        this.datawatcher.a(12, (byte) 0); // age
     }
 
     @Override
     public void updateVisuals() {
         if (getMyPet().isBaby()) {
-            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.MIN_VALUE);
         } else {
-            this.datawatcher.watch(12, new Byte((byte) 0));
+            this.datawatcher.watch(12, (byte) 0);
         }
     }
 

@@ -71,122 +71,116 @@ public class PetShop {
     }
 
     public void open(final Player player) {
-        IconMenu shop = new IconMenu(Colorizer.setColors(displayName), new IconMenu.OptionClickEventHandler() {
-            @Override
-            public void onOptionClick(IconMenu.OptionClickEvent event) {
-                if (pets.containsKey(event.getPosition())) {
-                    final ShopMyPet pet = pets.get(event.getPosition());
-                    if (pet != null) {
-                        final Player p = event.getPlayer();
-                        final MyPetPlayer owner;
-                        if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
-                            owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+        IconMenu shop = new IconMenu(Colorizer.setColors(displayName), event -> {
+            if (pets.containsKey(event.getPosition())) {
+                final ShopMyPet pet = pets.get(event.getPosition());
+                if (pet != null) {
+                    final Player p = event.getPlayer();
+                    final MyPetPlayer owner;
+                    if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
+                        owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-                            if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
-                                p.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", player));
-                                return;
-                            }
-                        } else {
-                            owner = null;
+                        if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
+                            p.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", player));
+                            return;
                         }
+                    } else {
+                        owner = null;
+                    }
 
-                        final BukkitRunnable confirmRunner = new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                IconMenu menu = new IconMenu(Util.formatText(Translation.getString("Message.Shop.Confirm.Title", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())), new IconMenu.OptionClickEventHandler() {
-                                    @Override
-                                    public void onOptionClick(IconMenu.OptionClickEvent event) {
-                                        if (event.getPosition() == 3) {
-                                            if (pet.getPrice() > 0) {
-                                                if (economyHook.canPay(p.getUniqueId(), pet.getPrice())) {
-                                                    if (economyHook.getEconomy().withdrawPlayer(p, pet.getPrice()).transactionSuccess()) {
-                                                        switch (wallet) {
-                                                            case Bank:
-                                                                economyHook.getEconomy().bankDeposit(walletOwner, pet.getPrice());
-                                                                break;
-                                                            case Player:
-                                                                economyHook.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(walletOwner)), pet.getPrice());
-                                                            case Private:
-                                                                depositPrivate(pet.getPrice());
-                                                                break;
-                                                        }
-                                                    } else {
-                                                        p.sendMessage(Translation.getString("Message.No.Money", player));
-                                                        return;
-                                                    }
-                                                } else {
-                                                    p.sendMessage(Translation.getString("Message.Shop.NoMoney", player));
-                                                    return;
+                    final BukkitRunnable confirmRunner = new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            IconMenu menu = new IconMenu(Util.formatText(Translation.getString("Message.Shop.Confirm.Title", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
+                                if (event1.getPosition() == 3) {
+                                    if (pet.getPrice() > 0) {
+                                        if (economyHook.canPay(p.getUniqueId(), pet.getPrice())) {
+                                            if (economyHook.getEconomy().withdrawPlayer(p, pet.getPrice()).transactionSuccess()) {
+                                                switch (wallet) {
+                                                    case Bank:
+                                                        economyHook.getEconomy().bankDeposit(walletOwner, pet.getPrice());
+                                                        break;
+                                                    case Player:
+                                                        economyHook.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(walletOwner)), pet.getPrice());
+                                                    case Private:
+                                                        depositPrivate(pet.getPrice());
+                                                        break;
                                                 }
-                                            }
-
-                                            final MyPetPlayer petOwner;
-                                            if (owner == null) {
-                                                petOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
                                             } else {
-                                                petOwner = owner;
+                                                p.sendMessage(Translation.getString("Message.No.Money", player));
+                                                return;
                                             }
-
-                                            pet.setOwner(petOwner);
-                                            final StoredMyPet clonedPet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet);
-
-                                            clonedPet.setOwner(petOwner);
-                                            clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
-                                            clonedPet.setUUID(null);
-
-                                            MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
-                                                @Override
-                                                public void callback(Boolean value) {
-                                                    p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
-                                                    if (petOwner.hasMyPet()) {
-                                                        p.sendMessage(Util.formatText(Translation.getString("Message.Shop.SuccessStorage", player), clonedPet.getPetName()));
-                                                    } else {
-                                                        petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
-                                                        MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
-                                                        MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(clonedPet).get();
-                                                        activePet.createEntity();
-                                                    }
-                                                }
-                                            });
+                                        } else {
+                                            p.sendMessage(Translation.getString("Message.Shop.NoMoney", player));
+                                            return;
                                         }
-                                        event.setWillClose(true);
-                                        event.setWillDestroy(true);
                                     }
-                                }, MyPetApi.getPlugin());
-                                IconMenuItem icon = new IconMenuItem()
-                                        .setMaterial(Material.WOOL)
-                                        .setData(5)
-                                        .setTitle(ChatColor.GREEN + Translation.getString("Name.Yes", player))
-                                        .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
-                                if (owner != null && owner.hasMyPet()) {
-                                    icon.addLoreLine("").addLoreLine(Util.formatText(Translation.getString("Message.Shop.Confirm.SendStorage", player)));
-                                }
-                                menu.setOption(3, icon);
-                                menu.setOption(5, new IconMenuItem()
-                                        .setMaterial(Material.WOOL)
-                                        .setData(14)
-                                        .setTitle(ChatColor.RED + Translation.getString("Name.No", player))
-                                        .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.No", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice()))));
-                                menu.open(player);
-                            }
-                        };
 
-                        if (owner != null && owner.hasMyPet()) {
-                            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
-                                @Override
-                                public void callback(List<StoredMyPet> value) {
-                                    int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
-                                    int limit = getMaxPetCount(p);
-                                    if (petCount >= limit) {
-                                        p.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), limit));
-                                        return;
+                                    final MyPetPlayer petOwner;
+                                    if (owner == null) {
+                                        petOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
+                                    } else {
+                                        petOwner = owner;
                                     }
-                                    confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
+
+                                    pet.setOwner(petOwner);
+                                    final StoredMyPet clonedPet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet);
+
+                                    clonedPet.setOwner(petOwner);
+                                    clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
+                                    clonedPet.setUUID(null);
+
+                                    MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
+                                        @Override
+                                        public void callback(Boolean value) {
+                                            p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
+                                            if (petOwner.hasMyPet()) {
+                                                p.sendMessage(Util.formatText(Translation.getString("Message.Shop.SuccessStorage", player), clonedPet.getPetName()));
+                                            } else {
+                                                petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
+                                                MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
+                                                MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(clonedPet).get();
+                                                activePet.createEntity();
+                                            }
+                                        }
+                                    });
                                 }
-                            });
-                        } else {
-                            confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
+                                event1.setWillClose(true);
+                                event1.setWillDestroy(true);
+                            }, MyPetApi.getPlugin());
+                            IconMenuItem icon = new IconMenuItem()
+                                    .setMaterial(Material.WOOL)
+                                    .setData(5)
+                                    .setTitle(ChatColor.GREEN + Translation.getString("Name.Yes", player))
+                                    .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
+                            if (owner != null && owner.hasMyPet()) {
+                                icon.addLoreLine("").addLoreLine(Util.formatText(Translation.getString("Message.Shop.Confirm.SendStorage", player)));
+                            }
+                            menu.setOption(3, icon);
+                            menu.setOption(5, new IconMenuItem()
+                                    .setMaterial(Material.WOOL)
+                                    .setData(14)
+                                    .setTitle(ChatColor.RED + Translation.getString("Name.No", player))
+                                    .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.No", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice()))));
+                            menu.open(player);
                         }
+                    };
+
+                    if (owner != null && owner.hasMyPet()) {
+                        MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+                            @Override
+                            public void callback(List<StoredMyPet> value) {
+                                int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
+                                int limit = getMaxPetCount(p);
+                                if (petCount >= limit) {
+                                    p.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), limit));
+                                    return;
+                                }
+                                confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
+                            }
+                        });
+                    } else {
+                        confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
                     }
                 }
             }

@@ -266,7 +266,8 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
     }
 
     private class Offer {
-        double price = 0;
+
+        double price;
         MyPet pet;
         UUID owner;
         UUID receiver;

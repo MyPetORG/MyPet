@@ -365,6 +365,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Metrics metrics = new Metrics(this) {
             public JSONObject getPluginData() {
                 JSONObject data = super.getPluginData();
+                //noinspection unchecked
                 data.put("pluginName", "MyPet-Premium");
                 return data;
             }

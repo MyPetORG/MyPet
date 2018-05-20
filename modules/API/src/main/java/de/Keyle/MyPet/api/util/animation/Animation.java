@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ public abstract class Animation {
     int taskID = -1;
     protected int framesPerTick = 1;
     protected int frame = 0;
-    protected int length = 0;
+    protected int length;
     protected int loops = 0;
     protected int tickRate = 1;
     protected LocationHolder locationHolder;
@@ -75,20 +75,17 @@ public abstract class Animation {
 
     public void once() {
         if (!running()) {
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if (locationHolder.isValid()) {
-                        for (int i = 0; i < framesPerTick; i++) {
-                            tick(frame, locationHolder.getLocation());
-                            if (++frame >= length) {
-                                stop();
-                                break;
-                            }
+            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+                if (locationHolder.isValid()) {
+                    for (int i = 0; i < framesPerTick; i++) {
+                        tick(frame, locationHolder.getLocation());
+                        if (++frame >= length) {
+                            stop();
+                            break;
                         }
-                    } else {
-                        stop();
                     }
+                } else {
+                    stop();
                 }
             }, 0, tickRate);
         }
@@ -108,20 +105,17 @@ public abstract class Animation {
 
     public void loop() {
         if (!running()) {
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if (locationHolder.isValid()) {
-                        for (int i = 0; i < framesPerTick; i++) {
-                            tick(frame, locationHolder.getLocation());
-                            if (++frame >= length) {
-                                reset();
-                                break;
-                            }
+            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+                if (locationHolder.isValid()) {
+                    for (int i = 0; i < framesPerTick; i++) {
+                        tick(frame, locationHolder.getLocation());
+                        if (++frame >= length) {
+                            reset();
+                            break;
                         }
-                    } else {
-                        stop();
                     }
+                } else {
+                    stop();
                 }
             }, 0, tickRate);
         }
@@ -130,24 +124,21 @@ public abstract class Animation {
     public void loop(int quantity) {
         if (!running()) {
             this.loops = quantity;
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if (locationHolder.isValid()) {
-                        for (int i = 0; i < framesPerTick; i++) {
-                            tick(frame, locationHolder.getLocation());
-                            if (++frame >= length) {
-                                if (--Animation.this.loops > 0) {
-                                    reset();
-                                } else {
-                                    stop();
-                                }
-                                break;
+            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+                if (locationHolder.isValid()) {
+                    for (int i = 0; i < framesPerTick; i++) {
+                        tick(frame, locationHolder.getLocation());
+                        if (++frame >= length) {
+                            if (--Animation.this.loops > 0) {
+                                reset();
+                            } else {
+                                stop();
                             }
+                            break;
                         }
-                    } else {
-                        stop();
                     }
+                } else {
+                    stop();
                 }
             }, 0, tickRate);
         }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -101,20 +101,20 @@ public class EntityMyWolf extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));         // age
-        this.datawatcher.a(16, new Byte((byte) 0));     // tamed/angry/sitting
+        this.datawatcher.a(12, 0);         // age
+        this.datawatcher.a(16, (byte) 0);     // tamed/angry/sitting
         this.datawatcher.a(17, "");                     // wolf owner name
-        this.datawatcher.a(18, new Float(getHealth())); // tail height
-        this.datawatcher.a(19, new Byte((byte) 0));     // N/A
-        this.datawatcher.a(20, new Byte((byte) 14));    // collar color
+        this.datawatcher.a(18, getHealth()); // tail height
+        this.datawatcher.a(19, (byte) 0);     // N/A
+        this.datawatcher.a(20, (byte) 14);    // collar color
     }
 
     @Override
     public void updateVisuals() {
         if (getMyPet().isBaby()) {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Integer.MIN_VALUE);
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, 0);
         }
 
         int i = this.datawatcher.getByte(16);
@@ -185,7 +185,7 @@ public class EntityMyWolf extends EntityMyPet {
 
     public void setHealth(float i) {
         super.setHealth(i);
-        this.datawatcher.watch(18, Float.valueOf(i));
+        this.datawatcher.watch(18, i);
     }
 
     public MyWolf getMyPet() {

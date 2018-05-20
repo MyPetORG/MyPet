@@ -90,35 +90,32 @@ public class MyPetSelectionGui {
             final int previousPage = page == 1 ? (int) Math.ceil(pets.size() / 45.) : page - 1;
             final int nextPage = page == Math.ceil(pets.size() / 45.) ? 1 : page + 1;
 
-            IconMenu menu = new IconMenu(title, new IconMenu.OptionClickEventHandler() {
-                @Override
-                public void onOptionClick(IconMenu.OptionClickEvent event) {
-                    if (event.getPosition() == 45) {
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                open(pets, previousPage, callback);
-                            }
-                        }.runTaskLater(MyPetApi.getPlugin(), 1L);
-                    } else if (event.getPosition() == 53) {
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                open(pets, nextPage, callback);
-                            }
-                        }.runTaskLater(MyPetApi.getPlugin(), 1L);
-
-                    } else if (event.getPosition() > 45) {
-                        return;
-                    } else if (petSlotList.containsKey(event.getPosition())) {
-                        StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
-                        if (storedMyPet != null && callback != null) {
-                            callback.callback(storedMyPet);
+            IconMenu menu = new IconMenu(title, event -> {
+                if (event.getPosition() == 45) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            open(pets, previousPage, callback);
                         }
+                    }.runTaskLater(MyPetApi.getPlugin(), 1L);
+                } else if (event.getPosition() == 53) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            open(pets, nextPage, callback);
+                        }
+                    }.runTaskLater(MyPetApi.getPlugin(), 1L);
+
+                } else if (event.getPosition() > 45) {
+                    return;
+                } else if (petSlotList.containsKey(event.getPosition())) {
+                    StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
+                    if (storedMyPet != null && callback != null) {
+                        callback.callback(storedMyPet);
                     }
-                    event.setWillClose(true);
-                    event.setWillDestroy(true);
                 }
+                event.setWillClose(true);
+                event.setWillDestroy(true);
             }, MyPetApi.getPlugin());
 
             int pagePets = pets.size() - (page - 1) * 45;

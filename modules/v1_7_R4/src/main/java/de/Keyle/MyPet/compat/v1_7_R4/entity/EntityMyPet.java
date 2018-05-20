@@ -515,7 +515,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public void onLivingUpdate() {
         if (hasRider) {
-            if (this.passenger == null || !(this.passenger instanceof EntityPlayer)) {
+            if (!(this.passenger instanceof EntityPlayer)) {
                 hasRider = false;
                 this.W = 0.5F; // climb height -> halfslab
                 Location playerLoc = getOwner().getPlayer().getLocation();

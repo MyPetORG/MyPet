@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -58,17 +58,17 @@ public class EntityMyGuardian extends EntityMyPet {
     @Override
     public void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(16, Integer.valueOf(0));
-        this.datawatcher.a(17, Integer.valueOf(0));
+        this.datawatcher.a(16, 0);
+        this.datawatcher.a(17, 0);
     }
 
     @Override
     public void updateVisuals() {
         int old = this.datawatcher.getInt(16);
         if (getMyPet().isElder()) {
-            this.datawatcher.watch(16, Integer.valueOf(old | 4));
+            this.datawatcher.watch(16, old | 4);
         } else {
-            this.datawatcher.watch(16, Integer.valueOf(old & ~4));
+            this.datawatcher.watch(16, old & ~4);
         }
     }
 

@@ -45,6 +45,7 @@ import java.util.Comparator;
  * @param <T> The type that represents a single point from the domain of definition of the
  *            interval.
  */
+@SuppressWarnings("ALL")
 public abstract class Interval<T extends Comparable<? super T>, S> {
 
     private S value;
@@ -604,19 +605,16 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
      * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
      * </p>
      */
-    public static Comparator<Interval> sweepLeftToRight = new Comparator<Interval>() {
-        @Override
-        public int compare(Interval a, Interval b) {
-            int compare = a.compareStarts(b);
-            if (compare != 0) {
-                return compare;
-            }
-            compare = a.compareEnds(b);
-            if (compare != 0) {
-                return compare;
-            }
-            return a.compareSpecialization(b);
+    public static Comparator<Interval> sweepLeftToRight = (a, b) -> {
+        int compare = a.compareStarts(b);
+        if (compare != 0) {
+            return compare;
         }
+        compare = a.compareEnds(b);
+        if (compare != 0) {
+            return compare;
+        }
+        return a.compareSpecialization(b);
     };
 
     /**
@@ -638,19 +636,16 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
      * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
      * </p>
      */
-    public static Comparator<Interval> sweepRightToLeft = new Comparator<Interval>() {
-        @Override
-        public int compare(Interval a, Interval b) {
-            int compare = b.compareEnds(a);
-            if (compare != 0) {
-                return compare;
-            }
-            compare = b.compareStarts(a);
-            if (compare != 0) {
-                return compare;
-            }
-            return a.compareSpecialization(b);
+    public static Comparator<Interval> sweepRightToLeft = (a, b) -> {
+        int compare = b.compareEnds(a);
+        if (compare != 0) {
+            return compare;
         }
+        compare = b.compareStarts(a);
+        if (compare != 0) {
+            return compare;
+        }
+        return a.compareSpecialization(b);
     };
 
     /**
@@ -699,7 +694,7 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Interval)) {
+        if (!(obj instanceof Interval)) {
             return false;
         }
         Interval<T, S> other = (Interval<T, S>) obj;

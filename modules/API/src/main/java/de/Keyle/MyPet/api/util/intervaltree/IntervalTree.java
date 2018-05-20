@@ -101,7 +101,7 @@ public class IntervalTree<T extends Comparable<? super T>, S> extends AbstractSe
      * @return A set containing all intervals from the tree, intersecting the query point.
      */
     public Set<Interval<T, S>> query(T point) {
-        return TreeNode.query(root, point, new HashSet<Interval<T, S>>());
+        return TreeNode.query(root, point, new HashSet<>());
     }
 
     /**

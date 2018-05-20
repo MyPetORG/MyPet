@@ -96,9 +96,9 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(16, new Short((short) 0));  // blockID
-        this.datawatcher.a(17, new Byte((byte) 0));    // blockData
-        this.datawatcher.a(18, new Byte((byte) 0));    // face(angry)
+        this.datawatcher.a(16, (short) 0);  // blockID
+        this.datawatcher.a(17, (byte) 0);    // blockData
+        this.datawatcher.a(18, (byte) 0);    // face(angry)
     }
 
     @Override

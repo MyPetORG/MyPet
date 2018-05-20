@@ -276,8 +276,6 @@ public class MySqlRepository implements Repository {
 
                     int result = statement.executeUpdate();
 
-                    //MyPetLogger.write("DELETE pet: " + result);
-
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), result);
                     }
@@ -381,9 +379,7 @@ public class MySqlRepository implements Repository {
 
                 statement.setString(14, myPet.getUUID().toString());
 
-                int result = statement.executeUpdate();
-
-                //MyPetLogger.write("UPDATE pet: " + result);
+                statement.executeUpdate();
             } catch (SQLException | IOException e) {
                 e.printStackTrace();
             }
@@ -422,9 +418,7 @@ public class MySqlRepository implements Repository {
                 statement.setString(9, multiWorldObject.toJSONString());
                 statement.setString(10, player.getInternalUUID().toString());
 
-                int result = statement.executeUpdate();
-
-                //MyPetLogger.write("UPDATE player: " + result);
+                statement.executeUpdate();
             } catch (SQLException | IOException e) {
                 e.printStackTrace();
             }
@@ -534,7 +528,6 @@ public class MySqlRepository implements Repository {
                         statement.setString(1, myPetPlayer.getInternalUUID().toString());
                         ResultSet resultSet = statement.executeQuery();
                         resultSet.next();
-                        //MyPetLogger.write("HAS pet: " + (resultSet.getInt(1) > 0));
 
                         callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
                         resultSet.close();
@@ -557,7 +550,6 @@ public class MySqlRepository implements Repository {
                         statement.setString(1, owner.getInternalUUID().toString());
                         ResultSet resultSet = statement.executeQuery();
                         List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
-                        //MyPetLogger.write("LOAD pets: " + pets);
                         callback.runTask(MyPetApi.getPlugin(), pets);
                         resultSet.close();
                     } catch (SQLException e) {
@@ -586,7 +578,6 @@ public class MySqlRepository implements Repository {
                                 resultSet.beforeFirst();
                                 List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
                                 if (pets.size() > 0) {
-                                    //MyPetLogger.write("LOAD pet: " + pets.get(0));
                                     callback.runTask(MyPetApi.getPlugin(), pets.get(0));
                                 }
                             }
@@ -610,8 +601,6 @@ public class MySqlRepository implements Repository {
                     statement.setString(1, uuid.toString());
 
                     int result = statement.executeUpdate();
-
-                    //MyPetLogger.write("DELETE pet: " + result);
 
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
@@ -674,7 +663,6 @@ public class MySqlRepository implements Repository {
                     }
 
                     boolean result = statement.executeUpdate() > 0;
-                    //MyPetLogger.write("INSERT pet: " + result);
 
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), result);
@@ -786,8 +774,6 @@ public class MySqlRepository implements Repository {
 
                     int result = statement.executeUpdate();
 
-                    //MyPetLogger.write("UPDATE pet: " + result);
-
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
                     }
@@ -893,8 +879,6 @@ public class MySqlRepository implements Repository {
                         ResultSet resultSet = statement.executeQuery();
                         resultSet.next();
 
-                        //MyPetLogger.write("IS player: " + (resultSet.getInt(1) > 0));
-
                         callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
                         resultSet.close();
                     } catch (SQLException e) {
@@ -916,7 +900,6 @@ public class MySqlRepository implements Repository {
                         ResultSet resultSet = statement.executeQuery();
                         MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
                         if (player != null) {
-                            //MyPetLogger.write("LOAD player: " + player);
                             callback.runTask(MyPetApi.getPlugin(), player);
                         }
                         resultSet.close();
@@ -942,7 +925,6 @@ public class MySqlRepository implements Repository {
 
                         MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
                         if (player != null) {
-                            //MyPetLogger.write("LOAD player: " + player);
                             callback.runTask(MyPetApi.getPlugin(), player);
                         }
                         resultSet.close();
@@ -1001,8 +983,6 @@ public class MySqlRepository implements Repository {
 
             int result = statement.executeUpdate();
 
-            //MyPetLogger.write("UPDATE player: " + result);
-
             return result > 0;
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -1046,13 +1026,13 @@ public class MySqlRepository implements Repository {
 
                     JSONObject multiWorldObject = new JSONObject();
                     for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
+                        //noinspection unchecked
                         multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                     }
                     statement.setString(10, multiWorldObject.toJSONString());
 
 
                     boolean result = statement.executeUpdate() > 0;
-                    //MyPetLogger.write("INSERT player: " + result);
 
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), result);
@@ -1131,8 +1111,6 @@ public class MySqlRepository implements Repository {
                     statement.setString(1, player.getInternalUUID().toString());
 
                     int result = statement.executeUpdate();
-
-                    //MyPetLogger.write("DELETE player: " + result);
 
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);

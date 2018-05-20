@@ -92,26 +92,23 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                     final List<String> availableShops = getAvailablePetShops(player);
                     if (availableShops != null && availableShops.size() > 0) {
                         final Player finalPlayer = player;
-                        IconMenu menu = new IconMenu(Translation.getString("Message.Shop.Available", player), new IconMenu.OptionClickEventHandler() {
-                            @Override
-                            public void onOptionClick(IconMenu.OptionClickEvent event) {
-                                String shopname = null;
-                                try {
-                                    shopname = availableShops.get(event.getPosition());
-                                } catch (Exception ignored) {
-                                }
-                                if (shopname != null) {
-                                    final String finalShopname = shopname;
-                                    new BukkitRunnable() {
-                                        @Override
-                                        public void run() {
-                                            shopManager.get().open(finalShopname, finalPlayer);
-                                        }
-                                    }.runTaskLater(MyPetApi.getPlugin(), 5L);
+                        IconMenu menu = new IconMenu(Translation.getString("Message.Shop.Available", player), event -> {
+                            String shopname = null;
+                            try {
+                                shopname = availableShops.get(event.getPosition());
+                            } catch (Exception ignored) {
+                            }
+                            if (shopname != null) {
+                                final String finalShopname = shopname;
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        shopManager.get().open(finalShopname, finalPlayer);
+                                    }
+                                }.runTaskLater(MyPetApi.getPlugin(), 5L);
 
-                                    event.setWillClose(true);
-                                    event.setWillDestroy(true);
-                                }
+                                event.setWillClose(true);
+                                event.setWillDestroy(true);
                             }
                         }, MyPetApi.getPlugin());
                         for (String shopname : availableShops) {

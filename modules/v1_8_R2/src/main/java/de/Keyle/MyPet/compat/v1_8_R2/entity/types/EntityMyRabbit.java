@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -81,16 +81,16 @@ public class EntityMyRabbit extends EntityMyPet {
     @Override
     public void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, Byte.valueOf((byte) 0)); // age
-        this.datawatcher.a(18, Byte.valueOf((byte) 0)); // variant
+        this.datawatcher.a(12, (byte) 0); // age
+        this.datawatcher.a(18, (byte) 0); // variant
     }
 
     @Override
     public void updateVisuals() {
         if (getMyPet().isBaby()) {
-            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.MIN_VALUE);
         } else {
-            this.datawatcher.watch(12, new Byte((byte) 0));
+            this.datawatcher.watch(12, (byte) 0);
         }
         this.datawatcher.watch(18, getMyPet().getVariant().getId());
     }

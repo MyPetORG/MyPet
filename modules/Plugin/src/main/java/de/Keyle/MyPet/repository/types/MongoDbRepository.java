@@ -303,15 +303,12 @@ public class MongoDbRepository implements Repository {
 
         final List<StoredMyPet> myPetList = new ArrayList<>();
 
-        petCollection.find().forEach(new Block<Document>() {
-            @Override
-            public void apply(final Document document) {
-                UUID ownerUUID = UUID.fromString(document.getString("owner_uuid"));
-                if (owners.containsKey(ownerUUID)) {
-                    StoredMyPet storedMyPet = documentToMyPet(owners.get(ownerUUID), document);
-                    if (storedMyPet != null) {
-                        myPetList.add(storedMyPet);
-                    }
+        petCollection.find().forEach((Block<Document>) document -> {
+            UUID ownerUUID = UUID.fromString(document.getString("owner_uuid"));
+            if (owners.containsKey(ownerUUID)) {
+                StoredMyPet storedMyPet = documentToMyPet(owners.get(ownerUUID), document);
+                if (storedMyPet != null) {
+                    myPetList.add(storedMyPet);
                 }
             }
         });
@@ -344,13 +341,10 @@ public class MongoDbRepository implements Repository {
                     final List<StoredMyPet> pets = new ArrayList<>();
                     MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                     FindIterable petDocuments = petCollection.find(new Document("owner_uuid", owner.getInternalUUID().toString()));
-                    petDocuments.forEach(new Block<Document>() {
-                        @Override
-                        public void apply(final Document document) {
-                            StoredMyPet storedMyPet = documentToMyPet(owner, document);
-                            if (storedMyPet != null) {
-                                pets.add(storedMyPet);
-                            }
+                    petDocuments.forEach((Block<Document>) document -> {
+                        StoredMyPet storedMyPet = documentToMyPet(owner, document);
+                        if (storedMyPet != null) {
+                            pets.add(storedMyPet);
                         }
                     });
                     callback.runTask(pets);
@@ -544,13 +538,10 @@ public class MongoDbRepository implements Repository {
         MongoCollection playerCollection = this.db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
 
         final List<MyPetPlayer> playerList = new ArrayList<>();
-        playerCollection.find().forEach(new Block<Document>() {
-            @Override
-            public void apply(final Document document) {
-                MyPetPlayer player = documentToPlayer(document);
-                if (player != null) {
-                    playerList.add(player);
-                }
+        playerCollection.find().forEach((Block<Document>) document -> {
+            MyPetPlayer player = documentToPlayer(document);
+            if (player != null) {
+                playerList.add(player);
             }
         });
         return playerList;
@@ -644,7 +635,7 @@ public class MongoDbRepository implements Repository {
     @SuppressWarnings("unchecked")
     private void setPlayerData(MyPetPlayer player, Document playerDocument) {
         playerDocument.append("internal_uuid", player.getInternalUUID().toString());
-        playerDocument.append("mojang_uuid", player.getMojangUUID() != null ? player.getMojangUUID() : null);
+        playerDocument.append("mojang_uuid", player.getMojangUUID());
         playerDocument.append("name", player.getName());
         playerDocument.append("last_update", System.currentTimeMillis());
 

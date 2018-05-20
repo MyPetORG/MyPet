@@ -241,7 +241,7 @@ public class ShopMyPet implements StoredMyPet {
         List<String> options = config.getStringList("Options");
         if (options != null && options.size() > 0) {
             TagCompound compound = new TagCompound();
-            String[] optionsArray = options.toArray(new String[options.size()]);
+            String[] optionsArray = options.toArray(new String[0]);
             CommandOptionCreate.createInfo(petType, optionsArray, compound);
             this.NBTextendetInfo = compound;
         }

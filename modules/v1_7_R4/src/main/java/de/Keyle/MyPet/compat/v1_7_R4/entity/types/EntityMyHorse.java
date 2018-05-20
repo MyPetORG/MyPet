@@ -51,9 +51,9 @@ public class EntityMyHorse extends EntityMyPet {
     private void applyVisual(int value, boolean flag) {
         int i = this.datawatcher.getInt(16);
         if (flag) {
-            this.datawatcher.watch(16, Integer.valueOf(i | value));
+            this.datawatcher.watch(16, i | value);
         } else {
-            this.datawatcher.watch(16, Integer.valueOf(i & (~value)));
+            this.datawatcher.watch(16, i & (~value));
         }
     }
 

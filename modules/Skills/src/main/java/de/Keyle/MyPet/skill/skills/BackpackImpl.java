@@ -48,7 +48,6 @@ public class BackpackImpl implements Backpack {
         this.myPet = myPet;
         inv = MyPetApi.getCompatUtil().getComapatInstance(CustomInventory.class, "util.inventory", "CustomInventory");
         rows.addCallback((newValue, reason) -> this.inv.setSize(newValue.intValue() * 9));
-        ;
     }
 
     public CustomInventory getInventory() {

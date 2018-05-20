@@ -305,11 +305,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     public void checkForDonation() {
         if (!donationChecked) {
             donationChecked = true;
-            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), new Runnable() {
-                public void run() {
-                    rank = DonateCheck.getDonationRank(MyPetPlayerImpl.this);
-                }
-            }, 60L);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> rank = DonateCheck.getDonationRank(MyPetPlayerImpl.this), 60L);
         }
     }
 

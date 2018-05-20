@@ -72,7 +72,7 @@ public class FireImpl implements Fire {
     }
 
     public void apply(LivingEntity target) {
-        target.setFireTicks(getDuration().getValue().intValue() * 20);
+        target.setFireTicks(getDuration().getValue() * 20);
         MyPetApi.getPlatformHelper().playParticleEffect(target.getLocation(), "SMOKE_LARGE", .5f, .5f, .5f, 0.02f, 20, 20);
     }
 
