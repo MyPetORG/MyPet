@@ -558,6 +558,10 @@ public class EntityListener implements Listener {
             MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
             if (event.getCause() == DamageCause.SUFFOCATION) {
+                if (bukkitEntity.getHandle().hasRider()) {
+                    event.setCancelled(true);
+                    return;
+                }
                 final MyPet myPet = bukkitEntity.getMyPet();
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 
