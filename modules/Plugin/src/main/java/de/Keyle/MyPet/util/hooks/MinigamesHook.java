@@ -45,7 +45,7 @@ public class MinigamesHook implements AllowedHook {
     public boolean onEnable() {
         if (Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES) {
             minigames = MyPetApi.getPluginHookManager().getPluginInstance(Minigames.class).get();
-            Bukkit.getPluginManager().registerEvents(new MinigamesHook(), MyPetApi.getPlugin());
+            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
             return true;
         }
         return false;
@@ -63,7 +63,7 @@ public class MinigamesHook implements AllowedHook {
             return !minigames.pdata.getMinigamePlayer(p).isInMinigame();
         } catch (Throwable ignored) {
         }
-        return false;
+        return true;
     }
 
     @EventHandler
