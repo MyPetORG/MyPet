@@ -114,9 +114,9 @@
         </dependency>
         <dependency>
             <!-- https://www.spigotmc.org/resources/minigames.19687/ -->
-            <groupId>com.pauldavdesign.mineauz</groupId>
+            <groupId>au.com.mineauz</groupId>
             <artifactId>Minigames</artifactId>
-            <version>1.8.0</version>
+            <version>1.12.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
