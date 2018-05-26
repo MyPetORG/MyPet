@@ -32,6 +32,7 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 
 @Compat("v1_12_R1")
 public class RangedAttack implements AIGoal {
+
     private MyPet myPet;
     private final EntityMyPet entityMyPet;
     private EntityLiving target;
@@ -99,7 +100,6 @@ public class RangedAttack implements AIGoal {
     public void finish() {
         this.target = null;
         this.lastSeenTimer = 0;
-        this.shootTimer = -1;
 
         this.entityMyPet.getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
     }

@@ -99,7 +99,6 @@ public class RangedAttack implements AIGoal {
     public void finish() {
         this.target = null;
         this.lastSeenTimer = 0;
-        this.shootTimer = -1;
 
         this.entityMyPet.getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
     }
