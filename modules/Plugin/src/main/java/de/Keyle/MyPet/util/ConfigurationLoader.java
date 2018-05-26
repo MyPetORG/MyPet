@@ -140,7 +140,9 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.Residence", Hooks.USE_Residence);
         config.addDefault("MyPet.Hooks.AncientRPG", Hooks.USE_AncientRPG);
         config.addDefault("MyPet.Hooks.GriefPrevention", Hooks.USE_GriefPrevention);
-        config.addDefault("MyPet.Hooks.PvPManager", Hooks.USE_PvPManager);
+        config.addDefault("MyPet.Hooks.PvPManager.Respect-PvP-Rules", Hooks.PvPManager.RESPECT_PVP_RULES);
+        config.addDefault("MyPet.Hooks.PvPManager.Despawn-Pets-In-Combat", Hooks.PvPManager.DESPAWN_PETS_IN_COMBAT);
+        config.addDefault("MyPet.Hooks.PvPManager.Prevent-Damage-In-Combat", Hooks.PvPManager.PREVENT_DAMAGE_IN_COMBAT);
         config.addDefault("MyPet.Hooks.PvPDiffTimer", Hooks.USE_PvPDiffTimer);
         config.addDefault("MyPet.Hooks.Minigames.DisablePetsInGames", Hooks.DISABLE_PETS_IN_MINIGAMES);
         config.addDefault("MyPet.Hooks.PvPArena.DisablePetsInArena", Hooks.DISABLE_PETS_IN_ARENA);
@@ -411,7 +413,9 @@ public class ConfigurationLoader {
         Hooks.USE_Residence = config.getBoolean("MyPet.Hooks.Residence", true);
         Hooks.USE_AncientRPG = config.getBoolean("MyPet.Hooks.AncientRPG", true);
         Hooks.USE_GriefPrevention = config.getBoolean("MyPet.Hooks.GriefPrevention", true);
-        Hooks.USE_PvPManager = config.getBoolean("MyPet.Hooks.PvPManager", true);
+        Hooks.PvPManager.DESPAWN_PETS_IN_COMBAT = config.getBoolean("MyPet.Hooks.PvPManager.Despawn-Pets-In-Combat", false);
+        Hooks.PvPManager.RESPECT_PVP_RULES = config.getBoolean("MyPet.Hooks.PvPManager.Respect-PvP-Rules", true);
+        Hooks.PvPManager.PREVENT_DAMAGE_IN_COMBAT = config.getBoolean("MyPet.Hooks.PvPManager.Prevent-Damage-In-Combat", false);
         Hooks.USE_PlotSquared = config.getBoolean("MyPet.Hooks.PlotSquared", true);
         Hooks.USE_PvPDiffTimer = config.getBoolean("MyPet.Hooks.PvPDiffTimer", true);
         Hooks.USE_Kingdoms = config.getBoolean("MyPet.Hooks.Kingdoms", true);
@@ -606,6 +610,9 @@ public class ConfigurationLoader {
                 }
             }
             config.getConfigurationSection("MyPet.Exp").set("Active", null);
+        }
+        if (!config.contains("MyPet.Hooks.PvPManager.Enabled")) {
+            config.getConfigurationSection("MyPet.Hooks").set("PvPManager", null);
         }
 
         MyPetApi.getPlugin().saveConfig();

@@ -252,7 +252,6 @@ public class Configuration {
         public static boolean USE_AncientRPG = true;
         public static boolean USE_GriefPrevention = true;
         public static boolean USE_PvPArena = true;
-        public static boolean USE_PvPManager = true;
         public static boolean USE_SurvivalGame = true;
         public static boolean USE_Kingdoms = true;
         public static boolean USE_PlotSquared = true;
@@ -270,6 +269,13 @@ public class Configuration {
             public static boolean ENABLED = true;
             public static boolean ALLOW_PETS = true;
             public static boolean RESPECT_PVP_RULE = true;
+        }
+
+        public static class PvPManager {
+
+            public static boolean PREVENT_DAMAGE_IN_COMBAT = false;
+            public static boolean DESPAWN_PETS_IN_COMBAT = false;
+            public static boolean RESPECT_PVP_RULES = true;
         }
     }
 }
