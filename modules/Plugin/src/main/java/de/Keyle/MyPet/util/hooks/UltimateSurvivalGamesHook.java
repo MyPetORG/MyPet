@@ -22,7 +22,6 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
@@ -58,7 +57,7 @@ public class UltimateSurvivalGamesHook implements AllowedHook {
             return !getUserManager().isPlaying(owner.getPlayer().getName()) && !getUserManager().isSpectator(owner.getPlayer().getName());
         } catch (Throwable ignored) {
         }
-        return false;
+        return true;
     }
 
     @EventHandler
@@ -69,13 +68,6 @@ public class UltimateSurvivalGamesHook implements AllowedHook {
                 player.getMyPet().removePet();
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
             }
-        }
-    }
-
-    @EventHandler
-    public void onMyPetCall(MyPetCallEvent event) {
-        if (!isPetAllowed(event.getOwner())) {
-            event.setCancelled(true);
         }
     }
 }

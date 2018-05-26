@@ -441,6 +441,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.NotAllowed;
                 }
 
+                if (!MyPetApi.getHookHelper().isPetAllowed(getOwner())) {
+                    return SpawnFlags.NotAllowed;
+                }
+
                 MyPetMinecraftEntity minecraftEntity = MyPetApi.getEntityRegistry().createMinecraftEntity(this, loc.getWorld());
 
                 if (minecraftEntity == null) {
