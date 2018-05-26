@@ -26,7 +26,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
@@ -62,11 +61,13 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
     @Override
     public boolean isPetAllowed(MyPetPlayer owner) {
-        try {
-            return !mobArenaHandler.isPlayerInArena(owner.getPlayer());
-        } catch (Throwable ignored) {
+        if (!Configuration.Hooks.MobArena.ALLOW_PETS) {
+            try {
+                return !mobArenaHandler.isPlayerInArena(owner.getPlayer());
+            } catch (Throwable ignored) {
+            }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -108,15 +109,6 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
         }
         if (!isPetAllowed(damager.getOwner())) {
             event.setCancelled(false);
-        }
-    }
-
-    @EventHandler
-    public void onMyPetCall(MyPetCallEvent event) {
-        if (!Configuration.Hooks.MobArena.ALLOW_PETS) {
-            if (!isPetAllowed(event.getOwner())) {
-                event.setCancelled(true);
-            }
         }
     }
 }

@@ -29,27 +29,22 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
-import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.Map;
 import java.util.Set;
@@ -188,30 +183,6 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             return s == null || s == StateFlag.State.ALLOW;
         }
         return true;
-    }
-
-    @EventHandler
-    public void on(MyPetCallEvent event) {
-        if (!isPetAllowed(event.getOwner())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void on(PlayerMoveEvent event) {
-        if (customFlags) {
-            if (event.getFrom().getBlock() != event.getTo().getBlock()) {
-                if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
-                    MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
-                    if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
-                        if (!isPetAllowed(player)) {
-                            player.getMyPet().removePet(true);
-                            player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @LeashFlagName("WorldGuard")

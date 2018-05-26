@@ -23,7 +23,6 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
@@ -72,7 +71,7 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, AllowedHook {
             return PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
         } catch (Throwable ignored) {
         }
-        return false;
+        return true;
     }
 
     @EventHandler
@@ -84,12 +83,5 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, AllowedHook {
                 player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
             }
         }
-    }
-
-    @EventHandler
-    public void onMyPetCall(MyPetCallEvent event) {
-        if (!isPetAllowed(event.getOwner())) {
-                event.setCancelled(true);
-            }
     }
 }

@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
+
     @EventHandler
     public void on(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
@@ -388,6 +389,21 @@ public class PlayerListener implements Listener {
                                 }
                             }
                         }.runTaskLater(MyPetApi.getPlugin(), 20L);
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerMoveEvent event) {
+        if (event.getFrom().getBlock() != event.getTo().getBlock()) {
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
+                MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
+                if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
+                    if (!MyPetApi.getHookHelper().isPetAllowed(player)) {
+                        player.getMyPet().removePet(true);
+                        player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
                     }
                 }
             }
