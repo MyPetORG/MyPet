@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -101,7 +101,6 @@ public class RangedAttack implements AIGoal {
     public void finish() {
         this.target = null;
         this.lastSeenTimer = 0;
-        this.shootTimer = -1;
 
         this.entityMyPet.getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
     }
