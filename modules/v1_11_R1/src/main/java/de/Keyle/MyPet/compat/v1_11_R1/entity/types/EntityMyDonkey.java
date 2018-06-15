@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,9 +34,9 @@ import java.util.UUID;
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyDonkey extends EntityMyPet implements IJumpable {
     protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.h);
-    protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Byte> saddleWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.a);
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.m);
-    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.h);
+    protected static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.h);
 
     int soundCounter = 0;
     int rearCounter = -1;
@@ -54,11 +54,11 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
      * 128 mouth open
      */
     protected void applyVisual(int value, boolean flag) {
-        int i = this.datawatcher.get(saddleChestWatcher);
+        int i = this.datawatcher.get(saddleWatcher);
         if (flag) {
-            this.datawatcher.set(saddleChestWatcher, (byte) (i | value));
+            this.datawatcher.set(saddleWatcher, (byte) (i | value));
         } else {
-            this.datawatcher.set(saddleChestWatcher, (byte) (i & (~value)));
+            this.datawatcher.set(saddleWatcher, (byte) (i & (~value)));
         }
     }
 
@@ -139,7 +139,7 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
 
     protected void initDatawatcher() {
         this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(saddleChestWatcher, (byte) 0);
+        this.datawatcher.register(saddleWatcher, (byte) 0);
         this.datawatcher.register(ownerWatcher, Optional.absent());
         this.datawatcher.register(chestWatcher, false);
     }
@@ -153,6 +153,7 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
         this.datawatcher.set(chestWatcher, getMyPet().hasChest());
+        applyVisual(4, getMyPet().hasSaddle());
     }
 
     @Override
