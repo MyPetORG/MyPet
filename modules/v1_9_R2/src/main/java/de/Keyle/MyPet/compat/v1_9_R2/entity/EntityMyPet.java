@@ -63,6 +63,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
@@ -1086,7 +1087,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         motionSideways *= 0.85F;
 
         float speed = 0.22222F * (1F + (rideSkill.getSpeedPercent() / 100F));
-        double jumpHeight = Util.clamp(rideSkill.getJumpHeight(), 0, 10);
+        double jumpHeight = Util.clamp(1 + rideSkill.getJumpHeight(), 0, 10);
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
             double factor = Math.log10(myPet.getSaturation()) / 2;
@@ -1137,6 +1138,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
             if (doJump) {
                 if (onGround) {
+                    jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                     String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
                     Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
                     jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
