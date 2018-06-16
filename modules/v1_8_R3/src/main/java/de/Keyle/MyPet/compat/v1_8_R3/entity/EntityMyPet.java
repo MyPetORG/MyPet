@@ -61,6 +61,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 
@@ -1007,6 +1008,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.fallDistance = 0;
         }
 
+        Ride rideSkill = myPet.getSkills().get(RideImpl.class);
+        if (rideSkill == null) {
+            this.passenger.mount(null);
+            return;
+        }
+
         //apply pitch & yaw
         this.lastYaw = (this.yaw = this.passenger.yaw);
         this.pitch = this.passenger.pitch * 0.5F;
@@ -1024,21 +1031,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         // sideways is slower too but not as slow as backwards
         motionSideways *= 0.85F;
 
-        float speed = 0.22222F;
-        double jumpHeight = 0.3D;
-        float ascenSpeed = 0.2f;
-
-        Ride rideSkill = myPet.getSkills().get(RideImpl.class);
-        if (rideSkill != null) {
-            speed *= 1F + (rideSkill.getSpeedIncrease().getValue() / 100F);
-            jumpHeight = rideSkill.getJumpHeight().getValue().doubleValue() * 0.18D;
-        }
+        float speed = 0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F));
+        double jumpHeight = Util.clamp(1 + rideSkill.getJumpHeight().getValue().doubleValue(), 0, 10);
+        float ascendSpeed = 0.2f;
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
             double factor = Math.log10(myPet.getSaturation()) / 2;
             speed *= factor;
             jumpHeight *= factor;
-            ascenSpeed *= factor;
+            ascendSpeed *= factor;
         }
 
         ride(motionSideways, motionForward, speed); // apply motion
@@ -1052,11 +1053,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
             if (doJump) {
                 if (onGround) {
+                    jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                     String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
                     Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
                     jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
                     this.motY = jumpVelocity;
-                } else if (rideSkill != null && rideSkill.getCanFly().getValue()) {
+                } else if (rideSkill.getCanFly().getValue()) {
                     if (limitCounter <= 0 && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
                         canFly = false;
                     } else if (flyCheckCounter-- <= 0) {
@@ -1064,7 +1066,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         flyCheckCounter = 5;
                     }
                     if (canFly) {
-                        this.motY = ascenSpeed;
+                        this.motY = ascendSpeed;
                         this.fallDistance = 0;
                         this.isFlying = true;
                     }
