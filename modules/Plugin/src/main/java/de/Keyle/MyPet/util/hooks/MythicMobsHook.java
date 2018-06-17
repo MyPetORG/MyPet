@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
+import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -36,7 +36,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("MythicMobs")
-public class MythicMobsHook implements PlayerLeashEntityHook {
+public class MythicMobsHook implements LeashHook {
 
     @Override
     public boolean onEnable() {

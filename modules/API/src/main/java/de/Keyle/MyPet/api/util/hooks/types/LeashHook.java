@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -27,6 +27,6 @@ import org.bukkit.entity.Player;
 /**
  * This interface defines that the hook checks if players can attack an entity
  */
-public interface PlayerLeashEntityHook extends PluginHook {
+public interface LeashHook extends PluginHook {
     boolean canLeash(Player attacker, Entity defender);
 }

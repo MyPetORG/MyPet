@@ -49,7 +49,7 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
-import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
+import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
@@ -466,7 +466,7 @@ public class EntityListener implements Listener {
                             usedArrow = true;
                         }
                     }
-                    for (PlayerLeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(PlayerLeashEntityHook.class)) {
+                    for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
                         if (!hook.canLeash(player, leashTarget)) {
                             return;
                         }
