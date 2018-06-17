@@ -6,6 +6,7 @@ website: ${project.url}
 softdepend:
   - Ancient
   - BattleArena
+  - BossShopPro
   - Citizens
   - Factions
   - GriefPrevention
