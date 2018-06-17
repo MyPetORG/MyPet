@@ -439,6 +439,14 @@
             <version>${preciousstones.version}</version>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/%E2%8C%BE-miniaturepets-%E2%8C%BE-custom-mobs-great-for-eula.23991/ -->
+            <groupId>com.kirelcodes.miniaturepets</groupId>
+            <artifactId>miniaturepets-api</artifactId>
+            <version>1.5.4</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>forms_rt</artifactId>
             <version>${forms_rt.version}</version>
