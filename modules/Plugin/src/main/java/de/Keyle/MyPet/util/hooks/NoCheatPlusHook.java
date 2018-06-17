@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,19 +29,17 @@ import fr.neatmonster.nocheatplus.hooks.NCPHook;
 import fr.neatmonster.nocheatplus.hooks.NCPHookManager;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @PluginHookName("NoCheatPlus")
 public class NoCheatPlusHook implements PluginHook {
-    int hookId;
+
+    List<Integer> hookIds = new ArrayList<>();
 
     @Override
     public boolean onEnable() {
-        try {
-            CheckType.valueOf("MOVING_VEHICLE_ENVELOPE");
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-
-        hookId = NCPHookManager.addHook(CheckType.MOVING_VEHICLE_ENVELOPE, new NCPHook() {
+        NCPHook hook = new NCPHook() {
             @Override
             public String getHookName() {
                 return "MyPet";
@@ -49,26 +47,49 @@ public class NoCheatPlusHook implements PluginHook {
 
             @Override
             public String getHookVersion() {
-                return "1.0";
+                return "1.1";
             }
 
             @Override
             public boolean onCheckFailure(CheckType checkType, Player player, IViolationInfo iViolationInfo) {
-                if (checkType == CheckType.MOVING_VEHICLE_ENVELOPE) {
-                    if (player.isInsideVehicle()) {
-                        if (player.getVehicle() instanceof MyPetBukkitEntity) {
-                            return true;
+                switch (checkType.name()) {
+                    case "MOVING_VEHICLE_ENVELOPE":
+                    case "MOVING_MOREPACKETS":
+                    case "MOVING_VEHICLE_MOREPACKETS":
+                        if (player.isInsideVehicle()) {
+                            return player.getVehicle() instanceof MyPetBukkitEntity;
                         }
-                    }
                 }
                 return false;
             }
-        });
-        return true;
+        };
+
+        try {
+            CheckType.valueOf("MOVING_VEHICLE_ENVELOPE");
+            hookIds.add(NCPHookManager.addHook(CheckType.MOVING_VEHICLE_ENVELOPE, hook));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        try {
+            CheckType.valueOf("MOVING_VEHICLE_ENVELOPE");
+            hookIds.add(NCPHookManager.addHook(CheckType.MOVING_VEHICLE_MOREPACKETS, hook));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        try {
+            CheckType.valueOf("MOVING_MOREPACKETS");
+            hookIds.add(NCPHookManager.addHook(CheckType.MOVING_MOREPACKETS, hook));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        return hookIds.size() > 0;
     }
 
     @Override
     public void onDisable() {
-        NCPHookManager.removeHook(hookId);
+        hookIds.forEach(NCPHookManager::removeHook);
     }
 }
