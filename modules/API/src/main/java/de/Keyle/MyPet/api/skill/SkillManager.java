@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 @ServiceName("SkillManager")
-@Load(Load.State.AfterHooks)
+@Load(Load.State.OnEnable)
 public class SkillManager implements ServiceContainer {
     private Map<Class<? extends Skill>, String> registeredSkillsNames = new HashMap<>();
     private Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
