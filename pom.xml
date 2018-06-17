@@ -381,6 +381,14 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/%E2%8C%BE-miniaturepets-%E2%8C%BE-custom-mobs-great-for-eula.23991/ -->
+            <groupId>com.kirelcodes.miniaturepets</groupId>
+            <artifactId>miniaturepets-api</artifactId>
+            <version>1.5.4</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>1.2</version>

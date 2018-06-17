@@ -496,6 +496,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         pluginHookManager.registerHook(KingdomsHook.class);
         pluginHookManager.registerHook(MagicSpellsHook.class);
         pluginHookManager.registerHook(McMMOHook.class);
+        pluginHookManager.registerHook(MiniaturePetsHook.class);
         pluginHookManager.registerHook(MinigamesHook.class);
         pluginHookManager.registerHook(MobArenaHook.class);
         pluginHookManager.registerHook(MythicMobsHook.class);
