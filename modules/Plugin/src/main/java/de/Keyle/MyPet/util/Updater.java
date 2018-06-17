@@ -26,6 +26,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.Util.UrlFactoryReset;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.json.simple.JSONObject;
@@ -37,7 +38,9 @@ import java.net.URL;
 import java.util.Optional;
 
 public class Updater {
+
     public class Update {
+
         String version;
         int build;
 
@@ -110,7 +113,10 @@ public class Updater {
             url += "://update.mypet-plugin.de/" + plugin + "?" + parameter;
 
             // no data will be saved on the server
+            UrlFactoryReset r = new UrlFactoryReset();
+            r.unsetFactory();
             String content = Util.readUrlContent(url);
+            r.resetFactory();
             JSONParser parser = new JSONParser();
             JSONObject result = (JSONObject) parser.parse(content);
 

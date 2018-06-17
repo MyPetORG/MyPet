@@ -35,8 +35,10 @@ import org.bukkit.Material;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -142,6 +144,38 @@ public class Util {
     public static String convertStreamToString(java.io.InputStream is) {
         Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    public static class UrlFactoryReset {
+
+        private URLStreamHandlerFactory factory;
+
+        public void unsetFactory() {
+            try {
+                Field f = URL.class.getDeclaredField("factory");
+                f.setAccessible(true);
+                factory = (URLStreamHandlerFactory) f.get(null);
+                if (factory != null) {
+                    f.set(null, null);
+                    URL.setURLStreamHandlerFactory(null);
+                }
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void resetFactory() {
+            if (factory != null) {
+                try {
+                    Field f = URL.class.getDeclaredField("factory");
+                    f.setAccessible(true);
+                    f.set(null, null);
+                    URL.setURLStreamHandlerFactory(factory);
+                } catch (IllegalAccessException | NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static String readUrlContent(String address) throws IOException {
