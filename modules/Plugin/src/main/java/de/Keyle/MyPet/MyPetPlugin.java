@@ -106,6 +106,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             ((MyPetLogger) getLogger()).disableDebugLogger();
         }
 
+        pluginHookManager.disableHooks();
         serviceManager.disableServices();
     }
 
@@ -160,8 +161,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
 
         serviceManager.activate(Load.State.OnEnable);
-        pluginHookManager.enableHooks();
-        serviceManager.activate(Load.State.AfterHooks);
 
         entityRegistry.registerEntityTypes();
 
@@ -387,6 +386,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }));
 
         updater.waitForDownload();
+
+        pluginHookManager.enableHooks();
+        serviceManager.activate(Load.State.AfterHooks);
 
         if (MyPetVersion.isPremium()) {
             getLogger().info("Thank you for buying MyPet-" + ChatColor.YELLOW + "Premium" + ChatColor.RESET + "!");

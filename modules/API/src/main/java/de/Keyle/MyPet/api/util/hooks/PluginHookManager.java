@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ import java.util.Map;
  * other plugins are active.
  */
 public class PluginHookManager {
+
     ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
     Map<String, PluginHook> hookByName = new HashMap<>();
     Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
@@ -115,6 +116,16 @@ public class PluginHookManager {
             }
         }
         registeredHooks.clear();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void disableHooks() {
+        for (PluginHook hook : hooks.values()) {
+            hook.onDisable();
+        }
+        hooks.clear();
+        hookByName.clear();
+        hookByClass.clear();
     }
 
     /**
