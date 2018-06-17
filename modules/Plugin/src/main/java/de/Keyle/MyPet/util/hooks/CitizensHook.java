@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
+import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import net.citizensnpcs.api.CitizensAPI;
@@ -31,7 +31,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Citizens")
-public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, PlayerLeashEntityHook {
+public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, LeashHook {
 
     @Override
     public boolean onEnable() {

@@ -34,7 +34,7 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.hooks.types.PlayerLeashEntityHook;
+import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.CaptureHelper;
 import de.keyle.knbt.*;
@@ -477,7 +477,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             for (Entity entity : entities) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetBukkitEntity)) {
                     if (MyPetApi.getMyPetInfo().isLeashableEntityType(entity.getType())) {
-                        for (PlayerLeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(PlayerLeashEntityHook.class)) {
+                        for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
                             if (!hook.canLeash(p, entity)) {
                                 continue entityLoop;
                             }
