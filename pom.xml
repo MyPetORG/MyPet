@@ -120,9 +120,6 @@
         <!-- http://dev.bukkit.org/bukkit-plugins/heroes/ -->
         <heroes.version>1.5.5.7</heroes.version>
 
-        <!-- https://www.spigotmc.org/resources/skillapi.4824/ -->
-        <skill-api.version>3.52</skill-api.version>
-
         <!-- http://dev.bukkit.org/bukkit-plugins/magicspells/ -->
         <magicspells.version>3.4.2</magicspells.version>
 
@@ -395,7 +392,7 @@
         <dependency>
             <groupId>com.sucy.skill</groupId>
             <artifactId>SkillAPI</artifactId>
-            <version>${skill-api.version}</version>
+            <version>3.104</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
