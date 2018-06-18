@@ -329,7 +329,7 @@
             <!-- https://www.spigotmc.org/resources/skillapi.4824/ -->
             <groupId>com.sucy.skill</groupId>
             <artifactId>SkillAPI</artifactId>
-            <version>3.52</version>
+            <version>3.104</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

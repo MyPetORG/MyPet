@@ -20,25 +20,40 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerExperienceGainEvent;
 import com.sucy.skill.api.event.PlayerExperienceLostEvent;
+import com.sucy.skill.api.player.PlayerClass;
+import com.sucy.skill.api.player.PlayerData;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 @PluginHookName("SkillAPI")
-public class SkillApiHook implements PluginHook {
+public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
+
+    boolean hasFriendly = false;
 
     @Override
     public boolean onEnable() {
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        try {
+            //noinspection unchecked
+            ReflectionUtil
+                    .getClass("com.sucy.skill.data.GroupSettings")
+                    .getDeclaredMethod("isFriendly");
+            hasFriendly = true;
+        } catch (Exception ignored) {
+        }
         return true;
     }
 
@@ -87,5 +102,30 @@ public class SkillApiHook implements PluginHook {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        if (!hasFriendly || !SkillAPI.getSettings().isWorldEnabled(defender.getWorld())) {
+            return true;
+        }
+
+        final PlayerData attackerData = SkillAPI.getPlayerData(attacker);
+        final PlayerData defenderData = SkillAPI.getPlayerData(defender);
+
+        for (final String group : SkillAPI.getGroups()) {
+            final boolean friendly = SkillAPI.getSettings().getGroupSettings(group).isFriendly();
+            if (friendly) {
+                final PlayerClass attackerClass = attackerData.getClass(group);
+                final PlayerClass defenderClass = defenderData.getClass(group);
+
+                if (defenderClass != null && attackerClass != null) {
+                    if (attackerClass.getData().getRoot() == defenderClass.getData().getRoot()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
