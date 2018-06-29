@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -113,12 +113,17 @@ public class EntityMyWolf extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(sitWatcher, (byte) 0);            // tamed/angry/sitting
-        this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        this.datawatcher.register(tailWatcher, 20F);                // tail height
-        this.datawatcher.register(watcher, false);                  // N/A
-        this.datawatcher.register(collarWatcher, 14);               // collar color
+        this.datawatcher.register(ageWatcher, false);
+        this.datawatcher.register(sitWatcher, (byte) 0);
+        this.datawatcher.register(ownerWatcher, Optional.absent());
+        this.datawatcher.register(tailWatcher, 30F);
+        this.datawatcher.register(watcher, false); // not used
+        this.datawatcher.register(collarWatcher, 14);
+    }
+
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(20.0D);
     }
 
     @Override
@@ -180,7 +185,7 @@ public class EntityMyWolf extends EntityMyPet {
             }
         }
 
-        float tailHeight = 20F * (getHealth() / getMaxHealth());
+        float tailHeight = 30F * (getHealth() / getMaxHealth());
         if (this.datawatcher.get(tailWatcher) != tailHeight) {
             this.datawatcher.set(tailWatcher, tailHeight); // update tail height
         }
@@ -194,7 +199,7 @@ public class EntityMyWolf extends EntityMyPet {
     public void setHealth(float i) {
         super.setHealth(i);
 
-        float tailHeight = 20F * (i / getMaxHealth());
+        float tailHeight = 30F * (i / getMaxHealth());
         this.datawatcher.set(tailWatcher, tailHeight);
     }
 

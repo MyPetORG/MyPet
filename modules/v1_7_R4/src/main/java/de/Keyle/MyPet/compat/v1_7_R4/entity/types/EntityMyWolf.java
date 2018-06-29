@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
+
     protected boolean shaking;
     protected boolean isWet;
     protected float shakeCounter;
@@ -101,12 +102,12 @@ public class EntityMyWolf extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));         // age
-        this.datawatcher.a(16, new Byte((byte) 0));     // tamed/angry/sitting
-        this.datawatcher.a(17, "");                     // wolf owner name
-        this.datawatcher.a(18, new Float(getHealth())); // tail height
-        this.datawatcher.a(19, new Byte((byte) 0));     // N/A
-        this.datawatcher.a(20, new Byte((byte) 14));    // collar color
+        this.datawatcher.a(12, 0);            // age
+        this.datawatcher.a(16, (byte) 0);     // tamed/angry/sitting
+        this.datawatcher.a(17, "");           // wolf owner name
+        this.datawatcher.a(18, 30F);          // tail height
+        this.datawatcher.a(19, (byte) 0);     // N/A
+        this.datawatcher.a(20, (byte) 14);    // collar color
     }
 
     @Override
@@ -172,7 +173,7 @@ public class EntityMyWolf extends EntityMyPet {
             }
         }
 
-        float tailHeight = 25.F * getHealth() / getMaxHealth();
+        float tailHeight = 30F * getHealth() / getMaxHealth();
         if (this.datawatcher.getFloat(18) != tailHeight) {
             this.datawatcher.watch(18, tailHeight); // update tail height
         }
@@ -185,7 +186,8 @@ public class EntityMyWolf extends EntityMyPet {
 
     public void setHealth(float i) {
         super.setHealth(i);
-        this.datawatcher.watch(18, Float.valueOf(i));
+        float tailHeight = 30F * getHealth() / getMaxHealth();
+        this.datawatcher.watch(18, tailHeight); // update tail height
     }
 
     public MyWolf getMyPet() {
