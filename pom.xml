@@ -429,7 +429,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
+            <version>1.18.0</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -461,7 +461,7 @@
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.16.20.0</version>
+                <version>1.18.0.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
