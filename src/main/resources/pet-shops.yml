@@ -288,6 +288,8 @@ Shops:
         PetType: Wolf
         EXP: 0
         Price: 100
+        Options:
+          - tamed
       vex:
         Name: Vex
         Description:
@@ -508,6 +510,7 @@ Shops:
         EXP: 0
         Price: 50
         Options:
+          - tamed
           - baby
       baby_zombie:
         Name: "Zombie"

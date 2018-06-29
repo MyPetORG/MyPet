@@ -101,10 +101,10 @@ public class EntityMyWolf extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, (byte) 0);         // age
+        this.datawatcher.a(12, (byte) 0);     // age
         this.datawatcher.a(16, (byte) 0);     // tamed/angry/sitting
-        this.datawatcher.a(17, "");                     // wolf owner name
-        this.datawatcher.a(18, getHealth()); // tail height
+        this.datawatcher.a(17, "");           // wolf owner name
+        this.datawatcher.a(18, 30F);          // tail height
         this.datawatcher.a(19, (byte) 0);     // N/A
         this.datawatcher.a(20, (byte) 14);    // collar color
     }
@@ -172,7 +172,7 @@ public class EntityMyWolf extends EntityMyPet {
             }
         }
 
-        float tailHeight = 25.F * getHealth() / getMaxHealth();
+        float tailHeight = 30F * getHealth() / getMaxHealth();
         if (this.datawatcher.getFloat(18) != tailHeight) {
             this.datawatcher.watch(18, tailHeight); // update tail height
         }
@@ -185,7 +185,8 @@ public class EntityMyWolf extends EntityMyPet {
 
     public void setHealth(float i) {
         super.setHealth(i);
-        this.datawatcher.watch(18, i);
+        float tailHeight = 30F * getHealth() / getMaxHealth();
+        this.datawatcher.watch(18, tailHeight);
     }
 
     public MyWolf getMyPet() {
