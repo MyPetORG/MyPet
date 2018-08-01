@@ -91,6 +91,6 @@
   ],
   "ID": "Farm",
   "Icon": {
-    "Material": "minecraft:writable_book"
+    "Material": "writable_book"
   }
 }

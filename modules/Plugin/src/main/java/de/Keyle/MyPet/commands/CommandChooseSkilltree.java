@@ -31,7 +31,8 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.ItemDatabase;
+import de.Keyle.MyPet.api.util.EnumSelector;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -165,10 +166,10 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         material = Material.matchMaterial(icon.getMaterial());
                         if (material == null) {
                             ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-                            material = itemDatabase.getMaterial(icon.getMaterial());
+                            material = itemDatabase.getMaterialById(icon.getMaterial());
                         }
                         if (material == null) {
-                            material = Material.SAPLING;
+                            material = EnumSelector.find(Material.class, "SAPLING", "OAK_SAPLING");
                         }
 
                         IconMenuItem option = new IconMenuItem().setMaterial(material).setData(icon.getData()).setGlowing(icon.isGlowing());

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v1_8_R1.entity;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
@@ -506,7 +507,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
                         }
-                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getHeadHeight(), 0), "HEART", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                        MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getHeadHeight(), 0), ParticleCompat.HEART.get(), 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
 
                         return true;
                     }
@@ -558,7 +559,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
         }
         if (sitPathfinder.isSitting() && sitCounter-- <= 0) {
-            MyPetApi.getPlatformHelper().playParticleEffect(getOwner().getPlayer(), this.getBukkitEntity().getLocation().add(0, getHeadHeight() + 1, 0), "BARRIER", 0F, 0F, 0F, 5F, 1, 32);
+            MyPetApi.getPlatformHelper().playParticleEffect(getOwner().getPlayer(), this.getBukkitEntity().getLocation().add(0, getHeadHeight() + 1, 0), ParticleCompat.BARRIER.get(), 0F, 0F, 0F, 5F, 1, 32);
             sitCounter = 60;
         }
         Player p = myPet.getOwner().getPlayer();
@@ -577,7 +578,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
             if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
                 donatorParticleCounter = 20 + getRandom().nextInt(10);
-                MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "VILLAGER_HAPPY", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+                MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), ParticleCompat.WATER_SPLASH.get(), 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
             }
         }
     }

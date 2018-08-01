@@ -23,10 +23,7 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 
-import static org.bukkit.Material.COOKIE;
-import static org.bukkit.Material.SEEDS;
-
-@DefaultInfo(food = {SEEDS, COOKIE}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {"cookie"}, leashFlags = {"Tamed"})
 public interface MyParrot extends MyPet {
     int getVariant();
 

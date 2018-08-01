@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
@@ -68,7 +69,7 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
     }
 
     public void setFlower(ItemStack item) {
-        if (item != null && item.getType() != Material.RED_ROSE && item.getData().getData() == 0) {
+        if (item != null && item.getType() != EnumSelector.find(Material.class, "RED_ROSE", "POPPY") && item.getData().getData() == 0) {
             return;
         }
         this.flower = item;

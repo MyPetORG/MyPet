@@ -146,7 +146,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                             m.then(is.getItemMeta().getDisplayName());
                         } else {
                             try {
-                                m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is) + ".name");
+                                m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is));
                             } catch (Exception e) {
                                 MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
                                 MyPetApi.getLogger().warning("" + is);

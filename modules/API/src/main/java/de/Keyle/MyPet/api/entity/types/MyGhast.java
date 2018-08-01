@@ -23,8 +23,7 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 
-import static org.bukkit.Material.SULPHUR;
-
-@DefaultInfo(food = {SULPHUR}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {"gunpowder"}, leashFlags = {"Impossible"})
 public interface MyGhast extends MyPet {
+
 }

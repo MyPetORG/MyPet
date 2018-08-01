@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.util.player;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
@@ -48,6 +48,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class MyPetPlayerImpl implements MyPetPlayer {
@@ -227,9 +228,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public Optional<TagBase> getExtendedInfo(String key) {
         if (extendedInfo.getCompoundData().containsKey(key)) {
-            return Optional.fromNullable(extendedInfo.getCompoundData().get(key));
+            return Optional.ofNullable(extendedInfo.getCompoundData().get(key));
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     public TagCompound getExtendedInfo() {
@@ -446,12 +447,14 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                             }
                         }
                         if (spawn && fall) {
-                            switch (p.getWorld().getBlockAt(p.getLocation().subtract(0, 0.5, 0)).getType()) {
-                                case AIR:
-                                case WATER:
-                                case STATIONARY_WATER:
-                                case LAVA:
-                                case STATIONARY_LAVA:
+                            switch (p.getWorld().getBlockAt(p.getLocation().subtract(0, 0.5, 0)).getType().name()) {
+                                case "AIR":
+                                case "CAVE_AIR":
+                                case "VOID_AIR":
+                                case "WATER":
+                                case "STATIONARY_WATER":
+                                case "LAVA":
+                                case "STATIONARY_LAVA":
                                     spawn = false;
                             }
                         }
@@ -491,9 +494,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
                         if (CaptureHelper.checkTamable((LivingEntity) entity, p)) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, 10);
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.LIME_GREEN_WOOL_DATA);
                         } else {
-                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, "ITEM_CRACK", 0, 0, 0, 0.02f, 20, 16, 351, 1);
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.RED_WOOL_DATA);
                         }
                         if (count++ > 20) {
                             break;

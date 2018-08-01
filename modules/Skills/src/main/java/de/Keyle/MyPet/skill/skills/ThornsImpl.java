@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -96,8 +97,8 @@ public class ThornsImpl implements Thorns {
                 entity.getHandle().makeSound("damage.thorns", 0.5F, 1.0F);
             }
 
-            MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), "CRIT_MAGIC", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
-            MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), "CRIT", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), ParticleCompat.CRIT_MAGIC.get(), 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), ParticleCompat.CRIT.get(), 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
         }
     }
 

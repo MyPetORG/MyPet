@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class ConfigItem {
@@ -49,17 +50,13 @@ public abstract class ConfigItem {
     }
 
     public boolean compare(ItemStack compareItem) {
-        if (item == null || item.getTypeId() == 0) {
-            if (compareItem == null || compareItem.getTypeId() == 0) {
-                return true;
-            } else {
-                return false;
-            }
+        if (item == null || item.getType() == Material.AIR) {
+            return compareItem == null || compareItem.getType() == Material.AIR;
         }
         if (compareItem == null) {
             return false;
         }
-        if (item.getTypeId() != compareItem.getTypeId()) {
+        if (item.getType() != compareItem.getType()) {
             return false;
         }
         switch (durabilityMode) {

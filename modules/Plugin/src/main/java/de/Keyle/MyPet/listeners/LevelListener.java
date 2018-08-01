@@ -22,6 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
@@ -97,17 +98,10 @@ public class LevelListener implements Listener {
                 myPet.setHealth(myPet.getMaxHealth());
                 myPet.setSaturation(100);
 
-                final boolean version17 = MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.8") < 0;
-
                 new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
                     @Override
                     protected void playParticleEffect(Location location) {
-                        if (version17) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(location, "magicCrit", 0, 0, 0, 0, 1, 32);
-                        } else {
-                            MyPetApi.getPlatformHelper().playParticleEffect(location, "CRIT_MAGIC", 0, 0, 0, 0, 1, 32);
-
-                        }
+                        MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.CRIT_MAGIC.get(), 0, 0, 0, 0, 1, 32);
                     }
                 }.loop(2);
 
@@ -152,17 +146,10 @@ public class LevelListener implements Listener {
                 myPet.setHealth(myPet.getMaxHealth());
                 myPet.setSaturation(100);
 
-                final boolean version17 = MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.8") < 0;
-
                 new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, new EntityLocationHolder(entity)) {
                     @Override
                     protected void playParticleEffect(Location location) {
-                        if (version17) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(location, "blockcrack", 0, 0, 0, 0, 1, 32, 152);
-                        } else {
-                            MyPetApi.getPlatformHelper().playParticleEffect(location, "BLOCK_CRACK", 0, 0, 0, 0, 1, 32, 152);
-
-                        }
+                        MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.BLOCK_CRACK.get(), 0, 0, 0, 0, 1, 32, ParticleCompat.REDSTONE_BLOCK_DATA);
                     }
                 }.once();
 

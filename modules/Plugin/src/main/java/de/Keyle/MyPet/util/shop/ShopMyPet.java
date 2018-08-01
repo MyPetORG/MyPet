@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -41,6 +40,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ShopMyPet implements StoredMyPet {
+
     protected double price = 0;
     protected IconMenuItem icon;
     protected String name;
@@ -58,7 +58,7 @@ public class ShopMyPet implements StoredMyPet {
 
     public ShopMyPet(String name) {
         this.name = name;
-        this.icon = new IconMenuItem().setMaterial(Material.MONSTER_EGG);
+        this.icon = new IconMenuItem();
     }
 
     public int getPosition() {
@@ -71,10 +71,8 @@ public class ShopMyPet implements StoredMyPet {
 
     public IconMenuItem getIcon() {
         IconMenuItem icon = this.icon.clone();
-        if (icon.getMaterial() == Material.MONSTER_EGG) {
-            Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
-            egg.ifPresent(eggIconService -> eggIconService.updateIcon(petType, icon));
-        }
+        Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
+        egg.ifPresent(eggIconService -> eggIconService.updateIcon(petType, icon));
         icon.setTitle(ChatColor.AQUA + Colorizer.setColors(getPetName()));
 
         return icon;

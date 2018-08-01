@@ -24,8 +24,6 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 
-import static org.bukkit.Material.BONE;
-
-@DefaultInfo(food = {BONE}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {"bone"}, leashFlags = {"Impossible"})
 public interface MyWither extends MyPet, MyPetBaby {
 }

@@ -31,7 +31,6 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Material;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -382,7 +381,7 @@ public class Util {
         lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().name());
         lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
-        return new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(mypet.getPetName());
+        return new ItemTooltip().addLore(lore).setTitle(mypet.getPetName());
     }
 
     public static String stackTraceToString() {

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Fire;
@@ -73,7 +74,7 @@ public class FireImpl implements Fire {
 
     public void apply(LivingEntity target) {
         target.setFireTicks(getDuration().getValue() * 20);
-        MyPetApi.getPlatformHelper().playParticleEffect(target.getLocation(), "SMOKE_LARGE", .5f, .5f, .5f, 0.02f, 20, 20);
+        MyPetApi.getPlatformHelper().playParticleEffect(target.getLocation(), ParticleCompat.SMOKE_LARGE.get(), .5f, .5f, .5f, 0.02f, 20, 20);
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -60,7 +60,8 @@ public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.
                 case v1_11_R1:
                 case v1_12_R1:
                     v1_11_R1(pet);
-                    break;
+                case v1_13_R1:
+                    v1_13_R1(pet);
             }
         }
     }
@@ -158,5 +159,13 @@ public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.
                 }
                 break;
         }
+    }
+
+    public void v1_13_R1(StoredMyPet pet) {
+        TagCompound info = pet.getInfo();
+
+        /* TODO pet upgrade for 1.13
+         * convert Items in Backpack
+         */
     }
 }

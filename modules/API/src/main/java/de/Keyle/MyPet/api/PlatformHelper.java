@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api;
 
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -46,7 +47,11 @@ public abstract class PlatformHelper {
      * @param count    the number of particles
      * @param radius   the radius around the location
      */
-    public abstract void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data);
+    public abstract void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data);
+
+    public void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
+        playParticleEffect(location, effect, offsetX, offsetY, offsetZ, speed, count, radius, null);
+    }
 
     /**
      * @param location the {@link Location} around which players must be to see the effect
@@ -58,7 +63,11 @@ public abstract class PlatformHelper {
      * @param count    the number of particles
      * @param radius   the radius around the location
      */
-    public abstract void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data);
+    public abstract void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data);
+
+    public void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
+        playParticleEffect(player, location, effect, offsetX, offsetY, offsetZ, speed, count, radius, null);
+    }
 
     public abstract boolean canSpawn(Location loc, MyPetMinecraftEntity entity);
 
@@ -74,25 +83,6 @@ public abstract class PlatformHelper {
             lang = getPlayerLanguage((Player) sender);
         }
         return lang;
-    }
-
-    public Material checkMaterial(int itemid, Material defaultMaterial) {
-        if (Material.getMaterial(itemid) == null) {
-            return defaultMaterial;
-        } else {
-            return Material.getMaterial(itemid);
-        }
-    }
-
-    public boolean isValidMaterial(int itemid) {
-        return Material.getMaterial(itemid) != null;
-    }
-
-    public String getMaterialName(int itemId) {
-        if (isValidMaterial(itemId)) {
-            return Material.getMaterial(itemId).name();
-        }
-        return String.valueOf(itemId);
     }
 
     public void sendMessage(Player player, String Message) {
@@ -153,5 +143,9 @@ public abstract class PlatformHelper {
             return Double.MAX_VALUE;
         }
         return Math.sqrt(distanceSquared(a, b));
+    }
+
+    public Material getMaterial(MaterialHolder materialHolder) {
+        return Material.matchMaterial(materialHolder.getId());
     }
 }

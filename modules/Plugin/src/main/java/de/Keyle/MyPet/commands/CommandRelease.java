@@ -36,7 +36,6 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -123,7 +122,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     message.then(myPet.getPetName())
                             .color(ChatColor.AQUA)
                             .command("/petrelease " + ChatColor.stripColor(myPet.getPetName()))
-                            .itemTooltip(new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(myPet.getPetName()));
+                            .itemTooltip(new ItemTooltip().addLore(lore).setTitle(myPet.getPetName()));
                     MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
                     return true;
                 }

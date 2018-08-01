@@ -23,11 +23,13 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
+import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.inventory.meta.SkullMeta;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
@@ -75,7 +77,7 @@ public class BeaconImpl implements Beacon {
         partyMeta.setOwner("NeverUsed0000003");
         partyMeta.setTexture("http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
         // owner skin
-        ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(Material.SKULL_ITEM).getItemMeta();
+        ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD")).getItemMeta();
         ownerMeta.setOwner(myPet.getOwner().getName());
 
         for (Buff buff : Buff.values()) {
@@ -279,23 +281,23 @@ public class BeaconImpl implements Beacon {
         }
 
         menu.setOption(3, new IconMenuItem()
-                .setMaterial(STAINED_GLASS_PANE)
+                .setMaterial(EnumSelector.find(Material.class, "STAINED_GLASS_PANE", "GREEN_STAINED_GLASS"))
                 .setData(5)
                 .setTitle(GREEN + Translation.getString("Name.Done", myPet.getOwner().getLanguage())));
         menu.setOption(5, new IconMenuItem()
-                .setMaterial(STAINED_GLASS_PANE)
+                .setMaterial(EnumSelector.find(Material.class, "STAINED_GLASS_PANE", "RED_STAINED_GLASS"))
                 .setData(14)
                 .setTitle(RED + Translation.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
         if (receiver == BuffReceiver.Owner) {
             menu.setOption(21, new IconMenuItem()
-                    .setMaterial(SKULL_ITEM)
+                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                     .setData(3)
                     .setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage()))
                     .setMeta(ownerMeta, false, false));
         } else {
             menu.setOption(21, new IconMenuItem()
-                    .setMaterial(SKULL_ITEM)
+                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                     .setData(3)
                     .setTitle(GOLD + Translation.getString("Name.Owner", myPet.getOwner().getLanguage()))
                     .setMeta(disabledMeta));
@@ -303,13 +305,13 @@ public class BeaconImpl implements Beacon {
         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookHelper().isInParty(getMyPet().getOwner().getPlayer())) {
             if (receiver != BuffReceiver.Party) {
                 menu.setOption(22, new IconMenuItem()
-                        .setMaterial(SKULL_ITEM)
+                        .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                         .setData(3)
                         .setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage()))
                         .setMeta(partyMeta));
             } else {
                 menu.setOption(22, new IconMenuItem()
-                        .setMaterial(SKULL_ITEM)
+                        .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                         .setData(3)
                         .setTitle(GOLD + Translation.getString("Name.Party", myPet.getOwner().getLanguage()))
                         .setMeta(disabledMeta));
@@ -317,13 +319,13 @@ public class BeaconImpl implements Beacon {
         }
         if (receiver == BuffReceiver.Everyone) {
             menu.setOption(23, new IconMenuItem()
-                    .setMaterial(SKULL_ITEM)
+                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                     .setData(3)
                     .setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage()))
                     .setMeta(everyoneMeta));
         } else {
             menu.setOption(23, new IconMenuItem()
-                    .setMaterial(SKULL_ITEM)
+                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                     .setData(3)
                     .setTitle(GOLD + Translation.getString("Name.Everyone", myPet.getOwner().getLanguage()))
                     .setMeta(disabledMeta));
@@ -337,7 +339,7 @@ public class BeaconImpl implements Beacon {
         }
         if (getBuffLevel(Buff.Haste) > 0) {
             menu.setOption(9, new IconMenuItem()
-                    .setMaterial(GOLD_PICKAXE)
+                    .setMaterial(EnumSelector.find(Material.class, "GOLD_PICKAXE", "GOLDEN_PICKAXE"))
                     .setAmount(getBuffLevel(Buff.Haste))
                     .setTitle(GOLD + Translation.getString("Name." + Buff.Haste.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Haste))));
         }
@@ -349,7 +351,7 @@ public class BeaconImpl implements Beacon {
         }
         if (getBuffLevel(Buff.JumpBoost) > 0) {
             menu.setOption(1, new IconMenuItem()
-                    .setMaterial(FIREWORK)
+                    .setMaterial(EnumSelector.find(Material.class, "FIREWORK", "FIREWORK_ROCKET"))
                     .setAmount(getBuffLevel(Buff.JumpBoost))
                     .setTitle(GOLD + Translation.getString("Name." + Buff.JumpBoost.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.JumpBoost))));
         }
@@ -373,13 +375,13 @@ public class BeaconImpl implements Beacon {
         }
         if (getBuffLevel(Buff.WaterBreathing) > 0) {
             menu.setOption(16, new IconMenuItem()
-                    .setMaterial(RAW_FISH)
+                    .setMaterial(EnumSelector.find(Material.class, "RAW_FISH", "COD"))
                     .setAmount(getBuffLevel(Buff.WaterBreathing))
                     .setTitle(GOLD + Translation.getString("Name." + Buff.WaterBreathing.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.WaterBreathing))));
         }
         if (getBuffLevel(Buff.Invisibility) > 0) {
             menu.setOption(25, new IconMenuItem()
-                    .setMaterial(EYE_OF_ENDER)
+                    .setMaterial(EnumSelector.find(Material.class, "EYE_OF_ENDER", "ENDER_EYE"))
                     .setAmount(getBuffLevel(Buff.Invisibility))
                     .setTitle(GOLD + Translation.getString("Name." + Buff.Invisibility.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.Invisibility))));
         }
@@ -478,7 +480,7 @@ public class BeaconImpl implements Beacon {
             }
 
             range = range * range;
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), "SPELL_WITCH", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), ParticleCompat.SPELL_WITCH.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
             List<Player> members = null;
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BuffReceiver.Party) {
@@ -508,14 +510,14 @@ public class BeaconImpl implements Beacon {
                             for (PotionEffect effect : potionEffects) {
                                 player.addPotionEffect(effect, true);
                             }
-                            MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                            MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             break targetLoop;
                         }
                     case Everyone:
                         for (PotionEffect effect : potionEffects) {
                             player.addPotionEffect(effect, true);
                         }
-                        MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                        MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
                     case Party:
                         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && members != null) {
@@ -523,7 +525,7 @@ public class BeaconImpl implements Beacon {
                                 for (PotionEffect effect : potionEffects) {
                                     player.addPotionEffect(effect, true);
                                 }
-                                MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), "SPELL_INSTANT", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                                MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             }
                             break;
                         } else {

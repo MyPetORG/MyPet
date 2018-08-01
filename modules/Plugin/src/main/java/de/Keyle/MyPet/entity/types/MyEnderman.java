@@ -23,6 +23,8 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -52,7 +54,6 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
         if (block != null && block.getType() != AIR) {
             info.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
         }
-        //info.getValue().put("Screaming", new TagByte("Screaming", isScreaming()));
         return info;
     }
 
@@ -60,26 +61,33 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
     public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("BlockID")) {
             int id;
-            int data = 0;
-
+            byte data = 0;
             if (info.containsKeyAs("BlockID", TagShort.class)) {
                 id = info.getAs("BlockID", TagShort.class).getShortData();
             } else {
                 id = info.getAs("BlockID", TagInt.class).getIntData();
             }
             if (info.containsKeyAs("BlockData", TagShort.class)) {
-                data = info.getAs("BlockData", TagShort.class).getShortData();
+                data = (byte) info.getAs("BlockData", TagShort.class).getShortData();
             } else if (info.containsKeyAs("BlockData", TagInt.class)) {
-                data = info.getAs("BlockData", TagInt.class).getIntData();
+                data = (byte) info.getAs("BlockData", TagInt.class).getIntData();
             }
-            setBlock(new ItemStack(Material.getMaterial(id), 1, (short) data));
+
+            ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+            MaterialHolder materialHolder = itemDatabase.getByLegacyId(id, data);
+            if (materialHolder != null) {
+                Material material = materialHolder.getMaterial();
+                if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                    setBlock(new ItemStack(material, 1));
+                } else {
+                    setBlock(new ItemStack(material, 1, data));
+                }
+            }
         } else if (info.getCompoundData().containsKey("Block")) {
             TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
             ItemStack block = MyPetApi.getPlatformHelper().compundToItemStack(itemStackCompund);
             setBlock(block);
         }
-
-        //setScreaming((()info.getValue().get("Screaming")).getBooleanValue());
     }
 
     @Override

@@ -25,12 +25,14 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_8_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_8_R1.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
@@ -61,14 +63,16 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      * @param count      the number of particles
      * @param radius     the radius around the location
      */
-    public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
+    public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         EnumParticle effect = EnumParticle.valueOf(effectName);
 
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effect, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, data);
+        int[] intData = data != null ? (int[]) data.get() : new int[0];
+
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, intData);
         radius = radius * radius;
 
         for (Player player : location.getWorld().getPlayers()) {
@@ -88,14 +92,16 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      * @param count      the number of particles
      * @param radius     the radius around the location
      */
-    public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, int... data) {
+    public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         EnumParticle effect = EnumParticle.valueOf(effectName);
 
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effect, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, data);
+        int[] intData = data != null ? (int[]) data.get() : new int[0];
+
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count, intData);
         radius = radius * radius;
 
         if (player.getLocation().getWorld() == location.getWorld()) {
@@ -245,7 +251,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public String getVanillaName(org.bukkit.inventory.ItemStack bukkitItemStack) {
         ItemStack itemStack = CraftItemStack.asNMSCopy(bukkitItemStack);
-        return itemStack.getItem().e_(itemStack);
+        return itemStack.getItem().e_(itemStack) + ".name";
     }
 
     @Override
@@ -273,5 +279,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public net.minecraft.server.v1_8_R1.World getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
+    }
+
+    public Material getMaterial(MaterialHolder materialHolder) {
+        return Material.matchMaterial(materialHolder.getLegacyName().getName());
     }
 }

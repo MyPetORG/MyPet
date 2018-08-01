@@ -46,6 +46,7 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
@@ -109,7 +110,7 @@ public class EntityListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onMyPet(EntityInteractEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
-            if (event.getBlock().getType() == Material.SOIL) {
+            if (event.getBlock().getType() == EnumSelector.find(Material.class, "SOIL", "FARMLAND")) {
                 event.setCancelled(true);
             }
         }
@@ -212,7 +213,7 @@ public class EntityListener implements Listener {
                                 m.then(is.getItemMeta().getDisplayName());
                             } else {
                                 try {
-                                    m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is) + ".name");
+                                    m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is));
                                 } catch (Exception e) {
                                     MyPetApi.getLogger().warning("A food item for \"" + myPet.getPetType().name() + "\" caused an error. If you think this is a bug please report it to the MyPet developer.");
                                     MyPetApi.getLogger().warning(is.toString());

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.util.chat.parts;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.ItemDatabase;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -113,10 +112,12 @@ public class ItemTooltip {
 
         String jsonString = "{id:";
 
-        if (minorVersion <= 7) {
-            jsonString += material.getId();
+        if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+            jsonString += material.getKey().toString();
+        } else if (MyPetApi.getCompatUtil().isCompatible("1.8")) {
+            jsonString += material.name().toLowerCase();
         } else {
-            jsonString += MyPetApi.getServiceManager().getService(ItemDatabase.class).get().getName(material.getId());
+            jsonString += material.getId();
         }
 
         if (lore.size() > 0 || !title.equals("")) {
