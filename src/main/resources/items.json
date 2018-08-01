@@ -1,0 +1,6287 @@
+[
+  {
+    "legacy-name": "air",
+    "legacy-id": 0,
+    "id": "air",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "void_air",
+    "introduced": "1.13"
+  },
+  {
+    "id": "cave_air",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "stone",
+    "legacy-id": 1,
+    "id": "stone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone",
+    "legacy-data": 1,
+    "legacy-id": 1,
+    "id": "granite",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "stone",
+    "legacy-data": 2,
+    "legacy-id": 1,
+    "id": "polished_granite",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "stone",
+    "legacy-data": 3,
+    "legacy-id": 1,
+    "id": "diorite",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "stone",
+    "legacy-data": 4,
+    "legacy-id": 1,
+    "id": "polished_diorite",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "stone",
+    "legacy-data": 5,
+    "legacy-id": 1,
+    "id": "andesite",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "stone",
+    "legacy-data": 6,
+    "legacy-id": 1,
+    "id": "polished_andesite",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "grass",
+    "legacy-id": 2,
+    "id": "grass_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dirt",
+    "legacy-id": 3,
+    "id": "dirt",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dirt",
+    "legacy-data": 1,
+    "legacy-id": 3,
+    "id": "coarse_dirt",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dirt",
+    "legacy-data": 2,
+    "legacy-id": 3,
+    "id": "podzol",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cobblestone",
+    "legacy-id": 4,
+    "id": "cobblestone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "planks",
+    "legacy-id": 5,
+    "id": "oak_planks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "planks",
+    "legacy-data": 1,
+    "legacy-id": 5,
+    "id": "spruce_planks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "planks",
+    "legacy-data": 2,
+    "legacy-id": 5,
+    "id": "birch_planks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "planks",
+    "legacy-data": 3,
+    "legacy-id": 5,
+    "id": "jungle_planks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "planks",
+    "legacy-data": 4,
+    "legacy-id": 5,
+    "id": "acacia_planks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "planks",
+    "legacy-data": 5,
+    "legacy-id": 5,
+    "id": "dark_oak_planks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sapling",
+    "legacy-id": 6,
+    "id": "oak_sapling",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sapling",
+    "legacy-data": 1,
+    "legacy-id": 6,
+    "id": "spruce_sapling",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sapling",
+    "legacy-data": 2,
+    "legacy-id": 6,
+    "id": "birch_sapling",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sapling",
+    "legacy-data": 3,
+    "legacy-id": 6,
+    "id": "jungle_sapling",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sapling",
+    "legacy-data": 4,
+    "legacy-id": 6,
+    "id": "acacia_sapling",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sapling",
+    "legacy-data": 5,
+    "legacy-id": 6,
+    "id": "dark_oak_sapling",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bedrock",
+    "legacy-id": 7,
+    "id": "bedrock",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "flowing_water",
+    "legacy-id": 8,
+    "id": "flowing_water",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "still_water",
+    "legacy-id": 9,
+    "id": "water",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "flowing_lava",
+    "legacy-id": 10,
+    "id": "flowing_lava",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "still_lava",
+    "legacy-id": 11,
+    "id": "lava",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sand",
+    "legacy-id": 12,
+    "id": "sand",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sand",
+    "legacy-data": 1,
+    "legacy-id": 12,
+    "id": "red_sand",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "gravel",
+    "legacy-id": 13,
+    "id": "gravel",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "gold_ore",
+    "legacy-id": 14,
+    "id": "gold_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_ore",
+    "legacy-id": 15,
+    "id": "iron_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "coal_ore",
+    "legacy-id": 16,
+    "id": "coal_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "log",
+    "legacy-id": 17,
+    "id": "oak_log",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "log",
+    "legacy-data": 1,
+    "legacy-id": 17,
+    "id": "spruce_log",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "log",
+    "legacy-data": 2,
+    "legacy-id": 17,
+    "id": "birch_log",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "log",
+    "legacy-data": 3,
+    "legacy-id": 17,
+    "id": "jungle_log",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "oak_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "spruce_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "birch_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "jungle_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "acacia_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dark_oak_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "stripped_oak_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "stripped_spruce_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "stripped_birch_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "stripped_jungle_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "stripped_acacia_wood",
+    "introduced": "1.13"
+  },
+  {
+    "id": "stripped_dark_oak_wood",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "leaves",
+    "legacy-id": 18,
+    "id": "oak_leaves",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leaves",
+    "legacy-data": 1,
+    "legacy-id": 18,
+    "id": "spruce_leaves",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leaves",
+    "legacy-data": 2,
+    "legacy-id": 18,
+    "id": "birch_leaves",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leaves",
+    "legacy-data": 3,
+    "legacy-id": 18,
+    "id": "jungle_leaves",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sponge",
+    "legacy-id": 19,
+    "id": "sponge",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sponge",
+    "legacy-data": 1,
+    "legacy-id": 19,
+    "id": "wet_sponge",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "glass",
+    "legacy-id": 20,
+    "id": "glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lapis_ore",
+    "legacy-id": 21,
+    "id": "lapis_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lapis_block",
+    "legacy-id": 22,
+    "id": "lapis_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dispenser",
+    "legacy-id": 23,
+    "id": "dispenser",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sandstone",
+    "legacy-id": 24,
+    "id": "sandstone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sandstone",
+    "legacy-data": 1,
+    "legacy-id": 24,
+    "id": "chiseled_sandstone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sandstone",
+    "legacy-data": 2,
+    "legacy-id": 24,
+    "id": "cut_sandstone",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "smooth_sandstone",
+    "introduced": "1.13"
+  },
+  {
+    "id": "smooth_red_sandstone",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "noteblock",
+    "legacy-id": 25,
+    "id": "note_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bed",
+    "legacy-id": 26,
+    "id": "bed",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_rail",
+    "legacy-id": 27,
+    "id": "powered_rail",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "detector_rail",
+    "legacy-id": 28,
+    "id": "detector_rail",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sticky_piston",
+    "legacy-id": 29,
+    "id": "sticky_piston",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "moving_piston",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "cobweb",
+    "legacy-id": 30,
+    "id": "cobweb",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "tall_seagrass",
+    "introduced": "1.13"
+  },
+  {
+    "id": "seagrass",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "grass",
+    "legacy-id": 31,
+    "id": "tallgrass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "tallgrass",
+    "legacy-data": 1,
+    "legacy-id": 31,
+    "id": "tallgrass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "tallgrass",
+    "legacy-data": 2,
+    "legacy-id": 31,
+    "id": "fern",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "deadbush",
+    "legacy-id": 32,
+    "id": "dead_bush",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "tube_coral",
+    "introduced": "1.13"
+  },
+  {
+    "id": "brain_coral",
+    "introduced": "1.13"
+  },
+  {
+    "id": "bubble_coral",
+    "introduced": "1.13"
+  },
+  {
+    "id": "fire_coral",
+    "introduced": "1.13"
+  },
+  {
+    "id": "horn_coral",
+    "introduced": "1.13"
+  },
+  {
+    "id": "tube_coral_fan",
+    "introduced": "1.13"
+  },
+  {
+    "id": "brain_coral_fan",
+    "introduced": "1.13"
+  },
+  {
+    "id": "bubble_coral_fan",
+    "introduced": "1.13"
+  },
+  {
+    "id": "fire_coral_fan",
+    "introduced": "1.13"
+  },
+  {
+    "id": "horn_coral_fan",
+    "introduced": "1.13"
+  },
+  {
+    "id": "kelp_plant",
+    "introduced": "1.13"
+  },
+  {
+    "id": "kelp",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dried_kelp",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dried_kelp_block",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "piston",
+    "legacy-id": 33,
+    "id": "piston",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "piston_head",
+    "legacy-id": 34,
+    "id": "piston_head",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-id": 35,
+    "id": "white_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 1,
+    "legacy-id": 35,
+    "id": "orange_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 2,
+    "legacy-id": 35,
+    "id": "magenta_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 3,
+    "legacy-id": 35,
+    "id": "light_blue_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 4,
+    "legacy-id": 35,
+    "id": "yellow_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 5,
+    "legacy-id": 35,
+    "id": "lime_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 6,
+    "legacy-id": 35,
+    "id": "pink_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 7,
+    "legacy-id": 35,
+    "id": "gray_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 8,
+    "legacy-id": 35,
+    "id": "light_gray_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 9,
+    "legacy-id": 35,
+    "id": "cyan_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 10,
+    "legacy-id": 35,
+    "id": "purple_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 11,
+    "legacy-id": 35,
+    "id": "blue_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 12,
+    "legacy-id": 35,
+    "id": "brown_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 13,
+    "legacy-id": 35,
+    "id": "green_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 14,
+    "legacy-id": 35,
+    "id": "red_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wool",
+    "legacy-data": 15,
+    "legacy-id": 35,
+    "id": "black_wool",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "yellow_flower",
+    "legacy-id": 37,
+    "id": "dandelion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-id": 38,
+    "id": "poppy",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 1,
+    "legacy-id": 38,
+    "id": "blue_orchid",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 2,
+    "legacy-id": 38,
+    "id": "allium",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 3,
+    "legacy-id": 38,
+    "id": "azure_bluet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 4,
+    "legacy-id": 38,
+    "id": "red_tulip",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 5,
+    "legacy-id": 38,
+    "id": "orange_tulip",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 6,
+    "legacy-id": 38,
+    "id": "white_tulip",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 7,
+    "legacy-id": 38,
+    "id": "pink_tulip",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_flower",
+    "legacy-data": 8,
+    "legacy-id": 38,
+    "id": "oxeye_daisy",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "brown_mushroom",
+    "legacy-id": 39,
+    "id": "brown_mushroom",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_mushroom",
+    "legacy-id": 40,
+    "id": "red_mushroom",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "gold_block",
+    "legacy-id": 41,
+    "id": "gold_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_block",
+    "legacy-id": 42,
+    "id": "iron_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-id": 43,
+    "id": "double_stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 1,
+    "legacy-id": 43,
+    "id": "double_stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 2,
+    "legacy-id": 43,
+    "id": "double_wooden_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 3,
+    "legacy-id": 43,
+    "id": "double_stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 4,
+    "legacy-id": 43,
+    "id": "double_stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 5,
+    "legacy-id": 43,
+    "id": "double_stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 6,
+    "legacy-id": 43,
+    "id": "double_stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 7,
+    "legacy-id": 43,
+    "id": "smooth_quartz",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_stone_slab",
+    "legacy-data": 8,
+    "legacy-id": 43,
+    "id": "smooth_stone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-id": 44,
+    "id": "stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-data": 1,
+    "legacy-id": 44,
+    "id": "sandstone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-data": 2,
+    "legacy-id": 44,
+    "id": "stone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-data": 3,
+    "legacy-id": 44,
+    "id": "cobblestone_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-data": 4,
+    "legacy-id": 44,
+    "id": "brick_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-data": 5,
+    "legacy-id": 44,
+    "id": "stone_brick_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-data": 6,
+    "legacy-id": 44,
+    "id": "nether_brick_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_slab",
+    "legacy-data": 7,
+    "legacy-id": 44,
+    "id": "quartz_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "brick_block",
+    "legacy-id": 45,
+    "id": "bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "tnt",
+    "legacy-id": 46,
+    "id": "tnt",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bookshelf",
+    "legacy-id": 47,
+    "id": "bookshelf",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mossy_cobblestone",
+    "legacy-id": 48,
+    "id": "mossy_cobblestone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "obsidian",
+    "legacy-id": 49,
+    "id": "obsidian",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "torch",
+    "legacy-id": 50,
+    "id": "torch",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "wall_torch",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "fire",
+    "legacy-id": 51,
+    "id": "fire",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 50,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 51,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 52,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 53,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 54,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 55,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 56,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 57,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 58,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 59,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 60,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 61,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 62,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 63,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 64,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 65,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 66,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 90,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 91,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 92,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 93,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 94,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 95,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 96,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 97,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 98,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 99,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mob_spawner",
+    "legacy-data": 100,
+    "legacy-id": 52,
+    "id": "mob_spawner",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "oak_stairs",
+    "legacy-id": 53,
+    "id": "oak_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "chest",
+    "legacy-id": 54,
+    "id": "chest",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "redstone_wire",
+    "legacy-id": 55,
+    "id": "redstone_wire",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_ore",
+    "legacy-id": 56,
+    "id": "diamond_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_block",
+    "legacy-id": 57,
+    "id": "diamond_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "crafting_table",
+    "legacy-id": 58,
+    "id": "crafting_table",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wheat",
+    "legacy-id": 59,
+    "id": "wheat",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wheat",
+    "legacy-id": 60,
+    "id": "farmland",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "furnace",
+    "legacy-id": 61,
+    "id": "furnace",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lit_furnace",
+    "legacy-id": 62,
+    "id": "furnace",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "standing_sign",
+    "legacy-id": 63,
+    "id": "standing_sign",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_door",
+    "legacy-id": 64,
+    "id": "wooden_door",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "ladder",
+    "legacy-id": 65,
+    "id": "ladder",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "rail",
+    "legacy-id": 66,
+    "id": "rail",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_stairs",
+    "legacy-id": 67,
+    "id": "cobblestone_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wall_sign",
+    "legacy-id": 68,
+    "id": "wall_sign",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lever",
+    "legacy-id": 69,
+    "id": "lever",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_pressure_plate",
+    "legacy-id": 70,
+    "id": "stone_pressure_plate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_door",
+    "legacy-id": 71,
+    "id": "iron_door",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_pressure_plate",
+    "legacy-id": 72,
+    "id": "oak_pressure_plate",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "spruce_pressure_plate",
+    "introduced": "1.13"
+  },
+  {
+    "id": "birch_pressure_plate",
+    "introduced": "1.13"
+  },
+  {
+    "id": "jungle_pressure_plate",
+    "introduced": "1.13"
+  },
+  {
+    "id": "acacia_pressure_plate",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dark_oak_pressure_plate",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "redstone_ore",
+    "legacy-id": 73,
+    "id": "redstone_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lit_redstone_ore",
+    "legacy-id": 74,
+    "id": "redstone_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "unlit_redstone_torch",
+    "legacy-id": 75,
+    "id": "unlit_redstone_torch",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lit_redstone_torch",
+    "legacy-id": 76,
+    "id": "redstone_torch",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "redstone_wall_torch",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "stone_button",
+    "legacy-id": 77,
+    "id": "stone_button",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "snow_layer",
+    "legacy-id": 78,
+    "id": "snow",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "ice",
+    "legacy-id": 79,
+    "id": "ice",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "snow",
+    "legacy-id": 80,
+    "id": "snow_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cactus",
+    "legacy-id": 81,
+    "id": "cactus",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "clay",
+    "legacy-id": 82,
+    "id": "clay_ball",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "reeds",
+    "legacy-id": 83,
+    "id": "reeds",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "jukebox",
+    "legacy-id": 84,
+    "id": "jukebox",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fence",
+    "legacy-id": 85,
+    "id": "oak_fence",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "pumpkin",
+    "legacy-id": 86,
+    "id": "pumpkin",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "carved_pumpkin",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "netherrack",
+    "legacy-id": 87,
+    "id": "netherrack",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "soul_sand",
+    "legacy-id": 88,
+    "id": "soul_sand",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "glowstone",
+    "legacy-id": 89,
+    "id": "glowstone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "portal",
+    "legacy-id": 90,
+    "id": "nether_portal",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lit_pumpkin",
+    "legacy-id": 91,
+    "id": "jack_o_lantern",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cake",
+    "legacy-id": 92,
+    "id": "cake",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "unpowered_repeater",
+    "legacy-id": 93,
+    "id": "powered_repeater",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "powered_repeater",
+    "legacy-id": 94,
+    "id": "powered_repeater",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-id": 95,
+    "id": "white_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 1,
+    "legacy-id": 95,
+    "id": "orange_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 2,
+    "legacy-id": 95,
+    "id": "magenta_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 3,
+    "legacy-id": 95,
+    "id": "light_blue_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 4,
+    "legacy-id": 95,
+    "id": "yellow_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 5,
+    "legacy-id": 95,
+    "id": "lime_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 6,
+    "legacy-id": 95,
+    "id": "pink_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 7,
+    "legacy-id": 95,
+    "id": "gray_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 8,
+    "legacy-id": 95,
+    "id": "light_gray_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 9,
+    "legacy-id": 95,
+    "id": "cyan_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 10,
+    "legacy-id": 95,
+    "id": "purple_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 11,
+    "legacy-id": 95,
+    "id": "blue_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 12,
+    "legacy-id": 95,
+    "id": "brown_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 13,
+    "legacy-id": 95,
+    "id": "green_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 14,
+    "legacy-id": 95,
+    "id": "red_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass",
+    "legacy-data": 15,
+    "legacy-id": 95,
+    "id": "black_stained_glass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "trapdoor",
+    "legacy-id": 96,
+    "id": "oak_trapdoor",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "spruce_trapdoor",
+    "introduced": "1.13"
+  },
+  {
+    "id": "birch_trapdoor",
+    "introduced": "1.13"
+  },
+  {
+    "id": "jungle_trapdoor",
+    "introduced": "1.13"
+  },
+  {
+    "id": "acacia_trapdoor",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dark_oak_trapdoor",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "monster_egg",
+    "legacy-id": 97,
+    "id": "infested_stone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "monster_egg",
+    "legacy-data": 1,
+    "legacy-id": 97,
+    "id": "infested_cobblestone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "monster_egg",
+    "legacy-data": 2,
+    "legacy-id": 97,
+    "id": "infested_stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "monster_egg",
+    "legacy-data": 3,
+    "legacy-id": 97,
+    "id": "infested_mossy_stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "monster_egg",
+    "legacy-data": 4,
+    "legacy-id": 97,
+    "id": "infested_cracked_stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "monster_egg",
+    "legacy-data": 5,
+    "legacy-id": 97,
+    "id": "infested_chiseled_stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stonebrick",
+    "legacy-id": 98,
+    "id": "stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stonebrick",
+    "legacy-data": 1,
+    "legacy-id": 98,
+    "id": "mossy_stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stonebrick",
+    "legacy-data": 2,
+    "legacy-id": 98,
+    "id": "cracked_stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stonebrick",
+    "legacy-data": 3,
+    "legacy-id": 98,
+    "id": "chiseled_stone_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "brown_mushroom_block",
+    "legacy-id": 99,
+    "id": "brown_mushroom_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "mushroom_stem",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "red_mushroom_block",
+    "legacy-id": 100,
+    "id": "red_mushroom_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_bars",
+    "legacy-id": 101,
+    "id": "iron_bars",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "glass_pane",
+    "legacy-id": 102,
+    "id": "glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "melon_block",
+    "legacy-id": 103,
+    "id": "melon",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "pumpkin_stem",
+    "legacy-id": 104,
+    "id": "pumpkin_stem",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "attached_pumpkin_stem",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "melon_stem",
+    "legacy-id": 105,
+    "id": "melon_stem",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "attached_melon_stem",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "vine",
+    "legacy-id": 106,
+    "id": "vine",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fence_gate",
+    "legacy-id": 107,
+    "id": "oak_fence_gate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "brick_stairs",
+    "legacy-id": 108,
+    "id": "brick_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_brick_stairs",
+    "legacy-id": 109,
+    "id": "stone_brick_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mycelium",
+    "legacy-id": 110,
+    "id": "mycelium",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "waterlily",
+    "legacy-id": 111,
+    "id": "lily_pad",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "bubble_column",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dead_tube_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dead_brain_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dead_bubble_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dead_fire_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dead_horn_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "tube_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "brain_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "bubble_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "fire_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "horn_coral_block",
+    "introduced": "1.13"
+  },
+  {
+    "id": "trident",
+    "introduced": "1.13"
+  },
+  {
+    "id": "scute",
+    "introduced": "1.13"
+  },
+  {
+    "id": "turtle_helmet",
+    "introduced": "1.13"
+  },
+  {
+    "id": "phantom_membrane",
+    "introduced": "1.13"
+  },
+  {
+    "id": "nautilus_shell",
+    "introduced": "1.13"
+  },
+  {
+    "id": "heart_of_the_sea",
+    "introduced": "1.13"
+  },
+  {
+    "id": "conduit",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "nether_brick",
+    "legacy-id": 112,
+    "id": "nether_bricks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "nether_brick_fence",
+    "legacy-id": 113,
+    "id": "nether_brick_fence",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "nether_brick_stairs",
+    "legacy-id": 114,
+    "id": "nether_brick_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "nether_brick_stairs",
+    "legacy-id": 115,
+    "id": "nether_brick_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "enchanting_table",
+    "legacy-id": 116,
+    "id": "enchanting_table",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "brewing_stand",
+    "legacy-id": 117,
+    "id": "brewing_stand",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cauldron",
+    "legacy-id": 118,
+    "id": "cauldron",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "end_portal",
+    "legacy-id": 119,
+    "id": "end_portal",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "end_portal_frame",
+    "legacy-id": 120,
+    "id": "end_portal_frame",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "end_stone",
+    "legacy-id": 121,
+    "id": "end_stone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dragon_egg",
+    "legacy-id": 122,
+    "id": "dragon_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "redstone_lamp",
+    "legacy-id": 123,
+    "id": "redstone_lamp",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lit_redstone_lamp",
+    "legacy-id": 124,
+    "id": "redstone_lamp",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_wooden_slab",
+    "legacy-id": 125,
+    "id": "double_wooden_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_wooden_slab",
+    "legacy-data": 1,
+    "legacy-id": 125,
+    "id": "double_wooden_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_wooden_slab",
+    "legacy-data": 2,
+    "legacy-id": 125,
+    "id": "double_wooden_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_wooden_slab",
+    "legacy-data": 3,
+    "legacy-id": 125,
+    "id": "double_wooden_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_wooden_slab",
+    "legacy-data": 4,
+    "legacy-id": 125,
+    "id": "double_wooden_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_wooden_slab",
+    "legacy-data": 5,
+    "legacy-id": 125,
+    "id": "double_wooden_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_slab",
+    "legacy-id": 126,
+    "id": "oak_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_slab",
+    "legacy-data": 1,
+    "legacy-id": 126,
+    "id": "spruce_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_slab",
+    "legacy-data": 2,
+    "legacy-id": 126,
+    "id": "birch_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_slab",
+    "legacy-data": 3,
+    "legacy-id": 126,
+    "id": "jungle_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_slab",
+    "legacy-data": 4,
+    "legacy-id": 126,
+    "id": "acacia_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_slab",
+    "legacy-data": 5,
+    "legacy-id": 126,
+    "id": "dark_oak_slab",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cocoa",
+    "legacy-id": 127,
+    "id": "cocoa",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sandstone_stairs",
+    "legacy-id": 128,
+    "id": "sandstone_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "emerald_ore",
+    "legacy-id": 129,
+    "id": "emerald_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "ender_chest",
+    "legacy-id": 130,
+    "id": "ender_chest",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "tripwire_hook",
+    "legacy-id": 131,
+    "id": "tripwire_hook",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "tripwire_hook",
+    "legacy-id": 132,
+    "id": "tripwire",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "emerald_block",
+    "legacy-id": 133,
+    "id": "emerald_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spruce_stairs",
+    "legacy-id": 134,
+    "id": "spruce_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "birch_stairs",
+    "legacy-id": 135,
+    "id": "birch_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "jungle_stairs",
+    "legacy-id": 136,
+    "id": "jungle_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "knowledge_book",
+    "introduced": "1.13"
+  },
+  {
+    "id": "debug_stick",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "command_block",
+    "legacy-id": 137,
+    "id": "command_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "beacon",
+    "legacy-id": 138,
+    "id": "beacon",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cobblestone_wall",
+    "legacy-id": 139,
+    "id": "cobblestone_wall",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cobblestone_wall",
+    "legacy-data": 1,
+    "legacy-id": 139,
+    "id": "mossy_cobblestone_wall",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "flower_pot",
+    "legacy-id": 140,
+    "id": "flower_pot",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "potted_poppy",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_dandelion",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_oak_sapling",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_spruce_sapling",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_birch_sapling",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_jungle_sapling",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_acacia_sapling",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_dark_oak_sapling",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_red_mushroom",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_brown_mushroom",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_cactus",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_dead_bush",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_fern",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_blue_orchid",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_allium",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_azure_bluet",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_red_tulip",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_orange_tulip",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_white_tulip",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_pink_tulip",
+    "introduced": "1.13"
+  },
+  {
+    "id": "potted_oxeye_daisy",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "carrots",
+    "legacy-id": 141,
+    "id": "carrots",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potatoes",
+    "legacy-id": 142,
+    "id": "potatoes",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_button",
+    "legacy-id": 143,
+    "id": "oak_button",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "spruce_button",
+    "introduced": "1.13"
+  },
+  {
+    "id": "birch_button",
+    "introduced": "1.13"
+  },
+  {
+    "id": "jungle_button",
+    "introduced": "1.13"
+  },
+  {
+    "id": "acacia_button",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dark_oak_button",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "skull",
+    "legacy-id": 144,
+    "id": "skull",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "anvil",
+    "legacy-id": 145,
+    "id": "anvil",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "anvil",
+    "legacy-data": 1,
+    "legacy-id": 145,
+    "id": "chipped_anvil",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "anvil",
+    "legacy-data": 2,
+    "legacy-id": 145,
+    "id": "damaged_anvil",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "trapped_chest",
+    "legacy-id": 146,
+    "id": "trapped_chest",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "light_weighted_pressure_plate",
+    "legacy-id": 147,
+    "id": "light_weighted_pressure_plate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "heavy_weighted_pressure_plate",
+    "legacy-id": 148,
+    "id": "heavy_weighted_pressure_plate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "unpowered_comparator",
+    "legacy-id": 149,
+    "id": "powered_comparator",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "powered_comparator",
+    "legacy-id": 150,
+    "id": "powered_comparator",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "daylight_detector",
+    "legacy-id": 151,
+    "id": "daylight_detector",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "redstone_block",
+    "legacy-id": 152,
+    "id": "redstone_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "quartz_ore",
+    "legacy-id": 153,
+    "id": "nether_quartz_ore",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "hopper",
+    "legacy-id": 154,
+    "id": "hopper",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "quartz",
+    "legacy-id": 155,
+    "id": "quartz_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "quartz",
+    "legacy-data": 1,
+    "legacy-id": 155,
+    "id": "chiseled_quartz_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "quartz",
+    "legacy-data": 2,
+    "legacy-id": 155,
+    "id": "quartz_pillar",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "quartz_stairs",
+    "legacy-id": 156,
+    "id": "quartz_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "activator_rail",
+    "legacy-id": 157,
+    "id": "activator_rail",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dropper",
+    "legacy-id": 158,
+    "id": "dropper",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-id": 159,
+    "id": "white_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 1,
+    "legacy-id": 159,
+    "id": "orange_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 2,
+    "legacy-id": 159,
+    "id": "magenta_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 3,
+    "legacy-id": 159,
+    "id": "light_blue_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 4,
+    "legacy-id": 159,
+    "id": "yellow_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 5,
+    "legacy-id": 159,
+    "id": "lime_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 6,
+    "legacy-id": 159,
+    "id": "pink_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 7,
+    "legacy-id": 159,
+    "id": "gray_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 8,
+    "legacy-id": 159,
+    "id": "light_gray_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 9,
+    "legacy-id": 159,
+    "id": "cyan_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 10,
+    "legacy-id": 159,
+    "id": "purple_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 11,
+    "legacy-id": 159,
+    "id": "blue_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 12,
+    "legacy-id": 159,
+    "id": "brown_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 13,
+    "legacy-id": 159,
+    "id": "green_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 14,
+    "legacy-id": 159,
+    "id": "red_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_hardened_clay",
+    "legacy-data": 15,
+    "legacy-id": 159,
+    "id": "black_terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-id": 160,
+    "id": "white_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 1,
+    "legacy-id": 160,
+    "id": "orange_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 2,
+    "legacy-id": 160,
+    "id": "magenta_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 3,
+    "legacy-id": 160,
+    "id": "light_blue_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 4,
+    "legacy-id": 160,
+    "id": "yellow_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 5,
+    "legacy-id": 160,
+    "id": "lime_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 6,
+    "legacy-id": 160,
+    "id": "pink_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 7,
+    "legacy-id": 160,
+    "id": "gray_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 8,
+    "legacy-id": 160,
+    "id": "light_gray_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 9,
+    "legacy-id": 160,
+    "id": "cyan_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 10,
+    "legacy-id": 160,
+    "id": "purple_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 11,
+    "legacy-id": 160,
+    "id": "blue_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 12,
+    "legacy-id": 160,
+    "id": "brown_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 13,
+    "legacy-id": 160,
+    "id": "green_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 14,
+    "legacy-id": 160,
+    "id": "red_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stained_glass_pane",
+    "legacy-data": 15,
+    "legacy-id": 160,
+    "id": "black_stained_glass_pane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leaves2",
+    "legacy-id": 161,
+    "id": "acacia_leaves",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leaves2",
+    "legacy-data": 1,
+    "legacy-id": 161,
+    "id": "dark_oak_leaves",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "log2",
+    "legacy-id": 162,
+    "id": "acacia_log",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "log2",
+    "legacy-data": 1,
+    "legacy-id": 162,
+    "id": "dark_oak_log",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "acacia_stairs",
+    "legacy-id": 163,
+    "id": "acacia_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dark_oak_stairs",
+    "legacy-id": 164,
+    "id": "dark_oak_stairs",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "slime",
+    "legacy-id": 165,
+    "id": "slime_block",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "barrier",
+    "legacy-id": 166,
+    "id": "barrier",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "iron_trapdoor",
+    "legacy-id": 167,
+    "id": "iron_trapdoor",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "prismarine",
+    "legacy-id": 168,
+    "id": "prismarine",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "prismarine",
+    "legacy-data": 1,
+    "legacy-id": 168,
+    "id": "prismarine_bricks",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "prismarine",
+    "legacy-data": 2,
+    "legacy-id": 168,
+    "id": "dark_prismarine",
+    "introduced": "1.8"
+  },
+  {
+    "id": "petrified_oak_slab",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dark_prismarine_slab",
+    "introduced": "1.13"
+  },
+  {
+    "id": "prismarine_slab",
+    "introduced": "1.13"
+  },
+  {
+    "id": "prismarine_brick_slab",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dark_prismarine_stairs",
+    "introduced": "1.13"
+  },
+  {
+    "id": "prismarine_stairs",
+    "introduced": "1.13"
+  },
+  {
+    "id": "prismarine_brick_stairs",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "sea_lantern",
+    "legacy-id": 169,
+    "id": "sea_lantern",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "hay_bale",
+    "legacy-id": 170,
+    "id": "hay_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-id": 171,
+    "id": "white_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 1,
+    "legacy-id": 171,
+    "id": "orange_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 2,
+    "legacy-id": 171,
+    "id": "magenta_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 3,
+    "legacy-id": 171,
+    "id": "light_blue_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 4,
+    "legacy-id": 171,
+    "id": "yellow_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 5,
+    "legacy-id": 171,
+    "id": "lime_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 6,
+    "legacy-id": 171,
+    "id": "pink_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 7,
+    "legacy-id": 171,
+    "id": "gray_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 8,
+    "legacy-id": 171,
+    "id": "light_gray_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 9,
+    "legacy-id": 171,
+    "id": "cyan_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 10,
+    "legacy-id": 171,
+    "id": "purple_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 11,
+    "legacy-id": 171,
+    "id": "blue_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 12,
+    "legacy-id": 171,
+    "id": "brown_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 13,
+    "legacy-id": 171,
+    "id": "green_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 14,
+    "legacy-id": 171,
+    "id": "red_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carpet",
+    "legacy-data": 15,
+    "legacy-id": 171,
+    "id": "black_carpet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "hardened_clay",
+    "legacy-id": 172,
+    "id": "terracotta",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "coal_block",
+    "legacy-id": 173,
+    "id": "coal_block",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "packed_ice",
+    "legacy-id": 174,
+    "id": "packed_ice",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "blue_ice",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "double_plant",
+    "legacy-id": 175,
+    "id": "sunflower",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_plant",
+    "legacy-data": 1,
+    "legacy-id": 175,
+    "id": "lilac",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_plant",
+    "legacy-data": 2,
+    "legacy-id": 175,
+    "id": "tall_grass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_plant",
+    "legacy-data": 3,
+    "legacy-id": 175,
+    "id": "large_fern",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_plant",
+    "legacy-data": 4,
+    "legacy-id": 175,
+    "id": "rose_bush",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "double_plant",
+    "legacy-data": 5,
+    "legacy-id": 175,
+    "id": "peony",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "standing_banner",
+    "legacy-id": 176,
+    "id": "standing_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "standing_banner",
+    "legacy-id": 177,
+    "id": "wall_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "daylight_detector_inverted",
+    "legacy-id": 178,
+    "id": "daylight_detector",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "red_sandstone",
+    "legacy-id": 179,
+    "id": "red_sandstone",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "red_sandstone",
+    "legacy-data": 1,
+    "legacy-id": 179,
+    "id": "chiseled_red_sandstone",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "red_sandstone",
+    "legacy-data": 2,
+    "legacy-id": 179,
+    "id": "cut_red_sandstone",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "red_sandstone_stairs",
+    "legacy-id": 180,
+    "id": "red_sandstone_stairs",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "double_stone_slab2",
+    "legacy-id": 181,
+    "id": "double_stone_slab2",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "stone_slab2",
+    "legacy-id": 182,
+    "id": "red_sandstone_slab",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "spruce_fence_gate",
+    "legacy-id": 183,
+    "id": "spruce_fence_gate",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "birch_fence_gate",
+    "legacy-id": 184,
+    "id": "birch_fence_gate",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "jungle_fence_gate",
+    "legacy-id": 185,
+    "id": "jungle_fence_gate",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "dark_oak_fence_gate",
+    "legacy-id": 186,
+    "id": "dark_oak_fence_gate",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "acacia_fence_gate",
+    "legacy-id": 187,
+    "id": "acacia_fence_gate",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "spruce_fence",
+    "legacy-id": 188,
+    "id": "spruce_fence",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "birch_fence",
+    "legacy-id": 189,
+    "id": "birch_fence",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "jungle_fence",
+    "legacy-id": 190,
+    "id": "jungle_fence",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "dark_oak_fence",
+    "legacy-id": 191,
+    "id": "dark_oak_fence",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "acacia_fence",
+    "legacy-id": 192,
+    "id": "acacia_fence",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "spruce_door",
+    "legacy-id": 193,
+    "id": "spruce_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "birch_door",
+    "legacy-id": 194,
+    "id": "birch_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "jungle_door",
+    "legacy-id": 195,
+    "id": "jungle_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "acacia_door",
+    "legacy-id": 196,
+    "id": "acacia_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "dark_oak_door",
+    "legacy-id": 197,
+    "id": "dark_oak_door",
+    "introduced": "1.8"
+  },
+  {
+    "1.9": {
+      "id": "end_rod"
+    },
+    "legacy-id": 198,
+    "id": "end_rod",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "chorus_plant"
+    },
+    "legacy-id": 199,
+    "id": "chorus_plant",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "chorus_flower"
+    },
+    "legacy-id": 200,
+    "id": "chorus_flower",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "purpur_block"
+    },
+    "legacy-id": 201,
+    "id": "purpur_block",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "purpur_pillar"
+    },
+    "legacy-id": 202,
+    "id": "purpur_pillar",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "purpur_stairs"
+    },
+    "legacy-id": 203,
+    "id": "purpur_stairs",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "purpur_double_slab"
+    },
+    "legacy-id": 204,
+    "id": "purpur_double_slab",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "purpur_slab"
+    },
+    "legacy-id": 205,
+    "id": "purpur_slab",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "end_bricks"
+    },
+    "legacy-id": 206,
+    "id": "end_stone_bricks",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "beetroots"
+    },
+    "legacy-id": 207,
+    "id": "beetroots",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "grass_path"
+    },
+    "legacy-id": 208,
+    "id": "grass_path",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "end_gateway"
+    },
+    "legacy-id": 209,
+    "id": "end_gateway",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "repeating_command_block"
+    },
+    "legacy-id": 210,
+    "id": "repeating_command_block",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "chain_command_block"
+    },
+    "legacy-id": 211,
+    "id": "chain_command_block",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "frosted_ice"
+    },
+    "legacy-id": 212,
+    "id": "frosted_ice",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "magma"
+    },
+    "legacy-id": 213,
+    "id": "magma_block",
+    "introduced": "1.9"
+  },
+  {
+    "1.10": {
+      "id": "nether_wart_block"
+    },
+    "legacy-id": 214,
+    "id": "nether_wart_block",
+    "introduced": "1.10"
+  },
+  {
+    "1.10": {
+      "id": "red_nether_brick"
+    },
+    "legacy-id": 215,
+    "id": "red_nether_bricks",
+    "introduced": "1.10"
+  },
+  {
+    "1.10": {
+      "id": "bone_block"
+    },
+    "legacy-id": 216,
+    "id": "bone_block",
+    "introduced": "1.10"
+  },
+  {
+    "1.9": {
+      "id": "structure_void"
+    },
+    "legacy-id": 217,
+    "id": "structure_void",
+    "introduced": "1.9"
+  },
+  {
+    "1.11": {
+      "id": "observer"
+    },
+    "legacy-id": 218,
+    "id": "observer",
+    "introduced": "1.11"
+  },
+  {
+    "id": "shulker_box",
+    "introduced": "1.13"
+  },
+  {
+    "1.11": {
+      "id": "white_shulker_box"
+    },
+    "legacy-id": 219,
+    "id": "white_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "orange_shulker_box"
+    },
+    "legacy-id": 220,
+    "id": "orange_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "magenta_shulker_box"
+    },
+    "legacy-id": 221,
+    "id": "magenta_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "light_blue_shulker_box"
+    },
+    "legacy-id": 222,
+    "id": "light_blue_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "yellow_shulker_box"
+    },
+    "legacy-id": 223,
+    "id": "yellow_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "lime_shulker_box"
+    },
+    "legacy-id": 224,
+    "id": "lime_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "pink_shulker_box"
+    },
+    "legacy-id": 225,
+    "id": "pink_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "gray_shulker_box"
+    },
+    "legacy-id": 226,
+    "id": "gray_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "light_gray_shulker_box"
+    },
+    "legacy-id": 227,
+    "id": "light_gray_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "cyan_shulker_box"
+    },
+    "legacy-id": 228,
+    "id": "cyan_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "purple_shulker_box"
+    },
+    "legacy-id": 229,
+    "id": "purple_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "blue_shulker_box"
+    },
+    "legacy-id": 230,
+    "id": "blue_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "brown_shulker_box"
+    },
+    "legacy-id": 231,
+    "id": "brown_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "green_shulker_box"
+    },
+    "legacy-id": 232,
+    "id": "green_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "red_shulker_box"
+    },
+    "legacy-id": 233,
+    "id": "red_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "black_shulker_box"
+    },
+    "legacy-id": 234,
+    "id": "black_shulker_box",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "white_glazed_terracotta"
+    },
+    "legacy-id": 235,
+    "id": "white_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "orange_glazed_terracotta"
+    },
+    "legacy-id": 236,
+    "id": "orange_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "magenta_glazed_terracotta"
+    },
+    "legacy-id": 237,
+    "id": "magenta_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "light_blue_glazed_terracotta"
+    },
+    "legacy-id": 238,
+    "id": "light_blue_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "yellow_glazed_terracotta"
+    },
+    "legacy-id": 239,
+    "id": "yellow_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "lime_glazed_terracotta"
+    },
+    "legacy-id": 240,
+    "id": "lime_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "pink_glazed_terracotta"
+    },
+    "legacy-id": 241,
+    "id": "pink_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "gray_glazed_terracotta"
+    },
+    "legacy-id": 242,
+    "id": "gray_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "light_gray_glazed_terracotta"
+    },
+    "legacy-id": 243,
+    "id": "light_gray_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "cyan_glazed_terracotta"
+    },
+    "legacy-id": 244,
+    "id": "cyan_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "purple_glazed_terracotta"
+    },
+    "legacy-id": 245,
+    "id": "purple_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "blue_glazed_terracotta"
+    },
+    "legacy-id": 246,
+    "id": "blue_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "brown_glazed_terracotta"
+    },
+    "legacy-id": 247,
+    "id": "brown_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "green_glazed_terracotta"
+    },
+    "legacy-id": 248,
+    "id": "green_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "red_glazed_terracotta"
+    },
+    "legacy-id": 249,
+    "id": "red_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "black_glazed_terracotta"
+    },
+    "legacy-id": 250,
+    "id": "black_glazed_terracotta",
+    "introduced": "1.11"
+  },
+  {
+    "1.12": {
+      "id": "concrete"
+    },
+    "legacy-id": 251,
+    "id": "white_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 1
+    },
+    "legacy-id": 251,
+    "legacy-data": 1,
+    "id": "orange_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 2
+    },
+    "legacy-id": 251,
+    "legacy-data": 2,
+    "id": "magenta_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 3
+    },
+    "legacy-id": 251,
+    "legacy-data": 3,
+    "id": "light_blue_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 4
+    },
+    "legacy-id": 251,
+    "legacy-data": 4,
+    "id": "yellow_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 5
+    },
+    "legacy-id": 251,
+    "legacy-data": 5,
+    "id": "lime_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 6
+    },
+    "legacy-id": 251,
+    "legacy-data": 6,
+    "id": "pink_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 7
+    },
+    "legacy-id": 251,
+    "legacy-data": 7,
+    "id": "gray_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 8
+    },
+    "legacy-id": 251,
+    "legacy-data": 8,
+    "id": "light_gray_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 9
+    },
+    "legacy-id": 251,
+    "legacy-data": 9,
+    "id": "cyan_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 10
+    },
+    "legacy-id": 251,
+    "legacy-data": 10,
+    "id": "purple_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 11
+    },
+    "legacy-id": 251,
+    "legacy-data": 11,
+    "id": "blue_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 12
+    },
+    "legacy-id": 251,
+    "legacy-data": 12,
+    "id": "brown_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 13
+    },
+    "legacy-id": 251,
+    "legacy-data": 13,
+    "id": "green_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 14
+    },
+    "legacy-id": 251,
+    "legacy-data": 14,
+    "id": "red_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete",
+      "data": 15
+    },
+    "legacy-id": 251,
+    "legacy-data": 15,
+    "id": "black_concrete",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder"
+    },
+    "legacy-id": 252,
+    "id": "white_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 1
+    },
+    "legacy-id": 252,
+    "legacy-data": 1,
+    "id": "orange_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 2
+    },
+    "legacy-id": 252,
+    "legacy-data": 2,
+    "id": "magenta_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 3
+    },
+    "legacy-id": 252,
+    "legacy-data": 3,
+    "id": "light_blue_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 4
+    },
+    "legacy-id": 252,
+    "legacy-data": 4,
+    "id": "yellow_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 5
+    },
+    "legacy-id": 252,
+    "legacy-data": 5,
+    "id": "lime_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 6
+    },
+    "legacy-id": 252,
+    "legacy-data": 6,
+    "id": "pink_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 7
+    },
+    "legacy-id": 252,
+    "legacy-data": 7,
+    "id": "gray_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 8
+    },
+    "legacy-id": 252,
+    "legacy-data": 8,
+    "id": "light_gray_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 9
+    },
+    "legacy-id": 252,
+    "legacy-data": 9,
+    "id": "cyan_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 10
+    },
+    "legacy-id": 252,
+    "legacy-data": 10,
+    "id": "purple_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 11
+    },
+    "legacy-id": 252,
+    "legacy-data": 11,
+    "id": "blue_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 12
+    },
+    "legacy-id": 252,
+    "legacy-data": 12,
+    "id": "brown_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 13
+    },
+    "legacy-id": 252,
+    "legacy-data": 13,
+    "id": "green_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 14
+    },
+    "legacy-id": 252,
+    "legacy-data": 14,
+    "id": "red_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.12": {
+      "id": "concrete_powder",
+      "data": 15
+    },
+    "legacy-id": 252,
+    "legacy-data": 15,
+    "id": "black_concrete_powder",
+    "introduced": "1.12"
+  },
+  {
+    "1.9": {
+      "id": "structure_block"
+    },
+    "legacy-id": 255,
+    "id": "structure_block",
+    "introduced": "1.9"
+  },
+  {
+    "legacy-name": "iron_shovel",
+    "legacy-id": 256,
+    "id": "iron_shovel",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_pickaxe",
+    "legacy-id": 257,
+    "id": "iron_pickaxe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_axe",
+    "legacy-id": 258,
+    "id": "iron_axe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "flint_and_steel",
+    "legacy-id": 259,
+    "id": "flint_and_steel",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "apple",
+    "legacy-id": 260,
+    "id": "apple",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bow",
+    "legacy-id": 261,
+    "id": "bow",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "arrow",
+    "legacy-id": 262,
+    "id": "arrow",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "coal",
+    "legacy-id": 263,
+    "id": "coal",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "charcoal",
+    "legacy-data": 1,
+    "legacy-id": 263,
+    "id": "charcoal",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond",
+    "legacy-id": 264,
+    "id": "diamond",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_ingot",
+    "legacy-id": 265,
+    "id": "iron_ingot",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "gold_ingot",
+    "legacy-id": 266,
+    "id": "gold_ingot",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_sword",
+    "legacy-id": 267,
+    "id": "iron_sword",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_sword",
+    "legacy-id": 268,
+    "id": "wooden_sword",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_shovel",
+    "legacy-id": 269,
+    "id": "wooden_shovel",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_pickaxe",
+    "legacy-id": 270,
+    "id": "wooden_pickaxe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_axe",
+    "legacy-id": 271,
+    "id": "wooden_axe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_sword",
+    "legacy-id": 272,
+    "id": "stone_sword",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_shovel",
+    "legacy-id": 273,
+    "id": "stone_shovel",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_pickaxe",
+    "legacy-id": 274,
+    "id": "stone_pickaxe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_axe",
+    "legacy-id": 275,
+    "id": "stone_axe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_sword",
+    "legacy-id": 276,
+    "id": "diamond_sword",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_shovel",
+    "legacy-id": 277,
+    "id": "diamond_shovel",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_pickaxe",
+    "legacy-id": 278,
+    "id": "diamond_pickaxe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_axe",
+    "legacy-id": 279,
+    "id": "diamond_axe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stick",
+    "legacy-id": 280,
+    "id": "stick",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bowl",
+    "legacy-id": 281,
+    "id": "bowl",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "mushroom_stew",
+    "legacy-id": 282,
+    "id": "mushroom_stew",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_sword",
+    "legacy-id": 283,
+    "id": "golden_sword",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_shovel",
+    "legacy-id": 284,
+    "id": "golden_shovel",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_pickaxe",
+    "legacy-id": 285,
+    "id": "golden_pickaxe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_axe",
+    "legacy-id": 286,
+    "id": "golden_axe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "string",
+    "legacy-id": 287,
+    "id": "string",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "feather",
+    "legacy-id": 288,
+    "id": "feather",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "gunpowder",
+    "legacy-id": 289,
+    "id": "gunpowder",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_hoe",
+    "legacy-id": 290,
+    "id": "wooden_hoe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "stone_hoe",
+    "legacy-id": 291,
+    "id": "stone_hoe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_hoe",
+    "legacy-id": 292,
+    "id": "iron_hoe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_hoe",
+    "legacy-id": 293,
+    "id": "diamond_hoe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_hoe",
+    "legacy-id": 294,
+    "id": "golden_hoe",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wheat_seeds",
+    "legacy-id": 295,
+    "id": "wheat_seeds",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wheat",
+    "legacy-id": 296,
+    "id": "wheat",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bread",
+    "legacy-id": 297,
+    "id": "bread",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leather_helmet",
+    "legacy-id": 298,
+    "id": "leather_helmet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leather_chestplate",
+    "legacy-id": 299,
+    "id": "leather_chestplate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leather_leggings",
+    "legacy-id": 300,
+    "id": "leather_leggings",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leather_boots",
+    "legacy-id": 301,
+    "id": "leather_boots",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "chainmail_helmet",
+    "legacy-id": 302,
+    "id": "chainmail_helmet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "chainmail_chestplate",
+    "legacy-id": 303,
+    "id": "chainmail_chestplate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "chainmail_leggings",
+    "legacy-id": 304,
+    "id": "chainmail_leggings",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "chainmail_boots",
+    "legacy-id": 305,
+    "id": "chainmail_boots",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_helmet",
+    "legacy-id": 306,
+    "id": "iron_helmet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_chestplate",
+    "legacy-id": 307,
+    "id": "iron_chestplate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_leggings",
+    "legacy-id": 308,
+    "id": "iron_leggings",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_boots",
+    "legacy-id": 309,
+    "id": "iron_boots",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_helmet",
+    "legacy-id": 310,
+    "id": "diamond_helmet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_chestplate",
+    "legacy-id": 311,
+    "id": "diamond_chestplate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_leggings",
+    "legacy-id": 312,
+    "id": "diamond_leggings",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "diamond_boots",
+    "legacy-id": 313,
+    "id": "diamond_boots",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_helmet",
+    "legacy-id": 314,
+    "id": "golden_helmet",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_chestplate",
+    "legacy-id": 315,
+    "id": "golden_chestplate",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_leggings",
+    "legacy-id": 316,
+    "id": "golden_leggings",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_boots",
+    "legacy-id": 317,
+    "id": "golden_boots",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "flint",
+    "legacy-id": 318,
+    "id": "flint",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "porkchop",
+    "legacy-id": 319,
+    "id": "porkchop",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cooked_porkchop",
+    "legacy-id": 320,
+    "id": "cooked_porkchop",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "painting",
+    "legacy-id": 321,
+    "id": "painting",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_apple",
+    "legacy-id": 322,
+    "id": "golden_apple",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_apple",
+    "legacy-data": 1,
+    "legacy-id": 322,
+    "id": "enchanted_golden_apple",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sign",
+    "legacy-id": 323,
+    "id": "sign",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "wooden_door",
+    "legacy-id": 324,
+    "id": "oak_door",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bucket",
+    "legacy-id": 325,
+    "id": "bucket",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "water_bucket",
+    "legacy-id": 326,
+    "id": "water_bucket",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "lava_bucket",
+    "legacy-id": 327,
+    "id": "lava_bucket",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "minecart",
+    "legacy-id": 328,
+    "id": "minecart",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "saddle",
+    "legacy-id": 329,
+    "id": "saddle",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "iron_door",
+    "legacy-id": 330,
+    "id": "iron_door",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "redstone",
+    "legacy-id": 331,
+    "id": "redstone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "snowball",
+    "legacy-id": 332,
+    "id": "snowball",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "boat",
+    "legacy-id": 333,
+    "id": "oak_boat",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "leather",
+    "legacy-id": 334,
+    "id": "leather",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "milk_bucket",
+    "legacy-id": 335,
+    "id": "milk_bucket",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "brick",
+    "legacy-id": 336,
+    "id": "brick",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "clay",
+    "legacy-id": 337,
+    "id": "clay",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "reeds",
+    "legacy-id": 338,
+    "id": "sugar_cane",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "paper",
+    "legacy-id": 339,
+    "id": "paper",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "book",
+    "legacy-id": 340,
+    "id": "book",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "slime_ball",
+    "legacy-id": 341,
+    "id": "slime_ball",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "chest_minecart",
+    "legacy-id": 342,
+    "id": "chest_minecart",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "furnace_minecart",
+    "legacy-id": 343,
+    "id": "furnace_minecart",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "egg",
+    "legacy-id": 344,
+    "id": "egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "turtle_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "two_turtle_eggs",
+    "introduced": "1.13"
+  },
+  {
+    "id": "three_turtle_eggs",
+    "introduced": "1.13"
+  },
+  {
+    "id": "four_turtle_eggs",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "compass",
+    "legacy-id": 345,
+    "id": "compass",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fishing_rod",
+    "legacy-id": 346,
+    "id": "fishing_rod",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "clock",
+    "legacy-id": 347,
+    "id": "clock",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "glowstone_dust",
+    "legacy-id": 348,
+    "id": "glowstone_dust",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fish",
+    "legacy-id": 349,
+    "id": "cod",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fish",
+    "legacy-data": 1,
+    "legacy-id": 349,
+    "id": "salmon",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "pufferfish_bucket",
+    "introduced": "1.13"
+  },
+  {
+    "id": "salmon_bucket",
+    "introduced": "1.13"
+  },
+  {
+    "id": "cod_bucket",
+    "introduced": "1.13"
+  },
+  {
+    "id": "tropical_fish_bucket",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "fish",
+    "legacy-data": 2,
+    "legacy-id": 349,
+    "id": "tropical_fish",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fish",
+    "legacy-data": 3,
+    "legacy-id": 349,
+    "id": "pufferfish",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cooked_fish",
+    "legacy-id": 350,
+    "id": "cooked_cod",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cooked_fish",
+    "legacy-data": 1,
+    "legacy-id": 350,
+    "id": "cooked_salmon",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-id": 351,
+    "id": "ink_sac",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 1,
+    "legacy-id": 351,
+    "id": "rose_red",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 2,
+    "legacy-id": 351,
+    "id": "cactus_green",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 3,
+    "legacy-id": 351,
+    "id": "cocoa_beans",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 4,
+    "legacy-id": 351,
+    "id": "lapis_lazuli",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 5,
+    "legacy-id": 351,
+    "id": "purple_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 6,
+    "legacy-id": 351,
+    "id": "cyan_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 7,
+    "legacy-id": 351,
+    "id": "light_gray_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 8,
+    "legacy-id": 351,
+    "id": "gray_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 9,
+    "legacy-id": 351,
+    "id": "pink_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 10,
+    "legacy-id": 351,
+    "id": "lime_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 11,
+    "legacy-id": 351,
+    "id": "dandelion_yellow",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 12,
+    "legacy-id": 351,
+    "id": "light_blue_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 13,
+    "legacy-id": 351,
+    "id": "magenta_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 14,
+    "legacy-id": 351,
+    "id": "orange_dye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "dye",
+    "legacy-data": 15,
+    "legacy-id": 351,
+    "id": "bone_meal",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bone",
+    "legacy-id": 352,
+    "id": "bone",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "sugar",
+    "legacy-id": 353,
+    "id": "sugar",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cake",
+    "legacy-id": 354,
+    "id": "cake",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "bed",
+    "legacy-id": 355,
+    "id": "white_bed",
+    "introduced": "1.7.10"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 1
+    },
+    "legacy-id": 355,
+    "legacy-data": 1,
+    "id": "orange_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 2
+    },
+    "legacy-id": 355,
+    "legacy-data": 2,
+    "id": "magenta_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 3
+    },
+    "legacy-id": 355,
+    "legacy-data": 3,
+    "id": "light_blue_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 4
+    },
+    "legacy-id": 355,
+    "legacy-data": 4,
+    "id": "yellow_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 5
+    },
+    "legacy-id": 355,
+    "legacy-data": 5,
+    "id": "lime_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 6
+    },
+    "legacy-id": 355,
+    "legacy-data": 6,
+    "id": "pink_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 7
+    },
+    "legacy-id": 355,
+    "legacy-data": 7,
+    "id": "gray_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 8
+    },
+    "legacy-id": 355,
+    "legacy-data": 8,
+    "id": "light_gray_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 9
+    },
+    "legacy-id": 355,
+    "legacy-data": 9,
+    "id": "cyan_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 10
+    },
+    "legacy-id": 355,
+    "legacy-data": 10,
+    "id": "purple_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 11
+    },
+    "legacy-id": 355,
+    "legacy-data": 11,
+    "id": "blue_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 12
+    },
+    "legacy-id": 355,
+    "legacy-data": 12,
+    "id": "brown_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 13
+    },
+    "legacy-id": 355,
+    "legacy-data": 13,
+    "id": "green_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 14
+    },
+    "legacy-id": 355,
+    "legacy-data": 14,
+    "id": "red_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "1.12.2": {
+      "id": "bed",
+      "data": 15
+    },
+    "legacy-id": 355,
+    "legacy-data": 15,
+    "id": "black_bed",
+    "introduced": "1.12.2"
+  },
+  {
+    "legacy-name": "repeater",
+    "legacy-id": 356,
+    "id": "repeater",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cookie",
+    "legacy-id": 357,
+    "id": "cookie",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "filled_map",
+    "legacy-id": 358,
+    "id": "filled_map",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "shears",
+    "legacy-id": 359,
+    "id": "shears",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "melon",
+    "legacy-id": 360,
+    "id": "melon_slice",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "pumpkin_seeds",
+    "legacy-id": 361,
+    "id": "pumpkin_seeds",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "melon_seeds",
+    "legacy-id": 362,
+    "id": "melon_seeds",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "beef",
+    "legacy-id": 363,
+    "id": "beef",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cooked_beef",
+    "legacy-id": 364,
+    "id": "cooked_beef",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "chicken",
+    "legacy-id": 365,
+    "id": "chicken",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cooked_chicken",
+    "legacy-id": 366,
+    "id": "cooked_chicken",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "rotten_flesh",
+    "legacy-id": 367,
+    "id": "rotten_flesh",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "ender_pearl",
+    "legacy-id": 368,
+    "id": "ender_pearl",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "blaze_rod",
+    "legacy-id": 369,
+    "id": "blaze_rod",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "ghast_tear",
+    "legacy-id": 370,
+    "id": "ghast_tear",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "gold_nugget",
+    "legacy-id": 371,
+    "id": "gold_nugget",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "nether_wart",
+    "legacy-id": 372,
+    "id": "nether_wart",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 32,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 64,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8193,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8194,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8195,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8196,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8197,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8198,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8200,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8201,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8202,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8204,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8205,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8206,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8225,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8226,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8228,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8229,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8233,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8235,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8236,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8257,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8258,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8259,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8260,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8262,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8264,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8265,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8266,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8267,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8269,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8270,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8289,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8290,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8292,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 8297,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16385,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16386,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16387,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16388,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16389,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16390,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16392,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16393,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16394,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16396,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16397,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16398,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16417,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16418,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16420,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16421,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16425,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16427,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16428,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16449,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16450,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16451,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16452,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16454,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16456,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16457,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16458,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16459,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16461,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16462,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16481,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16482,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16484,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potion",
+    "legacy-data": 16489,
+    "legacy-id": 373,
+    "id": "potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "glass_bottle",
+    "legacy-id": 374,
+    "id": "glass_bottle",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spider_eye",
+    "legacy-id": 375,
+    "id": "spider_eye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fermented_spider_eye",
+    "legacy-id": 376,
+    "id": "fermented_spider_eye",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "blaze_powder",
+    "legacy-id": 377,
+    "id": "blaze_powder",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "magma_cream",
+    "legacy-id": 378,
+    "id": "magma_cream",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "brewing_stand",
+    "legacy-id": 379,
+    "id": "brewing_stand",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "cauldron",
+    "legacy-id": 380,
+    "id": "cauldron",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "eye_of_ender",
+    "legacy-id": 381,
+    "id": "ender_eye",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "end_crystal",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "speckled_melon",
+    "legacy-id": 382,
+    "id": "glistering_melon_slice",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 4,
+    "legacy-id": 383,
+    "id": "elder_guardian_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 5,
+    "legacy-id": 383,
+    "id": "wither_skeleton_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 6,
+    "legacy-id": 383,
+    "id": "stray_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 23,
+    "legacy-id": 383,
+    "id": "husk_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 27,
+    "legacy-id": 383,
+    "id": "zombie_villager_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 28,
+    "legacy-id": 383,
+    "id": "skeleton_horse_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 29,
+    "legacy-id": 383,
+    "id": "zombie_horse_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 31,
+    "legacy-id": 383,
+    "id": "donkey_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 32,
+    "legacy-id": 383,
+    "id": "mule_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 34,
+    "legacy-id": 383,
+    "id": "evoker_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 35,
+    "legacy-id": 383,
+    "id": "vex_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 36,
+    "legacy-id": 383,
+    "id": "vindicator_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 50,
+    "legacy-id": 383,
+    "id": "creeper_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 51,
+    "legacy-id": 383,
+    "id": "skeleton_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 52,
+    "legacy-id": 383,
+    "id": "spider_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 54,
+    "legacy-id": 383,
+    "id": "zombie_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 55,
+    "legacy-id": 383,
+    "id": "slime_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 56,
+    "legacy-id": 383,
+    "id": "ghast_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 57,
+    "legacy-id": 383,
+    "id": "zombie_pigman_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 58,
+    "legacy-id": 383,
+    "id": "enderman_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 59,
+    "legacy-id": 383,
+    "id": "cave_spider_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 60,
+    "legacy-id": 383,
+    "id": "spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 61,
+    "legacy-id": 383,
+    "id": "blaze_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 62,
+    "legacy-id": 383,
+    "id": "magma_cube_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 65,
+    "legacy-id": 383,
+    "id": "bat_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 66,
+    "legacy-id": 383,
+    "id": "witch_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 67,
+    "legacy-id": 383,
+    "id": "endermite_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 68,
+    "legacy-id": 383,
+    "id": "guardian_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 69,
+    "legacy-id": 383,
+    "id": "shulker_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 90,
+    "legacy-id": 383,
+    "id": "pig_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 91,
+    "legacy-id": 383,
+    "id": "sheep_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 92,
+    "legacy-id": 383,
+    "id": "cow_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 93,
+    "legacy-id": 383,
+    "id": "chicken_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 94,
+    "legacy-id": 383,
+    "id": "squid_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 95,
+    "legacy-id": 383,
+    "id": "wolf_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 96,
+    "legacy-id": 383,
+    "id": "mooshroom_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 98,
+    "legacy-id": 383,
+    "id": "ocelot_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 100,
+    "legacy-id": 383,
+    "id": "horse_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 101,
+    "legacy-id": 383,
+    "id": "rabbit_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 102,
+    "legacy-id": 383,
+    "id": "polar_bear_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 103,
+    "legacy-id": 383,
+    "id": "llama_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "spawn_egg",
+    "legacy-data": 120,
+    "legacy-id": 383,
+    "id": "villager_spawn_egg",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "parrot_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "silverfish_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "cod_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "dolphin_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "drowned_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "phantom_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "pufferfish_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "salmon_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "tropical_fish_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "id": "turtle_spawn_egg",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "experience_bottle",
+    "legacy-id": 384,
+    "id": "experience_bottle",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fire_charge",
+    "legacy-id": 385,
+    "id": "fire_charge",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "writable_book",
+    "legacy-id": 386,
+    "id": "writable_book",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "written_book",
+    "legacy-id": 387,
+    "id": "written_book",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "emerald",
+    "legacy-id": 388,
+    "id": "emerald",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "item_frame",
+    "legacy-id": 389,
+    "id": "item_frame",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "flower_pot",
+    "legacy-id": 390,
+    "id": "flower_pot",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "carrot",
+    "legacy-id": 391,
+    "id": "carrot",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "potato",
+    "legacy-id": 392,
+    "id": "potato",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "sea_pickle",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "baked_potato",
+    "legacy-id": 393,
+    "id": "baked_potato",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "poisonous_potato",
+    "legacy-id": 394,
+    "id": "poisonous_potato",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "map",
+    "legacy-id": 395,
+    "id": "map",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "golden_carrot",
+    "legacy-id": 396,
+    "id": "golden_carrot",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "skull",
+    "legacy-id": 397,
+    "id": "skeleton_skull",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "skeleton_wall_skull",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "skull",
+    "legacy-data": 1,
+    "legacy-id": 397,
+    "id": "wither_skeleton_skull",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "wither_skeleton_wall_skull",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "skull",
+    "legacy-data": 2,
+    "legacy-id": 397,
+    "id": "zombie_head",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "zombie_wall_head",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "skull",
+    "legacy-data": 3,
+    "legacy-id": 397,
+    "id": "player_head",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "player_wall_head",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "skull",
+    "legacy-data": 4,
+    "legacy-id": 397,
+    "id": "creeper_head",
+    "introduced": "1.7.10"
+  },
+  {
+    "id": "creeper_wall_head",
+    "introduced": "1.13"
+  },
+  {
+    "1.9": {
+      "id": "skull",
+      "data": 5
+    },
+    "legacy-id": 397,
+    "legacy-data": 5,
+    "id": "dragon_head",
+    "introduced": "1.9"
+  },
+  {
+    "id": "dragon_wall_head",
+    "introduced": "1.13"
+  },
+  {
+    "legacy-name": "carrot_on_a_stick",
+    "legacy-id": 398,
+    "id": "carrot_on_a_stick",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "nether_star",
+    "legacy-id": 399,
+    "id": "nether_star",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "pumpkin_pie",
+    "legacy-id": 400,
+    "id": "pumpkin_pie",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "fireworks",
+    "legacy-id": 401,
+    "id": "firework_rocket",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "firework_charge",
+    "legacy-id": 402,
+    "id": "firework_star",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "enchanted_book",
+    "legacy-id": 403,
+    "id": "enchanted_book",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "redstone_comparator",
+    "legacy-id": 404,
+    "id": "comparator",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "netherbrick",
+    "legacy-id": 405,
+    "id": "nether_brick",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "quartz",
+    "legacy-id": 406,
+    "id": "quartz",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "tnt_minecart",
+    "legacy-id": 407,
+    "id": "tnt_minecart",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "hopper_minecart",
+    "legacy-id": 408,
+    "id": "hopper_minecart",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "prismarine_shard",
+    "legacy-id": 409,
+    "id": "prismarine_shard",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "prismarine_crystals",
+    "legacy-id": 410,
+    "id": "prismarine_crystals",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "rabbit",
+    "legacy-id": 411,
+    "id": "rabbit",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "cooked_rabbit",
+    "legacy-id": 412,
+    "id": "cooked_rabbit",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "rabbit_stew",
+    "legacy-id": 413,
+    "id": "rabbit_stew",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "rabbit_foot",
+    "legacy-id": 414,
+    "id": "rabbit_foot",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "rabbit_hide",
+    "legacy-id": 415,
+    "id": "rabbit_hide",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "armor_stand",
+    "legacy-id": 416,
+    "id": "armor_stand",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "iron_horse_armor",
+    "legacy-id": 417,
+    "id": "iron_horse_armor",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "golden_horse_armor",
+    "legacy-id": 418,
+    "id": "golden_horse_armor",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "diamond_horse_armor",
+    "legacy-id": 419,
+    "id": "diamond_horse_armor",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "lead",
+    "legacy-id": 420,
+    "id": "lead",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "name_tag",
+    "legacy-id": 421,
+    "id": "name_tag",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "command_block_minecart",
+    "legacy-id": 422,
+    "id": "command_block_minecart",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "mutton",
+    "legacy-id": 423,
+    "id": "mutton",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "cooked_mutton",
+    "legacy-id": 424,
+    "id": "cooked_mutton",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-id": 425,
+    "id": "black_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 1,
+    "legacy-id": 425,
+    "id": "red_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 2,
+    "legacy-id": 425,
+    "id": "green_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 3,
+    "legacy-id": 425,
+    "id": "brown_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 4,
+    "legacy-id": 425,
+    "id": "blue_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 5,
+    "legacy-id": 425,
+    "id": "purple_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 6,
+    "legacy-id": 425,
+    "id": "cyan_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 7,
+    "legacy-id": 425,
+    "id": "light_gray_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 8,
+    "legacy-id": 425,
+    "id": "gray_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 9,
+    "legacy-id": 425,
+    "id": "pink_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 10,
+    "legacy-id": 425,
+    "id": "lime_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 11,
+    "legacy-id": 425,
+    "id": "yellow_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 12,
+    "legacy-id": 425,
+    "id": "light_blue_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 13,
+    "legacy-id": 425,
+    "id": "magenta_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 14,
+    "legacy-id": 425,
+    "id": "orange_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "banner",
+    "legacy-data": 15,
+    "legacy-id": 425,
+    "id": "white_banner",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "spruce_door",
+    "legacy-id": 427,
+    "id": "spruce_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "birch_door",
+    "legacy-id": 428,
+    "id": "birch_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "spruce_door",
+    "legacy-id": 429,
+    "id": "spruce_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "spruce_door",
+    "legacy-id": 430,
+    "id": "spruce_door",
+    "introduced": "1.8"
+  },
+  {
+    "legacy-name": "spruce_door",
+    "legacy-id": 431,
+    "id": "spruce_door",
+    "introduced": "1.8"
+  },
+  {
+    "1.9": {
+      "id": "chorus_fruit"
+    },
+    "legacy-id": 432,
+    "id": "chorus_fruit",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "chorus_fruit_popped"
+    },
+    "legacy-id": 433,
+    "id": "popped_chorus_fruit",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "beetroot"
+    },
+    "legacy-id": 434,
+    "id": "beetroot",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "beetroot_seeds"
+    },
+    "legacy-id": 435,
+    "id": "beetroot_seeds",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "beetroot_soup"
+    },
+    "legacy-id": 436,
+    "id": "beetroot_soup",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "dragon_breath"
+    },
+    "legacy-id": 437,
+    "id": "dragon_breath",
+    "introduced": "1.9"
+  },
+  {
+    "legacy-name": "splash_potion",
+    "legacy-id": 438,
+    "id": "splash_potion",
+    "introduced": "1.7.10"
+  },
+  {
+    "1.9": {
+      "id": "spectral_arrow"
+    },
+    "legacy-id": 439,
+    "id": "spectral_arrow",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "tipped_arrow"
+    },
+    "legacy-id": 440,
+    "id": "tipped_arrow",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "lingering_potion"
+    },
+    "legacy-id": 441,
+    "id": "lingering_potion",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "shield"
+    },
+    "legacy-id": 442,
+    "id": "shield",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "elytra"
+    },
+    "legacy-id": 443,
+    "id": "elytra",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "spruce_boat"
+    },
+    "legacy-id": 444,
+    "id": "spruce_boat",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "birch_boat"
+    },
+    "legacy-id": 445,
+    "id": "birch_boat",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "jungle_boat"
+    },
+    "legacy-id": 446,
+    "id": "jungle_boat",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "acacia_boat"
+    },
+    "legacy-id": 447,
+    "id": "acacia_boat",
+    "introduced": "1.9"
+  },
+  {
+    "1.9": {
+      "id": "dark_oak_boat"
+    },
+    "legacy-id": 448,
+    "id": "dark_oak_boat",
+    "introduced": "1.9"
+  },
+  {
+    "1.11": {
+      "id": "totem_of_undying"
+    },
+    "legacy-id": 449,
+    "id": "totem_of_undying",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "shulker_shell"
+    },
+    "legacy-id": 450,
+    "id": "shulker_shell",
+    "introduced": "1.11"
+  },
+  {
+    "1.11": {
+      "id": "iron_nugget"
+    },
+    "legacy-id": 452,
+    "id": "iron_nugget",
+    "introduced": "1.11"
+  },
+  {
+    "legacy-name": "record_13",
+    "legacy-id": 2256,
+    "id": "music_disc_13",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_cat",
+    "legacy-id": 2257,
+    "id": "music_disc_cat",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_blocks",
+    "legacy-id": 2258,
+    "id": "music_disc_blocks",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_chirp",
+    "legacy-id": 2259,
+    "id": "music_disc_chirp",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_far",
+    "legacy-id": 2260,
+    "id": "music_disc_far",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_mall",
+    "legacy-id": 2261,
+    "id": "music_disc_mall",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_mellohi",
+    "legacy-id": 2262,
+    "id": "music_disc_mellohi",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_stal",
+    "legacy-id": 2263,
+    "id": "music_disc_stal",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_strad",
+    "legacy-id": 2264,
+    "id": "music_disc_strad",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_ward",
+    "legacy-id": 2265,
+    "id": "music_disc_ward",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_11",
+    "legacy-id": 2266,
+    "id": "music_disc_11",
+    "introduced": "1.7.10"
+  },
+  {
+    "legacy-name": "record_wait",
+    "legacy-id": 2267,
+    "id": "music_disc_wait",
+    "introduced": "1.7.10"
+  }
+]

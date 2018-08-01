@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -65,7 +66,10 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setArmor(ItemStack item) {
-        if (item != null && item.getType() != Material.IRON_BARDING && item.getType() != Material.GOLD_BARDING && item.getType() != Material.DIAMOND_BARDING) {
+        if (item != null &&
+                item.getType() != EnumSelector.find(Material.class, "IRON_BARDING", "IRON_HORSE_ARMOR") &&
+                item.getType() != EnumSelector.find(Material.class, "GOLD_BARDING", "GOLDEN_HORSE_ARMOR") &&
+                item.getType() != EnumSelector.find(Material.class, "DIAMOND_BARDING", "DIAMOND_HORSE_ARMOR")) {
             return;
         }
 
@@ -153,8 +157,8 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         if (info.containsKeyAs("Armor", TagInt.class)) {
             int armorType = info.getAs("Armor", TagInt.class).getIntData();
             if (armorType != 0) {
-                ItemStack item = new ItemStack(Material.getMaterial(416 + armorType));
-                setArmor(item);
+                //ItemStack item = new ItemStack(Material.getMaterial(416 + armorType));
+                //setArmor(item);
             }
         } else if (info.containsKeyAs("Armor", TagCompound.class)) {
             TagCompound itemTag = info.get("Armor");

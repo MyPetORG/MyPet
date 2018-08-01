@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -206,7 +207,7 @@ public class ProtocolLibHook implements PluginHook {
                             put(DyeColor.LIME, 10);
                             put(DyeColor.PINK, 9);
                             put(DyeColor.GRAY, 8);
-                            put(DyeColor.SILVER, 7);
+                            put(EnumSelector.find(DyeColor.class, "SILVER", "LIGHT_GRAY"), 7);
                             put(DyeColor.CYAN, 6);
                             put(DyeColor.PURPLE, 5);
                             put(DyeColor.BLUE, 4);

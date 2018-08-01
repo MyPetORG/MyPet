@@ -153,12 +153,12 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         config.addDefault("MyPet.Exp.Disabled-Worlds", new String[0]);
 
-        config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
+        config.addDefault("MyPet.Skill.Control.Item", "lead");
         config.addDefault("MyPet.Skill.Inventory.Creative", Skilltree.Skill.Inventory.OPEN_IN_CREATIVE);
         config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES);
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME);
         config.addDefault("MyPet.Skill.Beacon.Party-Support", Skilltree.Skill.Beacon.PARTY_SUPPORT);
-        config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
+        config.addDefault("MyPet.Skill.Ride.Item", "lead");
         config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
 
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
@@ -229,7 +229,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashRequirements", pi.leashFlags());
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0);
-            config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", Material.LEASH.getId());
+            config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
         }
 
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
@@ -238,23 +238,23 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
         config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", MyPet.IronGolem.CAN_THROW_UP);
         config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MyPet.Snowman.FIX_SNOW_TRACK);
-        config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
-        config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Cow.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Horse.GrowUpItem", "bread");
+        config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
-        config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
         if (MyPetType.Rabbit.checkMinecraftVersion()) {
-            config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", Material.POTION.getId());
+            config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle");
         }
         if (MyPetType.Llama.checkMinecraftVersion()) {
-            config.addDefault("MyPet.Pets.Llama.GrowUpItem", Material.POTION.getId());
+            config.addDefault("MyPet.Pets.Llama.GrowUpItem", "experience_bottle");
         }
 
         config.options().copyDefaults(true);
@@ -452,8 +452,8 @@ public class ConfigurationLoader {
     public static void loadCompatConfiguration() {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
-        Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
-        Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
+        Skilltree.Skill.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "lead"));
+        Skilltree.Skill.Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "lead"));
 
         File petConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath(), "pet-config.yml");
         if (petConfigFile.exists()) {
@@ -466,19 +466,19 @@ public class ConfigurationLoader {
             }
         }
 
-        MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Cow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + Material.BREAD.getId()));
-        MyPet.Llama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Llama.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "" + Material.POTION.getId()));
-        MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "" + Material.POTION.getId()));
+        MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle"));
+        MyPet.Cow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "experience_bottle"));
+        MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + "bread"));
+        MyPet.Llama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Llama.GrowUpItem", "experience_bottle"));
+        MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle"));
+        MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle"));
+        MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "experience_bottle"));
+        MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle"));
+        MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "experience_bottle"));
+        MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle"));
+        MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle"));
+        MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle"));
+        MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
 
         for (MyPetType petType : MyPetType.values()) {
             DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
@@ -495,13 +495,11 @@ public class ConfigurationLoader {
                         MyPetApi.getLogger().warning(foodString + " is not a valid food item!");
                     }
                 }
-            } else {
-                seperateFood(petType, config.getString("MyPet.Pets." + petType.name() + ".Food", "0"));
             }
             loadLeashFlags(petType, config.getStringList("MyPet.Pets." + petType + ".LeashRequirements"));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
-            MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "" + Material.LEASH.getId())));
+            MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
         }
     }
 
@@ -552,7 +550,7 @@ public class ConfigurationLoader {
             }
             config.getConfigurationSection("MyPet.Exp").set("Active", null);
         }
-        if (!config.contains("MyPet.Hooks.PvPManager.Enabled")) {
+        if (config.contains("MyPet.Hooks.PvPManager.Enabled")) {
             config.getConfigurationSection("MyPet.Hooks").set("PvPManager", null);
         }
 
@@ -585,44 +583,8 @@ public class ConfigurationLoader {
         }
     }
 
-    public static List<Integer> linkFood(Material[] foodTypes) {
-        List<Integer> foodList = new ArrayList<>();
-        for (Material foodType : foodTypes) {
-            foodList.add(foodType.getId());
-        }
-        return foodList;
-    }
-
-    public static void seperateFood(MyPetType type, String foodString) {
-        foodString = foodString.trim();
-        while (true) {
-            if (foodString.endsWith("\\;")) {
-                foodString = foodString.substring(0, foodString.length() - 2);
-                continue;
-            }
-            if (foodString.endsWith(";")) {
-                foodString = foodString.substring(0, foodString.length() - 1);
-                continue;
-            }
-            break;
-        }
-        if (foodString.contains(";")) {
-            for (String foodIDString : foodString.split("(?<!\\\\);")) {
-                ConfigItem ci = ConfigItem.createConfigItem(foodIDString.replace("\\;", ";"));
-                if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
-                    MyPetApi.getMyPetInfo().setFood(type, ci);
-                } else {
-                    MyPetApi.getLogger().warning(foodString + " is not a valid food item!");
-                }
-            }
-        } else {
-            ConfigItem ci = ConfigItem.createConfigItem(foodString);
-            if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
-                MyPetApi.getMyPetInfo().setFood(type, ci);
-            } else {
-                MyPetApi.getLogger().warning(foodString + " is not a valid food item!");
-            }
-        }
+    public static List<String> linkFood(String[] foodTypes) {
+        return new ArrayList<>(Arrays.asList(foodTypes));
     }
 
     public static void loadLeashFlags(MyPetType type, List<String> leashFlagStrings) {

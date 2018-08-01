@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import com.google.common.collect.Iterables;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -194,7 +195,7 @@ public class BehaviorImpl implements Behavior {
 
     public void schedule() {
         if (selectedBehavior == Aggressive && random.nextBoolean() && myPet.getStatus() == MyPet.PetState.Here) {
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, myPet.getEntity().get().getEyeHeight(), 0), "VILLAGER_ANGRY", 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
+            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, myPet.getEntity().get().getEyeHeight(), 0), ParticleCompat.VILLAGER_ANGRY.get(), 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
         }
     }
 

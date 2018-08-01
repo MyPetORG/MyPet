@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import org.bukkit.Material;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,7 +28,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface DefaultInfo {
-    Material[] food() default {};
+
+    String[] food() default {};
 
     double hp() default 20D;
 

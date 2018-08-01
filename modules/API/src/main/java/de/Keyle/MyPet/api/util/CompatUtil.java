@@ -93,6 +93,10 @@ public class CompatUtil {
         return internalVersion;
     }
 
+    public String getMinecraftVersion() {
+        return minecraftVersion;
+    }
+
     public int compareWithMinecraftVersion(String version) {
         if (VERSION_MATCHER.matcher(version).find()) {
             if (compareCache.containsKey(minecraftVersion + "-::-" + version)) {
@@ -103,5 +107,9 @@ public class CompatUtil {
             return compare;
         }
         throw new IllegalArgumentException("\"version\" must be a valid Minecraft version. \"" + version + "\" given.");
+    }
+
+    public boolean isCompatible(String version) {
+        return compareWithMinecraftVersion(version) >= 0;
     }
 }

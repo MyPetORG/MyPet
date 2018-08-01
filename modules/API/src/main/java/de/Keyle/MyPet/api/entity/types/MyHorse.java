@@ -25,9 +25,8 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.inventory.ItemStack;
 
-import static org.bukkit.Material.*;
 
-@DefaultInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {"sugar", "wheat", "apple"}, leashFlags = {"Tamed"})
 public interface MyHorse extends MyPet, MyPetBaby {
 
     ItemStack getArmor();

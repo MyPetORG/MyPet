@@ -25,9 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.entity.Ocelot.Type;
 
-import static org.bukkit.Material.RAW_FISH;
-
-@DefaultInfo(food = {RAW_FISH}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {"cod"}, leashFlags = {"Tamed"})
 public interface MyOcelot extends MyPet, MyPetBaby {
     Type getCatType();
 

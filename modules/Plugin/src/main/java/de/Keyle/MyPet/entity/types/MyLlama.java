@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -73,7 +74,7 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setDecor(ItemStack item) {
-        if (item != null && item.getType() != Material.CARPET) {
+        if (item != null && item.getType() != EnumSelector.find(Material.class, "CARPET", "RED_CARPET")) {
             return;
         }
         this.decor = item;

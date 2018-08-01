@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -61,7 +60,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter {
 
             String foodString = "";
             for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPetType)) {
-                foodString += WordUtils.capitalizeFully(MyPetApi.getPlatformHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")) + ", ";
+                //foodString += WordUtils.capitalizeFully(MyPetApi.getPlatformHelper().getMaterialName(material.getItem().getTypeId()).replace("_", " ")) + ", ";
             }
             foodString = foodString.substring(0, foodString.lastIndexOf(","));
             commandSender.sendMessage(Translation.getString("Name.Food", lang) + ": " + foodString);

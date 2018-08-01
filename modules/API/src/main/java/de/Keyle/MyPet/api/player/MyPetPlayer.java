@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.api.player;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -30,6 +29,7 @@ import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface MyPetPlayer extends Scheduler, NBTStorage {

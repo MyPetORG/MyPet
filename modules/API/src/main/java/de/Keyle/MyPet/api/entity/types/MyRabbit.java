@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,10 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.entity.Rabbit;
 
-import static org.bukkit.Material.CARROT_ITEM;
-import static org.bukkit.Material.RED_ROSE;
-
-@DefaultInfo(food = {CARROT_ITEM, RED_ROSE})
+@DefaultInfo(food = {"carrot"})
 public interface MyRabbit extends MyPet, MyPetBaby {
     enum RabbitType {
         BROWN(Rabbit.Type.BROWN, (byte) 0),

@@ -23,8 +23,6 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 
-import static org.bukkit.Material.ENDER_STONE;
-
-@DefaultInfo(food = {ENDER_STONE}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {"end_stone"}, leashFlags = {"Impossible"})
 public interface MyEnderDragon extends MyPet {
 }

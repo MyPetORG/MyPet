@@ -32,6 +32,8 @@ import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.commands.CommandAdmin;
@@ -39,6 +41,7 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -409,15 +412,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     compound.getCompoundData().put("CollarColor", new TagByte(color));
                 }
             } else if (arg.startsWith("block:")) {
-                String blocks = arg.replace("block:", "");
-                String[] blockInfo = blocks.split(":");
-                if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && MyPetApi.getPlatformHelper().isValidMaterial(Integer.parseInt(blockInfo[0]))) {
-                    compound.getCompoundData().put("BlockID", new TagInt(Integer.parseInt(blockInfo[0])));
-                }
-                if (blockInfo.length >= 2 && Util.isInt(blockInfo[1])) {
-                    int blockData = Integer.parseInt(blockInfo[1]);
-                    blockData = Math.min(Math.max(0, blockData), 15);
-                    compound.getCompoundData().put("BlockData", new TagInt(blockData));
+                String block = arg.replace("block:", "");
+                ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+                MaterialHolder materialHolder = itemDatabase.getByID(block.toLowerCase());
+                if (materialHolder != null) {
+                    compound.getCompoundData().put("BlockName", new TagString(materialHolder.getId()));
                 }
             }
         }

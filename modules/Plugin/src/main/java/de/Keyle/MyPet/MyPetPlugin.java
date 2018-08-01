@@ -39,6 +39,7 @@ import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
