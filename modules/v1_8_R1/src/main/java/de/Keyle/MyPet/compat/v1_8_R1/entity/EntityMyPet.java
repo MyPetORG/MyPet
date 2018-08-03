@@ -1001,11 +1001,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.fallDistance = 0;
         }
 
-        if (rideSkill == null) {
-            passenger.mount(null);
-            return;
-        }
-
         //apply pitch & yaw
         this.lastYaw = (this.yaw = this.passenger.yaw);
         this.pitch = this.passenger.pitch * 0.5F;
