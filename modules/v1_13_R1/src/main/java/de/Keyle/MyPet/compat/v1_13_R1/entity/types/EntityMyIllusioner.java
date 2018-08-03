@@ -80,7 +80,7 @@ public class EntityMyIllusioner extends EntityMyPet {
                 boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-                    if (itemInSlot != null) {
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
@@ -99,7 +99,7 @@ public class EntityMyIllusioner extends EntityMyPet {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
                 if (slot == EquipmentSlot.MainHand) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-                    if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && !entityhuman.abilities.canInstantlyBuild) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
