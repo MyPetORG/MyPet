@@ -61,7 +61,7 @@ public class EntityMyStray extends EntityMyPet {
                 boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-                    if (itemInSlot != null) {
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
@@ -79,7 +79,7 @@ public class EntityMyStray extends EntityMyPet {
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
                 ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-                if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                     entityitem.pickupDelay = 10;
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
