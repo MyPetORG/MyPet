@@ -81,19 +81,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected double walkSpeed = 0.3F;
     protected boolean hasRider = false;
     protected boolean isMyPet = false;
-    protected boolean isFlying = false;
-    protected boolean canFly = true;
     protected boolean isInvisible = false;
     protected MyPet myPet;
     protected int jumpDelay = 0;
     protected int idleSoundTimer = 0;
-    protected int flyCheckCounter = 0;
     protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
     protected Sit sitPathfinder;
     protected float jumpPower = 0;
     protected int donatorParticleCounter = 0;
-    protected float limitCounter = 0;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "bg");
 
@@ -1037,14 +1033,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     petPathfinderSelector.tick(); // pathfinder selector
                     petNavigation.tick(); // navigation
                 }
-
-                Ride rideSkill = myPet.getSkills().get(RideImpl.class);
-                if (this.onGround && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
-                    limitCounter += rideSkill.getFlyRegenRate().getValue().doubleValue();
-                    if (limitCounter > rideSkill.getFlyLimit().getValue().doubleValue()) {
-                        limitCounter = rideSkill.getFlyLimit().getValue().floatValue();
-                    }
-                }
             }
 
             M(); // "mob tick"
@@ -1066,24 +1054,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         return false;
     }
 
-    /**
-     * -> falldamage
-     */
-    public void c(float f, float f1) {
-        if (!this.isFlying) {
-            super.c(f, f1);
-        }
-    }
-
     public void a(float motionSideways, float motionForward, float f) {
         if (!hasRider || !this.isVehicle()) {
             super.a(motionSideways, motionForward, f);
             return;
-        }
-
-        if (this.onGround && this.isFlying) {
-            isFlying = false;
-            this.fallDistance = 0;
         }
 
         EntityLiving passenger = (EntityLiving) this.getFirstPassenger();
@@ -1113,13 +1087,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         float speed = 0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F));
         double jumpHeight = Util.clamp(1 + rideSkill.getJumpHeight().getValue().doubleValue(), 0, 10);
-        float ascendSpeed = 0.2f;
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
             double factor = Math.log10(myPet.getSaturation()) / 2;
             speed *= factor;
             jumpHeight *= factor;
-            ascendSpeed *= factor;
         }
 
         ride(motionSideways, motionForward, f, speed); // apply motion
@@ -1178,23 +1150,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).setValue(jumpVelocity);
                     }
                     this.motY = jumpVelocity;
-                } else if (rideSkill.getCanFly().getValue()) {
-                    if (limitCounter <= 0 && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
-                        canFly = false;
-                    } else if (flyCheckCounter-- <= 0) {
-                        canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
-                        flyCheckCounter = 5;
-                    }
-                    if (canFly) {
-                        if (this.motY < ascendSpeed) {
-                            this.motY = ascendSpeed;
-                            this.fallDistance = 0;
-                            this.isFlying = true;
-                        }
-                    }
                 }
-            } else {
-                flyCheckCounter = 0;
             }
         }
 
@@ -1204,9 +1160,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             double dZ = locZ - lastZ;
             if (dX != 0 || dY != 0 || dZ != 0) {
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
-                if (isFlying && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
-                    limitCounter -= distance;
-                }
                 myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
                 double factor = Math.log10(myPet.getSaturation()) / 2;
                 getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
