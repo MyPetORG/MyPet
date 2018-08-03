@@ -191,7 +191,7 @@ public class Updater {
 
             // Check hash now to be sure we downloaded the correct file
             try {
-                URL website = new URL(finalUrl);
+                URL website = new URL(finalUrl + "/hash");
                 HttpURLConnection httpConn = (HttpURLConnection) website.openConnection();
                 int responseCode = httpConn.getResponseCode();
 
