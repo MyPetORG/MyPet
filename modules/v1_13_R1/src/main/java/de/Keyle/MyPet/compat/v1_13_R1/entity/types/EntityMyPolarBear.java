@@ -36,7 +36,7 @@ public class EntityMyPolarBear extends EntityMyPet {
     int rearCounter = -1;
 
     public EntityMyPolarBear(World world, MyPet myPet) {
-        super(EntityTypes.ZOMBIE_PIGMAN, world, myPet);
+        super(EntityTypes.POLAR_BEAR, world, myPet);
     }
 
     @Override
