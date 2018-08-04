@@ -25,28 +25,31 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_13_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_13_R1.EntityTypes;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R1.*;
 
-@EntitySize(width = 0.7F, height = 0.475f)
-public class EntityMySquid extends EntityMyPet {
+@EntitySize(width = 0.9F, height = 0.6f)
+public class EntityMyDolphin extends EntityMyPet {
 
-    public EntityMySquid(World world, MyPet myPet) {
-        super(EntityTypes.SQUID, world, myPet);
+    private static final DataWatcherObject<BlockPosition> treasurePosWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.l);
+    private static final DataWatcherObject<Boolean> gotFishWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> moistnessWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
+
+    public EntityMyDolphin(World world, MyPet myPet) {
+        super(EntityTypes.DOLPHIN, world, myPet);
     }
 
     @Override
     protected String getDeathSound() {
-        return "entity.squid.death";
+        return "entity.dolphin.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.squid.hurt";
+        return "entity.dolphin.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.squid.ambient";
+        return "entity.dolphin.ambient";
     }
 
     @Override
@@ -55,5 +58,14 @@ public class EntityMySquid extends EntityMyPet {
         if (!isInWater() && this.random.nextBoolean()) {
             MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
         }
+    }
+
+    @Override
+    protected void initDatawatcher() {
+        super.initDatawatcher();
+
+        this.datawatcher.register(treasurePosWatcher, BlockPosition.ZERO);
+        this.datawatcher.register(gotFishWatcher, false);
+        this.datawatcher.register(moistnessWatcher, 2400);
     }
 }

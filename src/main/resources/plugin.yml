@@ -133,9 +133,12 @@ permissions:
       MyPet.leash.Blaze: true
       MyPet.leash.CaveSpider: true
       MyPet.leash.Chicken: true
+      MyPet.leash.Cod: true
       MyPet.leash.Cow: true
       MyPet.leash.Creeper: true
+      MyPet.leash.Dolphin: true
       MyPet.leash.Donkey: true
+      MyPet.leash.Drowned: true
       MyPet.leash.ElderGuardian: true
       MyPet.leash.Enderdragon: true
       MyPet.leash.Enderman: true
@@ -154,10 +157,13 @@ permissions:
       MyPet.leash.Mule: true
       MyPet.leash.Ocelot: true
       MyPet.leash.Parrot: true
+      MyPet.leash.Phantom: true
       MyPet.leash.Pig: true
       MyPet.leash.PigZombie: true
       MyPet.leash.PolarBear: true
+      MyPet.leash.Pufferfish: true
       MyPet.leash.Rabbit: true
+      MyPet.leash.Salmon: true
       MyPet.leash.Sheep: true
       MyPet.leash.Silverfish: true
       MyPet.leash.Skeleton: true
@@ -167,6 +173,8 @@ permissions:
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
       MyPet.leash.Stray: true
+      MyPet.leash.TropicalFish: true
+      MyPet.leash.Turtle: true
       MyPet.leash.Vex: true
       MyPet.leash.Villager: true
       MyPet.leash.Vindicator: true
@@ -184,9 +192,12 @@ permissions:
       MyPet.command.trade.offer.Blaze: true
       MyPet.command.trade.offer.CaveSpider: true
       MyPet.command.trade.offer.Chicken: true
+      MyPet.command.trade.offer.Cod: true
       MyPet.command.trade.offer.Cow: true
       MyPet.command.trade.offer.Creeper: true
+      MyPet.command.trade.offer.Dolphin: true
       MyPet.command.trade.offer.Donkey: true
+      MyPet.command.trade.offer.Drowned: true
       MyPet.command.trade.offer.ElderGuardian: true
       MyPet.command.trade.offer.Enderdragon: true
       MyPet.command.trade.offer.Enderman: true
@@ -204,10 +215,13 @@ permissions:
       MyPet.command.trade.offer.Mule: true
       MyPet.command.trade.offer.Ocelot: true
       MyPet.command.trade.offer.Parrot: true
+      MyPet.command.trade.offer.Phantom: true
       MyPet.command.trade.offer.Pig: true
       MyPet.command.trade.offer.PigZombie: true
       MyPet.command.trade.offer.PolarBear: true
+      MyPet.command.trade.offer.Pufferfish: true
       MyPet.command.trade.offer.Rabbit: true
+      MyPet.command.trade.offer.Salmon: true
       MyPet.command.trade.offer.Sheep: true
       MyPet.command.trade.offer.Silverfish: true
       MyPet.command.trade.offer.Skeleton: true
@@ -217,6 +231,8 @@ permissions:
       MyPet.command.trade.offer.Spider: true
       MyPet.command.trade.offer.Squid: true
       MyPet.command.trade.offer.Stray: true
+      MyPet.command.trade.offer.TropicalFish: true
+      MyPet.command.trade.offer.Turtle: true
       MyPet.command.trade.offer.Vex: true
       MyPet.command.trade.offer.Villager: true
       MyPet.command.trade.offer.Vindicator: true
@@ -234,9 +250,12 @@ permissions:
       MyPet.command.trade.receive.Blaze: true
       MyPet.command.trade.receive.CaveSpider: true
       MyPet.command.trade.receive.Chicken: true
+      MyPet.command.trade.receive.Cod: true
       MyPet.command.trade.receive.Cow: true
       MyPet.command.trade.receive.Creeper: true
+      MyPet.command.trade.receive.Dolphin: true
       MyPet.command.trade.receive.Donkey: true
+      MyPet.command.trade.receive.Drowned: true
       MyPet.command.trade.receive.ElderGuardian: true
       MyPet.command.trade.receive.Enderdragon: true
       MyPet.command.trade.receive.Enderman: true
@@ -254,10 +273,13 @@ permissions:
       MyPet.command.trade.receive.Mule: true
       MyPet.command.trade.receive.Ocelot: true
       MyPet.command.trade.receive.Parrot: true
+      MyPet.command.trade.receive.Phantom: true
       MyPet.command.trade.receive.Pig: true
       MyPet.command.trade.receive.PigZombie: true
       MyPet.command.trade.receive.PolarBear: true
+      MyPet.command.trade.receive.Pufferfish: true
       MyPet.command.trade.receive.Rabbit: true
+      MyPet.command.trade.receive.Salmon: true
       MyPet.command.trade.receive.Sheep: true
       MyPet.command.trade.receive.Silverfish: true
       MyPet.command.trade.receive.Skeleton: true
@@ -267,6 +289,8 @@ permissions:
       MyPet.command.trade.receive.Spider: true
       MyPet.command.trade.receive.Squid: true
       MyPet.command.trade.receive.Stray: true
+      MyPet.command.trade.receive.TropicalFish: true
+      MyPet.command.trade.receive.Turtle: true
       MyPet.command.trade.receive.Vex: true
       MyPet.command.trade.receive.Villager: true
       MyPet.command.trade.receive.Vindicator: true

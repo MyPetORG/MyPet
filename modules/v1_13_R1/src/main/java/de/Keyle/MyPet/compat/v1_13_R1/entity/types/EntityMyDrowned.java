@@ -26,22 +26,23 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.types.MyZombie;
+import de.Keyle.MyPet.api.entity.types.MyDrowned;
 import de.Keyle.MyPet.compat.v1_13_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_13_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 
-@EntitySize(width = 0.6F, height = 1.9F)
-public class EntityMyZombie extends EntityMyPet {
+@EntitySize(width = 0.6F, height = 1.95F)
+public class EntityMyDrowned extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> babyWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> unusedWatcher1 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> unusedWatcher2 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> babyWatcher = DataWatcher.a(EntityMyDrowned.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> unusedWatcher1 = DataWatcher.a(EntityMyDrowned.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> unusedWatcher2 = DataWatcher.a(EntityMyDrowned.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> unusedWatcher3 = DataWatcher.a(EntityMyDrowned.class, DataWatcherRegistry.i);
 
-    public EntityMyZombie(World world, MyPet myPet) {
-        super(EntityTypes.ZOMBIE, world, myPet);
+
+    public EntityMyDrowned(World world, MyPet myPet) {
+        super(EntityTypes.DROWNED, world, myPet);
     }
 
     /**
@@ -49,7 +50,7 @@ public class EntityMyZombie extends EntityMyPet {
      */
     @Override
     protected String getDeathSound() {
-        return "entity.zombie.death";
+        return "entity.drowned.death" + (isInWater() ? "_water" : "");
     }
 
     /**
@@ -57,14 +58,14 @@ public class EntityMyZombie extends EntityMyPet {
      */
     @Override
     protected String getHurtSound() {
-        return "entity.zombie.hurt";
+        return "entity.drowned.hurt" + (isInWater() ? "_water" : "");
     }
 
     /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound() {
-        return "entity.zombie.ambient";
+        return "entity.drowned.ambient" + (isInWater() ? "_water" : "");
     }
 
     /**
@@ -132,9 +133,9 @@ public class EntityMyZombie extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(babyWatcher, false);
-        getDataWatcher().register(typeWatcher, 0);
-        getDataWatcher().register(unusedWatcher1, false);
+        getDataWatcher().register(unusedWatcher1, 0);
         getDataWatcher().register(unusedWatcher2, false);
+        getDataWatcher().register(unusedWatcher3, false);
     }
 
     @Override
@@ -151,11 +152,11 @@ public class EntityMyZombie extends EntityMyPet {
     }
 
     public void playPetStepSound() {
-        makeSound("entity.zombie.step", 0.15F, 1.0F);
+        makeSound("entity.drowned.step", 0.15F, 1.0F);
     }
 
-    public MyZombie getMyPet() {
-        return (MyZombie) myPet;
+    public MyDrowned getMyPet() {
+        return (MyDrowned) myPet;
     }
 
     public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {

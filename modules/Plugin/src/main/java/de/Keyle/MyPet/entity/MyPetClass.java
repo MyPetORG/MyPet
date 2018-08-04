@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -32,9 +32,12 @@ public enum MyPetClass {
     Blaze(MyBlaze.class),
     CaveSpider(MyCaveSpider.class),
     Chicken(MyChicken.class),
+    Cod(MyCod.class),
     Cow(MyCow.class),
     Creeper(MyCreeper.class),
+    Dolphin(MyDolphin.class),
     Donkey(MyDonkey.class),
+    Drowned(MyDrowned.class),
     ElderGuardian(MyElderGuardian.class),
     EnderDragon(MyEnderDragon.class),
     Enderman(MyEnderman.class),
@@ -53,10 +56,13 @@ public enum MyPetClass {
     Mule(MyMule.class),
     Ocelot(MyOcelot.class),
     Parrot(MyParrot.class),
+    Phantom(MyPhantom.class),
     Pig(MyPig.class),
     PigZombie(MyPigZombie.class),
     PolarBear(MyPolarBear.class),
+    Pufferfish(MyPufferfish.class),
     Rabbit(MyRabbit.class),
+    Salmon(MySalmon.class),
     Sheep(MySheep.class),
     Silverfish(MySilverfish.class),
     Skeleton(MySkeleton.class),
@@ -66,6 +72,8 @@ public enum MyPetClass {
     Spider(MySpider.class),
     Squid(MySquid.class),
     Stray(MyStray.class),
+    TropicalFish(MyTropicalFish.class),
+    Turtle(MyTurtle.class),
     Witch(MyWitch.class),
     Wither(MyWither.class),
     WitherSkeleton(MyWitherSkeleton.class),

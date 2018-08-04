@@ -25,28 +25,29 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_13_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_13_R1.EntityTypes;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R1.*;
 
-@EntitySize(width = 0.7F, height = 0.475f)
-public class EntityMySquid extends EntityMyPet {
+@EntitySize(width = 0.5F, height = 0.3f)
+public class EntityMyCod extends EntityMyPet {
 
-    public EntityMySquid(World world, MyPet myPet) {
-        super(EntityTypes.SQUID, world, myPet);
+    private static final DataWatcherObject<Boolean> fromBucketWatcher = DataWatcher.a(EntityMyCod.class, DataWatcherRegistry.i);
+
+    public EntityMyCod(World world, MyPet myPet) {
+        super(EntityTypes.COD, world, myPet);
     }
 
     @Override
     protected String getDeathSound() {
-        return "entity.squid.death";
+        return "entity.cod.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.squid.hurt";
+        return "entity.cod.flop";
     }
 
     protected String getLivingSound() {
-        return "entity.squid.ambient";
+        return "entity.cod.ambient";
     }
 
     @Override
@@ -55,5 +56,10 @@ public class EntityMySquid extends EntityMyPet {
         if (!isInWater() && this.random.nextBoolean()) {
             MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
         }
+    }
+
+    protected void initDatawatcher() {
+        super.initDatawatcher();
+        this.datawatcher.register(fromBucketWatcher, false);
     }
 }

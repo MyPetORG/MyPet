@@ -22,72 +22,55 @@ package de.Keyle.MyPet.compat.v1_13_R1.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.types.MySlime;
+import de.Keyle.MyPet.api.entity.types.MyPhantom;
 import de.Keyle.MyPet.compat.v1_13_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_13_R1.entity.ai.attack.MeleeAttack;
 import net.minecraft.server.v1_13_R1.*;
 
 @EntitySize(width = 0.51F, height = 0.51F)
-public class EntityMySlime extends EntityMyPet {
+public class EntityMyPhantom extends EntityMyPet {
 
-    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntityMySlime.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntityMyPhantom.class, DataWatcherRegistry.b);
 
-    int jumpDelay;
-
-    public EntityMySlime(World world, MyPet myPet) {
-        super(EntityTypes.SLIME, world, myPet);
-        this.jumpDelay = (this.random.nextInt(20) + 10);
+    public EntityMyPhantom(World world, MyPet myPet) {
+        super(EntityTypes.PHANTOM, world, myPet);
     }
 
     @Override
     protected String getDeathSound() {
-        return "entity.slime.death";
-
+        return "entity.phantom.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.slime.hurt";
+        return "entity.phantom.hurt";
     }
 
     protected String getLivingSound() {
-        return null;
+        return "entity.phantom.ambient";
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(sizeWatcher, 1); //size
+
+        this.datawatcher.register(sizeWatcher, 0);
     }
 
     @Override
     public void updateVisuals() {
         int size = Math.max(1, getMyPet().getSize());
         this.datawatcher.set(sizeWatcher, size);
-        EntitySize es = EntityMySlime.class.getAnnotation(EntitySize.class);
+        EntitySize es = EntityMyPhantom.class.getAnnotation(EntitySize.class);
         if (es != null) {
             this.setSize(es.width() * size, es.width() * size);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.2), 20));
         }
     }
 
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-
-        if (this.onGround && jumpDelay-- <= 0) {
-            getControllerJump().a();
-            jumpDelay = (this.random.nextInt(20) + 50);
-            makeSound("entity.slime.jump", 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
-        }
-    }
-
-    public MySlime getMyPet() {
-        return (MySlime) myPet;
-    }
-
-    public void setPathfinder() {
-        super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
+    public MyPhantom getMyPet() {
+        return (MyPhantom) myPet;
     }
 }

@@ -22,8 +22,8 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetSlimeSize;
+import de.Keyle.MyPet.api.entity.MyPetSize;
 
 @DefaultInfo(food = {"sugar"})
-public interface MySlime extends MyPet, MyPetSlimeSize {
+public interface MySlime extends MyPet, MyPetSize {
 }
