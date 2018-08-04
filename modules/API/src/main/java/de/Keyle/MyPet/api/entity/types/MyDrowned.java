@@ -22,8 +22,11 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetSize;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
-@DefaultInfo(food = {"redstone"})
-public interface MyMagmaCube extends MyPet, MyPetSize {
+
+@DefaultInfo(food = {"rotten_flesh"})
+public interface MyDrowned extends MyPet, MyPetEquipment, MyPetBaby {
+
 }

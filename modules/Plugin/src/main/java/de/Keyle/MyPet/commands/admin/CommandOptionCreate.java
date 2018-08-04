@@ -84,6 +84,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("size:");
         petTypeOptionMap.put("magmacube", petTypeOptionList);
         petTypeOptionMap.put("slime", petTypeOptionList);
+        petTypeOptionMap.put("phantom", petTypeOptionList);
 
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
@@ -127,6 +128,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionMap.put("pigzombie", petTypeOptionList);
+        petTypeOptionMap.put("polarbear", petTypeOptionList);
+        petTypeOptionMap.put("wither", petTypeOptionList);
+        petTypeOptionMap.put("turtle", petTypeOptionList);
+        petTypeOptionMap.put("drowned", petTypeOptionList);
 
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
@@ -150,14 +155,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("guardian", petTypeOptionList);
 
         petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionMap.put("polarbear", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionMap.put("wither", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("glowing");
         petTypeOptionMap.put("vex", petTypeOptionList);
 
@@ -169,6 +166,13 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("variant:");
         petTypeOptionMap.put("parrot", petTypeOptionList);
+        petTypeOptionMap.put("tropicalfish", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("puff:none");
+        petTypeOptionList.add("puff:semi");
+        petTypeOptionList.add("puff:fully");
+        petTypeOptionMap.put("pufferfish", petTypeOptionList);
 
         for (MyPetType petType : MyPetType.values()) {
             petTypeList.add(petType.name());
@@ -376,6 +380,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.Parrot) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
+                    } else if (petType == MyPetType.TropicalFish) {
+                        compound.getCompoundData().put("Variant", new TagInt(variant));
                     }
                 }
             } else if (arg.startsWith("cat:")) {
@@ -417,6 +423,18 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 MaterialHolder materialHolder = itemDatabase.getByID(block.toLowerCase());
                 if (materialHolder != null) {
                     compound.getCompoundData().put("BlockName", new TagString(materialHolder.getId()));
+                }
+            } else if (arg.startsWith("puff:")) {
+                switch (arg) {
+                    case "puff:none":
+                        compound.getCompoundData().put("PuffState", new TagInt(0));
+                        break;
+                    case "puff:semi":
+                        compound.getCompoundData().put("PuffState", new TagInt(1));
+                        break;
+                    case "puff:fully":
+                        compound.getCompoundData().put("PuffState", new TagInt(2));
+                        break;
                 }
             }
         }

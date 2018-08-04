@@ -59,9 +59,12 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         Blaze("blaze"),
         CaveSpider("cave_spider"),
         Chicken("chicken"),
+        Cod("cod"),
         Cow("cow"),
         Creeper("creeper"),
         Donkey("donkey"),
+        Dolphin("dolphin"),
+        Drowned("drowned"),
         ElderGuardian("elder_guardian"),
         EnderDragon("ender_dragon"),
         Enderman("enderman"),
@@ -80,10 +83,13 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         Mule("mule"),
         Ocelot("ocelot"),
         Parrot("parrot"),
+        Phantom("phantom"),
         Pig("pig"),
         PigZombie("zombie_pigman"),
         PolarBear("polar_bear"),
+        Pufferfish("pufferfish"),
         Rabbit("rabbit"),
+        Salmon("salmon"),
         Sheep("sheep"),
         Silverfish("silverfish"),
         Skeleton("skeleton"),
@@ -93,6 +99,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         Spider("spider"),
         Squid("squid"),
         Stray("stray"),
+        Turtle("turtle"),
+        TropicalFish("tropicalfish"),
         Witch("witch"),
         Wither("wither"),
         WitherSkeleton("wither_skeleton"),
@@ -116,9 +124,12 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(Blaze, EntityMyBlaze.class);
         entityClasses.put(CaveSpider, EntityMyCaveSpider.class);
         entityClasses.put(Chicken, EntityMyChicken.class);
+        entityClasses.put(Cod, EntityMyCod.class);
         entityClasses.put(Cow, EntityMyCow.class);
         entityClasses.put(Creeper, EntityMyCreeper.class);
         entityClasses.put(Donkey, EntityMyDonkey.class);
+        entityClasses.put(Dolphin, EntityMyDolphin.class);
+        entityClasses.put(Drowned, EntityMyDrowned.class);
         entityClasses.put(ElderGuardian, EntityMyElderGuardian.class);
         entityClasses.put(EnderDragon, EntityMyEnderDragon.class);
         entityClasses.put(Enderman, EntityMyEnderman.class);
@@ -137,10 +148,13 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(Mule, EntityMyMule.class);
         entityClasses.put(Ocelot, EntityMyOcelot.class);
         entityClasses.put(Parrot, EntityMyParrot.class);
+        entityClasses.put(Phantom, EntityMyPhantom.class);
         entityClasses.put(Pig, EntityMyPig.class);
         entityClasses.put(PigZombie, EntityMyPigZombie.class);
         entityClasses.put(PolarBear, EntityMyPolarBear.class);
+        entityClasses.put(Pufferfish, EntityMyPufferfish.class);
         entityClasses.put(Rabbit, EntityMyRabbit.class);
+        entityClasses.put(Salmon, EntityMySalmon.class);
         entityClasses.put(Sheep, EntityMySheep.class);
         entityClasses.put(Silverfish, EntityMySilverfish.class);
         entityClasses.put(Skeleton, EntityMySkeleton.class);
@@ -150,6 +164,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityClasses.put(Spider, EntityMySpider.class);
         entityClasses.put(Squid, EntityMySquid.class);
         entityClasses.put(Stray, EntityMyStray.class);
+        entityClasses.put(TropicalFish, EntityMyTropicalFish.class);
+        entityClasses.put(Turtle, EntityMyTurtle.class);
         entityClasses.put(Witch, EntityMyWitch.class);
         entityClasses.put(Wither, EntityMyWither.class);
         entityClasses.put(WitherSkeleton, EntityMyWitherSkeleton.class);

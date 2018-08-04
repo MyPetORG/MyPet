@@ -18,12 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity.types;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetSize;
+public interface MyPetSize {
 
-@DefaultInfo(food = {"redstone"})
-public interface MyMagmaCube extends MyPet, MyPetSize {
+    int getSize();
+
+    void setSize(int value);
 }

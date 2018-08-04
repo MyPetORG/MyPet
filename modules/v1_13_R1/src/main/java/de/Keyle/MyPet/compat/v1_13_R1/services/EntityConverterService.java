@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_13_R1.services;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
@@ -32,6 +33,7 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftTropicalFish;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
@@ -82,6 +84,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case HUSK:
             case ZOMBIE:
             case PIG_ZOMBIE:
+            case DROWNED:
                 convertZombie((Zombie) entity, properties);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
                     convertEquipable(entity, properties);
@@ -106,6 +109,15 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case PARROT:
                 convertParrot((Parrot) entity, properties);
+                break;
+            case TROPICAL_FISH:
+                convertTropicalFish((TropicalFish) entity, properties);
+                break;
+            case PUFFERFISH:
+                convertPufferFish((PufferFish) entity, properties);
+                break;
+            case PHANTOM:
+                convertPhantom((Phantom) entity, properties);
                 break;
         }
 
@@ -366,5 +378,18 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         properties.getCompoundData().put("Sitting", new TagByte(wolf.isSitting()));
         properties.getCompoundData().put("Tamed", new TagByte(wolf.isTamed()));
         properties.getCompoundData().put("CollarColor", new TagByte(wolf.getCollarColor().getWoolData()));
+    }
+
+    public void convertTropicalFish(TropicalFish tropicalFish, TagCompound properties) {
+        CraftTropicalFish fish = (CraftTropicalFish) tropicalFish;
+        properties.getCompoundData().put("Variant", new TagInt(fish.getHandle().getVariant()));
+    }
+
+    public void convertPufferFish(PufferFish pufferFish, TagCompound properties) {
+        properties.getCompoundData().put("PuffState", new TagInt(Util.clamp(pufferFish.getPuffState(), 0, 2)));
+    }
+
+    public void convertPhantom(Phantom phantom, TagCompound properties) {
+        properties.getCompoundData().put("Size", new TagInt(phantom.getSize()));
     }
 }

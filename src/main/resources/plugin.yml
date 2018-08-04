@@ -121,9 +121,12 @@ permissions:
       MyPet.leash.Blaze: true
       MyPet.leash.CaveSpider: true
       MyPet.leash.Chicken: true
+      MyPet.leash.Cod: true
       MyPet.leash.Cow: true
       MyPet.leash.Creeper: true
+      MyPet.leash.Dolphin: true
       MyPet.leash.Donkey: true
+      MyPet.leash.Drowned: true
       MyPet.leash.ElderGuardian: true
       MyPet.leash.Enderdragon: true
       MyPet.leash.Enderman: true
@@ -142,10 +145,13 @@ permissions:
       MyPet.leash.Mule: true
       MyPet.leash.Ocelot: true
       MyPet.leash.Parrot: true
+      MyPet.leash.Phantom: true
       MyPet.leash.Pig: true
       MyPet.leash.PigZombie: true
       MyPet.leash.PolarBear: true
+      MyPet.leash.Pufferfish: true
       MyPet.leash.Rabbit: true
+      MyPet.leash.Salmon: true
       MyPet.leash.Sheep: true
       MyPet.leash.Silverfish: true
       MyPet.leash.Skeleton: true
@@ -155,6 +161,8 @@ permissions:
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
       MyPet.leash.Stray: true
+      MyPet.leash.TropicalFish: true
+      MyPet.leash.Turtle: true
       MyPet.leash.Vex: true
       MyPet.leash.Villager: true
       MyPet.leash.Vindicator: true

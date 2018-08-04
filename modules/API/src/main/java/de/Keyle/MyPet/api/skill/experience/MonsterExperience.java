@@ -81,6 +81,14 @@ public class MonsterExperience {
         mobExp.put("PARROT", new MonsterExperience(1, 3, "PARROT"));
         mobExp.put("HUSK", new MonsterExperience(5, "HUSK"));
         mobExp.put("STRAY", new MonsterExperience(5, "STRAY"));
+        mobExp.put("DOLPHIN", new MonsterExperience(0, "DOLPHIN"));
+        mobExp.put("DROWNED", new MonsterExperience(5, "DROWNED"));
+        mobExp.put("PHANTOM", new MonsterExperience(5, "PHANTOM"));
+        mobExp.put("TURTLE", new MonsterExperience(1, 3, "TURTLE"));
+        mobExp.put("COD", new MonsterExperience(0, "COD"));
+        mobExp.put("SALMON", new MonsterExperience(0, "SALMON"));
+        mobExp.put("PUFFERFISH", new MonsterExperience(0, "PUFFERFISH"));
+        mobExp.put("TROPICAL_FISH", new MonsterExperience(0, "TROPICAL_FISH"));
     }
 
     private double min;
