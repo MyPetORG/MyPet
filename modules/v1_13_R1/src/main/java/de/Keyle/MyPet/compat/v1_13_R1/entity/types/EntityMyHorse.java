@@ -54,7 +54,6 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
      * 8 chest
      * 32 head down
      * 64 rear
-     * 128 mouth open
      */
     protected void applyVisual(int value, boolean flag) {
         int i = this.datawatcher.get(saddleChestWatcher);
