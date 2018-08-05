@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -178,14 +178,11 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
             } else {
                 ItemStack itemStack = items.get(slot);
 
-                // --------------------------------------------------------------------------------------------
-                // ToDo: replace with cloneAndSubtract(int i) on next Bukkit revision
                 ItemStack splittedStack = new ItemStack(itemStack.getItem(), subtract, itemStack.getData());
                 if (itemStack.getTag() != null) {
                     splittedStack.setTag(((NBTTagCompound) itemStack.getTag().clone()));
                 }
                 itemStack.count -= subtract;
-                // --------------------------------------------------------------------------------------------
 
                 if (items.get(slot).count == 0) {
                     items.set(slot, null);

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -117,7 +117,6 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
 
     protected ItemStack createItemStack(IconMenuItem icon) {
         ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData()));
-        //TODO allow items like FIRE (51)
         if (is == null) {
             is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.SAPLING));
         }
