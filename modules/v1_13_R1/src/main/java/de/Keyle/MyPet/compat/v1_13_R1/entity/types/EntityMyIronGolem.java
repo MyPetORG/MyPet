@@ -47,7 +47,7 @@ public class EntityMyIronGolem extends EntityMyPet {
             flag = super.attack(entity);
             if (Configuration.MyPet.IronGolem.CAN_THROW_UP && flag) {
                 entity.motY += 0.4000000059604645D;
-                this.makeSound("entity.irongolem.attack", 1.0F, 1.0F);
+                this.makeSound("entity.iron_golem.attack", 1.0F, 1.0F);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,12 +57,12 @@ public class EntityMyIronGolem extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.irongolem.death";
+        return "entity.iron_golem.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.irongolem.hurt";
+        return "entity.iron_golem.hurt";
     }
 
     protected String getLivingSound() {
@@ -119,7 +119,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 
     @Override
     public void playPetStepSound() {
-        makeSound("entity.irongolem.step", 1.0F, 1.0F);
+        makeSound("entity.iron_golem.step", 1.0F, 1.0F);
     }
 
     public void onLivingUpdate() {

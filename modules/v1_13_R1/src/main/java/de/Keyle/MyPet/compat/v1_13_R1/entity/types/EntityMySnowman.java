@@ -81,16 +81,16 @@ public class EntityMySnowman extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.snowman.death";
+        return "entity.snow_golem.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.snowman.hurt";
+        return "entity.snow_golem.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.snowman.ambient";
+        return "entity.snow_golem.ambient";
     }
 
     @Override

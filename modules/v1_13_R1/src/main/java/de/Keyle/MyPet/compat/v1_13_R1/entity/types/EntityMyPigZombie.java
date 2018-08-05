@@ -44,16 +44,16 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.zombie_pig.death";
+        return "entity.zombie_pigman.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.zombie_pig.hurt";
+        return "entity.zombie_pigman.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.zombie_pig.ambient";
+        return "entity.zombie_pigman.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

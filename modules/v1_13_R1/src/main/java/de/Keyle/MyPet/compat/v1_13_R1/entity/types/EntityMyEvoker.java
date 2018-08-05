@@ -40,7 +40,7 @@ public class EntityMyEvoker extends EntityMyPet {
      */
     @Override
     protected String getDeathSound() {
-        return "entity.evocation_illager.death";
+        return "entity.evoker.death";
     }
 
     /**
@@ -48,14 +48,14 @@ public class EntityMyEvoker extends EntityMyPet {
      */
     @Override
     protected String getHurtSound() {
-        return "entity.evocation_illager.hurt";
+        return "entity.evoker.hurt";
     }
 
     /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound() {
-        return "entity.evocation_illager.ambient";
+        return "entity.evoker.ambient";
     }
 
     protected void initDatawatcher() {
