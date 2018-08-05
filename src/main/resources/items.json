@@ -2924,132 +2924,100 @@
     "introduced": "1.8"
   },
   {
-    "1.9": {
-      "id": "end_rod"
-    },
     "legacy-id": 198,
     "id": "end_rod",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "end_rod"
   },
   {
-    "1.9": {
-      "id": "chorus_plant"
-    },
     "legacy-id": 199,
     "id": "chorus_plant",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "chorus_plant"
   },
   {
-    "1.9": {
-      "id": "chorus_flower"
-    },
     "legacy-id": 200,
     "id": "chorus_flower",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "chorus_flower"
   },
   {
-    "1.9": {
-      "id": "purpur_block"
-    },
     "legacy-id": 201,
     "id": "purpur_block",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "purpur_block"
   },
   {
-    "1.9": {
-      "id": "purpur_pillar"
-    },
     "legacy-id": 202,
     "id": "purpur_pillar",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "purpur_pillar"
   },
   {
-    "1.9": {
-      "id": "purpur_stairs"
-    },
     "legacy-id": 203,
     "id": "purpur_stairs",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "purpur_stairs"
   },
   {
-    "1.9": {
-      "id": "purpur_double_slab"
-    },
     "legacy-id": 204,
     "id": "purpur_double_slab",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "purpur_double_slab"
   },
   {
-    "1.9": {
-      "id": "purpur_slab"
-    },
     "legacy-id": 205,
     "id": "purpur_slab",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "purpur_slab"
   },
   {
-    "1.9": {
-      "id": "end_bricks"
-    },
     "legacy-id": 206,
     "id": "end_stone_bricks",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "end_bricks"
   },
   {
-    "1.9": {
-      "id": "beetroots"
-    },
     "legacy-id": 207,
     "id": "beetroots",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "beetroots"
   },
   {
-    "1.9": {
-      "id": "grass_path"
-    },
     "legacy-id": 208,
     "id": "grass_path",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "grass_path"
   },
   {
-    "1.9": {
-      "id": "end_gateway"
-    },
     "legacy-id": 209,
     "id": "end_gateway",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "end_gateway"
   },
   {
-    "1.9": {
-      "id": "repeating_command_block"
-    },
     "legacy-id": 210,
     "id": "repeating_command_block",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "repeating_command_block"
   },
   {
-    "1.9": {
-      "id": "chain_command_block"
-    },
     "legacy-id": 211,
     "id": "chain_command_block",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "chain_command_block"
   },
   {
-    "1.9": {
-      "id": "frosted_ice"
-    },
     "legacy-id": 212,
     "id": "frosted_ice",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "frosted_ice"
   },
   {
-    "1.9": {
-      "id": "magma"
-    },
     "legacy-id": 213,
     "id": "magma_block",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "magma"
   },
   {
     "1.10": {
@@ -3076,12 +3044,10 @@
     "introduced": "1.10"
   },
   {
-    "1.9": {
-      "id": "structure_void"
-    },
     "legacy-id": 217,
     "id": "structure_void",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "structure_void"
   },
   {
     "1.11": {
@@ -3668,12 +3634,10 @@
     "introduced": "1.12"
   },
   {
-    "1.9": {
-      "id": "structure_block"
-    },
     "legacy-id": 255,
     "id": "structure_block",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "structure_block"
   },
   {
     "legacy-name": "iron_shovel",
@@ -5738,14 +5702,11 @@
     "introduced": "1.13"
   },
   {
-    "1.9": {
-      "id": "skull",
-      "data": 5
-    },
     "legacy-id": 397,
     "legacy-data": 5,
     "id": "dragon_head",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "skull"
   },
   {
     "id": "dragon_wall_head",
@@ -6055,52 +6016,40 @@
     "introduced": "1.8"
   },
   {
-    "1.9": {
-      "id": "chorus_fruit"
-    },
     "legacy-id": 432,
     "id": "chorus_fruit",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "chorus_fruit"
   },
   {
-    "1.9": {
-      "id": "chorus_fruit_popped"
-    },
     "legacy-id": 433,
     "id": "popped_chorus_fruit",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "chorus_fruit_popped"
   },
   {
-    "1.9": {
-      "id": "beetroot"
-    },
     "legacy-id": 434,
     "id": "beetroot",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "beetroot"
   },
   {
-    "1.9": {
-      "id": "beetroot_seeds"
-    },
     "legacy-id": 435,
     "id": "beetroot_seeds",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "beetroot_seeds"
   },
   {
-    "1.9": {
-      "id": "beetroot_soup"
-    },
     "legacy-id": 436,
     "id": "beetroot_soup",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "beetroot_soup"
   },
   {
-    "1.9": {
-      "id": "dragon_breath"
-    },
     "legacy-id": 437,
     "id": "dragon_breath",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "dragon_breath"
   },
   {
     "legacy-name": "splash_potion",
@@ -6109,84 +6058,64 @@
     "introduced": "1.7.10"
   },
   {
-    "1.9": {
-      "id": "spectral_arrow"
-    },
     "legacy-id": 439,
     "id": "spectral_arrow",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "spectral_arrow"
   },
   {
-    "1.9": {
-      "id": "tipped_arrow"
-    },
     "legacy-id": 440,
     "id": "tipped_arrow",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "tipped_arrow"
   },
   {
-    "1.9": {
-      "id": "lingering_potion"
-    },
     "legacy-id": 441,
     "id": "lingering_potion",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "lingering_potion"
   },
   {
-    "1.9": {
-      "id": "shield"
-    },
     "legacy-id": 442,
     "id": "shield",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "shield"
   },
   {
-    "1.9": {
-      "id": "elytra"
-    },
     "legacy-id": 443,
     "id": "elytra",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "elytra"
   },
   {
-    "1.9": {
-      "id": "spruce_boat"
-    },
     "legacy-id": 444,
     "id": "spruce_boat",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "spruce_boat"
   },
   {
-    "1.9": {
-      "id": "birch_boat"
-    },
     "legacy-id": 445,
     "id": "birch_boat",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "birch_boat"
   },
   {
-    "1.9": {
-      "id": "jungle_boat"
-    },
     "legacy-id": 446,
     "id": "jungle_boat",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "jungle_boat"
   },
   {
-    "1.9": {
-      "id": "acacia_boat"
-    },
     "legacy-id": 447,
     "id": "acacia_boat",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "acacia_boat"
   },
   {
-    "1.9": {
-      "id": "dark_oak_boat"
-    },
     "legacy-id": 448,
     "id": "dark_oak_boat",
-    "introduced": "1.9"
+    "introduced": "1.9",
+    "legacy-name": "dark_oak_boat"
   },
   {
     "1.11": {
