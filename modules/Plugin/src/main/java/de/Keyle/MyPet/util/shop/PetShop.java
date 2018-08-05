@@ -256,8 +256,10 @@ public class PetShop {
             try {
                 pet.load(pets.getConfigurationSection(name));
 
-                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                converter.ifPresent(service -> service.convert(pet));
+                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                for (RepositoryMyPetConverterService converter : converters) {
+                    converter.convert(pet);
+                }
 
                 if (Util.isBetween(0, 53, pet.getPosition())) {
                     this.pets.put(pet.getPosition(), pet);

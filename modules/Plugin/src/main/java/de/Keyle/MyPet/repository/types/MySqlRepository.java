@@ -454,8 +454,10 @@ public class MySqlRepository implements Repository {
                 pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
                 pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
 
-                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                converter.ifPresent(service -> service.convert(pet));
+                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                for (RepositoryMyPetConverterService converter : converters) {
+                    converter.convert(pet);
+                }
 
                 pets.add(pet);
             }

@@ -20,55 +20,18 @@
 
 package de.Keyle.MyPet.services;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.service.Load;
-import de.keyle.knbt.*;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 
 @Load(Load.State.AfterHooks)
-public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService {
-
-    Version toVersion;
-
-    @Override
-    public boolean onEnable() {
-        try {
-            toVersion = Version.valueOf(MyPetApi.getCompatUtil().getInternalVersion());
-        } catch (Throwable e) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void convert(StoredMyPet pet) {
-        Version fromVersion = Version.v1_7_R4;
-
-        TagCompound info = pet.getInfo();
-        if (info.containsKey("Version")) {
-            if (info.containsKeyAs("Version", TagString.class)) {
-                fromVersion = Version.valueOf(info.getAs("Version", TagString.class).getStringData());
-            } else if (info.containsKeyAs("Version", TagInt.class)) {
-                fromVersion = Version.values()[info.getAs("Version", TagInt.class).getIntData() + 1];
-            } else {
-                fromVersion = Version.values()[info.getAs("Version", TagShort.class).getShortData()];
-            }
-        }
-        if (fromVersion != toVersion) {
-            switch (toVersion) {
-                case v1_11_R1:
-                case v1_12_R1:
-                    v1_11_R1(pet);
-                case v1_13_R1:
-                    v1_13_R1(pet);
-            }
-        }
-    }
+public class RepositoryMyPetConverterService extends de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService {
 
     public void v1_11_R1(StoredMyPet pet) {
         TagCompound info = pet.getInfo();
-
 
         switch (pet.getPetType()) {
             case Horse:
@@ -159,13 +122,5 @@ public class RepositoryMyPetConverterService implements de.Keyle.MyPet.api.util.
                 }
                 break;
         }
-    }
-
-    public void v1_13_R1(StoredMyPet pet) {
-        TagCompound info = pet.getInfo();
-
-        /* TODO pet upgrade for 1.13
-         * convert Items in Backpack
-         */
     }
 }

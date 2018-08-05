@@ -277,8 +277,10 @@ public class MongoDbRepository implements Repository {
             pet.setSkills(TagStream.readTag(((Binary) document.get("skills")).getData(), true));
             pet.setInfo(TagStream.readTag(((Binary) document.get("info")).getData(), true));
 
-            Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-            converter.ifPresent(service -> service.convert(pet));
+            List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+            for (RepositoryMyPetConverterService converter : converters) {
+                converter.convert(pet);
+            }
 
             return pet;
         } catch (IOException e) {
