@@ -228,8 +228,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
                 inactiveMyPet.setWorldGroup(wg.getName());
 
-                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                converter.ifPresent(repositoryMyPetConverterService -> repositoryMyPetConverterService.convert(inactiveMyPet));
+                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                for (RepositoryMyPetConverterService converter : converters) {
+                    converter.convert(inactiveMyPet);
+                }
 
                 MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
                 Bukkit.getServer().getPluginManager().callEvent(createEvent);

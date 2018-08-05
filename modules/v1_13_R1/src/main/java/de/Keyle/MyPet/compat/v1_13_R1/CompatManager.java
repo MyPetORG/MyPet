@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_13_R1.services.EggIconService;
 import de.Keyle.MyPet.compat.v1_13_R1.services.EntityConverterService;
+import de.Keyle.MyPet.compat.v1_13_R1.services.RepositoryMyPetConverterService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,6 +38,7 @@ public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager impleme
     public void init() {
         MyPetApi.getServiceManager().registerService(EggIconService.class);
         MyPetApi.getServiceManager().registerService(EntityConverterService.class);
+        MyPetApi.getServiceManager().registerService(RepositoryMyPetConverterService.class);
     }
 
     public void enable() {

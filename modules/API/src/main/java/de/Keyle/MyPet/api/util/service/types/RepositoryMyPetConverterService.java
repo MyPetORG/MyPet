@@ -20,13 +20,22 @@
 
 package de.Keyle.MyPet.api.util.service.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagShort;
+import de.keyle.knbt.TagString;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @ServiceName("RepositoryMyPetConverterService")
-public interface RepositoryMyPetConverterService extends ServiceContainer {
-    enum Version {
+public class RepositoryMyPetConverterService implements ServiceContainer {
+
+    public enum Version {
         UNKNOWN,
         v1_7_R4,
         v1_8_R1,
@@ -40,5 +49,44 @@ public interface RepositoryMyPetConverterService extends ServiceContainer {
         v1_13_R1,
     }
 
-    void convert(StoredMyPet pet);
+    Version toVersion;
+
+    @Override
+    public boolean onEnable() {
+        try {
+            toVersion = Version.valueOf(MyPetApi.getCompatUtil().getInternalVersion());
+        } catch (Throwable e) {
+            return false;
+        }
+        return true;
+    }
+
+    public void convert(StoredMyPet pet) {
+        Version fromVersion = Version.v1_7_R4;
+
+        TagCompound info = pet.getInfo();
+        if (info.containsKey("Version")) {
+            if (info.containsKeyAs("Version", TagString.class)) {
+                fromVersion = Version.valueOf(info.getAs("Version", TagString.class).getStringData());
+            } else if (info.containsKeyAs("Version", TagInt.class)) {
+                fromVersion = Version.values()[info.getAs("Version", TagInt.class).getIntData() + 1];
+            } else {
+                fromVersion = Version.values()[info.getAs("Version", TagShort.class).getShortData()];
+            }
+        }
+
+        for (Version v : Version.values()) {
+            if (v.ordinal() <= fromVersion.ordinal()) {
+                continue;
+            }
+            if (v.ordinal() > toVersion.ordinal()) {
+                break;
+            }
+            try {
+                Method m = this.getClass().getDeclaredMethod(v.name(), StoredMyPet.class);
+                m.invoke(this, pet);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+            }
+        }
+    }
 }

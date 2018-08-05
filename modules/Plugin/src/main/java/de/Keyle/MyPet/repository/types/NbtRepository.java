@@ -153,8 +153,10 @@ public class NbtRepository implements Repository {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTags.get(petUUID));
 
-                    Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                    converter.ifPresent(service -> service.convert(myPet));
+                    List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                    for (RepositoryMyPetConverterService converter : converters) {
+                        converter.convert(myPet);
+                    }
 
                     petList.add(myPet);
                 }
@@ -182,8 +184,10 @@ public class NbtRepository implements Repository {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTag);
 
-                    Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                    converter.ifPresent(service -> service.convert(myPet));
+                    List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                    for (RepositoryMyPetConverterService converter : converters) {
+                        converter.convert(myPet);
+                    }
 
                     callback.run(myPet);
                 }

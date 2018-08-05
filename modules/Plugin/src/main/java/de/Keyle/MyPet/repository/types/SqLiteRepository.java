@@ -377,8 +377,10 @@ public class SqLiteRepository implements Repository {
                 pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
                 pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
 
-                Optional<RepositoryMyPetConverterService> converter = MyPetApi.getServiceManager().getService(RepositoryMyPetConverterService.class);
-                converter.ifPresent(repositoryMyPetConverterService -> repositoryMyPetConverterService.convert(pet));
+                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                for (RepositoryMyPetConverterService converter : converters) {
+                    converter.convert(pet);
+                }
 
                 pets.add(pet);
             }
