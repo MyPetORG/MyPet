@@ -26,13 +26,12 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.compat.v1_13_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_13_R1.*;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@EntitySize(width = 1.4F, height = 1.6F)
+@EntitySize(width = 1.3965F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet implements IJumpable {
 
     protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.i);
@@ -100,8 +99,9 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
         }
 
         if (itemStack != null && canUseItem()) {
+            org.bukkit.inventory.ItemStack is = CraftItemStack.asBukkitCopy(itemStack);
             if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
-                getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+                getMyPet().setSaddle(is);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
@@ -109,8 +109,8 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
                     }
                 }
                 return true;
-            } else if (getHorseArmorId(CraftItemStack.asBukkitCopy(itemStack)) > 0 && !getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
-                getMyPet().setArmor(CraftItemStack.asBukkitCopy(itemStack));
+            } else if (getHorseArmor(is) > 0 && !getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+                getMyPet().setArmor(is);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
@@ -161,13 +161,10 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
         return false;
     }
 
-    private int getHorseArmorId(org.bukkit.inventory.ItemStack itemstack) {
-        if (itemstack == null) {
-            return 0;
-        }
-        Material item = itemstack.getType();
-
-        return item == Material.DIAMOND_HORSE_ARMOR ? 3 : item == Material.GOLDEN_HORSE_ARMOR ? 2 : item == Material.IRON_HORSE_ARMOR ? 1 : 0;
+    private int getHorseArmor(org.bukkit.inventory.ItemStack itemstack) {
+        ItemStack is = CraftItemStack.asNMSCopy(itemstack);
+        EnumHorseArmor horseArmor = EnumHorseArmor.a(is);
+        return horseArmor.a();
     }
 
     protected void initDatawatcher() {
@@ -187,7 +184,7 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     @Override
     public void updateVisuals() {
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(armorWatcher, getHorseArmorId(getMyPet().getArmor()));
+        this.datawatcher.set(armorWatcher, getHorseArmor(getMyPet().getArmor()));
         this.datawatcher.set(variantWatcher, getMyPet().getVariant());
         applyVisual(4, getMyPet().hasSaddle());
     }
