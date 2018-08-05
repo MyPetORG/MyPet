@@ -46,7 +46,7 @@ public class EntityMyIllusioner extends EntityMyPet {
      */
     @Override
     protected String getDeathSound() {
-        return "entity.illusion_illager.death";
+        return "entity.illusioner.death";
     }
 
     /**
@@ -54,14 +54,14 @@ public class EntityMyIllusioner extends EntityMyPet {
      */
     @Override
     protected String getHurtSound() {
-        return "entity.illusion_illager.hurt";
+        return "entity.illusioner.hurt";
     }
 
     /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound() {
-        return "entity.illusion_illager.ambient";
+        return "entity.illusioner.ambient";
     }
 
     /**

@@ -40,12 +40,12 @@ public class EntityMyMagmaCube extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.magmacube.death";
+        return "entity.magma_cube.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.magmacube.hurt";
+        return "entity.magma_cube.hurt";
     }
 
     protected String getLivingSound() {
@@ -63,7 +63,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
         if (this.onGround && jumpDelay-- <= 0) {
             getControllerJump().a();
             jumpDelay = (this.random.nextInt(20) + 50);
-            this.makeSound("entity.magmacube.jump", 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+            this.makeSound("entity.magma_cube.jump", 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }
     }
 

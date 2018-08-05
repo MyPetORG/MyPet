@@ -45,17 +45,17 @@ public class EntityMyEnderman extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "entity.endermen.death";
+        return "entity.enderman.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.endermen.hurt";
+        return "entity.enderman.hurt";
     }
 
     @Override
     protected String getLivingSound() {
-        return getMyPet().isScreaming() ? "entity.endermen.scream" : "entity.endermen.ambient";
+        return getMyPet().isScreaming() ? "entity.enderman.scream" : "entity.enderman.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

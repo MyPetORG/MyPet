@@ -45,7 +45,7 @@ public class EntityMyVindicator extends EntityMyPet {
      */
     @Override
     protected String getDeathSound() {
-        return "entity.vindication_illager.death";
+        return "entity.vindicator.death";
     }
 
     /**
@@ -53,14 +53,14 @@ public class EntityMyVindicator extends EntityMyPet {
      */
     @Override
     protected String getHurtSound() {
-        return "entity.vindication_illager.hurt";
+        return "entity.vindicator.hurt";
     }
 
     /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound() {
-        return "entity.vindication_illager.ambient";
+        return "entity.vindicator.ambient";
     }
 
     /**
