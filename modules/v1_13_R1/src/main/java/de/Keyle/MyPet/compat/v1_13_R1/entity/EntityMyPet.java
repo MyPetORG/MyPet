@@ -534,7 +534,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (hasRider) {
             if (!isVehicle()) {
                 hasRider = false;
-                this.P = 0.5F; // climb height -> halfslab
+                this.Q = 0.5F; // climb height -> halfslab
                 Location playerLoc = getOwner().getPlayer().getLocation();
                 Location petLoc = getBukkitEntity().getLocation();
                 petLoc.setYaw(playerLoc.getYaw());
@@ -546,7 +546,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 for (Entity e : passengers) {
                     if (e instanceof EntityPlayer && getOwner().equals(e)) {
                         hasRider = true;
-                        this.P = 1.0F; // climb height -> 1 block
+                        this.Q = 1.0F; // climb height -> 1 block
                         petTargetSelector.finish();
                         petPathfinderSelector.finish();
                     } else {
