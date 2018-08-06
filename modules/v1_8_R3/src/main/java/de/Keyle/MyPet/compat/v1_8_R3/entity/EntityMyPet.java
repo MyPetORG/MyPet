@@ -984,6 +984,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             return;
         }
 
+        Ride rideSkill = myPet.getSkills().get(RideImpl.class);
+        if (rideSkill == null || !rideSkill.getActive().getValue()) {
+            this.passenger.mount(null);
+            return;
+        }
+
         //apply pitch & yaw
         this.lastYaw = (this.yaw = this.passenger.yaw);
         this.pitch = this.passenger.pitch * 0.5F;
@@ -1001,14 +1007,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         // sideways is slower too but not as slow as backwards
         motionSideways *= 0.85F;
 
-        float speed = 0.22222F;
-        double jumpHeight = 0.3D;
-
-        Ride rideSkill = myPet.getSkills().get(RideImpl.class);
-        if (rideSkill != null) {
-            speed *= 1F + (rideSkill.getSpeedIncrease().getValue() / 100F);
-            jumpHeight = rideSkill.getJumpHeight().getValue().doubleValue() * 0.18D;
-        }
+        float speed = 0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F));
+        double jumpHeight = Util.clamp(1 + rideSkill.getJumpHeight().getValue().doubleValue(), 0, 10);
 
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
             double factor = Math.log10(myPet.getSaturation()) / 2;
