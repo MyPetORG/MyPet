@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_13_R1.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -79,8 +78,7 @@ public class EntityMyWolf extends EntityMyPet {
         }
 
         if (getOwner().equals(entityhuman)) {
-            if (itemStack != null) {
-                MyPetApi.getLogger().info("is tag: " + itemStack.getTag().toString());
+            if (itemStack != null && itemStack.getItem() != Items.AIR) {
                 if (canUseItem()) {
                     if (itemStack.getItem() instanceof ItemDye && ((ItemDye) itemStack.getItem()).d().ordinal() != getMyPet().getCollarColor().ordinal()) {
                         if (getOwner().getPlayer().isSneaking()) {
