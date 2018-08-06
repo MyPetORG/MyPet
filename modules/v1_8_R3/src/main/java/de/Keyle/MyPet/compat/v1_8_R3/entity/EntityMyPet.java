@@ -1010,7 +1010,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
-        if (rideSkill == null) {
+        if (rideSkill == null || !rideSkill.getActive().getValue()) {
             this.passenger.mount(null);
             return;
         }
