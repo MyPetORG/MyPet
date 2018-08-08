@@ -85,6 +85,8 @@ public class Configuration {
     }
 
     public static class Respawn {
+
+        public static boolean DISABLE_AUTO_RESPAWN = false;
         public static int TIME_FACTOR = 5;
         public static int TIME_PLAYER_FACTOR = 5;
         public static int TIME_FIXED = 0;

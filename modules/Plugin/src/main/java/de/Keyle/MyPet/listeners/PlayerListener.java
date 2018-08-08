@@ -184,7 +184,11 @@ public class PlayerListener implements Listener {
                                                     joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", joinedPlayer), myPet.getPetName()));
                                                     break;
                                                 case Dead:
-                                                    joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", joinedPlayer), myPet.getPetName(), myPet.getRespawnTime()));
+                                                    if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                        joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", joinedPlayer), myPet.getPetName()));
+                                                    } else {
+                                                        joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", joinedPlayer), myPet.getPetName(), myPet.getRespawnTime()));
+                                                    }
                                                     break;
                                                 case Flying:
                                                     joinedPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", joinedPlayer), myPet.getPetName()));
@@ -302,7 +306,11 @@ public class PlayerListener implements Listener {
                                 break;
                             case Dead:
                                 if (runMyPet != myPet) {
-                                    myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", myPetPlayer), runMyPet.getPetName(), runMyPet.getRespawnTime()));
+                                    if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                        myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", runMyPet.getOwner()), runMyPet.getPetName()));
+                                    } else {
+                                        myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead.Respawn", runMyPet.getOwner()), runMyPet.getPetName(), runMyPet.getRespawnTime()));
+                                    }
                                 }
                                 break;
                             case Flying:
@@ -450,7 +458,11 @@ public class PlayerListener implements Listener {
                                     break;
                                 case Dead:
                                     if (runMyPet != myPet) {
-                                        respawnedMyPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", respawnedMyPetPlayer), runMyPet.getPetName(), runMyPet.getRespawnTime()));
+                                        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                            respawnedMyPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", respawnedMyPetPlayer), myPet.getPetName()));
+                                        } else {
+                                            respawnedMyPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead.Respawn", respawnedMyPetPlayer), runMyPet.getPetName(), runMyPet.getRespawnTime()));
+                                        }
                                     }
                                     break;
                                 case Flying:

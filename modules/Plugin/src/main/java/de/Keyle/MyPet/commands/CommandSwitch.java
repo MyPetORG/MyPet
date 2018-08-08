@@ -107,7 +107,11 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                                             owner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner), activePet.get().getPetName()));
                                             break;
                                         case Dead:
-                                            owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner), activePet.get().getPetName(), activePet.get().getRespawnTime()));
+                                            if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                owner.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), activePet.get().getPetName()));
+                                            } else {
+                                                owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner), activePet.get().getPetName(), activePet.get().getRespawnTime()));
+                                            }
                                             break;
                                         case Spectator:
                                             sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", owner), activePet.get().getPetName()));

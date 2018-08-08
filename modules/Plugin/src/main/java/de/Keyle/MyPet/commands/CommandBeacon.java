@@ -50,7 +50,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", player), myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getSkills().isActive(BeaconImpl.class)) {

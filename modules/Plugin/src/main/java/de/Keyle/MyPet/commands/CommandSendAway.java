@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -75,7 +75,7 @@ public class CommandSendAway implements CommandExecutor, TabCompleter {
             } else if (myPet.getStatus() == PetState.Despawned) {
                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.SendAway.AlreadyAway", petOwner), myPet.getPetName()));
             } else if (myPet.getStatus() == PetState.Dead) {
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", petOwner), myPet.getPetName()));
             }
         } else {
             if (args.length == 0) {

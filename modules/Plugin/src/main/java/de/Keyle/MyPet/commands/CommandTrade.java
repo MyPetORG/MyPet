@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -138,7 +139,9 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                                             newOwner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", newOwner), myPet.get().getPetName()));
                                             break;
                                         case Dead:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", newOwner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                            if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", newOwner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                            }
                                             break;
                                         case Spectator:
                                             newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", newOwner), myPet.get().getPetName()));

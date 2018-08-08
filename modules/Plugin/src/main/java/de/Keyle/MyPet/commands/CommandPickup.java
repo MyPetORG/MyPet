@@ -49,7 +49,7 @@ public class CommandPickup implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", owner), myPet.getPetName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", owner), myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getSkills().has(PickupImpl.class)) {

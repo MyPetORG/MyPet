@@ -97,6 +97,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);
         config.addDefault("MyPet.Repository.MongoDB.Port", Repository.MongoDB.PORT);
 
+        config.addDefault("MyPet.Respawn.Time.Disabled", Respawn.DISABLE_AUTO_RESPAWN);
         config.addDefault("MyPet.Respawn.Time.Default.Factor", Respawn.TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", Respawn.TIME_PLAYER_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Default.Fixed", Respawn.TIME_FIXED);
@@ -324,6 +325,7 @@ public class ConfigurationLoader {
         Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchFee.Percent", 5);
         Skilltree.SWITCH_FEE_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchFee.Admin", false);
         Skilltree.INHERIT_ALREADY_INHERITED_SKILLS = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
+        Respawn.DISABLE_AUTO_RESPAWN = config.getBoolean("MyPet.Respawn.Time.Disabled", false);
         Respawn.TIME_FACTOR = config.getInt("MyPet.Respawn.Time.Default.Factor", 5);
         Respawn.TIME_PLAYER_FACTOR = config.getInt("MyPet.Respawn.Time.Player.Factor", 5);
         Respawn.TIME_FIXED = config.getInt("MyPet.Respawn.Time.Default.Fixed", 0);

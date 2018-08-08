@@ -31,6 +31,7 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.ChatColor;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -366,9 +367,13 @@ public class Util {
     public static ItemTooltip myPetToItemTooltip(StoredMyPet mypet, String lang) {
         List<String> lore = new ArrayList<>();
         lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + Math.round(mypet.getSaturation()));
-        if (mypet.getRespawnTime() > 0) {
-            lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
-        } else {
+        if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+            if (mypet.getRespawnTime() > 0) {
+                lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
+            } else {
+                lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+            }
+        } else if (mypet.getRespawnTime() <= 0) {
             lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
         }
         lore.add(RESET + Translation.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
@@ -380,6 +385,11 @@ public class Util {
         }
         lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().name());
         lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
+        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+            if (mypet.getRespawnTime() > 0) {
+                lore.add(ChatColor.RED + Translation.getString("Name.Dead", lang));
+            }
+        }
 
         return new ItemTooltip().addLore(lore).setTitle(mypet.getPetName());
     }
