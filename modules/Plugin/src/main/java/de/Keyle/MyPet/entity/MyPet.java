@@ -62,6 +62,7 @@ import java.util.*;
 import static org.bukkit.Bukkit.getServer;
 
 public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
+
     protected final MyPetPlayer petOwner;
     protected MyPetBukkitEntity bukkitEntity;
     protected String petName;
@@ -284,7 +285,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void setRespawnTime(int time) {
-        respawnTime = time > 0 ? time : 0;
+        respawnTime = Math.max(time, 0);
 
         if (respawnTime > 0) {
             status = PetState.Dead;
@@ -596,7 +597,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
             }
             if (status == PetState.Dead) {
-                respawnTime--;
+                if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                    respawnTime--;
+                }
                 if (respawnTime <= 0) {
                     respawnPet();
                 } else if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
@@ -605,7 +608,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
                         vaultHook.pay(getOwner().getPlayer(), cost);
                         getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + vaultHook.currencyNameSingular()));
-                        respawnTime = 1;
+                        respawnTime = 0;
                     }
                 }
             }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
@@ -137,7 +138,11 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner), myPet.get().getPetName()));
                                     break;
                                 case Dead:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                    if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                        sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.get().getPetName()));
+                                    } else {
+                                        sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead.Respawn", owner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                    }
                                     break;
                                 case Flying:
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", owner), myPet.get().getPetName()));

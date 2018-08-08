@@ -390,7 +390,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                                                                 runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", myPet.getOwner()), myPet.getPetName()));
                                                                 break;
                                                             case Dead:
-                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", myPet.getOwner()), myPet.getPetName(), myPet.getRespawnTime()));
+                                                                if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                                    runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", myPet.getOwner()), myPet.getPetName()));
+                                                                } else {
+                                                                    runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", myPet.getOwner()), myPet.getPetName(), myPet.getRespawnTime()));
+                                                                }
                                                                 break;
                                                             case Flying:
                                                                 runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
