@@ -96,9 +96,6 @@ commands:
     aliases: [pr, petr]
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
-  pettype:
-    description: Shows info about the pet-types.
-    usage: '/<command> <pet type>'
   petsettings:
     aliases: [po, peto, petoption, petoptions, psettings]
     description: Settings command
