@@ -213,7 +213,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
         getCommand("petbeacon").setExecutor(new CommandBeacon());
         getCommand("petrespawn").setExecutor(new CommandRespawn());
-        getCommand("pettype").setExecutor(new CommandPetType());
         getCommand("petsettings").setExecutor(new CommandSettings());
         getCommand("petswitch").setExecutor(new CommandSwitch());
         getCommand("petstore").setExecutor(new CommandStore());

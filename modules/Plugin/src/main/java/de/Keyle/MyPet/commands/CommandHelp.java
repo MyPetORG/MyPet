@@ -47,7 +47,6 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Admin", player), "/petadmin"));
             }
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Info", player), "/petinfo"));
-            player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Type", player), "/pettype"));
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Shop", player), "/petshop"));
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Options", player), "/petoptions"));
             if (Permissions.hasLegacy(player, "MyPet.command.capturehelper")) {
