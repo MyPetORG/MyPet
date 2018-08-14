@@ -169,7 +169,11 @@ public class ExperienceCache implements ServiceContainer {
                 loadIntervals();
             }
         } catch (ParseException | IOException e) {
-            e.printStackTrace();
+            cacheFile.delete();
+            version = 0;
+            calculator = null;
+            expMap.clear();
+            intervalMap.clear();
         }
     }
 
