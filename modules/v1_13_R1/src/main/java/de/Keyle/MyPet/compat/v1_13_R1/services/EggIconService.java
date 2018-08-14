@@ -43,11 +43,17 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Chicken:
                 icon.setMaterial(Material.CHICKEN_SPAWN_EGG);
                 break;
+            case Cod:
+                icon.setMaterial(Material.COD_SPAWN_EGG);
+                break;
             case Cow:
                 icon.setMaterial(Material.COW_SPAWN_EGG);
                 break;
             case Creeper:
                 icon.setMaterial(Material.CREEPER_SPAWN_EGG);
+                break;
+            case Dolphin:
+                icon.setMaterial(Material.DOLPHIN_SPAWN_EGG);
                 break;
             case EnderDragon:
                 icon.setMaterial(Material.DRAGON_EGG);
@@ -114,6 +120,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Parrot:
                 icon.setMaterial(Material.PARROT_SPAWN_EGG);
                 break;
+            case Phantom:
+                icon.setMaterial(Material.PHANTOM_SPAWN_EGG);
+                break;
             case Pig:
                 icon.setMaterial(Material.PIG_SPAWN_EGG);
                 break;
@@ -123,11 +132,17 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case PolarBear:
                 icon.setMaterial(Material.POLAR_BEAR_SPAWN_EGG);
                 break;
+            case Pufferfish:
+                icon.setMaterial(Material.PUFFERFISH_SPAWN_EGG);
+                break;
             case Rabbit:
                 icon.setMaterial(Material.RABBIT_SPAWN_EGG);
                 break;
             case Sheep:
                 icon.setMaterial(Material.SHEEP_SPAWN_EGG);
+                break;
+            case Salmon:
+                icon.setMaterial(Material.SALMON_SPAWN_EGG);
                 break;
             case Silverfish:
                 icon.setMaterial(Material.SILVERFISH_SPAWN_EGG);
@@ -137,6 +152,12 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Stray:
                 icon.setMaterial(Material.STRAY_SPAWN_EGG);
+                break;
+            case TropicalFish:
+                icon.setMaterial(Material.TROPICAL_FISH_SPAWN_EGG);
+                break;
+            case Turtle:
+                icon.setMaterial(Material.TURTLE_EGG);
                 break;
             case WitherSkeleton:
                 icon.setMaterial(Material.WITHER_SKELETON_SPAWN_EGG);
