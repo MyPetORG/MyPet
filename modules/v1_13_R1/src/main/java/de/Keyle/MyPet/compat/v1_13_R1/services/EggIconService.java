@@ -55,6 +55,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Dolphin:
                 icon.setMaterial(Material.DOLPHIN_SPAWN_EGG);
                 break;
+            case Drowned:
+                icon.setMaterial(Material.DROWNED_SPAWN_EGG);
+                break;
             case EnderDragon:
                 icon.setMaterial(Material.DRAGON_EGG);
                 break;
