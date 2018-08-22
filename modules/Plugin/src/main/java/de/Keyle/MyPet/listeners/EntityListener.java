@@ -479,6 +479,7 @@ public class EntityListener implements Listener {
                         String flagName = flagSettings.getFlagName();
                         LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
                         if (flag == null) {
+                            MyPetApi.getLogger().warning("\"" + flagName + "\" is not a valid leash requirement!");
                             continue;
                         }
                         if (!flag.check(player, leashTarget, event.getDamage(), flagSettings)) {
