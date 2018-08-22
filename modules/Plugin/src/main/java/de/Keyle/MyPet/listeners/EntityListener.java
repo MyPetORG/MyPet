@@ -478,6 +478,9 @@ public class EntityListener implements Listener {
                     for (LeashFlagSettings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
                         String flagName = flagSettings.getFlagName();
                         LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
+                        if (flag == null) {
+                            continue;
+                        }
                         if (!flag.check(player, leashTarget, event.getDamage(), flagSettings)) {
                             willBeLeashed = false;
                         }
