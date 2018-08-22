@@ -98,8 +98,14 @@ public class EntityMyEnderman extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        IBlockData data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getData());
-        this.datawatcher.set(blockWatcher, Optional.ofNullable(data));
+        Optional<IBlockData> block;
+        if (getMyPet().getBlock() != null) {
+            IBlockData data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getData());
+            block = Optional.ofNullable(data);
+        } else {
+            block = Optional.empty();
+        }
+        this.datawatcher.set(blockWatcher, block);
         this.datawatcher.set(screamingWatcher, getMyPet().isScreaming());
     }
 
