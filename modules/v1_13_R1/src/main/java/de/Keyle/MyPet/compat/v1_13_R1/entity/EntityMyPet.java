@@ -1035,7 +1035,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
             }
 
-            M(); // "mob tick"
+            mobTick();
 
             // controls
             getControllerMove().a(); // move

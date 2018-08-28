@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_13_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_13_R1.EntityArmorStand;
 import net.minecraft.server.v1_13_R1.EntityLiving;
+import net.minecraft.server.v1_13_R1.EnumHand;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
@@ -110,7 +111,7 @@ public class MeleeAttack implements AIGoal {
                 this.ticksUntilNextHitLeft = ticksUntilNextHit;
                 if (this.petEntity instanceof MyPetEquipment) {
                     if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.MainHand) != null) {
-                        this.petEntity.bB(); // -> swingItem()
+                        this.petEntity.a(EnumHand.MAIN_HAND); // -> swingItem()
                     }
                 }
                 this.petEntity.attack(targetEntity);

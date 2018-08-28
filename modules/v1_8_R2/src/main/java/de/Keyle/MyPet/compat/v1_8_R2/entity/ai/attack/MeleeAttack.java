@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -109,7 +109,7 @@ public class MeleeAttack implements AIGoal {
                 this.ticksUntilNextHitLeft = ticksUntilNextHit;
                 if (this.petEntity instanceof MyPetEquipment) {
                     if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.MainHand) != null) {
-                        this.petEntity.bv(); // -> swingItem()
+                        this.petEntity.bw(); // -> swingItem()
                     }
                 }
                 this.petEntity.attack(targetEntity);
