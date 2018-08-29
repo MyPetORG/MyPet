@@ -50,10 +50,7 @@ public class EntityMyPolarBear extends EntityMyPet {
     }
 
     protected String getLivingSound() {
-        if (getMyPet().isBaby()) {
-            return "entity.polar_bear.baby_ambient";
-        }
-        return "entity.polar_bear.ambient";
+        return "entity.polar_bear.ambient" + (getMyPet().isBaby() ? "_baby" : "");
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
