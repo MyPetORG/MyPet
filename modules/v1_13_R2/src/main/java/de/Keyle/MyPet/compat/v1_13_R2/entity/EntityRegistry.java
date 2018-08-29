@@ -25,17 +25,13 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_13_R2.entity.types.*;
-import net.minecraft.server.v1_13_R2.*;
+import net.minecraft.server.v1_13_R2.World;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,78 +41,6 @@ import static de.Keyle.MyPet.api.entity.MyPetType.*;
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     protected static Map<MyPetType, Class<? extends EntityMyPet>> entityClasses = new HashMap<>();
-
-    Field RegistryMaterials_a = ReflectionUtil.getField(RegistryMaterials.class, "b");
-    Field RegistryID_b = ReflectionUtil.getField(RegistryID.class, "b");
-    Field RegistryID_c = ReflectionUtil.getField(RegistryID.class, "c");
-    Field RegistryID_d = ReflectionUtil.getField(RegistryID.class, "d");
-    Field EntityTypes_a_a = ReflectionUtil.getField(EntityTypes.a.class, "a");
-    Method EntityTypes_a = ReflectionUtil.getMethod(EntityTypes.class, "a", String.class, EntityTypes.a.class);
-
-    public enum RegistryNames {
-        Bat("bat"),
-        Blaze("blaze"),
-        CaveSpider("cave_spider"),
-        Chicken("chicken"),
-        Cod("cod"),
-        Cow("cow"),
-        Creeper("creeper"),
-        Donkey("donkey"),
-        Dolphin("dolphin"),
-        Drowned("drowned"),
-        ElderGuardian("elder_guardian"),
-        EnderDragon("ender_dragon"),
-        Enderman("enderman"),
-        Endermite("endermite"),
-        Evoker("evoker"),
-        Ghast("ghast"),
-        Giant("giant"),
-        Guardian("guardian"),
-        Horse("horse"),
-        Husk("husk"),
-        Illusioner("illusioner"),
-        IronGolem("iron_golem"),
-        Llama("llama"),
-        MagmaCube("magma_cube"),
-        Mooshroom("mooshroom"),
-        Mule("mule"),
-        Ocelot("ocelot"),
-        Parrot("parrot"),
-        Phantom("phantom"),
-        Pig("pig"),
-        PigZombie("zombie_pigman"),
-        PolarBear("polar_bear"),
-        Pufferfish("pufferfish"),
-        Rabbit("rabbit"),
-        Salmon("salmon"),
-        Sheep("sheep"),
-        Silverfish("silverfish"),
-        Skeleton("skeleton"),
-        SkeletonHorse("skeleton_horse"),
-        Slime("slime"),
-        Snowman("snow_golem"),
-        Spider("spider"),
-        Squid("squid"),
-        Stray("stray"),
-        Turtle("turtle"),
-        TropicalFish("tropicalfish"),
-        Witch("witch"),
-        Wither("wither"),
-        WitherSkeleton("wither_skeleton"),
-        Wolf("wolf"),
-        Vex("vex"),
-        Villager("villager"),
-        Vindicator("vindicator"),
-        Zombie("zombie"),
-        ZombieHorse("zombie_horse"),
-        ZombieVillager("zombie_villager");
-
-        public String minecraftName;
-
-        RegistryNames(String typeName) {
-            this.minecraftName = typeName;
-        }
-    }
 
     public EntityRegistry() {
         entityClasses.put(Bat, EntityMyBat.class);
@@ -207,98 +131,10 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void registerEntityTypes() {
-        IRegistry registry = getRegistry();
-        if (isRegistryCustom()) {
-            MyPetApi.getLogger().info("Custom entity registry found: " + IRegistry.ENTITY_TYPE.getClass().getName());
-        }
-        Object[] backup = backupRegistryID(registry);
-
-        for (MyPetType type : entityClasses.keySet()) {
-            try {
-                EntityTypes.a entitytypes = EntityTypes.a.a(EntityMyPet.class).b().a();
-                EntityTypes_a.invoke(null, RegistryNames.valueOf(type.name()).minecraftName, entitytypes);
-            } catch (Exception e) {
-                e.printStackTrace();
-                // NPE means that the entity was registered successfully but the key was not
-            }
-        }
-        restoreRegistryID(registry, backup);
-    }
-
-    protected Object[] backupRegistryID(IRegistry registry) {
-        RegistryID a = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials_a, registry);
-        Object[] d = (Object[]) ReflectionUtil.getFieldValue(RegistryID_d, a);
-
-        return Arrays.copyOf(d, d.length);
-    }
-
-    protected void restoreRegistryID(IRegistry registry, Object[] backup) {
-        RegistryID a = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials_a, registry);
-        Object[] d = (Object[]) ReflectionUtil.getFieldValue(RegistryID_d, a);
-
-        if (d != null) {
-            for (int i = 0; i < backup.length; i++) {
-                if (backup[i] != null) {
-                    d[i] = backup[i];
-                }
-            }
-        }
-    }
-
-    protected IRegistry getRegistry() {
-        if (isRegistryCustom()) {
-            return getCustomRegistry(IRegistry.ENTITY_TYPE);
-        }
-        return IRegistry.ENTITY_TYPE;
-    }
-
-    protected boolean isRegistryCustom() {
-        return IRegistry.ENTITY_TYPE.getClass() != RegistryMaterials.class;
-    }
-
-    public IRegistry getCustomRegistry(IRegistry registryMaterials) {
-        for (Field field : registryMaterials.getClass().getDeclaredFields()) {
-            if (field.getType() == RegistryMaterials.class) {
-                field.setAccessible(true);
-                try {
-                    IRegistry reg = (RegistryMaterials) field.get(registryMaterials);
-
-                    if (reg.getClass() != RegistryMaterials.class) {
-                        reg = getCustomRegistry(reg);
-                    }
-
-                    return reg;
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return registryMaterials;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void unregisterEntityTypes() {
-        IRegistry registry = getRegistry();
-
-        RegistryID registryID = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials_a, registry);
-        Object[] entityClasses = (Object[]) ReflectionUtil.getFieldValue(RegistryID_b, registryID);
-        int[] entityIDs = (int[]) ReflectionUtil.getFieldValue(RegistryID_c, registryID);
-
-        if (entityClasses != null && entityIDs != null) {
-            for (int i = 0; i < entityClasses.length; i++) {
-                if (entityClasses[i] != null) {
-                    if (entityClasses[i] instanceof EntityTypes.a) {
-                        Class<?> entityClass = (Class<?>) ReflectionUtil.getFieldValue(EntityTypes_a_a, entityClasses[i]);
-                        if (entityClass != null && EntityMyPet.class.isAssignableFrom(entityClass)) {
-                            entityClasses[i] = null;
-                            entityIDs[i] = 0;
-                        }
-                    }
-                }
-            }
-        }
     }
 }
