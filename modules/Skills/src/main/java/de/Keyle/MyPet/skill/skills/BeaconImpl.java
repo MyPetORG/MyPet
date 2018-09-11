@@ -375,7 +375,7 @@ public class BeaconImpl implements Beacon {
         }
         if (getBuffLevel(Buff.WaterBreathing) > 0) {
             menu.setOption(16, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "RAW_FISH", "COD"))
+                    .setMaterial(EnumSelector.find(Material.class, "RAW_FISH", "PUFFERFISH"))
                     .setAmount(getBuffLevel(Buff.WaterBreathing))
                     .setTitle(GOLD + Translation.getString("Name." + Buff.WaterBreathing.getName(), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(getBuffLevel(Buff.WaterBreathing))));
         }

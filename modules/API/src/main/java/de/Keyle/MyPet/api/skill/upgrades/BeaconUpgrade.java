@@ -46,8 +46,6 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeIntegerModifier absorptionModifier = null;
     @Getter @Setter @Accessors(chain = true)
-    protected UpgradeIntegerModifier fireResistanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
     protected UpgradeIntegerModifier hasteModifier = null;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeIntegerModifier healthBoostModifier = null;
@@ -62,11 +60,15 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeIntegerModifier regenerationModifier = null;
     @Getter @Setter @Accessors(chain = true)
+    protected UpgradeBooleanModifier fireResistanceModifier = null;
+    @Getter @Setter @Accessors(chain = true)
     protected UpgradeBooleanModifier luckModifier = null;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeBooleanModifier nightVisionModifier = null;
     @Getter @Setter @Accessors(chain = true)
     protected UpgradeBooleanModifier waterBreathingModifier = null;
+    @Getter @Setter @Accessors(chain = true)
+    protected UpgradeBooleanModifier invisibilityModifier = null;
 
     @Override
     public void apply(Beacon skill) {
@@ -86,6 +88,7 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
         skill.getBuff(Beacon.Buff.Luck).addUpgrade(luckModifier);
         skill.getBuff(Beacon.Buff.NightVision).addUpgrade(nightVisionModifier);
         skill.getBuff(Beacon.Buff.WaterBreathing).addUpgrade(waterBreathingModifier);
+        skill.getBuff(Beacon.Buff.Invisibility).addUpgrade(invisibilityModifier);
     }
 
     @Override
@@ -106,5 +109,6 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
         skill.getBuff(Beacon.Buff.Luck).removeUpgrade(luckModifier);
         skill.getBuff(Beacon.Buff.NightVision).removeUpgrade(nightVisionModifier);
         skill.getBuff(Beacon.Buff.WaterBreathing).removeUpgrade(waterBreathingModifier);
+        skill.getBuff(Beacon.Buff.Invisibility).removeUpgrade(invisibilityModifier);
     }
 }
