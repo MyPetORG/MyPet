@@ -973,11 +973,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     /**
      * -> mount(Entity)
      */
-    protected void o(Entity entity) {
+    protected boolean o(Entity entity) {
+        boolean returnVal = false;
         // don't allow anything but the owner to ride this entity
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill != null && entity instanceof EntityPlayer && getOwner().equals(entity)) {
-            super.o(entity);
+            returnVal = super.o(entity);
             if (this instanceof IJumpable) {
                 double factor = 1;
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
@@ -986,6 +987,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
             }
         }
+        return returnVal;
     }
 
     /**
