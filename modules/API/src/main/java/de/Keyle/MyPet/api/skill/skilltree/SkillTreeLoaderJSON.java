@@ -241,7 +241,7 @@ public class SkillTreeLoaderJSON {
                         .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")))
                         .setNumberOfBuffsModifier(parseIntegerModifier(get(upgradeObject, "count")))
                         .setAbsorptionModifier(parseIntegerModifier(get(buffsObject, "absorption")))
-                        .setFireResistanceModifier(parseIntegerModifier(get(buffsObject, "fireresistance")))
+                        .setFireResistanceModifier(parseBooleanModifier(get(buffsObject, "fireresistance")))
                         .setHasteModifier(parseIntegerModifier(get(buffsObject, "haste")))
                         .setLuckModifier(parseBooleanModifier(get(buffsObject, "luck")))
                         .setNightVisionModifier(parseBooleanModifier(get(buffsObject, "nightvision")))
@@ -249,7 +249,9 @@ public class SkillTreeLoaderJSON {
                         .setSpeedModifier(parseIntegerModifier(get(buffsObject, "speed")))
                         .setStrengthModifier(parseIntegerModifier(get(buffsObject, "strength")))
                         .setWaterBreathingModifier(parseBooleanModifier(get(buffsObject, "waterbreathing")))
-                        .setRegenerationModifier(parseIntegerModifier(get(buffsObject, "regeneration")));
+                        .setRegenerationModifier(parseIntegerModifier(get(buffsObject, "regeneration")))
+                        .setInvisibilityModifier(parseBooleanModifier(get(buffsObject, "invisibility")))
+                        .setJumpBoostModifier(parseIntegerModifier(get(buffsObject, "jumpboost")));
                 break;
             }
             case "behavior": {
