@@ -29,6 +29,7 @@ import de.Keyle.MyPet.compat.v1_13_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
 import de.keyle.knbt.TagShort;
+import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_13_R1.ItemStack;
 import net.minecraft.server.v1_13_R1.NBTTagCompound;
 import net.minecraft.server.v1_13_R1.NBTTagList;
@@ -141,15 +142,15 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         //add enchantment glowing
         if (icon.isGlowing()) {
             TagCompound enchTag = new TagCompound();
-            enchTag.put("id", new TagShort(2));
+            enchTag.put("id", new TagString("minecraft:feather_falling"));
             enchTag.put("lvl", new TagShort(1));
             TagList enchList = new TagList();
             enchList.addTag(enchTag);
 
-            is.getTag().set("ench", ItemStackNBTConverter.compoundToVanillaCompound(enchList));
-            is.getTag().setInt("HideFlags", 1);
+            is.getTag().set("Enchantments", ItemStackNBTConverter.compoundToVanillaCompound(enchList));
+            is.getTag().setInt("HideFlags", 63);
         } else {
-            is.getTag().remove("ench");
+            is.getTag().remove("Enchantments");
         }
 
         // Prepare display tag
