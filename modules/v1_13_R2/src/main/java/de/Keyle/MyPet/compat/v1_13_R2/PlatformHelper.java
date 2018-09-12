@@ -330,4 +330,20 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public net.minecraft.server.v1_13_R2.World getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
     }
+
+    @Override
+    public void strikeLightning(Location loc, float distance) {
+        WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
+        EntityLightning lightning = new EntityLightning(world, loc.getX(), loc.getY(), loc.getZ(), true);
+        world.getServer()
+                .getServer()
+                .getPlayerList()
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
+                        new PacketPlayOutSpawnEntityWeather(lightning));
+        world.getServer()
+                .getServer()
+                .getPlayerList()
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
+                        new PacketPlayOutNamedSoundEffect(SoundEffects.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+    }
 }
