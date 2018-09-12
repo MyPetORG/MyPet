@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
@@ -73,7 +74,7 @@ public class LightningImpl implements Lightning {
         Player owner = myPet.getOwner().getPlayer();
         isStriking = true;
         Location loc = target.getLocation();
-        loc.getWorld().strikeLightningEffect(loc);
+        MyPetApi.getPlatformHelper().strikeLightning(loc, 32);
         for (Entity entity : myPet.getEntity().get().getNearbyEntities(1.5, 1.5, 1.5)) {
             if (entity instanceof LivingEntity && entity != owner) {
                 ((LivingEntity) entity).damage(damage.getValue().doubleValue(), myPet.getEntity().get());

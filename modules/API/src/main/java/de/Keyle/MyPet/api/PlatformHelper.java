@@ -148,4 +148,6 @@ public abstract class PlatformHelper {
     public Material getMaterial(MaterialHolder materialHolder) {
         return Material.matchMaterial(materialHolder.getId());
     }
+
+    public abstract void strikeLightning(Location loc, float distance);
 }

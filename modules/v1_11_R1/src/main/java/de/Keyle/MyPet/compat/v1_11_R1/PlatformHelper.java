@@ -319,4 +319,20 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public Material getMaterial(MaterialHolder materialHolder) {
         return Material.matchMaterial(materialHolder.getLegacyName().getName());
     }
+
+    @Override
+    public void strikeLightning(Location loc, float distance) {
+        WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
+        EntityLightning lightning = new EntityLightning(world, loc.getX(), loc.getY(), loc.getZ(), true);
+        world.getServer()
+                .getServer()
+                .getPlayerList()
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
+                        new PacketPlayOutSpawnEntityWeather(lightning));
+        world.getServer()
+                .getServer()
+                .getPlayerList()
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
+                        new PacketPlayOutNamedSoundEffect(SoundEffects.dx, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+    }
 }
