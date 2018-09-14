@@ -93,54 +93,43 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     }
 
     public void load(String data) {
-        NBTBase nbtBase = null;
-        if (data.contains("{")) {
-            String tagString = data.substring(data.indexOf("{"));
-            data = data.substring(0, data.indexOf("{"));
-            try {
-                nbtBase = MojangsonParser.parse(tagString);
-            } catch (Exception e) {
-                MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
-                MyPetApi.getLogger().warning(data + tagString);
-            }
-        }
+        String[] splitData = data.split("\\s+", 2);
 
-        String[] splitData = data.split("\\s+");
         if (splitData.length == 0) {
             return;
         }
 
-        Item item = null;
+        Item item;
         if (Util.isInt(splitData[0])) {
             int itemId = Integer.parseInt(splitData[0]);
             item = Item.getById(itemId);
         } else {
             item = (Item) Item.REGISTRY.get(splitData[0]);
         }
-        if (item != null) {
-            int itemDamage = 0;
-
-            if (splitData.length >= 2) {
-                if (splitData[1].startsWith("<")) {
-                    this.durabilityMode = DurabilityMode.Smaller;
-                    splitData[1] = splitData[1].substring(1);
-                } else if (splitData[1].startsWith(">")) {
-                    this.durabilityMode = DurabilityMode.Bigger;
-                    splitData[1] = splitData[1].substring(1);
-                } else {
-                    this.durabilityMode = DurabilityMode.Equal;
-                }
-                if (Util.isInt(splitData[1])) {
-                    itemDamage = Integer.parseInt(splitData[1]);
-                }
-            }
-
-            net.minecraft.server.v1_7_R4.ItemStack is = new net.minecraft.server.v1_7_R4.ItemStack(item, 1, itemDamage);
-            if (nbtBase != null) {
-                is.setTag((NBTTagCompound) nbtBase);
-            }
-
-            this.item = CraftItemStack.asBukkitCopy(is);
+        if (item == null) {
+            return;
         }
+
+        net.minecraft.server.v1_7_R4.ItemStack is = new net.minecraft.server.v1_7_R4.ItemStack(item, 1);
+
+        if (splitData.length >= 2) {
+            NBTBase tag = null;
+            String nbtString = splitData[1].trim();
+            if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
+                String tagString = data.substring(data.indexOf("{"), data.lastIndexOf("}"));
+                data = data.substring(0, data.indexOf("{"));
+                try {
+                    tag = MojangsonParser.parse(tagString);
+                } catch (Exception e) {
+                    MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+                    MyPetApi.getLogger().warning(data + tagString);
+                }
+                if (tag != null) {
+                    is.setTag((NBTTagCompound) tag);
+                }
+            }
+        }
+
+        this.item = CraftItemStack.asCraftMirror(is);
     }
 }

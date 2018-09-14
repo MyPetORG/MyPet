@@ -89,7 +89,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     public void load(String data) {
 
-        String[] splitData = data.split("\\s+", 3);
+        String[] splitData = data.split("\\s+", 2);
 
         if (splitData.length == 0) {
             return;
@@ -116,33 +116,17 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         is = new net.minecraft.server.v1_12_R1.ItemStack(item, 1);
 
         if (splitData.length >= 2) {
-            String dataString = splitData[1];
-            if (dataString.startsWith("<")) {
-                this.durabilityMode = DurabilityMode.Smaller;
-                dataString = dataString.substring(1);
-            } else if (dataString.startsWith(">")) {
-                this.durabilityMode = DurabilityMode.Bigger;
-                dataString = dataString.substring(1);
-            } else {
-                this.durabilityMode = DurabilityMode.Equal;
-            }
-            if (Util.isInt(dataString)) {
-                is.setData(Integer.parseInt(dataString));
-            }
-        }
-
-        if (splitData.length == 3) {
-            NBTBase nbtBase = null;
-            String nbtString = splitData[2];
-            if (nbtString.startsWith("{")) {
+            NBTTagCompound tag = null;
+            String nbtString = splitData[1].trim();
+            if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 try {
-                    nbtBase = MojangsonParser.parse(nbtString.trim());
+                    tag = MojangsonParser.parse(nbtString);
                 } catch (Exception e) {
                     MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
-                    MyPetApi.getLogger().warning(item.getName() + " " + is.getData() + nbtString);
+                    MyPetApi.getLogger().warning(item.getName() + " " + nbtString);
                 }
-                if (nbtBase != null) {
-                    is.setTag((NBTTagCompound) nbtBase);
+                if (tag != null) {
+                    is.setTag(tag);
                 }
             }
         }
