@@ -20,19 +20,24 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.config.ConfigurationManager;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
@@ -40,39 +45,77 @@ import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @PluginHookName("WorldGuard")
 public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook {
+
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
     public static final StateFlag DENY_FLAG = new StateFlag("mypet-deny", false);
     public static final StateFlag LEASH_FLAG = new StateFlag("mypet-leash", true);
 
+    public static StateFlag PVP;
+    public static StateFlag DAMAGE_ANIMALS;
+
     protected WorldGuardPlugin wgp = null;
     protected boolean customFlags = false;
+
+    protected Map<String, Boolean> missingEntityTypeFixValue = new HashMap<>();
+    protected boolean is7 = false;
+    protected static Method METHOD_getRegionManager = ReflectionUtil.getMethod(WorldGuardPlugin.class, "getRegionManager", World.class);
+    protected static Method METHOD_getFlagRegistry = ReflectionUtil.getMethod(WorldGuardPlugin.class, "getFlagRegistry");
+    protected static Method METHOD_getApplicableRegions = ReflectionUtil.getMethod(RegionManager.class, "getApplicableRegions", Location.class);
 
     public WorldGuardHook() {
         if (Configuration.Hooks.USE_WorldGuard) {
             wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
 
-            try {
-                FlagRegistry flagRegistry = wgp.getFlagRegistry();
-                flagRegistry.register(FLY_FLAG);
-                flagRegistry.register(DAMAGE_FLAG);
-                flagRegistry.register(DENY_FLAG);
-                flagRegistry.register(LEASH_FLAG);
+            if (wgp.getDescription().getVersion().startsWith("7.")) {
+                is7 = true;
+            }
 
-                MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
-                customFlags = true;
-            } catch (NoSuchMethodError ignored) {
+            try {
+                FlagRegistry flagRegistry = null;
+                if (is7) {
+                    flagRegistry = WorldGuard.getInstance().getFlagRegistry();
+                    PVP = Flags.PVP;
+                    DAMAGE_ANIMALS = Flags.DAMAGE_ANIMALS;
+                } else {
+                    try {
+                        flagRegistry = (FlagRegistry) METHOD_getFlagRegistry.invoke(wgp);
+                    } catch (Throwable ignore) {
+                    }
+                    PVP = (StateFlag) ReflectionUtil
+                            .getClass("com.sk89q.worldguard.protection.flags.DefaultFlag")
+                            .getDeclaredField("PVP")
+                            .get(null);
+                    DAMAGE_ANIMALS = (StateFlag) ReflectionUtil
+                            .getClass("com.sk89q.worldguard.protection.flags.DefaultFlag")
+                            .getDeclaredField("DAMAGE_ANIMALS")
+                            .get(null);
+                }
+
+                if (flagRegistry != null) {
+                    flagRegistry.register(FLY_FLAG);
+                    flagRegistry.register(DAMAGE_FLAG);
+                    flagRegistry.register(DENY_FLAG);
+                    flagRegistry.register(LEASH_FLAG);
+
+                    MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
+                    customFlags = true;
+                }
+            } catch (NoSuchMethodError | IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -91,19 +134,49 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
         MyPetApi.getLeashFlagManager().removeFlag("WorldGuard");
     }
 
+    public void fixMissingEntityType(World world, boolean apply) {
+        ConfigurationManager cfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
+        BukkitWorldConfiguration wcfg = (BukkitWorldConfiguration) cfg.get(BukkitAdapter.adapt(world));
+        if (apply) {
+            if (missingEntityTypeFixValue.containsKey(world.getName())) {
+                fixMissingEntityType(world, false);
+            }
+            missingEntityTypeFixValue.put(world.getName(), wcfg.blockPluginSpawning);
+            wcfg.blockPluginSpawning = false;
+        } else if (missingEntityTypeFixValue.containsKey(world.getName())) {
+            wcfg.blockPluginSpawning = missingEntityTypeFixValue.get(world.getName());
+            missingEntityTypeFixValue.remove(world.getName());
+        }
+    }
+
+    public StateFlag.State getState(Location loc, Player player, StateFlag... flags) {
+        if (is7) {
+            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            return rc.createQuery().queryState(
+                    BukkitAdapter.adapt(loc),
+                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                    flags);
+        } else {
+            try {
+                RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
+                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
+                return set.queryState(wgp.wrapPlayer(player), flags);
+            } catch (Exception ignored) {
+                return StateFlag.State.ALLOW;
+            }
+        }
+    }
+
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
         if (customFlags) {
             try {
                 Location location = defender.getLocation();
-                RegionManager mgr = wgp.getRegionManager(location.getWorld());
-
-                ApplicableRegionSet set = mgr.getApplicableRegions(location);
                 StateFlag.State s;
                 if (defender instanceof Animals) {
-                    s = set.queryState(null, DefaultFlag.DAMAGE_ANIMALS, DAMAGE_FLAG);
+                    s = getState(location, null, DAMAGE_ANIMALS, DAMAGE_FLAG);
                 } else {
-                    s = set.queryState(null, DAMAGE_FLAG);
+                    s = getState(location, null, DAMAGE_FLAG);
                 }
                 return s == null || s == StateFlag.State.ALLOW;
             } catch (Throwable ignored) {
@@ -116,13 +189,11 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public boolean canHurt(Player attacker, Player defender) {
         try {
             Location location = defender.getLocation();
-            RegionManager mgr = wgp.getRegionManager(location.getWorld());
-            ApplicableRegionSet set = mgr.getApplicableRegions(location);
             StateFlag.State s;
             if (customFlags) {
-                s = set.queryState(wgp.wrapPlayer(defender), DefaultFlag.PVP, DAMAGE_FLAG);
+                s = getState(location, defender, PVP, DAMAGE_FLAG);
             } else {
-                s = set.queryState(wgp.wrapPlayer(defender), DefaultFlag.PVP);
+                s = getState(location, defender, PVP);
             }
             return s == null || s == StateFlag.State.ALLOW;
         } catch (Throwable ignored) {
@@ -132,44 +203,10 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public boolean canFly(Location location) {
         if (customFlags) {
-            RegionManager mgr = wgp.getRegionManager(location.getWorld());
-            ApplicableRegionSet regions = mgr.getApplicableRegions(location);
-            StateFlag.State s = regions.queryState(null, FLY_FLAG);
+            StateFlag.State s = getState(location, null, FLY_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
         }
 
-        try {
-            Map<String, Boolean> flyZones = Configuration.Skilltree.Skill.Ride.FLY_ZONES;
-            boolean allowed = true;
-
-            if (flyZones.size() > 0) {
-                RegionManager mgr = wgp.getRegionManager(location.getWorld());
-                ApplicableRegionSet set = mgr.getApplicableRegions(location);
-                int priority = Integer.MIN_VALUE;
-                Set<ProtectedRegion> regions = set.getRegions();
-                regions.add(mgr.getRegion("__global__"));
-
-                for (ProtectedRegion region : regions) {
-                    String zone = location.getWorld().getName() + "::" + region.getId();
-                    if (flyZones.containsKey(zone)) {
-                        if (flyZones.get(zone)) {
-                            if (region.getPriority() > priority) {
-                                priority = region.getPriority();
-                                allowed = true;
-                            }
-                        } else {
-                            if (region.getPriority() >= priority) {
-                                priority = region.getPriority();
-                                allowed = false;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return allowed;
-        } catch (Throwable ignored) {
-        }
         return true;
     }
 
@@ -177,9 +214,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public boolean isPetAllowed(MyPetPlayer player) {
         if (customFlags) {
             Player p = player.getPlayer();
-            RegionManager mgr = wgp.getRegionManager(p.getWorld());
-            ApplicableRegionSet regions = mgr.getApplicableRegions(p.getLocation());
-            StateFlag.State s = regions.queryState(null, DENY_FLAG);
+            StateFlag.State s = getState(p.getLocation(), null, DENY_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
         }
         return true;
@@ -187,12 +222,11 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     @LeashFlagName("WorldGuard")
     class RegionFlag implements LeashFlag {
+
         @Override
         public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
-            Location loc = entity.getLocation();
-            RegionManager mgr = wgp.getRegionManager(loc.getWorld());
-            ApplicableRegionSet regions = mgr.getApplicableRegions(loc);
-            StateFlag.State s = regions.queryState(null, LEASH_FLAG);
+            Location location = entity.getLocation();
+            StateFlag.State s = getState(location, null, LEASH_FLAG);
 
             return s == null || s == StateFlag.State.ALLOW;
         }

@@ -183,10 +183,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skill.Beacon.Party-Support", Skilltree.Skill.Beacon.PARTY_SUPPORT);
         config.addDefault("MyPet.Skill.Ride.Item", "lead");
         config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
-        if (!config.contains("MyPet.Skill.Ride.FlyZones")) {
-            config.set("MyPet.Skill.Ride.FlyZones.SomeWorld::SomeRegion", false);
-            config.set("MyPet.Skill.Ride.FlyZones.SomeWorld::__global__", true);
-        }
 
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
@@ -311,15 +307,6 @@ public class ConfigurationLoader {
         Skilltree.Skill.Inventory.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
         Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
-        if (config.contains("MyPet.Skill.Ride.FlyZones")) {
-            Skilltree.Skill.Ride.FLY_ZONES.clear();
-            if (config.isConfigurationSection("MyPet.Skill.Ride.FlyZones")) {
-                ConfigurationSection section = config.getConfigurationSection("MyPet.Skill.Ride.FlyZones");
-                for (String zone : section.getKeys(false)) {
-                    Skilltree.Skill.Ride.FLY_ZONES.put(zone, section.getBoolean(zone));
-                }
-            }
-        }
 
         Skilltree.SWITCH_FEE_FIXED = config.getDouble("MyPet.Skilltree.SwitchFee.Fixed", 0.0);
         Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchFee.Percent", 5);
@@ -613,6 +600,9 @@ public class ConfigurationLoader {
         }
         if (config.contains("MyPet.Hooks.PvPManager.Enabled")) {
             config.getConfigurationSection("MyPet.Hooks").set("PvPManager", null);
+        }
+        if (config.contains("MyPet.Skill.Ride.FlyZones")) {
+            config.getConfigurationSection("MyPet.Skill.Ride").set("FlyZones", null);
         }
 
         MyPetApi.getPlugin().saveConfig();
