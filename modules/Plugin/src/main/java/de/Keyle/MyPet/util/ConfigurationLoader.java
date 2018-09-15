@@ -555,6 +555,9 @@ public class ConfigurationLoader {
         if (config.contains("MyPet.Hooks.PvPManager.Enabled")) {
             config.getConfigurationSection("MyPet.Hooks").set("PvPManager", null);
         }
+        if (config.contains("MyPet.Skill.Ride.FlyZones")) {
+            config.getConfigurationSection("MyPet.Skill.Ride").set("FlyZones", null);
+        }
 
         MyPetApi.getPlugin().saveConfig();
 

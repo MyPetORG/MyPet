@@ -46,6 +46,7 @@ import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.Keyle.MyPet.skill.skills.LifeImpl;
 import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.hooks.VaultHook;
+import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import de.keyle.knbt.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.Bukkit;
@@ -510,7 +511,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
                 }
 
+                MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class).fixMissingEntityType(loc.getWorld(), true);
                 if (MyPetApi.getEntityRegistry().spawnMinecraftEntity(minecraftEntity, loc.getWorld())) {
+                    MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class).fixMissingEntityType(loc.getWorld(), false);
 
                     bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), this));
                     status = PetState.Here;
@@ -525,6 +528,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
                     return SpawnFlags.Success;
                 }
+                MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class).fixMissingEntityType(loc.getWorld(), false);
                 return SpawnFlags.Canceled;
             }
         }

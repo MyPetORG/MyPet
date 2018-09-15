@@ -22,9 +22,7 @@ package de.Keyle.MyPet.api;
 
 import de.Keyle.MyPet.api.util.ConfigItem;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class Configuration {
@@ -152,7 +150,6 @@ public class Configuration {
             public static class Ride {
                 public static ConfigItem RIDE_ITEM;
                 public static double HUNGER_PER_METER = 0.01;
-                public static Map<String, Boolean> FLY_ZONES = new HashMap<>();
             }
 
             public static class Beacon {
