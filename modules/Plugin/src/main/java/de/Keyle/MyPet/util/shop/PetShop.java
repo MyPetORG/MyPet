@@ -159,7 +159,7 @@ public class PetShop {
                             }
                             menu.setOption(3, icon);
                             menu.setOption(5, new IconMenuItem()
-                                    .setMaterial(Material.RED_WOOL)
+                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "RED_WOOL"))
                                     .setData(14)
                                     .setTitle(ChatColor.RED + Translation.getString("Name.No", player))
                                     .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.No", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice()))));
