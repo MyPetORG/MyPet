@@ -135,17 +135,19 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     }
 
     public void fixMissingEntityType(World world, boolean apply) {
-        ConfigurationManager cfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
-        BukkitWorldConfiguration wcfg = (BukkitWorldConfiguration) cfg.get(BukkitAdapter.adapt(world));
-        if (apply) {
-            if (missingEntityTypeFixValue.containsKey(world.getName())) {
-                fixMissingEntityType(world, false);
+        if (is7) {
+            ConfigurationManager cfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
+            BukkitWorldConfiguration wcfg = (BukkitWorldConfiguration) cfg.get(BukkitAdapter.adapt(world));
+            if (apply) {
+                if (missingEntityTypeFixValue.containsKey(world.getName())) {
+                    fixMissingEntityType(world, false);
+                }
+                missingEntityTypeFixValue.put(world.getName(), wcfg.blockPluginSpawning);
+                wcfg.blockPluginSpawning = false;
+            } else if (missingEntityTypeFixValue.containsKey(world.getName())) {
+                wcfg.blockPluginSpawning = missingEntityTypeFixValue.get(world.getName());
+                missingEntityTypeFixValue.remove(world.getName());
             }
-            missingEntityTypeFixValue.put(world.getName(), wcfg.blockPluginSpawning);
-            wcfg.blockPluginSpawning = false;
-        } else if (missingEntityTypeFixValue.containsKey(world.getName())) {
-            wcfg.blockPluginSpawning = missingEntityTypeFixValue.get(world.getName());
-            missingEntityTypeFixValue.remove(world.getName());
         }
     }
 
