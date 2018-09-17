@@ -567,7 +567,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
             if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
                 donatorParticleCounter = 20 + getRandom().nextInt(10);
-                MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), ParticleCompat.WATER_SPLASH.get(), 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+                MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), ParticleCompat.VILLAGER_HAPPY.get(), 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
             }
         }
     }
