@@ -32,10 +32,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ItemTooltip {
+
     private static final Pattern MINECRAFT_VERSION_MATCHER = Pattern.compile("\\(MC: \\d\\.(\\d+)(?:\\.\\d+)?\\)");
     private static int minorVersion = Integer.MIN_VALUE;
 
-    protected Material material = Material.AIR;
+    protected Material material = Material.STONE;
     protected String title = "";
     protected List<String> lore = new ArrayList<>();
 
@@ -113,7 +114,7 @@ public class ItemTooltip {
         String jsonString = "{id:";
 
         if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
-            jsonString += material.getKey().toString();
+            jsonString += "\"" + material.getKey().toString() + "\"";
         } else if (MyPetApi.getCompatUtil().isCompatible("1.8")) {
             jsonString += material.name().toLowerCase();
         } else {
@@ -123,7 +124,15 @@ public class ItemTooltip {
         if (lore.size() > 0 || !title.equals("")) {
             jsonString += ",tag:{display:{";
             if (!title.equals("")) {
-                jsonString += "Name:\"" + title.replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'") + "\"";
+                jsonString += "Name:\"";
+                if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                    jsonString += "{\\\"text\\\":\\\"";
+                }
+                jsonString += title.replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'");
+                if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                    jsonString += "\\\"}";
+                }
+                jsonString += "\"";
                 if (lore.size() > 0) {
                     jsonString += ",";
                 }
