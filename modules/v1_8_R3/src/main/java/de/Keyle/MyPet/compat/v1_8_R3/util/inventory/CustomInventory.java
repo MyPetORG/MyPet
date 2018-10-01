@@ -46,7 +46,8 @@ import java.util.List;
 
 @Compat("v1_8_R3")
 public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
-    private String inventroyName = null;
+
+    private String inventroyName = "";
     private List<ItemStack> items = new ArrayList<>();
     private int size = 0;
     private int stackSize = 64;
@@ -79,10 +80,10 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public void setName(String name) {
-        if (name != null && name.length() > 64) {
+        if (name != null) {
             name = name.substring(0, 64);
+            this.inventroyName = name;
         }
-        this.inventroyName = name;
     }
 
     public ItemStack getItem(int i) {
