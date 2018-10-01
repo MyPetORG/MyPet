@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -47,7 +47,8 @@ import java.util.List;
 
 @Compat("v1_12_R1")
 public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
-    private String inventroyName = null;
+
+    private String inventroyName = "";
     private NonNullList<ItemStack> items = NonNullList.a(64, ItemStack.a);
     private int size = 0;
     private int stackSize = 64;
@@ -80,10 +81,10 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public void setName(String name) {
-        if (name != null && name.length() > 64) {
+        if (name != null) {
             name = name.substring(0, 64);
+            this.inventroyName = name;
         }
-        this.inventroyName = name;
     }
 
     public ItemStack getItem(int i) {

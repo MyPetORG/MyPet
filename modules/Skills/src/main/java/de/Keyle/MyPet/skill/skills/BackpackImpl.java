@@ -79,7 +79,6 @@ public class BackpackImpl implements Backpack {
                 return false;
             }
             if (!myPet.getLocation().get().getBlock().isLiquid()) {
-                inv.setName(myPet.getPetName());
                 openInventory(myPet.getOwner().getPlayer());
                 return true;
             } else {
@@ -93,6 +92,7 @@ public class BackpackImpl implements Backpack {
     }
 
     public void openInventory(Player p) {
+        inv.setName(myPet.getPetName());
         inv.open(p);
     }
 
