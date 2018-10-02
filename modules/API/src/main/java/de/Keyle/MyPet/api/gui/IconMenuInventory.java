@@ -26,6 +26,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.List;
 
 public interface IconMenuInventory {
+
     void open(IconMenu menu, HumanEntity player);
 
     void update(IconMenu menu);
