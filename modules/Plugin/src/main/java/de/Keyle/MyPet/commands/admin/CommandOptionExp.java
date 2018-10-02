@@ -26,13 +26,13 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.commands.CommandAdmin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandOptionExp implements CommandOptionTabCompleter {
@@ -123,6 +123,6 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
         } else if (strings.length == 4) {
             return addSetRemoveList;
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

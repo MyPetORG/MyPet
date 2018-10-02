@@ -35,6 +35,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandBehavior implements CommandExecutor, TabCompleter {
@@ -119,6 +120,6 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                 return behaviorList;
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

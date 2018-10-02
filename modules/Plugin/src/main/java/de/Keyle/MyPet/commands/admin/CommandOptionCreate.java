@@ -36,7 +36,6 @@ import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
-import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -290,7 +289,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 return commonTypeOptionList;
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public static void updateData(InactiveMyPet inactiveMyPet, String[] args) {

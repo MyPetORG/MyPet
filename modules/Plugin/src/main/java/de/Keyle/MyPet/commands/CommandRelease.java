@@ -45,6 +45,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -144,6 +145,6 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                 return petnameList;
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

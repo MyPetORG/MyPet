@@ -44,6 +44,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CommandInfo implements CommandExecutor, TabCompleter {
@@ -225,7 +226,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
         if (sender instanceof Player && strings.length == 1 && Permissions.has((Player) sender, "MyPet.command.info.other")) {
             return null;
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public static boolean canSee(boolean adminOnly, Player player, StoredMyPet storedMyPet) {

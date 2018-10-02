@@ -31,12 +31,12 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.commands.CommandAdmin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -162,7 +162,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         if (strings.length == 2) {
             return null;
         } else {
-            return CommandAdmin.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 }

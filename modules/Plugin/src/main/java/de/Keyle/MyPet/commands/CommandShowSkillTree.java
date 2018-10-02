@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CommandShowSkillTree implements CommandExecutor, TabCompleter {
@@ -62,6 +63,6 @@ public class CommandShowSkillTree implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }
