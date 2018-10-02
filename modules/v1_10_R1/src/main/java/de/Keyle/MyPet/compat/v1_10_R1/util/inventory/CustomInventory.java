@@ -26,6 +26,7 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
 import net.minecraft.server.v1_10_R1.*;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
@@ -81,7 +82,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 
     public void setName(String name) {
         if (name != null) {
-            name = name.substring(0, 64);
+            name = StringUtils.left(name, 64);
             this.inventroyName = name;
         }
     }
