@@ -39,10 +39,12 @@ import org.bukkit.inventory.Inventory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Compat("v1_8_R1")
 public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInventory {
+
     private static Method applyToItemMethhod = null;
 
     static {
@@ -63,21 +65,22 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
 
     @Override
     public void open(IconMenu menu, HumanEntity player) {
-            size = menu.getSize();
-            minecraftInventory = new CustomInventory(size, menu.getTitle());
+        size = menu.getSize();
+        minecraftInventory = new CustomInventory(size, menu.getTitle());
 
-            for (int slot = 0; slot < size; slot++) {
-                IconMenuItem menuItem = menu.getOption(slot);
-                if (menuItem != null) {
-                    ItemStack item = createItemStack(menuItem);
-                    minecraftInventory.setItem(slot, item);
-                }
+        for (int slot = 0; slot < size; slot++) {
+            IconMenuItem menuItem = menu.getOption(slot);
+            if (menuItem != null) {
+                ItemStack item = createItemStack(menuItem);
+                minecraftInventory.setItem(slot, item);
             }
+        }
         player.openInventory(minecraftInventory.getBukkitInventory());
     }
 
     @Override
     public void update(IconMenu menu) {
+        if (minecraftInventory != null) {
             for (int slot = 0; slot < size; slot++) {
                 IconMenuItem menuItem = menu.getOption(slot);
                 if (menuItem != null) {
@@ -87,24 +90,28 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
                     minecraftInventory.setItem(slot, null);
                 }
             }
+        }
     }
 
     @Override
     public void close() {
-        List<HumanEntity> viewers = new ArrayList<>(minecraftInventory.getBukkitInventory().getViewers());
-            for (HumanEntity viewer : viewers) {
-                viewer.closeInventory();
-            }
-            minecraftInventory = null;
+        List<HumanEntity> viewers = new ArrayList<>(getViewers());
+        for (HumanEntity viewer : viewers) {
+            viewer.closeInventory();
+        }
+        minecraftInventory = null;
     }
 
     @Override
     public boolean isMenuInventory(Inventory inv) {
-        return minecraftInventory.getBukkitInventory().equals(inv);
+        return minecraftInventory != null && minecraftInventory.getBukkitInventory().equals(inv);
     }
 
     @Override
     public List<HumanEntity> getViewers() {
+        if (minecraftInventory == null) {
+            return Collections.emptyList();
+        }
         return minecraftInventory.getBukkitInventory().getViewers();
     }
 
