@@ -29,13 +29,13 @@ import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,6 +125,6 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         if (strings.length == 3) {
             return null;
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

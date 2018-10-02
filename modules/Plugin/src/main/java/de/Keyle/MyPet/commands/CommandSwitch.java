@@ -38,6 +38,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -164,6 +165,6 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
                 return storeList;
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

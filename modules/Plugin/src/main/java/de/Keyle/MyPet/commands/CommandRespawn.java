@@ -36,6 +36,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandRespawn implements CommandExecutor, TabCompleter {
@@ -116,6 +117,6 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
                 return optionsList;
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

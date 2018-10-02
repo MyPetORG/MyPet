@@ -42,10 +42,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
@@ -216,9 +213,9 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                 if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
-                    return CommandAdmin.EMPTY_LIST;
+                    return Collections.emptyList();
                 } else if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
-                    return CommandAdmin.EMPTY_LIST;
+                    return Collections.emptyList();
                 } else {
                     List<String> skilltreeList = new ArrayList<>();
                     for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
@@ -230,6 +227,6 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

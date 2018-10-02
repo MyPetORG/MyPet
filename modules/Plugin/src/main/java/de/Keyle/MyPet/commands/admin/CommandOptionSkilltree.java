@@ -26,13 +26,13 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.commands.CommandAdmin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandOptionSkilltree implements CommandOptionTabCompleter {
@@ -75,7 +75,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         if (strings.length == 3) {
             Player player = Bukkit.getServer().getPlayer(strings[1]);
             if (player == null || !player.isOnline()) {
-                return CommandAdmin.EMPTY_LIST;
+                return Collections.emptyList();
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
@@ -88,6 +88,6 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
                 return skilltreeList;
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

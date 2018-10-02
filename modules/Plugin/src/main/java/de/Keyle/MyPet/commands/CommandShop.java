@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -150,7 +151,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public List<String> getAvailablePetShops(Player player) {

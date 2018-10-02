@@ -265,7 +265,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
             }
             return null;
         }
-        return CommandAdmin.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     private class Offer {
