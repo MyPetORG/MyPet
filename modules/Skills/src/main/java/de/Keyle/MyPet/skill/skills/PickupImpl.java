@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
@@ -140,11 +141,7 @@ public class PickupImpl implements Pickup {
                             int itemAmount = inv.addItem(itemStack);
                             if (itemAmount == 0) {
                                 MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity().get(), itemEntity);
-                                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                                    myPet.getEntity().get().getHandle().makeSound("entity.item.pickup", 0.2F, 1.0F);
-                                } else {
-                                    myPet.getEntity().get().getHandle().makeSound("random.pop", 0.2F, 1.0F);
-                                }
+                                myPet.getEntity().get().getHandle().makeSound(SoundCompat.ITEM_PICKUP.get(), 0.2F, 1.0F);
                                 itemStack.setAmount(0);
                                 itemEntity.remove();
                             } else {
