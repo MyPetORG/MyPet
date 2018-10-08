@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_7_R4.util.inventory;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -70,7 +71,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public void setSize(int size) {
-        this.size = size;
+        this.size = Util.clamp(size, 0, 64);
         for (int i = items.size(); i < size; i++) {
             items.add(i, null);
         }
