@@ -146,9 +146,6 @@ public class SkillTreeLoaderJSON {
             if (containsKey(iconObject, "Material")) {
                 icon.setMaterial(get(iconObject, "Material").toString());
             }
-            if (containsKey(iconObject, "Data")) {
-                icon.setData(((Number) get(iconObject, "Data")).byteValue());
-            }
             if (containsKey(iconObject, "Glowing")) {
                 icon.setGlowing((Boolean) get(iconObject, "Glowing"));
             }
