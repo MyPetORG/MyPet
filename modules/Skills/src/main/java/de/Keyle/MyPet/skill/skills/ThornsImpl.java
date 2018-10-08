@@ -22,6 +22,7 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
+import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -91,12 +92,7 @@ public class ThornsImpl implements Thorns {
         if (myPet.getEntity().isPresent()) {
             MyPetBukkitEntity entity = myPet.getEntity().get();
             damager.damage(calculateReflectedDamage(event.getDamage()), entity);
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                entity.getHandle().makeSound("enchant.thorns.hit", 0.2F, 1.0F);
-            } else {
-                entity.getHandle().makeSound("damage.thorns", 0.5F, 1.0F);
-            }
-
+            entity.getHandle().makeSound(SoundCompat.THORNS_HIT.get(), 0.2F, 1.0F);
             MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), ParticleCompat.CRIT_MAGIC.get(), 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
             MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), ParticleCompat.CRIT.get(), 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
         }
