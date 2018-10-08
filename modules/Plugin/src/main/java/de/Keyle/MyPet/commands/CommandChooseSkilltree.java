@@ -31,11 +31,10 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,6 +44,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("You can't use this command from server console!");
@@ -148,21 +148,16 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         event.setWillDestroy(true);
                     }, MyPetApi.getPlugin());
 
+                    ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
                     for (int i = 0; i < availableSkilltrees.size(); i++) {
                         Skilltree addedSkilltree = availableSkilltrees.get(i);
 
                         SkilltreeIcon icon = addedSkilltree.getIcon();
-                        Material material;
-                        material = Material.matchMaterial(icon.getMaterial());
+                        MaterialHolder material = itemDatabase.getByID(icon.getMaterial());
                         if (material == null) {
-                            ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-                            material = itemDatabase.getMaterialById(icon.getMaterial());
+                            material = itemDatabase.getByID("oak_sapling");
                         }
-                        if (material == null) {
-                            material = EnumSelector.find(Material.class, "SAPLING", "OAK_SAPLING");
-                        }
-
-                        IconMenuItem option = new IconMenuItem().setMaterial(material).setData(icon.getData()).setGlowing(icon.isGlowing());
+                        IconMenuItem option = new IconMenuItem().setMaterial(material.getMaterial()).setData(material.getLegacyId().getData()).setGlowing(icon.isGlowing());
                         option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + Colorizer.setColors(addedSkilltree.getDisplayName()) + ChatColor.RESET + "  ❰❰❰");
 
                         boolean selectable = false;
