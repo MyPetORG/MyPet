@@ -29,7 +29,5 @@ public class SkilltreeIcon {
     @Getter @Setter @Accessors(chain = true) @NonNull
     protected String material = "Sapling";
     @Getter @Setter @Accessors(chain = true)
-    protected byte data = 0;
-    @Getter @Setter @Accessors(chain = true)
     protected boolean glowing = false;
 }
