@@ -277,7 +277,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertEnderman(Enderman enderman, TagCompound properties) {
-        if (enderman.getCarriedMaterial().getItemType() != Material.AIR) {
+        if (enderman.getCarriedBlock() != null) {
             ItemStack block = enderman.getCarriedMaterial().toItemStack(1);
             properties.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
         }
