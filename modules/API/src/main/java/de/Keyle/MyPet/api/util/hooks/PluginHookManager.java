@@ -214,6 +214,24 @@ public class PluginHookManager {
     }
 
     /**
+     * searches for an instance of a plugin
+     *
+     * @param pluginName name of the plugin
+     * @return instance of the plugin
+     */
+    public <T extends JavaPlugin> Optional<T> getPluginInstance(String pluginName) {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
+        if (plugin == null) {
+            for (Plugin p : Bukkit.getPluginManager().getPlugins()) {
+                if (p.getName().equalsIgnoreCase(pluginName)) {
+                    return Optional.of((T) p);
+                }
+            }
+        }
+        return Optional.absent();
+    }
+
+    /**
      * checks if a plugin is enabled
      *
      * @param pluginName name of the plugin

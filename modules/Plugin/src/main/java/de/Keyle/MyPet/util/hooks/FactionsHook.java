@@ -20,15 +20,16 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.massivecraft.factions.Factions;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.plugin.RegisteredListener;
 
 import java.lang.reflect.Method;
 
@@ -36,7 +37,8 @@ import java.lang.reflect.Method;
 public class FactionsHook implements PlayerVersusPlayerHook {
 
     enum ApiVersion {
-        V1, V2, V3
+        V1, V2, V3,
+        Savage
     }
 
     ApiVersion apiVersion = ApiVersion.V2;
@@ -77,8 +79,22 @@ public class FactionsHook implements PlayerVersusPlayerHook {
                 return true;
             } catch (Throwable ignored) {
             }
+            try {
+                for (RegisteredListener rl : EntityDamageEvent.getHandlerList().getRegisteredListeners()) {
+                    Listener l = rl.getListener();
+                    MyPetApi.getLogger().info(l.getClass().getName());
+                    if (l.getClass().getName().equalsIgnoreCase("com.massivecraft.factions.listeners.FactionsEntityListener")) {
+                        engine = l;
+                        engineMethod = l.getClass().getDeclaredMethod("canDamagerHurtDamagee", EntityDamageByEntityEvent.class, boolean.class);
+                        engineMethod.setAccessible(true);
+                        apiVersion = ApiVersion.Savage;
+                        return true;
+                    }
+                }
+            } catch (Throwable ignored) {
+            }
             MyPetApi.getLogger().warning("Factions was found but no suitable MyPet hook was provided. Please report this to the MyPet developer.");
-            MyPetApi.getLogger().warning("Factions version: " + MyPetApi.getPluginHookManager().getPluginInstance(Factions.class).get().getDescription().getVersion());
+            MyPetApi.getLogger().warning("Factions version: " + MyPetApi.getPluginHookManager().getPluginInstance("Factions").get().getDescription().getVersion());
         }
         return false;
     }
@@ -91,6 +107,7 @@ public class FactionsHook implements PlayerVersusPlayerHook {
                 case V1:
                 case V2:
                 case V3:
+                case Savage:
                     return engineMethod.invoke(engine, sub, false).equals(true);
             }
         } catch (Throwable ignored) {
