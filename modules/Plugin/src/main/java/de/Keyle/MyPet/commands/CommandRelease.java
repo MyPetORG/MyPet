@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -141,7 +142,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
                 List<String> petnameList = new ArrayList<>();
-                petnameList.add(MyPetApi.getMyPetManager().getMyPet((Player) sender).getPetName());
+                petnameList.add(Colorizer.stripColors(MyPetApi.getMyPetManager().getMyPet((Player) sender).getPetName()));
                 return petnameList;
             }
         }
