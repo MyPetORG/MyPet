@@ -23,7 +23,6 @@ package de.Keyle.MyPet.api.gui;
 import de.Keyle.MyPet.api.util.inventory.meta.IconMeta;
 import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagCompound;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class IconMenuItem implements Cloneable {
+
     protected Material material = Material.NAME_TAG;
     protected int data = 0;
     protected int amount = 1;
@@ -47,8 +47,7 @@ public class IconMenuItem implements Cloneable {
     protected boolean hasChanged = true;
 
     public IconMenuItem setMaterial(Material material) {
-        Validate.notNull(material, "Material cannot be null");
-        if (this.material != material) {
+        if (material != null && this.material != material) {
             this.material = material;
             hasChanged = true;
         }
@@ -64,7 +63,7 @@ public class IconMenuItem implements Cloneable {
     }
 
     public IconMenuItem setAmount(int amount) {
-        Validate.isTrue(amount >= 0, "Amount must be greater than 0");
+        amount = Math.max(1, amount);
         if (this.amount != amount) {
             this.amount = amount;
             hasChanged = true;
@@ -74,8 +73,6 @@ public class IconMenuItem implements Cloneable {
 
     @SuppressWarnings("unchecked")
     public IconMenuItem setMeta(ItemMeta meta, boolean useTitle, boolean useLore) {
-        Validate.notNull(meta, "Name cannot be null");
-
         this.meta = null;
 
         if (useTitle && meta.hasDisplayName()) {
@@ -102,8 +99,7 @@ public class IconMenuItem implements Cloneable {
     }
 
     public IconMenuItem setTitle(String title) {
-        Validate.notNull(title, "Title cannot be null");
-        if (!this.title.equals(title)) {
+        if (title != null && !this.title.equals(title)) {
             this.title = title;
             hasChanged = true;
         }
@@ -111,37 +107,40 @@ public class IconMenuItem implements Cloneable {
     }
 
     public IconMenuItem setLore(String... lore) {
-        Validate.notNull(lore, "Lore cannot be null");
-        this.lore.clear();
-        Collections.addAll(this.lore, lore);
-        hasChanged = true;
+        if (lore != null) {
+            this.lore.clear();
+            Collections.addAll(this.lore, lore);
+            hasChanged = true;
+        }
         return this;
     }
 
     public IconMenuItem addLoreLine(String line) {
-        Validate.notNull(line, "Lore line cannot be null");
-        if (line.contains("\n")) {
-            Collections.addAll(this.lore, line.split("\n"));
-        } else {
-            this.lore.add(line);
+        if (line != null) {
+            if (line.contains("\n")) {
+                Collections.addAll(this.lore, line.split("\n"));
+            } else {
+                this.lore.add(line);
+            }
+            hasChanged = true;
         }
-        hasChanged = true;
         return this;
     }
 
     public IconMenuItem addLoreLine(String line, int position) {
-        Validate.notNull(line, "Lore line cannot be null");
-        if (line.contains("\n")) {
-            List<String> lore = new LinkedList<>();
-            Collections.addAll(lore, line.split("\n"));
-            Collections.reverse(lore);
-            for (String l : lore) {
-                this.lore.add(position, l);
+        if (line != null && position >= 0) {
+            if (line.contains("\n")) {
+                List<String> lore = new LinkedList<>();
+                Collections.addAll(lore, line.split("\n"));
+                Collections.reverse(lore);
+                for (String l : lore) {
+                    this.lore.add(position, l);
+                }
+            } else {
+                this.lore.add(position, line);
             }
-        } else {
-            this.lore.add(position, line);
+            hasChanged = true;
         }
-        hasChanged = true;
         return this;
     }
 
@@ -154,8 +153,7 @@ public class IconMenuItem implements Cloneable {
     }
 
     public IconMenuItem addLore(List<String> lore) {
-        Validate.notNull(lore, "Lore cannot be null");
-        if (lore.size() > 0) {
+        if (lore != null && lore.size() > 0) {
             this.lore.addAll(lore);
             hasChanged = true;
         }
