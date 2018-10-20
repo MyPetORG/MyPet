@@ -276,7 +276,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     public Material getMaterial(MaterialHolder materialHolder) {
-        return Material.getMaterial(materialHolder.getLegacyId().getId());
+        Material mat = Material.getMaterial(materialHolder.getLegacyId().getId());
+        if (mat == null) {
+            mat = Material.matchMaterial(materialHolder.getLegacyName().getName());
+        }
+        return mat;
     }
 
     @Override
