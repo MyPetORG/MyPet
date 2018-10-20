@@ -576,7 +576,7 @@ public class ConfigurationLoader {
                 String[] flagString = config.getString("MyPet.Pets." + petType.name() + ".LeashFlags").split(",");
                 Set<String> flags = new HashSet<>(Arrays.asList(flagString));
                 flags.remove("None");
-                config.set("MyPet.Pets." + petType.name() + ".LeashRequirements", flags);
+                config.set("MyPet.Pets." + petType.name() + ".LeashRequirements", flags.toArray(new String[0]));
                 config.getConfigurationSection("MyPet.Pets." + petType).set("LeashFlags", null);
             }
         }
