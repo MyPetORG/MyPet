@@ -234,9 +234,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         if (!createDefaultSkilltree) {
             File legacyDefaultSkilltree = new File(skilltreeFolder, "default.st");
-            createDefaultSkilltree = legacyDefaultSkilltree.exists();
-            if (createDefaultSkilltree) {
+            if (legacyDefaultSkilltree.exists()) {
                 if (Util.getSha256FromFile(legacyDefaultSkilltree) == -4323392001800132707L) {
+                    createDefaultSkilltree = true;
                     legacyDefaultSkilltree.delete();
                 }
             }
