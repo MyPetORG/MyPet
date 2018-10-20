@@ -148,7 +148,7 @@ public class WebServer extends NanoWSD {
         Response res;
         try {
             res = Response.newChunkedResponse(Status.OK, mime, ClassLoader.getSystemResource(file).openStream());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new FileNotFoundException(e.getMessage());
         }
         res.addHeader("Accept-Ranges", "bytes");
