@@ -25,8 +25,10 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_13_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_13_R2.skill.skills.ranged.nms.*;
+import de.Keyle.MyPet.compat.v1_13_R2.util.FieldCompat;
 import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
 
@@ -68,7 +70,13 @@ public class RangedAttack implements AIGoal {
             return false;
         }
         double meleeDamage = myPet.getDamage();
-        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, target.getBoundingBox().b, target.locZ) < 4) {
+        double minY;
+        if (FieldCompat.AxisAlignedBB_Fields.get()) {
+            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), target.getBoundingBox());
+        } else {
+            minY = target.getBoundingBox().minY;
+        }
+        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, minY, target.locZ) < 4) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
             if (meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return false;
@@ -87,7 +95,13 @@ public class RangedAttack implements AIGoal {
             return true;
         }
         double meleeDamage = myPet.getDamage();
-        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, target.getBoundingBox().b, target.locZ) < 4) {
+        double minY;
+        if (FieldCompat.AxisAlignedBB_Fields.get()) {
+            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.target.getBoundingBox());
+        } else {
+            minY = this.target.getBoundingBox().minY;
+        }
+        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, minY, target.locZ) < 4) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
             if (meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return true;
@@ -106,7 +120,13 @@ public class RangedAttack implements AIGoal {
 
     @Override
     public void tick() {
-        double distanceToTarget = this.entityMyPet.e(this.target.locX, this.target.getBoundingBox().b, this.target.locZ);
+        double minY;
+        if (FieldCompat.AxisAlignedBB_Fields.get()) {
+            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.target.getBoundingBox());
+        } else {
+            minY = this.target.getBoundingBox().minY;
+        }
+        double distanceToTarget = this.entityMyPet.e(this.target.locX, minY, this.target.locZ);
         boolean canSee = this.entityMyPet.getEntitySenses().a(this.target); // a -> canSee
 
         if (canSee) {
@@ -145,6 +165,13 @@ public class RangedAttack implements AIGoal {
     public void shootProjectile(EntityLiving target, float damage, Projectile projectile) {
         World world = target.world;
 
+        double minY;
+        if (FieldCompat.AxisAlignedBB_Fields.get()) {
+            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.target.getBoundingBox());
+        } else {
+            minY = this.target.getBoundingBox().minY;
+        }
+
         switch (projectile) {
             case Snowball: {
                 MyPetSnowball snowball = new MyPetSnowball(world, entityMyPet);
@@ -172,7 +199,7 @@ public class RangedAttack implements AIGoal {
             }
             case LargeFireball: {
                 double distanceX = this.target.locX - entityMyPet.locX;
-                double distanceY = this.target.getBoundingBox().b + (double) (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double) (entityMyPet.length / 2.0F));
+                double distanceY = minY + (double) (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double) (entityMyPet.length / 2.0F));
                 double distanceZ = this.target.locZ - entityMyPet.locZ;
                 MyPetLargeFireball largeFireball = new MyPetLargeFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
                 largeFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
@@ -183,7 +210,7 @@ public class RangedAttack implements AIGoal {
             }
             case SmallFireball: {
                 double distanceX = this.target.locX - entityMyPet.locX;
-                double distanceY = this.target.getBoundingBox().b + (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (entityMyPet.length / 2.0F));
+                double distanceY = minY + (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (entityMyPet.length / 2.0F));
                 double distanceZ = this.target.locZ - entityMyPet.locZ;
                 MyPetSmallFireball smallFireball = new MyPetSmallFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
                 smallFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
@@ -194,7 +221,7 @@ public class RangedAttack implements AIGoal {
             }
             case WitherSkull: {
                 double distanceX = this.target.locX - entityMyPet.locX;
-                double distanceY = this.target.getBoundingBox().b + (double) (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double) (entityMyPet.length / 2.0F));
+                double distanceY = minY + (double) (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double) (entityMyPet.length / 2.0F));
                 double distanceZ = this.target.locZ - entityMyPet.locZ;
                 MyPetWitherSkull witherSkull = new MyPetWitherSkull(world, entityMyPet, distanceX, distanceY, distanceZ);
                 witherSkull.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
@@ -205,7 +232,7 @@ public class RangedAttack implements AIGoal {
             }
             case DragonFireball: {
                 double distanceX = this.target.locX - entityMyPet.locX;
-                double distanceY = this.target.getBoundingBox().b + (double) (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double) (entityMyPet.length / 2.0F));
+                double distanceY = minY + (double) (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double) (entityMyPet.length / 2.0F));
                 double distanceZ = this.target.locZ - entityMyPet.locZ;
                 MyPetDragonFireball dragonFireball = new MyPetDragonFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
                 dragonFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);

@@ -29,12 +29,17 @@ import java.util.List;
 
 public class Compat<T> {
 
-    List<KeyValue<String, T>> values = new LinkedList<>();
+    List<KeyValue<String, CompatValueProvider<T>>> values = new LinkedList<>();
 
     KeyValue<String, T> foundValue = null;
 
     public Compat<T> v(String version, T value) {
-        values.add(new KeyValue<>(version, value));
+        values.add(new KeyValue<>(version, () -> value));
+        return this;
+    }
+
+    public Compat<T> v(String version, CompatValueProvider<T> func) {
+        values.add(new KeyValue<>(version, func));
         return this;
     }
 
@@ -43,14 +48,14 @@ public class Compat<T> {
     }
 
     public Compat<T> search() {
-        for (KeyValue<String, T> pair : values) {
+        for (KeyValue<String, CompatValueProvider<T>> pair : values) {
             if (MyPetApi.getCompatUtil().isCompatible(pair.getKey())) {
                 if (foundValue != null) {
                     if (Util.versionCompare(foundValue.getKey(), pair.getKey()) < 0) {
-                        foundValue = pair;
+                        foundValue = new KeyValue<>(pair.getKey(), pair.getValue().value());
                     }
                 } else {
-                    foundValue = pair;
+                    foundValue = new KeyValue<>(pair.getKey(), pair.getValue().value());
                 }
             }
         }
@@ -60,5 +65,10 @@ public class Compat<T> {
     public T searchAndGet() {
         search();
         return get();
+    }
+
+    public interface CompatValueProvider<T> {
+
+        T value();
     }
 }
