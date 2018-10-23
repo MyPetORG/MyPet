@@ -175,13 +175,12 @@ public class EntityMyWolf extends EntityMyPet {
             }
 
             if (this.shakeCounter > 0.4F) {
-                float locY = (float) this.getBoundingBox().b;
                 int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
                 for (; i >= 0; i--) {
                     float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
                     float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
 
-                    this.world.addParticle(Particles.R, this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
+                    this.world.addParticle(Particles.R, this.locX + offsetX, this.locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
                 }
             }
         }

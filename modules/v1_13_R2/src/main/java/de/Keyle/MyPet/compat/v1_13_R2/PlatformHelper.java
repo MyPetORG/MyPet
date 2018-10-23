@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.compat.v1_13_R2.util.FieldCompat;
 import de.Keyle.MyPet.compat.v1_13_R2.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_13_R2.*;
@@ -145,12 +146,31 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @SuppressWarnings("unchecked")
     public List getBlockBBsInBB(net.minecraft.server.v1_13_R2.World world, AxisAlignedBB axisalignedbb) {
         UnsafeList unsafeList = new UnsafeList();
-        int minX = MathHelper.floor(axisalignedbb.a);
-        int maxX = (int) Math.ceil(axisalignedbb.d);
-        int minY = MathHelper.floor(axisalignedbb.b);
-        int maxY = (int) Math.ceil(axisalignedbb.e);
-        int minZ = MathHelper.floor(axisalignedbb.c);
-        int maxZ = (int) Math.ceil(axisalignedbb.f);
+        int minX;
+        int maxX;
+        int minY;
+        int maxY;
+        int minZ;
+        int maxZ;
+
+        if (FieldCompat.AxisAlignedBB_Fields.get()) {
+            minX = MathHelper.floor((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minX.get(), axisalignedbb));
+            maxX = (int) Math.ceil((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_maxX.get(), axisalignedbb));
+            minY = MathHelper.floor((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), axisalignedbb));
+            maxY = (int) Math.ceil((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_maxY.get(), axisalignedbb));
+            minZ = MathHelper.floor((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minZ.get(), axisalignedbb));
+            maxZ = (int) Math.ceil((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_maxZ.get(), axisalignedbb));
+        } else {
+            minX = MathHelper.floor(axisalignedbb.minX);
+            maxX = (int) Math.ceil(axisalignedbb.maxX);
+            minY = MathHelper.floor(axisalignedbb.minY);
+            maxY = (int) Math.ceil(axisalignedbb.maxY);
+            minZ = MathHelper.floor(axisalignedbb.minZ);
+            maxZ = (int) Math.ceil(axisalignedbb.maxZ);
+        }
+
+        VoxelShape vec3d;
+        boolean isEmpty;
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
@@ -159,8 +179,19 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                         BlockPosition bp = new BlockPosition(x, y, z);
                         IBlockData blockData = world.getType(bp);
                         if (blockData != null && blockData.getMaterial().isSolid()) {
-                            VoxelShape vec3d = blockData.h(world, bp);
-                            if (!vec3d.b()) {
+                            if (FieldCompat.AxisAlignedBB_Fields.get()) {
+                                try {
+                                    vec3d = (VoxelShape) FieldCompat.IBlockData_getCollisionShape.get().invoke(blockData, world, bp);
+                                    isEmpty = (boolean) FieldCompat.VoxelShape_isEmpty.get().invoke(vec3d);
+                                } catch (Exception e) {
+                                    vec3d = null;
+                                    isEmpty = true;
+                                }
+                            } else {
+                                vec3d = blockData.getCollisionShape(world, bp);
+                                isEmpty = vec3d.isEmpty();
+                            }
+                            if (!isEmpty) {
                                 for (AxisAlignedBB bb : vec3d.d()) {
                                     if (bb.a(bp).c(axisalignedbb)) {
                                         unsafeList.add(bb);

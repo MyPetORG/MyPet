@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_13_R2.entity;
 
+import com.google.common.base.Preconditions;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -46,6 +47,7 @@ import de.Keyle.MyPet.compat.v1_13_R2.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_13_R2.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_13_R2.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_13_R2.entity.types.EntityMyHorse;
+import de.Keyle.MyPet.compat.v1_13_R2.util.FieldCompat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_13_R2.*;
@@ -66,6 +68,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -739,9 +742,16 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 this.motY = 0.30000001192092896D;
             }
         } else {
+            double minY;
+            if (FieldCompat.AxisAlignedBB_Fields.get()) {
+                minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.getBoundingBox());
+            } else {
+                minY = this.getBoundingBox().minY;
+            }
+
             float friction = 0.91F;
             if (this.onGround) {
-                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(this.getBoundingBox().b) - 1, MathHelper.floor(this.locZ))).getBlock().n() * 0.91F;
+                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(minY) - 1, MathHelper.floor(this.locZ))).getBlock().n() * 0.91F;
             }
 
             speed = speedModifier * (0.16277136F / (friction * friction * friction));
@@ -749,7 +759,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.a(motionSideways, motionForward, f, speed);
             friction = 0.91F;
             if (this.onGround) {
-                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(this.getBoundingBox().b) - 1, MathHelper.floor(this.locZ))).getBlock().n() * 0.91F;
+                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(minY) - 1, MathHelper.floor(this.locZ))).getBlock().n() * 0.91F;
             }
 
             if (this.z_()) {
@@ -975,14 +985,35 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     /**
-     * -> mount(Entity)
+     * -> addPassenger(Entity)
      */
     protected boolean o(Entity entity) {
+        return addPassenger(entity);
+    }
+
+    protected boolean addPassenger(Entity entity) {
         boolean returnVal = false;
         // don't allow anything but the owner to ride this entity
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill != null && entity instanceof EntityPlayer && getOwner().equals(entity)) {
-            returnVal = super.o(entity);
+            if (entity.getVehicle() != this) {
+                throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
+            } else {
+                Preconditions.checkState(!entity.passengers.contains(this), "Circular entity riding! %s %s", this, entity);
+                EntityMountEvent event = new EntityMountEvent(entity.getBukkitEntity(), this.getBukkitEntity());
+                Bukkit.getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    returnVal = false;
+                } else {
+                    if (!this.world.isClientSide && !(this.bO() instanceof EntityHuman)) {
+                        this.passengers.add(0, entity);
+                    } else {
+                        this.passengers.add(entity);
+                    }
+                    returnVal = true;
+                }
+            }
+
             if (this instanceof IJumpable) {
                 double factor = 1;
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
