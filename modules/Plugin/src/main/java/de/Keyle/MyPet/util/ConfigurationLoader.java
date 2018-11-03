@@ -75,6 +75,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
         config.addDefault("MyPet.Disable-All-Actionbar-Messages", Misc.DISABLE_ALL_ACTIONBAR_MESSAGES);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
+        config.addDefault("MyPet.Right-Click-Command", Misc.RIGHT_CLICK_COMMAND);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", Respawn.TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", Respawn.TIME_PLAYER_FACTOR);
@@ -273,6 +274,10 @@ public class ConfigurationLoader {
         Misc.CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
         Misc.ALLOW_RANGED_LEASHING = config.getBoolean("MyPet.Leash.AllowRanged", true);
         Misc.MAX_STORED_PET_COUNT = config.getInt("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
+        Misc.RIGHT_CLICK_COMMAND = config.getString("MyPet.Right-Click-Command", Misc.RIGHT_CLICK_COMMAND);
+        if (Misc.RIGHT_CLICK_COMMAND.startsWith("/")) {
+            Misc.RIGHT_CLICK_COMMAND = Misc.RIGHT_CLICK_COMMAND.substring(1);
+        }
 
         Update.ASYNC = config.getBoolean("MyPet.Update.In-Background", Update.ASYNC);
         Update.CHECK = config.getBoolean("MyPet.Update.Check", Update.CHECK);
