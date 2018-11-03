@@ -82,7 +82,6 @@ public class FactionsHook implements PlayerVersusPlayerHook {
             try {
                 for (RegisteredListener rl : EntityDamageEvent.getHandlerList().getRegisteredListeners()) {
                     Listener l = rl.getListener();
-                    MyPetApi.getLogger().info(l.getClass().getName());
                     if (l.getClass().getName().equalsIgnoreCase("com.massivecraft.factions.listeners.FactionsEntityListener")) {
                         engine = l;
                         engineMethod = l.getClass().getDeclaredMethod("canDamagerHurtDamagee", EntityDamageByEntityEvent.class, boolean.class);

@@ -164,8 +164,13 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         if (material == null) {
                             material = itemDatabase.getByID("oak_sapling");
                         }
-                        IconMenuItem option = new IconMenuItem().setMaterial(material.getMaterial()).setData(material.getLegacyId().getData()).setGlowing(icon.isGlowing());
-                        option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + Colorizer.setColors(addedSkilltree.getDisplayName()) + ChatColor.RESET + "  ❰❰❰");
+                        IconMenuItem option = new IconMenuItem()
+                                .setMaterial(material.getMaterial())
+                                .setGlowing(icon.isGlowing())
+                                .setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + Colorizer.setColors(addedSkilltree.getDisplayName()) + ChatColor.RESET + "  ❰❰❰");
+                        if (material.isLegacy()) {
+                            option.setData(material.getLegacyId().getData());
+                        }
 
                         boolean selectable = false;
                         int requiredLevel = addedSkilltree.getRequiredLevel();

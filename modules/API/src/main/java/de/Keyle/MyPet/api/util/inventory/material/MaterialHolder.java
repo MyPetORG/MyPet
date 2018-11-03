@@ -70,6 +70,10 @@ public class MaterialHolder {
         return legacyId != null;
     }
 
+    public boolean isLegacy() {
+        return hasLegacyId() || hasLegacyName();
+    }
+
     public Material getMaterial() {
         return MyPetApi.getPlatformHelper().getMaterial(this);
     }
