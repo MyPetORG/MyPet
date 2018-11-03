@@ -99,6 +99,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                             behaviorSkill.activate();
                             return false;
                         }
+                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), Translation.getString("Name." + behaviorSkill.getBehavior().name(), myPet.getOwner().getPlayer())));
                     } else {
                         behaviorSkill.activate();
                     }
