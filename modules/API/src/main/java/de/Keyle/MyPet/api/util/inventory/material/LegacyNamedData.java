@@ -28,7 +28,7 @@ public class LegacyNamedData implements LegacyData {
     short data;
 
     public LegacyNamedData(String name, short data) {
-        this.name = name;
+        this.name = name.toLowerCase();
         this.data = data;
     }
 
