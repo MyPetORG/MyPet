@@ -44,7 +44,6 @@ public class ItemDatabase implements ServiceContainer {
     @Override
     public boolean onEnable() {
         try {
-
             loadFile();
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +111,7 @@ public class ItemDatabase implements ServiceContainer {
     }
 
     public MaterialHolder getByID(String id) {
-        return byID.get(id);
+        return byID.get(id.toLowerCase());
     }
 
     public MaterialHolder getByLegacyId(LegacyIdData legacyIdData) {
@@ -132,6 +131,7 @@ public class ItemDatabase implements ServiceContainer {
     }
 
     public MaterialHolder getByLegacyName(String name, short data) {
+        name = name.toLowerCase();
         if (name.startsWith("minecraft:")) {
             name = name.substring(10);
         }
