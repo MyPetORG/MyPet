@@ -5,6 +5,10 @@ Shops:
     Name: "All Pets"
     Balance:
       Type: Private
+    Position: 0
+    Icon:
+      Material: "chest"
+      Glowing: false
     Pets:
 #      a_unique_name:
 #        Position: 0
@@ -357,6 +361,7 @@ Shops:
     Name: "Baby Shop"
     Balance:
       Type: Private
+    Position: 1
     Pets:
       baby_chicken:
         Name: "Chicken"

@@ -21,16 +21,20 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.hooks.VaultHook;
+import de.Keyle.MyPet.util.shop.PetShop;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,6 +47,7 @@ import java.util.Optional;
 import static org.bukkit.ChatColor.RESET;
 
 public class CommandShop implements CommandExecutor, TabCompleter {
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
             sender.sendMessage(Translation.getString("Message.No.Economy", sender));
@@ -112,11 +117,28 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                                 event.setWillDestroy(true);
                             }
                         }, MyPetApi.getPlugin());
+
+                        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+
                         for (String shopname : availableShops) {
+                            PetShop s = shopManager.get().getShop(shopname);
                             IconMenuItem icon = new IconMenuItem();
-                            icon.setTitle(RESET + Colorizer.setColors(shopManager.get().getShop(shopname).getDisplayName()));
-                            icon.setMaterial(Material.CHEST);
-                            menu.addOption(icon);
+                            icon.setTitle(RESET + Colorizer.setColors(s.getDisplayName()));
+
+                            SkilltreeIcon si = s.getIcon();
+                            MaterialHolder material = itemDatabase.getByID(si.getMaterial());
+                            if (material == null) {
+                                material = itemDatabase.getByID("chest");
+                            }
+                            icon.setMaterial(material.getMaterial()).setGlowing(si.isGlowing());
+                            if (material.isLegacy()) {
+                                icon.setData(material.getLegacyId().getData());
+                            }
+                            if (Util.isBetween(0, 53, s.getPosition())) {
+                                menu.setOption(s.getPosition(), icon);
+                            } else {
+                                menu.addOption(icon);
+                            }
                         }
 
                         menu.open(player);

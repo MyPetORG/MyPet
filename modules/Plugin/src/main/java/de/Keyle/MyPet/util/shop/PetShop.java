@@ -32,12 +32,15 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
+import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.util.hooks.VaultHook;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -52,6 +55,8 @@ public class PetShop {
     protected String displayName = "Pet - Shop";
     protected Map<Integer, ShopMyPet> pets = new HashMap<>();
     protected WalletType wallet = WalletType.None;
+    @Getter @Setter protected int position = -1;
+    @Getter @Setter protected SkilltreeIcon icon = new SkilltreeIcon().setMaterial("chest");
     protected String walletOwner = null;
     protected boolean defaultShop = false;
     VaultHook economyHook;
@@ -238,6 +243,20 @@ public class PetShop {
     public void load(ConfigurationSection section) {
         displayName = section.getString("Name", name);
         defaultShop = section.getBoolean("Default", false);
+        position = section.getInt("Position", -1);
+
+        if (section.contains("Icon")) {
+            ConfigurationSection iconSection = section.getConfigurationSection("Icon");
+            SkilltreeIcon icon = new SkilltreeIcon();
+            if (iconSection.contains("Material")) {
+                icon.setMaterial(iconSection.getString("Material", "chest"));
+            }
+            if (iconSection.contains("Glowing")) {
+                icon.setGlowing(iconSection.getBoolean("Glowing", false));
+            }
+            this.icon = icon;
+        }
+
         wallet = WalletType.getByName(section.getString("Balance.Type", ""));
         if (wallet == null) {
             wallet = WalletType.None;
