@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -165,10 +165,11 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
     public void onLivingUpdate() {
         boolean oldRiding = hasRider;
         super.onLivingUpdate();
-        if (rearCounter > -1 && rearCounter-- == 0) {
-            applyVisual(64, false);
-            rearCounter = -1;
-        }
+        if (!hasRider)
+            if (rearCounter > -1 && rearCounter-- == 0) {
+                applyVisual(64, false);
+                rearCounter = -1;
+            }
         if (oldRiding != hasRider) {
             if (hasRider) {
                 applyVisual(4, true);

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet implements IJumpable {
+
     protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.h);
     protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.m);
@@ -195,9 +196,11 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     public void onLivingUpdate() {
         boolean oldRiding = hasRider;
         super.onLivingUpdate();
-        if (rearCounter > -1 && rearCounter-- == 0) {
-            applyVisual(64, false);
-            rearCounter = -1;
+        if (!hasRider) {
+            if (rearCounter > -1 && rearCounter-- == 0) {
+                applyVisual(64, false);
+                rearCounter = -1;
+            }
         }
         if (oldRiding != hasRider) {
             if (hasRider) {
