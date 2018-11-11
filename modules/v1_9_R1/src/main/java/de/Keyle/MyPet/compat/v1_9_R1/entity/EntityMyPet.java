@@ -688,19 +688,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             locY = this.locY;
             speed = 0.8F;
             swimmSpeed = 0.02F;
-            f2 = (float) EnchantmentManager.d(this);
-            if (f2 > 3.0F) {
-                f2 = 3.0F;
-            }
-
-            if (!this.onGround) {
-                f2 *= 0.5F;
-            }
-
-            if (f2 > 0.0F) {
-                speed += (0.54600006F - speed) * f2 / 3.0F;
-                swimmSpeed += (speedModifier * 1.0F - swimmSpeed) * f2 / 3.0F;
-            }
 
             this.a(motionSideways, motionForward, swimmSpeed);
             this.move(this.motX, this.motY, this.motZ);
