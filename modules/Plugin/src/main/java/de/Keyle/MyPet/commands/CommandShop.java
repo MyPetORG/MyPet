@@ -39,10 +39,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.bukkit.ChatColor.RESET;
 
@@ -98,12 +95,9 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                     final List<String> availableShops = getAvailablePetShops(player);
                     if (availableShops != null && availableShops.size() > 0) {
                         final Player finalPlayer = player;
+                        Map<Integer, String> shops = new HashMap<>();
                         IconMenu menu = new IconMenu(Translation.getString("Message.Shop.Available", player), event -> {
-                            String shopname = null;
-                            try {
-                                shopname = availableShops.get(event.getPosition());
-                            } catch (Exception ignored) {
-                            }
+                            String shopname = shops.get(event.getPosition());
                             if (shopname != null) {
                                 final String finalShopname = shopname;
                                 new BukkitRunnable() {
@@ -136,8 +130,9 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                             }
                             if (Util.isBetween(0, 53, s.getPosition())) {
                                 menu.setOption(s.getPosition(), icon);
+                                shops.put(s.getPosition(), s.getName());
                             } else {
-                                menu.addOption(icon);
+                                shops.put(menu.addOption(icon), s.getName());
                             }
                         }
 
