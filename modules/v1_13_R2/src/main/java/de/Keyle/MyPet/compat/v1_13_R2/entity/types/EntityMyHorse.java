@@ -192,9 +192,11 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     public void onLivingUpdate() {
         boolean oldRiding = hasRider;
         super.onLivingUpdate();
-        if (rearCounter > -1 && rearCounter-- == 0) {
-            applyVisual(64, false);
-            rearCounter = -1;
+        if (!hasRider) {
+            if (rearCounter > -1 && rearCounter-- == 0) {
+                applyVisual(64, false);
+                rearCounter = -1;
+            }
         }
         if (oldRiding != hasRider) {
             if (hasRider) {

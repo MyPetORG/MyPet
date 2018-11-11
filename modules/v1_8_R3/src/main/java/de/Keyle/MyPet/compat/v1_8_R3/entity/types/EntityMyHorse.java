@@ -31,6 +31,7 @@ import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
+
     int soundCounter = 0;
     int rearCounter = -1;
 
@@ -230,9 +231,11 @@ public class EntityMyHorse extends EntityMyPet {
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (rearCounter > -1 && rearCounter-- == 0) {
-            applyVisual(64, false);
-            rearCounter = -1;
+        if (!hasRider) {
+            if (rearCounter > -1 && rearCounter-- == 0) {
+                applyVisual(64, false);
+                rearCounter = -1;
+            }
         }
     }
 

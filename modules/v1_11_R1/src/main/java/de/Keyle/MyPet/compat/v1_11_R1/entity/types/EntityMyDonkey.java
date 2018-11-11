@@ -33,6 +33,7 @@ import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyDonkey extends EntityMyPet implements IJumpable {
+
     protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.h);
     protected static final DataWatcherObject<Byte> saddleWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.a);
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.m);
@@ -173,9 +174,11 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
     public void onLivingUpdate() {
         boolean oldRiding = hasRider;
         super.onLivingUpdate();
-        if (rearCounter > -1 && rearCounter-- == 0) {
-            applyVisual(64, false);
-            rearCounter = -1;
+        if (!hasRider) {
+            if (rearCounter > -1 && rearCounter-- == 0) {
+                applyVisual(64, false);
+                rearCounter = -1;
+            }
         }
         if (oldRiding != hasRider) {
             if (hasRider) {
