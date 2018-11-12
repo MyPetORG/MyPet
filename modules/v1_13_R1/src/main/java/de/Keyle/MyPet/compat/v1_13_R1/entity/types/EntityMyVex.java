@@ -151,4 +151,18 @@ public class EntityMyVex extends EntityMyPet {
         }
         return super.getEquipment(vanillaSlot);
     }
+
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+
+        if (!this.onGround && this.motY < 0.0D) {
+            this.motY *= 0.6D;
+        }
+    }
+
+    /**
+     * -> disable falldamage
+     */
+    public void c(float f, float f1) {
+    }
 }
