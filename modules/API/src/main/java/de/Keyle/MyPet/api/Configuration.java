@@ -26,7 +26,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Configuration {
+
     public static class Misc {
+
         public static boolean CONSUME_LEASH_ITEM = false;
         public static boolean ALLOW_RANGED_LEASHING = true;
         public static boolean OWNER_CAN_ATTACK_PET = false;
@@ -45,10 +47,12 @@ public class Configuration {
     }
 
     public static class Log {
+
         public static String LEVEL = "INFO";
     }
 
     public static class Update {
+
         public static boolean ASYNC = false;
         public static boolean CHECK = true;
         public static boolean DOWNLOAD = false;
@@ -57,12 +61,14 @@ public class Configuration {
     }
 
     public static class Repository {
+
         public static long EXTERNAL_LOAD_DELAY = 20L;
 
         public static String REPOSITORY_TYPE = "SQLite";
         public static String CONVERT_FROM = "";
 
         public static class MySQL {
+
             public static String DATABASE = "mypet";
             public static String PREFIX = "";
             public static String HOST = "localhost";
@@ -74,6 +80,7 @@ public class Configuration {
         }
 
         public static class MongoDB {
+
             public static String DATABASE = "mypet";
             public static String PREFIX = "";
             public static String HOST = "localhost";
@@ -95,9 +102,11 @@ public class Configuration {
     }
 
     public static class Name {
+
         public static int MAX_LENGTH = 32;
 
         public static class Tag {
+
             public static boolean SHOW = true;
             public static String PREFIX = "<aqua>";
             public static String SUFFIX = "";
@@ -105,15 +114,18 @@ public class Configuration {
     }
 
     public static class Permissions {
+
         public static boolean ENABLED = true;
         public static boolean EXTENDED = false;
         public static boolean LEGACY = false;
     }
 
     public static class LevelSystem {
+
         public static String CALCULATION_MODE = "Default";
 
         public static class Experience {
+
             public static int LOSS_PERCENT = 0;
             public static double LOSS_FIXED = 0;
             public static boolean ALLOW_LEVEL_DOWNGRADE = false;
@@ -128,6 +140,7 @@ public class Configuration {
     }
 
     public static class HungerSystem {
+
         public static boolean USE_HUNGER_SYSTEM = true;
         public static int HUNGER_SYSTEM_TIME = 60;
         public static double HUNGER_SYSTEM_SATURATION_PER_FEED = 6.0;
@@ -136,6 +149,7 @@ public class Configuration {
     }
 
     public static class Skilltree {
+
         public static int SWITCH_FEE_PERCENT = 5;
         public static double SWITCH_FEE_FIXED = 0.0;
         public static boolean SWITCH_FEE_ADMIN = false;
@@ -146,19 +160,23 @@ public class Configuration {
         public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
 
         public static class Skill {
+
             public static ConfigItem CONTROL_ITEM;
 
             public static class Ride {
+
                 public static ConfigItem RIDE_ITEM;
                 public static double HUNGER_PER_METER = 0.01;
             }
 
             public static class Beacon {
+
                 public static int HUNGER_DECREASE_TIME = 100;
                 public static boolean PARTY_SUPPORT = true;
             }
 
             public static class Inventory {
+
                 public static boolean OPEN_IN_CREATIVE = false;
                 public static boolean DROP_WHEN_OWNER_DIES = false;
             }
@@ -166,60 +184,74 @@ public class Configuration {
     }
 
     public static class MyPet {
+
         public static class Chicken {
+
             public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_LAY_EGGS = true;
         }
 
         public static class Cow {
+
             public static boolean CAN_GIVE_MILK = true;
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Sheep {
+
             public static boolean CAN_BE_SHEARED = true;
             public static boolean CAN_REGROW_WOOL = true;
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class IronGolem {
+
             public static boolean CAN_THROW_UP = true;
         }
 
         public static class Snowman {
+
             public static boolean FIX_SNOW_TRACK = true;
         }
 
         public static class Horse {
+
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Llama {
+
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Mooshroom {
+
             public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_GIVE_SOUP;
         }
 
         public static class Ocelot {
+
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Pig {
+
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Villager {
+
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Wolf {
+
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Zombie {
+
             public static ConfigItem GROW_UP_ITEM;
         }
 
@@ -229,11 +261,13 @@ public class Configuration {
         }
 
         public static class Rabbit {
+
             public static ConfigItem GROW_UP_ITEM;
         }
     }
 
     public static class Hooks {
+
         public static boolean USE_ECONOMY = true;
         public static boolean DISABLE_PETS_IN_MINIGAMES = true;
         public static boolean DISABLE_PETS_IN_ARENA = true;
@@ -267,6 +301,7 @@ public class Configuration {
         }
 
         public static class MobArena {
+
             public static boolean ENABLED = true;
             public static boolean ALLOW_PETS = true;
             public static boolean RESPECT_PVP_RULE = true;
@@ -277,6 +312,12 @@ public class Configuration {
             public static boolean PREVENT_DAMAGE_IN_COMBAT = false;
             public static boolean DESPAWN_PETS_IN_COMBAT = false;
             public static boolean RESPECT_PVP_RULES = true;
+        }
+
+        public static class CombatLogX {
+
+            public static boolean ENABLED = false;
+            public static boolean IGNORE_PLUGIN_SETTINGS = false;
         }
     }
 }

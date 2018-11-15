@@ -387,6 +387,14 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/combatlogx.31689/ -->
+            <groupId>com.SirBlobman.combatlogx</groupId>
+            <artifactId>CombatLogX-Plugin</artifactId>
+            <version>9.0.0.0</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-premium-apis</artifactId>
             <version>1.0-SNAPSHOT</version>
