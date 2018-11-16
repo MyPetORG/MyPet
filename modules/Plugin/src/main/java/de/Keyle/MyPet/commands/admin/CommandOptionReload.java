@@ -22,8 +22,13 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -32,9 +37,46 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
-public class CommandOptionReload implements CommandOption {
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class CommandOptionReload implements CommandOptionTabCompleter {
+
+    public static final List<String> COMMAND_OPTIONS = new ArrayList<>();
+
+    static {
+        COMMAND_OPTIONS.add("all");
+        COMMAND_OPTIONS.add("config");
+        COMMAND_OPTIONS.add("skilltrees");
+    }
+
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin reload " + ChatColor.RED + "<what to reload?>");
+            return false;
+        }
+        switch (args[0].toLowerCase()) {
+            case "all":
+                reloadConfig(sender);
+                reloadSkilltrees(sender);
+                break;
+            case "config":
+                reloadConfig(sender);
+                break;
+            case "skilltrees":
+                reloadSkilltrees(sender);
+                break;
+            default:
+                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin reload " + ChatColor.RED + "<what to reload?>");
+        }
+        return true;
+    }
+
+    protected void reloadConfig(CommandSender sender) {
         int oldMaxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
@@ -64,8 +106,62 @@ public class CommandOptionReload implements CommandOption {
         ExperienceCalculatorManager calculatorManager = MyPetApi.getServiceManager().getService(ExperienceCalculatorManager.class).get();
         calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE);
 
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config loaded!");
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config reloaded!");
+        MyPetApi.getLogger().info("Config reloaded!");
+    }
 
-        return true;
+    protected void reloadSkilltrees(CommandSender sender) {
+        for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
+            try {
+                Bukkit.getPluginManager().removePermission(new Permission(skilltree.getFullPermission()));
+            } catch (Exception ignored) {
+            }
+        }
+        MyPetApi.getSkilltreeManager().clearSkilltrees();
+
+        SkillTreeLoaderJSON.loadSkilltrees(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"));
+
+        // register skilltree permissions
+        for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
+            try {
+                Bukkit.getPluginManager().addPermission(new Permission(skilltree.getFullPermission()));
+            } catch (Exception ignored) {
+            }
+        }
+
+        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
+            Skilltree skilltree = myPet.getSkilltree();
+            if (skilltree != null) {
+                String skilltreeName = skilltree.getName();
+                if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
+                    skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
+                    if (!skilltree.getMobTypes().contains(myPet.getPetType())) {
+                        skilltree = null;
+                    }
+                } else {
+                    skilltree = null;
+                }
+            }
+            myPet.setSkilltree(skilltree);
+            if (skilltree != null) {
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", myPet.getOwner()), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
+                for (Skill skill : myPet.getSkills().all()) {
+                    if (skill.isActive()) {
+                        myPet.getOwner().sendMessage("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.toPrettyString());
+                    }
+                }
+            }
+        }
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!");
+        MyPetApi.getLogger().info("Silltrees reloaded!");
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
+        if (strings.length > 2) {
+            return Collections.emptyList();
+        } else {
+            return COMMAND_OPTIONS;
+        }
     }
 }
