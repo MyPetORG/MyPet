@@ -45,7 +45,9 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
 
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (args.length < 1) {
+        if (args.length == 0) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin respawn " + ChatColor.RED + "<a player name>");
             return false;
         }
 

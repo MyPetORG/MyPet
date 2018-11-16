@@ -180,20 +180,24 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
     @Override
     public boolean onCommandOption(final CommandSender sender, String[] args) {
-        if (args.length < 2) {
+        if (args.length == 0) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + ChatColor.RED + "<a player name>");
             return false;
         }
-
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
 
         int forceOffset = 0;
         if (args[0].equalsIgnoreCase("-f")) {
             forceOffset = 1;
-
-            if (args.length < 3) {
-                return false;
-            }
         }
+
+        if (args.length < 2 + forceOffset) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " " + ChatColor.RED + "<a pet-type>");
+            return false;
+        }
+
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
 
         try {
             MyPetType myPetType = MyPetType.byName(args[1 + forceOffset]);

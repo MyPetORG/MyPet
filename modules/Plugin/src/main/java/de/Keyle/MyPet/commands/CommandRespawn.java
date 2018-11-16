@@ -67,6 +67,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
                         costsString = costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
                     }
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
+                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show.Pay", petOwner)));
                     return true;
                 }
 
@@ -100,6 +101,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
                         costsString = costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
                     }
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
+                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show.Pay", petOwner)));
                 }
             } else {
                 sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
