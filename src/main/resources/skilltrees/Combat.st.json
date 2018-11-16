@@ -29,6 +29,13 @@
         }
       }
     },
+    "Knockback": {
+      "Upgrades": {
+        "10": {
+          "Chance": "+15"
+        }
+      }
+    },
     "Thorns": {
       "Upgrades": {
         "5": {
@@ -37,13 +44,6 @@
         },
         "9": {
           "Chance": "+8"
-        }
-      }
-    },
-    "Knockback": {
-      "Upgrades": {
-        "10": {
-          "Chance": "+15"
         }
       }
     },
@@ -95,5 +95,6 @@
   "ID": "Combat",
   "Icon": {
     "Material": "stone_axe"
-  }
+  },
+  "Name": "Combat"
 }

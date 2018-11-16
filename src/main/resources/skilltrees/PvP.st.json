@@ -46,11 +46,21 @@
     "Beacon": {
       "Upgrades": {
         "7": {
+          "Buffs": {
+            "Resistance": "+1",
+            "Strength": "+1"
+          },
           "Duration": "+8",
+          "Count": "+1",
           "Range": "+5"
         },
         "10": {
-          "Duration": "+8",
+          "Buffs": {
+            "Resistance": "+2",
+            "Strength": "+2"
+          },
+          "Duration": "+2",
+          "Count": "+1",
           "Range": "+5"
         }
       }
@@ -108,5 +118,6 @@
   "ID": "PvP",
   "Icon": {
     "Material": "diamond_sword"
-  }
+  },
+  "Name": "PvP"
 }
