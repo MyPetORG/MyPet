@@ -45,19 +45,24 @@
         }
       }
     },
+    "Beacon": {
+      "Upgrades": {
+        "10": {
+          "Buffs": {
+            "Regeneration": "+2",
+            "WaterBreathing": true
+          },
+          "Duration": "+8",
+          "Count": "+1",
+          "Range": "+10"
+        }
+      }
+    },
     "Thorns": {
       "Upgrades": {
         "9": {
           "Reflection": "+20",
           "Chance": "+50"
-        }
-      }
-    },
-    "Beacon": {
-      "Upgrades": {
-        "10": {
-          "Duration": "+8",
-          "Range": "+10"
         }
       }
     },
@@ -89,8 +94,8 @@
     "Ride": {
       "Upgrades": {
         "1": {
-          "Active": true,
           "Speed": "+5",
+          "Active": true,
           "JumpHeight": "+1.25"
         },
         "10": {
@@ -106,5 +111,6 @@
   "Icon": {
     "Material": "saddle",
     "Glowing": true
-  }
+  },
+  "Name": "Ride"
 }

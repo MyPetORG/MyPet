@@ -97,5 +97,6 @@
   "ID": "Utility",
   "Icon": {
     "Material": "trapped_chest"
-  }
+  },
+  "Name": "Utility"
 }

@@ -92,5 +92,6 @@
   "ID": "Farm",
   "Icon": {
     "Material": "writable_book"
-  }
+  },
+  "Name": "Farm"
 }
