@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,7 +46,12 @@ public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter 
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
-            if (args.length > 0 && Util.isInt(args[0])) {
+            if (args.length < 2) {
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petsettings idle-volume " + ChatColor.RED + "<amount>");
+                return false;
+            }
+            if (Util.isInt(args[0])) {
                 float volume = Math.min(Math.max(Integer.parseInt(args[0]), 0f), 100f) / 100f;
 
                 MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);

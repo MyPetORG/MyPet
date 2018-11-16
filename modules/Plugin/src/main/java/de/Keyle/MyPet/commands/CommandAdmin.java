@@ -21,9 +21,11 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.admin.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -65,11 +67,14 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (!Permissions.has((Player) sender, "MyPet.admin", false)) {
+                sender.sendMessage(Util.formatText(Translation.getString("Message.No.Allowed", sender)));
                 return true;
             }
         }
 
         if (args.length < 1) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, COMMAND_OPTIONS.keySet()));
             return false;
         }
 

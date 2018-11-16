@@ -20,10 +20,13 @@
 
 package de.Keyle.MyPet.commands;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.settings.CommandSettingHealthbar;
 import de.Keyle.MyPet.commands.settings.CommandSettingsPetLivingSound;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -48,6 +51,8 @@ public class CommandSettings implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, commandOptions.keySet()));
             return false;
         }
 

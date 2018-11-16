@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CommandOptionExp implements CommandOptionTabCompleter {
+
     private static List<String> addSetRemoveList = new ArrayList<>();
 
     static {
@@ -46,7 +47,14 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
 
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin exp " + ChatColor.RED + "<a player name>");
+            return false;
+        }
         if (args.length < 2) {
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin exp " + args[0] + " " + ChatColor.RED + "<amount>");
             return false;
         }
 
