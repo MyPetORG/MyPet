@@ -81,10 +81,6 @@ commands:
     aliases: [petadmin]
     description: §6MyPet-Admin-Command §r-> §3https://wiki.mypet-plugin.de/doku.php?id=en:commands
     permission: MyPet.admin
-  petskilltree:
-    aliases: [petst]
-    description: Shows a fully configured skilltree
-    usage: '/<command> <mobtype> [skilltree name]'
   petchooseskilltree:
     aliases: [pcst, petcst]
     description: Chooses a skilltree.
