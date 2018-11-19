@@ -37,4 +37,19 @@ public class SoundCompat {
             .v("1.7.10", "damage.thorns")
             .v("1.9", "enchant.thorns.hit")
             .search();
+
+    public static Compat<String> LEVEL_UP = new Compat<String>()
+            .v("1.7.10", "LEVEL_UP")
+            .v("1.9", "ENTITY_PLAYER_LEVELUP")
+            .search();
+
+    public static Compat<String> FALL_BIG = new Compat<String>()
+            .v("1.7.10", "FALL_BIG")
+            .v("1.9", "ENTITY_HOSTILE_BIG_FALL")
+            .search();
+
+    public static Compat<String> LEVEL_DOWN = new Compat<String>()
+            .v("1.7.10", "ANVIL_BREAK")
+            .v("1.9", "ENTITY_WITHER_BREAK_BLOCK")
+            .search();
 }
