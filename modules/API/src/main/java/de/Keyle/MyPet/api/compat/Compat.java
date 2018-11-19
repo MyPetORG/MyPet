@@ -29,26 +29,52 @@ import java.util.List;
 
 public class Compat<T> {
 
-    List<KeyValue<String, CompatValueProvider<T>>> values = new LinkedList<>();
+    List<KeyValue<String, CompatValueProvider<T>>> valueProviders = new LinkedList<>();
+    CompatValueProvider<T> defaultValueProvider = null;
 
     KeyValue<String, T> foundValue = null;
+    T defaultValue = null;
+
+    public Compat(T value) {
+        defaultValueProvider = () -> value;
+    }
+
+    public Compat(CompatValueProvider<T> func) {
+        defaultValueProvider = func;
+    }
+
+    public Compat() {
+    }
+
+    public Compat<T> d(T value) {
+        defaultValueProvider = () -> value;
+        return this;
+    }
 
     public Compat<T> v(String version, T value) {
-        values.add(new KeyValue<>(version, () -> value));
+        valueProviders.add(new KeyValue<>(version, () -> value));
         return this;
     }
 
     public Compat<T> v(String version, CompatValueProvider<T> func) {
-        values.add(new KeyValue<>(version, func));
+        valueProviders.add(new KeyValue<>(version, func));
+        return this;
+    }
+
+    public Compat<T> d(CompatValueProvider<T> func) {
+        defaultValueProvider = func;
         return this;
     }
 
     public T get() {
+        if (foundValue == null) {
+            return defaultValue;
+        }
         return foundValue.getValue();
     }
 
     public Compat<T> search() {
-        for (KeyValue<String, CompatValueProvider<T>> pair : values) {
+        for (KeyValue<String, CompatValueProvider<T>> pair : valueProviders) {
             if (MyPetApi.getCompatUtil().isCompatible(pair.getKey())) {
                 if (foundValue != null) {
                     if (Util.versionCompare(foundValue.getKey(), pair.getKey()) < 0) {
@@ -57,6 +83,11 @@ public class Compat<T> {
                 } else {
                     foundValue = new KeyValue<>(pair.getKey(), pair.getValue().value());
                 }
+            }
+        }
+        if (foundValue == null) {
+            if (defaultValueProvider != null) {
+                defaultValue = defaultValueProvider.value();
             }
         }
         return this;

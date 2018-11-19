@@ -23,33 +23,33 @@ package de.Keyle.MyPet.api.compat;
 public class SoundCompat {
 
     public static Compat<String> ENDERMAN_TELEPORT = new Compat<String>()
-            .v("1.7.10", "mob.endermen.portal")
+            .d("mob.endermen.portal")
             .v("1.9", "entity.endermen.teleport")
             .v("1.13", "entity.enderman.teleport")
             .search();
 
     public static Compat<String> ITEM_PICKUP = new Compat<String>()
-            .v("1.7.10", "random.pop")
+            .d("random.pop")
             .v("1.9", "entity.item.pickup")
             .search();
 
     public static Compat<String> THORNS_HIT = new Compat<String>()
-            .v("1.7.10", "damage.thorns")
+            .d("damage.thorns")
             .v("1.9", "enchant.thorns.hit")
             .search();
 
     public static Compat<String> LEVEL_UP = new Compat<String>()
-            .v("1.7.10", "LEVEL_UP")
+            .d("LEVEL_UP")
             .v("1.9", "ENTITY_PLAYER_LEVELUP")
             .search();
 
     public static Compat<String> FALL_BIG = new Compat<String>()
-            .v("1.7.10", "FALL_BIG")
+            .d("FALL_BIG")
             .v("1.9", "ENTITY_HOSTILE_BIG_FALL")
             .search();
 
     public static Compat<String> LEVEL_DOWN = new Compat<String>()
-            .v("1.7.10", "ANVIL_BREAK")
+            .d("ANVIL_BREAK")
             .v("1.9", "ENTITY_WITHER_BREAK_BLOCK")
             .search();
 }

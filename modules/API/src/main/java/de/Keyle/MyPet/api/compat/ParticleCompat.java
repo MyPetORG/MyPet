@@ -24,73 +24,73 @@ public class ParticleCompat {
     // https://mcreator.net/wiki/particles-ids
 
     public static Compat<String> VILLAGER_HAPPY = new Compat<String>()
-            .v("1.7.10", "happyVillager")
+            .d("happyVillager")
             .v("1.8", "VILLAGER_HAPPY")
             .v("1.13", "happy_villager")
             .search();
 
     public static Compat<String> VILLAGER_ANGRY = new Compat<String>()
-            .v("1.7.10", "angryVillager")
+            .d("angryVillager")
             .v("1.8", "VILLAGER_ANGRY")
             .v("1.13", "angry_villager")
             .search();
 
     public static Compat<String> BARRIER = new Compat<String>()
-            .v("1.7.10", "spell")
+            .d("spell")
             .v("1.8", "BARRIER")
             .v("1.13", "barrier")
             .search();
 
     public static Compat<String> ITEM_CRACK = new Compat<String>()
-            .v("1.7.10", "iconcrack_")
+            .d("iconcrack_")
             .v("1.8", "ITEM_CRACK")
             .v("1.13", "item")
             .search();
 
     public static Compat<String> BLOCK_CRACK = new Compat<String>()
-            .v("1.7.10", "blockcrack")
+            .d("blockcrack")
             .v("1.8", "BLOCK_CRACK")
             .v("1.13", "block")
             .search();
 
     public static Compat<String> SPELL_WITCH = new Compat<String>()
-            .v("1.7.10", "spell")
+            .d("spell")
             .v("1.8", "SPELL_WITCH")
             .v("1.13", "witch")
             .search();
 
     public static Compat<String> SPELL_INSTANT = new Compat<String>()
-            .v("1.7.10", "instantSpell")
+            .d("instantSpell")
             .v("1.8", "SPELL_INSTANT")
             .v("1.13", "instant_effect")
             .search();
 
     public static Compat<String> CRIT_MAGIC = new Compat<String>()
-            .v("1.7.10", "magicCrit")
+            .d("magicCrit")
             .v("1.8", "CRIT_MAGIC")
             .v("1.13", "enchanted_hit")
             .search();
 
     public static Compat<String> CRIT = new Compat<String>()
-            .v("1.7.10", "crit")
+            .d("crit")
             .v("1.8", "CRIT")
             .v("1.13", "crit")
             .search();
 
     public static Compat<String> HEART = new Compat<String>()
-            .v("1.7.10", "heart")
+            .d("heart")
             .v("1.8", "HEART")
             .v("1.13", "heart")
             .search();
 
     public static Compat<String> WATER_SPLASH = new Compat<String>()
-            .v("1.7.10", "splash")
+            .d("splash")
             .v("1.8", "WATER_SPLASH")
             .v("1.13", "splash")
             .search();
 
     public static Compat<String> SMOKE_LARGE = new Compat<String>()
-            .v("1.7.10", "largesmoke")
+            .d("largesmoke")
             .v("1.8", "SMOKE_LARGE")
             .v("1.13", "large_smoke")
             .search();
@@ -100,19 +100,19 @@ public class ParticleCompat {
      */
 
     public static Compat<Object> RED_WOOL_DATA = new Compat<>()
-            .v("1.7.10", 4447) // (351+(1*4096))
+            .d(4447) // (351+(1*4096))
             .v("1.8", new int[]{351, 1})
             .v("1.13", "rose_red")
             .search();
 
     public static Compat<Object> LIME_GREEN_WOOL_DATA = new Compat<>()
-            .v("1.7.10", 41311) // (351+(10*4096))
+            .d(41311) // (351+(10*4096))
             .v("1.8", new int[]{351, 10})
             .v("1.13", "lime_dye")
             .search();
 
     public static Compat<Object> REDSTONE_BLOCK_DATA = new Compat<>()
-            .v("1.7.10", 152)
+            .d(152)
             .v("1.8", new int[]{152})
             .v("1.13", "redstone_block")
             .search();
