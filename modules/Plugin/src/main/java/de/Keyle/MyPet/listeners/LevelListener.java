@@ -23,6 +23,7 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
+import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
@@ -105,11 +106,7 @@ public class LevelListener implements Listener {
                     }
                 }.loop(2);
 
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    entity.getWorld().playSound(entity.getLocation(), "entity.player.levelup", 1F, 0.7F);
-                } else {
-                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("ENTITY_PLAYER_LEVELUP"), 1F, 0.7F);
-                }
+                entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_UP.get()), 1F, 0.7F);
             }
         }
     }
@@ -153,11 +150,7 @@ public class LevelListener implements Listener {
                     }
                 }.once();
 
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    entity.getWorld().playSound(entity.getLocation(), "random.anvil_break", 1F, 0.7F);
-                } else {
-                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf("ENTITY_WITHER_BREAK_BLOCK"), 1F, 0.7F);
-                }
+                entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_DOWN.get()), 1F, 0.7F);
             }
         }
     }
