@@ -35,9 +35,10 @@ import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombieVillager extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> babyWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> unusedWatcher1 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> unusedWatcher2 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Boolean> shiverwatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.b);
 
@@ -132,16 +133,17 @@ public class EntityMyZombieVillager extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(babyWatcher, false);
         getDataWatcher().register(typeWatcher, 0);
-        getDataWatcher().register(watcher, false);       // N/A
+        getDataWatcher().register(unusedWatcher1, false);
+        getDataWatcher().register(unusedWatcher2, false);
         getDataWatcher().register(shiverwatcher, false);
         getDataWatcher().register(professionWatcher, 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(babyWatcher, getMyPet().isBaby());
         this.datawatcher.set(professionWatcher, getMyPet().getProfession());
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
