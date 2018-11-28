@@ -81,6 +81,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 public class EntityListener implements Listener {
+
     Map<UUID, ItemStack> usedItems = new HashMap<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -666,13 +667,12 @@ public class EntityListener implements Listener {
                 }
 
                 // fix influence of other plugins for this event and throw damage event
-                if (event.getDamager() instanceof Projectile) {
-                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
-                    Bukkit.getPluginManager().callEvent(petDamageEvent);
-                    event.setDamage(petDamageEvent.getDamage());
+                MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
+                Bukkit.getPluginManager().callEvent(petDamageEvent);
+                if (petDamageEvent.isCancelled()) {
+                    event.setCancelled(true);
+                    return;
                 } else {
-                    MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
-                    Bukkit.getPluginManager().callEvent(petDamageEvent);
                     event.setDamage(petDamageEvent.getDamage());
                 }
 
