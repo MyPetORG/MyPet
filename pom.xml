@@ -77,10 +77,6 @@
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>inventive-repo</id>
-            <url>http://repo.inventivetalent.org/content/repositories/releases</url>
-        </repository>
-        <repository>
             <id>md5-repo</id>
             <url>http://repo.md-5.net/content/repositories/public</url>
         </repository>
