@@ -73,10 +73,6 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>placeholderapi-repo</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
             <id>md5-repo</id>
             <url>http://repo.md-5.net/content/repositories/public</url>
         </repository>
@@ -98,15 +94,15 @@
             <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
-            <version>2.0.22</version>
+            <version>2.0.24</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- https://www.spigotmc.org/resources/day-night-pvp-difficulty-cycle.21979/ -->
+            <!-- https://www.spigotmc.org/resources/pvpdifftimer.52205/ -->
             <groupId>br.net.fabiozumbi12</groupId>
             <artifactId>PvPDiffTimer</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -119,7 +115,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
+            <!-- https://www.spigotmc.org/resources/plotsquared.1177/ -->
             <groupId>com.plotsquared.bukkit</groupId>
             <artifactId>PlotSquared</artifactId>
             <version>3.4.4</version>
@@ -130,7 +126,7 @@
             <!-- https://dev.bukkit.org/projects/mythicmobs -->
             <groupId>io.lumine.xikage.mythicmobs</groupId>
             <artifactId>MythicMobs</artifactId>
-            <version>4.0.1</version>
+            <version>4.4.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -138,7 +134,7 @@
             <!-- http://dev.bukkit.org/bukkit-plugins/vault/ -->
             <groupId>org.natrolite</groupId>
             <artifactId>vault-api</artifactId>
-            <version>1.6.1</version>
+            <version>1.7</version>
             <type>jar</type>
             <scope>provided</scope>
             <optional>true</optional>
@@ -153,7 +149,7 @@
             <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>1.5.00</version>
+            <version>1.6.0</version>
             <scope>provided</scope>
             <optional>true</optional>
             <exclusions>
@@ -199,7 +195,7 @@
             <!-- http://dev.bukkit.org/bukkit-plugins/factions/ -->
             <groupId>com.massivecraft</groupId>
             <artifactId>Factions</artifactId>
-            <version>2.13.7</version>
+            <version>2.14.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -207,7 +203,7 @@
             <!-- http://dev.bukkit.org/bukkit-plugins/mcore/ -->
             <groupId>com.massivecraft</groupId>
             <artifactId>MassiveCore</artifactId>
-            <version>2.8.6</version>
+            <version>2.14.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -215,7 +211,7 @@
             <!-- http://dev.bukkit.org/bukkit-plugins/mobarena/ -->
             <groupId>com.garbagemule</groupId>
             <artifactId>MobArena</artifactId>
-            <version>0.97.1</version>
+            <version>0.103</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -231,7 +227,7 @@
             <!-- https://www.spigotmc.org/resources/pvp-arena.16584/ -->
             <groupId>net.slipcor</groupId>
             <artifactId>pvparena</artifactId>
-            <version>1.3.2.59</version>
+            <version>1.3.4.298</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -247,7 +243,7 @@
             <!-- https://www.spigotmc.org/resources/survival-games.17740/ -->
             <groupId>org.mcsg</groupId>
             <artifactId>survivalgames</artifactId>
-            <version>0.6.0</version>
+            <version>0.6.7</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -255,7 +251,7 @@
             <!-- http://ltcraft.lt/Residence/ -->
             <groupId>com.bekvon.bukkit</groupId>
             <artifactId>residence</artifactId>
-            <version>4.7.4.1</version>
+            <version>4.8.3.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -263,7 +259,7 @@
             <!-- http://towny.palmergames.com/ -->
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.91.1.0</version>
+            <version>0.93.0.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -271,7 +267,7 @@
             <!-- http://104.236.246.108:8080/job/SimpleClans/ -->
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
-            <version>2.7.7</version>
+            <version>2.7.11</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -279,7 +275,7 @@
             <!-- https://www.spigotmc.org/resources/redprotect-for-all-versions-anti-grief-server-protection.15841/ -->
             <groupId>br.net.fabiozumbi12.RedProtect</groupId>
             <artifactId>RedProtect</artifactId>
-            <version>7.3.0</version>
+            <version>7.5.5</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -287,12 +283,11 @@
             <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
             <groupId>me.ryanhamshire</groupId>
             <artifactId>GriefPrevention</artifactId>
-            <version>15.0.1</version>
+            <version>16.11.5</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
             <groupId>net.kaikk.mc</groupId>
             <artifactId>GriefPreventionPlus</artifactId>
             <version>12.28</version>
@@ -303,7 +298,7 @@
             <!-- http://dev.bukkit.org/bukkit-plugins/pvpmanager/ -->
             <groupId>me.NoChance.PvPManager</groupId>
             <artifactId>PvPManager</artifactId>
-            <version>3.1.8</version>
+            <version>3.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -311,7 +306,7 @@
             <!-- https://www.spigotmc.org/resources/kingdoms-plugin-demo.6392/ -->
             <groupId>org.kingdoms</groupId>
             <artifactId>kingdoms</artifactId>
-            <version>8.5.4</version>
+            <version>13.3.40</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -327,7 +322,7 @@
             <!-- https://www.spigotmc.org/resources/skillapi.4824/ -->
             <groupId>com.sucy.skill</groupId>
             <artifactId>SkillAPI</artifactId>
-            <version>3.104</version>
+            <version>3.108</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -343,7 +338,7 @@
             <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.3.0</version>
+            <version>4.4.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -351,14 +346,14 @@
             <!-- https://www.spigotmc.org/resources/placeholderapi.6245/ -->
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.8.5</version>
+            <version>2.9.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <!-- https://www.spigotmc.org/resources/nocheatplus2015-07-25.26/ -->
             <groupId>fr.neatmonster</groupId>
             <artifactId>nocheatplus</artifactId>
-            <version>3.15.0-SNAPSHOT</version>
+            <version>3.16.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -366,7 +361,7 @@
             <!-- https://www.spigotmc.org/resources/supervanish-be-invisible.1331/ -->
             <groupId>de.myzelyam</groupId>
             <artifactId>supervanish</artifactId>
-            <version>6.0.4</version>
+            <version>6.1.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -374,7 +369,7 @@
             <!-- https://www.spigotmc.org/resources/preciousstones.5270/ -->
             <groupId>net.sacredlabyrinth.Phaed</groupId>
             <artifactId>PreciousStones</artifactId>
-            <version>10.6.0</version>
+            <version>10.7.2</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -390,7 +385,7 @@
             <!-- https://www.spigotmc.org/resources/combatlogx.31689/ -->
             <groupId>com.SirBlobman.combatlogx</groupId>
             <artifactId>CombatLogX-Plugin</artifactId>
-            <version>9.0.0.0</version>
+            <version>9.1.1.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -404,21 +399,21 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
-            <version>3.6.3</version>
+            <version>3.9.1</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>knbt</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.3</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -432,7 +427,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.2</version>
+            <version>2.8.5</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -453,14 +448,14 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.0</version>
+            <version>1.18.4</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.mozilla</groupId>
             <artifactId>rhino</artifactId>
-            <version>1.7.9</version>
+            <version>1.7.10</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
