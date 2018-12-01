@@ -29,7 +29,7 @@ public class ReflectionUtil {
     public static Class getClass(String name) {
         try {
             return Class.forName(name);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
             return Class.class;
         }
     }
@@ -39,7 +39,7 @@ public class ReflectionUtil {
             Method m = clazz.getDeclaredMethod(method, parameterTypes);
             m.setAccessible(true);
             return m;
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
             return null;
         }
     }
@@ -49,7 +49,7 @@ public class ReflectionUtil {
             Field f = clazz.getDeclaredField(field);
             f.setAccessible(true);
             return f;
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
             return null;
         }
     }
@@ -59,7 +59,7 @@ public class ReflectionUtil {
             Field f = clazz.getDeclaredField(field);
             f.setAccessible(true);
             return f.get(object);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
             return null;
         }
     }
@@ -68,7 +68,7 @@ public class ReflectionUtil {
     public static Object getFieldValue(Field field, Object object) {
         try {
             return field.get(object);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return null;
     }
@@ -77,7 +77,7 @@ public class ReflectionUtil {
         try {
             field.set(object, value);
             return true;
-        } catch (IllegalAccessException e) {
+        } catch (Throwable e) {
             return false;
         }
 
@@ -90,7 +90,7 @@ public class ReflectionUtil {
                 field.set(object, value);
                 return true;
             }
-        } catch (IllegalAccessException ignored) {
+        } catch (Throwable ignored) {
         }
         return false;
     }
