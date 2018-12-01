@@ -24,9 +24,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.event.MyPetSendAwayEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -71,8 +73,12 @@ public class CommandSendAway implements CommandExecutor, TabCompleter {
         if (petOwner != null && petOwner.hasMyPet()) {
             MyPet myPet = petOwner.getMyPet();
             if (myPet.getStatus() == PetState.Here) {
-                myPet.removePet(false);
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.SendAway.Success", petOwner), myPet.getPetName()));
+                MyPetSendAwayEvent event = new MyPetSendAwayEvent(myPet);
+                Bukkit.getPluginManager().callEvent(event);
+                if (!event.isCancelled()) {
+                    myPet.removePet(false);
+                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.SendAway.Success", petOwner), myPet.getPetName()));
+                }
             } else if (myPet.getStatus() == PetState.Despawned) {
                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.SendAway.AlreadyAway", petOwner), myPet.getPetName()));
             } else if (myPet.getStatus() == PetState.Dead) {

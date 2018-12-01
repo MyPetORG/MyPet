@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelEvent;
+import de.Keyle.MyPet.api.event.MyPetStatusEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
@@ -289,7 +290,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         respawnTime = Math.max(time, 0);
 
         if (respawnTime > 0) {
-            status = PetState.Dead;
+            updateStatus(PetState.Dead);
         }
     }
 
@@ -342,9 +343,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public PetState getStatus() {
         if (status == PetState.Here) {
             if (bukkitEntity == null || bukkitEntity.getHandle() == null) {
-                status = PetState.Despawned;
+                updateStatus(PetState.Despawned);
             } else if (bukkitEntity.getHealth() <= 0 || bukkitEntity.isDead()) {
-                status = PetState.Dead;
+                updateStatus(PetState.Dead);
             }
         }
         return status;
@@ -358,11 +359,18 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 createEntity();
             }
         } else if (status == PetState.Dead) {
-            this.status = PetState.Dead;
+            updateStatus(PetState.Dead);
         } else {
             if (this.status == PetState.Here) {
                 removePet();
             }
+        }
+    }
+
+    protected void updateStatus(PetState status) {
+        if (this.status != status) {
+            this.status = status;
+            Bukkit.getPluginManager().callEvent(new MyPetStatusEvent(this, status));
         }
     }
 
@@ -407,7 +415,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (status != PetState.Here && getOwner().isOnline()) {
             Player owner = getOwner().getPlayer();
             if (owner.isDead()) {
-                status = PetState.Despawned;
+                updateStatus(PetState.Despawned);
                 return SpawnFlags.OwnerDead;
             }
             if (owner.getGameMode().name().equals("SPECTATOR")) {
@@ -450,7 +458,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 MyPetMinecraftEntity minecraftEntity = MyPetApi.getEntityRegistry().createMinecraftEntity(this, loc.getWorld());
 
                 if (minecraftEntity == null) {
-                    status = PetState.Despawned;
+                    updateStatus(PetState.Despawned);
                     return SpawnFlags.Canceled;
                 }
                 bukkitEntity = minecraftEntity.getBukkitEntity();
@@ -506,7 +514,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 if (!positionFound) {
                     minecraftEntity.setLocation(origin);
                     if (!MyPetApi.getPlatformHelper().canSpawn(origin, minecraftEntity)) {
-                        status = PetState.Despawned;
+                        updateStatus(PetState.Despawned);
                         return SpawnFlags.NoSpace;
                     }
                 }
@@ -521,7 +529,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
 
                     bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), this));
-                    status = PetState.Here;
+                    updateStatus(PetState.Here);
 
                     if (worldGroup == null || worldGroup.equals("")) {
                         setWorldGroup(WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName());
@@ -549,7 +557,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void removePet() {
         if (status == PetState.Here) {
             health = bukkitEntity.getHealth();
-            status = PetState.Despawned;
+            updateStatus(PetState.Despawned);
             bukkitEntity.removeEntity();
             bukkitEntity = null;
 
@@ -564,7 +572,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void respawnPet() {
         if (status != PetState.Here && getOwner().isOnline()) {
-            this.status = PetState.Despawned;
+            updateStatus(PetState.Despawned);
             respawnTime = 0;
             switch (createEntity()) {
                 case Success:
