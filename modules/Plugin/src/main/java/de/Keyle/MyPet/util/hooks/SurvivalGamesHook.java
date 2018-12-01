@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import com.thundergemios10.survivalgames.GameManager;
+import com.thundergemios10.survivalgames.api.PlayerJoinArenaEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -30,10 +32,8 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.mcsg.survivalgames.GameManager;
-import org.mcsg.survivalgames.api.PlayerJoinArenaEvent;
 
-@PluginHookName(value = "SurvivalGames", classPath = "org.mcsg.survivalgames.SurvivalGames")
+@PluginHookName(value = "SurvivalGames", classPath = "com.thundergemios10.survivalgames.SurvivalGames")
 public class SurvivalGamesHook implements AllowedHook {
 
     @Override
