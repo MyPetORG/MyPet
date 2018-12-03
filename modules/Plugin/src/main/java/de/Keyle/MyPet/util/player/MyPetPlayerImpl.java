@@ -52,6 +52,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class MyPetPlayerImpl implements MyPetPlayer {
+
     protected String lastKnownPlayerName;
     protected String lastLanguage = "en_US";
     protected UUID mojangUUID = null;
@@ -488,7 +489,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         if (!MyPetApi.getHookHelper().canHurt(p, entity)) {
                             continue;
                         }
-                        if (!Permissions.hasLegacy(this, "MyPet.leash.", MyPetType.byEntityTypeName(entity.getType().name()))) {
+                        if (!Permissions.has(this, "MyPet.leash." + MyPetType.byEntityTypeName(entity.getType().name()))) {
                             continue;
                         }
                         Location l = entity.getLocation();

@@ -50,27 +50,27 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Info", player), "/petinfo"));
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Shop", player), "/petshop"));
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Options", player), "/petoptions"));
-            if (Permissions.hasLegacy(player, "MyPet.command.capturehelper")) {
+            if (Permissions.has(player, "MyPet.command.capturehelper")) {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.CaptureHelper", player), "/petcapturehelper"));
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Call", player), "/petcall"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.SendAway", player), "/petsendaway"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Stop", player), "/petstop"));
-                if (Permissions.hasLegacy(player, "MyPet.command.name")) {
+                if (Permissions.has(player, "MyPet.command.name")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Name", player), "/petname"));
                 }
-                if (Permissions.hasLegacy(player, "MyPet.command.release")) {
+                if (Permissions.has(player, "MyPet.command.release")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Release", player), "/petrelease"));
                 }
-                if (Permissions.hasLegacy(player, "MyPet.command.respawn")) {
+                if (Permissions.has(player, "MyPet.command.respawn")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Respawn", player), "/petrespawn"));
                 }
-                if (Permissions.hasLegacy(player, "MyPet.command.switch")) {
+                if (Permissions.has(player, "MyPet.command.switch")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Switch", player), "/petswitch"));
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Store", player), "/petstore"));
                 }
-                if (Permissions.hasLegacy(player, "MyPet.command.trade.offer") || Permissions.hasLegacy(player, "MyPet.command.trade.receive")) {
+                if (Permissions.has(player, "MyPet.command.trade.offer") || Permissions.has(player, "MyPet.command.trade.receive")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Trade", player), "/pettrade"));
                 }
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Skill", player), "/petskill"));

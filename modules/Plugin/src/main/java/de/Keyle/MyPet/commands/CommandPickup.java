@@ -43,7 +43,7 @@ public class CommandPickup implements CommandExecutor, TabCompleter {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
 
-                if (!Permissions.hasExtendedLegacy(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
+                if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
                     sender.sendMessage(Translation.getString("Message.No.Allowed", owner));
                     return true;
                 } else if (myPet.getStatus() == PetState.Despawned) {

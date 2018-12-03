@@ -75,6 +75,7 @@ public class MySqlRepository implements Repository {
         dataSource.setUsername(Configuration.Repository.MySQL.USER);
         dataSource.setPassword(Configuration.Repository.MySQL.PASSWORD);
         dataSource.setMaximumPoolSize(Configuration.Repository.MySQL.POOL_SIZE);
+        dataSource.addDataSourceProperty("cachePrepStmts", true);
         dataSource.setLeakDetectionThreshold(10000);
 
         try (Connection connection = dataSource.getConnection();

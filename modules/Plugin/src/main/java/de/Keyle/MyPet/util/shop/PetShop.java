@@ -210,7 +210,7 @@ public class PetShop {
             maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         } else {
             for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
-                if (Permissions.hasLegacy(p, "MyPet.petstorage.limit.", i)) {
+                if (Permissions.has(p, "MyPet.petstorage.limit." + i)) {
                     maxPetCount = i;
                     break;
                 }

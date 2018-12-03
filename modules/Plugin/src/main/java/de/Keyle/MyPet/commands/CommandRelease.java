@@ -60,7 +60,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
-                if (!Permissions.hasLegacy(petOwner, "MyPet.command.release")) {
+                if (!Permissions.has(petOwner, "MyPet.command.release")) {
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned) {

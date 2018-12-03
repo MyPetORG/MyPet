@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,33 +30,6 @@ import org.bukkit.permissions.PermissibleBase;
 public class Permissions {
 
     private static Multimap<String, String> legacy = ArrayListMultimap.create();
-
-    static {
-        legacy.put("MyPet.command.info.other", "MyPet.user.command.info.other");
-        legacy.put("MyPet.command.capturehelper", "MyPet.user.command.capturehelper");
-        legacy.put("MyPet.command.release", "MyPet.user.command.release");
-        legacy.put("MyPet.command.respawn", "MyPet.user.command.respawn");
-        legacy.put("MyPet.command.name", "MyPet.user.command.name");
-        legacy.put("MyPet.command.name.color", "MyPet.user.command.name.color");
-        legacy.put("MyPet.command.switch", "MyPet.user.command.switch");
-        legacy.put("MyPet.petstorage.limit.", "MyPet.user.command.switch.limit.");
-        legacy.put("MyPet.petstorage.limit.", "MyPet.command.switch.limit.");
-        legacy.put("MyPet.petstorage.limit.", "MyPet.npc.storage.max.");
-        legacy.put("MyPet.command.trade.offer.", "MyPet.user.command.offer.type.");
-        legacy.put("MyPet.command.trade.offer.", "MyPet.command.trade.offer.type.");
-        legacy.put("MyPet.command.trade.receive.", "MyPet.user.trade.recieve.type.");
-        legacy.put("MyPet.command.trade.receive.", "MyPet.command.trade.receive.type.");
-        legacy.put("MyPet.leash.", "MyPet.user.leash.");
-        legacy.put("MyPet.skilltree.", "MyPet.custom.skilltree.");
-        legacy.put("MyPet.extended.feed", "MyPet.user.extended.CanFeed");
-        legacy.put("MyPet.extended.beacon", "MyPet.user.extended.Beacon");
-        legacy.put("MyPet.extended.behavior.", "MyPet.user.extended.Behavior.");
-        legacy.put("MyPet.extended.inventory", "MyPet.user.extended.Inventory");
-        legacy.put("MyPet.extended.ride", "MyPet.user.extended.Ride");
-        legacy.put("MyPet.extended.control", "MyPet.user.extended.Control");
-        legacy.put("MyPet.extended.pickup", "MyPet.user.extended.Pickup");
-        legacy.put("MyPet.extended.equip", "MyPet.user.extended.Equip");
-    }
 
     public static boolean hasLegacy(MyPetPlayer player, String node, Object parameter) {
         if (player != null && player.isOnline()) {
