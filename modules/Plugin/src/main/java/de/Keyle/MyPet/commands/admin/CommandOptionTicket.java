@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,17 +22,21 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOption;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class CommandOptionTicket implements CommandOption {
+
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         try {
@@ -47,6 +51,7 @@ public class CommandOptionTicket implements CommandOption {
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "logs" + File.separator + "MyPet.log"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder().getParentFile().getParentFile(), "logs" + File.separator + "latest.log"), out, "");
+            writeStreamToZip(new ByteArrayInputStream(accumulatePermissions().getBytes()), "permissions.txt", out);
 
             out.close();
 
@@ -60,19 +65,29 @@ public class CommandOptionTicket implements CommandOption {
         return true;
     }
 
+    private String accumulatePermissions() {
+        StringBuilder retValue = new StringBuilder();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            retValue.append(p.getName()).append(" (").append(p.getUniqueId().toString()).append(")\n");
+            List<String> permList = new ArrayList<>();
+            for (PermissionAttachmentInfo perm : p.getEffectivePermissions()) {
+                if (perm.getValue()) {
+                    permList.add(perm.getPermission());
+                }
+            }
+            Collections.sort(permList);
+            for (String perm : permList) {
+                retValue.append("    ").append(perm).append("\n");
+            }
+            retValue.append("\n\n\n");
+        }
+        return retValue.toString();
+    }
+
     private void addFileToZip(File file, ZipOutputStream zip, String folder) throws IOException {
         if (file.isFile()) {
             FileInputStream in = new FileInputStream(file);
-            zip.putNextEntry(new ZipEntry(folder + file.getName()));
-
-            byte[] b = new byte[1024];
-            int count;
-
-            while ((count = in.read(b)) > 0) {
-                System.out.println();
-                zip.write(b, 0, count);
-            }
-            in.close();
+            this.writeStreamToZip(in, folder + file.getName(), zip);
         } else if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
@@ -81,5 +96,18 @@ public class CommandOptionTicket implements CommandOption {
                 }
             }
         }
+    }
+
+    private void writeStreamToZip(InputStream in, String file, ZipOutputStream zip) throws IOException {
+        zip.putNextEntry(new ZipEntry(file));
+
+        byte[] b = new byte[1024];
+        int count;
+
+        while ((count = in.read(b)) > 0) {
+            System.out.println();
+            zip.write(b, 0, count);
+        }
+        in.close();
     }
 }
