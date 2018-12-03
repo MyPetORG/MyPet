@@ -40,8 +40,8 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.attack.RangedAttack;
-import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.movement.Float;
+import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_8_R2.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
@@ -278,7 +278,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public boolean canEquip() {
-        return Permissions.hasExtendedLegacy(getOwner().getPlayer(), "MyPet.extended.equip") && canUseItem();
+        return Permissions.hasExtended(getOwner().getPlayer(), "MyPet.extended.equip") && canUseItem();
     }
 
     public void dropEquipment() {
@@ -426,7 +426,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             Player owner = this.getOwner().getPlayer();
             if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
-                    if (Permissions.hasExtendedLegacy(owner, "MyPet.extended.ride")) {
+                    if (Permissions.hasExtended(owner, "MyPet.extended.ride")) {
                         entityhuman.mount(this);
                         return true;
                     } else {
@@ -441,7 +441,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
             if (itemStack != null) {
                 if (itemStack.getItem() == Items.NAME_TAG && itemStack.hasName()) {
-                    if (Permissions.hasLegacy(getOwner(), "MyPet.command.name") && Permissions.hasExtended(getOwner(), "MyPet.extended.nametag")) {
+                    if (Permissions.has(getOwner(), "MyPet.command.name") && Permissions.hasExtended(getOwner(), "MyPet.extended.nametag")) {
                         final String name = itemStack.getName();
                         getMyPet().setPetName(name);
                         EntityMyPet.super.setCustomName("-");
@@ -461,7 +461,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     }
                 }
                 if (canEat(itemStack) && canUseItem()) {
-                    if (owner != null && !Permissions.hasExtendedLegacy(owner, "MyPet.extended.feed")) {
+                    if (owner != null && !Permissions.hasExtended(owner, "MyPet.extended.feed")) {
                         return false;
                     }
                     if (this.petTargetSelector.hasGoal("DuelTarget")) {

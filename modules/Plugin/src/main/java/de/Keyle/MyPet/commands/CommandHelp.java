@@ -53,16 +53,16 @@ public class CommandHelp implements CommandExecutor, TabCompleter {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Call", player), "/petcall"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.SendAway", player), "/petsendaway"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Stop", player), "/petstop"));
-                if (Permissions.hasLegacy(player, "MyPet.command.name")) {
+                if (Permissions.has(player, "MyPet.command.name")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Name", player), "/petname"));
                 }
-                if (Permissions.hasLegacy(player, "MyPet.command.release")) {
+                if (Permissions.has(player, "MyPet.command.release")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Release", player), "/petrelease"));
                 }
-                if (Permissions.hasLegacy(player, "MyPet.command.respawn")) {
+                if (Permissions.has(player, "MyPet.command.respawn")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Respawn", player), "/petrespawn"));
                 }
-                if (Permissions.hasLegacy(player, "MyPet.command.switch")) {
+                if (Permissions.has(player, "MyPet.command.switch")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Switch", player), "/petswitch"));
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Store", player), "/petstore"));
                 }

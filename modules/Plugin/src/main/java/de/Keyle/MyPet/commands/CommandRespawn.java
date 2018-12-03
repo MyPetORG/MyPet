@@ -53,7 +53,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
             Player petOwner = (Player) sender;
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-                if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) || !Permissions.hasLegacy(petOwner, "MyPet.command.respawn")) {
+                if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) || !Permissions.has(petOwner, "MyPet.command.respawn")) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
                     return true;
                 }

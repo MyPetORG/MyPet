@@ -459,7 +459,7 @@ public class EntityListener implements Listener {
                     MyPetType petType = MyPetType.byEntityTypeName(leashTarget.getType().name());
                     ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
 
-                    if (!Permissions.hasLegacy(player, "MyPet.leash.", petType.name())) {
+                    if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
                         return;
                     }
                     boolean usedArrow = false;
@@ -798,7 +798,7 @@ public class EntityListener implements Listener {
             sendDeathMessage(event);
             myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner.getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
-            if (MyPetApi.getPluginHookManager().isHookActive(EconomyHook.class) && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.hasLegacy(owner.getPlayer(), "MyPet.command.respawn")) {
+            if (MyPetApi.getPluginHookManager().isHookActive(EconomyHook.class) && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
                 double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                 if (MyPetApi.getHookHelper().getEconomy().canPay(owner, costs)) {
                     MyPetApi.getHookHelper().getEconomy().pay(owner, costs);

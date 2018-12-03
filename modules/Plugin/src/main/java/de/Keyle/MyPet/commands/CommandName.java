@@ -50,7 +50,7 @@ public class CommandName implements CommandExecutor, TabCompleter {
                 }
 
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-                if (!Permissions.hasLegacy(petOwner, "MyPet.command.name")) {
+                if (!Permissions.has(petOwner, "MyPet.command.name")) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
                     return true;
                 }
@@ -80,7 +80,7 @@ public class CommandName implements CommandExecutor, TabCompleter {
                 name = Util.cutString(name, 64);
 
                 if (nameWihtoutColors.length() <= Configuration.Name.MAX_LENGTH) {
-                    if (Permissions.hasLegacy(petOwner, "MyPet.command.name.color")) {
+                    if (Permissions.has(petOwner, "MyPet.command.name.color")) {
                         myPet.setPetName(name);
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), name));
                     } else {

@@ -52,7 +52,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", player), myPet.getPetName()));
                         return true;
                     }
-                    if (!Permissions.hasExtendedLegacy(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin", false)) {
+                    if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin", false)) {
                         myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", player));
                         return true;
                     }

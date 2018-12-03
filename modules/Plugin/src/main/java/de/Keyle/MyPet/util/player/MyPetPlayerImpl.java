@@ -45,6 +45,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class MyPetPlayerImpl implements MyPetPlayer {
+
     protected String lastKnownPlayerName;
     protected String lastLanguage = "en_US";
     protected UUID mojangUUID = null;

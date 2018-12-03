@@ -102,7 +102,7 @@ public class PickupImpl implements Pickup {
     public void schedule() {
         MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Use);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if (pickup && (event.isCancelled() || !Permissions.hasExtendedLegacy(myPet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
+        if (pickup && (event.isCancelled() || !Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
             pickup = false;
             myPet.getOwner().sendMessage(Util.formatText(Translation.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Translation.getString("Name.Disabled", myPet.getOwner())));
             return;
