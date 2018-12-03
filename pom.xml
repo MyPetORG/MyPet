@@ -138,12 +138,6 @@
             <type>jar</type>
             <scope>provided</scope>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <!-- https://www.spigotmc.org/resources/mcmmo.2445/ -->
@@ -399,7 +393,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.4</version>
+            <version>1.2</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
