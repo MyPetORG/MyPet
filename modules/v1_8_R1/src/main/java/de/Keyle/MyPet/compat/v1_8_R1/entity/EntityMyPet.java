@@ -1060,6 +1060,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         canFly = false;
                     } else if (flyCheckCounter-- <= 0) {
                         canFly = MyPetApi.getHookHelper().canMyPetFlyAt(getBukkitEntity().getLocation());
+                        if (canFly && !Permissions.hasExtended(getOwner().getPlayer(), "MyPet.extended.ride.fly")) {
+                            canFly = false;
+                        }
                         flyCheckCounter = 5;
                     }
                     if (canFly) {
