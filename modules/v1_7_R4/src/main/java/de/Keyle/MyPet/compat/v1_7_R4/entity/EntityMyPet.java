@@ -497,6 +497,18 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     }
                 }
             }
+            if (!owner.isSneaking() && !Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
+                String command = Configuration.Misc.RIGHT_CLICK_COMMAND;
+                command = command.replaceAll("%pet_name%", myPet.getPetName());
+                command = command.replaceAll("%pet_owner%", myPet.getOwner().getName());
+                command = command.replaceAll("%pet_level%", "" + myPet.getExperience().getLevel());
+                command = command.replaceAll("%pet_status%", "" + myPet.getStatus().name());
+                command = command.replaceAll("%pet_type%", myPet.getPetType().name());
+                command = command.replaceAll("%pet_uuid%", myPet.getUUID().toString());
+                command = command.replaceAll("%pet_world_group%", myPet.getWorldGroup());
+                command = command.replaceAll("%pet_skilltree_name%", myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : "");
+                return owner.performCommand(command);
+            }
         } else {
             if (itemStack != null) {
                 if (itemStack.getItem() == Items.NAME_TAG) {
