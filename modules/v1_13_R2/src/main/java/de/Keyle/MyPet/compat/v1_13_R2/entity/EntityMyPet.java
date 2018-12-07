@@ -511,7 +511,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     }
                 }
             }
-            if (!Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
+            if (!owner.isSneaking() && !Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
                 String command = Configuration.Misc.RIGHT_CLICK_COMMAND;
                 command = command.replaceAll("%pet_name%", myPet.getPetName());
                 command = command.replaceAll("%pet_owner%", myPet.getOwner().getName());

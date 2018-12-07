@@ -107,7 +107,6 @@ public class EntityMySkeleton extends EntityMyPet {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
                     }
                 }
-
                 return true;
             }
         }
