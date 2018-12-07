@@ -45,7 +45,7 @@ public class EntityMyIronGolem extends EntityMyPet {
         try {
             this.world.broadcastEntityEffect(this, (byte) 4);
             flag = super.attack(entity);
-            if (Configuration.MyPet.IronGolem.CAN_THROW_UP && flag) {
+            if (Configuration.MyPet.IronGolem.CAN_TOSS_UP && flag) {
                 entity.motY += 0.4000000059604645D;
                 this.makeSound("entity.iron_golem.attack", 1.0F, 1.0F);
             }

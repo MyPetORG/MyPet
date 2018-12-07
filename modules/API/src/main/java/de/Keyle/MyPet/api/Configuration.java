@@ -206,7 +206,7 @@ public class Configuration {
 
         public static class IronGolem {
 
-            public static boolean CAN_THROW_UP = true;
+            public static boolean CAN_TOSS_UP = true;
         }
 
         public static class Snowman {

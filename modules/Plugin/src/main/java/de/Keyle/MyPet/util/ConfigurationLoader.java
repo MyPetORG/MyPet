@@ -262,7 +262,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
-        config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", MyPet.IronGolem.CAN_THROW_UP);
+        config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MyPet.Snowman.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", "experience_bottle");
@@ -498,7 +498,7 @@ public class ConfigurationLoader {
         MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
-        MyPet.IronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
+        MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
         MyPet.Snowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
     }
@@ -634,6 +634,10 @@ public class ConfigurationLoader {
                 config.set("MyPet.Pets." + petType.name() + ".LeashRequirements", flags.toArray(new String[0]));
                 config.getConfigurationSection("MyPet.Pets." + petType).set("LeashFlags", null);
             }
+        }
+        if (config.contains("MyPet.Pets.IronGolem.CanThrowUp")) {
+            MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp");
+            config.getConfigurationSection("MyPet.Pets.IronGolem").set("CanThrowUp", null);
         }
 
         try {
