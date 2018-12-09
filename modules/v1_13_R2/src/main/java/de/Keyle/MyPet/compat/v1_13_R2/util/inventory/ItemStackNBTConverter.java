@@ -96,21 +96,21 @@ public class ItemStackNBTConverter {
     public static TagBase vanillaCompoundToCompound(NBTBase vanillaTag) {
         switch (vanillaTag.getTypeId()) {
             case 1:
-                return new TagByte(((NBTTagByte) vanillaTag).g());
+                return new TagByte(((NBTTagByte) vanillaTag).asByte());
             case 2:
-                return new TagShort(((NBTTagShort) vanillaTag).f());
+                return new TagShort(((NBTTagShort) vanillaTag).asShort());
             case 3:
-                return new TagInt(((NBTTagInt) vanillaTag).e());
+                return new TagInt(((NBTTagInt) vanillaTag).asInt());
             case 4:
-                return new TagLong(((NBTTagLong) vanillaTag).d());
+                return new TagLong(((NBTTagLong) vanillaTag).asLong());
             case 5:
-                return new TagFloat(((NBTTagFloat) vanillaTag).i());
+                return new TagFloat(((NBTTagFloat) vanillaTag).asFloat());
             case 6:
                 return new TagDouble(((NBTTagDouble) vanillaTag).asDouble());
             case 7:
                 return new TagByteArray(((NBTTagByteArray) vanillaTag).c());
             case 8:
-                return new TagString(vanillaTag.b_());
+                return new TagString(vanillaTag.asString());
             case 9:
                 NBTTagList tagList = (NBTTagList) vanillaTag;
                 List compoundList = new ArrayList();
