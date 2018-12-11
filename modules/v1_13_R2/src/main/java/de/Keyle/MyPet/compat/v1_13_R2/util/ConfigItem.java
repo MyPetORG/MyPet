@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_13_R2.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_13_R2.util.inventory.ItemStackComparator;
 import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.ChatColor;
@@ -63,24 +63,12 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         return item.isSimilar(CraftItemStack.asCraftMirror(compareItem));
     }
 
-    public void load(String data) {
-        String[] splitData = data.split("\\s+", 2);
-
-        if (splitData.length == 0) {
-            return;
-        }
-
-        Item item;
-        if (Util.isInt(splitData[0])) {
-            int itemId = Integer.parseInt(splitData[0]);
-            item = Item.getById(itemId);
-        } else {
-            MinecraftKey key = new MinecraftKey(splitData[0]);
-            item = IRegistry.ITEM.get(key);
-            if (item == null) {
-                Block block = IRegistry.BLOCK.get(key);
-                item = block.getItem();
-            }
+    public void load(MaterialHolder material, String data) {
+        MinecraftKey key = new MinecraftKey(material.getId());
+        Item item = IRegistry.ITEM.get(key);
+        if (item == null) {
+            Block block = IRegistry.BLOCK.get(key);
+            item = block.getItem();
         }
         if (item == null) {
             return;
@@ -88,9 +76,9 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
         net.minecraft.server.v1_13_R2.ItemStack is = new net.minecraft.server.v1_13_R2.ItemStack(item, 1);
 
-        if (splitData.length >= 2) {
+        if (data != null) {
             NBTTagCompound tag = null;
-            String nbtString = splitData[1].trim();
+            String nbtString = data.trim();
             if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 try {
                     tag = MojangsonParser.parse(nbtString);

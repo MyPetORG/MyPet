@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_7_R4.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_7_R4.util.inventory.ItemStackComparator;
 import net.minecraft.server.v1_7_R4.Item;
 import net.minecraft.server.v1_7_R4.MojangsonParser;
@@ -92,29 +92,17 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         return true;
     }
 
-    public void load(String data) {
-        String[] splitData = data.split("\\s+", 2);
-
-        if (splitData.length == 0) {
-            return;
-        }
-
-        Item item;
-        if (Util.isInt(splitData[0])) {
-            int itemId = Integer.parseInt(splitData[0]);
-            item = Item.getById(itemId);
-        } else {
-            item = (Item) Item.REGISTRY.get(splitData[0]);
-        }
+    public void load(MaterialHolder material, String data) {
+        Item item = (Item) Item.REGISTRY.get(material.getLegacyName().getName());
         if (item == null) {
             return;
         }
 
-        net.minecraft.server.v1_7_R4.ItemStack is = new net.minecraft.server.v1_7_R4.ItemStack(item, 1);
+        net.minecraft.server.v1_7_R4.ItemStack is = new net.minecraft.server.v1_7_R4.ItemStack(item, 1, material.getLegacyName().getData());
 
-        if (splitData.length >= 2) {
+        if (data != null) {
             NBTBase tag = null;
-            String nbtString = splitData[1].trim();
+            String nbtString = data.trim();
             if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 String tagString = data.substring(data.indexOf("{"), data.lastIndexOf("}"));
                 data = data.substring(0, data.indexOf("{"));

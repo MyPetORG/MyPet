@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_13_R1.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_13_R1.util.inventory.ItemStackComparator;
 import net.minecraft.server.v1_13_R1.*;
 import org.bukkit.ChatColor;
@@ -63,37 +63,22 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         return item.isSimilar(CraftItemStack.asCraftMirror(compareItem));
     }
 
-    public void load(String data) {
-
-        String[] splitData = data.split("\\s+", 2);
-
-        if (splitData.length == 0) {
-            return;
-        }
-
-        net.minecraft.server.v1_13_R1.ItemStack is;
-
-        Item item;
-        if (Util.isInt(splitData[0])) {
-            int itemId = Integer.parseInt(splitData[0]);
-            item = Item.getById(itemId);
-        } else {
-            MinecraftKey key = new MinecraftKey(splitData[0]);
-            item = Item.REGISTRY.get(key);
-            if (item == null) {
-                Block block = Block.REGISTRY.get(key);
-                item = block.getItem();
-            }
+    public void load(MaterialHolder material, String data) {
+        MinecraftKey key = new MinecraftKey(material.getId());
+        Item item = Item.REGISTRY.get(key);
+        if (item == null) {
+            Block block = Block.REGISTRY.get(key);
+            item = block.getItem();
         }
         if (item == null) {
             return;
         }
 
-        is = new net.minecraft.server.v1_13_R1.ItemStack(item, 1);
+        net.minecraft.server.v1_13_R1.ItemStack is = new net.minecraft.server.v1_13_R1.ItemStack(item, 1);
 
-        if (splitData.length >= 2) {
+        if (data != null) {
             NBTTagCompound tag = null;
-            String nbtString = splitData[1].trim();
+            String nbtString = data.trim();
             if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 try {
                     tag = MojangsonParser.parse(nbtString);
