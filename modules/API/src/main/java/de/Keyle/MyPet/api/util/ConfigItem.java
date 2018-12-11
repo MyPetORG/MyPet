@@ -21,10 +21,14 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
+import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class ConfigItem {
+
     protected ItemStack item = null;
     protected DurabilityMode durabilityMode = DurabilityMode.NotUsed;
 
@@ -38,7 +42,24 @@ public abstract class ConfigItem {
     }
 
     public ConfigItem(String data) {
-        load(data);
+        String[] splitData = data.split("\\s+", 2);
+
+        if (splitData.length == 0) {
+            return;
+        }
+        if (Util.isInt(splitData[0])) {
+            MyPetApi.getLogger().warning("Number IDs are not supported anymore! You need to use 1.13 item IDs from now on. Please check your configs.");
+            return;
+        }
+
+        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+        MaterialHolder material = itemDatabase.getByID(splitData[0]);
+        if (material == null) {
+            MyPetApi.getLogger().warning(splitData[0] + " is not a valid 1.13 item ID! Please check your configs.");
+            return;
+        }
+
+        load(material, splitData.length == 2 ? splitData[1] : null);
     }
 
     public static ConfigItem createConfigItem(String data) {
@@ -93,5 +114,5 @@ public abstract class ConfigItem {
 
     public abstract boolean compare(Object compareItem);
 
-    public abstract void load(String data);
+    public abstract void load(MaterialHolder material, String data);
 }

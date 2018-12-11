@@ -34,8 +34,8 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
-import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -135,12 +135,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
 
-        ConfigurationLoader.loadCompatConfiguration();
-
         registerServices();
+
         compatManager = compatUtil.getComapatInstance(CompatManager.class, "", "CompatManager");
         compatManager.init();
+
         serviceManager.activate(Load.State.OnLoad);
+
         registerHooks();
     }
 
@@ -167,6 +168,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         compatManager.enable();
         getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
+
+        ConfigurationLoader.loadCompatConfiguration();
 
         //register leash flags
         registerLeashFlags();

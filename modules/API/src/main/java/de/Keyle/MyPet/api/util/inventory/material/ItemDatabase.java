@@ -111,7 +111,11 @@ public class ItemDatabase implements ServiceContainer {
     }
 
     public MaterialHolder getByID(String id) {
-        return byID.get(id.toLowerCase());
+        id = id.toLowerCase();
+        if (id.startsWith("minecraft:")) {
+            id = id.substring(10);
+        }
+        return byID.get(id);
     }
 
     public MaterialHolder getByLegacyId(LegacyIdData legacyIdData) {
