@@ -204,6 +204,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
         } else if (myPet instanceof MyParrot) {
             ((Parrot) normalEntity).setVariant(Parrot.Variant.values()[((MyParrot) myPet).getVariant()]);
+        } else if (myPet instanceof MyTropicalFish) {
+            ((CraftTropicalFish) normalEntity).getHandle().setVariant(((MyTropicalFish) myPet).getVariant());
+        } else if (myPet instanceof MyPufferfish) {
+            ((PufferFish) normalEntity).setPuffState(((MyPufferfish) myPet).getPuffState().ordinal());
+        } else if (myPet instanceof MyPhantom) {
+            ((Phantom) normalEntity).setSize(((MyPhantom) myPet).getSize());
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
