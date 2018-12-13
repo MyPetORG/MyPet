@@ -913,7 +913,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         return super.cE();
     }
 
+    /*
+     *  old movementTick method
+     */
     public void k() {
+        movementTick();
+    }
+
+    public void movementTick() {
         if (this.jumpDelay > 0) {
             --this.jumpDelay;
         }
@@ -946,13 +953,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.motZ = 0.0D;
         }
 
-        this.world.methodProfiler.a("ai");
-        this.world.methodProfiler.a("newAi");
         this.doMyPetTick();
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.b();
 
-        this.world.methodProfiler.a("jump");
         if (this.bg) {
             if (this.W > 0.0D && (!this.onGround || this.W > 0.4D)) {
                 this.c(TagsFluid.WATER);
@@ -965,18 +967,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         } else {
             this.jumpDelay = 0;
         }
-        this.world.methodProfiler.b();
 
-        this.world.methodProfiler.a("travel");
         this.bh *= 0.98F;
         this.bj *= 0.98F;
         this.bk *= 0.9F;
         this.n();
         this.a(this.bh, this.bi, this.bj);
-        this.world.methodProfiler.b();
-        this.world.methodProfiler.a("push");
         this.cN();
-        this.world.methodProfiler.b();
     }
 
     /**
