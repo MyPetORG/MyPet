@@ -121,6 +121,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public boolean onEnable() {
         if (customFlags && Configuration.Hooks.USE_WorldGuard) {
             Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+            MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
         }
         return Configuration.Hooks.USE_WorldGuard;
     }
