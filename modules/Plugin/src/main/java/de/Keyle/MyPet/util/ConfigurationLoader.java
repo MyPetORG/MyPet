@@ -156,6 +156,8 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.Gain.PreventFromSpawnReason", new ArrayList<>());
         config.addDefault("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         config.addDefault("MyPet.Exp.Disabled-Worlds", new String[0]);
+        config.addDefault("MyPet.Exp.Modifier.Global", LevelSystem.Experience.Modifier.GLOBAL);
+        config.addDefault("MyPet.Exp.Modifier.Use-Permissions", LevelSystem.Experience.Modifier.PERMISSION);
 
         config.addDefault("MyPet.Skill.Control.Item", "lead");
         config.addDefault("MyPet.Skill.Inventory.Creative", Skilltree.Skill.Inventory.OPEN_IN_CREATIVE);
@@ -386,6 +388,8 @@ public class ConfigurationLoader {
         LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", true);
         LevelSystem.Experience.DISABLED_WORLDS.clear();
         LevelSystem.Experience.DISABLED_WORLDS.addAll(config.getStringList("MyPet.Exp.Disabled-Worlds"));
+        LevelSystem.Experience.Modifier.GLOBAL = config.getDouble("MyPet.Exp.Modifier.Global", 1D);
+        LevelSystem.Experience.Modifier.PERMISSION = config.getBoolean("MyPet.Exp.Modifier.Use-Permissions", false);
 
         if (config.contains("MyPet.Exp.Gain.PreventFromSpawnReason")) {
             LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.clear();

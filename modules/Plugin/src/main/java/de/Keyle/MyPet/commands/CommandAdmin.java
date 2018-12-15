@@ -45,6 +45,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
 
         COMMAND_OPTIONS.put("name", new CommandOptionName());
         COMMAND_OPTIONS.put("exp", new CommandOptionExp());
+        COMMAND_OPTIONS.put("exp-rate", new CommandOptionExpRate());
         COMMAND_OPTIONS.put("respawn", new CommandOptionRespawn());
         COMMAND_OPTIONS.put("reload", new CommandOptionReload());
         COMMAND_OPTIONS.put("skilltree", new CommandOptionSkilltree());

@@ -29,6 +29,9 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
+import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
+import de.Keyle.MyPet.api.skill.experience.modifier.GlobalModifier;
+import de.Keyle.MyPet.api.skill.experience.modifier.PermissionModifier;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -42,12 +45,15 @@ import java.util.WeakHashMap;
 
 public class MyPetExperience {
 
+    public static final GlobalModifier GLOBAL_MODIFIER = new GlobalModifier();
+
     @Getter protected final MyPet myPet;
     @Getter protected int level = 1;
     @Getter protected double exp = 0;
     @Getter protected double maxExp = Double.MAX_VALUE;
     protected ExperienceCache cache;
     protected ExperienceCalculator expCalculator;
+    protected Map<String, ExperienceModifier> modifier = new HashMap<>();
 
     public MyPetExperience(MyPet pet) {
         this.myPet = pet;
@@ -55,6 +61,25 @@ public class MyPetExperience {
                 .getService(ExperienceCalculatorManager.class).get()
                 .getCalculator();
         cache = MyPetApi.getServiceManager().getService(ExperienceCache.class).get();
+
+        this.modifier.put("Global", GLOBAL_MODIFIER);
+        this.modifier.put("Permission", new PermissionModifier(myPet));
+    }
+
+    protected double modifyExp(double exp) {
+        double returnVal = exp;
+        for (ExperienceModifier modifier : modifier.values()) {
+            returnVal = modifier.modify(returnVal, exp);
+        }
+        return returnVal;
+    }
+
+    public void addModifier(String id, ExperienceModifier modifier) {
+        this.modifier.put(id, modifier);
+    }
+
+    public ExperienceModifier removeModifier(String id) {
+        return this.modifier.remove(id);
     }
 
     public double setMaxLevel(int level) {
@@ -71,22 +96,43 @@ public class MyPetExperience {
     }
 
     public double addExp(double exp) {
+        return this.addExp(exp, false);
+    }
+
+    public double addExp(double exp, boolean modify) {
+        if (modify) {
+            exp = modifyExp(exp);
+        }
         return uppdateExp(exp, false);
     }
 
     public double addExp(Entity entity) {
+        return this.addExp(entity, false);
+    }
+
+    public double addExp(Entity entity, boolean modify) {
         MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(entity);
         if (monsterExperience != MonsterExperience.UNKNOWN) {
             double exp = monsterExperience.getRandomExp();
+            if (modify) {
+                exp = modifyExp(exp);
+            }
             return uppdateExp(exp, false);
         }
         return 0;
     }
 
     public double addExp(Entity entity, int percent) {
+        return addExp(entity, percent, false);
+    }
+
+    public double addExp(Entity entity, int percent, boolean modify) {
         MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(entity);
         if (monsterExperience != MonsterExperience.UNKNOWN) {
             double exp = monsterExperience.getRandomExp() / 100. * percent;
+            if (modify) {
+                this.exp = modifyExp(exp);
+            }
             return uppdateExp(exp, false);
         }
         return 0;

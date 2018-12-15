@@ -46,6 +46,12 @@ import static org.bukkit.ChatColor.RESET;
 
 public class Util {
 
+    static Random rng = new Random();
+
+    public static Random getRandom() {
+        return rng;
+    }
+
     public static boolean isInt(String number) {
         try {
             Integer.parseInt(number);

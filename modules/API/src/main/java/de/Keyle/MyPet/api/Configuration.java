@@ -136,6 +136,12 @@ public class Configuration {
             public static int LEVEL_CAP = 100;
             public static Set<String> PREVENT_FROM_SPAWN_REASON = new HashSet<>();
             public static Set<String> DISABLED_WORLDS = new HashSet<>();
+
+            public static class Modifier {
+
+                public static double GLOBAL = 1;
+                public static boolean PERMISSION = false;
+            }
         }
     }
 
