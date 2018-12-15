@@ -348,3 +348,15 @@ permissions:
     description: Extended permission. Allows to use the ´raid´ behavior.
   MyPet.extended.behavior.duel:
     description: Extended permission. Allows to use the ´duel´ behavior.
+  MyPet.experience.multiplier.125:
+    description: Grants 25% extra experience.
+  MyPet.experience.multiplier.150:
+    description: Grants 50% extra experience.
+  MyPet.experience.multiplier.175:
+    description: Grants 75% extra experience.
+  MyPet.experience.multiplier.200:
+    description: Grants 100% extra experience.
+  MyPet.experience.multiplier.225:
+    description: Grants 125% extra experience.
+  MyPet.experience.multiplier.250:
+    description: Grants 150% extra experience.

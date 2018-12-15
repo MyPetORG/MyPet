@@ -75,7 +75,8 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
                             return;
                         }
                     }
-                    myPet.getExperience().addExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                    double exp = event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100;
+                    myPet.getExperience().addExp(exp, true);
                 }
             }
         }

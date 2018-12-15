@@ -22,6 +22,7 @@ package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.event.MyPetLoadEvent;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
@@ -29,6 +30,7 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.entity.MyPetClass;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -70,7 +72,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
             }
         }
 
-        MyPetLoadEvent event = new MyPetLoadEvent(storedMyPet);
+        Event event = new MyPetLoadEvent(storedMyPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         MyPet myPet = MyPetClass.getByMyPetType(storedMyPet.getPetType()).getNewMyPetInstance(storedMyPet.getOwner());
@@ -98,6 +100,10 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         myPet.setSaturation(storedMyPet.getSaturation());
 
         mActivePetsPlayer.put(myPet, myPet.getOwner());
+
+
+        event = new MyPetActivatedEvent(myPet);
+        Bukkit.getServer().getPluginManager().callEvent(event);
 
         return Optional.of(myPet);
     }

@@ -26,6 +26,7 @@ import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.config.ConfigurationManager;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DoubleFlag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
@@ -33,10 +34,13 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
@@ -53,6 +57,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +69,8 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
     public static final StateFlag DENY_FLAG = new StateFlag("mypet-deny", false);
     public static final StateFlag LEASH_FLAG = new StateFlag("mypet-leash", true);
+    public static final DoubleFlag EXP_ADD_FLAG = new DoubleFlag("mypet-exp-add");
+    public static final DoubleFlag EXP_MULT_FLAG = new DoubleFlag("mypet-exp-mult");
 
     public static StateFlag PVP;
     public static StateFlag DAMAGE_ANIMALS;
@@ -169,6 +177,24 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
         }
     }
 
+    public Collection<Double> getDoubleValue(Location loc, Player player, DoubleFlag flag) {
+        if (is7) {
+            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            return rc.createQuery().queryAllValues(
+                    BukkitAdapter.adapt(loc),
+                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                    flag);
+        } else {
+            try {
+                RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
+                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
+                return set.queryAllValues(wgp.wrapPlayer(player), flag);
+            } catch (Exception ignored) {
+                return Collections.emptyList();
+            }
+        }
+    }
+
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
         if (customFlags) {
@@ -220,6 +246,38 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             return s == null || s == StateFlag.State.ALLOW;
         }
         return true;
+    }
+
+    public void on(MyPetActivatedEvent event) {
+        if (customFlags) {
+            event.getMyPet().getExperience().addModifier("WorldGuard-Region", new RegionModifier(event.getMyPet()));
+        }
+    }
+
+    public class RegionModifier extends ExperienceModifier {
+
+        MyPet myPet;
+
+        public RegionModifier(MyPet myPet) {
+            this.myPet = myPet;
+        }
+
+        @Override
+        public double modify(double experience, double baseExperience) {
+            try {
+                Location location = myPet.getEntity().get().getLocation();
+                Collection<Double> values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_ADD_FLAG);
+                for (double d : values) {
+                    experience += d;
+                }
+                values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_MULT_FLAG);
+                for (double d : values) {
+                    experience *= d;
+                }
+            } catch (Throwable ignored) {
+            }
+            return experience;
+        }
     }
 
     @LeashFlagName("WorldGuard")

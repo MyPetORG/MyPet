@@ -848,7 +848,7 @@ public class EntityListener implements Listener {
                     }
                     if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
                         double randomExp = MonsterExperience.getMonsterExperience(deadEntity).getRandomExp();
-                        myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
+                        myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp, true);
                     }
                 } else if (entity instanceof Player) {
                     Player owner = (Player) entity;
