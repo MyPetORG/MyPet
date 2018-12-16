@@ -129,10 +129,11 @@ public class MyPetExperience {
     public double addExp(Entity entity, int percent, boolean modify) {
         MonsterExperience monsterExperience = MonsterExperience.getMonsterExperience(entity);
         if (monsterExperience != MonsterExperience.UNKNOWN) {
-            double exp = monsterExperience.getRandomExp() / 100. * percent;
+            double exp = monsterExperience.getRandomExp();
             if (modify) {
-                this.exp = modifyExp(exp);
+                exp = modifyExp(exp);
             }
+            exp = exp * percent / 100.;
             return uppdateExp(exp, false);
         }
         return 0;
