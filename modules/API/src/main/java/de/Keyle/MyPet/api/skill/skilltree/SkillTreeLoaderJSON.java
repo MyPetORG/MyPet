@@ -151,6 +151,12 @@ public class SkillTreeLoaderJSON {
             }
             skilltree.setIcon(icon);
         }
+        if (containsKey(skilltreeObject, "Inheritance")) {
+            JSONObject inheritanceObject = (JSONObject) get(skilltreeObject, "Inheritance");
+            if (containsKey(inheritanceObject, "Skilltree")) {
+                skilltree.setInheritedSkilltreeName(get(inheritanceObject, "Skilltree").toString());
+            }
+        }
         if (containsKey(skilltreeObject, "Description")) {
             JSONArray descriptionArray = (JSONArray) get(skilltreeObject, "Description");
             for (Object lvl_object : descriptionArray) {
