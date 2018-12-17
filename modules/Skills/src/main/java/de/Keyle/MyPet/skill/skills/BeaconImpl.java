@@ -116,7 +116,12 @@ public class BeaconImpl implements Beacon {
         duration.removeAllUpgrades();
         range.removeAllUpgrades();
         selectableBuffs.removeAllUpgrades();
+        selectedBuffs.clear();
         buffLevel.values().forEach(UpgradeComputer::removeAllUpgrades);
+        beaconTimer = 0;
+        hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
+        receiver = BuffReceiver.Owner;
+        active = false;
     }
 
     public boolean activate() {
@@ -248,18 +253,16 @@ public class BeaconImpl implements Beacon {
                                             .setMaterial(GLASS_BOTTLE)
                                             .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
                                 }
-                            } else {
-                                if (!selectedBuffs.contains(selectedBuff)) {
-                                    if (selectedBuffs.size() != 0 && menu.getOption(selectedBuff.getPosition()) != null) {
-                                        for (Buff buff : selectedBuffs) {
-                                            menu.getOption(buff.getPosition()).setGlowing(false);
-                                        }
-                                        selectedBuffs.clear();
+                            } else if (!selectedBuffs.contains(selectedBuff)) {
+                                if (selectedBuffs.size() != 0 && menu.getOption(selectedBuff.getPosition()) != null) {
+                                    for (Buff buff : selectedBuffs) {
+                                        menu.getOption(buff.getPosition()).setGlowing(false);
                                     }
-                                    selectedBuffs.add(selectedBuff);
-                                    menu.getOption(selectedBuff.getPosition()).setGlowing(true);
-                                    menu.update();
+                                    selectedBuffs.clear();
                                 }
+                                selectedBuffs.add(selectedBuff);
+                                menu.getOption(selectedBuff.getPosition()).setGlowing(true);
+                                menu.update();
                             }
                         }
                 }
