@@ -20,16 +20,20 @@
 
 package de.Keyle.MyPet.api.skill.skilltree;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
 public class Skilltree {
 
-    protected String skillTreeName;
+    protected String skilltreeName;
+    @Getter @Setter protected String inheritedSkilltreeName;
     protected List<String> description = new ArrayList<>();
     protected SkilltreeIcon icon = null;
     protected String permission = null;
@@ -42,11 +46,11 @@ public class Skilltree {
     protected Map<LevelRule, String> notifications = new HashMap<>();
 
     public Skilltree(String name) {
-        this.skillTreeName = name;
+        this.skilltreeName = name;
     }
 
     public String getName() {
-        return skillTreeName;
+        return skilltreeName;
     }
 
     public List<String> getDescription() {
@@ -100,7 +104,7 @@ public class Skilltree {
 
     public String getDisplayName() {
         if (displayName == null) {
-            return skillTreeName;
+            return skilltreeName;
         }
         return displayName;
     }
@@ -113,9 +117,15 @@ public class Skilltree {
         this.displayName = displayName;
     }
 
+    public boolean hasInheritance() {
+        return inheritedSkilltreeName != null
+                && !inheritedSkilltreeName.isEmpty()
+                && MyPetApi.getSkilltreeManager().hasSkilltree(inheritedSkilltreeName);
+    }
+
     public String getPermission() {
         if (permission == null) {
-            return skillTreeName;
+            return skilltreeName;
         }
         return permission;
     }
@@ -126,7 +136,7 @@ public class Skilltree {
 
     public String getFullPermission() {
         if (permission == null) {
-            return "MyPet.skilltree." + skillTreeName;
+            return "MyPet.skilltree." + skilltreeName;
         }
         return "MyPet.skilltree." + permission;
     }
@@ -140,7 +150,21 @@ public class Skilltree {
     }
 
     public List<Upgrade> getUpgrades(int level) {
+        return getUpgrades(level, new HashSet<>());
+    }
+
+    protected List<Upgrade> getUpgrades(int level, Set<String> computedSkilltrees) {
         List<Upgrade> upgrades = new ArrayList<>();
+        computedSkilltrees.add(this.skilltreeName);
+        if (inheritedSkilltreeName != null && !inheritedSkilltreeName.isEmpty() && !computedSkilltrees.contains(inheritedSkilltreeName)) {
+            if (MyPetApi.getSkilltreeManager().hasSkilltree(inheritedSkilltreeName)) {
+                upgrades.addAll(MyPetApi
+                        .getSkilltreeManager()
+                        .getSkilltree(inheritedSkilltreeName)
+                        .getUpgrades(level, computedSkilltrees));
+            }
+        }
+
         List<LevelRule> rules = new ArrayList<>(this.upgrades.keySet());
         rules.sort(Comparator.comparingInt(LevelRule::getPriority));
         for (LevelRule rule : rules) {
@@ -183,7 +207,7 @@ public class Skilltree {
     @Override
     public String toString() {
         return "Skilltree{" +
-                "skillTreeName='" + skillTreeName + '\'' +
+                "skilltreeName='" + skilltreeName + '\'' +
                 ", displayName='" + displayName + '\'' +
                 (maxLevel > 0 ? ", maxLevel=" + maxLevel : "") +
                 (requiredLevel > 0 ? ", requiredLevel=" + requiredLevel : "") +
