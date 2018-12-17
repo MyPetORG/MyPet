@@ -381,7 +381,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(PlayerMoveEvent event) {
-        if (event.getFrom().getBlock() != event.getTo().getBlock()) {
+        if (!MyPetApi.getPlatformHelper().compareBlockPositions(event.getFrom(), event.getTo())) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
                 if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {

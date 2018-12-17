@@ -37,6 +37,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.*;
 
 public abstract class PlatformHelper {
+
     /**
      * @param location the {@link Location} around which players must be to see the effect
      * @param effect   list of effects: https://gist.github.com/riking/5759002
@@ -150,4 +151,10 @@ public abstract class PlatformHelper {
     }
 
     public abstract void strikeLightning(Location loc, float distance);
+
+    public boolean compareBlockPositions(Location a, Location b) {
+        return a.getBlockX() == b.getBlockX() &&
+                a.getBlockY() == b.getBlockY() &&
+                a.getBlockZ() == b.getBlockZ();
+    }
 }
