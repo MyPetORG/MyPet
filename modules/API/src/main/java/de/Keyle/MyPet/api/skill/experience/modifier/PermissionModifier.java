@@ -36,23 +36,18 @@ public class PermissionModifier extends ExperienceModifier {
         if (Modifier.PERMISSION) {
             Player owner = myPet.getOwner().getPlayer();
             if (owner != null) {
-                if (owner.hasPermission("mypet.experience.multiplier.125")) {
-                    experience *= 1.25;
-                }
-                if (owner.hasPermission("mypet.experience.multiplier.150")) {
-                    experience *= 1.5;
-                }
-                if (owner.hasPermission("mypet.experience.multiplier.175")) {
-                    experience *= 1.75;
-                }
-                if (owner.hasPermission("mypet.experience.multiplier.200")) {
-                    experience *= 2;
-                }
-                if (owner.hasPermission("mypet.experience.multiplier.225")) {
-                    experience *= 2.25;
-                }
                 if (owner.hasPermission("mypet.experience.multiplier.250")) {
                     experience *= 2.5;
+                } else if (owner.hasPermission("mypet.experience.multiplier.225")) {
+                    experience *= 2.25;
+                } else if (owner.hasPermission("mypet.experience.multiplier.200")) {
+                    experience *= 2;
+                } else if (owner.hasPermission("mypet.experience.multiplier.175")) {
+                    experience *= 1.75;
+                } else if (owner.hasPermission("mypet.experience.multiplier.150")) {
+                    experience *= 1.5;
+                } else if (owner.hasPermission("mypet.experience.multiplier.125")) {
+                    experience *= 1.25;
                 }
             }
         }
