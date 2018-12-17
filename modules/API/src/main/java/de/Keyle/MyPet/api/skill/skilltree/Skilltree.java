@@ -41,6 +41,7 @@ public class Skilltree {
     protected int maxLevel = 0;
     protected int requiredLevel = 0;
     protected int order = 0;
+    @Getter @Setter protected double weight = 1;
     protected Set<MyPetType> mobTypes = new HashSet<>();
     protected Map<LevelRule, Upgrade> upgrades = new HashMap<>();
     protected Map<LevelRule, String> notifications = new HashMap<>();
