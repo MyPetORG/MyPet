@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_13_R2.util.inventory;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.*;
@@ -53,41 +54,47 @@ public class ItemStackNBTConverter {
 
     @SuppressWarnings("unchecked")
     public static NBTBase compoundToVanillaCompound(TagBase tag) {
-        switch (TagType.getTypeById(tag.getTagTypeId())) {
-            case Int:
-                return new NBTTagInt(((TagInt) tag).getIntData());
-            case Short:
-                return new NBTTagShort(((TagShort) tag).getShortData());
-            case String:
-                return new NBTTagString(((TagString) tag).getStringData());
-            case Byte:
-                return new NBTTagByte(((TagByte) tag).getByteData());
-            case Byte_Array:
-                return new NBTTagByteArray(((TagByteArray) tag).getByteArrayData());
-            case Double:
-                return new NBTTagDouble(((TagDouble) tag).getDoubleData());
-            case Float:
-                return new NBTTagFloat(((TagFloat) tag).getFloatData());
-            case Int_Array:
-                return new NBTTagIntArray(((TagIntArray) tag).getIntArrayData());
-            case Long:
-                return new NBTTagLong(((TagLong) tag).getLongData());
-            case List:
-                TagList TagList = (TagList) tag;
-                NBTTagList tagList = new NBTTagList();
-                for (TagBase tagInList : TagList.getReadOnlyList()) {
-                    tagList.add(compoundToVanillaCompound(tagInList));
-                }
-                return tagList;
-            case Compound:
-                TagCompound TagCompound = (TagCompound) tag;
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                for (String name : TagCompound.getCompoundData().keySet()) {
-                    tagCompound.set(name, compoundToVanillaCompound(TagCompound.getCompoundData().get(name)));
-                }
-                return tagCompound;
-            case End:
-                return null;
+        try {
+            switch (TagType.getTypeById(tag.getTagTypeId())) {
+                case Int:
+                    return new NBTTagInt(((TagInt) tag).getIntData());
+                case Short:
+                    return new NBTTagShort(((TagShort) tag).getShortData());
+                case String:
+                    return new NBTTagString(((TagString) tag).getStringData());
+                case Byte:
+                    return new NBTTagByte(((TagByte) tag).getByteData());
+                case Byte_Array:
+                    return new NBTTagByteArray(((TagByteArray) tag).getByteArrayData());
+                case Double:
+                    return new NBTTagDouble(((TagDouble) tag).getDoubleData());
+                case Float:
+                    return new NBTTagFloat(((TagFloat) tag).getFloatData());
+                case Int_Array:
+                    return new NBTTagIntArray(((TagIntArray) tag).getIntArrayData());
+                case Long:
+                    return new NBTTagLong(((TagLong) tag).getLongData());
+                case List:
+                    TagList TagList = (TagList) tag;
+                    NBTTagList tagList = new NBTTagList();
+                    for (TagBase tagInList : TagList.getReadOnlyList()) {
+                        tagList.add(compoundToVanillaCompound(tagInList));
+                    }
+                    return tagList;
+                case Compound:
+                    TagCompound TagCompound = (TagCompound) tag;
+                    NBTTagCompound tagCompound = new NBTTagCompound();
+                    for (String name : TagCompound.getCompoundData().keySet()) {
+                        tagCompound.set(name, compoundToVanillaCompound(TagCompound.getCompoundData().get(name)));
+                    }
+                    return tagCompound;
+                case End:
+                    return null;
+            }
+        } catch (NoSuchMethodError e) {
+            MyPetApi.getLogger().warning("Please update your server!");
+            e.printStackTrace();
+            MyPetApi.getLogger().warning("Please update your server!");
         }
         throw new IllegalArgumentException("Not a valid tag type");
     }
