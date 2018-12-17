@@ -171,7 +171,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             try {
                 RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
                 ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
-                return set.queryState(wgp.wrapPlayer(player), flags);
+                return set.queryState(player != null ? wgp.wrapPlayer(player) : null, flags);
             } catch (Exception ignored) {
                 return StateFlag.State.ALLOW;
             }
@@ -189,7 +189,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             try {
                 RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
                 ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
-                return set.queryAllValues(wgp.wrapPlayer(player), flag);
+                return set.queryAllValues(player != null ? wgp.wrapPlayer(player) : null, flag);
             } catch (Exception ignored) {
                 return Collections.emptyList();
             }
