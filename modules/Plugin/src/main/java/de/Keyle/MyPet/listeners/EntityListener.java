@@ -849,7 +849,7 @@ public class EntityListener implements Listener {
                     }
                     if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
                         double randomExp = MonsterExperience.getMonsterExperience(deadEntity).getRandomExp();
-                        myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp, true);
+                        myPet.getExperience().addExp(damagePercentMap.get(entity.getUniqueId()) * randomExp, true);
                     }
                 } else if (entity instanceof Player) {
                     Player owner = (Player) entity;
@@ -863,7 +863,7 @@ public class EntityListener implements Listener {
                         if (myPet.isPassiv() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
                             if (myPet.getStatus() == PetState.Here) {
                                 if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
-                                    int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity));
+                                    int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity.getUniqueId()));
                                     myPet.getExperience().addExp(deadEntity, percentage);
                                 }
                             }
@@ -881,7 +881,7 @@ public class EntityListener implements Listener {
                             if (myPet.isPassiv() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
                                 if (myPet.getStatus() == PetState.Here) {
                                     if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
-                                        int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity));
+                                        int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity.getUniqueId()));
                                         myPet.getExperience().addExp(deadEntity, percentage);
                                     }
                                 }
