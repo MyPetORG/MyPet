@@ -100,6 +100,9 @@ public class SkillTreeLoaderJSON {
         if (containsKey(skilltreeObject, "Order")) {
             skilltree.setOrder(((Number) get(skilltreeObject, "Order")).intValue());
         }
+        if (containsKey(skilltreeObject, "Weight")) {
+            skilltree.setWeight(((Number) get(skilltreeObject, "Weight")).doubleValue());
+        }
         if (containsKey(skilltreeObject, "MobTypes")) {
             JSONArray mobTypeArray = (JSONArray) get(skilltreeObject, "MobTypes");
             Set<MyPetType> mobTypes = new HashSet<>();
