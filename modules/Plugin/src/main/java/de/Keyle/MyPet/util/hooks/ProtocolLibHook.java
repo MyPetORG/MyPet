@@ -127,6 +127,10 @@ public class ProtocolLibHook implements PluginHook {
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
+                        if (event.isPlayerTemporary() || event.isCancelled() || event.isAsync()) {
+                            return;
+                        }
+
                         PacketContainer packet = event.getPacket();
 
                         final Entity entity = packet.getEntityModifier(event).readSafely(0);
@@ -145,6 +149,10 @@ public class ProtocolLibHook implements PluginHook {
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
+                        if (event.isPlayerTemporary() || event.isCancelled() || event.isAsync()) {
+                            return;
+                        }
+
                         PacketContainer packet = event.getPacket();
 
                         final Entity entity = packet.getEntityModifier(event).readSafely(0);
@@ -185,7 +193,7 @@ public class ProtocolLibHook implements PluginHook {
 
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if (event.isCancelled()) {
+                        if (event.isPlayerTemporary() || event.isCancelled() || event.isAsync()) {
                             return;
                         }
 
