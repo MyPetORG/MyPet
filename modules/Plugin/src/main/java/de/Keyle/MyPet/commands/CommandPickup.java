@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -40,6 +41,10 @@ public class CommandPickup implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player owner = (Player) sender;
+            if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
+                owner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner)));
+                return true;
+            }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
 

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -64,6 +65,10 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
             MyPetPlayer petOwner;
 
             if (args.length == 0) {
+                if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
+                    player.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player)));
+                    return true;
+                }
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                     petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                 } else {

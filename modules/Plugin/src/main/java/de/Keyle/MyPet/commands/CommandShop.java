@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -55,6 +56,13 @@ public class CommandShop implements CommandExecutor, TabCompleter {
         if (sender instanceof ConsoleCommandSender && args.length < 2) {
             sender.sendMessage("You can't use this command from server console!");
             return true;
+        }
+
+        if (sender instanceof Player) {
+            if (WorldGroup.getGroupByWorld(((Player) sender).getWorld()).isDisabled()) {
+                sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", sender)));
+                return true;
+            }
         }
 
         if (args.length > 1) {

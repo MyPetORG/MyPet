@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,21 +20,24 @@
 
 package de.Keyle.MyPet.api;
 
+import lombok.Getter;
+import org.bukkit.World;
+
 import java.util.*;
 
 public class WorldGroup {
+
     private static Map<String, WorldGroup> allGroups = new HashMap<>();
     private static Map<String, WorldGroup> groupWorlds = new HashMap<>();
 
     private String name;
+    @Getter private boolean disabled;
     private List<String> worlds = new ArrayList<>();
 
 
-    public WorldGroup(String groupName) {
+    public WorldGroup(String groupName, boolean disabled) {
         this.name = groupName.toLowerCase();
-    }
-
-    public void registerGroup() {
+        this.disabled = disabled;
         if (allGroups.containsKey(this.getName())) {
             return;
         }
@@ -93,6 +96,16 @@ public class WorldGroup {
      */
     public static WorldGroup getGroupByWorld(String name) {
         return groupWorlds.get(name);
+    }
+
+    /**
+     * Returns the group the world is in
+     *
+     * @param world World
+     * @return WorldGroup
+     */
+    public static WorldGroup getGroupByWorld(World world) {
+        return groupWorlds.get(world.getName());
     }
 
     /**

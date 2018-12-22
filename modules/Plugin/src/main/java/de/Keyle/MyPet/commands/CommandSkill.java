@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
@@ -49,6 +50,11 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                     return true;
                 } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                     sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
+                    return true;
+                }
+            } else {
+                if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
+                    petOwner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", petOwner)));
                     return true;
                 }
             }

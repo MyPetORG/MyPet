@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -40,6 +41,10 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
+            if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
+                player.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player)));
+                return true;
+            }
 
             if (Permissions.has(player, "MyPet.command.capturehelper")) {
                 MyPetPlayer myPetPlayer;

@@ -422,6 +422,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                                 playerManager.setOnline(onlinePlayer);
 
                                 final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
+                                if (joinGroup.isDisabled()) {
+                                    return;
+                                }
                                 if (onlinePlayer.hasMyPet()) {
                                     MyPet myPet = onlinePlayer.getMyPet();
                                     if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
@@ -429,7 +432,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                                     }
                                 }
 
-                                if (joinGroup != null && !onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
+                                if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                                     final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
 
                                     MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
@@ -572,72 +575,68 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WorldFlag());
     }
 
-    private int loadGroups(File f) {
+    private void loadGroups(File f) {
+        getLogger().info("--- Loading WorldGroups ---------------------------");
+
         ConfigurationYAML yamlConfiguration = new ConfigurationYAML(f);
         FileConfiguration config = yamlConfiguration.getConfig();
 
-        if (config == null) {
-            return 0;
-        }
-
         WorldGroup.clearGroups();
+        WorldGroup defaultGroup = new WorldGroup("default", false);
+        WorldGroup disabledGroup = new WorldGroup("---DISABLED---", true);
 
-        Set<String> nodes;
-        try {
-            nodes = config.getConfigurationSection("Groups").getKeys(false);
-        } catch (NullPointerException e) {
-            nodes = new HashSet<>();
-            getLogger().info("No groups found. Everything will be in 'default' group.");
+        if (config == null) {
+            return;
         }
 
-        getLogger().info("--- Loading WorldGroups ---------------------------");
-        if (nodes.size() == 0) {
-            List<String> worldNames = new ArrayList<>();
-            WorldGroup defaultGroup = new WorldGroup("default");
-            defaultGroup.registerGroup();
-            for (World world : this.getServer().getWorlds()) {
+        Set<String> groups;
+        Set<String> disabledWorlds = new HashSet<>();
+        try {
+            groups = config.getConfigurationSection("Groups").getKeys(false);
+        } catch (NullPointerException e) {
+            groups = new HashSet<>();
+        }
+        if (config.contains("Disabled")) {
+            disabledWorlds.addAll(config.getStringList("Disabled"));
+        } else {
+            config.set("Disabled", new String[]{"example_world"});
+            yamlConfiguration.saveConfig();
+        }
+
+        for (String world : disabledWorlds) {
+            if (Bukkit.getServer().getWorld(world) != null) {
+                if (disabledGroup.addWorld(world)) {
+                    getLogger().info("   disabled MyPet in '" + world + "'");
+                }
+            }
+        }
+        for (String node : groups) {
+            List<String> worlds = config.getStringList("Groups." + node);
+            if (worlds.size() > 0) {
+                WorldGroup newGroup = new WorldGroup(node, false);
+                for (String world : worlds) {
+                    if (Bukkit.getServer().getWorld(world) != null) {
+                        if (newGroup.addWorld(world)) {
+                            getLogger().info("   added '" + world + "' to '" + newGroup.getName() + "'");
+                        }
+                    }
+                }
+            }
+        }
+
+        List<String> worldNames = new ArrayList<>();
+        for (World world : getServer().getWorlds()) {
+            if (defaultGroup.addWorld(world.getName())) {
                 getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                 worldNames.add(world.getName());
-                defaultGroup.addWorld(world.getName());
-            }
-            config.set("Groups.default", worldNames);
-            yamlConfiguration.saveConfig();
-        } else {
-            for (String node : nodes) {
-                List<String> worlds = config.getStringList("Groups." + node);
-                if (worlds.size() > 0) {
-                    WorldGroup newGroup = new WorldGroup(node);
-                    for (String world : worlds) {
-                        getLogger().info("   added '" + world + "' to '" + newGroup.getName() + "'");
-                        newGroup.addWorld(world);
-                    }
-                    if (newGroup.getWorlds().size() > 0) {
-                        newGroup.registerGroup();
-                    }
-                }
-            }
-
-            WorldGroup defaultGroup = WorldGroup.getGroupByName("default");
-            if (defaultGroup == null) {
-                defaultGroup = new WorldGroup("default");
-                defaultGroup.registerGroup();
-            }
-
-            boolean saveConfig = false;
-            for (World world : getServer().getWorlds()) {
-                if (WorldGroup.getGroupByWorld(world.getName()) == null) {
-                    getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
-                    defaultGroup.addWorld(world.getName());
-                    saveConfig = true;
-                }
-            }
-            if (saveConfig) {
-                config.set("Groups.default", defaultGroup.getWorlds());
-                yamlConfiguration.saveConfig();
             }
         }
+        if (worldNames.size() > 0) {
+            config.set("Groups.default", worldNames);
+            yamlConfiguration.saveConfig();
+        }
+
         getLogger().info("-------------------------------------------------");
-        return 0;
     }
 
     @Override

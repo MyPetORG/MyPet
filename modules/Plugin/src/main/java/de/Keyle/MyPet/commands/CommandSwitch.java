@@ -56,6 +56,10 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
+        if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
+            player.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player)));
+            return true;
+        }
         if (!Permissions.has(player, "MyPet.command.switch")) {
             player.sendMessage(Translation.getString("Message.No.Allowed", player));
             return true;
