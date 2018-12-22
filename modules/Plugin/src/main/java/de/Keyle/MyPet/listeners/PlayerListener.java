@@ -364,8 +364,12 @@ public class PlayerListener implements Listener {
         if (!event.getPlayer().isOnline()) {
             return;
         }
-        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer().getName())) {
-            final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
+        Player player = event.getPlayer();
+        if (player.isInsideVehicle() && player.getVehicle() instanceof MyPetBukkitEntity) {
+            player.getVehicle().eject();
+        }
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here) {
