@@ -208,6 +208,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     return true;
                 }
 
+                if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
+                    sender.sendMessage("Pets are not allowed in " + ChatColor.GOLD + owner.getWorld().getName());
+                    return true;
+                }
+
                 final MyPetPlayer newOwner;
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
                     newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);

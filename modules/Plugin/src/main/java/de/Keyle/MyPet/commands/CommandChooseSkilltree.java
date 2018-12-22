@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
@@ -51,6 +52,10 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
+        if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
+            player.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player)));
+            return true;
+        }
         if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
             final MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
             final MyPetPlayer myPetOwner = myPet.getOwner();

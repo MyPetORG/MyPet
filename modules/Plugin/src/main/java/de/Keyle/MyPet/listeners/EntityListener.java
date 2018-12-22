@@ -84,7 +84,7 @@ public class EntityListener implements Listener {
 
     Map<UUID, ItemStack> usedItems = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMyPet(CreatureSpawnEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(false);
@@ -93,6 +93,9 @@ public class EntityListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void on(CreatureSpawnEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getLocation().getWorld()).isDisabled()) {
+            return;
+        }
         if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0) {
             event.getEntity().setMetadata("SpawnReason", new FixedMetadataValue(MyPetApi.getPlugin(), event.getSpawnReason().name()));
         }
@@ -121,6 +124,9 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onMyPet(EntityCombustByEntityEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
+            return;
+        }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             if (event.getCombuster() instanceof Player || (event.getCombuster() instanceof Projectile && ((Projectile) event.getCombuster()).getShooter() instanceof Player)) {
                 Player damager;
@@ -143,6 +149,9 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onMyPet(final EntityDamageByEntityEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getDamager().getWorld()).isDisabled()) {
+            return;
+        }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPetBukkitEntity craftMyPet = (MyPetBukkitEntity) event.getEntity();
             MyPet myPet = craftMyPet.getMyPet();
@@ -314,6 +323,9 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final PlayerInteractEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         if (Configuration.Misc.ALLOW_RANGED_LEASHING) {
             if (event.useItemInHand() != Event.Result.DENY && event.getItem() != null) {
                 usedItems.put(event.getPlayer().getUniqueId(), event.getItem().clone());
@@ -329,6 +341,9 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void on(EntityShootBowEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
+            return;
+        }
         if (Configuration.Misc.ALLOW_RANGED_LEASHING) {
             if (event.getEntity() instanceof Player) {
                 if (event.getProjectile() instanceof Arrow) {
@@ -390,6 +405,9 @@ public class EntityListener implements Listener {
         Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player && !(projectile instanceof Arrow)) {
             Player player = (Player) projectile.getShooter();
+            if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
+                return;
+            }
             if (!MyPetApi.getPlayerManager().isMyPetPlayer(player) || !MyPetApi.getPlayerManager().getMyPetPlayer(player).hasMyPet()) {
                 ItemStack leashItem = usedItems.get(player.getUniqueId());
                 if (leashItem != null) {
@@ -403,6 +421,9 @@ public class EntityListener implements Listener {
     public void on(final EntityDamageByEntityEvent event) {
         if (event.getEntity() == null) {
             // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
+        if (WorldGroup.getGroupByWorld(event.getDamager().getWorld()).isDisabled()) {
             return;
         }
         if (!event.getEntity().isDead() && !(event.getEntity() instanceof MyPetBukkitEntity)) {
@@ -563,6 +584,10 @@ public class EntityListener implements Listener {
     @EventHandler
     public void onMyPet(final EntityDamageEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
+            if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
+                return;
+            }
+
             MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
             if (event.getCause() == DamageCause.SUFFOCATION) {
@@ -609,6 +634,9 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMonitor(final EntityDamageByEntityEvent event) {
         Entity target = event.getEntity();
+        if (WorldGroup.getGroupByWorld(target.getWorld()).isDisabled()) {
+            return;
+        }
 
         if (target instanceof LivingEntity) {
             Entity source = event.getDamager();
@@ -707,6 +735,9 @@ public class EntityListener implements Listener {
     @EventHandler
     public void onMyPet(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
+        if (WorldGroup.getGroupByWorld(deadEntity.getWorld()).isDisabled()) {
+            return;
+        }
         if (deadEntity instanceof MyPetBukkitEntity) {
             MyPet myPet = ((MyPetBukkitEntity) deadEntity).getMyPet();
             if (myPet == null || myPet.getHealth() > 0) // check health for death events where the pet isn't really dead (/killall)
@@ -811,7 +842,6 @@ public class EntityListener implements Listener {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @EventHandler
     public void on(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
@@ -819,6 +849,9 @@ public class EntityListener implements Listener {
             return;
         }
         if (Configuration.Hooks.SkillAPI.DISABLE_VANILLA_EXP) {
+            return;
+        }
+        if (WorldGroup.getGroupByWorld(deadEntity.getWorld()).isDisabled()) {
             return;
         }
         if (Configuration.LevelSystem.Experience.DISABLED_WORLDS.contains(deadEntity.getWorld().getName())) {
@@ -944,6 +977,9 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void on(final EntityTargetEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getTarget().getWorld()).isDisabled()) {
+            return;
+        }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
             if (myPet.getSkills().isActive(Behavior.class)) {

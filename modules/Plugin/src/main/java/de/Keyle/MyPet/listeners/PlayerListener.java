@@ -65,6 +65,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
             if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().get().canMove()) {
@@ -100,6 +103,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(PlayerGameModeChangeEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         if (event.getNewGameMode().name().equals("SPECTATOR")) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
@@ -137,6 +143,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(final PlayerJoinEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         long delay = MyPetApi.getRepository() instanceof SqLiteRepository ? 1L : Configuration.Repository.EXTERNAL_LOAD_DELAY;
 
         new BukkitRunnable() {
@@ -220,6 +229,9 @@ public class PlayerListener implements Listener {
     public void onPlayerDamageByEntity(final EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
+            if (WorldGroup.getGroupByWorld(victim.getWorld()).isDisabled()) {
+                return;
+            }
             if (event.getDamager() instanceof CraftMyPetProjectile) {
                 CraftMyPetProjectile projectile = (CraftMyPetProjectile) event.getDamager();
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
@@ -239,6 +251,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void on(PlayerQuitEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet()) {
@@ -259,11 +274,16 @@ public class PlayerListener implements Listener {
         if (!event.getPlayer().isOnline()) {
             return;
         }
+
+        final WorldGroup toGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
+        if (toGroup.isDisabled()) {
+            return;
+        }
+
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
 
             final WorldGroup fromGroup = WorldGroup.getGroupByWorld(event.getFrom().getName());
-            final WorldGroup toGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
 
             final MyPet myPet = myPetPlayer.hasMyPet() ? myPetPlayer.getMyPet() : null;
             final BukkitRunnable callPet = new BukkitRunnable() {
@@ -340,6 +360,9 @@ public class PlayerListener implements Listener {
         if (!event.getPlayer().isOnline()) {
             return;
         }
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         Player player = event.getPlayer();
         if (player.isInsideVehicle() && player.getVehicle() instanceof MyPetBukkitEntity) {
             player.getVehicle().eject();
@@ -385,6 +408,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(PlayerMoveEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         if (!MyPetApi.getPlatformHelper().compareBlockPositions(event.getFrom(), event.getTo())) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
@@ -400,6 +426,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(final PlayerDeathEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
+            return;
+        }
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getEntity())) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getEntity());
             if (myPetPlayer.hasMyPet()) {
@@ -417,6 +446,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void on(final PlayerRespawnEvent event) {
+        if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
+            return;
+        }
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer respawnedMyPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             final MyPet myPet = respawnedMyPetPlayer.getMyPet();
