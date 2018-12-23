@@ -365,15 +365,17 @@ public class PlayerListener implements Listener {
         }
         Player player = event.getPlayer();
         if (player.isInsideVehicle() && player.getVehicle() instanceof MyPetBukkitEntity) {
-            player.getVehicle().eject();
+            if (player.getLocation().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
+                player.getVehicle().eject();
+            }
         }
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here) {
-                    if (myPet.getLocation().get().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), event.getTo()) > 10) {
-                        final boolean sameWorld = myPet.getLocation().get().getWorld() == event.getTo().getWorld();
+                    if (event.getFrom().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
+                        final boolean sameWorld = event.getFrom().getWorld() == event.getTo().getWorld();
                         myPet.removePet();
                         new BukkitRunnable() {
                             public void run() {
