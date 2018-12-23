@@ -42,7 +42,7 @@ public class CommandPickup implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player owner = (Player) sender;
             if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
-                owner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner)));
+                owner.sendMessage(Translation.getString("Message.No.AllowedHere", owner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {

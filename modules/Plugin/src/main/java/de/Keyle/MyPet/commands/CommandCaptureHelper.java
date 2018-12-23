@@ -42,7 +42,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
             Player player = (Player) commandSender;
 
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player)));
+                player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
                 return true;
             }
 

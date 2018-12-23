@@ -66,7 +66,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
 
             if (args.length == 0) {
                 if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                    player.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player)));
+                    player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
                     return true;
                 }
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {

@@ -358,7 +358,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (!sitEvent.isCancelled()) {
             this.sitPathfinder.toggleSitting();
             if (isSitting()) {
-                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
+                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner()), getMyPet().getPetName()));
             } else {
                 getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Follow", myPet.getOwner().getLanguage()), getMyPet().getPetName()));
             }

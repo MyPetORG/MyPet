@@ -46,7 +46,7 @@ public class CommandName implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", petOwner)));
+                petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {

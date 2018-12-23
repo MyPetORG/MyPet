@@ -134,35 +134,35 @@ public class BehaviorImpl implements Behavior {
     }
 
     public String toPrettyString() {
-        String activeModes = ChatColor.GOLD + Translation.getString("Name.Normal", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+        String activeModes = ChatColor.GOLD + Translation.getString("Name.Normal", myPet.getOwner()) + ChatColor.RESET;
         if (activeBehaviors.contains(Friendly)) {
-            activeModes += ", " + ChatColor.GOLD + Translation.getString("Name.Friendly", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ", " + ChatColor.GOLD + Translation.getString("Name.Friendly", myPet.getOwner()) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Aggressive)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Aggressive", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Aggressive", myPet.getOwner()) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Farm)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Farm", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Farm", myPet.getOwner()) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Raid)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Raid", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Raid", myPet.getOwner()) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Duel)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Duel", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Duel", myPet.getOwner()) + ChatColor.RESET;
         }
-        return Translation.getString("Name.Modes", myPet.getOwner().getLanguage()) + ": " + activeModes;
+        return Translation.getString("Name.Modes", myPet.getOwner()) + ": " + activeModes;
     }
 
     public boolean activate() {
@@ -177,10 +177,10 @@ public class BehaviorImpl implements Behavior {
                     break;
                 }
             }
-            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), Translation.getString("Name." + selectedBehavior.name(), myPet.getOwner().getPlayer())));
+            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Behavior.NewMode", myPet.getOwner()), myPet.getPetName(), Translation.getString("Name." + selectedBehavior.name(), myPet.getOwner().getPlayer())));
             return true;
         } else {
-            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
+            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.Skill", myPet.getOwner()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
             return false;
         }
     }

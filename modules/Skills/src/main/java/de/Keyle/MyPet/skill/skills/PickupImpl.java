@@ -70,7 +70,7 @@ public class PickupImpl implements Pickup {
     }
 
     public String toPrettyString() {
-        return Translation.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + ChatColor.GOLD + String.format("%1.2f", range.getValue().doubleValue()) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
+        return Translation.getString("Name.Range", myPet.getOwner()) + ": " + ChatColor.GOLD + String.format("%1.2f", range.getValue().doubleValue()) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }
 
     public boolean activate() {
@@ -87,14 +87,14 @@ public class PickupImpl implements Pickup {
                 }
 
                 String mode = pickup ? Translation.getString("Name.Enabled", myPet.getOwner()) : Translation.getString("Name.Disabled", myPet.getOwner());
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), mode));
+                myPet.getOwner().sendMessage(Util.formatText(Translation.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner()), myPet.getPetName(), mode));
                 return true;
             } else {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Pickup.NoInventory", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Pickup.NoInventory", myPet.getOwner()), myPet.getPetName()));
                 return false;
             }
         } else {
-            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
+            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.Skill", myPet.getOwner()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
             return false;
         }
     }

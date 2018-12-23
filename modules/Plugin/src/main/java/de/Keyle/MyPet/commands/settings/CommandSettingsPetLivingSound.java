@@ -47,7 +47,7 @@ public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter 
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             if (args.length < 2) {
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+                sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
                 sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petsettings idle-volume " + ChatColor.RED + "<amount>");
                 return false;
             }

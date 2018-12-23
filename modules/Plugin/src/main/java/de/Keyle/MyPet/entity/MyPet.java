@@ -133,7 +133,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         skills = new Skills(this);
         experience = new MyPetExperience(this);
         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
-        petName = Translation.getString("Name." + getPetType().name(), this.petOwner);
+        petName = Translation.getString("Name." + getPetType().name(), petOwner);
     }
 
     public java.util.Optional<MyPetBukkitEntity> getEntity() {

@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -51,7 +50,7 @@ public class CommandSettings implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, commandOptions.keySet()));
             return false;
         }

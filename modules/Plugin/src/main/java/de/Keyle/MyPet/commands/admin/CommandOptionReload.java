@@ -58,7 +58,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin reload " + ChatColor.RED + "<what to reload?>");
             return false;
         }

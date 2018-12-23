@@ -60,7 +60,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
 
         if (sender instanceof Player) {
             if (WorldGroup.getGroupByWorld(((Player) sender).getWorld()).isDisabled()) {
-                sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", sender)));
+                sender.sendMessage(Translation.getString("Message.No.AllowedHere", sender));
                 return true;
             }
         }

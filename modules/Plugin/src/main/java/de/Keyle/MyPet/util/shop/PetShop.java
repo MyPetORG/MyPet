@@ -160,7 +160,7 @@ public class PetShop {
                                     .setTitle(ChatColor.GREEN + Translation.getString("Name.Yes", player))
                                     .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
                             if (owner != null && owner.hasMyPet()) {
-                                icon.addLoreLine("").addLoreLine(Util.formatText(Translation.getString("Message.Shop.Confirm.SendStorage", player)));
+                                icon.addLoreLine("").addLoreLine(Translation.getString("Message.Shop.Confirm.SendStorage", player));
                             }
                             menu.setOption(3, icon);
                             menu.setOption(5, new IconMenuItem()
