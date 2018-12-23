@@ -110,7 +110,7 @@ public class Util {
 
     public static String cutString(String string, int length) {
         if (string.length() > length) {
-            return string.substring(0, length);
+            return string.substring(0, length - 1);
         }
         return string;
     }
