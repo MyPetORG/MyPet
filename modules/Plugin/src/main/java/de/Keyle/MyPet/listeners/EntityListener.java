@@ -84,7 +84,7 @@ public class EntityListener implements Listener {
 
     Map<UUID, ItemStack> usedItems = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onMyPet(CreatureSpawnEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(false);
