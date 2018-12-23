@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.keyle.knbt.TagCompound;
@@ -141,7 +142,7 @@ public class MyPetSelectionGui {
                     lore.add(RESET + Translation.getString("Name.Exp", player) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
                 }
                 lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + Translation.getString("Name." + mypet.getPetType().name(), player));
-                lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
+                lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + Colorizer.setColors(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
                 IconMenuItem icon = new IconMenuItem();
                 icon.setTitle(RESET + mypet.getPetName());
