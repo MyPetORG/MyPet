@@ -86,7 +86,7 @@ public class PlayerListener implements Listener {
                         }
                     }
                     if (!Permissions.hasExtended(event.getPlayer(), "MyPet.extended.control")) {
-                        myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
+                        myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()));
                         return;
                     }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
@@ -219,7 +219,7 @@ public class PlayerListener implements Listener {
         }.runTaskLater(MyPetApi.getPlugin(), delay);
 
         if (event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
-            event.getPlayer().sendMessage(Util.formatText(Translation.getString("Message.Update.Available", event.getPlayer())) + " " + Updater.getLatest());
+            event.getPlayer().sendMessage(Translation.getString("Message.Update.Available", event.getPlayer()) + " " + Updater.getLatest());
             event.getPlayer().sendMessage(ChatColor.DARK_GREEN + "    https://mypet-plugin.de/download");
 
         }

@@ -52,7 +52,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", petOwner)));
+                petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
@@ -104,7 +104,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                             behaviorSkill.activate();
                             return false;
                         }
-                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), Translation.getString("Name." + behaviorSkill.getBehavior().name(), myPet.getOwner().getPlayer())));
+                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skill.Behavior.NewMode", myPet.getOwner()), myPet.getPetName(), Translation.getString("Name." + behaviorSkill.getBehavior().name(), myPet.getOwner().getPlayer())));
                     } else {
                         behaviorSkill.activate();
                     }

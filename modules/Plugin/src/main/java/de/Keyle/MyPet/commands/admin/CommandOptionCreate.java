@@ -181,7 +181,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
     @Override
     public boolean onCommandOption(final CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + ChatColor.RED + "<a player name>");
             return false;
         }
@@ -192,7 +192,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         }
 
         if (args.length < 2 + forceOffset) {
-            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.MissingParameter", sender)));
+            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " " + ChatColor.RED + "<a pet-type>");
             return false;
         }
@@ -226,7 +226,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
                 final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
                 inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner().getLanguage()));
+                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
 
                 TagCompound compound = inactiveMyPet.getInfo();
                 createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);

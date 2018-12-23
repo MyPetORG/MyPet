@@ -57,9 +57,9 @@ public class LevelListener implements Listener {
         if (!event.isQuiet()) {
             int maxlevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
             if (maxlevel != 0 && lvl >= maxlevel) {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.ReachedMaxLevel", event.getOwner().getLanguage()), myPet.getPetName(), maxlevel));
+                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.ReachedMaxLevel", event.getOwner()), myPet.getPetName(), maxlevel));
             } else {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelUp", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
+                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelUp", event.getOwner()), myPet.getPetName(), event.getLevel()));
             }
         }
         Skilltree skilltree = myPet.getSkilltree();
@@ -118,7 +118,7 @@ public class LevelListener implements Listener {
         int fromLvl = event.fromLevel();
 
         if (!event.isQuiet()) {
-            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelDown", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
+            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelDown", event.getOwner()), myPet.getPetName(), event.getLevel()));
         }
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {

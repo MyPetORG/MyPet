@@ -40,7 +40,7 @@ public class CommandCall implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", petOwner)));
+                sender.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {

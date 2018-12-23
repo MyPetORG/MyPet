@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -54,7 +55,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                 }
             } else {
                 if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                    petOwner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", petOwner)));
+                    petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
                     return true;
                 }
             }
@@ -62,7 +63,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : Util.formatText(myPet.getSkilltree().getDisplayName()))));
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), Colorizer.setColors(myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
 
                 for (Skill skill : myPet.getSkills().all()) {
                     if (skill.isActive()) {

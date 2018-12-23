@@ -49,7 +49,7 @@ public class CommandStore implements CommandExecutor, TabCompleter {
         }
         final Player player = (Player) sender;
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player)));
+            player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
             return true;
         }
 

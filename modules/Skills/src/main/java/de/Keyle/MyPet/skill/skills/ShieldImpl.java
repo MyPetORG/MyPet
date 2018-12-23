@@ -64,7 +64,7 @@ public class ShieldImpl implements Shield {
     }
 
     public String toPrettyString() {
-        return Util.formatText(Translation.getString("Message.Skill.Shield.Format", myPet.getOwner().getLanguage()), myPet.getPetName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
+        return Util.formatText(Translation.getString("Message.Skill.Shield.Format", myPet.getOwner()), myPet.getPetName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
     }
 
     public boolean trigger() {
