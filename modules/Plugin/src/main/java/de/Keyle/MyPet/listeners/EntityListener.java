@@ -149,7 +149,7 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onMyPet(final EntityDamageByEntityEvent event) {
-        if (WorldGroup.getGroupByWorld(event.getDamager().getWorld()).isDisabled()) {
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
@@ -423,7 +423,7 @@ public class EntityListener implements Listener {
             // catch invalid events (i.e. EnchantmentAPI)
             return;
         }
-        if (WorldGroup.getGroupByWorld(event.getDamager().getWorld()).isDisabled()) {
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
         if (!event.getEntity().isDead() && !(event.getEntity() instanceof MyPetBukkitEntity)) {
@@ -977,7 +977,7 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void on(final EntityTargetEvent event) {
-        if (WorldGroup.getGroupByWorld(event.getTarget().getWorld()).isDisabled()) {
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
