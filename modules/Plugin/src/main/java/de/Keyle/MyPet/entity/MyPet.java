@@ -427,6 +427,12 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.WrongWorldGroup;
                 }
 
+                int ownerX = owner.getLocation().getChunk().getX();
+                int ownerZ = owner.getLocation().getChunk().getZ();
+                if (!owner.getWorld().isChunkGenerated(ownerX, ownerZ) || !owner.getWorld().isChunkLoaded(ownerX, ownerZ)) {
+                    return SpawnFlags.InvalidPosition;
+                }
+
                 if (owner.isFlying()) {
                     boolean groundFound = false;
                     for (int i = 10; i >= 0; i--) {
