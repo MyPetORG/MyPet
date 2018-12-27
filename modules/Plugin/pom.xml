@@ -289,7 +289,7 @@
                                     <include>de.keyle:mypet*</include>
                                     <include>de.keyle:knbt:jar:*</include>
                                     <include>de.keyle:fanciful-chat:*</include>
-                                    <include>org.bstats:*</include>
+                                    <include>org.bstats:bstats-bukkit:*</include>
                                     <include>com.googlecode.json-simple:json-simple:*</include>
                                     <include>com.google.code.gson:gson:*</include>
                                     <include>com.zaxxer:HikariCP:*</include>
