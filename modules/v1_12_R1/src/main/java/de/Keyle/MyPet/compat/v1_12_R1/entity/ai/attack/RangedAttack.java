@@ -226,6 +226,18 @@ public class RangedAttack implements AIGoal {
                 world.addEntity(enderPearl);
                 break;
             }
+            case LlamaSpit: {
+                MyPetLlamaSpit llamaSpit = new MyPetLlamaSpit(world, entityMyPet);
+                llamaSpit.setDamage(damage);
+                entityMyPet.makeSound("entity.llama.spit", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+                double distanceX = target.locX - entityMyPet.locX;
+                double distanceY = target.locY + (target.getHeadHeight() / 3.0F) - llamaSpit.locY;
+                double distanceZ = target.locZ - entityMyPet.locZ;
+                double distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2D;
+                llamaSpit.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.5F, 10.0F);
+                world.addEntity(llamaSpit);
+                break;
+            }
             case Arrow:
             default: {
                 EntityArrow arrow = new MyPetArrow(world, entityMyPet);

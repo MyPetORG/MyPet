@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 public interface Ranged extends Skill {
 
     enum Projectile {
-        Arrow, Snowball, LargeFireball, SmallFireball, WitherSkull, Egg, DragonFireball, Trident, EnderPearl
+        Arrow, Snowball, LargeFireball, SmallFireball, WitherSkull, Egg, DragonFireball, Trident, EnderPearl, LlamaSpit
     }
 
     UpgradeComputer<Integer> getRateOfFire();
