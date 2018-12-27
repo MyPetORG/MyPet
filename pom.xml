@@ -78,7 +78,7 @@
         </repository>
         <repository>
             <id>bstats-repo</id>
-            <url>http://repo.bstats.org/content/repositories/releases/</url>
+            <url>https://repo.codemc.org/repository/maven-releases/</url>
         </repository>
     </repositories>
 
@@ -129,6 +129,12 @@
             <version>4.18.12.27</version>
             <scope>provided</scope>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bstats</groupId>
+                    <artifactId>bstats-bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <!-- https://dev.bukkit.org/projects/mythicmobs -->
@@ -401,7 +407,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
