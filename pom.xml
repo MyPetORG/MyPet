@@ -115,10 +115,18 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- https://www.spigotmc.org/resources/plotsquared.1177/ -->
+            <!-- Legacy version -->
             <groupId>com.plotsquared.bukkit</groupId>
             <artifactId>PlotSquared</artifactId>
             <version>3.4.4</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- https://www.spigotmc.org/resources/plotsquared.1177/ -->
+            <groupId>com.github.intellectualsites</groupId>
+            <artifactId>plotsquared</artifactId>
+            <version>4.18.12.27</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
