@@ -28,10 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The {@link PluginHookManager} manages all interactions with other plugins. Hooks are stored by class and by the
@@ -43,10 +40,11 @@ public class PluginHookManager {
     ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
     Map<String, PluginHook> hookByName = new HashMap<>();
     Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
-    List<PluginHook> registeredHooks = new LinkedList<>();
+    Queue<PluginHook> registeredHooks = new ArrayDeque<>();
 
     /**
-     * register new hooks here. A hook needs the {@link PluginHookName} annotation to be accepted.
+     * Register new hooks here. A hook needs the {@link PluginHookName} annotation to be accepted.
+     * Registered hooks will not enabled after MyPet has loaded. Use enableHook instead.
      *
      * @param hookClass the hook class
      */
@@ -74,51 +72,71 @@ public class PluginHookManager {
         }
     }
 
+    /**
+     * Adds a hook for MyPet.
+     * A hook needs the {@link PluginHookName} annotation to be accepted.
+     *
+     * @param hook the hook
+     * @return true if the hook was enabled successfully
+     */
     @SuppressWarnings("unchecked")
-    public void enableHooks() {
-        for (PluginHook hook : registeredHooks) {
-            try {
-                PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
-                if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
-                    if (!isPluginUsable(hook.getPluginName(), hookNameAnnotation.classPath())) {
-                        continue;
-                    }
-                } else {
-                    if (!isPluginUsable(hook.getPluginName())) {
-                        continue;
-                    }
+    public boolean enableHook(PluginHook hook) {
+        try {
+            PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
+            if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
+                if (!isPluginUsable(hook.getPluginName(), hookNameAnnotation.classPath())) {
+                    return false;
                 }
-                if (hook.onEnable()) {
-                    boolean genericHook = true;
-                    for (Object o : ClassUtils.getAllInterfaces(hook.getClass())) {
-                        if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
-                            hooks.put((Class) o, hook);
-                            genericHook = false;
-                        }
-                    }
-                    if (genericHook) {
-                        hooks.put(PluginHook.class, hook);
-                    }
-                    hookByName.put(hook.getPluginName(), hook);
-                    hookByClass.put(hook.getClass(), hook);
-
-                    String message = hook.getPluginName();
-                    message += " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ")";
-                    if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
-                        message += " (" + hookNameAnnotation.classPath() + ")";
-                    }
-                    message += hook.getActivationMessage();
-                    MyPetApi.getLogger().info(message + " hook activated.");
+            } else {
+                if (!isPluginUsable(hook.getPluginName())) {
+                    return false;
                 }
-            } catch (Throwable e) {
-                MyPetApi.getLogger().warning("Error occured while enabling " + hook.getPluginName() + " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ") hook.");
-                e.printStackTrace();
             }
+            if (hook.onEnable()) {
+                boolean genericHook = true;
+                for (Object o : ClassUtils.getAllInterfaces(hook.getClass())) {
+                    if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
+                        hooks.put((Class) o, hook);
+                        genericHook = false;
+                    }
+                }
+                if (genericHook) {
+                    hooks.put(PluginHook.class, hook);
+                }
+                hookByName.put(hook.getPluginName(), hook);
+                hookByClass.put(hook.getClass(), hook);
+
+                String message = hook.getPluginName();
+                message += " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ")";
+                if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
+                    message += " (" + hookNameAnnotation.classPath() + ")";
+                }
+                message += hook.getActivationMessage();
+                MyPetApi.getLogger().info(message + " hook activated.");
+                return true;
+            }
+        } catch (Throwable e) {
+            MyPetApi.getLogger().warning("Error occured while enabling " + hook.getPluginName() + " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ") hook.");
+            e.printStackTrace();
         }
-        registeredHooks.clear();
+        return false;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Enables all registered hooks.
+     * Not needed after MyPet has loaded.
+     */
+    public void enableHooks() {
+        while (!registeredHooks.isEmpty()) {
+            PluginHook hook = registeredHooks.poll();
+            enableHook(hook);
+        }
+    }
+
+    /**
+     * Disables all enabled hooks.
+     * Only used to disable MyPet.
+     */
     public void disableHooks() {
         for (PluginHook hook : hooks.values()) {
             hook.onDisable();
@@ -126,6 +144,23 @@ public class PluginHookManager {
         hooks.clear();
         hookByName.clear();
         hookByClass.clear();
+    }
+
+    /**
+     * Disables one specific enabled hook.
+     *
+     * @param hook the hook to be disabled
+     */
+    public void disableHook(PluginHook hook) {
+        hook.onDisable();
+        for (Object o : ClassUtils.getAllInterfaces(hook.getClass())) {
+            if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
+                hooks.remove(o, hook);
+            }
+        }
+        hooks.removeAll(hook.getClass());
+        hookByName.remove(hook.getPluginName());
+        hookByClass.remove(hook.getClass());
     }
 
     /**
