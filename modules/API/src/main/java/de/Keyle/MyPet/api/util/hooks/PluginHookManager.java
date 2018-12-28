@@ -86,10 +86,8 @@ public class PluginHookManager {
                 if (!isPluginUsable(hook.getPluginName(), hookNameAnnotation.classPath())) {
                     return false;
                 }
-            } else {
-                if (!isPluginUsable(hook.getPluginName())) {
-                    return false;
-                }
+            } else if (!isPluginUsable(hook.getPluginName())) {
+                return false;
             }
             if (hook.onEnable()) {
                 boolean genericHook = true;
@@ -262,8 +260,9 @@ public class PluginHookManager {
                     return Optional.of((T) p);
                 }
             }
+            return Optional.empty();
         }
-        return Optional.empty();
+        return Optional.of((T) plugin);
     }
 
     /**
