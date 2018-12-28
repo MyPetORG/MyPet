@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.api.util.hooks;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
 import org.apache.commons.lang.ClassUtils;
@@ -245,7 +244,7 @@ public class PluginHookManager {
                 }
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -254,6 +253,7 @@ public class PluginHookManager {
      * @param pluginName name of the plugin
      * @return instance of the plugin
      */
+    @SuppressWarnings("unchecked")
     public <T extends JavaPlugin> Optional<T> getPluginInstance(String pluginName) {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
         if (plugin == null) {
@@ -263,7 +263,7 @@ public class PluginHookManager {
                 }
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
