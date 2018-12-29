@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -32,9 +33,7 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -42,7 +41,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class CommandSwitch implements CommandExecutor, TabCompleter {
+public class CommandSwitch implements CommandTabCompleter {
+
     private List<String> storeList = new ArrayList<>();
 
     public CommandSwitch() {
@@ -164,9 +164,9 @@ public class CommandSwitch implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player) {
+        if (sender instanceof Player && strings.length == 1) {
             if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
-                return storeList;
+                return filterTabCompletionResults(storeList, strings[0]);
             }
         }
         return Collections.emptyList();

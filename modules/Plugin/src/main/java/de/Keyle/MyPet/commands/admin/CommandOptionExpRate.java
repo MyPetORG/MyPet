@@ -73,7 +73,7 @@ public class CommandOptionExpRate implements CommandOptionTabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
         if (strings.length == 2) {
-            return addSetRemoveList;
+            return filterTabCompletionResults(addSetRemoveList, strings[1]);
         }
         return Collections.emptyList();
     }

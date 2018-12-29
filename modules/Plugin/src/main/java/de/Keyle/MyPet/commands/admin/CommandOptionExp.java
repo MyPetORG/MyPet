@@ -129,7 +129,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
         if (strings.length == 2) {
             return null;
         } else if (strings.length == 4) {
-            return addSetRemoveList;
+            return filterTabCompletionResults(addSetRemoveList, strings[3]);
         }
         return Collections.emptyList();
     }

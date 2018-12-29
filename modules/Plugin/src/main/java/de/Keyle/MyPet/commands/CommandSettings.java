@@ -22,19 +22,19 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.settings.CommandSettingHealthbar;
 import de.Keyle.MyPet.commands.settings.CommandSettingsPetLivingSound;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CommandSettings implements CommandExecutor, TabCompleter {
+public class CommandSettings implements CommandTabCompleter {
+
     private static List<String> optionsList = new ArrayList<>();
     private static Map<String, CommandOption> commandOptions = new HashMap<>();
 
@@ -69,7 +69,7 @@ public class CommandSettings implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         if (sender instanceof Player) {
             if (strings.length == 1) {
-                return optionsList;
+                return filterTabCompletionResults(optionsList, strings[0]);
             } else if (strings.length >= 1) {
                 CommandOption co = commandOptions.get(strings[0]);
                 if (co != null) {

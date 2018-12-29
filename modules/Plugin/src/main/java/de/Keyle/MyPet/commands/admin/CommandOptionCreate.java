@@ -285,7 +285,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             return null;
         }
         if (strings.length == 3 + forceOffset) {
-            return petTypeList;
+            return filterTabCompletionResults(petTypeList, strings[2 + forceOffset]);
         }
         if (strings.length >= 4 + forceOffset) {
             if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase())) {
@@ -293,9 +293,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 if (!options.contains(commonTypeOptionList.get(0))) {
                     options.addAll(commonTypeOptionList);
                 }
-                return options;
+                return filterTabCompletionResults(options, strings[3 + forceOffset]);
             } else {
-                return commonTypeOptionList;
+                return filterTabCompletionResults(commonTypeOptionList, strings[3 + forceOffset]);
             }
         }
         return Collections.emptyList();

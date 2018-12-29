@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -31,16 +32,14 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandRespawn implements CommandExecutor, TabCompleter {
+public class CommandRespawn implements CommandTabCompleter {
     private static List<String> optionsList = new ArrayList<>();
 
     static {
@@ -121,7 +120,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         if (sender instanceof Player) {
             if (strings.length == 1) {
-                return optionsList;
+                return filterTabCompletionResults(optionsList, strings[0]);
             }
         }
         return Collections.emptyList();

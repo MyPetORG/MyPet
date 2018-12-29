@@ -92,7 +92,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
                         skilltreeList.add(skilltree.getName());
                     }
                 }
-                return skilltreeList;
+                return filterTabCompletionResults(skilltreeList, strings[2]);
             }
         }
         return Collections.emptyList();

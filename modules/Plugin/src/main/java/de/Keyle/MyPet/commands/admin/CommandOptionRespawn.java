@@ -87,7 +87,7 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
             return null;
         }
         if (strings.length == 3) {
-            return showList;
+            return filterTabCompletionResults(showList, strings[2]);
         }
         return Collections.emptyList();
     }

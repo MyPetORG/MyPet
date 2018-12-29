@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
@@ -37,14 +38,12 @@ import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
+public class CommandChooseSkilltree implements CommandTabCompleter {
 
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -228,7 +227,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                             skilltreeList.add(skilltree.getName());
                         }
                     }
-                    return skilltreeList;
+                    return filterTabCompletionResults(skilltreeList, strings[0]);
                 }
             }
         }
