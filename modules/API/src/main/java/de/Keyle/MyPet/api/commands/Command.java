@@ -20,17 +20,8 @@
 
 package de.Keyle.MyPet.api.commands;
 
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.CommandExecutor;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+public interface Command extends CommandExecutor {
 
-public interface CommandOptionTabCompleter extends CommandOption {
-
-    List<String> onTabComplete(CommandSender commandSender, String[] strings);
-
-    default List<String> filterTabCompletionResults(Collection<String> collection, String startsWith) {
-        return collection.stream().filter(s -> s.toLowerCase().startsWith(startsWith.toLowerCase())).sorted().collect(Collectors.toList());
-    }
 }

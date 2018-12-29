@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -31,15 +32,13 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CommandList implements CommandExecutor, TabCompleter {
+public class CommandList implements CommandTabCompleter {
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         final String lang;
         if (sender instanceof Player) {

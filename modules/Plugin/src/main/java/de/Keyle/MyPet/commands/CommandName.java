@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.Colorizer;
@@ -31,9 +32,7 @@ import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -41,7 +40,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandName implements CommandExecutor, TabCompleter {
+public class CommandName implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;

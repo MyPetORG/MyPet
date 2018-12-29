@@ -30,9 +30,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter {
+
     private List<String> presetVolumes = new ArrayList<>();
 
     public CommandSettingsPetLivingSound() {
@@ -67,6 +69,10 @@ public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter 
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        return presetVolumes;
+        if (strings.length > 2) {
+            return Collections.emptyList();
+        } else {
+            return filterTabCompletionResults(presetVolumes, strings[1]);
+        }
     }
 }

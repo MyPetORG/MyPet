@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
@@ -31,15 +32,13 @@ import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import de.Keyle.MyPet.skill.skills.PickupImpl;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CommandHelp implements CommandExecutor, TabCompleter {
+public class CommandHelp implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;

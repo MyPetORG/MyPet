@@ -23,19 +23,18 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.admin.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CommandAdmin implements CommandExecutor, TabCompleter {
+public class CommandAdmin implements CommandTabCompleter {
     private static List<String> optionsList = new ArrayList<>();
     public static final Map<String, CommandOption> COMMAND_OPTIONS = new HashMap<>();
 
@@ -97,7 +96,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
                 optionsList = new ArrayList<>(COMMAND_OPTIONS.keySet());
                 Collections.sort(optionsList);
             }
-            return optionsList;
+            return filterTabCompletionResults(optionsList, strings[0]);
         } else if (strings.length >= 1) {
             CommandOption co = COMMAND_OPTIONS.get(strings[0]);
             if (co != null) {

@@ -178,7 +178,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         if (strings.length > 2) {
             return Collections.emptyList();
         } else {
-            return COMMAND_OPTIONS;
+            return filterTabCompletionResults(COMMAND_OPTIONS, strings[1]);
         }
     }
 }

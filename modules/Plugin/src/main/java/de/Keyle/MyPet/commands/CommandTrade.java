@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
@@ -36,14 +37,13 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CommandTrade implements CommandExecutor, TabCompleter {
+public class CommandTrade implements CommandTabCompleter {
+
     protected HashMap<UUID, Offer> offers = new HashMap<>();
     private List<String> tradeList = new ArrayList<>();
 
@@ -94,7 +94,7 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
                             return true;
                         }
 
-                        if (!player.getWorld().equals(owner.getWorld()) || MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(),owner.getLocation()) > 100) {
+                        if (!player.getWorld().equals(owner.getWorld()) || MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), owner.getLocation()) > 100) {
                             sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Distance", player), owner.getName()));
                             return true;
                         }
@@ -265,11 +265,10 @@ public class CommandTrade implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player) {
+        if (sender instanceof Player && strings.length == 1) {
             if (offers.containsKey(((Player) sender).getUniqueId())) {
-                return tradeList;
+                return filterTabCompletionResults(tradeList, strings[0]);
             }
-            return null;
         }
         return Collections.emptyList();
     }

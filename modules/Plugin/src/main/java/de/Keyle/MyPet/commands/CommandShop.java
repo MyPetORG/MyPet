@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -36,7 +37,9 @@ import de.Keyle.MyPet.util.shop.PetShop;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -44,7 +47,7 @@ import java.util.*;
 
 import static org.bukkit.ChatColor.RESET;
 
-public class CommandShop implements CommandExecutor, TabCompleter {
+public class CommandShop implements CommandTabCompleter {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
@@ -162,7 +165,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 if (strings.length == 1) {
-                    return getAvailablePetShops(player);
+                    return filterTabCompletionResults(getAvailablePetShops(player), strings[0]);
                 } else if (strings.length == 2) {
                     if (Permissions.has(player, "MyPet.admin")) {
                         return null;
@@ -170,7 +173,7 @@ public class CommandShop implements CommandExecutor, TabCompleter {
                 }
             } else {
                 if (strings.length == 1) {
-                    return new ArrayList<>(shopManager.get().getShopNames());
+                    return filterTabCompletionResults(shopManager.get().getShopNames(), strings[0]);
                 } else if (strings.length == 2) {
                     return null;
                 }
