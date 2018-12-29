@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -49,7 +49,11 @@ public class VaultHook implements EconomyHook {
 
     @Override
     public String getActivationMessage() {
-        return " (Economy: " + economy.getName() + ")";
+        try {
+            return " (Economy: " + economy.getName() + ")";
+        } catch (UnsupportedOperationException e) {
+            return " (Economy: " + economy.getClass().getName() + ")";
+        }
     }
 
     @Override
