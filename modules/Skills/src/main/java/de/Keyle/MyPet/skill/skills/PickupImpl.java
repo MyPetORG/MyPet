@@ -73,6 +73,13 @@ public class PickupImpl implements Pickup {
         return Translation.getString("Name.Range", myPet.getOwner()) + ": " + ChatColor.GOLD + String.format("%1.2f", range.getValue().doubleValue()) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", getRange().getValue().doubleValue()))
+        };
+    }
+
     public boolean activate() {
         if (isActive()) {
             if (myPet.getSkills().isActive(BackpackImpl.class)) {

@@ -20,9 +20,11 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Life;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 
 public class LifeImpl implements Life {
@@ -49,6 +51,13 @@ public class LifeImpl implements Life {
 
     public String toPrettyString() {
         return "+" + ChatColor.GOLD + life.getValue().doubleValue();
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), myPet.getMaxHealth())
+        };
     }
 
     public UpgradeComputer<Number> getLife() {

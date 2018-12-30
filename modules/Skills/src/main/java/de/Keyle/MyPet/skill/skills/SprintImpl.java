@@ -20,9 +20,11 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Sprint;
+import de.Keyle.MyPet.api.util.locale.Translation;
 
 public class SprintImpl implements Sprint {
 
@@ -56,6 +58,16 @@ public class SprintImpl implements Sprint {
 
     public String toPrettyString() {
         return "";
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        if (getActive().getValue()) {
+            return new String[]{
+                    Util.formatText(Translation.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName())
+            };
+        }
+        return null;
     }
 
     @Override

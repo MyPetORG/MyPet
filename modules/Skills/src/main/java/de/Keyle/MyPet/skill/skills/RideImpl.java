@@ -59,6 +59,11 @@ public class RideImpl implements Ride {
                 + " +" + ChatColor.GOLD + speed.getValue() + ChatColor.RESET + "%";
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return null;
+    }
+
     public boolean isActive() {
         return active.getValue();
     }

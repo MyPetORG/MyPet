@@ -165,6 +165,14 @@ public class BehaviorImpl implements Behavior {
         return Translation.getString("Name.Modes", myPet.getOwner()) + ": " + activeModes;
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()),
+                "  " + toPrettyString()
+        };
+    }
+
     public boolean activate() {
         if (isActive()) {
             while (true) {

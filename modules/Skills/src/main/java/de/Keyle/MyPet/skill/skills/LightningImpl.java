@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
@@ -64,6 +65,13 @@ public class LightningImpl implements Lightning {
         return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "% -> "
                 + ChatColor.GOLD + damage.getValue().doubleValue() + ChatColor.RESET + " "
                 + Translation.getString("Name.Damage", myPet.getOwner());
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Lightning.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue(), getDamage().getValue().doubleValue())
+        };
     }
 
     public boolean trigger() {

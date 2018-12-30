@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Damage;
@@ -49,6 +50,13 @@ public class DamageImpl implements Damage {
 
     public String toPrettyString() {
         return "" + ChatColor.GOLD + damage.getValue().doubleValue() + ChatColor.RESET + " " + Translation.getString("Name.Damage", myPet.getOwner());
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Damage.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getDamage().getValue().doubleValue())
+        };
     }
 
     public UpgradeComputer<Number> getDamage() {

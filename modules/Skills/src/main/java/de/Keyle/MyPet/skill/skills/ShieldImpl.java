@@ -67,6 +67,13 @@ public class ShieldImpl implements Shield {
         return Util.formatText(Translation.getString("Message.Skill.Shield.Format", myPet.getOwner()), myPet.getPetName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Shield.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue(), getRedirectedDamage().getValue())
+        };
+    }
+
     public boolean trigger() {
         return random.nextDouble() < chance.getValue() / 100.;
     }
