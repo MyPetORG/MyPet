@@ -59,4 +59,6 @@ public interface Skill {
     void reset();
 
     String toPrettyString();
+
+    String[] getUpgradeMessage();
 }

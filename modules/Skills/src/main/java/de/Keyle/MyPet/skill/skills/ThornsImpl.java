@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -65,6 +66,13 @@ public class ThornsImpl implements Thorns {
         return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET
                 + "% -> " + ChatColor.GOLD + reflectedDamage.getValue() + ChatColor.RESET
                 + "% " + Translation.getString("Name.Damage", myPet.getOwner());
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue(), getReflectedDamage().getValue())
+        };
     }
 
     protected double calculateReflectedDamage(double damage) {

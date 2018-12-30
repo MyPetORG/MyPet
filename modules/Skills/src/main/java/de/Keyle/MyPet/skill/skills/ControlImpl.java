@@ -58,6 +58,11 @@ public class ControlImpl implements Control {
         return "";
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return null;
+    }
+
     public Location getLocation() {
         Location tmpMoveTo = moveTo;
         moveTo = null;

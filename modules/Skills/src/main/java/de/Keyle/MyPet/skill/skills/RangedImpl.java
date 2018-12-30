@@ -63,6 +63,13 @@ public class RangedImpl implements Ranged {
                 + " " + Translation.getString("Name.Damage", myPet.getOwner());
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner()), myPet.getPetName(), Translation.getString("Name." + getProjectile().getValue().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire().getValue() * 50.) / 1000.)) * 60.))
+        };
+    }
+
     public UpgradeComputer<Integer> getRateOfFire() {
         return rateOfFire;
     }

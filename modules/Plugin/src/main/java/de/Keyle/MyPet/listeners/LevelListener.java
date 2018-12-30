@@ -43,7 +43,9 @@ import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public class LevelListener implements Listener {
@@ -79,6 +81,7 @@ public class LevelListener implements Listener {
                         }
                     }
                 }
+                Set<Skill> affectedSkills = new HashSet<>();
                 List<Upgrade> upgrades = skilltree.getUpgrades(i);
                 for (Upgrade upgrade : upgrades) {
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
@@ -86,6 +89,17 @@ public class LevelListener implements Listener {
                         Skill skill = myPet.getSkills().get(sn.value());
                         if (skill != null) {
                             upgrade.apply(skill);
+                            affectedSkills.add(skill);
+                        }
+                    }
+                }
+                if (!event.isQuiet()) {
+                    for (Skill skill : affectedSkills) {
+                        String[] messages = skill.getUpgradeMessage();
+                        if (messages != null && messages.length > 0) {
+                            for (String message : messages) {
+                                myPet.getOwner().sendMessage("  " + message);
+                            }
                         }
                     }
                 }

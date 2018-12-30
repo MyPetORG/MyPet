@@ -20,9 +20,11 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Poison;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
@@ -59,6 +61,13 @@ public class PoisonImpl implements Poison {
     public String toPrettyString() {
         return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET
                 + "% -> " + ChatColor.GOLD + duration.getValue() + ChatColor.RESET + "sec";
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Poison.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue(), getDuration().getValue())
+        };
     }
 
     public boolean trigger() {

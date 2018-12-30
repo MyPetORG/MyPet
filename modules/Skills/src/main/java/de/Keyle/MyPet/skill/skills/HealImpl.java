@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -58,6 +59,13 @@ public class HealImpl implements Heal {
         return "+" + ChatColor.GOLD + heal.getValue().doubleValue() + ChatColor.RESET
                 + Translation.getString("Name.HP", myPet.getOwner())
                 + " ->" + ChatColor.GOLD + timer.getValue() + ChatColor.RESET + "sec";
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getHeal().getValue().doubleValue(), getTimer().getValue())
+        };
     }
 
     public void schedule() {

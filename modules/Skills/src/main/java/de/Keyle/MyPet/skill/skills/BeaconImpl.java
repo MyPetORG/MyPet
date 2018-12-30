@@ -460,6 +460,14 @@ public class BeaconImpl implements Beacon {
         return availableBuffs;
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", getRange().getValue().doubleValue()), getDuration().getValue()),
+                " " + toPrettyString()
+        };
+    }
+
     public void schedule() {
         if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;

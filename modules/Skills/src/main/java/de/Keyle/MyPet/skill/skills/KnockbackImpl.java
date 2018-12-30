@@ -20,9 +20,11 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
@@ -55,6 +57,13 @@ public class KnockbackImpl implements Knockback {
 
     public String toPrettyString() {
         return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "%";
+    }
+
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue())
+        };
     }
 
     public boolean trigger() {

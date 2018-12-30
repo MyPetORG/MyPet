@@ -62,6 +62,13 @@ public class BackpackImpl implements Backpack {
         return "" + ChatColor.GOLD + rows.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Rows", myPet.getOwner());
     }
 
+    @Override
+    public String[] getUpgradeMessage() {
+        return new String[]{
+                Util.formatText(Translation.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()), myPet.getPetName(), getRows().getValue().intValue() * 9)
+        };
+    }
+
     public boolean activate() {
         if (rows.getValue().intValue() > 0) {
             if (myPet.getOwner().getPlayer().isSleeping()) {
