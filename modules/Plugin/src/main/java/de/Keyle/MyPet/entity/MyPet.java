@@ -429,7 +429,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
                 int ownerX = owner.getLocation().getChunk().getX();
                 int ownerZ = owner.getLocation().getChunk().getZ();
-                if (!owner.getWorld().isChunkGenerated(ownerX, ownerZ) || !owner.getWorld().isChunkLoaded(ownerX, ownerZ)) {
+                if (MyPetApi.getCompatUtil().isCompatible("1.13") && !owner.getWorld().isChunkGenerated(ownerX, ownerZ)) {
+                    return SpawnFlags.InvalidPosition;
+                }
+                if (!owner.getWorld().isChunkLoaded(ownerX, ownerZ)) {
                     return SpawnFlags.InvalidPosition;
                 }
 
