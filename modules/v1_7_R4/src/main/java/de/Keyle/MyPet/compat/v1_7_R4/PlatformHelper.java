@@ -50,6 +50,7 @@ import java.util.List;
 
 @Compat("v1_7_R4")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
+
     private static Field EntityInsentient_goalSelector_FIELD = ReflectionUtil.getField(EntityInsentient.class, "goalSelector");
 
     /**
@@ -234,6 +235,16 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 } else if (itemstack.getItem() instanceof ItemPickaxe) {
                     return true;
                 } else if (itemstack.getItem() instanceof ItemBow) {
+                    return true;
+                } else if (itemstack.getItem() instanceof ItemFishingRod) {
+                    return true;
+                } else if (itemstack.getItem() == Items.COMPASS) {
+                    return true;
+                } else if (itemstack.getItem() == Items.WATCH) {
+                    return true;
+                } else if (itemstack.getItem() instanceof ItemCarrotStick) {
+                    return true;
+                } else if (itemstack.getItem() instanceof ItemSign) {
                     return true;
                 }
                 return false;
