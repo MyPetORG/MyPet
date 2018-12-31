@@ -48,10 +48,14 @@ import java.util.List;
 @PluginHookName("ProtocolLib")
 public class ProtocolLibHook implements PluginHook {
 
+    protected boolean checkTemporaryPlayers = false;
+
     @Override
     public boolean onEnable() {
         try {
             registerEnderDragonInteractionFix();
+
+            checkTemporaryPlayers = ReflectionUtil.getMethod(PacketEvent.class, "isPlayerTemporary") != null;
 
             // reverse dragon facing direction
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
@@ -116,7 +120,9 @@ public class ProtocolLibHook implements PluginHook {
                 case "VEHICLE_MOVE":
                 case "ENTITY_HEAD_ROTATION":
                 case "ENTITY_TELEPORT":
-                    types.add(pt);
+                    if (pt.isSupported()) {
+                        types.add(pt);
+                    }
             }
         }
         return types;
@@ -127,7 +133,7 @@ public class ProtocolLibHook implements PluginHook {
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if (event.isPlayerTemporary() || event.isCancelled() || event.isAsync()) {
+                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
                             return;
                         }
 
@@ -149,7 +155,7 @@ public class ProtocolLibHook implements PluginHook {
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if (event.isPlayerTemporary() || event.isCancelled() || event.isAsync()) {
+                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
                             return;
                         }
 
@@ -193,7 +199,7 @@ public class ProtocolLibHook implements PluginHook {
 
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if (event.isPlayerTemporary() || event.isCancelled() || event.isAsync()) {
+                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
                             return;
                         }
 
