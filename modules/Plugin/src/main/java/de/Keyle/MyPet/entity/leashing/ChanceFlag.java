@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ public class ChanceFlag implements LeashFlag {
     public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
         if (settings.map().containsKey("chance")) {
             LeashFlagSetting chanceSetting = settings.map().get("chance");
-            if (Util.isInt(chanceSetting.getValue())) {
+            if (Util.isInt(chanceSetting.getValue().replace("%", "").trim())) {
                 int chance = Integer.parseInt(chanceSetting.getValue());
                 return random.nextInt(100) <= chance;
             }
