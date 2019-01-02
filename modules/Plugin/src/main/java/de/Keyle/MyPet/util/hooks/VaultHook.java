@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,31 +20,56 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
+import de.Keyle.MyPet.api.util.hooks.types.PermissionGroupHook;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.UUID;
 
 @PluginHookName("Vault")
-public class VaultHook implements EconomyHook {
+public class VaultHook implements EconomyHook, PermissionGroupHook {
+
     private Economy economy = null;
+    private Permission permission = null;
 
     @Override
     public boolean onEnable() {
+        boolean enabled = false;
         if (Configuration.Hooks.USE_ECONOMY) {
             RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
             if (economyProvider != null) {
                 economy = economyProvider.getProvider();
-                return true;
+                enabled = true;
             }
         }
-        return false;
+        RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+            enabled = true;
+            MyPetApi.getLeashFlagManager().registerLeashFlag(new PermissionGroupFlag());
+        }
+        return enabled;
+    }
+
+    @Override
+    public void onDisable() {
+        MyPetApi.getLeashFlagManager().removeFlag("PermissionGroup");
+        economy = null;
+        permission = null;
     }
 
     @Override
@@ -121,7 +146,7 @@ public class VaultHook implements EconomyHook {
     public String currencyNameSingular() {
         try {
             return economy.currencyNameSingular();
-        }catch (Throwable ignored) {
+        } catch (Throwable ignored) {
         }
         return "";
     }
@@ -137,5 +162,45 @@ public class VaultHook implements EconomyHook {
 
     public Economy getEconomy() {
         return economy;
+    }
+
+    @Override
+    public boolean isInGroup(Player player, String group) {
+        if (permission.hasGroupSupport()) {
+            return permission.playerInGroup(player.getWorld().getName(), player, group);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isInGroup(Player player, String group, String world) {
+        if (permission.hasGroupSupport()) {
+            return permission.playerInGroup(world, player, group);
+        }
+        return false;
+    }
+
+    @LeashFlagName("PermissionGroup")
+    public class PermissionGroupFlag implements LeashFlag {
+
+        @Override
+        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+            String world = null;
+            String group = null;
+            for (LeashFlagSetting setting : settings.all()) {
+                if (setting.getKey().equalsIgnoreCase("world")) {
+                    world = setting.getValue();
+                } else {
+                    group = setting.getValue();
+                }
+            }
+            if (group != null) {
+                if (world != null) {
+                    return isInGroup(player, group, world);
+                }
+                return isInGroup(player, group);
+            }
+            return true;
+        }
     }
 }
