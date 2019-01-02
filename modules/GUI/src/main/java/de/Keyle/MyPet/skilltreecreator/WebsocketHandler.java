@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -72,6 +72,9 @@ public class WebsocketHandler extends WebSocket {
                     break;
                 case "CHANGE_LANGUAGE":
                     Preferences.userNodeForPackage(Main.MyPetPlugin.class).put("Language", message.get("data").toString());
+                    break;
+                case "CLOSE":
+                    Main.close();
                     break;
                 default:
                     System.out.println(message);
