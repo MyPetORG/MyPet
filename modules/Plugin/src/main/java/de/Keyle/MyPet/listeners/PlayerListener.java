@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -251,9 +251,9 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
+        if (!event.isCancelled() && event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
             if (WorldGroup.getGroupByWorld(victim.getWorld()).isDisabled()) {
                 return;
@@ -264,7 +264,6 @@ public class PlayerListener implements Listener {
                     MyPet myPet = myPetPlayerDamagee.getMyPet();
                     if (myPet.getSkills().has(ShieldImpl.class)) {
                         ShieldImpl shield = myPet.getSkills().get(ShieldImpl.class);
-
                         if (shield.trigger()) {
                             shield.apply(event);
                         }
