@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
+import de.Keyle.MyPet.skill.skills.ShieldImpl;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
@@ -244,6 +245,28 @@ public class PlayerListener implements Listener {
                 }
                 if (!MyPetApi.getHookHelper().canHurt(projectile.getMyPetProjectile().getShooter().getOwner().getPlayer(), victim, true)) {
                     event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDamage(EntityDamageEvent event) {
+        if (!event.isCancelled() && event.getEntity() instanceof Player) {
+            Player victim = (Player) event.getEntity();
+            if (WorldGroup.getGroupByWorld(victim.getWorld()).isDisabled()) {
+                return;
+            }
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
+                MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
+                if (myPetPlayerDamagee.hasMyPet()) {
+                    MyPet myPet = myPetPlayerDamagee.getMyPet();
+                    if (myPet.getSkills().has(ShieldImpl.class)) {
+                        ShieldImpl shield = myPet.getSkills().get(ShieldImpl.class);
+                        if (shield.trigger()) {
+                            shield.apply(event);
+                        }
+                    }
                 }
             }
         }
