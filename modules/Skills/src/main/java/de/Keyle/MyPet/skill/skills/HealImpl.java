@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -55,10 +55,10 @@ public class HealImpl implements Heal {
         heal.removeAllUpgrades();
     }
 
-    public String toPrettyString() {
+    public String toPrettyString(String locale) {
         return "+" + ChatColor.GOLD + heal.getValue().doubleValue() + ChatColor.RESET
-                + Translation.getString("Name.HP", myPet.getOwner())
-                + " ->" + ChatColor.GOLD + timer.getValue() + ChatColor.RESET + "sec";
+                + Translation.getString("Name.HP", locale)
+                + " ->" + ChatColor.GOLD + timer.getValue() + ChatColor.RESET + Translation.getString("Name.Seconds", locale);
     }
 
     @Override

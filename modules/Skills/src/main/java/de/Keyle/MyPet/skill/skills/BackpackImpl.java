@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -58,8 +58,8 @@ public class BackpackImpl implements Backpack {
         return myPet;
     }
 
-    public String toPrettyString() {
-        return "" + ChatColor.GOLD + rows.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Rows", myPet.getOwner());
+    public String toPrettyString(String locale) {
+        return "" + ChatColor.GOLD + rows.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Rows", locale);
     }
 
     @Override

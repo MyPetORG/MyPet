@@ -74,7 +74,7 @@ public class CommandSkill implements CommandTabCompleter {
 
             for (Skill skill : myPet.getSkills().all()) {
                 if (skill.isActive()) {
-                    sender.sendMessage("  " + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender)) + ChatColor.RESET + " " + skill.toPrettyString());
+                    sender.sendMessage("  " + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender)) + ChatColor.RESET + " " + skill.toPrettyString(MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender)));
                 }
             }
             return true;

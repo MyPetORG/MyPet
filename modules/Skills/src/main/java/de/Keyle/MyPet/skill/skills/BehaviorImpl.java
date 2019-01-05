@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -133,43 +133,43 @@ public class BehaviorImpl implements Behavior {
         return friendlyBehavior;
     }
 
-    public String toPrettyString() {
-        String activeModes = ChatColor.GOLD + Translation.getString("Name.Normal", myPet.getOwner()) + ChatColor.RESET;
+    public String toPrettyString(String locale) {
+        String activeModes = ChatColor.GOLD + Translation.getString("Name.Normal", locale) + ChatColor.RESET;
         if (activeBehaviors.contains(Friendly)) {
-            activeModes += ", " + ChatColor.GOLD + Translation.getString("Name.Friendly", myPet.getOwner()) + ChatColor.RESET;
+            activeModes += ", " + ChatColor.GOLD + Translation.getString("Name.Friendly", locale) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Aggressive)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Aggressive", myPet.getOwner()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Aggressive", locale) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Farm)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Farm", myPet.getOwner()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Farm", locale) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Raid)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Raid", myPet.getOwner()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Raid", locale) + ChatColor.RESET;
         }
         if (activeBehaviors.contains(Duel)) {
             if (!activeModes.equalsIgnoreCase("")) {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Duel", myPet.getOwner()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Translation.getString("Name.Duel", locale) + ChatColor.RESET;
         }
-        return Translation.getString("Name.Modes", myPet.getOwner()) + ": " + activeModes;
+        return Translation.getString("Name.Modes", locale) + ": " + activeModes;
     }
 
     @Override
     public String[] getUpgradeMessage() {
         return new String[]{
                 Util.formatText(Translation.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()),
-                "  " + toPrettyString()
+                "  " + toPrettyString(myPet.getOwner().getLanguage())
         };
     }
 
