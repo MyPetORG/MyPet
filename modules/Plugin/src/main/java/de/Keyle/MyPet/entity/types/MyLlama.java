@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -33,6 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.MyLlama {
+
     public boolean baby = false;
     protected byte horseType = 0;
     protected int variant = 0;
@@ -74,8 +74,29 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     public void setDecor(ItemStack item) {
-        if (item != null && item.getType() != EnumSelector.find(Material.class, "CARPET", "RED_CARPET")) {
-            return;
+        if (item != null) {
+            switch (item.getType().name()) {
+                case "CARPET":
+                case "RED_CARPET":
+                case "BLACK_CARPET":
+                case "CYAN_CARPET":
+                case "BLUE_CARPET":
+                case "BROWN_CARPET":
+                case "GRAY_CARPET":
+                case "GREEN_CARPET":
+                case "LIME_CARPET":
+                case "PINK_CARPET":
+                case "ORANGE_CARPET":
+                case "MAGENTA_CARPET":
+                case "LIGHT_GRAY_CARPET":
+                case "LIGHT_BLUE_CARPET":
+                case "PURPLE_CARPET":
+                case "WHITE_CARPET":
+                case "YELLOW_CARPET":
+                    break;
+                default:
+                    return;
+            }
         }
         this.decor = item;
         if (this.decor != null) {

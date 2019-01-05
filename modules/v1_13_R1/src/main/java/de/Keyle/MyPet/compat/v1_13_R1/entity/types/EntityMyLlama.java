@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -138,7 +138,10 @@ public class EntityMyLlama extends EntityMyPet {
         this.datawatcher.set(chestWatcher, getMyPet().hasChest());
         this.datawatcher.set(ageWatcher, getMyPet().isBaby());
         if (getMyPet().hasDecor()) {
-            this.datawatcher.set(colorWatcher, (int) getMyPet().getDecor().getData().getData());
+            ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
+            Block block = Block.asBlock(is.getItem());
+            int color = block instanceof BlockCarpet ? ((BlockCarpet) block).d().getColorIndex() : 0;
+            this.datawatcher.set(colorWatcher, color);
         } else {
             this.datawatcher.set(colorWatcher, -1);
         }
