@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -445,14 +445,14 @@ public class BeaconImpl implements Beacon {
         return true;
     }
 
-    public String toPrettyString() {
+    public String toPrettyString(String locale) {
         String availableBuffs = "";
         for (Buff buff : Buff.values()) {
             if (getBuffLevel(buff) > 0) {
                 if (!availableBuffs.equalsIgnoreCase("")) {
                     availableBuffs += ", ";
                 }
-                availableBuffs += GOLD + Translation.getString("Name." + buff.getName(), myPet.getOwner());
+                availableBuffs += GOLD + Translation.getString("Name." + buff.getName(), locale);
                 availableBuffs += GRAY + " " + Util.decimal2roman(getBuffLevel(buff));
                 availableBuffs += ChatColor.RESET;
             }
@@ -464,7 +464,7 @@ public class BeaconImpl implements Beacon {
     public String[] getUpgradeMessage() {
         return new String[]{
                 Util.formatText(Translation.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", getRange().getValue().doubleValue()), getDuration().getValue()),
-                " " + toPrettyString()
+                " " + toPrettyString(myPet.getOwner().getLanguage())
         };
     }
 

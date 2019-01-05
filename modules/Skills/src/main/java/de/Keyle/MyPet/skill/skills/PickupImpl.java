@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -69,8 +69,8 @@ public class PickupImpl implements Pickup {
         expPickup.removeAllUpgrades();
     }
 
-    public String toPrettyString() {
-        return Translation.getString("Name.Range", myPet.getOwner()) + ": " + ChatColor.GOLD + String.format("%1.2f", range.getValue().doubleValue()) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", myPet.getOwner().getPlayer());
+    public String toPrettyString(String locale) {
+        return Translation.getString("Name.Range", locale) + ": " + ChatColor.GOLD + String.format("%1.2f", range.getValue().doubleValue()) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", locale);
     }
 
     @Override

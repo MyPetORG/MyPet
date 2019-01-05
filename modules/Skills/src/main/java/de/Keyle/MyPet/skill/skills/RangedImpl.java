@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -57,10 +57,10 @@ public class RangedImpl implements Ranged {
         projectile.removeAllUpgrades();
     }
 
-    public String toPrettyString() {
-        return Util.formatText(Translation.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((rateOfFire.getValue() * 50.) / 1000.)) * 60.))
+    public String toPrettyString(String locale) {
+        return Util.formatText(Translation.getString("Message.Skill.Ranged.RoundsPerMinute", locale), String.format("%1.2f", (1. / ((rateOfFire.getValue() * 50.) / 1000.)) * 60.))
                 + " -> " + ChatColor.GOLD + damage.getValue().doubleValue() + ChatColor.RESET
-                + " " + Translation.getString("Name.Damage", myPet.getOwner());
+                + " " + Translation.getString("Name.Damage", locale);
     }
 
     @Override

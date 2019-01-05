@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -63,8 +63,8 @@ public class ShieldImpl implements Shield {
         redirectedDamage.removeAllUpgrades();
     }
 
-    public String toPrettyString() {
-        return Util.formatText(Translation.getString("Message.Skill.Shield.Format", myPet.getOwner()), myPet.getPetName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
+    public String toPrettyString(String locale) {
+        return Util.formatText(Translation.getString("Message.Skill.Shield.Format", locale), myPet.getPetName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
     }
 
     @Override

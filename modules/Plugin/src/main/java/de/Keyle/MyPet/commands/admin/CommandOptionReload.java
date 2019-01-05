@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -144,10 +144,10 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
             }
             myPet.setSkilltree(skilltree);
             if (skilltree != null) {
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", myPet.getOwner()), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", sender), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
                 for (Skill skill : myPet.getSkills().all()) {
                     if (skill.isActive()) {
-                        myPet.getOwner().sendMessage("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.toPrettyString());
+                        myPet.getOwner().sendMessage("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.toPrettyString(myPet.getOwner().getLanguage()));
                     }
                 }
             }
