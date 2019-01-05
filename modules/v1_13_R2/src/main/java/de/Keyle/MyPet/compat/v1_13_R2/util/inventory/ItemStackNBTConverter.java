@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_13_R2.util.inventory;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.*;
@@ -146,7 +145,6 @@ public class ItemStackNBTConverter {
                     return new TagIntArray(((NBTTagIntArray) vanillaTag).d());
             }
         } catch (NoSuchMethodError e) {
-            MyPetApi.getLogger().warning("Please update your server!");
             return vanillaCompoundToCompoundLegacy(vanillaTag);
         }
         return null;
