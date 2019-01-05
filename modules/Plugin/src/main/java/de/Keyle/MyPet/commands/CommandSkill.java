@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -41,49 +41,57 @@ import java.util.List;
 public class CommandSkill implements CommandTabCompleter {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player petOwner = (Player) sender;
-            if (args.length > 0 && Permissions.has(petOwner, "MyPet.admin", false)) {
-                petOwner = Bukkit.getServer().getPlayer(args[0]);
+        Player petOwner;
+        if (args.length == 0 && sender instanceof Player) {
+            petOwner = (Player) sender;
+        } else if (args.length > 0 && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin"))) {
+            petOwner = Bukkit.getServer().getPlayer(args[0]);
 
-                if (petOwner == null || !petOwner.isOnline()) {
-                    sender.sendMessage(Translation.getString("Message.No.PlayerOnline", petOwner));
-                    return true;
-                } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
-                    return true;
-                }
-            } else {
-                if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                    petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
-                    return true;
-                }
-            }
-
-            if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-                myPet.autoAssignSkilltree();
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), Colorizer.setColors(myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
-
-                for (Skill skill : myPet.getSkills().all()) {
-                    if (skill.isActive()) {
-                        sender.sendMessage("  " + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getPlayerLanguage(petOwner)) + ChatColor.RESET + " " + skill.toPrettyString());
-                    }
-                }
+            if (petOwner == null || !petOwner.isOnline()) {
+                sender.sendMessage(Translation.getString("Message.No.PlayerOnline", sender));
                 return true;
+            } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+                sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", sender), petOwner.getName()));
+                return true;
+            }
+        } else {
+            if (sender instanceof Player) {
+                sender.sendMessage(Translation.getString("Message.No.AllowedHere", sender));
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage("You can't use this command from server console!");
             }
             return true;
         }
-        sender.sendMessage("You can't use this command from server console!");
+
+        if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
+            sender.sendMessage(Translation.getString("Message.No.AllowedHere", sender));
+        }
+
+        if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+            myPet.autoAssignSkilltree();
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", sender), myPet.getPetName(), Colorizer.setColors(myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
+
+            for (Skill skill : myPet.getSkills().all()) {
+                if (skill.isActive()) {
+                    sender.sendMessage("  " + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender)) + ChatColor.RESET + " " + skill.toPrettyString());
+                }
+            }
+            return true;
+        } else {
+            sender.sendMessage(Translation.getString("Message.No.HasPet", sender));
+        }
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player) {
-            if (strings.length == 1 && Permissions.has((Player) sender, "MyPet.admin", false)) {
+        if (strings.length == 1) {
+            if (sender instanceof Player) {
+                if (Permissions.has((Player) sender, "MyPet.command.info.other")) {
+                    return null;
+                }
+            } else {
                 return null;
             }
         }
