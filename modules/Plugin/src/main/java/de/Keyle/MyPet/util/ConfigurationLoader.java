@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -539,7 +539,13 @@ public class ConfigurationLoader {
         MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
 
         for (MyPetType petType : MyPetType.values()) {
+            if (!petType.checkMinecraftVersion()) {
+                continue;
+            }
             DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
+            if (pi == null) {
+                continue;
+            }
 
             MyPetApi.getMyPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi.hp()));
             MyPetApi.getMyPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed()));
