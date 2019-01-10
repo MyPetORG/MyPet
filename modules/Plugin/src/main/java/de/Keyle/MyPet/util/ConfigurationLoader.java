@@ -110,7 +110,9 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.Heroes", Hooks.USE_Heroes);
         config.addDefault("MyPet.Hooks.Factions", Hooks.USE_Factions);
         config.addDefault("MyPet.Hooks.WorldGuard", Hooks.USE_WorldGuard);
-        config.addDefault("MyPet.Hooks.Citizens", Hooks.USE_Citizens);
+        config.addDefault("MyPet.Hooks.Citizens.Enabled", Hooks.Citizens.ENABLED);
+        config.addDefault("MyPet.Hooks.Citizens.Storage-Trait.Costs.Fixed", Hooks.Citizens.NPC_STORAGE_COSTS_FIXED);
+        config.addDefault("MyPet.Hooks.Citizens.Storage-Trait.Costs.Factor", Hooks.Citizens.NPC_STORAGE_COSTS_FACTOR);
         config.addDefault("MyPet.Hooks.mcMMO", Hooks.USE_McMMO);
         config.addDefault("MyPet.Hooks.SimpleClans", Hooks.USE_SimpleClans);
         config.addDefault("MyPet.Hooks.RedProtect", Hooks.USE_RedProtect);
@@ -356,7 +358,9 @@ public class ConfigurationLoader {
         Hooks.USE_Towny = config.getBoolean("MyPet.Hooks.Towny", true);
         Hooks.USE_Factions = config.getBoolean("MyPet.Hooks.Factions", true);
         Hooks.USE_WorldGuard = config.getBoolean("MyPet.Hooks.WorldGuard", true);
-        Hooks.USE_Citizens = config.getBoolean("MyPet.Hooks.Citizens", true);
+        Hooks.Citizens.ENABLED = config.getBoolean("MyPet.Hooks.Citizens.Enabled", true);
+        Hooks.Citizens.NPC_STORAGE_COSTS_FACTOR = config.getDouble("MyPet.Hooks.Citizens.Storage-Trait.Costs.Factor", 5.0);
+        Hooks.Citizens.NPC_STORAGE_COSTS_FIXED = config.getDouble("MyPet.Hooks.Citizens.Storage-Trait.Costs.Fixed", 5.0);
         Hooks.USE_Heroes = config.getBoolean("MyPet.Hooks.Heroes", true);
         Hooks.USE_McMMO = config.getBoolean("MyPet.Hooks.mcMMO", true);
         Hooks.USE_SimpleClans = config.getBoolean("MyPet.Hooks.SimpleClans", true);
@@ -574,6 +578,10 @@ public class ConfigurationLoader {
         }
         if (config.contains("MyPet.Skill.Ride.FlyZones")) {
             config.getConfigurationSection("MyPet.Skill.Ride").set("FlyZones", null);
+        }
+        if (config.contains("MyPet.Hooks.Citizens") && config.isBoolean("MyPet.Hooks.Citizens")) {
+            Hooks.Citizens.ENABLED = config.getBoolean("MyPet.Hooks.Citizens", true);
+            config.getConfigurationSection("MyPet.Hooks").set("Citizens", null);
         }
 
         MyPetApi.getPlugin().saveConfig();
