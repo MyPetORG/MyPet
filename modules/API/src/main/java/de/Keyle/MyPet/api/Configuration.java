@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -283,7 +283,6 @@ public class Configuration {
         public static boolean USE_Towny = true;
         public static boolean USE_Factions = true;
         public static boolean USE_WorldGuard = true;
-        public static boolean USE_Citizens = true;
         public static boolean USE_Heroes = true;
         public static boolean USE_McMMO = true;
         public static boolean USE_SimpleClans = true;
@@ -324,6 +323,13 @@ public class Configuration {
 
             public static boolean ENABLED = false;
             public static boolean IGNORE_PLUGIN_SETTINGS = false;
+        }
+
+        public static class Citizens {
+
+            public static boolean ENABLED = true;
+            public static double NPC_STORAGE_COSTS_FIXED = 5;
+            public static double NPC_STORAGE_COSTS_FACTOR = 1;
         }
     }
 }

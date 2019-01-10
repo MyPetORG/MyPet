@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,22 +20,50 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.util.hooks.citizens.ShopTrait;
+import de.Keyle.MyPet.util.hooks.citizens.StorageTrait;
+import de.Keyle.MyPet.util.hooks.citizens.WalletTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.TraitInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 @PluginHookName("Citizens")
 public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, LeashHook {
 
     @Override
     public boolean onEnable() {
-        return Configuration.Hooks.USE_Citizens;
+        if (Configuration.Hooks.Citizens.ENABLED) {
+            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
+            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
+            if (MyPetVersion.isPremium()) {
+                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ShopTrait.class).withName("mypet-shop"));
+            }
+            Plugin npcPlugin = Bukkit.getPluginManager().getPlugin("MyPet-NPC");
+            if (npcPlugin != null) {
+                MyPetApi.getLogger().warning("MyPet-NPC is included into MyPet now. Please remove the MyPet-NPC plugin!");
+                npcPlugin.setNaggable(false);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDisable() {
+        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
+        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
+        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(ShopTrait.class).withName("mypet-shop"));
     }
 
     public boolean canHurt(Player attacker, Entity defender) {
