@@ -53,6 +53,7 @@ public class ErrorReporter {
         context.addTag("server_version", Bukkit.getServer().getVersion());
         sentry.setServerName(Bukkit.getServerId());
         sentry.setRelease(MyPetVersion.getVersion());
+        sentry.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
     }
 
     public void onEnable() {
