@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -54,6 +54,7 @@ import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ConfigurationLoader;
+import de.Keyle.MyPet.util.ErrorReporter;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -89,6 +90,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private HookHelper hookHelper;
     private PluginHookManager pluginHookManager;
     private ServiceManager serviceManager;
+    private ErrorReporter errorReporter = null;
 
     public void onDisable() {
         if (isReady) {
@@ -109,6 +111,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         pluginHookManager.disableHooks();
         serviceManager.disableServices();
+        if (errorReporter != null) {
+            errorReporter.onDisable();
+        }
     }
 
     public void onLoad() {
@@ -118,6 +123,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         // load version from manifest
         MyPetVersion.reset();
+
+        if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
+            this.errorReporter = new ErrorReporter();
+            this.errorReporter.onEnable();
+            MyPetApi.getLogger().info("Error-Reporter ENABLED");
+        }
 
         compatUtil = new CompatUtil();
 

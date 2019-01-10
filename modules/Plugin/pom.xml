@@ -1,7 +1,7 @@
 <!--
   ~ This file is part of MyPet
   ~
-  ~ Copyright © 2011-2018 Keyle
+  ~ Copyright © 2011-2019 Keyle
   ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
   ~ MyPet is free software: you can redistribute it and/or modify
@@ -214,6 +214,11 @@
             <version>1.7.25</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.11.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
             <version>1.7.25</version>
@@ -297,6 +302,8 @@
                                     <include>org.slf4j:slf4j-nop:*</include>
                                     <include>org.nanohttpd:nanohttpd:*</include>
                                     <include>org.nanohttpd:nanohttpd-websocket:*</include>
+                                    <include>io.sentry:sentry:*</include>
+                                    <include>com.fasterxml.jackson.core:jackson-core:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
