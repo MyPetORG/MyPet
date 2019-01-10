@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -334,6 +334,15 @@ public class Util {
             MyPetApi.getLogger().info("=====================================================================================================================================");
         }
         return false;
+    }
+
+    public static boolean findStringInThrowable(Throwable throwable, String string) {
+        for (StackTraceElement el : throwable.getStackTrace()) {
+            if (el.getClassName().contains(string)) {
+                return true;
+            }
+        }
+        return throwable.getCause() != null && findStringInThrowable(throwable.getCause(), string);
     }
 
     public static ItemTooltip myPetToItemTooltip(StoredMyPet mypet, String lang) {
