@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -62,13 +62,14 @@ import org.bukkit.craftbukkit.v1_13_R2.util.CraftChatMessage;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -992,12 +993,16 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
             } else {
                 Preconditions.checkState(!entity.passengers.contains(this), "Circular entity riding! %s %s", this, entity);
-                EntityMountEvent event = new EntityMountEvent(entity.getBukkitEntity(), this.getBukkitEntity());
-                Bukkit.getPluginManager().callEvent(event);
-                if (event.isCancelled()) {
+                Event event = null;
+                if (MyPetApi.getPlatformHelper().isSpigot()) {
+                    //noinspection UnnecessaryFullyQualifiedName
+                    event = new org.spigotmc.event.entity.EntityMountEvent(entity.getBukkitEntity(), this.getBukkitEntity());
+                    Bukkit.getPluginManager().callEvent(event);
+                }
+                if (event != null && ((Cancellable) event).isCancelled()) {
                     returnVal = false;
                 } else {
-                    if (!this.world.isClientSide && !(this.bO() instanceof EntityHuman)) {
+                    if (!(this.bO() instanceof EntityHuman)) {
                         this.passengers.add(0, entity);
                     } else {
                         this.passengers.add(entity);
