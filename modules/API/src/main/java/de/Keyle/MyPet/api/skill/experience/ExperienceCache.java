@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 import lombok.Getter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -168,7 +167,7 @@ public class ExperienceCache implements ServiceContainer {
                 this.calculator = cacheObject.get("calculator").toString();
                 loadIntervals();
             }
-        } catch (ParseException | IOException e) {
+        } catch (Throwable e) {
             cacheFile.delete();
             version = 0;
             calculator = null;
