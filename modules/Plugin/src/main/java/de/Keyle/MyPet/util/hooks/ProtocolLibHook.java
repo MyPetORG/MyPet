@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -65,13 +65,7 @@ public class ProtocolLibHook implements PluginHook {
             }
 
             if (MyPetApi.getCompatUtil().getInternalVersion().equals("v1_7_R4")) {
-                boolean activate = true;
-                try {
-                    Class.forName("org.spigotmc.SpigotConfig");
-                } catch (Throwable throwable) {
-                    activate = false;
-                }
-                if (activate) {
+                if (MyPetApi.getPlatformHelper().isSpigot()) {
                     registerCompatFix_1_8();
                 }
             }

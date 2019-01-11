@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -156,5 +156,14 @@ public abstract class PlatformHelper {
         return a.getBlockX() == b.getBlockX() &&
                 a.getBlockY() == b.getBlockY() &&
                 a.getBlockZ() == b.getBlockZ();
+    }
+
+    public boolean isSpigot() {
+        try {
+            Class.forName("org.spigotmc.SpigotConfig");
+            return true;
+        } catch (Throwable throwable) {
+            return false;
+        }
     }
 }
