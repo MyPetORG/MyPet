@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -872,7 +872,7 @@ public class EntityListener implements Listener {
         if (Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
             Map<UUID, Double> damagePercentMap = MyPetExperience.getDamageToEntityPercent(deadEntity);
             for (UUID entityUUID : damagePercentMap.keySet()) {
-                Entity entity = Bukkit.getEntity(entityUUID);
+                Entity entity = MyPetApi.getPlatformHelper().getEntityByUUID(entityUUID);
                 if (entity instanceof MyPetBukkitEntity) {
                     MyPet myPet = ((MyPetBukkitEntity) entity).getMyPet();
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
