@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -69,12 +69,12 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public int getSize() {
-        return size;
+        return this.size;
     }
 
     public void setSize(int size) {
         this.size = Util.clamp(size, 0, 64);
-        for (int i = items.size(); i < size; i++) {
+        for (int i = items.size(); i < this.size; i++) {
             items.set(i, ItemStack.a);
         }
     }
