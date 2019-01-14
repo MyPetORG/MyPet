@@ -381,30 +381,34 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Timer.startTimer();
 
         // init Metrics
-        Metrics metrics = new Metrics(this) {
-            public JSONObject getPluginData() {
-                JSONObject data = super.getPluginData();
-                //noinspection unchecked
-                data.put("pluginName", "MyPet-Premium");
-                return data;
-            }
-        };
-        metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
-        metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
-        metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
-            String mode = "Disabled";
-            if (Configuration.Update.CHECK) {
-                mode = "Check";
-                if (Configuration.Update.DOWNLOAD) {
-                    mode += " & Download";
-                    if (Configuration.Update.TOKEN.equals("")) {
-                        mode += " (Missing Token)";
+        try {
+            Metrics metrics = new Metrics(this) {
+                public JSONObject getPluginData() {
+                    JSONObject data = super.getPluginData();
+                    //noinspection unchecked
+                    data.put("pluginName", "MyPet-Premium");
+                    return data;
+                }
+            };
+            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
+            metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
+            metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
+                String mode = "Disabled";
+                if (Configuration.Update.CHECK) {
+                    mode = "Check";
+                    if (Configuration.Update.DOWNLOAD) {
+                        mode += " & Download";
+                        if (Configuration.Update.TOKEN.equals("")) {
+                            mode += " (Missing Token)";
+                        }
                     }
                 }
+                return mode;
             }
-            return mode;
+            ));
+        } catch (Throwable e) {
+            errorReporter.sendError(e, "Init Metrics failed");
         }
-        ));
 
         updater.waitForDownload();
 
