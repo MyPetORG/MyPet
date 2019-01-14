@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -209,7 +209,7 @@ public class SkillTreeLoaderJSON {
             Matcher matcher = LEVEL_RULE_REGEX.matcher(levelRuleString);
             while (matcher.find()) {
                 if (matcher.group(0).startsWith("%")) {
-                    modulo = Integer.parseInt(matcher.group(1));
+                    modulo = Math.max(1, Integer.parseInt(matcher.group(1)));
                 } else if (matcher.group(0).startsWith(">")) {
                     min = Integer.parseInt(matcher.group(3));
                 } else if (matcher.group(0).startsWith("<")) {
