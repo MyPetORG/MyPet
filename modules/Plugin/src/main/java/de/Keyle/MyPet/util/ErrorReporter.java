@@ -26,6 +26,9 @@ import io.sentry.SentryClient;
 import io.sentry.SentryClientFactory;
 import io.sentry.context.Context;
 import io.sentry.event.BreadcrumbBuilder;
+import io.sentry.event.UserBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
@@ -34,10 +37,15 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.bukkit.Bukkit;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ErrorReporter {
+
+    @Getter @Setter private static UUID serverUUID = UUID.randomUUID();
 
     protected SentryClient sentry;
     protected Context context;
@@ -50,8 +58,12 @@ public class ErrorReporter {
         context.addTag("premium", "" + MyPetVersion.isPremium());
         context.addTag("plugin_version", "" + MyPetVersion.getVersion());
         context.addTag("plugin_build", "" + MyPetVersion.getBuild());
-        context.addTag("server_version", Bukkit.getServer().getVersion());
-        sentry.setServerName(Bukkit.getServerId());
+        context.addExtra("plugins", Arrays
+                .stream(Bukkit.getPluginManager().getPlugins())
+                .map(plugin -> plugin.getName() + " (" + plugin.getDescription().getVersion() + ")\n")
+                .collect(Collectors.joining(", ")));
+        context.setUser(new UserBuilder().setId(serverUUID.toString()).build());
+        sentry.setServerName(Bukkit.getServer().getVersion());
         sentry.setRelease(MyPetVersion.getVersion());
         sentry.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
     }

@@ -121,6 +121,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetVersion.reset();
 
         if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
+            if (getConfig().contains("MyPet.Log.Unique-ID")) {
+                try {
+                    UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Report-Errors"));
+                    ErrorReporter.setServerUUID(serverUUID);
+                } catch (Throwable ignored) {
+                }
+            }
             this.errorReporter = new ErrorReporter();
             this.errorReporter.onEnable();
             MyPetApi.getLogger().info("Error-Reporter ENABLED");
