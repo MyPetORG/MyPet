@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet.api.skill.experience;
 
+import de.Keyle.MyPet.MyPetApi;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -159,8 +161,15 @@ public class MonsterExperience {
         return identifier + "{min=" + min + ", max=" + max + "}";
     }
 
+    @SuppressWarnings("RedundantCast")
     public static MonsterExperience getMonsterExperience(Entity entity) {
-        String name = entity.getCustomName();
+        String name = null;
+        if (MyPetApi.getCompatUtil().isCompatible("1.8")) {
+            name = entity.getCustomName();
+        } else if (entity instanceof LivingEntity) {
+            // casting for 1.7.10
+            name = ((LivingEntity) entity).getCustomName();
+        }
         if (name != null) {
             if (customMobExp.containsKey(name)) {
                 return customMobExp.get(name);
