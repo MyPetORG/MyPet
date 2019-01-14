@@ -330,10 +330,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         Timer.startTimer();
 
         // init Metrics
-        Metrics metrics = new Metrics(this);
-        metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
-        metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
-        metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
+            metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
+            metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
                 String mode = "Disabled";
                 if (Configuration.Update.CHECK) {
                     mode = "Check";
@@ -343,7 +344,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 }
                 return mode;
             }
-        ));
+            ));
+        } catch (Throwable e) {
+            errorReporter.sendError(e, "Init Metrics failed");
+        }
 
         updater.waitForDownload();
 
