@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,9 +31,11 @@ import de.Keyle.MyPet.compat.v1_8_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_8_R1.*;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
@@ -48,6 +50,7 @@ import org.json.simple.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 
 @Compat("v1_8_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
@@ -313,5 +316,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 .getPlayerList()
                 .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
                         new PacketPlayOutNamedSoundEffect("ambient.weather.thunder", loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+    }
+
+    @Override
+    public Entity getEntityByUUID(UUID uuid) {
+        net.minecraft.server.v1_8_R1.Entity e = ((CraftServer) Bukkit.getServer()).getServer().a(uuid);
+        return e != null ? e.getBukkitEntity() : null;
     }
 }

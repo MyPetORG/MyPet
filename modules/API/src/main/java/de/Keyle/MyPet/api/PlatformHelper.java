@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.keyle.knbt.TagCompound;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -35,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;
+import java.util.UUID;
 
 public abstract class PlatformHelper {
 
@@ -165,5 +167,9 @@ public abstract class PlatformHelper {
         } catch (Throwable throwable) {
             return false;
         }
+    }
+
+    public Entity getEntityByUUID(UUID uuid) {
+        return Bukkit.getEntity(uuid);
     }
 }
