@@ -81,11 +81,28 @@ public class BeaconImpl implements Beacon {
         ownerMeta.setOwner(myPet.getOwner().getName());
 
         for (Buff buff : Buff.values()) {
+            UpgradeComputer upgradeComputer;
             if (buff.hasMoreThanOneLevel()) {
-                buffLevel.put(buff, new UpgradeComputer<>(0));
+                upgradeComputer = new UpgradeComputer<>(0);
             } else {
-                buffLevel.put(buff, new UpgradeComputer<>(false));
+                upgradeComputer = new UpgradeComputer<>(false);
             }
+            buffLevel.put(buff, upgradeComputer);
+            UpgradeComputer.UpgradeCallback callback = (newValue, reason) -> {
+                if (reason == UpgradeComputer.CallbackReason.Remove) {
+                    if (upgradeComputer.getValue() instanceof Boolean) {
+                        if (!((Boolean) newValue)) {
+                            selectedBuffs.remove(buff);
+                        }
+                    } else if (upgradeComputer.getValue() instanceof Integer) {
+                        if ((Integer) newValue == 0) {
+                            selectedBuffs.remove(buff);
+                        }
+                    }
+                }
+            };
+            //noinspection unchecked
+            upgradeComputer.addCallback(callback);
         }
     }
 
@@ -209,7 +226,6 @@ public class BeaconImpl implements Beacon {
                     default:
                         Buff selectedBuff = Buff.getBuffAtPosition(event.getPosition());
                         if (selectedBuff != null) {
-
                             if (selectableBuffs.getValue() > 1) {
                                 if (selectedBuffs.contains(selectedBuff)) {
                                     selectedBuffs.remove(selectedBuff);
@@ -256,7 +272,10 @@ public class BeaconImpl implements Beacon {
                             } else if (!selectedBuffs.contains(selectedBuff)) {
                                 if (selectedBuffs.size() != 0 && menu.getOption(selectedBuff.getPosition()) != null) {
                                     for (Buff buff : selectedBuffs) {
-                                        menu.getOption(buff.getPosition()).setGlowing(false);
+                                        IconMenuItem item = menu.getOption(buff.getPosition());
+                                        if (item != null) {
+                                            item.setGlowing(false);
+                                        }
                                     }
                                     selectedBuffs.clear();
                                 }
