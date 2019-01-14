@@ -37,10 +37,7 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.bukkit.Bukkit;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ErrorReporter {
@@ -58,14 +55,28 @@ public class ErrorReporter {
         context.addTag("premium", "" + MyPetVersion.isPremium());
         context.addTag("plugin_version", "" + MyPetVersion.getVersion());
         context.addTag("plugin_build", "" + MyPetVersion.getBuild());
-        context.addExtra("plugins", Arrays
-                .stream(Bukkit.getPluginManager().getPlugins())
-                .map(plugin -> plugin.getName() + " (" + plugin.getDescription().getVersion() + ")\n")
-                .collect(Collectors.joining(", ")));
         context.setUser(new UserBuilder().setId(serverUUID.toString()).build());
         sentry.setServerName(Bukkit.getServer().getVersion());
         sentry.setRelease(MyPetVersion.getVersion());
         sentry.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
+
+        List<String> plugins = Arrays
+                .stream(Bukkit.getPluginManager().getPlugins())
+                .map(plugin -> plugin.getName() + " (" + plugin.getDescription().getVersion() + ")")
+                .collect(Collectors.toList());
+        int pluginCounter = 1;
+        StringBuilder part = new StringBuilder();
+        for (String plugin : plugins) {
+            if (part.length() + plugin.length() + "\n".length() > 400) {
+                context.addExtra("plugins_" + pluginCounter, part.toString());
+                pluginCounter++;
+                part = new StringBuilder();
+            }
+            part.append(plugin).append("\n");
+        }
+        if (part.length() > 0) {
+            context.addExtra("plugins_" + pluginCounter, part.toString());
+        }
     }
 
     public void onEnable() {
