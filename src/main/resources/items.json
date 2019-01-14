@@ -5830,37 +5830,37 @@
     "legacy-name": "iron_horse_armor",
     "legacy-id": 417,
     "id": "iron_horse_armor",
-    "introduced": "1.8"
+    "introduced": "1.7.10"
   },
   {
     "legacy-name": "golden_horse_armor",
     "legacy-id": 418,
     "id": "golden_horse_armor",
-    "introduced": "1.8"
+    "introduced": "1.7.10"
   },
   {
     "legacy-name": "diamond_horse_armor",
     "legacy-id": 419,
     "id": "diamond_horse_armor",
-    "introduced": "1.8"
+    "introduced": "1.7.10"
   },
   {
     "legacy-name": "lead",
     "legacy-id": 420,
     "id": "lead",
-    "introduced": "1.8"
+    "introduced": "1.7.10"
   },
   {
     "legacy-name": "name_tag",
     "legacy-id": 421,
     "id": "name_tag",
-    "introduced": "1.8"
+    "introduced": "1.7.10"
   },
   {
     "legacy-name": "command_block_minecart",
     "legacy-id": 422,
     "id": "command_block_minecart",
-    "introduced": "1.8"
+    "introduced": "1.7.10"
   },
   {
     "legacy-name": "mutton",
