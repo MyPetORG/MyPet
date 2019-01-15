@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,27 +26,58 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
+import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.sentry.util.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 
 @PluginHookName("MythicMobs")
-public class MythicMobsHook implements LeashHook {
+public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook {
 
     @Override
     public boolean onEnable() {
         MyPetApi.getLeashFlagManager().registerLeashFlag(new MythicMobFlag());
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
         return true;
     }
 
     @Override
     public void onDisable() {
         MyPetApi.getLeashFlagManager().removeFlag("MythicMobs");
+        HandlerList.unregisterAll(this);
+    }
+
+    @EventHandler
+    public void on(MyPetDamageEvent event) {
+        try {
+            if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(event.getTarget()))) {
+                MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(event.getTarget()).getType();
+                for (String m : defenderType.getDamageModifiers()) {
+                    if (m.startsWith("ENTITY_ATTACK")) {
+                        double modifier = Util.parseDouble(m.substring(14), 1D);
+                        if (modifier == 0) {
+                            event.setCancelled(true);
+                        }
+                        event.setDamage(event.getDamage() * modifier);
+                        break;
+                    }
+                }
+            }
+
+        } catch (NumberFormatException ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     @Override
@@ -68,8 +99,31 @@ public class MythicMobsHook implements LeashHook {
         return true;
     }
 
+    @Override
+    public boolean canHurt(Player attacker, Entity defender) {
+        try {
+            if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender))) {
+                MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(defender).getType();
+                for (String m : defenderType.getDamageModifiers()) {
+                    if (m.startsWith("ENTITY_ATTACK")) {
+                        double modifier = Util.parseDouble(m.substring(14), 1D);
+                        if (modifier == 0) {
+                            return false;
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (NumberFormatException ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return true;
+    }
+
     @LeashFlagName("MythicMobs")
     class MythicMobFlag implements LeashFlag {
+
         @Override
         public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
             if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
