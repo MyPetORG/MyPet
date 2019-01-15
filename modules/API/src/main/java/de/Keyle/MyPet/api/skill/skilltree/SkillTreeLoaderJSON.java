@@ -46,6 +46,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SkillTreeLoaderJSON {
+
     final static Pattern LEVEL_RULE_REGEX = Pattern.compile("(?:%(\\d+))|(?:<(\\d+))|(?:>(\\d+))");
 
     public static void loadSkilltrees(File skilltreePath) {
@@ -323,7 +324,7 @@ public class SkillTreeLoaderJSON {
                 upgrade = new RangedUpgrade()
                         .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")))
                         .setRateOfFireModifier(parseIntegerModifier(get(upgradeObject, "rate")))
-                        .setProjectileModifier(parseEnumModifier(get(upgradeObject, "projectile"), Ranged.Projectile.class));
+                        .setProjectileModifier(parseEnumModifier(get(upgradeObject, "projectile"), Ranged.Projectile.class, Ranged.Projectile.Arrow));
                 break;
             }
             case "ride": {
@@ -451,7 +452,7 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
-    private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(Object modifierObject, Class<T> e) {
+    private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(Object modifierObject, Class<T> e, T def) {
         if (modifierObject instanceof String) {
             String modifierString = modifierObject.toString();
             for (T c : e.getEnumConstants()) {
@@ -460,6 +461,6 @@ public class SkillTreeLoaderJSON {
                 }
             }
         }
-        return null;
+        return new UpgradeEnumModifier<>(def);
     }
 }
