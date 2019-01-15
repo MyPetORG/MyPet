@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.sentry.util.Util;
 import org.bukkit.Bukkit;
@@ -61,16 +62,28 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook {
     public void on(MyPetDamageEvent event) {
         try {
             if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(event.getTarget()))) {
-                MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(event.getTarget()).getType();
+                ActiveMob defender = MythicMobs.inst().getMobManager().getMythicMobInstance(event.getTarget());
+                MythicMob defenderType = defender.getType();
+
+                if (defenderType.getIsInvincible()) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                double damage, baseDamage = damage = event.getDamage();
+                damage -= defender.getArmor();
+                if (baseDamage >= 1D && damage < 1D) {
+                    damage = 1D;
+                }
                 for (String m : defenderType.getDamageModifiers()) {
                     if (m.startsWith("ENTITY_ATTACK")) {
-                        double modifier = Util.parseDouble(m.substring(14), 1D);
-                        if (modifier == 0) {
-                            event.setCancelled(true);
-                        }
-                        event.setDamage(event.getDamage() * modifier);
+                        damage *= Util.parseDouble(m.substring(14), 1D);
                         break;
                     }
+                }
+                event.setDamage(damage);
+                if (damage == 0) {
+                    event.setCancelled(true);
                 }
             }
 
@@ -104,6 +117,9 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook {
         try {
             if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender))) {
                 MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(defender).getType();
+                if (defenderType.getIsInvincible()) {
+                    return false;
+                }
                 for (String m : defenderType.getDamageModifiers()) {
                     if (m.startsWith("ENTITY_ATTACK")) {
                         double modifier = Util.parseDouble(m.substring(14), 1D);
@@ -135,7 +151,6 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook {
                 }
                 return false;
             }
-
             return true;
         }
     }
