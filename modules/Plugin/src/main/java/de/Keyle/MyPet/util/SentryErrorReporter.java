@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.ErrorReporter;
 import io.sentry.SentryClient;
 import io.sentry.SentryClientFactory;
 import io.sentry.context.Context;
@@ -40,15 +41,16 @@ import org.bukkit.Bukkit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ErrorReporter {
+public class SentryErrorReporter implements ErrorReporter {
 
     @Getter @Setter private static UUID serverUUID = UUID.randomUUID();
 
     protected SentryClient sentry;
     protected Context context;
     protected Appender loggerAppender = null;
+    protected boolean enabled = false;
 
-    public ErrorReporter() {
+    public void onEnable() {
         sentry = SentryClientFactory.sentryClient("https://14aec086f95d4fbe8a378638c80b68fa@sentry.io/1368849");
         context = sentry.getContext();
 
@@ -77,24 +79,28 @@ public class ErrorReporter {
         if (part.length() > 0) {
             context.addExtra("plugins_" + pluginCounter, part.toString());
         }
-    }
 
-    public void onEnable() {
         loggerAppender = new MyPetExceptionAppender();
         loggerAppender.start();
         Logger logger = (Logger) LogManager.getRootLogger();
         logger.addAppender(loggerAppender);
+
+        enabled = true;
     }
 
     public void onDisable() {
-        if (loggerAppender != null) {
+        if (enabled && loggerAppender != null) {
             Logger logger = (Logger) LogManager.getRootLogger();
             loggerAppender.stop();
             logger.removeAppender(loggerAppender);
         }
+        enabled = false;
     }
 
     public void sendError(Throwable t, String... context) {
+        if (!enabled) {
+            return;
+        }
         for (String c : context) {
             this.context.recordBreadcrumb(
                     new BreadcrumbBuilder().setMessage(c).build()

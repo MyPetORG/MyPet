@@ -52,7 +52,7 @@ import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.ConfigurationLoader;
-import de.Keyle.MyPet.util.ErrorReporter;
+import de.Keyle.MyPet.util.SentryErrorReporter;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -86,7 +86,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private HookHelper hookHelper;
     private PluginHookManager pluginHookManager;
     private ServiceManager serviceManager;
-    private ErrorReporter errorReporter = null;
+    private SentryErrorReporter errorReporter = null;
 
     public void onDisable() {
         if (isReady) {
@@ -120,15 +120,15 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         // load version from manifest
         MyPetVersion.reset();
 
-        if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
-            if (getConfig().contains("MyPet.Log.Unique-ID")) {
-                try {
-                    UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Report-Errors"));
-                    ErrorReporter.setServerUUID(serverUUID);
-                } catch (Throwable ignored) {
-                }
+        if (getConfig().contains("MyPet.Log.Unique-ID")) {
+            try {
+                UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Report-Errors"));
+                SentryErrorReporter.setServerUUID(serverUUID);
+            } catch (Throwable ignored) {
             }
-            this.errorReporter = new ErrorReporter();
+        }
+        this.errorReporter = new SentryErrorReporter();
+        if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
             this.errorReporter.onEnable();
             MyPetApi.getLogger().info("Error-Reporter ENABLED");
         }
@@ -644,6 +644,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
     public PlatformHelper getPlatformHelper() {
         return platformHelper;
+    }
+
+    public SentryErrorReporter getErrorReporter() {
+        return errorReporter;
     }
 
     private void replaceLogger() {
