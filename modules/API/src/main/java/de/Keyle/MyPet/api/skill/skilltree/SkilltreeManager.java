@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skilltree;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
@@ -64,13 +65,13 @@ public class SkilltreeManager implements ServiceContainer {
         return skilltrees;
     }
 
-    public Skilltree getRandomSkilltree(Player p) {
+    public Skilltree getRandomSkilltree(MyPet pet, Player p) {
         TreeMap<Double, Skilltree> skilltreeMap = new TreeMap<>();
         List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getSkilltrees());
 
         double totalWeight = 0;
         for (Skilltree skilltree : skilltrees) {
-            if (Permissions.has(p, skilltree.getFullPermission()) && skilltree.getWeight() > 0) {
+            if (skilltree.getMobTypes().contains(pet.getPetType()) && Permissions.has(p, skilltree.getFullPermission()) && skilltree.getWeight() > 0) {
                 skilltreeMap.put(totalWeight, skilltree);
                 totalWeight += skilltree.getWeight();
             }
