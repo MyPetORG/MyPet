@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.skill.SkillManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.CompatUtil;
+import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
@@ -77,6 +78,13 @@ public class MyPetApi {
      */
     public static PlatformHelper getPlatformHelper() {
         return plugin.getPlatformHelper();
+    }
+
+    /**
+     * @return instance of the error reporter
+     */
+    public static ErrorReporter getErrorReporter() {
+        return plugin.getErrorReporter();
     }
 
     /**
