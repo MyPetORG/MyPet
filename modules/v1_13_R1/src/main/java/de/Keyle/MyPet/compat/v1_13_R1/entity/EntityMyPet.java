@@ -1061,6 +1061,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         EntityLiving passenger = (EntityLiving) this.getFirstPassenger();
 
+        if (passenger.a(TagsFluid.a)) {
+            this.motY += 0.4;
+        }
+
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill == null || !rideSkill.getActive().getValue()) {
             passenger.stopRiding();
