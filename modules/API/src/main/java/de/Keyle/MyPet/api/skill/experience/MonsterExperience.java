@@ -21,17 +21,19 @@
 package de.Keyle.MyPet.api.skill.experience;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.hooks.types.MonsterExperienceHook;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MonsterExperience {
 
     public static final Map<String, MonsterExperience> mobExp = new HashMap<>();
-    public static final Map<String, MonsterExperience> customMobExp = new HashMap<>();
+    public static final Map<String, MonsterExperience> CUSTOM_MOB_EXP = new HashMap<>();
     public static MonsterExperience UNKNOWN = new MonsterExperience(0., "UNKNOWN");
 
     static {
@@ -149,7 +151,7 @@ public class MonsterExperience {
     }
 
     public static void addCustomExperience(MonsterExperience experience) {
-        customMobExp.put(experience.identifier, experience);
+        CUSTOM_MOB_EXP.put(experience.identifier, experience);
     }
 
     private static double doubleRandom(double low, double high) {
@@ -170,11 +172,21 @@ public class MonsterExperience {
             // casting for 1.7.10
             name = ((LivingEntity) entity).getCustomName();
         }
-        if (name != null) {
-            if (customMobExp.containsKey(name)) {
-                return customMobExp.get(name);
+
+        List<MonsterExperienceHook> hooks = MyPetApi.getPluginHookManager().getHooks(MonsterExperienceHook.class);
+        for (MonsterExperienceHook hook : hooks) {
+            MonsterExperience monsterExperience = hook.getMonsterExperience(entity);
+            if (monsterExperience != null) {
+                return monsterExperience;
             }
         }
+
+        if (name != null) {
+            if (!name.startsWith("!") && CUSTOM_MOB_EXP.containsKey(name)) {
+                return CUSTOM_MOB_EXP.get(name);
+            }
+        }
+
         if (mobExp.containsKey(entity.getType().name())) {
             return mobExp.get(entity.getType().name());
         }
@@ -189,8 +201,8 @@ public class MonsterExperience {
     }
 
     public static MonsterExperience getMonsterExperience(String identifier) {
-        if (customMobExp.containsKey(identifier)) {
-            return customMobExp.get(identifier);
+        if (CUSTOM_MOB_EXP.containsKey(identifier)) {
+            return CUSTOM_MOB_EXP.get(identifier);
         }
         if (mobExp.containsKey(identifier)) {
             return mobExp.get(identifier);
