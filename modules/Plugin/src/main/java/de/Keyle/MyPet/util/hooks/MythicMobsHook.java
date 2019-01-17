@@ -27,8 +27,10 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
+import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
+import de.Keyle.MyPet.api.util.hooks.types.MonsterExperienceHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -43,7 +45,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 @PluginHookName("MythicMobs")
-public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook {
+public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, MonsterExperienceHook {
 
     @Override
     public boolean onEnable() {
@@ -135,6 +137,19 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook {
             t.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public MonsterExperience getMonsterExperience(Entity entity) {
+        try {
+            if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
+                MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(entity).getType();
+                return MonsterExperience.CUSTOM_MOB_EXP.get("!MythicMobs:" + defenderType.getInternalName());
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return null;
     }
 
     @LeashFlagName("MythicMobs")

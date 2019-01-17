@@ -478,7 +478,7 @@ public class ConfigurationLoader {
             }
         }
         ConfigurationSection customExpSection = config.getConfigurationSection("Custom");
-        MonsterExperience.customMobExp.clear();
+        MonsterExperience.CUSTOM_MOB_EXP.clear();
         if (customExpSection != null) {
             for (String name : customExpSection.getKeys(false)) {
                 MonsterExperience exp = new MonsterExperience(0, 0, name);
