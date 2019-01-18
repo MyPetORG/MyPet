@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -53,6 +53,7 @@ public class LogFormat extends Formatter {
         }
 
         text = text.replaceAll("(\\u001b\\[\\d{1,3}(?:;\\d+)*m|(?:\\u001b\\[m)*)", "");
+        text = Colorizer.stripColors(text);
 
         return text;
     }
