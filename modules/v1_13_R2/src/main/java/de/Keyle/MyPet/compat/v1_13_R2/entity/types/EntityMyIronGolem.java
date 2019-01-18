@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -82,7 +82,7 @@ public class EntityMyIronGolem extends EntityMyPet {
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Blocks.POPPY.getItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
@@ -97,7 +97,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setFlower(null);
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.damage(1, entityhuman);
                 }
 

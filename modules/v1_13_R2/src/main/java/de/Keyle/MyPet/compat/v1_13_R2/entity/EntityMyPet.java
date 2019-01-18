@@ -501,7 +501,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     }
 
                     if (used) {
-                        if (!entityhuman.abilities.canInstantlyBuild) {
+                        if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                             itemStack.subtract(1);
                             if (itemStack.getCount() <= 0) {
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);

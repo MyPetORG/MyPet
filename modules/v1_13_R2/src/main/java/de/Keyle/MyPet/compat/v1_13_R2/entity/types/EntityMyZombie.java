@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -93,7 +93,7 @@ public class EntityMyZombie extends EntityMyPet {
                     }
                 }
                 if (hadEquipment) {
-                    if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.damage(1, entityhuman);
                     }
                 }
@@ -101,14 +101,14 @@ public class EntityMyZombie extends EntityMyPet {
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
                 ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-                if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                     entityitem.pickupDelay = 10;
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     this.world.addEntity(entityitem);
                 }
                 getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
@@ -116,7 +116,7 @@ public class EntityMyZombie extends EntityMyPet {
                 }
                 return true;
             } else if (Configuration.MyPet.Zombie.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);

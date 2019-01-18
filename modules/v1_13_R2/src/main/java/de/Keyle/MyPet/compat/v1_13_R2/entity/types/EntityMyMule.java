@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -86,7 +86,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
         if (itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
@@ -95,7 +95,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
                 return true;
             } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
                 getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
@@ -119,13 +119,13 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setChest(null);
                 getMyPet().setSaddle(null);
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.damage(1, entityhuman);
                 }
 
                 return true;
             } else if (Configuration.MyPet.Horse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
