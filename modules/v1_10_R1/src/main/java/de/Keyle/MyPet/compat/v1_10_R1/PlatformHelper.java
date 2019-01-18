@@ -196,7 +196,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 ReflectionUtil.setFieldValue("trades", villager, new MerchantRecipeList(nbttaglist));
             }
 
-            NBTTagList invTag = vanillaNBT.getList("BackpackImpl", 10);
+            NBTTagList invTag = vanillaNBT.getList("Inventory", 10);
 
             for (int i = 0; i < invTag.size(); ++i) {
                 ItemStack itemstack = ItemStack.createStack(invTag.get(i));

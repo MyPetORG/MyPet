@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_8_R1.services;
 
+import com.google.common.collect.Sets;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
@@ -36,7 +37,10 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Compat("v1_8_R1")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
@@ -299,10 +303,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         properties.getCompoundData().put("Profession", new TagInt(profession));
 
         TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
-        String[] allowedTags = {"Riches", "Career", "CareerLevel", "Willing", "BackpackImpl", "Offers"};
+        Set<String> allowedTags = Sets.newHashSet("Riches", "Career", "CareerLevel", "Willing", "Inventory", "Offers");
         Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
         for (String key : keys) {
-            if (Arrays.binarySearch(allowedTags, key) > -1) {
+            if (allowedTags.contains(key)) {
                 continue;
             }
             villagerTag.remove(key);
