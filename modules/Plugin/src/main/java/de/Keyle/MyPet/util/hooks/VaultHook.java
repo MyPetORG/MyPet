@@ -74,11 +74,22 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
 
     @Override
     public String getActivationMessage() {
-        try {
-            return " (Economy: " + economy.getName() + ")";
-        } catch (UnsupportedOperationException e) {
-            return " (Economy: " + economy.getClass().getName() + ")";
+        String message = "";
+        if (economy != null) {
+            try {
+                message += " (Economy: " + economy.getName() + ")";
+            } catch (UnsupportedOperationException e) {
+                message += " (Economy: " + economy.getClass().getName() + ")";
+            }
         }
+        if (permission != null) {
+            try {
+                message += " (Permissions: " + permission.getName() + ")";
+            } catch (UnsupportedOperationException e) {
+                message += " (Permissions: " + permission.getClass().getName() + ")";
+            }
+        }
+        return message;
     }
 
     @Override
