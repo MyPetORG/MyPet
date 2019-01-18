@@ -55,6 +55,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -993,13 +994,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
             } else {
                 Preconditions.checkState(!entity.passengers.contains(this), "Circular entity riding! %s %s", this, entity);
-                Event event = null;
+                boolean cancelled = false;
                 if (MyPetApi.getPlatformHelper().isSpigot()) {
-                    //noinspection UnnecessaryFullyQualifiedName
-                    event = new org.spigotmc.event.entity.EntityMountEvent(entity.getBukkitEntity(), this.getBukkitEntity());
-                    Bukkit.getPluginManager().callEvent(event);
+                    cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
                 }
-                if (event != null && ((Cancellable) event).isCancelled()) {
+                if (cancelled) {
                     returnVal = false;
                 } else {
                     if (!(this.bO() instanceof EntityHuman)) {
@@ -1020,6 +1019,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             }
         }
         return returnVal;
+    }
+
+    private static class MountEventWrapper {
+
+        public static boolean callEvent(final CraftEntity player, final CraftMyPet pet) {
+            Event event = new org.spigotmc.event.entity.EntityMountEvent(player, pet);
+            Bukkit.getPluginManager().callEvent(event);
+            return ((Cancellable) event).isCancelled();
+        }
     }
 
     /**
