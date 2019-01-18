@@ -29,12 +29,14 @@ import org.bukkit.entity.LivingEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class MonsterExperience {
 
     public static final Map<String, MonsterExperience> mobExp = new HashMap<>();
     public static final Map<String, MonsterExperience> CUSTOM_MOB_EXP = new HashMap<>();
     public static MonsterExperience UNKNOWN = new MonsterExperience(0., "UNKNOWN");
+    public static Pattern PLUGIN_CONFIG_PATTERN = Pattern.compile("\\[\\w+]=.+");
 
     static {
         mobExp.put("SKELETON", new MonsterExperience(5., "SKELETON"));
@@ -182,7 +184,7 @@ public class MonsterExperience {
         }
 
         if (name != null) {
-            if (!name.startsWith("!") && CUSTOM_MOB_EXP.containsKey(name)) {
+            if (!PLUGIN_CONFIG_PATTERN.matcher(name).matches() && CUSTOM_MOB_EXP.containsKey(name)) {
                 return CUSTOM_MOB_EXP.get(name);
             }
         }

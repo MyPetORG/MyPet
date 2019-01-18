@@ -144,7 +144,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
         try {
             if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
                 MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(entity).getType();
-                return MonsterExperience.CUSTOM_MOB_EXP.get("!MythicMobs:" + defenderType.getInternalName());
+                return MonsterExperience.CUSTOM_MOB_EXP.get("[MythicMobs]=" + defenderType.getInternalName());
             }
         } catch (Throwable t) {
             t.printStackTrace();
