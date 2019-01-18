@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ public class EntityMySnowman extends EntityMyPet {
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Item.getItemOf(Blocks.PUMPKIN) && getMyPet().isSheared() && entityhuman.isSneaking()) {
                 getMyPet().setSheared(false);
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
@@ -53,7 +53,7 @@ public class EntityMySnowman extends EntityMyPet {
             } else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isSneaking()) {
                 getMyPet().setSheared(true);
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
-                if (!entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.damage(1, entityhuman);
                 }
                 return true;
