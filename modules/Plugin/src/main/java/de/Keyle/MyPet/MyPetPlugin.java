@@ -605,8 +605,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         FileConfiguration config = yamlConfiguration.getConfig();
 
         WorldGroup.clearGroups();
-        WorldGroup defaultGroup = new WorldGroup("default", false);
-        WorldGroup disabledGroup = new WorldGroup("---DISABLED---", true);
 
         if (config == null) {
             return;
@@ -628,7 +626,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         for (String world : disabledWorlds) {
             if (Bukkit.getServer().getWorld(world) != null) {
-                if (disabledGroup.addWorld(world)) {
+                if (WorldGroup.DISABLED_GROUP.addWorld(world)) {
                     getLogger().info("   disabled MyPet in '" + world + "'");
                 }
             }
@@ -649,7 +647,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         List<String> worldNames = new ArrayList<>();
         for (World world : getServer().getWorlds()) {
-            if (defaultGroup.addWorld(world.getName())) {
+            if (WorldGroup.DEFAULT_GROUP.addWorld(world.getName())) {
                 getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                 worldNames.add(world.getName());
             }
