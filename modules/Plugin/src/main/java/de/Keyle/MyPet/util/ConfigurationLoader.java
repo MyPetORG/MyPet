@@ -266,6 +266,7 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
+        config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
@@ -275,12 +276,15 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", "bread");
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
+        config.addDefault("MyPet.Pets.Mule.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
         if (MyPetType.Rabbit.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle");
@@ -543,6 +547,10 @@ public class ConfigurationLoader {
         MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle"));
         MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle"));
         MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
+        MyPet.ZombieHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle"));
+        MyPet.SkeletonHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle"));
+        MyPet.Mule.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mule.GrowUpItem", "experience_bottle"));
+        MyPet.Donkey.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle"));
 
         for (MyPetType petType : MyPetType.values()) {
             if (!petType.checkMinecraftVersion()) {

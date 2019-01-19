@@ -122,7 +122,7 @@ public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
                 }
 
                 return true;
-            } else if (Configuration.MyPet.Horse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (Configuration.MyPet.SkeletonHorse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {

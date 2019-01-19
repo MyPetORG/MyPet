@@ -225,6 +225,26 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class SkeletonHorse {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class ZombieHorse {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Mule {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Donkey {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Llama {
 
             public static ConfigItem GROW_UP_ITEM;
