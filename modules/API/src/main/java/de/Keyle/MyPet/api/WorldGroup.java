@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,6 +29,9 @@ public class WorldGroup {
 
     private static Map<String, WorldGroup> allGroups = new HashMap<>();
     private static Map<String, WorldGroup> groupWorlds = new HashMap<>();
+
+    public static final WorldGroup DEFAULT_GROUP = new WorldGroup("default", false);
+    public static final WorldGroup DISABLED_GROUP = new WorldGroup("---DISABLED---", true);
 
     private String name;
     @Getter private boolean disabled;
@@ -95,7 +98,11 @@ public class WorldGroup {
      * @return WorldGroup
      */
     public static WorldGroup getGroupByWorld(String name) {
-        return groupWorlds.get(name);
+        WorldGroup group = groupWorlds.get(name);
+        if (group == null) {
+            return DISABLED_GROUP;
+        }
+        return group;
     }
 
     /**
@@ -105,7 +112,11 @@ public class WorldGroup {
      * @return WorldGroup
      */
     public static WorldGroup getGroupByWorld(World world) {
-        return groupWorlds.get(world.getName());
+        WorldGroup group = groupWorlds.get(world.getName());
+        if (group == null) {
+            return DISABLED_GROUP;
+        }
+        return group;
     }
 
     /**
@@ -115,7 +126,11 @@ public class WorldGroup {
      * @return WorldGroup
      */
     public static WorldGroup getGroupByName(String name) {
-        return allGroups.get(name);
+        WorldGroup group = allGroups.get(name);
+        if (group == null) {
+            return DISABLED_GROUP;
+        }
+        return group;
     }
 
     /**
@@ -124,5 +139,7 @@ public class WorldGroup {
     public static void clearGroups() {
         allGroups.clear();
         groupWorlds.clear();
+        allGroups.put(DEFAULT_GROUP.getName(), DEFAULT_GROUP);
+        allGroups.put(DISABLED_GROUP.getName(), DISABLED_GROUP);
     }
 }
