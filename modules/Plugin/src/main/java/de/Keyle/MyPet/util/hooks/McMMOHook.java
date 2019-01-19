@@ -22,7 +22,6 @@ package de.Keyle.MyPet.util.hooks;
 
 import com.gmail.nossr50.api.PartyAPI;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
-import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.util.player.UserManager;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
@@ -31,20 +30,43 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 @PluginHookName("mcMMO")
 public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
 
+    private static Method METHOD_SkillType_values;
+    private static Method METHOD_SkillType_getName;
+    private static Method METHOD_McMMOPlayer_getSkillLevel;
+
     @Override
     public boolean onEnable() {
         if (Configuration.Hooks.USE_McMMO) {
+            boolean isV2;
+            try {
+                Class.forName("com.gmail.nossr50.datatypes.skills.PrimarySkillType");
+                isV2 = true;
+            } catch (ClassNotFoundException e) {
+                isV2 = false;
+            }
+            Class skillTypeClass;
+            if (isV2) {
+                skillTypeClass = ReflectionUtil.getClass("com.gmail.nossr50.datatypes.skills.PrimarySkillType");
+            } else {
+                skillTypeClass = ReflectionUtil.getClass("com.gmail.nossr50.datatypes.skills.SkillType");
+            }
+            METHOD_SkillType_values = ReflectionUtil.getMethod(skillTypeClass, "values");
+            METHOD_SkillType_getName = ReflectionUtil.getMethod(skillTypeClass, "getName");
+            METHOD_McMMOPlayer_getSkillLevel = ReflectionUtil.getMethod(McMMOPlayer.class, "getSkillLevel", skillTypeClass);
             MyPetApi.getLeashFlagManager().registerLeashFlag(new JobLevelFlag());
             return true;
         }
@@ -88,19 +110,26 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
 
     @LeashFlagName("mcMMO")
     class JobLevelFlag implements LeashFlag {
+
         @Override
         public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
-            for (SkillType skillType : SkillType.values()) {
-                if (settings.map().containsKey(skillType.getName().toLowerCase())) {
-                    LeashFlagSetting setting = settings.map().get(skillType.getName().toLowerCase());
-                    if (Util.isInt(setting.getValue())) {
-                        int requiredLevel = Integer.parseInt(setting.getValue());
-                        McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
-                        if (mmoPlayer.getSkillLevel(skillType) < requiredLevel) {
-                            return false;
+            try {
+                for (Object skillType : (Object[]) METHOD_SkillType_values.invoke(null)) {
+                    String skillName = METHOD_SkillType_getName.invoke(skillType).toString().toLowerCase();
+                    if (settings.map().containsKey(skillName)) {
+                        LeashFlagSetting setting = settings.map().get(skillName);
+                        if (Util.isInt(setting.getValue())) {
+                            int requiredLevel = Integer.parseInt(setting.getValue());
+                            McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
+                            int skillLevel = (int) METHOD_McMMOPlayer_getSkillLevel.invoke(mmoPlayer, skillType);
+                            if (skillLevel < requiredLevel) {
+                                return false;
+                            }
                         }
                     }
                 }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
             return true;
         }
