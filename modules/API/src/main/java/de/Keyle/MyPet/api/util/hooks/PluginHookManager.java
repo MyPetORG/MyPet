@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -158,6 +158,16 @@ public class PluginHookManager {
         hooks.removeAll(hook.getClass());
         hookByName.remove(hook.getPluginName());
         hookByClass.remove(hook.getClass());
+    }
+
+    /**
+     * returns all enabled hooks
+     *
+     * @return list of instances of the hook class
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends PluginHook> List<T> getHooks() {
+        return (List<T>) new ArrayList<>(hookByName.values());
     }
 
     /**

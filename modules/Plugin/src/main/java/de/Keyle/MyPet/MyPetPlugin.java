@@ -38,6 +38,7 @@ import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -329,6 +330,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
         Timer.startTimer();
 
+        updater.waitForDownload();
+
+        pluginHookManager.enableHooks();
+        serviceManager.activate(Load.State.AfterHooks);
+
         // init Metrics
         try {
             Metrics metrics = new Metrics(this);
@@ -345,14 +351,17 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
                 return mode;
             }
             ));
+            metrics.addCustomChart(new Metrics.AdvancedPie("hooks", () -> {
+                Map<String, Integer> activatedHooks = new HashMap<>();
+                for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
+                    activatedHooks.put(hook.getPluginName(), 1);
+                }
+                return activatedHooks;
+            }
+            ));
         } catch (Throwable e) {
             errorReporter.sendError(e, "Init Metrics failed");
         }
-
-        updater.waitForDownload();
-
-        pluginHookManager.enableHooks();
-        serviceManager.activate(Load.State.AfterHooks);
 
         getLogger().info("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
