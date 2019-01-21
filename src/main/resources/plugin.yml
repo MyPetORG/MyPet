@@ -7,7 +7,9 @@ website: ${project.url}
 softdepend:
   - Ancient
   - BattleArena
+  - BossShopPro
   - Citizens
+  - CombatLogX
   - Factions
   - GangsPlus
   - GriefPrevention
@@ -19,6 +21,7 @@ softdepend:
   - MiniaturePets
   - Minigames
   - MobArena
+  - MobStacker
   - Multiverse-Core
   - MythicMobs
   - NoCheatPlus
@@ -34,6 +37,7 @@ softdepend:
   - Residence
   - SimpleClans
   - SkillAPI
+  - StackMob
   - SuperVanish
   - SurvivalGames
   - Towny
