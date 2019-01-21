@@ -50,6 +50,7 @@ import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
+import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -542,7 +543,15 @@ public class EntityListener implements Listener {
                         Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
                         converter.ifPresent(service -> inactiveMyPet.setInfo(service.convertEntity(leashTarget)));
 
-                        leashTarget.remove();
+                        boolean remove = true;
+                        for (LeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(LeashEntityHook.class)) {
+                            if (!hook.prepare(leashTarget)) {
+                                remove = false;
+                            }
+                        }
+                        if (remove) {
+                            leashTarget.remove();
+                        }
 
                         if (!usedArrow) {
                             if (Configuration.Misc.CONSUME_LEASH_ITEM && player.getGameMode() != GameMode.CREATIVE && leashItem != null) {
