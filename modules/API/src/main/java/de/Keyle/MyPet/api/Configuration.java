@@ -296,6 +296,8 @@ public class Configuration {
         public static boolean USE_PlotSquared = true;
         public static boolean USE_PvPDiffTimer = true;
         public static boolean USE_PreciousStones = true;
+        public static boolean USE_MobStacker = true;
+        public static boolean USE_StackMob = true;
 
         public static class SkillAPI {
 

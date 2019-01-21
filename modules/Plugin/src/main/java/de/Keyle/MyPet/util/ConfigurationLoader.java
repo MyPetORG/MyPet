@@ -143,6 +143,8 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.MythicMobs.Disable-Leashing", Hooks.DISABLE_MYTHIC_MOB_LEASHING);
         config.addDefault("MyPet.Hooks.CombatLogX.Enabled", Hooks.CombatLogX.ENABLED);
         config.addDefault("MyPet.Hooks.CombatLogX.Ignore-Plugin-Settings", Hooks.CombatLogX.IGNORE_PLUGIN_SETTINGS);
+        config.addDefault("MyPet.Hooks.MobStacker", Hooks.USE_MobStacker);
+        config.addDefault("MyPet.Hooks.StackMob", Hooks.USE_StackMob);
 
         config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
         config.addDefault("MyPet.Name.MaxLength", Name.MAX_LENGTH);
@@ -383,6 +385,8 @@ public class ConfigurationLoader {
         Hooks.DISABLE_MYTHIC_MOB_LEASHING = config.getBoolean("MyPet.Hooks.MythicMobs.Disable-Leashing", true);
         Hooks.CombatLogX.ENABLED = config.getBoolean("MyPet.Hooks.CombatLogX.Enabled", true);
         Hooks.CombatLogX.IGNORE_PLUGIN_SETTINGS = config.getBoolean("MyPet.Hooks.CombatLogX.Ignore-Plugin-Settings", false);
+        Hooks.USE_MobStacker = config.getBoolean("MyPet.Hooks.MobStacker", true);
+        Hooks.USE_StackMob = config.getBoolean("MyPet.Hooks.StackMob", true);
 
         LevelSystem.Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
