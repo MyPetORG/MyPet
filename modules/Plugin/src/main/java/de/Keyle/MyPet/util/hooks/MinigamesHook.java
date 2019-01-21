@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@ import au.com.mineauz.minigames.Minigames;
 import au.com.mineauz.minigames.events.JoinMinigameEvent;
 import au.com.mineauz.minigames.events.SpectateMinigameEvent;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -42,12 +41,9 @@ public class MinigamesHook implements AllowedHook {
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.DISABLE_PETS_IN_MINIGAMES) {
-            minigames = MyPetApi.getPluginHookManager().getPluginInstance(Minigames.class).get();
-            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-            return true;
-        }
-        return false;
+        minigames = MyPetApi.getPluginHookManager().getPluginInstance(Minigames.class).get();
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        return true;
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,25 +20,33 @@
 
 package de.Keyle.MyPet.api.util.hooks;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
 /**
  * Plugin hooks are used to create a wrapper for functionality used from another plugin.
  */
 public interface PluginHook extends Listener {
+
     /**
      * Method that is called when the hook gets enabled
      *
      * @return if activation was successfull
      */
     default boolean onEnable() {
-        return false;
+        return true;
     }
 
     /**
      * Method that is called when the hook gets disabled
      */
     default void onDisable() {
+    }
+
+    /**
+     * Method that is called before the hook gets enabled to load the config
+     */
+    default void loadConfig(ConfigurationSection config) {
     }
 
     /**

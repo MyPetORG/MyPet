@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -38,13 +37,11 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_Residence) {
-            residence = MyPetApi.getPluginHookManager().getPluginInstance(Residence.class).get();
+        residence = MyPetApi.getPluginHookManager().getPluginInstance(Residence.class).get();
 
             FlagPermissions.addFlag("mypet-damage");
             return true;
-        }
-        return false;
+
     }
 
     @Override

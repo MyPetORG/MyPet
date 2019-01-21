@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import org.bukkit.entity.LivingEntity;
@@ -39,7 +38,7 @@ public class StackMobHook implements LeashEntityHook {
         StackMob sm = (StackMob) MyPetApi.getPluginHookManager().getPluginInstance("StackMob").get();
         entityManager = new EntityManager(sm);
 
-        return Configuration.Hooks.USE_StackMob;
+        return true;
     }
 
     @Override

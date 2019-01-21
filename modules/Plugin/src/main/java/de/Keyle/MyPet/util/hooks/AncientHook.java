@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@ package de.Keyle.MyPet.util.hooks;
 
 import com.ancientshores.Ancient.Guild.AncientGuild;
 import com.ancientshores.Ancient.Party.AncientParty;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -35,11 +34,6 @@ import java.util.UUID;
 
 @PluginHookName("Ancient")
 public class AncientHook implements PlayerVersusPlayerHook, PartyHook {
-
-    @Override
-    public boolean onEnable() {
-        return Configuration.Hooks.USE_AncientRPG;
-    }
 
     public boolean canHurt(Player attacker, Player defender) {
         try {

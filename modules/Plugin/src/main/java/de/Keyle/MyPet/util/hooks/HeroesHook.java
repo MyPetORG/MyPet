@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@ import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.party.HeroParty;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -40,11 +39,8 @@ public class HeroesHook implements PlayerVersusPlayerHook, PartyHook {
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_Heroes) {
-            heroes = MyPetApi.getPluginHookManager().getPluginInstance(Heroes.class).get();
-            return true;
-        }
-        return false;
+        heroes = MyPetApi.getPluginHookManager().getPluginInstance(Heroes.class).get();
+        return true;
     }
 
     @Override

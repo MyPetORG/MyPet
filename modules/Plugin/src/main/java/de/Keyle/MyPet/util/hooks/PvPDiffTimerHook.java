@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import br.net.fabiozumbi12.PvPDiffTimer.Worlds;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.World;
@@ -29,10 +28,6 @@ import org.bukkit.entity.Player;
 
 @PluginHookName("PvPDiffTimer")
 public class PvPDiffTimerHook implements PlayerVersusPlayerHook {
-    @Override
-    public boolean onEnable() {
-        return Configuration.Hooks.USE_PvPDiffTimer;
-    }
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {

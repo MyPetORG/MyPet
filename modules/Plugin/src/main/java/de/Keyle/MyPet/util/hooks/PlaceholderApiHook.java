@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -49,11 +49,10 @@ public class PlaceholderApiHook implements PluginHook {
         boolean loaded = registerParentPlaceHolder();
         if (loaded) {
             registerPlaceholder();
-        }
-
-        PlaceholderAPIPlugin plugin = MyPetApi.getPluginHookManager().getPluginInstance(PlaceholderAPIPlugin.class).get();
-        if (Util.versionCompare(plugin.getDescription().getVersion(), "2.8.5") < 0) {
-            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+            PlaceholderAPIPlugin plugin = MyPetApi.getPluginHookManager().getPluginInstance(PlaceholderAPIPlugin.class).get();
+            if (Util.versionCompare(plugin.getDescription().getVersion(), "2.8.5") < 0) {
+                Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+            }
         }
         return loaded;
     }

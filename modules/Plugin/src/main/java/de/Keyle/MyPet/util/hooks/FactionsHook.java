@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -48,53 +47,51 @@ public class FactionsHook implements PlayerVersusPlayerHook {
     @SuppressWarnings("unchecked")
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_Factions) {
-            try {
-                Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineMain");
-                Method getMethod = engineClass.getDeclaredMethod("get");
-                engine = getMethod.invoke(null);
-                engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
-                engineMethod.setAccessible(true);
-                apiVersion = ApiVersion.V1;
-                return true;
-            } catch (Throwable ignored) {
-            }
-            try {
-                Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineCombat");
-                Method getMethod = engineClass.getDeclaredMethod("get");
-                engine = getMethod.invoke(null);
-                engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
-                engineMethod.setAccessible(true);
-                apiVersion = ApiVersion.V2;
-                return true;
-            } catch (Throwable ignored) {
-            }
-            try {
-                Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineCanCombatHappen");
-                Method getMethod = engineClass.getDeclaredMethod("get");
-                engine = getMethod.invoke(null);
-                engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
-                engineMethod.setAccessible(true);
-                apiVersion = ApiVersion.V3;
-                return true;
-            } catch (Throwable ignored) {
-            }
-            try {
-                for (RegisteredListener rl : EntityDamageEvent.getHandlerList().getRegisteredListeners()) {
-                    Listener l = rl.getListener();
-                    if (l.getClass().getName().equalsIgnoreCase("com.massivecraft.factions.listeners.FactionsEntityListener")) {
-                        engine = l;
-                        engineMethod = l.getClass().getDeclaredMethod("canDamagerHurtDamagee", EntityDamageByEntityEvent.class, boolean.class);
-                        engineMethod.setAccessible(true);
-                        apiVersion = ApiVersion.Savage;
-                        return true;
-                    }
-                }
-            } catch (Throwable ignored) {
-            }
-            MyPetApi.getLogger().warning("Factions was found but no suitable MyPet hook was provided. Please report this to the MyPet developer.");
-            MyPetApi.getLogger().warning("Factions version: " + MyPetApi.getPluginHookManager().getPluginInstance("Factions").get().getDescription().getVersion());
+        try {
+            Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineMain");
+            Method getMethod = engineClass.getDeclaredMethod("get");
+            engine = getMethod.invoke(null);
+            engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+            engineMethod.setAccessible(true);
+            apiVersion = ApiVersion.V1;
+            return true;
+        } catch (Throwable ignored) {
         }
+        try {
+            Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineCombat");
+            Method getMethod = engineClass.getDeclaredMethod("get");
+            engine = getMethod.invoke(null);
+            engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+            engineMethod.setAccessible(true);
+            apiVersion = ApiVersion.V2;
+            return true;
+        } catch (Throwable ignored) {
+        }
+        try {
+            Class engineClass = ReflectionUtil.getClass("com.massivecraft.factions.engine.EngineCanCombatHappen");
+            Method getMethod = engineClass.getDeclaredMethod("get");
+            engine = getMethod.invoke(null);
+            engineMethod = engineClass.getDeclaredMethod("canCombatDamageHappen", EntityDamageByEntityEvent.class, boolean.class);
+            engineMethod.setAccessible(true);
+            apiVersion = ApiVersion.V3;
+            return true;
+        } catch (Throwable ignored) {
+        }
+        try {
+            for (RegisteredListener rl : EntityDamageEvent.getHandlerList().getRegisteredListeners()) {
+                Listener l = rl.getListener();
+                if (l.getClass().getName().equalsIgnoreCase("com.massivecraft.factions.listeners.FactionsEntityListener")) {
+                    engine = l;
+                    engineMethod = l.getClass().getDeclaredMethod("canDamagerHurtDamagee", EntityDamageByEntityEvent.class, boolean.class);
+                    engineMethod.setAccessible(true);
+                    apiVersion = ApiVersion.Savage;
+                    return true;
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        MyPetApi.getLogger().warning("Factions was found but no suitable MyPet hook was provided. Please report this to the MyPet developer.");
+        MyPetApi.getLogger().warning("Factions version: " + MyPetApi.getPluginHookManager().getPluginInstance("Factions").get().getDescription().getVersion());
         return false;
     }
 

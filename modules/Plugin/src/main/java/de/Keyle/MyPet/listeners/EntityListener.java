@@ -857,9 +857,6 @@ public class EntityListener implements Listener {
         if (deadEntity instanceof MyPetBukkitEntity) {
             return;
         }
-        if (Configuration.Hooks.SkillAPI.DISABLE_VANILLA_EXP) {
-            return;
-        }
         if (WorldGroup.getGroupByWorld(deadEntity.getWorld()).isDisabled()) {
             return;
         }

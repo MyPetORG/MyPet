@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
@@ -38,6 +37,7 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.sentry.util.Util;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -47,6 +47,8 @@ import org.bukkit.event.HandlerList;
 @PluginHookName("MythicMobs")
 public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, MonsterExperienceHook {
 
+    public static boolean DISABLE_MYTHIC_MOB_LEASHING = true;
+    
     @Override
     public boolean onEnable() {
         MyPetApi.getLeashFlagManager().registerLeashFlag(new MythicMobFlag());
@@ -58,6 +60,13 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
     public void onDisable() {
         MyPetApi.getLeashFlagManager().removeFlag("MythicMobs");
         HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public void loadConfig(ConfigurationSection config) {
+        config.addDefault("Disable-Leashing", DISABLE_MYTHIC_MOB_LEASHING);
+
+        DISABLE_MYTHIC_MOB_LEASHING = config.getBoolean("Disable-Leashing", true);
     }
 
     @EventHandler
@@ -97,7 +106,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
 
     @Override
     public boolean canLeash(Player attacker, Entity defender) {
-        if (Configuration.Hooks.DISABLE_MYTHIC_MOB_LEASHING) {
+        if (DISABLE_MYTHIC_MOB_LEASHING) {
             try {
                 if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender))) {
                     MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(defender).getType();

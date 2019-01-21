@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ package de.Keyle.MyPet.util.hooks;
 import com.mewin.WGCustomFlags.WGCustomFlagsPlugin;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -38,10 +37,9 @@ public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, Player
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_WorldGuard) {
-            try {
-                if (MyPetApi.getPluginHookManager().isPluginUsable("WorldGuard")) {
-                    wgHook = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
+        try {
+            if (MyPetApi.getPluginHookManager().isPluginUsable("WorldGuard")) {
+                wgHook = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
 
                     WGCustomFlagsPlugin wgcfPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WGCustomFlagsPlugin.class).get();
                     wgcfPlugin.addCustomFlag(WorldGuardHook.DAMAGE_FLAG);
@@ -50,7 +48,7 @@ public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, Player
                     return true;
                 }
             } catch (Throwable ignored) {
-            }
+
         }
         return false;
     }

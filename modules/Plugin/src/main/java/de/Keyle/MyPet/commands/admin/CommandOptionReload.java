@@ -29,12 +29,14 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
@@ -106,7 +108,13 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         ExperienceCalculatorManager calculatorManager = MyPetApi.getServiceManager().getService(ExperienceCalculatorManager.class).get();
         calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE);
 
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config reloaded!");
+        MyPetApi.getPluginHookManager().getConfig().loadConfig();
+        for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
+            hook.loadConfig(MyPetApi.getPluginHookManager().getConfig().getConfig().getConfigurationSection(hook.getPluginName()));
+        }
+        if (!(sender instanceof ConsoleCommandSender)) {
+            sender.sendMessage("[" + ChatColor.DARK_GREEN + "MyPet" + ChatColor.RESET + "] config reloaded!");
+        }
         MyPetApi.getLogger().info("Config reloaded!");
     }
 

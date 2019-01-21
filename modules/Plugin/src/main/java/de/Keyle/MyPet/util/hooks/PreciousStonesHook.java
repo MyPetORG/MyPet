@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -33,11 +32,6 @@ import org.bukkit.entity.Villager;
 
 @PluginHookName("PreciousStones")
 public class PreciousStonesHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
-
-    @Override
-    public boolean onEnable() {
-        return Configuration.Hooks.USE_PreciousStones;
-    }
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {

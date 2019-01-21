@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class ConfigurationYAML {
+
     public File yamlFile;
     private FileConfiguration config;
 
@@ -35,11 +36,7 @@ public class ConfigurationYAML {
 
     public ConfigurationYAML(File file) {
         yamlFile = file;
-        config = new org.bukkit.configuration.file.YamlConfiguration();
-        try {
-            config.load(yamlFile);
-        } catch (Exception ignored) {
-        }
+        loadConfig();
         file.setWritable(true);
         file.setReadable(true);
     }
@@ -54,6 +51,16 @@ public class ConfigurationYAML {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean loadConfig() {
+        clearConfig();
+        try {
+            config.load(yamlFile);
+            return true;
+        } catch (Exception ignored) {
             return false;
         }
     }
