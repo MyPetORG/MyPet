@@ -408,6 +408,14 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/guilds-v3-guilds-reborn-is-live.48920/ -->
+            <groupId>me.glaremasters</groupId>
+            <artifactId>Guilds</artifactId>
+            <version>3.3</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-premium-apis</artifactId>
             <version>1.0-SNAPSHOT</version>
