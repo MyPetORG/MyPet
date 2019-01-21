@@ -298,6 +298,7 @@ public class Configuration {
         public static boolean USE_PreciousStones = true;
         public static boolean USE_MobStacker = true;
         public static boolean USE_StackMob = true;
+        public static boolean USE_Guilds = true;
 
         public static class SkillAPI {
 

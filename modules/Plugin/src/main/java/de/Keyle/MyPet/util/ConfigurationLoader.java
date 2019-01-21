@@ -145,6 +145,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Hooks.CombatLogX.Ignore-Plugin-Settings", Hooks.CombatLogX.IGNORE_PLUGIN_SETTINGS);
         config.addDefault("MyPet.Hooks.MobStacker", Hooks.USE_MobStacker);
         config.addDefault("MyPet.Hooks.StackMob", Hooks.USE_StackMob);
+        config.addDefault("MyPet.Hooks.Guilds", Hooks.USE_Guilds);
 
         config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
         config.addDefault("MyPet.Name.MaxLength", Name.MAX_LENGTH);
@@ -387,6 +388,7 @@ public class ConfigurationLoader {
         Hooks.CombatLogX.IGNORE_PLUGIN_SETTINGS = config.getBoolean("MyPet.Hooks.CombatLogX.Ignore-Plugin-Settings", false);
         Hooks.USE_MobStacker = config.getBoolean("MyPet.Hooks.MobStacker", true);
         Hooks.USE_StackMob = config.getBoolean("MyPet.Hooks.StackMob", true);
+        Hooks.USE_Guilds = config.getBoolean("MyPet.Hooks.Guilds", true);
 
         LevelSystem.Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
