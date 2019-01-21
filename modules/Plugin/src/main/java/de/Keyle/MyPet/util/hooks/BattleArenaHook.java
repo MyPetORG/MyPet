@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -38,11 +37,8 @@ public class BattleArenaHook implements AllowedHook {
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.DISABLE_PETS_IN_ARENA) {
-            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-            return true;
-        }
-        return false;
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        return true;
     }
 
     @Override

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import me.jet315.stacker.MobStacker;
@@ -44,7 +43,7 @@ public class MobStackerHook implements LeashEntityHook {
     @Override
     public boolean onEnable() {
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-        return Configuration.Hooks.USE_MobStacker;
+        return true;
     }
 
     @Override

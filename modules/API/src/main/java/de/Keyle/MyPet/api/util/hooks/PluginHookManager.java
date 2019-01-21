@@ -22,11 +22,15 @@ package de.Keyle.MyPet.api.util.hooks;
 
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
+import lombok.Getter;
 import org.apache.commons.lang.ClassUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -36,10 +40,17 @@ import java.util.*;
  */
 public class PluginHookManager {
 
-    ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
-    Map<String, PluginHook> hookByName = new HashMap<>();
-    Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
-    Queue<PluginHook> registeredHooks = new ArrayDeque<>();
+    protected ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
+    protected Map<String, PluginHook> hookByName = new HashMap<>();
+    protected Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
+    protected Queue<PluginHook> registeredHooks = new ArrayDeque<>();
+    @Getter public ConfigurationYAML config;
+
+    public PluginHookManager() {
+        File hookConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "hooks-config.yml");
+        config = new ConfigurationYAML(hookConfigFile);
+        config.getConfig().options().copyDefaults(true);
+    }
 
     /**
      * Register new hooks here. A hook needs the {@link PluginHookName} annotation to be accepted.
@@ -89,7 +100,11 @@ public class PluginHookManager {
             } else if (!isPluginUsable(hook.getPluginName())) {
                 return false;
             }
-            if (hook.onEnable()) {
+
+            boolean enable = loadHookConfig(hook);
+            config.saveConfig();
+
+            if (enable && hook.onEnable()) {
                 boolean genericHook = true;
                 for (Object o : ClassUtils.getAllInterfaces(hook.getClass())) {
                     if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
@@ -117,6 +132,20 @@ public class PluginHookManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    protected boolean loadHookConfig(PluginHook hook) {
+        boolean enable = true;
+        FileConfiguration config = this.config.getConfig();
+        if (config.contains(hook.getPluginName())) {
+            enable = config.getBoolean(hook.getPluginName(), true);
+        } else {
+            config.addDefault(hook.getPluginName() + ".Enabled", true);
+        }
+
+        hook.loadConfig(config.getConfigurationSection(hook.getPluginName()));
+
+        return enable;
     }
 
     /**

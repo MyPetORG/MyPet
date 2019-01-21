@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ package de.Keyle.MyPet.util.hooks;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -37,11 +36,8 @@ public class TownyHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_Towny) {
-            towny = MyPetApi.getPluginHookManager().getPluginInstance(Towny.class).get();
-            return true;
-        }
-        return false;
+        towny = MyPetApi.getPluginHookManager().getPluginInstance(Towny.class).get();
+        return true;
     }
 
     @Override

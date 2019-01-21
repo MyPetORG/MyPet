@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
@@ -34,6 +33,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -41,22 +41,22 @@ import org.bukkit.plugin.Plugin;
 @PluginHookName("Citizens")
 public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, LeashHook {
 
+    public static double NPC_STORAGE_COSTS_FIXED = 5;
+    public static double NPC_STORAGE_COSTS_FACTOR = 1;
+
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.Citizens.ENABLED) {
-            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
-            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
-            if (MyPetVersion.isPremium()) {
-                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ShopTrait.class).withName("mypet-shop"));
-            }
-            Plugin npcPlugin = Bukkit.getPluginManager().getPlugin("MyPet-NPC");
-            if (npcPlugin != null) {
-                MyPetApi.getLogger().warning("MyPet-NPC is included into MyPet now. Please remove the MyPet-NPC plugin!");
-                npcPlugin.setNaggable(false);
-            }
-            return true;
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
+        if (MyPetVersion.isPremium()) {
+            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ShopTrait.class).withName("mypet-shop"));
         }
-        return false;
+        Plugin npcPlugin = Bukkit.getPluginManager().getPlugin("MyPet-NPC");
+        if (npcPlugin != null) {
+            MyPetApi.getLogger().warning("MyPet-NPC is included into MyPet now. Please remove the MyPet-NPC plugin!");
+            npcPlugin.setNaggable(false);
+        }
+        return true;
     }
 
     @Override
@@ -64,6 +64,15 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
         CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
         CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
         CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(ShopTrait.class).withName("mypet-shop"));
+    }
+
+    @Override
+    public void loadConfig(ConfigurationSection config) {
+        config.addDefault("Storage-Trait.Costs.Fixed", NPC_STORAGE_COSTS_FIXED);
+        config.addDefault("Storage-Trait.Costs.Factor", NPC_STORAGE_COSTS_FACTOR);
+
+        NPC_STORAGE_COSTS_FACTOR = config.getDouble("Storage-Trait.Costs.Factor", 5.0);
+        NPC_STORAGE_COSTS_FIXED = config.getDouble("Storage-Trait.Costs.Fixed", 5.0);
     }
 
     public boolean canHurt(Player attacker, Entity defender) {

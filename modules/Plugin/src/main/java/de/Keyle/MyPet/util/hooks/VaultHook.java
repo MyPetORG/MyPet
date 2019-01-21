@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
@@ -34,6 +33,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -43,13 +43,15 @@ import java.util.UUID;
 @PluginHookName("Vault")
 public class VaultHook implements EconomyHook, PermissionGroupHook {
 
+    public static boolean USE_ECONOMY = true;
+
     private Economy economy = null;
     private Permission permission = null;
 
     @Override
     public boolean onEnable() {
         boolean enabled = false;
-        if (Configuration.Hooks.USE_ECONOMY) {
+        if (USE_ECONOMY) {
             RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
             if (economyProvider != null) {
                 economy = economyProvider.getProvider();
@@ -70,6 +72,13 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
         MyPetApi.getLeashFlagManager().removeFlag("PermissionGroup");
         economy = null;
         permission = null;
+    }
+
+    @Override
+    public void loadConfig(ConfigurationSection config) {
+        config.addDefault("Economy", USE_ECONOMY);
+
+        USE_ECONOMY = config.getBoolean("Economy", true);
     }
 
     @Override

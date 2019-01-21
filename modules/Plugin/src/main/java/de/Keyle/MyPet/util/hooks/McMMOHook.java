@@ -24,7 +24,6 @@ import com.gmail.nossr50.api.PartyAPI;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.util.player.UserManager;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
@@ -50,27 +49,24 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_McMMO) {
-            boolean isV2;
-            try {
-                Class.forName("com.gmail.nossr50.datatypes.skills.PrimarySkillType");
-                isV2 = true;
-            } catch (ClassNotFoundException e) {
-                isV2 = false;
-            }
-            Class skillTypeClass;
-            if (isV2) {
-                skillTypeClass = ReflectionUtil.getClass("com.gmail.nossr50.datatypes.skills.PrimarySkillType");
-            } else {
-                skillTypeClass = ReflectionUtil.getClass("com.gmail.nossr50.datatypes.skills.SkillType");
-            }
-            METHOD_SkillType_values = ReflectionUtil.getMethod(skillTypeClass, "values");
-            METHOD_SkillType_getName = ReflectionUtil.getMethod(skillTypeClass, "getName");
-            METHOD_McMMOPlayer_getSkillLevel = ReflectionUtil.getMethod(McMMOPlayer.class, "getSkillLevel", skillTypeClass);
-            MyPetApi.getLeashFlagManager().registerLeashFlag(new JobLevelFlag());
-            return true;
+        boolean isV2;
+        try {
+            Class.forName("com.gmail.nossr50.datatypes.skills.PrimarySkillType");
+            isV2 = true;
+        } catch (ClassNotFoundException e) {
+            isV2 = false;
         }
-        return false;
+        Class skillTypeClass;
+        if (isV2) {
+            skillTypeClass = ReflectionUtil.getClass("com.gmail.nossr50.datatypes.skills.PrimarySkillType");
+        } else {
+            skillTypeClass = ReflectionUtil.getClass("com.gmail.nossr50.datatypes.skills.SkillType");
+        }
+        METHOD_SkillType_values = ReflectionUtil.getMethod(skillTypeClass, "values");
+        METHOD_SkillType_getName = ReflectionUtil.getMethod(skillTypeClass, "getName");
+        METHOD_McMMOPlayer_getSkillLevel = ReflectionUtil.getMethod(McMMOPlayer.class, "getSkillLevel", skillTypeClass);
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new JobLevelFlag());
+        return true;
     }
 
     @Override

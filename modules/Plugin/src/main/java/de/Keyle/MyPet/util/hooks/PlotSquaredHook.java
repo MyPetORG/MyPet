@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -38,16 +37,13 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_PlotSquared) {
-            try {
-                Class.forName("com.github.intellectualsites.plotsquared.plot.object.Plot");
-                isV4 = true;
-            } catch (ClassNotFoundException e) {
-                isV4 = false;
-            }
-            return true;
+        try {
+            Class.forName("com.github.intellectualsites.plotsquared.plot.object.Plot");
+            isV4 = true;
+        } catch (ClassNotFoundException e) {
+            isV4 = false;
         }
-        return false;
+        return true;
     }
 
     @Override

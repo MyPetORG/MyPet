@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ package de.Keyle.MyPet.util.hooks;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -32,6 +31,7 @@ import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -42,11 +42,15 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 @PluginHookName(value = "MobArena", classPath = "com.garbagemule.MobArena.MobArena")
 public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
+    public static boolean ENABLED = true;
+    public static boolean ALLOW_PETS = true;
+    public static boolean RESPECT_PVP_RULE = true;
+    
     protected MobArenaHandler mobArenaHandler;
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.MobArena.ENABLED) {
+        if (ENABLED) {
             Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
             mobArenaHandler = new MobArenaHandler();
             return true;
@@ -60,8 +64,19 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
     }
 
     @Override
+    public void loadConfig(ConfigurationSection config) {
+        config.addDefault("Enabled", ENABLED);
+        config.addDefault("AllowPets", ALLOW_PETS);
+        config.addDefault("RespectPvPRule", RESPECT_PVP_RULE);
+
+        ENABLED = config.getBoolean("Enabled", true);
+        ALLOW_PETS = config.getBoolean("AllowPets", true);
+        RESPECT_PVP_RULE = config.getBoolean("RespectPvPRule", true);
+    }
+
+    @Override
     public boolean isPetAllowed(MyPetPlayer owner) {
-        if (!Configuration.Hooks.MobArena.ALLOW_PETS) {
+        if (!ALLOW_PETS) {
             try {
                 return !mobArenaHandler.isPlayerInArena(owner.getPlayer());
             } catch (Throwable ignored) {
@@ -72,7 +87,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
-        if (Configuration.Hooks.MobArena.RESPECT_PVP_RULE) {
+        if (RESPECT_PVP_RULE) {
             try {
                 if (mobArenaHandler.isPlayerInArena(defender)) {
                     return mobArenaHandler.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
@@ -85,7 +100,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
     @EventHandler
     public void onJoinPvPArena(ArenaPlayerJoinEvent event) {
-        if (!Configuration.Hooks.MobArena.ALLOW_PETS) {
+        if (!ALLOW_PETS) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
                 if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {

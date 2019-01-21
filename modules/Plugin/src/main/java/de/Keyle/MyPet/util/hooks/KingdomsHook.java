@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.Player;
@@ -31,11 +30,6 @@ import org.kingdoms.manager.game.GameManagement;
 
 @PluginHookName("Kingdoms")
 public class KingdomsHook implements PlayerVersusPlayerHook {
-
-    @Override
-    public boolean onEnable() {
-        return Configuration.Hooks.USE_Kingdoms;
-    }
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {

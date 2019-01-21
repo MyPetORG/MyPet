@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,12 +23,12 @@ package de.Keyle.MyPet.util.hooks;
 import com.SirBlobman.combatlogx.config.ConfigOptions;
 import com.SirBlobman.combatlogx.utility.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -43,13 +43,12 @@ import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagType;
 @PluginHookName("CombatLogX")
 public class CombatLogXHook implements PluginHook {
 
+    public static boolean IGNORE_PLUGIN_SETTINGS = false;
+
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.CombatLogX.ENABLED) {
-            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-            return true;
-        }
-        return false;
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        return true;
     }
 
     @Override
@@ -57,16 +56,23 @@ public class CombatLogXHook implements PluginHook {
         HandlerList.unregisterAll(this);
     }
 
+    @Override
+    public void loadConfig(ConfigurationSection config) {
+        config.addDefault("MyPet.Hooks.CombatLogX.Ignore-Plugin-Settings", IGNORE_PLUGIN_SETTINGS);
+
+        IGNORE_PLUGIN_SETTINGS = config.getBoolean("Ignore-Plugin-Settings", false);
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void on(EntityDamageByEntityEvent e) {
         Entity damaged = e.getEntity();
         Entity damager = e.getDamager();
 
-        if ((damager instanceof CraftMyPetProjectile) && (ConfigOptions.OPTION_LINK_PROJECTILES || Configuration.Hooks.CombatLogX.IGNORE_PLUGIN_SETTINGS)) {
+        if ((damager instanceof CraftMyPetProjectile) && (ConfigOptions.OPTION_LINK_PROJECTILES || IGNORE_PLUGIN_SETTINGS)) {
             damager = ((CraftMyPetProjectile) damager).getShootingMyPet();
         }
 
-        if ((damager instanceof MyPetBukkitEntity) && (ConfigOptions.OPTION_LINK_PETS || Configuration.Hooks.CombatLogX.IGNORE_PLUGIN_SETTINGS)) {
+        if ((damager instanceof MyPetBukkitEntity) && (ConfigOptions.OPTION_LINK_PETS || IGNORE_PLUGIN_SETTINGS)) {
             damager = ((MyPetBukkitEntity) damager).getOwner().getPlayer();
         } else {
             return;

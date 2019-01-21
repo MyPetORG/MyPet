@@ -41,7 +41,6 @@
 package de.Keyle.MyPet.util.hooks.citizens;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -54,6 +53,7 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
+import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
@@ -277,6 +277,6 @@ public class StorageTrait extends Trait {
     }
 
     public double calculateStorageCosts(MyPet myPet) {
-        return Configuration.Hooks.Citizens.NPC_STORAGE_COSTS_FIXED + (myPet.getExperience().getLevel() * Configuration.Hooks.Citizens.NPC_STORAGE_COSTS_FACTOR);
+        return CitizensHook.NPC_STORAGE_COSTS_FIXED + (myPet.getExperience().getLevel() * CitizensHook.NPC_STORAGE_COSTS_FACTOR);
     }
 }

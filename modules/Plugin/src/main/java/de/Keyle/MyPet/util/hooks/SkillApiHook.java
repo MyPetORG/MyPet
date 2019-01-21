@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,12 +34,17 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 @PluginHookName("SkillAPI")
 public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
+
+    public static boolean ALLOW_LEVEL_DOWNGRADE = true;
+    public static boolean GRANT_EXP = true;
+    public static int EXP_PERCENT = 100;
 
     boolean hasFriendly = false;
 
@@ -62,9 +67,20 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
         HandlerList.unregisterAll(this);
     }
 
+    @Override
+    public void loadConfig(ConfigurationSection config) {
+        config.addDefault("GrantExp", GRANT_EXP);
+        config.addDefault("Allow-Level-Downgrade", ALLOW_LEVEL_DOWNGRADE);
+        config.addDefault("ExpPercent", EXP_PERCENT);
+
+        ALLOW_LEVEL_DOWNGRADE = config.getBoolean("Allow-Level-Downgrade", true);
+        GRANT_EXP = config.getBoolean("GrantExp", true);
+        EXP_PERCENT = config.getInt("ExpPercent", 100);
+    }
+
     @EventHandler
     public void on(PlayerExperienceGainEvent event) {
-        if (Configuration.Hooks.SkillAPI.GRANT_EXP) {
+        if (GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -75,7 +91,7 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
                             return;
                         }
                     }
-                    double exp = event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100;
+                    double exp = event.getExp() * EXP_PERCENT / 100;
                     myPet.getExperience().addExp(exp, true);
                 }
             }
@@ -84,7 +100,7 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
 
     @EventHandler
     public void on(PlayerExperienceLostEvent event) {
-        if (Configuration.Hooks.SkillAPI.GRANT_EXP) {
+        if (GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -95,10 +111,10 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
                             return;
                         }
                     }
-                    if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE && Configuration.Hooks.SkillAPI.ALLOW_LEVEL_DOWNGRADE) {
-                        myPet.getExperience().removeExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                    if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE && ALLOW_LEVEL_DOWNGRADE) {
+                        myPet.getExperience().removeExp(event.getExp() * EXP_PERCENT / 100);
                     } else {
-                        myPet.getExperience().removeCurrentExp(event.getExp() * Configuration.Hooks.SkillAPI.EXP_PERCENT / 100);
+                        myPet.getExperience().removeCurrentExp(event.getExp() * EXP_PERCENT / 100);
                     }
                 }
             }

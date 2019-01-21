@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -33,7 +33,6 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
@@ -75,7 +74,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public static StateFlag PVP;
     public static StateFlag DAMAGE_ANIMALS;
 
-    protected WorldGuardPlugin wgp = null;
+    protected WorldGuardPlugin wgp;
     protected boolean customFlags = false;
 
     protected Map<String, Boolean> missingEntityTypeFixValue = new HashMap<>();
@@ -85,7 +84,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     protected static Method METHOD_getApplicableRegions = ReflectionUtil.getMethod(RegionManager.class, "getApplicableRegions", Location.class);
 
     public WorldGuardHook() {
-        if (Configuration.Hooks.USE_WorldGuard) {
+        if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
             wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
 
             if (wgp.getDescription().getVersion().startsWith("7.")) {
@@ -130,11 +129,11 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     @Override
     public boolean onEnable() {
-        if (customFlags && Configuration.Hooks.USE_WorldGuard) {
+        if (customFlags) {
             Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
             MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
         }
-        return Configuration.Hooks.USE_WorldGuard;
+        return customFlags;
     }
 
     @Override

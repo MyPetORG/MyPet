@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import me.glaremasters.guilds.Guilds;
@@ -34,14 +33,6 @@ import java.util.UUID;
 
 @PluginHookName("Guilds")
 public class GuildsHook implements PlayerVersusPlayerHook {
-
-    @Override
-    public boolean onEnable() {
-        if (Configuration.Hooks.USE_Guilds) {
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
@@ -36,11 +35,8 @@ public class SimpleClansHook implements PlayerVersusPlayerHook {
 
     @Override
     public boolean onEnable() {
-        if (Configuration.Hooks.USE_SimpleClans) {
-            simpleClans = MyPetApi.getPluginHookManager().getPluginInstance(SimpleClans.class).get();
-            return true;
-        }
-        return false;
+        simpleClans = MyPetApi.getPluginHookManager().getPluginInstance(SimpleClans.class).get();
+        return true;
     }
 
     @Override

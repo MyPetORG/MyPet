@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,22 +20,35 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import me.NoChance.PvPManager.PvPlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 @PluginHookName("PvPManager")
 public class PvPManagerHook implements PlayerVersusPlayerHook, AllowedHook {
 
+    public static boolean PREVENT_DAMAGE_IN_COMBAT = false;
+    public static boolean DESPAWN_PETS_IN_COMBAT = false;
+    public static boolean RESPECT_PVP_RULES = true;
+
     @Override
     public boolean onEnable() {
-        return Configuration.Hooks.PvPManager.DESPAWN_PETS_IN_COMBAT ||
-                Configuration.Hooks.PvPManager.RESPECT_PVP_RULES ||
-                Configuration.Hooks.PvPManager.PREVENT_DAMAGE_IN_COMBAT;
+        return DESPAWN_PETS_IN_COMBAT || RESPECT_PVP_RULES || PREVENT_DAMAGE_IN_COMBAT;
+    }
+
+    @Override
+    public void loadConfig(ConfigurationSection config) {
+        config.addDefault("Respect-PvP-Rules", RESPECT_PVP_RULES);
+        config.addDefault("Despawn-Pets-In-Combat", DESPAWN_PETS_IN_COMBAT);
+        config.addDefault("Prevent-Damage-In-Combat", PREVENT_DAMAGE_IN_COMBAT);
+
+        DESPAWN_PETS_IN_COMBAT = config.getBoolean("Despawn-Pets-In-Combat", false);
+        RESPECT_PVP_RULES = config.getBoolean("Respect-PvP-Rules", true);
+        PREVENT_DAMAGE_IN_COMBAT = config.getBoolean("Prevent-Damage-In-Combat", false);
     }
 
     @Override
@@ -43,7 +56,7 @@ public class PvPManagerHook implements PlayerVersusPlayerHook, AllowedHook {
         try {
             PvPlayer pvpAttacker = PvPlayer.get(attacker);
             PvPlayer pvpDefender = PvPlayer.get(defender);
-            if (Configuration.Hooks.PvPManager.RESPECT_PVP_RULES) {
+            if (RESPECT_PVP_RULES) {
                 if (pvpAttacker.hasOverride()) {
                     return true;
                 }
@@ -57,7 +70,7 @@ public class PvPManagerHook implements PlayerVersusPlayerHook, AllowedHook {
                     return false;
                 }
             }
-            if (Configuration.Hooks.PvPManager.PREVENT_DAMAGE_IN_COMBAT && pvpDefender.isInCombat()) {
+            if (PREVENT_DAMAGE_IN_COMBAT && pvpDefender.isInCombat()) {
                 return false;
             }
             return true;
@@ -68,7 +81,7 @@ public class PvPManagerHook implements PlayerVersusPlayerHook, AllowedHook {
 
     @Override
     public boolean isPetAllowed(MyPetPlayer owner) {
-        if (Configuration.Hooks.PvPManager.DESPAWN_PETS_IN_COMBAT) {
+        if (DESPAWN_PETS_IN_COMBAT) {
             try {
                 Player player = owner.getPlayer();
                 PvPlayer pvpPlayer = PvPlayer.get(player);
