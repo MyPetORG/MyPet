@@ -42,10 +42,16 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
     public static double NPC_STORAGE_COSTS_FIXED = 5;
     public static double NPC_STORAGE_COSTS_FACTOR = 1;
 
+    TraitInfo storageTrait;
+    TraitInfo walletTrait;
+
     @Override
     public boolean onEnable() {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
+        storageTrait = TraitInfo.create(StorageTrait.class).withName("mypet-storage");
+        walletTrait = TraitInfo.create(WalletTrait.class).withName("mypet-wallet");
+
+        CitizensAPI.getTraitFactory().registerTrait(storageTrait);
+        CitizensAPI.getTraitFactory().registerTrait(walletTrait);
 
         Plugin npcPlugin = Bukkit.getPluginManager().getPlugin("MyPet-NPC");
         if (npcPlugin != null) {
@@ -57,8 +63,10 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
 
     @Override
     public void onDisable() {
-        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
-        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
+        if (CitizensAPI.hasImplementation()) {
+            CitizensAPI.getTraitFactory().deregisterTrait(storageTrait);
+            CitizensAPI.getTraitFactory().deregisterTrait(walletTrait);
+        }
     }
 
     @Override
