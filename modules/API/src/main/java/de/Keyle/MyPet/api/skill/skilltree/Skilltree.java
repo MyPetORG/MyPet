@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,9 +22,12 @@ package de.Keyle.MyPet.api.skill.skilltree;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
+import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +39,6 @@ public class Skilltree {
     @Getter @Setter protected String inheritedSkilltreeName;
     protected List<String> description = new ArrayList<>();
     protected SkilltreeIcon icon = null;
-    protected String permission = null;
     protected String displayName = null;
     protected int maxLevel = 0;
     protected int requiredLevel = 0;
@@ -45,6 +47,7 @@ public class Skilltree {
     protected Set<MyPetType> mobTypes = new HashSet<>();
     protected Map<LevelRule, Upgrade> upgrades = new HashMap<>();
     protected Map<LevelRule, String> notifications = new HashMap<>();
+    protected @Getter List<Settings> requirementSettings = new ArrayList<>();
 
     public Skilltree(String name) {
         this.skilltreeName = name;
@@ -124,24 +127,6 @@ public class Skilltree {
                 && MyPetApi.getSkilltreeManager().hasSkilltree(inheritedSkilltreeName);
     }
 
-    public String getPermission() {
-        if (permission == null) {
-            return skilltreeName;
-        }
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    public String getFullPermission() {
-        if (permission == null) {
-            return "MyPet.skilltree." + skilltreeName;
-        }
-        return "MyPet.skilltree." + permission;
-    }
-
     public int getOrder() {
         return order;
     }
@@ -203,6 +188,29 @@ public class Skilltree {
     public void setMobTypes(Collection<MyPetType> mobTypes) {
         this.mobTypes.clear();
         this.mobTypes.addAll(mobTypes);
+    }
+
+    public void addRequirementSettings(Settings settings) {
+        this.requirementSettings.add(settings);
+    }
+
+    public boolean checkRequirements(MyPet pet) {
+        boolean usable = true;
+        for (Settings flagSettings : requirementSettings) {
+            String reqName = flagSettings.getName();
+            Requirement requirement = MyPetApi.getSkilltreeManager().getRequirement(reqName);
+            if (requirement == null) {
+                MyPetApi.getLogger().warning("\"" + reqName + "\" is not a valid skilltree requirement!");
+                continue;
+            }
+            if (!requirement.check(this, pet, flagSettings)) {
+                usable = false;
+            }
+            if (!usable) {
+                break;
+            }
+        }
+        return usable;
     }
 
     @Override

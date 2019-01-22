@@ -119,23 +119,9 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
     }
 
     protected void reloadSkilltrees(CommandSender sender) {
-        for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
-            try {
-                Bukkit.getPluginManager().removePermission(new Permission(skilltree.getFullPermission()));
-            } catch (Exception ignored) {
-            }
-        }
         MyPetApi.getSkilltreeManager().clearSkilltrees();
 
         SkillTreeLoaderJSON.loadSkilltrees(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"));
-
-        // register skilltree permissions
-        for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
-            try {
-                Bukkit.getPluginManager().addPermission(new Permission(skilltree.getFullPermission()));
-            } catch (Exception ignored) {
-            }
-        }
 
         for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             Skilltree skilltree = myPet.getSkilltree();

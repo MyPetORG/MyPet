@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.skill.skilltree.levelrule.DynamicLevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.StaticLevelRule;
 import de.Keyle.MyPet.api.skill.upgrades.*;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -87,7 +88,11 @@ public class SkillTreeLoaderJSON {
             skilltree.setDisplayName(get(skilltreeObject, "Name").toString());
         }
         if (containsKey(skilltreeObject, "Permission")) {
-            skilltree.setPermission(get(skilltreeObject, "Permission").toString());
+            String permission = get(skilltreeObject, "Permission").toString();
+            Settings settings = new Settings("Permission");
+            settings.load(permission);
+            skilltree.addRequirementSettings(settings);
+            //TODO warnung zum aktualisieren
         }
         if (containsKey(skilltreeObject, "Display")) {
             skilltree.setDisplayName(get(skilltreeObject, "Display").toString());
@@ -174,6 +179,19 @@ public class SkillTreeLoaderJSON {
                 LevelRule levelRule = loadLevelRule(levelRuleString);
                 String message = notificationsObject.get(ooo).toString();
                 skilltree.addNotification(levelRule, message);
+            }
+        }
+        if (containsKey(skilltreeObject, "Requirements")) {
+            JSONArray requirementsArray = (JSONArray) get(skilltreeObject, "Requirements");
+            for (Object ooo : requirementsArray) {
+                boolean hasParameter = ooo.toString().contains(":");
+                String[] data = ooo.toString().split(":", 2);
+                Settings settings = new Settings(data[0]);
+                if (hasParameter) {
+                    settings.load(data[1]);
+                }
+                MyPetApi.getLogger().info("add settings to " + skilltree.getName() + " -> " + settings);
+                skilltree.addRequirementSettings(settings);
             }
         }
         if (containsKey(skilltreeObject, "Skills")) {
