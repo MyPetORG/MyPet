@@ -85,6 +85,10 @@ public class ProtocolLibHook implements PluginHook {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Client.USE_ENTITY) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
+                if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
+                    return;
+                }
+
                 PacketContainer packet = event.getPacket();
                 if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
 
