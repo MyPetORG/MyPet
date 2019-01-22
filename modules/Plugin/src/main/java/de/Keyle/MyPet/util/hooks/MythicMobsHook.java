@@ -23,10 +23,10 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
+import de.Keyle.MyPet.api.util.configuration.settings.Setting;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.MonsterExperienceHook;
@@ -165,10 +165,10 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
     class MythicMobFlag implements LeashFlag {
 
         @Override
-        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
             if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
                 String name = MythicMobs.inst().getMobManager().getMythicMobInstance(entity).getType().getInternalName();
-                for (LeashFlagSetting setting : settings.all()) {
+                for (Setting setting : settings.all()) {
                     if (setting.getValue().equalsIgnoreCase(name)) {
                         return true;
                     }

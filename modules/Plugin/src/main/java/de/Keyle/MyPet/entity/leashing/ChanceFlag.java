@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.leashing;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import de.Keyle.MyPet.api.util.configuration.settings.Setting;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -35,9 +35,9 @@ public class ChanceFlag implements LeashFlag {
     Random random = new Random();
 
     @Override
-    public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+    public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
         if (settings.map().containsKey("chance")) {
-            LeashFlagSetting chanceSetting = settings.map().get("chance");
+            Setting chanceSetting = settings.map().get("chance");
             if (Util.isInt(chanceSetting.getValue().replace("%", "").trim())) {
                 int chance = Integer.parseInt(chanceSetting.getValue());
                 return random.nextInt(100) <= chance;

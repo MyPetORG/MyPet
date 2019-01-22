@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,17 +18,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity.leashing;
+package de.Keyle.MyPet.api.util.configuration.settings;
 
-public class LeashFlagSetting {
+public class Setting {
+
     String key;
     String value = null;
 
-    public LeashFlagSetting(String key) {
+    public Setting(String key) {
         this.key = key;
     }
 
-    public LeashFlagSetting(String key, String value) {
+    public Setting(String key, String value) {
         this.key = key;
         this.value = value;
     }
@@ -43,6 +44,9 @@ public class LeashFlagSetting {
 
     @Override
     public String toString() {
-        return "LeashFlagSetting{" + getKey() + "='" + getValue() + "'}";
+        return "Setting{" +
+                getKey() +
+                (value != null ? ("='" + getValue() + "'") : "") +
+                "}";
     }
 }

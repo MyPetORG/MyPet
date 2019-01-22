@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,17 +18,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity.leashing;
+package de.Keyle.MyPet.api.util.configuration.settings;
 
 import java.util.*;
 
-public class LeashFlagSettings {
-    String flagName;
-    Map<String, LeashFlagSetting> settingsMap = new HashMap<>();
-    Set<LeashFlagSetting> settings = new HashSet<>();
+public class Settings {
 
-    public LeashFlagSettings(String flagName) {
-        this.flagName = flagName;
+    String name;
+    Map<String, Setting> settingsMap = new HashMap<>();
+    Set<Setting> settings = new HashSet<>();
+
+    public Settings(String flagName) {
+        this.name = flagName;
     }
 
     public void load(String settingsString) {
@@ -36,25 +37,33 @@ public class LeashFlagSettings {
         for (String settingString : settingStrings) {
             if (settingString.contains("=")) {
                 String[] keyValue = settingString.split("=", 2);
-                LeashFlagSetting setting = new LeashFlagSetting(keyValue[0], keyValue[1]);
+                Setting setting = new Setting(keyValue[0], keyValue[1]);
                 this.settingsMap.put(setting.key.toLowerCase(), setting);
                 settings.add(setting);
             } else {
-                LeashFlagSetting setting = new LeashFlagSetting(settingString);
+                Setting setting = new Setting(settingString);
                 settings.add(setting);
             }
         }
     }
 
-    public String getFlagName() {
-        return flagName;
+    public String getName() {
+        return name;
     }
 
-    public Map<String, LeashFlagSetting> map() {
+    public Map<String, Setting> map() {
         return Collections.unmodifiableMap(settingsMap);
     }
 
-    public Set<LeashFlagSetting> all() {
+    public Set<Setting> all() {
         return Collections.unmodifiableSet(settings);
+    }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "name='" + name + '\'' +
+                ", settings=" + settings +
+                '}';
     }
 }

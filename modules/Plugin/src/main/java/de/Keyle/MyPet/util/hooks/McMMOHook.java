@@ -27,9 +27,9 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.api.util.configuration.settings.Setting;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -108,12 +108,12 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
     class JobLevelFlag implements LeashFlag {
 
         @Override
-        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
             try {
                 for (Object skillType : (Object[]) METHOD_SkillType_values.invoke(null)) {
                     String skillName = METHOD_SkillType_getName.invoke(skillType).toString().toLowerCase();
                     if (settings.map().containsKey(skillName)) {
-                        LeashFlagSetting setting = settings.map().get(skillName);
+                        Setting setting = settings.map().get(skillName);
                         if (Util.isInt(setting.getValue())) {
                             int requiredLevel = Integer.parseInt(setting.getValue());
                             McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
