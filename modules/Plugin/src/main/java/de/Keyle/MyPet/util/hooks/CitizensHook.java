@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
@@ -44,13 +43,20 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
     public static double NPC_STORAGE_COSTS_FIXED = 5;
     public static double NPC_STORAGE_COSTS_FACTOR = 1;
 
+    TraitInfo storageTrait;
+    TraitInfo walletTrait;
+    TraitInfo shopTrait;
+
     @Override
     public boolean onEnable() {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
-        if (MyPetVersion.isPremium()) {
-            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ShopTrait.class).withName("mypet-shop"));
-        }
+        storageTrait = TraitInfo.create(StorageTrait.class).withName("mypet-storage");
+        walletTrait = TraitInfo.create(WalletTrait.class).withName("mypet-wallet");
+        shopTrait = TraitInfo.create(ShopTrait.class).withName("mypet-shop");
+
+        CitizensAPI.getTraitFactory().registerTrait(storageTrait);
+        CitizensAPI.getTraitFactory().registerTrait(walletTrait);
+        CitizensAPI.getTraitFactory().registerTrait(shopTrait);
+
         Plugin npcPlugin = Bukkit.getPluginManager().getPlugin("MyPet-NPC");
         if (npcPlugin != null) {
             MyPetApi.getLogger().warning("MyPet-NPC is included into MyPet now. Please remove the MyPet-NPC plugin!");
@@ -61,9 +67,11 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
 
     @Override
     public void onDisable() {
-        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(StorageTrait.class).withName("mypet-storage"));
-        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(WalletTrait.class).withName("mypet-wallet"));
-        CitizensAPI.getTraitFactory().deregisterTrait(TraitInfo.create(ShopTrait.class).withName("mypet-shop"));
+        if (CitizensAPI.hasImplementation()) {
+            CitizensAPI.getTraitFactory().deregisterTrait(storageTrait);
+            CitizensAPI.getTraitFactory().deregisterTrait(walletTrait);
+            CitizensAPI.getTraitFactory().deregisterTrait(shopTrait);
+        }
     }
 
     @Override
