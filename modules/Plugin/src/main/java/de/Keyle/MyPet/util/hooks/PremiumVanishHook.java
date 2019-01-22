@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,5 +23,5 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 
 @PluginHookName("PremiumVanish")
-public class PremiumVanish extends SuperVanish {
+public class PremiumVanishHook extends SuperVanishHook {
 }
