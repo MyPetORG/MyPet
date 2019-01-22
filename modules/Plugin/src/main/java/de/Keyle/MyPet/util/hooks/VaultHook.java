@@ -23,9 +23,9 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSetting;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.configuration.settings.Setting;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PermissionGroupHook;
@@ -204,10 +204,10 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
     public class PermissionGroupFlag implements LeashFlag {
 
         @Override
-        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
             String world = null;
             String group = null;
-            for (LeashFlagSetting setting : settings.all()) {
+            for (Setting setting : settings.all()) {
                 if (setting.getKey().equalsIgnoreCase("world")) {
                     world = setting.getValue();
                 } else {

@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
@@ -49,6 +48,7 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
@@ -500,8 +500,8 @@ public class EntityListener implements Listener {
 
                     boolean willBeLeashed = true;
 
-                    for (LeashFlagSettings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
-                        String flagName = flagSettings.getFlagName();
+                    for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
+                        String flagName = flagSettings.getName();
                         LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
                         if (flag == null) {
                             MyPetApi.getLogger().warning("\"" + flagName + "\" is not a valid leash requirement!");

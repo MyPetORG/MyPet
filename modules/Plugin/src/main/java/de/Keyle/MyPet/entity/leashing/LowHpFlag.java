@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,14 +22,14 @@ package de.Keyle.MyPet.entity.leashing;
 
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 @LeashFlagName("LowHP")
 public class LowHpFlag implements LeashFlag {
     @Override
-    public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+    public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
         return (entity.getHealth() - damage) / entity.getMaxHealth() <= 0.1;
     }
 }

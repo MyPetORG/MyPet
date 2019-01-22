@@ -25,11 +25,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.NameFilter;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -548,7 +548,7 @@ public class ConfigurationLoader {
         for (String leashFlagString : leashFlagStrings) {
             boolean hasParameter = leashFlagString.contains(":");
             String[] data = leashFlagString.split(":", 2);
-            LeashFlagSettings settings = new LeashFlagSettings(data[0]);
+            Settings settings = new Settings(data[0]);
             if (hasParameter) {
                 settings.load(data[1]);
             }

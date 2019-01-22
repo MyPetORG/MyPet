@@ -36,11 +36,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.entity.leashing.LeashFlagSettings;
 import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
@@ -272,7 +272,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     class RegionFlag implements LeashFlag {
 
         @Override
-        public boolean check(Player player, LivingEntity entity, double damage, LeashFlagSettings settings) {
+        public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
             Location location = entity.getLocation();
             StateFlag.State s = getState(location, null, LEASH_FLAG);
 
