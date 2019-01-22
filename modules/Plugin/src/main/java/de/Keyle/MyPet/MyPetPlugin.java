@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.skill.SkillManager;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
-import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.*;
@@ -54,6 +53,10 @@ import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.skill.skilltree.requirements.NoSkilltreeRequirement;
+import de.Keyle.MyPet.skill.skilltree.requirements.PermissionRequirement;
+import de.Keyle.MyPet.skill.skilltree.requirements.PetLevelRequirement;
+import de.Keyle.MyPet.skill.skilltree.requirements.SkilltreeRequirement;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.SentryErrorReporter;
 import de.Keyle.MyPet.util.Updater;
@@ -197,6 +200,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         //register leash flags
         registerLeashFlags();
 
+        //register skilltree requirementSettings
+        registerSkilltreeRequirements();
+
         //register exp calculators
         if (!new File(getDataFolder(), "exp.js").exists()) {
             platformHelper.copyResource(this, "exp.js", new File(getDataFolder(), "exp.js"));
@@ -290,13 +296,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         // load skilltrees
         MyPetApi.getSkilltreeManager().clearSkilltrees();
         SkillTreeLoaderJSON.loadSkilltrees(new File(getDataFolder(), "skilltrees"));
-        // register skilltree permissions
-        for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
-            try {
-                Bukkit.getPluginManager().addPermission(new Permission(skilltree.getFullPermission()));
-            } catch (Exception ignored) {
-            }
-        }
 
         for (int i = 0; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
             try {
@@ -608,6 +607,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetApi.getLeashFlagManager().registerLeashFlag(new UserCreatedFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WildFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WorldFlag());
+    }
+
+    public static void registerSkilltreeRequirements() {
+        MyPetApi.getSkilltreeManager().registerRequirement(new NoSkilltreeRequirement());
+        MyPetApi.getSkilltreeManager().registerRequirement(new PermissionRequirement());
+        MyPetApi.getSkilltreeManager().registerRequirement(new PetLevelRequirement());
+        MyPetApi.getSkilltreeManager().registerRequirement(new SkilltreeRequirement());
     }
 
     private void loadGroups(File f) {

@@ -302,7 +302,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getSkilltrees());
 
                 for (Skilltree skilltree : skilltrees) {
-                    if (Permissions.has(this.petOwner.getPlayer(), skilltree.getFullPermission())) {
+                    if (skilltree.getMobTypes().contains(getPetType()) && skilltree.checkRequirements(this)) {
                         return setSkilltree(skilltree);
                     }
                 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.Colorizer;
@@ -76,7 +75,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                         skilltreeName = skilltreeName.substring(0, skilltreeName.length() - 1);
                         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
                             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
-                            if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getFullPermission())) {
+                            if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {
                                 int requiredLevel = skilltree.getRequiredLevel();
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
@@ -109,7 +108,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                 } else {
                     List<Skilltree> availableSkilltrees = new ArrayList<>();
                     for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
-                        if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getFullPermission())) {
+                        if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {
                             availableSkilltrees.add(skilltree);
                         }
                     }
@@ -223,7 +222,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                 } else {
                     List<String> skilltreeList = new ArrayList<>();
                     for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
-                        if (skilltree.getMobTypes().contains(myPet.getPetType()) && Permissions.has(player, skilltree.getPermission())) {
+                        if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {
                             skilltreeList.add(skilltree.getName());
                         }
                     }
