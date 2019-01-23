@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,8 +31,12 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
+
     @Override
     public boolean canHurt(Player attacker, Player defender, boolean viceversa) {
+        if (attacker == null || defender == null) {
+            return false;
+        }
         if (!attacker.getWorld().getPVP()) {
             return false;
         } else if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
