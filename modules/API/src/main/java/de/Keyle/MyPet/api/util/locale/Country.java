@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,19 +20,18 @@
 
 package de.Keyle.MyPet.api.util.locale;
 
+import lombok.Getter;
+
 public class Country {
-    private Language language;
-    private String code;
-    private TranslationBundle translations = null;
+
+    @Getter private Language language;
+    @Getter private String code;
+    private TranslationBundle translations;
 
     public Country(Language language, String code) {
         this.language = language;
         this.code = code;
-        load();
-    }
-
-    public String getCode() {
-        return code;
+        translations = Translation.loadLocale(language.getCode() + "_" + getCode());
     }
 
     public String translate(String key) {
@@ -40,9 +39,5 @@ public class Country {
             return translations.getString(key);
         }
         return key;
-    }
-
-    private void load() {
-        translations = Translation.loadLocale(language.getCode() + "_" + getCode());
     }
 }
