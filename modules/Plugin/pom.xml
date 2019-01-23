@@ -339,6 +339,10 @@
                                     <pattern>org.nanohttpd</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.nanohttpd</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>io.sentry</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.sentry</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
