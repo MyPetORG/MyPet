@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -69,17 +69,21 @@ public class CommandStore implements CommandTabCompleter {
                 MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                     @Override
                     public void callback(List<StoredMyPet> pets) {
-                        MyPet myPet = owner.getMyPet();
-                        String worldGroup = myPet.getWorldGroup();
+                        if (owner.hasMyPet()) {
+                            MyPet myPet = owner.getMyPet();
+                            String worldGroup = myPet.getWorldGroup();
 
-                        int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
-                        if (inactivePetCount >= maxPetCount) {
-                            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), maxPetCount));
-                            return;
-                        }
-                        if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
-                            owner.setMyPetForWorldGroup(worldGroup, null);
-                            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Success", player), myPet.getPetName()));
+                            int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
+                            if (inactivePetCount >= maxPetCount) {
+                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), maxPetCount));
+                                return;
+                            }
+                            if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
+                                owner.setMyPetForWorldGroup(worldGroup, null);
+                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Success", player), myPet.getPetName()));
+                            }
+                        } else {
+                            player.sendMessage(Translation.getString("Message.Command.Switch.NoPet", player));
                         }
                     }
                 });
