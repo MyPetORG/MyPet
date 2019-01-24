@@ -44,11 +44,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @PluginHookName("MythicMobs")
 public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, MonsterExperienceHook {
 
     public static boolean DISABLE_MYTHIC_MOB_LEASHING = true;
-    
+    public static Set<String> PREVENT_DAMAGE_TO_FACTIONS = new HashSet<>();
+    public static Set<String> PREVENT_DAMAGE_TO_MOBS = new HashSet<>();
+
     @Override
     public boolean onEnable() {
         MyPetApi.getLeashFlagManager().registerLeashFlag(new MythicMobFlag());
@@ -65,8 +70,14 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
     @Override
     public void loadConfig(ConfigurationSection config) {
         config.addDefault("Disable-Leashing", DISABLE_MYTHIC_MOB_LEASHING);
+        config.addDefault("Prevent-Damage-To.Factions", new String[]{"VeryFriendlyFaction"});
+        config.addDefault("Prevent-Damage-To.Mobs", new String[]{"VeryFriendlyMob"});
 
         DISABLE_MYTHIC_MOB_LEASHING = config.getBoolean("Disable-Leashing", true);
+        PREVENT_DAMAGE_TO_FACTIONS.clear();
+        PREVENT_DAMAGE_TO_FACTIONS.addAll(config.getStringList("Prevent-Damage-To.Factions"));
+        PREVENT_DAMAGE_TO_MOBS.clear();
+        PREVENT_DAMAGE_TO_MOBS.addAll(config.getStringList("Prevent-Damage-To.Mobs"));
     }
 
     @EventHandler
@@ -129,6 +140,12 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
             if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(defender))) {
                 MythicMob defenderType = MythicMobs.inst().getMobManager().getMythicMobInstance(defender).getType();
                 if (defenderType.getIsInvincible()) {
+                    return false;
+                }
+                if (defenderType.hasFaction() && PREVENT_DAMAGE_TO_FACTIONS.contains(defenderType.getFaction())) {
+                    return false;
+                }
+                if (PREVENT_DAMAGE_TO_MOBS.contains(defenderType.getInternalName())) {
                     return false;
                 }
                 for (String m : defenderType.getDamageModifiers()) {
