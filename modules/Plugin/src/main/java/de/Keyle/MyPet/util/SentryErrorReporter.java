@@ -51,7 +51,8 @@ public class SentryErrorReporter implements ErrorReporter {
     protected boolean enabled = false;
 
     public void onEnable() {
-        sentry = SentryClientFactory.sentryClient("https://14aec086f95d4fbe8a378638c80b68fa@sentry.io/1368849");
+        sentry = SentryClientFactory.sentryClient("https://14aec086f95d4fbe8a378638c80b68fa@sentry.io/1368849?" +
+                "stacktrace.app.packages=");
         context = sentry.getContext();
 
         context.addTag("premium", "" + MyPetVersion.isPremium());
