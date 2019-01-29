@@ -289,7 +289,7 @@ public class PlaceholderApiHook implements PluginHook {
 
             @Override
             public String getVersion() {
-                return "1.0.3";
+                return "1.0.4";
             }
 
             /**
@@ -299,6 +299,9 @@ public class PlaceholderApiHook implements PluginHook {
             @Override
             @SuppressWarnings("unchecked")
             public String onPlaceholderRequest(Player p, String identifier) {
+                if (p == null) {
+                    return null;
+                }
                 if (placeHolders.containsKey(identifier)) {
                     PlaceHolder placeHolder = placeHolders.get(identifier);
 
@@ -318,10 +321,8 @@ public class PlaceholderApiHook implements PluginHook {
                             }
                         }
                     }
-
                     return "";
                 }
-
                 return null;
             }
         };
