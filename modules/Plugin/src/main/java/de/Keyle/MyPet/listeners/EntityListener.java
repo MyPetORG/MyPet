@@ -743,7 +743,7 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onMyPet(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
         if (WorldGroup.getGroupByWorld(deadEntity.getWorld()).isDisabled()) {
@@ -807,6 +807,7 @@ public class EntityListener implements Listener {
                 }
             }
             event.setDroppedExp(0);
+            event.getDrops().clear();
 
             if (Configuration.LevelSystem.Experience.LOSS_FIXED > 0 || Configuration.LevelSystem.Experience.LOSS_PERCENT > 0) {
                 double lostExpirience = Configuration.LevelSystem.Experience.LOSS_FIXED;
