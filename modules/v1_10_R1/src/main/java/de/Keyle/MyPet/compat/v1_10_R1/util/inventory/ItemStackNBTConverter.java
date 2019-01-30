@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -35,11 +35,11 @@ import java.util.Set;
 public class ItemStackNBTConverter {
     private static Field TAG_LIST_LIST = ReflectionUtil.getField(NBTTagList.class, "list");
 
-    public static TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
-        return itemStackToCompund(CraftItemStack.asNMSCopy(itemStack));
+    public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
+        return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
     }
 
-    public static TagCompound itemStackToCompund(ItemStack itemStack) {
+    public static TagCompound itemStackToCompound(ItemStack itemStack) {
         TagCompound compound = new TagCompound();
 
         compound.getCompoundData().put("id", new TagShort((short) Item.getId(itemStack.getItem())));
@@ -52,7 +52,7 @@ public class ItemStackNBTConverter {
         return compound;
     }
 
-    public static ItemStack compundToItemStack(TagCompound compound) {
+    public static ItemStack compoundToItemStack(TagCompound compound) {
         int id = compound.getAs("id", TagShort.class).getShortData();
         int count = compound.getAs("Count", TagByte.class).getByteData();
         int damage = compound.getAs("Damage", TagShort.class).getShortData();

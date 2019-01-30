@@ -203,7 +203,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         for (int i = 0; i < this.items.size(); i++) {
             ItemStack itemStack = this.items.get(i);
             if (itemStack != null) {
-                TagCompound item = ItemStackNBTConverter.itemStackToCompund(itemStack);
+                TagCompound item = ItemStackNBTConverter.itemStackToCompound(itemStack);
                 item.getCompoundData().put("Slot", new TagByte((byte) i));
                 itemList.add(item);
             }
@@ -218,7 +218,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         for (int i = 0; i < items.size(); i++) {
             TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
 
-            ItemStack itemStack = ItemStackNBTConverter.compundToItemStack(itemCompound);
+            ItemStack itemStack = ItemStackNBTConverter.compoundToItemStack(itemCompound);
             setItem(itemCompound.getAs("Slot", TagByte.class).getByteData(), itemStack);
         }
     }

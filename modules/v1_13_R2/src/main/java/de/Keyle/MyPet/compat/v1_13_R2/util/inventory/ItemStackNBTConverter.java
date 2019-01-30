@@ -44,17 +44,17 @@ public class ItemStackNBTConverter {
     private static Method METHOD_FLOAT_i = ReflectionUtil.getMethod(NBTTagFloat.class, "i");
     private static Method METHOD_STRING_b_ = ReflectionUtil.getMethod(NBTTagString.class, "b_");
 
-    public static TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
-        return itemStackToCompund(CraftItemStack.asNMSCopy(itemStack));
+    public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
+        return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
     }
 
-    public static TagCompound itemStackToCompund(ItemStack itemStack) {
+    public static TagCompound itemStackToCompound(ItemStack itemStack) {
         NBTTagCompound tagCompound = new NBTTagCompound();
         itemStack.save(tagCompound);
         return (TagCompound) vanillaCompoundToCompound(tagCompound);
     }
 
-    public static ItemStack compundToItemStack(TagCompound compound) {
+    public static ItemStack compoundToItemStack(TagCompound compound) {
         NBTTagCompound tagCompound = (NBTTagCompound) compoundToVanillaCompound(compound);
         return ItemStack.a(tagCompound);
     }

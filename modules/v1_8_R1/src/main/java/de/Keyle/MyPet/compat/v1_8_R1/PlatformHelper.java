@@ -184,12 +184,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
-        return ItemStackNBTConverter.itemStackToCompund(itemStack);
+        return ItemStackNBTConverter.itemStackToCompound(itemStack);
     }
 
     @Override
     public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
-        return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(compound));
+        return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 
     public void sendMessageRaw(Player player, String message) {
