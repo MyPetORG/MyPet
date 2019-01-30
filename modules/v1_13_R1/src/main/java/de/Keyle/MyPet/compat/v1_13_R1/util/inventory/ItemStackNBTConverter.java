@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -36,17 +36,17 @@ public class ItemStackNBTConverter {
 
     private static Field TAG_LIST_LIST = ReflectionUtil.getField(NBTTagList.class, "list");
 
-    public static TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
-        return itemStackToCompund(CraftItemStack.asNMSCopy(itemStack));
+    public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
+        return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
     }
 
-    public static TagCompound itemStackToCompund(ItemStack itemStack) {
+    public static TagCompound itemStackToCompound(ItemStack itemStack) {
         NBTTagCompound tagCompound = new NBTTagCompound();
         itemStack.save(tagCompound);
         return (TagCompound) vanillaCompoundToCompound(tagCompound);
     }
 
-    public static ItemStack compundToItemStack(TagCompound compound) {
+    public static ItemStack compoundToItemStack(TagCompound compound) {
         NBTTagCompound tagCompound = (NBTTagCompound) compoundToVanillaCompound(compound);
         return ItemStack.a(tagCompound);
     }
