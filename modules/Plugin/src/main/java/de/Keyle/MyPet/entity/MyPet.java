@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelEvent;
+import de.Keyle.MyPet.api.event.MyPetNameEvent;
 import de.Keyle.MyPet.api.event.MyPetStatusEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -271,6 +272,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void setPetName(String newName) {
         if (!NameFilter.isClean(newName)) {
             newName = Translation.getString("Name." + getPetType().name(), getOwner().getLanguage());
+        }
+        if (!this.petName.equals(newName)) {
+            MyPetNameEvent event = new MyPetNameEvent(this, newName);
+            Bukkit.getPluginManager().callEvent(event);
+            newName = event.getNewName();
         }
         this.petName = newName;
         if (status == PetState.Here) {
