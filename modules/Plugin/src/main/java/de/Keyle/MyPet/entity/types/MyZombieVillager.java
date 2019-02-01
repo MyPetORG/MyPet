@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,10 +25,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
-import de.keyle.knbt.TagList;
+import de.keyle.knbt.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -65,6 +62,7 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
         return info;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Baby")) {
@@ -75,11 +73,13 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
         }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
-            for (int i = 0; i < equipment.size(); i++) {
-                TagCompound item = equipment.getTag(i);
-
-                ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
-                setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
+            List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
+            for (TagBase tag : equipmentList) {
+                if (tag instanceof TagCompound) {
+                    TagCompound item = (TagCompound) tag;
+                    ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+                    setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
+                }
             }
         }
     }
