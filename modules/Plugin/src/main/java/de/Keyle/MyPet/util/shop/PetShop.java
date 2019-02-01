@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -268,6 +268,10 @@ public class PetShop {
         }
 
         ConfigurationSection pets = section.getConfigurationSection("Pets");
+        if (pets == null) {
+            MyPetApi.getLogger().warning(displayName + " shop failed to load! Please check your shop config.");
+            return;
+        }
 
         Queue<ShopMyPet> filler = new ArrayDeque<>();
         for (String name : pets.getKeys(false)) {
