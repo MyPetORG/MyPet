@@ -25,6 +25,8 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.commands.CommandAdmin;
+import de.Keyle.MyPet.commands.admin.CommandOptionNpc;
 import de.Keyle.MyPet.util.hooks.citizens.ShopTrait;
 import de.Keyle.MyPet.util.hooks.citizens.StorageTrait;
 import de.Keyle.MyPet.util.hooks.citizens.WalletTrait;
@@ -56,6 +58,8 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
         CitizensAPI.getTraitFactory().registerTrait(storageTrait);
         CitizensAPI.getTraitFactory().registerTrait(walletTrait);
         CitizensAPI.getTraitFactory().registerTrait(shopTrait);
+
+        CommandAdmin.COMMAND_OPTIONS.put("npc", new CommandOptionNpc());
 
         Plugin npcPlugin = Bukkit.getPluginManager().getPlugin("MyPet-NPC");
         if (npcPlugin != null) {
