@@ -190,7 +190,6 @@ public class SkillTreeLoaderJSON {
                 if (hasParameter) {
                     settings.load(data[1]);
                 }
-                MyPetApi.getLogger().info("add settings to " + skilltree.getName() + " -> " + settings);
                 skilltree.addRequirementSettings(settings);
             }
         }
