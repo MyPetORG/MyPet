@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -47,6 +47,7 @@ import java.sql.*;
 import java.util.*;
 
 public class SqLiteRepository implements Repository {
+
     private Connection connection;
     private int version = 1;
 
@@ -914,8 +915,9 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
+                PreparedStatement statement = null;
                 try {
-                    PreparedStatement statement = connection.prepareStatement(
+                    statement = connection.prepareStatement(
                             "INSERT INTO players (" +
                                     "internal_uuid, " +
                                     "mojang_uuid, " +
@@ -958,6 +960,11 @@ public class SqLiteRepository implements Repository {
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    MyPetApi.getLogger().info("Exception Info: " + statement.toString());
+                    MyPetApi.getLogger().info("UUID: " + player.getInternalUUID().toString());
+                    MyPetApi.getLogger().info("Name: " + player.getName());
+                    MyPetApi.getLogger().info("Mojang: " + (player.getMojangUUID() != null ? player.getMojangUUID().toString() : null));
+                    MyPetApi.getLogger().info("callback: " + callback);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
