@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,7 +26,9 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVex;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_11_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
@@ -156,6 +158,21 @@ public class EntityMyVex extends EntityMyPet {
 
         if (!this.onGround && this.motY < 0.0D) {
             this.motY *= 0.6D;
+        }
+    }
+
+    protected void doMyPetTick() {
+        super.doMyPetTick();
+        BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
+        Behavior.BehaviorMode behavior = skill.getBehavior();
+        if (behavior == Behavior.BehaviorMode.Aggressive) {
+            if (!getMyPet().isGlowing()) {
+                getMyPet().setGlowing(true);
+            }
+        } else {
+            if (getMyPet().isGlowing()) {
+                getMyPet().setGlowing(false);
+            }
         }
     }
 
