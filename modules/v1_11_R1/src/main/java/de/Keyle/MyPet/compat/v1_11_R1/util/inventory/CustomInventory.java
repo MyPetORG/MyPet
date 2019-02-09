@@ -161,7 +161,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         World world = ((CraftWorld) loc.getWorld()).getHandle();
         for (int i = 0; i < this.getSize(); i++) {
             ItemStack is = this.splitWithoutUpdate(i);
-            if (is != ItemStack.a) {
+            if (is != null && !is.isEmpty()) {
                 is = is.cloneItemStack();
                 EntityItem itemEntity = new EntityItem(world, loc.getX(), loc.getY(), loc.getZ(), is);
                 itemEntity.pickupDelay = 20;
