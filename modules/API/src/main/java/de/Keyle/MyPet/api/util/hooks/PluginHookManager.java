@@ -49,6 +49,13 @@ public class PluginHookManager {
     public PluginHookManager() {
         File hookConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "hooks-config.yml");
         config = new ConfigurationYAML(hookConfigFile);
+        config.getConfig().options().header("" +
+                "#######################################################################\n" +
+                "               This is the hook configuration of MyPet                #\n" +
+                "                 You can find more info on the wiki:                  #\n" +
+                "  https://wiki.mypet-plugin.de/setup/configurations/hooks-config.yml  #\n" +
+                "#######################################################################\n");
+        config.getConfig().options().copyHeader(true);
         config.getConfig().options().copyDefaults(true);
     }
 

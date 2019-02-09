@@ -49,11 +49,11 @@ public class ConfigurationLoader {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
         config.options().header("" +
-                "########################################################\n" +
-                "       This is the main configuration of MyPet         #\n" +
-                "         You can find more info in the wiki:           #\n" +
-                "       https://wiki.mypet-plugin.de/configfile         #\n" +
-                "########################################################\n");
+                "#################################################################\n" +
+                "           This is the main configuration of MyPet              #\n" +
+                "             You can find more info on the wiki:                #\n" +
+                "  https://wiki.mypet-plugin.de/setup/configurations/config.yml  #\n" +
+                "#################################################################\n");
         config.options().copyHeader(true);
 
         config.addDefault("MyPet.Update.Check", Update.CHECK);
@@ -142,6 +142,13 @@ public class ConfigurationLoader {
 
         File expConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "exp-config.yml");
         config = new YamlConfiguration();
+        config.options().header("" +
+                "#####################################################################\n" +
+                "              This is the exp configuration of MyPet                #\n" +
+                "                You can find more info on the wiki:                 #\n" +
+                "  https://wiki.mypet-plugin.de/setup/configurations/exp-config.yml  #\n" +
+                "#####################################################################\n");
+        config.options().copyHeader(true);
 
         if (expConfigFile.exists()) {
             try {
@@ -180,11 +187,11 @@ public class ConfigurationLoader {
         }
 
         config.options().header("" +
-                "#######################################################\n" +
-                "       This is the pet configuration of MyPet         #\n" +
-                "         You can find more info in the wiki:          #\n" +
-                "       https://wiki.mypet-plugin.de/petconfig         #\n" +
-                "#######################################################\n");
+                "#####################################################################\n" +
+                "              This is the pet configuration of MyPet                #\n" +
+                "                You can find more info on the wiki:                 #\n" +
+                "  https://wiki.mypet-plugin.de/setup/configurations/pet-config.yml  #\n" +
+                "#####################################################################\n");
         config.options().copyHeader(true);
 
         for (MyPetType petType : MyPetType.values()) {
