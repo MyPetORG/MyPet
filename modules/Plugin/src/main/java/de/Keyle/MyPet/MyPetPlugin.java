@@ -628,6 +628,14 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             return;
         }
 
+        config.options().header("" +
+                "######################################################################\n" +
+                "          This is the world group configuration of MyPet             #\n" +
+                "                You can find more info on the wiki:                  #\n" +
+                "  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #\n" +
+                "######################################################################\n");
+        config.options().copyHeader(true);
+
         Set<String> groups;
         Set<String> disabledWorlds = new HashSet<>();
         try {
