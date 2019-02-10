@@ -95,8 +95,8 @@
                     <finalName>${project.name}-${project.version}</finalName>
                     <archive>
                         <manifestEntries>
-                            <Class-Path>MyPet/rhino.jar MyPet/rhino-1.7.10.jar MyPet/mongo-java-driver.jar
-                                MyPet/mongo-java-driver-3.9.1.jar
+                            <Class-Path>MyPet/rhino.jar MyPet/rhino-1.7.9.jar MyPet/rhino-1.7.10.jar
+                                MyPet/mongo-java-driver.jar MyPet/mongo-java-driver-3.9.1.jar
                             </Class-Path>
                             <Main-Class>de.Keyle.MyPet.skilltreecreator.Main</Main-Class>
                             <Premium>true</Premium>
