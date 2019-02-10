@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@
 //  ###       MC 1.3.1 script         ###
 //  #####################################
 //
-//      Usable Methods for the "info" Object:
-//          info.getType()
-//          info.getWorldGroup()
+//      Usable Fields for the "info" Object:
+//          info.type
+//          info.worldGroup
 //
 
 //  Level 2-16 cost 17 XP points each
@@ -42,18 +42,19 @@ function getExpByLevel(level, info) {
     if (level <= 1) {
         return 0;
     }
+    var exp = 0, i;
     if (level > 31) {
-        var exp = 887;
+        exp = 887;
         level -= 31;
-        for (var i = 1; i < level; i++) {
+        for (i = 1; i < level; i++) {
             exp += 62 + (i * 7);
         }
         return exp;
     }
     if (level > 17) {
-        var exp = 272;
+        exp = 272;
         level -= 17;
-        for (var i = 1; i <= level; i++) {
+        for (i = 1; i <= level; i++) {
             exp += 17 + (i * 3);
         }
         return exp;

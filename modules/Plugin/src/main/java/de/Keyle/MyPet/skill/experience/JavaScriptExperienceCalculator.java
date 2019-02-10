@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -39,7 +39,10 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
     protected File scriptFile = new File(MyPetApi.getPlugin().getDataFolder().getPath(), "exp.js");
 
     public JavaScriptExperienceCalculator() {
-        if (!new File(MyPetApi.getPlugin().getDataFolder(), "rhino.jar").exists()) {
+        if (!new File(MyPetApi.getPlugin().getDataFolder(), "rhino.jar").exists() &&
+                !new File(MyPetApi.getPlugin().getDataFolder(), "rhino-1.7.9.jar").exists() &&
+                !new File(MyPetApi.getPlugin().getDataFolder(), "rhino-1.7.10.jar").exists()
+        ) {
             MyPetApi.getLogger().warning("rhino.jar is missing. Please download it here (https://github.com/mozilla/rhino/releases) and put it into the MyPet folder.");
             return;
         }
@@ -71,18 +74,14 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
     }
 
     private void initScriptEngine() {
-        Context cx = Context.enter();
         try {
-            ScriptableObject scriptable = new ImporterTopLevel(cx);
-            Scriptable scope = cx.initStandardObjects(scriptable);
-            cx.evaluateReader(scope, new FileReader(scriptFile), "exp.js", 0, null);
-
-            jsExp = new JavaScriptExperience(cx, scope);
+            Context cx = Context.enter();
+            jsExp = new JavaScriptExperience(cx);
             isUsable = jsExp.init();
             if (!isUsable) {
                 Context.exit();
             }
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -104,7 +103,14 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
 
         private Function getExpByLevel = null;
 
-        public JavaScriptExperience(Context cx, Scriptable scope) {
+        public JavaScriptExperience(Context cx) {
+            ScriptableObject scriptable = new ImporterTopLevel(cx);
+            Scriptable scope = cx.initStandardObjects(scriptable);
+            try {
+                cx.evaluateReader(scope, new FileReader(scriptFile), "exp.js", 0, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             this.cx = cx;
             this.scope = scope;
         }
