@@ -38,7 +38,7 @@
 //   |  Return Methods  |
 //   |------------------|
 
-function getExpByLevel(level, info) {
+function getExpByLevel(level, petType, worldGroup) {
     if (level <= 1) {
         return 0;
     }
