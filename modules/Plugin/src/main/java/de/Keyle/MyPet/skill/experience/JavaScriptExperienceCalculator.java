@@ -24,7 +24,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
-import lombok.Getter;
 import org.mozilla.javascript.*;
 
 import java.io.File;
@@ -61,8 +60,7 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
             return 0;
         }
         try {
-            MyPetScriptInfo scriptInfo = new MyPetScriptInfo(myPet.getPetType().name(), myPet.getWorldGroup());
-            return jsExp.getExpByLevel(level, scriptInfo);
+            return jsExp.getExpByLevel(level, myPet.getPetType().name(), myPet.getWorldGroup());
         } catch (Exception e) {
             MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error.");
             MyPetApi.getLogger().warning("   " + e.getLocalizedMessage());
@@ -125,19 +123,8 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
             return true;
         }
 
-        public double getExpByLevel(int level, MyPetScriptInfo info) {
-            return ((Number) getExpByLevel.call(cx, scope, scope, new Object[]{level, info})).doubleValue();
-        }
-    }
-
-    class MyPetScriptInfo {
-
-        @Getter private final String type;
-        @Getter private final String worldGroup;
-
-        public MyPetScriptInfo(String type, String worldGroup) {
-            this.type = type;
-            this.worldGroup = worldGroup;
+        public double getExpByLevel(int level, String name, String worldgroup) {
+            return ((Number) getExpByLevel.call(cx, scope, scope, new Object[]{level, name, worldgroup})).doubleValue();
         }
     }
 }
