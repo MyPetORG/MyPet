@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
 import org.mozilla.javascript.*;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 public class JavaScriptExperienceCalculator implements ExperienceCalculator {
@@ -104,7 +103,11 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
             ScriptableObject scriptable = new ImporterTopLevel(cx);
             Scriptable scope = cx.initStandardObjects(scriptable);
             try {
-                cx.evaluateReader(scope, new FileReader(scriptFile), "exp.js", 0, null);
+                String content = Util.readFileAsString(scriptFile.getAbsolutePath());
+                content = "function print(msg) {\n" +
+                        "  java.lang.System.out.println(msg);\n" +
+                        "}\n\n" + content;
+                cx.evaluateString(scope, content, "exp.js", 0, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
