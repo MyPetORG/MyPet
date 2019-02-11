@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.experience;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
 import lombok.Getter;
 import org.mozilla.javascript.*;
@@ -62,7 +61,7 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
             return 0;
         }
         try {
-            MyPetScriptInfo scriptInfo = new MyPetScriptInfo(myPet.getPetType(), myPet.getWorldGroup());
+            MyPetScriptInfo scriptInfo = new MyPetScriptInfo(myPet.getPetType().name(), myPet.getWorldGroup());
             return jsExp.getExpByLevel(level, scriptInfo);
         } catch (Exception e) {
             MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error.");
@@ -133,10 +132,10 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
 
     class MyPetScriptInfo {
 
-        @Getter private final MyPetType type;
+        @Getter private final String type;
         @Getter private final String worldGroup;
 
-        public MyPetScriptInfo(MyPetType type, String worldGroup) {
+        public MyPetScriptInfo(String type, String worldGroup) {
             this.type = type;
             this.worldGroup = worldGroup;
         }
