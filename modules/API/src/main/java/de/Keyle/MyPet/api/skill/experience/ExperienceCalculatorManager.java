@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.skill.experience;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.exceptions.MyPetExperienceCalculatorInitException;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -55,6 +56,9 @@ public class ExperienceCalculatorManager implements ServiceContainer {
                     if (newCalculator.isUsable()) {
                         this.calculator = newCalculator;
                     }
+                } catch (MyPetExperienceCalculatorInitException e) {
+                    MyPetApi.getLogger().warning("There was an error loading the experience calculator. Please check your setup.");
+                    MyPetApi.getLogger().warning("  " + e.getMessage());
                 } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }

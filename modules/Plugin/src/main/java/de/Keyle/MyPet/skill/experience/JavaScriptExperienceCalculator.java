@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.experience;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.exceptions.MyPetExperienceCalculatorInitException;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
 import org.mozilla.javascript.*;
 
@@ -77,8 +78,8 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
             if (!isUsable) {
                 Context.exit();
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (EvaluatorException e) {
+            throw new MyPetExperienceCalculatorInitException(e.getMessage());
         }
     }
 
