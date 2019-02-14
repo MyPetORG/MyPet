@@ -61,6 +61,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
         config.addDefault("MyPet.Update.Token", Update.TOKEN);
         config.addDefault("MyPet.Update.In-Background", Update.ASYNC);
+        config.addDefault("MyPet.Update.OP-Notification", Update.SHOW_OP);
 
         config.addDefault("MyPet.Leash.Consume", Misc.CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.AllowRanged", Misc.ALLOW_RANGED_LEASHING);
@@ -288,6 +289,7 @@ public class ConfigurationLoader {
         Update.DOWNLOAD = config.getBoolean("MyPet.Update.Download", Update.DOWNLOAD);
         Update.REPLACE_OLD = config.getBoolean("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
         Update.TOKEN = config.getString("MyPet.Update.Token", Update.TOKEN);
+        Update.SHOW_OP = config.getBoolean("MyPet.Update..OP-Notification", Update.SHOW_OP);
 
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Skilltree.Skill.Beacon.PARTY_SUPPORT = config.getBoolean("MyPet.Skill.Beacon.Party-Support", true);
