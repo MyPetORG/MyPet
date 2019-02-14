@@ -164,7 +164,8 @@ public class ProtocolLibHook implements PluginHook {
                         if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
 
                             switch (packet.getType().name()) {
-                                case "ENTITY_TELEPORT": {
+                                case "ENTITY_TELEPORT":
+                                case "ENTITY_HEAD_ROTATION": {
                                     byte angle = packet.getBytes().read(0);
                                     angle += Byte.MAX_VALUE;
                                     packet.getBytes().write(0, angle);
@@ -174,7 +175,6 @@ public class ProtocolLibHook implements PluginHook {
                                 case "ENTITY_MOVE_LOOK":
                                 case "REL_ENTITY_MOVE_LOOK":
                                 case "VEHICLE_MOVE":
-                                case "ENTITY_HEAD_ROTATION":
                                     byte angle = packet.getBytes().read(3);
                                     angle += Byte.MAX_VALUE;
                                     packet.getBytes().write(3, angle);
