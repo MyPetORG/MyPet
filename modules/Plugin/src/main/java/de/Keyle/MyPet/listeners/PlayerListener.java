@@ -219,7 +219,7 @@ public class PlayerListener implements Listener {
             }
         }.runTaskLater(MyPetApi.getPlugin(), delay);
 
-        if (event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
+        if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
             event.getPlayer().sendMessage(Translation.getString("Message.Update.Available", event.getPlayer()) + " " + Updater.getLatest());
             event.getPlayer().sendMessage(ChatColor.DARK_GREEN + "    https://mypet-plugin.de/download");
 
