@@ -243,8 +243,10 @@ public class PlayerListener implements Listener {
                         }
                     }
                 }
-                if (!MyPetApi.getHookHelper().canHurt(projectile.getMyPetProjectile().getShooter().getOwner().getPlayer(), victim, true)) {
-                    event.setCancelled(true);
+                if (projectile.getShootingMyPet() != null) {
+                    if (!MyPetApi.getHookHelper().canHurt(projectile.getShootingMyPet().getOwner().getPlayer(), victim, true)) {
+                        event.setCancelled(true);
+                    }
                 }
             }
 
