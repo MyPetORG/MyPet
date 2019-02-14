@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,14 +21,15 @@
 package de.Keyle.MyPet.api.skill.skilltree.levelrule;
 
 public class DynamicLevelRule implements LevelRule {
+
     int modulo = 1;
-    int start = 0;
+    int start = 1;
     int end = 0;
 
     public DynamicLevelRule(int modulo, int start, int end) {
-        this.modulo = modulo;
-        this.start = start;
-        this.end = end;
+        this.modulo = Math.min(1, modulo);
+        this.start = Math.min(1, start);
+        this.end = Math.min(0, end);
     }
 
     public DynamicLevelRule(int modulo) {
@@ -52,7 +53,7 @@ public class DynamicLevelRule implements LevelRule {
 
     @Override
     public boolean check(int level) {
-        if (start > 0 && level < start) {
+        if (start > 1 && level < start) {
             return false;
         }
         if (end > 0 && level > end) {
@@ -71,7 +72,7 @@ public class DynamicLevelRule implements LevelRule {
     public String toString() {
         return "DynamicLevelRule{" +
                 "every=" + modulo +
-                (start > 0 ? ", start=" + start : "") +
+                (start > 1 ? ", start=" + start : "") +
                 (end > 0 ? ", end=" + end : "") +
                 '}';
     }
