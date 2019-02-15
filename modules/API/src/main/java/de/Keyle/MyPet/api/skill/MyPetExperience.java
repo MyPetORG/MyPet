@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -206,16 +206,42 @@ public class MyPetExperience {
     public double getRequiredExp() {
         double requiredExp = this.getExpByLevel(level + 1);
         double prevRequiredExp = this.getExpByLevel(level);
-        return requiredExp - prevRequiredExp;
+        requiredExp = requiredExp - prevRequiredExp;
+        if (requiredExp == 0) {
+            MyPetApi.getLogger().warning("Level " + level + " and " + (level + 1) + " require the same amount of XP. Please change that.");
+            requiredExp = Double.MAX_VALUE;
+        }
+        return requiredExp;
     }
 
     public double getExpByLevel(int level) {
-        double exp;
+        if (level <= 1) {
+            return 0;
+        }
+        double prev = 0, exp, next;
         try {
+            if (level > 2) {
+                prev = cache.getExp(myPet.getWorldGroup(), myPet.getPetType(), level - 1);
+            }
             exp = cache.getExp(myPet.getWorldGroup(), myPet.getPetType(), level);
+            next = cache.getExp(myPet.getWorldGroup(), myPet.getPetType(), level + 1);
         } catch (ExperienceCache.LevelNotCalculatedException e) {
+            if (level > 2) {
+                prev = expCalculator.getExpByLevel(this.getMyPet(), level - 1);
+                cache.insertExp(myPet.getWorldGroup(), myPet.getPetType(), level - 1, prev);
+            }
             exp = expCalculator.getExpByLevel(this.getMyPet(), level);
+            next = expCalculator.getExpByLevel(this.getMyPet(), level + 1);
             cache.insertExp(myPet.getWorldGroup(), myPet.getPetType(), level, exp);
+            cache.insertExp(myPet.getWorldGroup(), myPet.getPetType(), level + 1, next);
+        }
+        if (prev == exp) {
+            MyPetApi.getLogger().warning("Level " + (level - 1) + " and " + level + " require the same amount of XP. Please change that.");
+            exp = Double.MAX_VALUE;
+        }
+        if (exp == next) {
+            MyPetApi.getLogger().warning("Level " + level + " and " + (level + 1) + " require the same amount of XP. Please change that.");
+            exp = Double.MAX_VALUE;
         }
         return exp;
     }
