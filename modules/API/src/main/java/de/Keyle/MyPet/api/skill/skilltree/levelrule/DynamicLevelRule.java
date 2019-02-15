@@ -27,9 +27,9 @@ public class DynamicLevelRule implements LevelRule {
     int end = 0;
 
     public DynamicLevelRule(int modulo, int start, int end) {
-        this.modulo = Math.min(1, modulo);
-        this.start = Math.min(1, start);
-        this.end = Math.min(0, end);
+        this.modulo = Math.max(1, modulo);
+        this.start = Math.max(1, start);
+        this.end = Math.max(0, end);
     }
 
     public DynamicLevelRule(int modulo) {
