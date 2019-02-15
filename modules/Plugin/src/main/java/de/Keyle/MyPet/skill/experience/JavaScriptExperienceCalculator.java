@@ -106,7 +106,7 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
             try {
                 String content = Util.readFileAsString(scriptFile.getAbsolutePath());
                 content = "function print(msg) {\n" +
-                        "  java.lang.System.out.println(msg);\n" +
+                        "  java.lang.System.out.println('[MyPet][JS] ' + msg);\n" +
                         "}\n\n" + content;
                 cx.evaluateString(scope, content, "exp.js", 0, null);
             } catch (IOException e) {
