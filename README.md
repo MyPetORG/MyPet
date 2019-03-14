@@ -1,10 +1,5 @@
 [![MyPet on BukkitDev][Logo]][Homepage]
 ## MyPet - The extensive pet plugin
-
-Do you like MyPet? Feel free to donate or buy [MyPet-Premium][Premium]!<br />
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)][Donate]
-
-## What is MyPet?
 MyPet is a highly customizable pet plugin with a lot of features.<br />
 Take them on a lead, train them and make them a very powerful companion!
 
@@ -12,7 +7,6 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Builds][BuildsImage]][Builds]
 [![Wiki][WikiImage]][Wiki]
 [![Spigot][SpigotImage]][Spigot]
-[![Premium][PremiumImage]][Premium]
 
 ## The License
 Copyright (c) 2011-2018, Keyle<br />
@@ -34,5 +28,3 @@ Download the latest builds from the official [MyPet-Site][Builds].
 [WikiImage]: http://dl.keyle.de/images/wiki.png
 [Spigot]: https://www.spigotmc.org/resources/mypet.12725/
 [SpigotImage]: http://dl.keyle.de/images/spigot.png
-[Premium]: https://www.spigotmc.org/resources/mypet-premium.17566/
-[PremiumImage]: http://dl.keyle.de/images/mypet_premium.png

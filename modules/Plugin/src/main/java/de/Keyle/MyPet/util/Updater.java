@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -101,9 +101,6 @@ public class Updater {
             String parameter = "";
             parameter += "&package=" + MyPetApi.getCompatUtil().getInternalVersion();
             parameter += "&build=" + MyPetVersion.getBuild();
-            parameter += "&premium=" + MyPetVersion.isPremium();
-            parameter += "&version=" + "%%__USER__%%";
-            parameter += "&checksum=" + "%%__NONCE__%%";
             parameter += "&dev=" + MyPetVersion.isDevBuild();
 
             String url = "http";
@@ -193,11 +190,7 @@ public class Updater {
                 outputStream.close();
                 inputStream.close();
             } catch (IOException e) {
-                if (e.getMessage().contains("403")) {
-                    MyPetApi.getLogger().warning("You are not allowed to download MyPet-Premium. Please check/set your download token in the config.");
-                    MyPetApi.getLogger().warning("You can find your token here (requires login): ");
-                    MyPetApi.getLogger().warning("   https://mypet-plugin.de/download");
-                }
+                return;
             }
 
             // Check hash now to be sure we downloaded the correct file

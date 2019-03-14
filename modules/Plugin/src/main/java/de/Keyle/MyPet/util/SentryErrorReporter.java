@@ -55,7 +55,6 @@ public class SentryErrorReporter implements ErrorReporter {
                 "stacktrace.app.packages=");
         context = sentry.getContext();
 
-        context.addTag("premium", "" + MyPetVersion.isPremium());
         context.addTag("plugin_version", "" + MyPetVersion.getVersion());
         context.addTag("plugin_build", "" + MyPetVersion.getBuild());
         context.setUser(new UserBuilder().setId(serverUUID.toString()).build());

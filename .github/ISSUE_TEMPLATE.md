@@ -6,8 +6,6 @@ Please use the `/petadmin ticket` command and attach the generated `ticket.zip` 
 
 **MyPet Build/Version:**
 
-**Do you use the premium version? (this wont change anything for you)**
-
 **What is the expected result?**
 
 **What happens instead of that?**

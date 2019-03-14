@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -37,7 +37,6 @@ public class MyPetVersion {
     private static String build = "0";
     private static String minecraftVersion = "0.0.0";
     private static List<String> bukkitPackets = new ArrayList<>();
-    private static boolean premium = false;
 
     private static void loadData() {
         try {
@@ -57,9 +56,6 @@ public class MyPetVersion {
                 String bukkitPackets = attr.getValue("Project-Bukkit-Packets");
                 MyPetVersion.bukkitPackets.clear();
                 Collections.addAll(MyPetVersion.bukkitPackets, bukkitPackets.split(";"));
-            }
-            if (attr.getValue("Premium") != null) {
-                premium = true;
             }
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -121,14 +117,6 @@ public class MyPetVersion {
             updated = true;
         }
         return Collections.unmodifiableList(bukkitPackets);
-    }
-
-    public static boolean isPremium() {
-        if (!updated) {
-            loadData();
-            updated = true;
-        }
-        return premium;
     }
 
     public static void reset() {
