@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.Colorizer;
@@ -80,7 +81,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
                                 } else if (myPet.setSkilltree(skilltree)) {
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", player), skilltree.getName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", player), skilltree.getDisplayName()));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                                         double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
                                         switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_FEE_PERCENT / 100.;
@@ -134,7 +135,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
                                 } else if (myPet.setSkilltree(selecedSkilltree)) {
-                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
+                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getDisplayName()));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                                         double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
                                         switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_FEE_PERCENT / 100.;
@@ -213,13 +214,9 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
-                if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
-                    return Collections.emptyList();
-                } else if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
-                    return Collections.emptyList();
-                } else {
+            if (Permissions.has(player, "MyPet.admin", false)) {
+                if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                    MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                     List<String> skilltreeList = new ArrayList<>();
                     for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
                         if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {

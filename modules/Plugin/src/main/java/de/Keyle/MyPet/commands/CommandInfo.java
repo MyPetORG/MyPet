@@ -203,7 +203,7 @@ public class CommandInfo implements CommandTabCompleter {
                 }
             }
             if (canSee(PetInfoDisplay.Skilltree.adminOnly, sender, myPet) && myPet.getSkilltree() != null) {
-                sender.sendMessage("   " + Translation.getString("Name.Skilltree", sender) + ": " + myPet.getSkilltree().getName());
+                sender.sendMessage("   " + Translation.getString("Name.Skilltree", sender) + ": " + myPet.getSkilltree().getDisplayName());
                 infoShown = true;
             }
             if (canSee(PetInfoDisplay.Level.adminOnly, sender, myPet)) {

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         if (MyPetApi.getSkilltreeManager().hasSkilltree(args[1])) {
             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(args[1]);
             if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree)) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), skilltree.getName()));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), skilltree.getDisplayName()));
             } else {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.Skilltree.NotSwitched", lang));
             }
