@@ -579,8 +579,10 @@ public class EntityListener implements Listener {
                                 owner.sendMessage(Translation.getString("Message.Leash.Add", owner));
 
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
-                                if (myPet.isPresent()) {
-                                    myPet.get().createEntity();
+                                myPet.ifPresent(MyPet::createEntity);
+                                if (owner.isCaptureHelperActive()) {
+                                    owner.setCaptureHelperActive(false);
+                                    owner.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", owner), Translation.getString("Name.Disabled", owner)));
                                 }
                             }
                         });

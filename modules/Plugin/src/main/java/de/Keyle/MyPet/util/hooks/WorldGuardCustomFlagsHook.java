@@ -24,6 +24,7 @@ import com.mewin.WGCustomFlags.WGCustomFlagsPlugin;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Location;
@@ -31,7 +32,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("WGCustomFlags")
-public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
+public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
 
     protected WorldGuardHook wgHook = null;
 
@@ -41,14 +42,14 @@ public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, Player
             if (MyPetApi.getPluginHookManager().isPluginUsable("WorldGuard")) {
                 wgHook = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
 
-                    WGCustomFlagsPlugin wgcfPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WGCustomFlagsPlugin.class).get();
-                    wgcfPlugin.addCustomFlag(WorldGuardHook.DAMAGE_FLAG);
-                    wgcfPlugin.addCustomFlag(WorldGuardHook.DENY_FLAG);
-                    wgcfPlugin.addCustomFlag(WorldGuardHook.LEASH_FLAG);
-                    return true;
-                }
-            } catch (Throwable ignored) {
-
+                WGCustomFlagsPlugin wgcfPlugin = MyPetApi.getPluginHookManager().getPluginInstance(WGCustomFlagsPlugin.class).get();
+                wgcfPlugin.addCustomFlag(WorldGuardHook.FLY_FLAG);
+                wgcfPlugin.addCustomFlag(WorldGuardHook.DAMAGE_FLAG);
+                wgcfPlugin.addCustomFlag(WorldGuardHook.DENY_FLAG);
+                wgcfPlugin.addCustomFlag(WorldGuardHook.LEASH_FLAG);
+                return true;
+            }
+        } catch (Throwable ignored) {
         }
         return false;
     }
@@ -69,6 +70,15 @@ public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, Player
         try {
             Location location = defender.getLocation();
             StateFlag.State s = wgHook.getState(location, defender, WorldGuardHook.DAMAGE_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    public boolean canFly(Location location) {
+        try {
+            StateFlag.State s = wgHook.getState(location, null, WorldGuardHook.FLY_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
         } catch (Throwable ignored) {
         }

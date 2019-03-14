@@ -40,9 +40,11 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.commands.admin.npc.CommandOptionShop;
 import de.Keyle.MyPet.commands.admin.npc.CommandOptionWallet;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -56,6 +58,9 @@ public class CommandOptionNpc implements CommandOptionTabCompleter {
 
     public CommandOptionNpc() {
         COMMAND_OPTIONS.put("wallet", new CommandOptionWallet());
+        if (MyPetVersion.isPremium()) {
+            COMMAND_OPTIONS.put("shop", new CommandOptionShop());
+        }
     }
 
     @Override

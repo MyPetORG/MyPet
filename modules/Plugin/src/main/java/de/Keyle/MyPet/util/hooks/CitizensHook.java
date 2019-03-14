@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.commands.admin.CommandOptionNpc;
+import de.Keyle.MyPet.util.hooks.citizens.ShopTrait;
 import de.Keyle.MyPet.util.hooks.citizens.StorageTrait;
 import de.Keyle.MyPet.util.hooks.citizens.WalletTrait;
 import net.citizensnpcs.api.CitizensAPI;
@@ -46,14 +47,17 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
 
     TraitInfo storageTrait;
     TraitInfo walletTrait;
+    TraitInfo shopTrait;
 
     @Override
     public boolean onEnable() {
         storageTrait = TraitInfo.create(StorageTrait.class).withName("mypet-storage");
         walletTrait = TraitInfo.create(WalletTrait.class).withName("mypet-wallet");
+        shopTrait = TraitInfo.create(ShopTrait.class).withName("mypet-shop");
 
         CitizensAPI.getTraitFactory().registerTrait(storageTrait);
         CitizensAPI.getTraitFactory().registerTrait(walletTrait);
+        CitizensAPI.getTraitFactory().registerTrait(shopTrait);
 
         CommandAdmin.COMMAND_OPTIONS.put("npc", new CommandOptionNpc());
 
@@ -70,6 +74,7 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
         if (CitizensAPI.hasImplementation()) {
             CitizensAPI.getTraitFactory().deregisterTrait(storageTrait);
             CitizensAPI.getTraitFactory().deregisterTrait(walletTrait);
+            CitizensAPI.getTraitFactory().deregisterTrait(shopTrait);
         }
     }
 

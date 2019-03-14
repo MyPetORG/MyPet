@@ -36,7 +36,6 @@ public class Main {
     public static TrayIcon trayIcon = null;
 
     static class MyPetPlugin {
-
     }
 
     public static void main(String[] args) {

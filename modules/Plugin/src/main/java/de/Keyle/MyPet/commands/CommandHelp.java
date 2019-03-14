@@ -47,7 +47,11 @@ public class CommandHelp implements CommandTabCompleter {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Admin", player), "/petadmin"));
             }
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Info", player), "/petinfo"));
+            player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Shop", player), "/petshop"));
             player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Options", player), "/petoptions"));
+            if (Permissions.has(player, "MyPet.command.capturehelper")) {
+                player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.CaptureHelper", player), "/petcapturehelper"));
+            }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Call", player), "/petcall"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.SendAway", player), "/petsendaway"));
@@ -64,6 +68,9 @@ public class CommandHelp implements CommandTabCompleter {
                 if (Permissions.has(player, "MyPet.command.switch")) {
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Switch", player), "/petswitch"));
                     player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Store", player), "/petstore"));
+                }
+                if (Permissions.has(player, "MyPet.command.trade.offer") || Permissions.has(player, "MyPet.command.trade.receive")) {
+                    player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Trade", player), "/pettrade"));
                 }
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Skill", player), "/petskill"));
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.ChooseSkilltree", player), "/petchooseskilltree"));

@@ -43,6 +43,7 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
+import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Bukkit;
@@ -61,8 +62,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @PluginHookName("WorldGuard")
-public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, AllowedHook {
+public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook {
 
+    public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
     public static final StateFlag DENY_FLAG = new StateFlag("mypet-deny", false);
     public static final StateFlag LEASH_FLAG = new StateFlag("mypet-leash", true);
@@ -111,6 +113,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                 }
 
                 if (flagRegistry != null) {
+                    flagRegistry.register(FLY_FLAG);
                     flagRegistry.register(DAMAGE_FLAG);
                     flagRegistry.register(DENY_FLAG);
                     flagRegistry.register(LEASH_FLAG);
@@ -223,6 +226,15 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             return s == null || s == StateFlag.State.ALLOW;
         } catch (Throwable ignored) {
         }
+        return true;
+    }
+
+    public boolean canFly(Location location) {
+        if (customFlags) {
+            StateFlag.State s = getState(location, null, FLY_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        }
+
         return true;
     }
 

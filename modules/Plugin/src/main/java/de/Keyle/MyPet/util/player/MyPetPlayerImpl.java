@@ -29,15 +29,22 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.CaptureHelper;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -51,6 +58,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected UUID mojangUUID = null;
     protected final UUID internalUUID;
     protected boolean onlineMode = false;
+
+    protected boolean captureHelperMode = false;
+    protected int captureHelperTimer = 90;
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
     protected int autoRespawnMin = 1;
@@ -95,6 +105,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public boolean hasCustomData() {
         if (autoRespawn || autoRespawnMin != 1) {
+            return true;
+        } else if (captureHelperMode) {
             return true;
         } else if (extendedInfo.getCompoundData().size() > 0) {
             return true;
@@ -143,10 +155,14 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     public boolean isCaptureHelperActive() {
-        return false;
+        return captureHelperMode;
     }
 
     public void setCaptureHelperActive(boolean captureHelperMode) {
+        this.captureHelperMode = captureHelperMode;
+        if (captureHelperMode) {
+            captureHelperTimer = 90;
+        }
     }
 
     public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID) {
@@ -302,6 +318,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         TagCompound settingsTag = new TagCompound();
         settingsTag.getCompoundData().put("AutoRespawn", new TagByte(hasAutoRespawnEnabled()));
         settingsTag.getCompoundData().put("AutoRespawnMin", new TagInt(getAutoRespawnMin()));
+        settingsTag.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
         settingsTag.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
         settingsTag.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
         playerNBT.getCompoundData().put("Settings", settingsTag);
@@ -346,6 +363,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             if (settingsTag.getCompoundData().containsKey("AutoRespawnMin")) {
                 setAutoRespawnMin(settingsTag.getAs("AutoRespawnMin", TagInt.class).getIntData());
             }
+            if (settingsTag.containsKeyAs("CaptureMode", TagByte.class)) {
+                setCaptureHelperActive(settingsTag.getAs("CaptureMode", TagByte.class).getBooleanData());
+            }
             if (settingsTag.getCompoundData().containsKey("HealthBar")) {
                 setHealthBarActive(settingsTag.getAs("HealthBar", TagByte.class).getBooleanData());
             }
@@ -361,6 +381,13 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             }
             if (myplayerNBT.getCompoundData().containsKey("AutoRespawnMin")) {
                 setAutoRespawnMin(myplayerNBT.getAs("AutoRespawnMin", TagInt.class).getIntData());
+            }
+            if (myplayerNBT.containsKeyAs("CaptureMode", TagString.class)) {
+                if (!myplayerNBT.getAs("CaptureMode", TagString.class).getStringData().equals("Deactivated")) {
+                    setCaptureHelperActive(true);
+                }
+            } else if (myplayerNBT.containsKeyAs("CaptureMode", TagByte.class)) {
+                setCaptureHelperActive(myplayerNBT.getAs("CaptureMode", TagByte.class).getBooleanData());
             }
             if (myplayerNBT.getCompoundData().containsKey("HealthBar")) {
                 setHealthBarActive(myplayerNBT.getAs("HealthBar", TagByte.class).getBooleanData());
@@ -435,6 +462,45 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
                         if (spawn && myPet.createEntity() == MyPet.SpawnFlags.Success) {
                             p.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", p), myPet.getPetName()));
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isCaptureHelperActive()) {
+            if (captureHelperTimer-- <= 0) {
+                setCaptureHelperActive(false);
+            }
+
+            Player p = getPlayer();
+            List<Entity> entities = p.getNearbyEntities(7, 7, 7);
+            int count = 0;
+
+            entityLoop:
+            for (Entity entity : entities) {
+                if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetBukkitEntity)) {
+                    if (MyPetApi.getMyPetInfo().isLeashableEntityType(entity.getType())) {
+                        for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
+                            if (!hook.canLeash(p, entity)) {
+                                continue entityLoop;
+                            }
+                        }
+                        if (!MyPetApi.getHookHelper().canHurt(p, entity)) {
+                            continue;
+                        }
+                        if (!Permissions.has(this, "MyPet.leash." + MyPetType.byEntityTypeName(entity.getType().name()))) {
+                            continue;
+                        }
+                        Location l = entity.getLocation();
+                        l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
+                        if (CaptureHelper.checkTamable((LivingEntity) entity, p)) {
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.LIME_GREEN_WOOL_DATA);
+                        } else {
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.RED_WOOL_DATA);
+                        }
+                        if (count++ > 20) {
+                            break;
                         }
                     }
                 }

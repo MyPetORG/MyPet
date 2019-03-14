@@ -59,6 +59,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Update.Check", Update.CHECK);
         config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
         config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+        config.addDefault("MyPet.Update.Token", Update.TOKEN);
         config.addDefault("MyPet.Update.In-Background", Update.ASYNC);
         config.addDefault("MyPet.Update.OP-Notification", Update.SHOW_OP);
 
@@ -80,6 +81,27 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
         config.addDefault("MyPet.Right-Click-Command", Misc.RIGHT_CLICK_COMMAND);
 
+        config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
+        config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
+        config.addDefault("MyPet.Repository.LoadDelay", Repository.EXTERNAL_LOAD_DELAY);
+
+        config.addDefault("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
+        config.addDefault("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);
+        config.addDefault("MyPet.Repository.MySQL.Host", Repository.MySQL.HOST);
+        config.addDefault("MyPet.Repository.MySQL.Password", Repository.MySQL.PASSWORD);
+        config.addDefault("MyPet.Repository.MySQL.User", Repository.MySQL.USER);
+        config.addDefault("MyPet.Repository.MySQL.Port", Repository.MySQL.PORT);
+        config.addDefault("MyPet.Repository.MySQL.MaxConnections", Repository.MySQL.POOL_SIZE);
+        config.addDefault("MyPet.Repository.MySQL.CharacterEncoding", Repository.MySQL.CHARACTER_ENCODING);
+
+        config.addDefault("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
+        config.addDefault("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);
+        config.addDefault("MyPet.Repository.MongoDB.Host", Repository.MongoDB.HOST);
+        config.addDefault("MyPet.Repository.MongoDB.Password", Repository.MongoDB.PASSWORD);
+        config.addDefault("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);
+        config.addDefault("MyPet.Repository.MongoDB.Port", Repository.MongoDB.PORT);
+
+        config.addDefault("MyPet.Respawn.Time.Disabled", Respawn.DISABLE_AUTO_RESPAWN);
         config.addDefault("MyPet.Respawn.Time.Default.Factor", Respawn.TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", Respawn.TIME_PLAYER_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Default.Fixed", Respawn.TIME_FIXED);
@@ -215,6 +237,7 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
+        config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
@@ -224,12 +247,15 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", "bread");
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
+        config.addDefault("MyPet.Pets.Mule.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
         if (MyPetType.Rabbit.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle");
@@ -262,6 +288,7 @@ public class ConfigurationLoader {
         Update.CHECK = config.getBoolean("MyPet.Update.Check", Update.CHECK);
         Update.DOWNLOAD = config.getBoolean("MyPet.Update.Download", Update.DOWNLOAD);
         Update.REPLACE_OLD = config.getBoolean("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
+        Update.TOKEN = config.getString("MyPet.Update.Token", Update.TOKEN);
         Update.SHOW_OP = config.getBoolean("MyPet.Update.OP-Notification", Update.SHOW_OP);
 
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
@@ -312,6 +339,26 @@ public class ConfigurationLoader {
         Name.Tag.SHOW = config.getBoolean("MyPet.Name.Tag.Show", Name.Tag.SHOW);
         Name.Tag.PREFIX = Colorizer.setColors(config.getString("MyPet.Name.Tag.Prefix", Name.Tag.PREFIX));
         Name.Tag.SUFFIX = Colorizer.setColors(config.getString("MyPet.Name.Tag.Suffix", Name.Tag.SUFFIX));
+
+        Repository.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
+        Repository.CONVERT_FROM = config.getString("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
+        Repository.EXTERNAL_LOAD_DELAY = config.getLong("MyPet.Repository.LoadDelay", Repository.EXTERNAL_LOAD_DELAY);
+
+        Repository.MySQL.DATABASE = config.getString("MyPet.Repository.MySQL.Database", Repository.MySQL.DATABASE);
+        Repository.MySQL.PREFIX = config.getString("MyPet.Repository.MySQL.TablePrefix", Repository.MySQL.PREFIX);
+        Repository.MySQL.HOST = config.getString("MyPet.Repository.MySQL.Host", Repository.MySQL.HOST);
+        Repository.MySQL.PASSWORD = config.getString("MyPet.Repository.MySQL.Password", Repository.MySQL.PASSWORD);
+        Repository.MySQL.USER = config.getString("MyPet.Repository.MySQL.User", Repository.MySQL.USER);
+        Repository.MySQL.PORT = config.getInt("MyPet.Repository.MySQL.Port", Repository.MySQL.PORT);
+        Repository.MySQL.POOL_SIZE = config.getInt("MyPet.Repository.MySQL.MaxConnections", Repository.MySQL.POOL_SIZE);
+        Repository.MySQL.CHARACTER_ENCODING = config.getString("MyPet.Repository.MySQL.CharacterEncoding", Repository.MySQL.CHARACTER_ENCODING);
+
+        Repository.MongoDB.DATABASE = config.getString("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
+        Repository.MongoDB.PREFIX = config.getString("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);
+        Repository.MongoDB.HOST = config.getString("MyPet.Repository.MongoDB.Host", Repository.MongoDB.HOST);
+        Repository.MongoDB.PASSWORD = config.getString("MyPet.Repository.MongoDB.Password", Repository.MongoDB.PASSWORD);
+        Repository.MongoDB.USER = config.getString("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);
+        Repository.MongoDB.PORT = config.getInt("MyPet.Repository.MongoDB.Port", Repository.MongoDB.PORT);
 
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
@@ -435,6 +482,10 @@ public class ConfigurationLoader {
         MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle"));
         MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle"));
         MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
+        MyPet.ZombieHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle"));
+        MyPet.SkeletonHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle"));
+        MyPet.Mule.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mule.GrowUpItem", "experience_bottle"));
+        MyPet.Donkey.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle"));
 
         for (MyPetType petType : MyPetType.values()) {
             if (!petType.checkMinecraftVersion()) {
@@ -481,6 +532,9 @@ public class ConfigurationLoader {
         if (config.contains("MyPet.Update-Check")) {
             Update.CHECK = config.getBoolean("MyPet.Update-Check", Update.CHECK);
             config.getConfigurationSection("MyPet").set("Update-Check", null);
+        }
+        if (config.contains("MyPet.Activate-Resourcepack-By-Default")) {
+            config.getConfigurationSection("MyPet").set("Activate-Resourcepack-By-Default", null);
         }
         if (config.contains("MyPet.HungerSystem.HungerPointsPerFeed")) {
             HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED = config.getDouble("MyPet.HungerSystem.HungerPointsPerFeed", HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED);

@@ -45,6 +45,7 @@ public class CommandOptionTicket implements CommandOption {
 
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "config.yml"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-config.yml"), out, "");
+            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-shops.yml"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "My.Pets.old"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pets.db"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "worldgroups.yml"), out, "");

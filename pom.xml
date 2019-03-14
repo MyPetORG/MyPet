@@ -426,6 +426,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.9.1</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>knbt</artifactId>
             <version>0.0.3</version>

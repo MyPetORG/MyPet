@@ -107,7 +107,6 @@ public class FileManager extends DefaultTempFileManagerFactory {
         }
 
         static class DeleteTempFileTask extends TimerTask {
-
             @Override
             public void run() {
                 System.gc();

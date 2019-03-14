@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -43,6 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class CommandOptionReload implements CommandOptionTabCompleter {
 
@@ -52,6 +54,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         COMMAND_OPTIONS.add("all");
         COMMAND_OPTIONS.add("config");
         COMMAND_OPTIONS.add("skilltrees");
+        COMMAND_OPTIONS.add("shops");
     }
 
     @Override
@@ -65,12 +68,16 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
             case "all":
                 reloadConfig(sender);
                 reloadSkilltrees(sender);
+                reloadShops(sender);
                 break;
             case "config":
                 reloadConfig(sender);
                 break;
             case "skilltrees":
                 reloadSkilltrees(sender);
+                break;
+            case "shops":
+                reloadShops(sender);
                 break;
             default:
                 sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin reload " + ChatColor.RED + "<what to reload?>");
@@ -148,6 +155,16 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         }
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!");
         MyPetApi.getLogger().info("Silltrees reloaded!");
+    }
+
+    protected void reloadShops(CommandSender sender) {
+        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
+        if (shopManager.isPresent()) {
+            MyPetApi.getServiceManager().getService(ShopManager.class).get().onEnable(); //TODO reload method?
+        }
+
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] shops reloaded!");
+        MyPetApi.getLogger().info("Shops reloaded!");
     }
 
     @Override

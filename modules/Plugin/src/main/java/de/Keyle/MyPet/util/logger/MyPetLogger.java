@@ -163,8 +163,6 @@ public class MyPetLogger extends PluginLogger {
                 this.warning(e.getMessage());
             }
             fileHandler.setLevel(level);
-            System.out.println("Level: " + level);
-
             fileHandler.setFormatter(new LogFormat());
             addHandler(fileHandler);
             debugLogFileHandler = fileHandler;

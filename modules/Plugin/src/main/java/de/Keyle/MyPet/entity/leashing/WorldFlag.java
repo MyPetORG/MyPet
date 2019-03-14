@@ -29,7 +29,6 @@ import org.bukkit.entity.Player;
 
 @LeashFlagName("World")
 public class WorldFlag implements LeashFlag {
-
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
         for (Setting setting : settings.all()) {

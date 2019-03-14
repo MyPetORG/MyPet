@@ -31,7 +31,6 @@ import org.bukkit.entity.Slime;
 
 @LeashFlagName("Size")
 public class SizeFlag implements LeashFlag {
-
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
         if (entity instanceof Slime) {

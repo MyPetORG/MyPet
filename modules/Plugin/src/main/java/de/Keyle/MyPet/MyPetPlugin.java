@@ -47,6 +47,8 @@ import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.entity.leashing.*;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
+import de.Keyle.MyPet.repository.types.MongoDbRepository;
+import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
@@ -61,6 +63,7 @@ import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,6 +74,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
+import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -240,6 +244,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getCommand("petswitch").setExecutor(new CommandSwitch());
         getCommand("petstore").setExecutor(new CommandStore());
         getCommand("petlist").setExecutor(new CommandList());
+        getCommand("petcapturehelper").setExecutor(new CommandCaptureHelper());
+        getCommand("pettrade").setExecutor(new CommandTrade());
+        getCommand("petshop").setExecutor(new CommandShop());
 
         // register skills
         registerSkills();
@@ -308,18 +315,54 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         }
 
         // init repository
-        repo = new SqLiteRepository();
-        try {
-            repo.init();
-        } catch (RepositoryInitException ignored) {
-            setEnabled(false);
-            return;
+        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("NBT")) {
+            Configuration.Repository.REPOSITORY_TYPE = "SQLite";
+            Configuration.Repository.CONVERT_FROM = "NBT";
+            repo = new SqLiteRepository();
+            try {
+                repo.init();
+            } catch (RepositoryInitException e) {
+                e.printStackTrace();
+                repo = null;
+            }
+        } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+            MyPetApi.getLogger().info("Connect to MySQL database...");
+            repo = new MySqlRepository();
+            try {
+                repo.init();
+                MyPetApi.getLogger().info("MySQL connection successful.");
+            } catch (RepositoryInitException e) {
+                MyPetApi.getLogger().warning("MySQL connection failed!");
+                e.printStackTrace();
+                repo = null;
+            }
+        } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
+            MyPetApi.getLogger().info("Connect to MongoDB database...");
+            repo = new MongoDbRepository();
+            try {
+                repo.init();
+                MyPetApi.getLogger().info("MongoDB connection successful.");
+            } catch (RepositoryInitException e) {
+                MyPetApi.getLogger().warning("MongoDB connection failed!");
+                e.printStackTrace();
+                repo = null;
+            }
         }
 
-        File nbtFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
-        if (nbtFile.exists()) {
-            Converter.convert();
+        if (repo == null) {
+            MyPetApi.getLogger().info("Connect to SQLite database...");
+            repo = new SqLiteRepository();
+            try {
+                repo.init();
+                MyPetApi.getLogger().info("SQLite connection successful.");
+            } catch (RepositoryInitException ignored) {
+                MyPetApi.getLogger().warning("SQLite connection failed!");
+                setEnabled(false);
+                return;
+            }
         }
+
+        Converter.convert();
 
         if (repo instanceof Scheduler) {
             Timer.addTask((Scheduler) repo);
@@ -327,6 +370,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
 
         // load worldgroups
         loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
+
+        File shopConfig = new File(getDataFolder(), "pet-shops.yml");
+        if (!shopConfig.exists()) {
+            platformHelper.copyResource(this, "pet-shops.yml", shopConfig);
+        }
+        new ShopManager();
+
         Timer.startTimer();
 
         updater.waitForDownload();
@@ -460,11 +510,13 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         serviceManager.registerService(ExperienceCalculatorManager.class);
         serviceManager.registerService(SkillManager.class);
         serviceManager.registerService(SkilltreeManager.class);
+        serviceManager.registerService(ShopManager.class);
     }
 
     private void registerHooks() {
         pluginHookManager.registerHook(AncientHook.class);
         pluginHookManager.registerHook(BattleArenaHook.class);
+        pluginHookManager.registerHook(BossShopProHook.class);
         pluginHookManager.registerHook(CitizensHook.class);
         pluginHookManager.registerHook(CombatLogXHook.class);
         pluginHookManager.registerHook(FactionsHook.class);

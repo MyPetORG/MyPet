@@ -26,6 +26,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.Util.UrlFactoryReset;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.json.simple.JSONObject;
@@ -37,7 +38,9 @@ import java.net.URL;
 import java.util.Optional;
 
 public class Updater {
+
     public class Update {
+
         String version;
         int build;
 
@@ -98,6 +101,9 @@ public class Updater {
             String parameter = "";
             parameter += "&package=" + MyPetApi.getCompatUtil().getInternalVersion();
             parameter += "&build=" + MyPetVersion.getBuild();
+            parameter += "&premium=" + MyPetVersion.isPremium();
+            parameter += "&version=" + "%%__USER__%%";
+            parameter += "&checksum=" + "%%__NONCE__%%";
             parameter += "&dev=" + MyPetVersion.isDevBuild();
 
             String url = "http";
@@ -107,7 +113,10 @@ public class Updater {
             url += "://update.mypet-plugin.de/" + plugin + "?" + parameter;
 
             // no data will be saved on the server
+            UrlFactoryReset r = new UrlFactoryReset();
+            r.unsetFactory();
             String content = Util.readUrlContent(url);
+            r.resetFactory();
             JSONParser parser = new JSONParser();
             JSONObject result = (JSONObject) parser.parse(content);
 
@@ -142,6 +151,8 @@ public class Updater {
         } else {
             url += "release";
         }
+        String hashUrl = url + "/hash?api_token=" + Configuration.Update.TOKEN;
+        url += "?api_token=" + Configuration.Update.TOKEN;
         File pluginFile;
         if (Configuration.Update.REPLACE_OLD) {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/" + MyPetApi.getPlugin().getFile().getName());
@@ -191,7 +202,7 @@ public class Updater {
 
             // Check hash now to be sure we downloaded the correct file
             try {
-                URL website = new URL(finalUrl + "/hash");
+                URL website = new URL(hashUrl);
                 HttpURLConnection httpConn = (HttpURLConnection) website.openConnection();
                 int responseCode = httpConn.getResponseCode();
 

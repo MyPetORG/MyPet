@@ -67,7 +67,6 @@ public abstract class HookHelper {
 
     /**
      * Returns if a player can fly a pet at a certain location
-     *
      * @param location checked location
      * @return if a player can fly the pet
      */

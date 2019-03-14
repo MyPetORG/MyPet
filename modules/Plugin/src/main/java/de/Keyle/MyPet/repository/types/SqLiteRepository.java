@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2018 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -47,7 +47,6 @@ import java.sql.*;
 import java.util.*;
 
 public class SqLiteRepository implements Repository {
-
     private Connection connection;
     private int version = 1;
 
@@ -327,7 +326,7 @@ public class SqLiteRepository implements Repository {
                 statement.setString(2, player.getName());
                 statement.setBoolean(3, player.hasAutoRespawnEnabled());
                 statement.setInt(4, player.getAutoRespawnMin());
-                statement.setBoolean(5, false);
+                statement.setBoolean(5, player.isCaptureHelperActive());
                 statement.setBoolean(6, player.isHealthBarActive());
                 statement.setFloat(7, player.getPetLivingSoundVolume());
                 statement.setBytes(8, TagStream.writeTag(player.getExtendedInfo(), true));
@@ -736,6 +735,7 @@ public class SqLiteRepository implements Repository {
 
                 petPlayer.setAutoRespawnEnabled(resultSet.getBoolean("auto_respawn"));
                 petPlayer.setAutoRespawnMin(resultSet.getInt("auto_respawn_min"));
+                petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
                 petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
                 petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBytes("extended_info"), true));
@@ -886,7 +886,7 @@ public class SqLiteRepository implements Repository {
             statement.setString(2, player.getName());
             statement.setBoolean(3, player.hasAutoRespawnEnabled());
             statement.setInt(4, player.getAutoRespawnMin());
-            statement.setBoolean(5, false);
+            statement.setBoolean(5, player.isCaptureHelperActive());
             statement.setBoolean(6, player.isHealthBarActive());
             statement.setFloat(7, player.getPetLivingSoundVolume());
             statement.setBytes(8, TagStream.writeTag(player.getExtendedInfo(), true));
@@ -915,9 +915,8 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                PreparedStatement statement = null;
                 try {
-                    statement = connection.prepareStatement(
+                    PreparedStatement statement = connection.prepareStatement(
                             "INSERT INTO players (" +
                                     "internal_uuid, " +
                                     "mojang_uuid, " +
@@ -935,7 +934,7 @@ public class SqLiteRepository implements Repository {
                     statement.setString(3, player.getName());
                     statement.setBoolean(4, player.hasAutoRespawnEnabled());
                     statement.setInt(5, player.getAutoRespawnMin());
-                    statement.setBoolean(6, false);
+                    statement.setBoolean(6, player.isCaptureHelperActive());
                     statement.setBoolean(7, player.isHealthBarActive());
                     statement.setFloat(8, player.getPetLivingSoundVolume());
                     try {
@@ -960,11 +959,6 @@ public class SqLiteRepository implements Repository {
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    MyPetApi.getLogger().info("Exception Info: " + statement.toString());
-                    MyPetApi.getLogger().info("UUID: " + player.getInternalUUID().toString());
-                    MyPetApi.getLogger().info("Name: " + player.getName());
-                    MyPetApi.getLogger().info("Mojang: " + (player.getMojangUUID() != null ? player.getMojangUUID().toString() : null));
-                    MyPetApi.getLogger().info("callback: " + callback);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -1004,7 +998,7 @@ public class SqLiteRepository implements Repository {
                 statement.setString(3, playerName);
                 statement.setBoolean(4, player.hasAutoRespawnEnabled());
                 statement.setInt(5, player.getAutoRespawnMin());
-                statement.setBoolean(6, false);
+                statement.setBoolean(6, player.isCaptureHelperActive());
                 statement.setBoolean(7, player.isHealthBarActive());
                 statement.setFloat(8, player.getPetLivingSoundVolume());
                 statement.setBytes(9, TagStream.writeTag(player.getExtendedInfo(), true));

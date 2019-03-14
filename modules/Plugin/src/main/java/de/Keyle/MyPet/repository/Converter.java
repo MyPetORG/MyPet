@@ -24,38 +24,95 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.repository.Repository;
+import de.Keyle.MyPet.api.repository.RepositoryInitException;
+import de.Keyle.MyPet.repository.types.MongoDbRepository;
+import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 
 public class Converter {
 
     public static boolean convert() {
-        MyPetApi.getLogger().info("Converting from NBT to " + Configuration.Repository.REPOSITORY_TYPE + "...");
+        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase(Configuration.Repository.REPOSITORY_TYPE)) {
+            return false;
+        }
 
-        NbtRepository fromRepo = new NbtRepository();
-        fromRepo.init();
+        Repository fromRepo;
+        Repository toRepo;
 
-        SqLiteRepository toRepo = (SqLiteRepository) MyPetApi.getRepository();
+        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("NBT")) {
+            fromRepo = new NbtRepository();
+        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
+            fromRepo = new MySqlRepository();
+        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MongoDB")) {
+            fromRepo = new MongoDbRepository();
+        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("SQLite")) {
+            fromRepo = new SqLiteRepository();
+        } else {
+            return false;
+        }
+
+        MyPetApi.getLogger().info("Converting from " + Configuration.Repository.CONVERT_FROM + " to " + Configuration.Repository.REPOSITORY_TYPE + "...");
+
+        try {
+            fromRepo.init();
+        } catch (RepositoryInitException e) {
+            return false;
+        }
+
+        toRepo = MyPetApi.getRepository();
 
         List<MyPetPlayer> playerList = fromRepo.getAllMyPetPlayers();
-        toRepo.addMyPetPlayers(playerList);
+        if (toRepo instanceof NbtRepository) {
+            return false;
+        } else if (toRepo instanceof MySqlRepository) {
+            ((MySqlRepository) toRepo).addMyPetPlayers(playerList);
+        } else if (toRepo instanceof SqLiteRepository) {
+            ((SqLiteRepository) toRepo).addMyPetPlayers(playerList);
+        } else if (toRepo instanceof MongoDbRepository) {
+            HashSet<String> playerNames = new HashSet<>();
+            for (MyPetPlayer player : playerList) {
+                String playerName = player.getName();
+                if (playerNames.contains(playerName)) {
+                    MyPetApi.getLogger().info("Found duplicate Player: " + player.toString());
+                    continue;
+                }
+                playerNames.add(playerName);
+                ((MongoDbRepository) toRepo).addMyPetPlayer(player);
+            }
+        }
 
         List<StoredMyPet> pets = fromRepo.getAllMyPets();
-        toRepo.addMyPets(pets);
+
+        if (toRepo instanceof MySqlRepository) {
+            ((MySqlRepository) toRepo).addMyPets(pets);
+        } else if (toRepo instanceof SqLiteRepository) {
+            ((SqLiteRepository) toRepo).addMyPets(pets);
+        } else if (toRepo instanceof MongoDbRepository) {
+            for (StoredMyPet pet : pets) {
+                ((MongoDbRepository) toRepo).addMyPet(pet);
+            }
+        }
 
         toRepo.save();
         fromRepo.disable();
 
-        File nbtFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
-        File nbtFileOld = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets.old");
-        nbtFile.renameTo(nbtFileOld);
-        MyPetApi.getPlugin().getConfig().set("MyPet.Repository.NBT", null);
+        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("NBT")) {
+            File nbtFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
+            File nbtFileOld = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets.old");
+            nbtFile.renameTo(nbtFileOld);
+            MyPetApi.getPlugin().getConfig().set("MyPet.Repository.Type", Configuration.Repository.REPOSITORY_TYPE);
+            MyPetApi.getPlugin().getConfig().set("MyPet.Repository.NBT", null);
+        }
+        MyPetApi.getPlugin().getConfig().set("MyPet.Repository.ConvertFrom", "-");
         MyPetApi.getPlugin().saveConfig();
 
-        MyPetApi.getLogger().info("Conversion from NBT to " + Configuration.Repository.REPOSITORY_TYPE + " complete!");
+        MyPetApi.getLogger().info("Conversion from " + Configuration.Repository.CONVERT_FROM + " to " + Configuration.Repository.REPOSITORY_TYPE + " complete!");
 
         return true;
     }

@@ -49,7 +49,6 @@ public class CommandSettings implements CommandTabCompleter {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
         if (args.length < 1) {
             sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, commandOptions.keySet()));

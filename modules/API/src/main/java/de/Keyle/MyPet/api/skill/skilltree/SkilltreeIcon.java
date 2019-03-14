@@ -26,7 +26,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 public class SkilltreeIcon {
-
     @Getter @Setter @Accessors(chain = true) @NonNull
     protected String material = "Sapling";
     @Getter @Setter @Accessors(chain = true)

@@ -94,7 +94,13 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean canMyPetFlyAt(Location location) {
-        return false;
+        List<FlyHook> flyHooks = MyPetApi.getPluginHookManager().getHooks(FlyHook.class);
+        for (FlyHook hook : flyHooks) {
+            if (!hook.canFly(location)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
