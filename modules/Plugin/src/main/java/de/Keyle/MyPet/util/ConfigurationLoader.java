@@ -400,7 +400,7 @@ public class ConfigurationLoader {
                 ymlcnf.load(expConfigFile);
                 config = ymlcnf;
             } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
+                MyPetApi.getLogger().warning("There was an error while loading exp-config.yml");
             }
         }
 
@@ -440,7 +440,7 @@ public class ConfigurationLoader {
                 ymlcnf.load(petConfigFile);
                 config = ymlcnf;
             } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
+                MyPetApi.getLogger().warning("There was an error while loading pet-config.yml");
             }
         }
         MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
@@ -465,7 +465,7 @@ public class ConfigurationLoader {
                 ymlcnf.load(petConfigFile);
                 config = ymlcnf;
             } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
+                MyPetApi.getLogger().warning("There was an error while loading pet-config.yml");
             }
         }
 
