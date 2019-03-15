@@ -168,6 +168,9 @@ public class StorageTrait extends Trait {
                             });
                         } else {
                             IconMenu menu = new IconMenu(Translation.getString("Message.Npc.HandOverTitle", myPetPlayer), event -> {
+                                if (!myPetPlayer.hasMyPet()) {
+                                    return;
+                                }
                                 if (event.getPosition() == 3) {
                                     boolean store = true;
                                     double costs = calculateStorageCosts(myPetPlayer.getMyPet());
