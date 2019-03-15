@@ -32,15 +32,16 @@ import java.util.Random;
 
 @LeashFlagName("Chance")
 public class ChanceFlag implements LeashFlag {
+
     Random random = new Random();
 
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        if (settings.map().containsKey("chance")) {
-            Setting chanceSetting = settings.map().get("chance");
-            if (Util.isInt(chanceSetting.getValue().replace("%", "").trim())) {
-                int chance = Integer.parseInt(chanceSetting.getValue());
-                return random.nextInt(100) <= chance;
+        int r = random.nextInt(100);
+        for (Setting setting : settings.all()) {
+            if (Util.isInt(setting.getKey().replace("%", "").trim())) {
+                int chance = Integer.parseInt(setting.getValue().replace("%", "").trim());
+                return r <= chance;
             }
         }
         return true;
