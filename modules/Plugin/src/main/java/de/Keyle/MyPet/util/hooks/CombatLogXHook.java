@@ -78,7 +78,7 @@ public class CombatLogXHook implements PluginHook {
             return;
         }
 
-        if (damaged instanceof LivingEntity) {
+        if (damager != null && damaged instanceof LivingEntity) {
             if (damaged instanceof Player) {
                 Player p = (Player) damaged;
                 LivingEntity enemy = (LivingEntity) damager;
