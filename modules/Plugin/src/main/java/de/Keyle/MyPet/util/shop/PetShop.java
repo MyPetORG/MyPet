@@ -59,13 +59,10 @@ public class PetShop {
     @Getter @Setter protected SkilltreeIcon icon = new SkilltreeIcon().setMaterial("chest");
     protected String walletOwner = null;
     protected boolean defaultShop = false;
-    VaultHook economyHook;
-
     protected double privateWallet = 0;
 
     public PetShop(String name) {
         this.name = name;
-        economyHook = (VaultHook) MyPetApi.getHookHelper().getEconomy();
     }
 
     public String getName() {
@@ -77,6 +74,8 @@ public class PetShop {
     }
 
     public void open(final Player player) {
+        VaultHook economyHook = (VaultHook) MyPetApi.getHookHelper().getEconomy();
+
         IconMenu shop = new IconMenu(Colorizer.setColors(displayName), event -> {
             if (pets.containsKey(event.getPosition())) {
                 final ShopMyPet pet = pets.get(event.getPosition());
