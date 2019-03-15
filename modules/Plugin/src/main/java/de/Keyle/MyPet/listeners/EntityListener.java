@@ -1024,6 +1024,7 @@ public class EntityListener implements Listener {
         }
     }
 
+    @SuppressWarnings("RedundantCast")
     private void sendDeathMessage(final EntityDeathEvent event) {
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
@@ -1035,7 +1036,7 @@ public class EntityListener implements Listener {
                     if (e.getDamager() == myPet.getOwner().getPlayer()) {
                         killer = Translation.getString("Name.You", myPet.getOwner());
                     } else {
-                        killer = e.getDamager().getName();
+                        killer = ((Player) e.getDamager()).getName();
                     }
                 } else if (e.getDamager().getType() == EntityType.WOLF) {
                     Wolf w = (Wolf) e.getDamager();
