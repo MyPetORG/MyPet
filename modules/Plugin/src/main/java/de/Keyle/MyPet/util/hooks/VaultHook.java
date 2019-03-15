@@ -113,9 +113,11 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
 
     @Override
     public boolean canPay(OfflinePlayer player, double costs) {
-        try {
-            return economy.has(player, costs);
-        } catch (Throwable ignored) {
+        if (checkEconomy()) {
+            try {
+                return economy.has(player, costs);
+            } catch (Throwable ignored) {
+            }
         }
         return false;
     }
@@ -132,10 +134,12 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
 
     @Override
     public boolean transfer(OfflinePlayer from, OfflinePlayer to, double costs) {
-        if (economy.has(from, costs)) {
-            try {
-                return economy.withdrawPlayer(from, costs).transactionSuccess() && economy.depositPlayer(to, costs).transactionSuccess();
-            } catch (Throwable ignored) {
+        if (checkEconomy()) {
+            if (economy.has(from, costs)) {
+                try {
+                    return economy.withdrawPlayer(from, costs).transactionSuccess() && economy.depositPlayer(to, costs).transactionSuccess();
+                } catch (Throwable ignored) {
+                }
             }
         }
         return false;
@@ -153,10 +157,12 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
 
     @Override
     public boolean pay(OfflinePlayer player, double costs) {
-        if (economy.has(player, costs)) {
-            try {
-                return economy.withdrawPlayer(player, costs).transactionSuccess();
-            } catch (Throwable ignored) {
+        if (checkEconomy()) {
+            if (economy.has(player, costs)) {
+                try {
+                    return economy.withdrawPlayer(player, costs).transactionSuccess();
+                } catch (Throwable ignored) {
+                }
             }
         }
         return false;
@@ -164,20 +170,32 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
 
     @Override
     public String currencyNameSingular() {
-        try {
-            return economy.currencyNameSingular();
-        } catch (Throwable ignored) {
+        if (checkEconomy()) {
+            try {
+                return economy.currencyNameSingular();
+            } catch (Throwable ignored) {
+            }
         }
         return "";
     }
 
     @Override
     public String format(double amount) {
-        try {
-            return economy.format(amount);
-        } catch (Throwable ignored) {
+        if (checkEconomy()) {
+            try {
+                return economy.format(amount);
+            } catch (Throwable ignored) {
+            }
         }
         return "" + amount;
+    }
+
+    public boolean checkEconomy() {
+        return economy != null;
+    }
+
+    public boolean checkPermissions() {
+        return economy != null;
     }
 
     public Economy getEconomy() {
@@ -186,16 +204,20 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
 
     @Override
     public boolean isInGroup(Player player, String group) {
-        if (permission.hasGroupSupport()) {
-            return permission.playerInGroup(player.getWorld().getName(), player, group);
+        if (checkPermissions()) {
+            if (permission.hasGroupSupport()) {
+                return permission.playerInGroup(player.getWorld().getName(), player, group);
+            }
         }
         return false;
     }
 
     @Override
     public boolean isInGroup(Player player, String group, String world) {
-        if (permission.hasGroupSupport()) {
-            return permission.playerInGroup(world, player, group);
+        if (checkPermissions()) {
+            if (permission.hasGroupSupport()) {
+                return permission.playerInGroup(world, player, group);
+            }
         }
         return false;
     }
