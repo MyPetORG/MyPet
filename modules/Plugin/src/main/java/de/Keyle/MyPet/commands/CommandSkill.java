@@ -70,7 +70,7 @@ public class CommandSkill implements CommandTabCompleter {
         if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
             myPet.autoAssignSkilltree();
-            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", sender), myPet.getPetName(), Colorizer.setColors(myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
+            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", sender), myPet.getPetName(), myPet.getSkilltree() == null ? "-" : Colorizer.setColors(myPet.getSkilltree().getDisplayName())));
 
             for (Skill skill : myPet.getSkills().all()) {
                 if (skill.isActive()) {

@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.ConfigurationLoader;
@@ -145,7 +146,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
             }
             myPet.setSkilltree(skilltree);
             if (skilltree != null) {
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", sender), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName())));
+                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", sender), myPet.getPetName(), (myPet.getSkilltree() == null ? "-" : Colorizer.setColors(myPet.getSkilltree().getDisplayName()))));
                 for (Skill skill : myPet.getSkills().all()) {
                     if (skill.isActive()) {
                         myPet.getOwner().sendMessage("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.toPrettyString(myPet.getOwner().getLanguage()));

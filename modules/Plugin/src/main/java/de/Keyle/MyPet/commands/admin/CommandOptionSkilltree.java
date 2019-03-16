@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,7 +65,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         if (MyPetApi.getSkilltreeManager().hasSkilltree(args[1])) {
             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(args[1]);
             if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree)) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), skilltree.getDisplayName()));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.Skilltree.SwitchedToFor", lang), petOwner.getName(), Colorizer.setColors(skilltree.getDisplayName())));
             } else {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.Skilltree.NotSwitched", lang));
             }

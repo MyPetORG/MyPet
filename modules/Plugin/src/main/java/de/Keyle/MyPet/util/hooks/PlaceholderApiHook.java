@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
@@ -172,7 +173,7 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("skilltree_display", new PlaceHolder<MyPet>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
-                return pet.getSkilltree() != null ? pet.getSkilltree().getDisplayName() : "";
+                return pet.getSkilltree() != null ? Colorizer.setColors(pet.getSkilltree().getDisplayName()) : "";
             }
         });
 

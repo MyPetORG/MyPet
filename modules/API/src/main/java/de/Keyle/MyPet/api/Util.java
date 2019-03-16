@@ -25,6 +25,7 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagCompound;
@@ -399,7 +400,7 @@ public class Util {
             }
         }
         lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().name());
-        lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
+        lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkilltree() != null ? Colorizer.setColors(mypet.getSkilltree().getDisplayName()) : "-"));
         if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
             if (mypet.getRespawnTime() > 0) {
                 lore.add(ChatColor.RED + Translation.getString("Name.Dead", lang));

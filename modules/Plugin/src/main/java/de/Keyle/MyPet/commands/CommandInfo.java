@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
@@ -203,7 +204,7 @@ public class CommandInfo implements CommandTabCompleter {
                 }
             }
             if (canSee(PetInfoDisplay.Skilltree.adminOnly, sender, myPet) && myPet.getSkilltree() != null) {
-                sender.sendMessage("   " + Translation.getString("Name.Skilltree", sender) + ": " + myPet.getSkilltree().getDisplayName());
+                sender.sendMessage("   " + Translation.getString("Name.Skilltree", sender) + ": " + Colorizer.setColors(myPet.getSkilltree().getDisplayName()));
                 infoShown = true;
             }
             if (canSee(PetInfoDisplay.Level.adminOnly, sender, myPet)) {

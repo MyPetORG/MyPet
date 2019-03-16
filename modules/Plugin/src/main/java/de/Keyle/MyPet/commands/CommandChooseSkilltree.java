@@ -81,7 +81,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
                                 } else if (myPet.setSkilltree(skilltree)) {
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", player), skilltree.getDisplayName()));
+                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", player), Colorizer.setColors(skilltree.getDisplayName())));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                                         double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
                                         switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_FEE_PERCENT / 100.;
@@ -135,7 +135,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
                                 } else if (myPet.setSkilltree(selecedSkilltree)) {
-                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getDisplayName()));
+                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), Colorizer.setColors(selecedSkilltree.getDisplayName())));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                                         double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
                                         switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_FEE_PERCENT / 100.;

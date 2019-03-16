@@ -44,6 +44,7 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
@@ -253,7 +254,7 @@ public class EntityListener implements Listener {
                         infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet) && myPet.getSkilltree() != null) {
-                        damager.sendMessage("   " + Translation.getString("Name.Skilltree", damager) + ": " + myPet.getSkilltree().getDisplayName());
+                        damager.sendMessage("   " + Translation.getString("Name.Skilltree", damager) + ": " + Colorizer.setColors(myPet.getSkilltree().getDisplayName()));
                         infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet)) {
