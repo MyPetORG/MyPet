@@ -85,7 +85,7 @@ public class ProtocolLibHook implements PluginHook {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Client.USE_ENTITY) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
-                if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
+                if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
                     return;
                 }
 
@@ -131,7 +131,7 @@ public class ProtocolLibHook implements PluginHook {
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
+                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
                             return;
                         }
 
@@ -153,7 +153,7 @@ public class ProtocolLibHook implements PluginHook {
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
+                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
                             return;
                         }
 
@@ -197,7 +197,7 @@ public class ProtocolLibHook implements PluginHook {
 
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled() || event.isAsync()) {
+                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
                             return;
                         }
 
