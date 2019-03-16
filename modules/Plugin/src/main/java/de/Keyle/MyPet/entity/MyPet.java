@@ -620,11 +620,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void schedule() {
         if (status != PetState.Despawned && getOwner().isOnline()) {
-            for (Skill skill : skills.all()) {
-                if (skill instanceof Scheduler) {
-                    ((Scheduler) skill).schedule();
-                }
-            }
             if (status == PetState.Dead) {
                 if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
                     respawnTime--;
@@ -642,6 +637,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
             }
             if (status == PetState.Here) {
+                for (Skill skill : skills.all()) {
+                    if (skill instanceof Scheduler) {
+                        ((Scheduler) skill).schedule();
+                    }
+                }
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
                     if (saturation > 1 && --hungerTime <= 0) {
                         saturation--;
