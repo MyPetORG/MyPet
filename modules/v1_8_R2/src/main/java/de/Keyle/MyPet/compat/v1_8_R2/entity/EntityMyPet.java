@@ -523,7 +523,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 command = command.replaceAll("%pet_type%", myPet.getPetType().name());
                 command = command.replaceAll("%pet_uuid%", myPet.getUUID().toString());
                 command = command.replaceAll("%pet_world_group%", myPet.getWorldGroup());
-                command = command.replaceAll("%pet_skilltree_name%", myPet.getSkilltree() != null ? myPet.getSkilltree().getDisplayName() : "");
+                command = command.replaceAll("%pet_skilltree_name%", myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : "");
                 return owner.performCommand(command);
             }
         } else {
