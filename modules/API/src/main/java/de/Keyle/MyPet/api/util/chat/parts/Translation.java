@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -40,19 +40,41 @@
 
 package de.Keyle.MyPet.api.util.chat.parts;
 
+import de.Keyle.MyPet.api.util.chat.FancyMessage;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Translation extends MessagePart {
+
     final String identifier;
+    Object[] using = null;
 
     public Translation(final String identifier) {
         this.identifier = identifier;
+    }
+
+    public Translation(final String identifier, Object... using) {
+        this.identifier = identifier;
+        this.using = using;
     }
 
     @SuppressWarnings("unchecked")
     public JSONObject toJson() {
         JSONObject json = super.toJson();
         json.put("translate", identifier);
+        if (using != null) {
+            JSONArray using = new JSONArray();
+            for (Object o : this.using) {
+                if (o instanceof MessagePart) {
+                    using.add(((MessagePart) o).toJson());
+                } else if (o instanceof FancyMessage) {
+                    using.add(((FancyMessage) o).toJSON());
+                } else {
+                    using.add(o.toString());
+                }
+            }
+            json.put("with", using);
+        }
         return json;
     }
 }

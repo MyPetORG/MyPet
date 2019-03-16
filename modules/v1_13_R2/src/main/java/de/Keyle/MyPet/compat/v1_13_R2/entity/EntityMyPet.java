@@ -99,6 +99,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected float jumpPower = 0;
     protected int donatorParticleCounter = 0;
     protected float limitCounter = 0;
+    protected DamageSource deathReason = null;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "bg");
 
@@ -637,6 +638,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
             MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
         }
+    }
+
+    public void die(DamageSource damagesource) {
+        this.deathReason = damagesource;
+        super.die(damagesource);
     }
 
     protected void initDatawatcher() {
@@ -1290,5 +1296,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             e.printStackTrace();
         }
         return null;
+    }
+
+    public DamageSource cr() {
+        DamageSource source = super.cr();
+        if (deathReason != null) {
+            return deathReason;
+        }
+        return source;
     }
 }

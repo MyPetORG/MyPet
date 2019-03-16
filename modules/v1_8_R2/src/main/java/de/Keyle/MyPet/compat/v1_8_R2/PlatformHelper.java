@@ -38,12 +38,14 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftZombie;
 import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_8_R2.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.json.simple.JSONObject;
@@ -320,5 +322,13 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public Entity getEntityByUUID(UUID uuid) {
         net.minecraft.server.v1_8_R2.Entity e = ((CraftServer) Bukkit.getServer()).getServer().a(uuid);
         return e != null ? e.getBukkitEntity() : null;
+    }
+
+    public String getLastDamageSource(LivingEntity e) {
+        EntityLiving el = ((CraftLivingEntity) e).getHandle();
+        if (!(el.combatTracker.b() instanceof ChatMessage)) {
+            return null;
+        }
+        return ((ChatMessage) el.combatTracker.b()).i();
     }
 }

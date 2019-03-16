@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,13 +29,21 @@ import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class FancyMessage {
+
+    final static Pattern colorStylePattern = Pattern.compile("(?i)" + '§' + "([0-9a-fk-or])");
+
     private final List<MessagePart> messageParts;
 
     public FancyMessage(final String firstPartText) {
-        messageParts = new ArrayList<>();
+        this();
         messageParts.add(new Text(firstPartText));
+    }
+
+    public FancyMessage() {
+        messageParts = new ArrayList<>();
     }
 
     public FancyMessage color(final ChatColor color) {
@@ -101,6 +109,11 @@ public class FancyMessage {
         return this;
     }
 
+    public FancyMessage translateUsing(final String id, Object... using) {
+        messageParts.add(new Translation(id, using));
+        return this;
+    }
+
     @SuppressWarnings("unchecked")
     public String toJSONString() {
         JSONArray parts = new JSONArray();
@@ -110,6 +123,17 @@ public class FancyMessage {
         }
 
         return parts.toJSONString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONArray toJSON() {
+        JSONArray parts = new JSONArray();
+
+        for (final MessagePart part : messageParts) {
+            parts.add(part.toJson());
+        }
+
+        return parts;
     }
 
     private MessagePart latest() {

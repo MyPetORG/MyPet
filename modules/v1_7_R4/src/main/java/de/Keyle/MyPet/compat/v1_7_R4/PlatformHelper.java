@@ -37,6 +37,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftZombie;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
@@ -323,5 +324,13 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             }
         }
         return null;
+    }
+
+    public String getLastDamageSource(LivingEntity e) {
+        EntityLiving el = ((CraftLivingEntity) e).getHandle();
+        if (!(el.combatTracker.b() instanceof ChatMessage)) {
+            return null;
+        }
+        return ((ChatMessage) el.combatTracker.b()).i();
     }
 }

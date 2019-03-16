@@ -35,13 +35,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_13_R1.util.UnsafeList;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Zombie;
+import org.bukkit.entity.*;
 import org.json.simple.JSONObject;
 
 import java.util.List;
@@ -357,5 +356,13 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 .getPlayerList()
                 .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
                         new PacketPlayOutNamedSoundEffect(SoundEffects.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+    }
+
+    public String getLastDamageSource(LivingEntity e) {
+        EntityLiving el = ((CraftLivingEntity) e).getHandle();
+        if (el.cr() == null) {
+            return null;
+        }
+        return ((ChatMessage) el.cr().getLocalizedDeathMessage(el)).h();
     }
 }

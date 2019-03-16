@@ -1047,7 +1047,7 @@ public class EntityListener implements Listener {
                     }
                 } else if (e.getDamager() instanceof MyPetBukkitEntity) {
                     MyPetBukkitEntity craftMyPet = (MyPetBukkitEntity) e.getDamager();
-                    killer = craftMyPet.getMyPet().getPetName() + " (" + craftMyPet.getOwner().getName() + ')';
+                    killer = ChatColor.AQUA + craftMyPet.getMyPet().getPetName() + ChatColor.RESET + " (" + craftMyPet.getOwner().getName() + ')';
                 } else if (e.getDamager() instanceof Projectile) {
                     Projectile projectile = (Projectile) e.getDamager();
                     killer = Translation.getString("Name." + Util.capitalizeName(projectile.getType().name()), myPet.getOwner()) + " (";
@@ -1085,7 +1085,21 @@ public class EntityListener implements Listener {
                     killer = Translation.getString("Name.Unknow", myPet.getOwner());
                 }
             }
-            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.DeathMessage", myPet.getOwner()), myPet.getPetName(), killer));
+
+            String deathMessageKey = MyPetApi.getPlatformHelper().getLastDamageSource(event.getEntity());
+            if (deathMessageKey == null) {
+                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.DeathMessage", myPet.getOwner()), myPet.getPetName(), killer));
+                return;
+            }
+
+            FancyMessage message = new FancyMessage();
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                message.translateUsing(deathMessageKey, ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET, killer);
+            } else {
+                message.translateUsing(deathMessageKey, ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET);
+            }
+
+            MyPetApi.getPlatformHelper().sendMessageRaw(myPet.getOwner().getPlayer(), message.toJSONString());
         }
     }
 }

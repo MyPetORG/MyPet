@@ -30,6 +30,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
@@ -172,4 +173,6 @@ public abstract class PlatformHelper {
     public Entity getEntityByUUID(UUID uuid) {
         return Bukkit.getEntity(uuid);
     }
+
+    public abstract String getLastDamageSource(LivingEntity e);
 }
