@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import lombok.Getter;
 import org.apache.commons.lang.ClassUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -149,8 +150,10 @@ public class PluginHookManager {
         } else {
             config.addDefault(hook.getPluginName() + ".Enabled", true);
         }
-
-        hook.loadConfig(config.getConfigurationSection(hook.getPluginName()));
+        ConfigurationSection pluginSection = config.getConfigurationSection(hook.getPluginName());
+        if (pluginSection != null) {
+            hook.loadConfig(pluginSection);
+        }
 
         return enable;
     }
