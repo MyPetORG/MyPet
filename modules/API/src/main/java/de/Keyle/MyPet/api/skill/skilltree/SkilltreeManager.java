@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.skill.skilltree.requirements.RequirementName;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -72,7 +71,7 @@ public class SkilltreeManager implements ServiceContainer {
         return skilltrees;
     }
 
-    public Skilltree getRandomSkilltree(MyPet pet, Player p) {
+    public Skilltree getRandomSkilltree(MyPet pet) {
         TreeMap<Double, Skilltree> skilltreeMap = new TreeMap<>();
         List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getSkilltrees());
         if (skilltrees.size() == 0) {
