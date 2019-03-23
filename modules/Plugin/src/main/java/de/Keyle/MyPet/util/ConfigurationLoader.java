@@ -236,33 +236,56 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
         }
 
+        config.addDefault("MyPet.Pets.Bat.CanGlide", MyPet.Bat.CAN_GLIDE);
+        config.addDefault("MyPet.Pets.Blaze.CanGlide", MyPet.Blaze.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
+        config.addDefault("MyPet.Pets.Chicken.CanGlide", MyPet.Chicken.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
-        config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
-        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
+        if (MyPetType.Donkey.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
+        }
+        config.addDefault("MyPet.Pets.EnderDragon.CanGlide", MyPet.EnderDragon.CAN_GLIDE);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MyPet.Snowman.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Ghast.CanGlide", MyPet.Ghast.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", "bread");
+        if (MyPetType.Llama.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Llama.GrowUpItem", "experience_bottle");
+        }
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
-        config.addDefault("MyPet.Pets.Mule.GrowUpItem", "experience_bottle");
+        if (MyPetType.Mule.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Mule.GrowUpItem", "experience_bottle");
+        }
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle");
+        if (MyPetType.Parrot.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Parrot.CanGlide", MyPet.Parrot.CAN_GLIDE);
+        }
+        if (MyPetType.Phantom.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Phantom.CanGlide", MyPet.Phantom.CAN_GLIDE);
+        }
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
         if (MyPetType.Rabbit.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle");
         }
-        if (MyPetType.Llama.checkMinecraftVersion()) {
-            config.addDefault("MyPet.Pets.Llama.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
+        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
+        config.addDefault("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle");
+        if (MyPetType.SkeletonHorse.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle");
+        }
+        if (MyPetType.Vex.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Vex.CanGlide", MyPet.Vex.CAN_GLIDE);
+        }
+        config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
+        config.addDefault("MyPet.Pets.Wither.CanGlide", MyPet.Wither.CAN_GLIDE);
+        config.addDefault("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle");
+        if (MyPetType.ZombieHorse.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle");
         }
 
         config.options().copyDefaults(true);

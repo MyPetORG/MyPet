@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
+
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyChicken.class, DataWatcherRegistry.h);
 
     private int nextEggTimer;
@@ -84,8 +85,10 @@ public class EntityMyChicken extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!this.onGround && this.motY < 0.0D) {
-            this.motY *= 0.6D;
+        if (Configuration.MyPet.Chicken.CAN_GLIDE) {
+            if (!this.onGround && this.motY < 0.0D) {
+                this.motY *= 0.6D;
+            }
         }
 
         if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
@@ -107,5 +110,8 @@ public class EntityMyChicken extends EntityMyPet {
      * -> disable falldamage
      */
     public void e(float f, float f1) {
+        if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
+            super.e(f, f1);
+        }
     }
 }

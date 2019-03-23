@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_13_R2.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
@@ -93,9 +94,10 @@ public class EntityMyBlaze extends EntityMyPet {
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
-        if (!this.onGround && this.motY < 0.0D) {
-            this.motY *= 0.6D;
+        if (Configuration.MyPet.Blaze.CAN_GLIDE) {
+            if (!this.onGround && this.motY < 0.0D) {
+                this.motY *= 0.6D;
+            }
         }
     }
 
@@ -107,5 +109,8 @@ public class EntityMyBlaze extends EntityMyPet {
      * -> disable falldamage
      */
     public void c(float f, float f1) {
+        if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
+            super.c(f, f1);
+        }
     }
 }

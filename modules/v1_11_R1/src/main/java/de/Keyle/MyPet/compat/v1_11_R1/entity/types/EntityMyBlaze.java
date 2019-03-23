@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
@@ -28,6 +29,7 @@ import net.minecraft.server.v1_11_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
+
     private static final DataWatcherObject<Byte> onFireWatcher = DataWatcher.a(EntityMyBlaze.class, DataWatcherRegistry.a);
 
     public EntityMyBlaze(World world, MyPet myPet) {
@@ -92,9 +94,10 @@ public class EntityMyBlaze extends EntityMyPet {
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
-        if (!this.onGround && this.motY < 0.0D) {
-            this.motY *= 0.6D;
+        if (Configuration.MyPet.Blaze.CAN_GLIDE) {
+            if (!this.onGround && this.motY < 0.0D) {
+                this.motY *= 0.6D;
+            }
         }
     }
 
@@ -106,5 +109,8 @@ public class EntityMyBlaze extends EntityMyPet {
      * -> disable falldamage
      */
     public void e(float f, float f1) {
+        if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
+            super.e(f, f1);
+        }
     }
 }

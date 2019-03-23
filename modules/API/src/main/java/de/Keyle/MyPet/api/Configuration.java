@@ -193,10 +193,21 @@ public class Configuration {
 
     public static class MyPet {
 
+        public static class Bat {
+
+            public static boolean CAN_GLIDE = true;
+        }
+
+        public static class Blaze {
+
+            public static boolean CAN_GLIDE = true;
+        }
+
         public static class Chicken {
 
             public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_LAY_EGGS = true;
+            public static boolean CAN_GLIDE = true;
         }
 
         public static class Cow {
@@ -205,21 +216,19 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class Sheep {
+        public static class Donkey {
 
-            public static boolean CAN_BE_SHEARED = true;
-            public static boolean CAN_REGROW_WOOL = true;
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class IronGolem {
+        public static class EnderDragon {
 
-            public static boolean CAN_TOSS_UP = true;
+            public static boolean CAN_GLIDE = true;
         }
 
-        public static class Snowman {
+        public static class Ghast {
 
-            public static boolean FIX_SNOW_TRACK = true;
+            public static boolean CAN_GLIDE = true;
         }
 
         public static class Horse {
@@ -227,24 +236,9 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class SkeletonHorse {
+        public static class IronGolem {
 
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class ZombieHorse {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Mule {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Donkey {
-
-            public static ConfigItem GROW_UP_ITEM;
+            public static boolean CAN_TOSS_UP = true;
         }
 
         public static class Llama {
@@ -258,9 +252,24 @@ public class Configuration {
             public static boolean CAN_GIVE_SOUP;
         }
 
+        public static class Mule {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Ocelot {
 
             public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Parrot {
+
+            public static boolean CAN_GLIDE = true;
+        }
+
+        public static class Phantom {
+
+            public static boolean CAN_GLIDE = true;
         }
 
         public static class Pig {
@@ -268,9 +277,46 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class PigZombie {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Rabbit {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Sheep {
+
+            public static boolean CAN_BE_SHEARED = true;
+            public static boolean CAN_REGROW_WOOL = true;
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class SkeletonHorse {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Snowman {
+
+            public static boolean FIX_SNOW_TRACK = true;
+        }
+
+        public static class Vex {
+
+            public static boolean CAN_GLIDE = true;
+        }
+
         public static class Villager {
 
             public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Wither {
+
+            public static boolean CAN_GLIDE = true;
         }
 
         public static class Wolf {
@@ -283,12 +329,7 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class PigZombie {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Rabbit {
+        public static class ZombieHorse {
 
             public static ConfigItem GROW_UP_ITEM;
         }

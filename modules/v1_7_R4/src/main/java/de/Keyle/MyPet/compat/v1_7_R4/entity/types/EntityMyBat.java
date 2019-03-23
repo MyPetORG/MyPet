@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
@@ -27,6 +28,7 @@ import net.minecraft.server.v1_7_R4.World;
 
 @EntitySize(width = 0.5F, height = 0.45f)
 public class EntityMyBat extends EntityMyPet {
+
     public EntityMyBat(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -64,8 +66,10 @@ public class EntityMyBat extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!this.onGround && this.motY < 0.0D) {
-            this.motY *= 0.6D;
+        if (Configuration.MyPet.Bat.CAN_GLIDE) {
+            if (!this.onGround && this.motY < 0.0D) {
+                this.motY *= 0.6D;
+            }
         }
     }
 
@@ -73,5 +77,8 @@ public class EntityMyBat extends EntityMyPet {
      * -> disable falldamage
      */
     public void b(float f) {
+        if (!Configuration.MyPet.Bat.CAN_GLIDE) {
+            super.b(f);
+        }
     }
 }

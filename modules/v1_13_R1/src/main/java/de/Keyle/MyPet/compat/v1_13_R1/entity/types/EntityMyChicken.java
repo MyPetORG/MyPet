@@ -86,8 +86,10 @@ public class EntityMyChicken extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!this.onGround && this.motY < 0.0D) {
-            this.motY *= 0.6D;
+        if (Configuration.MyPet.Chicken.CAN_GLIDE) {
+            if (!this.onGround && this.motY < 0.0D) {
+                this.motY *= 0.6D;
+            }
         }
 
         if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
@@ -109,5 +111,8 @@ public class EntityMyChicken extends EntityMyPet {
      * -> disable falldamage
      */
     public void c(float f, float f1) {
+        if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
+            super.c(f, f1);
+        }
     }
 }

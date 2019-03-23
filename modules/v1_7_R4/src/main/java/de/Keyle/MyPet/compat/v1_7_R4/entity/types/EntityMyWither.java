@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_7_R4.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWither;
@@ -56,7 +57,7 @@ public class EntityMyWither extends EntityMyPet {
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
+        if (Configuration.MyPet.Wither.CAN_GLIDE)
         if (!this.onGround && this.motY < 0.0D) {
             this.motY *= 0.6D;
         }
@@ -71,6 +72,9 @@ public class EntityMyWither extends EntityMyPet {
      * -> disable falldamage
      */
     public void b(float f) {
+        if (!Configuration.MyPet.Wither.CAN_GLIDE) {
+            super.b(f);
+        }
     }
 
     public MyWither getMyPet() {

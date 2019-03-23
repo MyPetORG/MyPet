@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_12_R1.entity.types;
 
 import com.google.common.base.Optional;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyParrot;
@@ -34,6 +35,7 @@ import java.util.UUID;
 
 @EntitySize(width = 0.5F, height = 0.9f)
 public class EntityMyParrot extends EntityMyPet {
+
     private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.h);
     protected static final DataWatcherObject<Byte> SIT_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.a);
     protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.m);
@@ -83,9 +85,10 @@ public class EntityMyParrot extends EntityMyPet {
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
-        if (!this.onGround && this.motY < 0.0D) {
-            this.motY *= 0.6D;
+        if (Configuration.MyPet.Parrot.CAN_GLIDE) {
+            if (!this.onGround && this.motY < 0.0D) {
+                this.motY *= 0.6D;
+            }
         }
     }
 
@@ -93,5 +96,8 @@ public class EntityMyParrot extends EntityMyPet {
      * -> disable falldamage
      */
     public void e(float f, float f1) {
+        if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
+            super.e(f, f1);
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -91,9 +91,10 @@ public class EntityMyChicken extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!this.onGround && this.motY < 0.0D) {
-            this.motY *= 0.6D;
-        }
+        if (Configuration.MyPet.Chicken.CAN_GLIDE)
+            if (!this.onGround && this.motY < 0.0D) {
+                this.motY *= 0.6D;
+            }
 
         if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
             world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
@@ -114,5 +115,8 @@ public class EntityMyChicken extends EntityMyPet {
      * -> disable falldamage
      */
     public void b(float f) {
+        if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
+            super.b(f);
+        }
     }
 }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_11_R1.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
@@ -155,7 +156,7 @@ public class EntityMyVex extends EntityMyPet {
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
+        if (Configuration.MyPet.Vex.CAN_GLIDE)
         if (!this.onGround && this.motY < 0.0D) {
             this.motY *= 0.6D;
         }
@@ -180,5 +181,8 @@ public class EntityMyVex extends EntityMyPet {
      * -> disable falldamage
      */
     public void e(float f, float f1) {
+        if (!Configuration.MyPet.Vex.CAN_GLIDE) {
+            super.e(f, f1);
+        }
     }
 }
