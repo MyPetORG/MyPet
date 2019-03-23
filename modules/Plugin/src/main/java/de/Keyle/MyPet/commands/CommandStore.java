@@ -51,7 +51,7 @@ public class CommandStore implements CommandTabCompleter {
             return true;
         }
 
-        if (!Permissions.has(player, "MyPet.command.switch")) {
+        if (!Permissions.has(player, "MyPet.command.store")) {
             player.sendMessage(Translation.getString("Message.No.Allowed", player));
             return true;
         }
