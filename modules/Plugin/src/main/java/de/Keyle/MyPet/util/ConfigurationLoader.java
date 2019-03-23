@@ -156,6 +156,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skill.Beacon.Party-Support", Skilltree.Skill.Beacon.PARTY_SUPPORT);
         config.addDefault("MyPet.Skill.Ride.Item", "lead");
         config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
+        config.addDefault("MyPet.Skill.Ride.Prevent-Teleportation-While-Riding", Skilltree.Skill.Ride.PREVENT_TELEPORTATION);
 
         config.addDefault("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
@@ -296,7 +297,7 @@ public class ConfigurationLoader {
         Skilltree.Skill.Inventory.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
         Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
-
+        Skilltree.Skill.Ride.PREVENT_TELEPORTATION = config.getBoolean("MyPet.Skill.Ride.Prevent-Teleportation-While-Riding", false);
         Skilltree.SWITCH_FEE_FIXED = config.getDouble("MyPet.Skilltree.SwitchFee.Fixed", 0.0);
         Skilltree.SWITCH_FEE_PERCENT = config.getInt("MyPet.Skilltree.SwitchFee.Percent", 5);
         Skilltree.SWITCH_FEE_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchFee.Admin", false);

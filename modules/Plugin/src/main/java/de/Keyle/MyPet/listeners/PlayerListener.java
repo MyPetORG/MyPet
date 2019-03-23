@@ -392,6 +392,11 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if (player.isInsideVehicle() && player.getVehicle() instanceof MyPetBukkitEntity) {
             if (player.getLocation().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
+                if (Configuration.Skilltree.Skill.Ride.PREVENT_TELEPORTATION) {
+                    event.setCancelled(true);
+                    player.sendMessage(Translation.getString("Message.Skill.Ride.NoTeleport", player));
+                    return;
+                }
                 player.getVehicle().eject();
             }
         }

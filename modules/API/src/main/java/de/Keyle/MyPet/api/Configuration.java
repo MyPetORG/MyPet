@@ -174,6 +174,7 @@ public class Configuration {
 
                 public static ConfigItem RIDE_ITEM;
                 public static double HUNGER_PER_METER = 0.01;
+                public static boolean PREVENT_TELEPORTATION = false;
             }
 
             public static class Beacon {
