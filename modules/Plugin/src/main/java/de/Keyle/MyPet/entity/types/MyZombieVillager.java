@@ -77,8 +77,12 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
             for (TagBase tag : equipmentList) {
                 if (tag instanceof TagCompound) {
                     TagCompound item = (TagCompound) tag;
-                    ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
-                    setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
+                    try {
+                        ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+                        setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
+                    } catch (Exception e) {
+                        MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
+                    }
                 }
             }
         }

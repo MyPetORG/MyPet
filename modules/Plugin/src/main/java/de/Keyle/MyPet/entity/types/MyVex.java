@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -67,8 +67,12 @@ public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVe
     public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Weapon")) {
             TagCompound item = info.getAs("Weapon", TagCompound.class);
-            ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
-            setEquipment(EquipmentSlot.MainHand, itemStack);
+            try {
+                ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+                setEquipment(EquipmentSlot.MainHand, itemStack);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Weapon item from pet data!");
+            }
         }
         if (info.getCompoundData().containsKey("Glowing")) {
             setGlowing(info.getAs("Glowing", TagByte.class).getBooleanData());

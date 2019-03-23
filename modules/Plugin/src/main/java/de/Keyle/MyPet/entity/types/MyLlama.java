@@ -131,13 +131,21 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
         if (info.containsKeyAs("Chest", TagCompound.class)) {
             TagCompound itemTag = info.get("Chest");
-            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-            setChest(item);
+            try {
+                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                setChest(item);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
+            }
         }
         if (info.containsKeyAs("Decor", TagCompound.class)) {
             TagCompound itemTag = info.get("Decor");
-            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-            setDecor(item);
+            try {
+                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                setDecor(item);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Decor item from pet data!");
+            }
         }
     }
 

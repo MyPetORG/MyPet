@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -85,8 +85,12 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
             }
         } else if (info.getCompoundData().containsKey("Block")) {
             TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
-            ItemStack block = MyPetApi.getPlatformHelper().compundToItemStack(itemStackCompund);
-            setBlock(block);
+            try {
+                ItemStack block = MyPetApi.getPlatformHelper().compundToItemStack(itemStackCompund);
+                setBlock(block);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Block item from pet data!");
+            }
         }
     }
 

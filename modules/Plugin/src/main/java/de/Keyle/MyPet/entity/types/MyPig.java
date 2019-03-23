@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -58,8 +58,12 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-            setSaddle(item);
+            try {
+                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                setSaddle(item);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
+            }
         }
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());

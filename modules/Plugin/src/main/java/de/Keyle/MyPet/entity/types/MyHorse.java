@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -162,8 +162,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             }
         } else if (info.containsKeyAs("Armor", TagCompound.class)) {
             TagCompound itemTag = info.get("Armor");
-            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-            setArmor(item);
+            try {
+                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                setArmor(item);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Armor item from pet data!");
+            }
         }
         if (info.getCompoundData().containsKey("Age")) {
             setAge(info.getAs("Age", TagInt.class).getIntData());
@@ -176,8 +180,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             }
         } else if (info.containsKeyAs("Chest", TagCompound.class)) {
             TagCompound itemTag = info.get("Chest");
-            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-            setChest(item);
+            try {
+                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                setChest(item);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
+            }
         }
         if (info.containsKeyAs("Saddle", TagByte.class)) {
             boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
@@ -187,8 +195,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-            setSaddle(item);
+            try {
+                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                setSaddle(item);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
+            }
         }
     }
 
