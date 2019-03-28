@@ -113,13 +113,17 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                 }
 
                 if (flagRegistry != null) {
-                    flagRegistry.register(FLY_FLAG);
-                    flagRegistry.register(DAMAGE_FLAG);
-                    flagRegistry.register(DENY_FLAG);
-                    flagRegistry.register(LEASH_FLAG);
+                    try {
+                        flagRegistry.register(FLY_FLAG);
+                        flagRegistry.register(DAMAGE_FLAG);
+                        flagRegistry.register(DENY_FLAG);
+                        flagRegistry.register(LEASH_FLAG);
 
-                    MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
-                    customFlags = true;
+                        MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
+                        customFlags = true;
+                    } catch (IllegalStateException e) {
+                        MyPetApi.getLogger().warning("Could not register WorldGuard flags!");
+                    }
                 }
             } catch (NoSuchMethodError | IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
