@@ -458,16 +458,16 @@
     "introduced": "1.13"
   },
   {
-    "legacy-name": "grass",
+    "legacy-name": "tallgrass",
     "legacy-id": 31,
-    "id": "tallgrass",
+    "id": "grass",
     "introduced": "1.7.10"
   },
   {
     "legacy-name": "tallgrass",
     "legacy-data": 1,
     "legacy-id": 31,
-    "id": "tallgrass",
+    "id": "grass",
     "introduced": "1.7.10"
   },
   {
