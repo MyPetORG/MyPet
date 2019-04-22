@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter 
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
-            if (args.length < 2) {
+            if (args.length < 1) {
                 sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
                 sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petsettings idle-volume " + ChatColor.RED + "<amount>");
                 return false;
