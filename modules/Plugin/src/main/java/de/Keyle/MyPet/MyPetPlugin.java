@@ -74,7 +74,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
-import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -531,7 +530,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         pluginHookManager.registerHook(MiniaturePetsHook.class);
         pluginHookManager.registerHook(MinigamesHook.class);
         pluginHookManager.registerHook(MobArenaHook.class);
-        pluginHookManager.registerHook(MobStackerHook.class);
+        pluginHookManager.registerHook(MobStackerAHook.class);
+        pluginHookManager.registerHook(MobStackerBHook.class);
         pluginHookManager.registerHook(MythicMobsHook.class);
         pluginHookManager.registerHook(NoCheatPlusHook.class);
         pluginHookManager.registerHook(PlaceholderApiHook.class);

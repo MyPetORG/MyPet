@@ -20,28 +20,23 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import com.kiwifisher.mobstacker.MobStacker;
+import com.kiwifisher.mobstacker.utils.StackUtils;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
-import me.jet315.stacker.MobStacker;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.entity.EntityDeathEvent;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+@PluginHookName(value = "MobStacker", classPath = "com.kiwifisher.mobstacker.MobStacker")
+public class MobStackerBHook implements LeashEntityHook {
 
-@PluginHookName("MobStacker")
-public class MobStackerHook implements LeashEntityHook {
-
-    protected Set<UUID> killedStackedMobs = new HashSet<>();
+    MobStacker plugin;
 
     @Override
     public boolean onEnable() {
+        plugin = (MobStacker) MyPetApi.getPluginHookManager().getPluginInstance("StackMob").get();
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
         return true;
     }
@@ -51,21 +46,16 @@ public class MobStackerHook implements LeashEntityHook {
         HandlerList.unregisterAll(this);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void on(EntityDeathEvent event) {
-        if (killedStackedMobs.remove(event.getEntity().getUniqueId())) {
-            event.setDroppedExp(0);
-            event.getDrops().clear();
-        }
-    }
-
     @Override
     public boolean prepare(LivingEntity leashedEntity) {
-        MobStacker.getInstance().getStackEntity().attemptUnstackOne(leashedEntity);
-        killedStackedMobs.add(leashedEntity.getUniqueId());
-        if (MobStacker.getInstance().getMobStackerConfig().stackOnlySpawnerMobs) {
-            MobStacker.getInstance().getEntityStacker().getValidEntity().remove(leashedEntity);
+        if (!StackUtils.hasRequiredData(leashedEntity)) {
+            return true;
         }
-        return true;
+        if (StackUtils.getStackSize(leashedEntity) <= 1) {
+            return true;
+        }
+        LivingEntity peeledEntity = plugin.getStackUtils().peelOffStack(leashedEntity, false);
+        peeledEntity.remove();
+        return false;
     }
 }
