@@ -174,7 +174,7 @@ public class StorageTrait extends Trait {
                                 if (event.getPosition() == 3) {
                                     boolean store = true;
                                     double costs = calculateStorageCosts(myPetPlayer.getMyPet());
-                                    if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && costs > 0 && npc.hasTrait(WalletTrait.class)) {
+                                    if (MyPetApi.getHookHelper().isEconomyEnabled() && costs > 0 && npc.hasTrait(WalletTrait.class)) {
                                         WalletTrait walletTrait = npc.getTrait(WalletTrait.class);
                                         if (!MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, costs)) {
                                             player.sendMessage(Util.formatText(Translation.getString("Message.No.Money", myPetPlayer), myPetPlayer.getMyPet().getPetName(), npcEvent.getNPC().getName()));

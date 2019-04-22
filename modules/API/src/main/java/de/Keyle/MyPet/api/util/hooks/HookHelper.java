@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -88,7 +88,14 @@ public abstract class HookHelper {
 
     /**
      * Returns the Vault economy hook
+     *
      * @return the Vault economy hook
      */
     public abstract EconomyHook getEconomy();
+
+    /**
+     * Returns if the Vault economy hook is enabled
+     * @return true if enabled
+     */
+    public abstract boolean isEconomyEnabled();
 }

@@ -88,13 +88,13 @@ public class WalletTrait extends Trait {
                 this.credit += amount;
                 return true;
             case Player:
-                if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
+                if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
                     MyPetApi.getPlugin().getLogger().info(ChatColor.RED + "The MyPet-Wallet trait needs an economy plugin to use the \"Owner\" wallet type! (NPC: " + this.getNPC().getId() + ")");
                     return false;
                 }
                 return ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.npc.getTrait(Owner.class).getOwnerId()), amount).transactionSuccess();
             case Bank:
-                if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
+                if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
                     MyPetApi.getPlugin().getLogger().info(ChatColor.RED + "The MyPet-Wallet trait needs an economy plugin to use the \"Bank\" wallet type! (NPC: " + this.getNPC().getId() + ")");
                     return false;
                 }

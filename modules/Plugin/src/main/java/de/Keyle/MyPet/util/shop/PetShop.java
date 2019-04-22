@@ -74,6 +74,10 @@ public class PetShop {
     }
 
     public void open(final Player player) {
+        if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
+            player.sendMessage(Translation.getString("Message.No.Economy", player));
+            return;
+        }
         VaultHook economyHook = (VaultHook) MyPetApi.getHookHelper().getEconomy();
 
         IconMenu shop = new IconMenu(Colorizer.setColors(displayName), event -> {

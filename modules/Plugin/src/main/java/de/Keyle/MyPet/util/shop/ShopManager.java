@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -80,7 +80,7 @@ public class ShopManager implements ShopService {
     }
 
     public void open(String name, Player player) {
-        if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
+        if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
             player.sendMessage(Translation.getString("Message.No.Economy", player));
             return;
         }

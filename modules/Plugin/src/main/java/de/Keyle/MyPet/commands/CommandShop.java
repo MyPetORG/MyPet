@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.shop.PetShop;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
@@ -50,7 +49,7 @@ import static org.bukkit.ChatColor.RESET;
 public class CommandShop implements CommandTabCompleter {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
+        if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
             sender.sendMessage(Translation.getString("Message.No.Economy", sender));
             return true;
         }

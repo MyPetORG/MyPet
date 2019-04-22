@@ -50,7 +50,6 @@ import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
@@ -846,7 +845,7 @@ public class EntityListener implements Listener {
             sendDeathMessage(event);
             myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner.getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
-            if (MyPetApi.getPluginHookManager().isHookActive(EconomyHook.class) && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
+            if (MyPetApi.getHookHelper().isEconomyEnabled() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() >= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
                 double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                 if (MyPetApi.getHookHelper().getEconomy().canPay(owner, costs)) {
                     MyPetApi.getHookHelper().getEconomy().pay(owner, costs);

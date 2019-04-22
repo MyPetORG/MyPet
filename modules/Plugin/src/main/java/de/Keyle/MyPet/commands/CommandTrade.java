@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.hooks.VaultHook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -100,6 +99,10 @@ public class CommandTrade implements CommandTabCompleter {
                         }
 
                         if (offer.getPrice() > 0) {
+                            if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
+                                player.sendMessage(Translation.getString("Message.No.Economy", player));
+                                return true;
+                            }
                             if (!MyPetApi.getHookHelper().getEconomy().transfer(player, owner, offer.getPrice())) {
                                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.NotEnoughMoney", player), MyPetApi.getHookHelper().getEconomy().format(offer.getPrice())));
                                 return true;
@@ -224,7 +227,7 @@ public class CommandTrade implements CommandTabCompleter {
                     double price = 0;
 
                     if (args.length >= 2) {
-                        if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
+                        if (MyPetApi.getHookHelper().isEconomyEnabled()) {
                             if (Util.isDouble(args[1])) {
                                 price = Double.parseDouble(args[1]);
                             } else {

@@ -130,4 +130,9 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
         List<EconomyHook> economyHooks = MyPetApi.getPluginHookManager().getHooks(EconomyHook.class);
         return economyHooks.stream().findFirst().orElse(null);
     }
+
+    public boolean isEconomyEnabled() {
+        EconomyHook economyHook = getEconomy();
+        return economyHook != null && economyHook.checkEconomy();
+    }
 }

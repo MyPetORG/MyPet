@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.hooks.VaultHook;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,7 +56,7 @@ public class CommandRespawn implements CommandTabCompleter {
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-                if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) || !Permissions.has(petOwner, "MyPet.command.respawn")) {
+                if (!MyPetApi.getHookHelper().isEconomyEnabled() || !Permissions.has(petOwner, "MyPet.command.respawn")) {
                     myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
                     return true;
                 }

@@ -66,7 +66,7 @@ public class CommandOptionWallet implements CommandOptionTabCompleter {
 
             WalletTrait trait = selectedNPC.getTrait(WalletTrait.class);
 
-            if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
+            if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
                 if (newWalletType == WalletType.Bank || newWalletType == WalletType.Player) {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You can not use the \"Player\" and \"Bank\" wallet types without an economy plugin installed!");
                     return true;
