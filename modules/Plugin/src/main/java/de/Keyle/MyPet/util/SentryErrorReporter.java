@@ -101,6 +101,9 @@ public class SentryErrorReporter implements ErrorReporter {
         if (!enabled) {
             return;
         }
+        if (!filter(t)) {
+            return;
+        }
         for (String c : context) {
             this.context.recordBreadcrumb(
                     new BreadcrumbBuilder().setMessage(c).build()
@@ -109,6 +112,25 @@ public class SentryErrorReporter implements ErrorReporter {
 
         sentry.sendException(t);
         this.context.clearBreadcrumbs();
+    }
+
+    protected boolean filter(Throwable t) {
+        if (t instanceof ConcurrentModificationException ||
+                t instanceof VirtualMachineError
+        ) {
+            return false;
+        }
+        if (t instanceof NullPointerException) {
+            long myPetTraces = Arrays.stream(t.getStackTrace())
+                    .limit(3)
+                    .filter(stackTraceElement -> stackTraceElement.getClassName().contains("MyPet"))
+                    .count();
+            return myPetTraces >= 1;
+        }
+        long myPetTraces = Arrays.stream(t.getStackTrace())
+                .filter(trace -> trace.getClassName().contains("mypet") && trace.getClassName().contains("npc"))
+                .count();
+        return myPetTraces == 0;
     }
 
     protected class MyPetExceptionAppender extends AbstractAppender {
