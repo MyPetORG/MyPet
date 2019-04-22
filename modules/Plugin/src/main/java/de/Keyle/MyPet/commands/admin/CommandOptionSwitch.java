@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -69,7 +69,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                 o = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             }
             if (o == null) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), o.getName()));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), player.getName()));
             }
         } else if (parameter.length == 2) {
             show = false;
