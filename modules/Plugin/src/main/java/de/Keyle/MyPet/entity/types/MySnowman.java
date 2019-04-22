@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.
     public void setSheared(boolean flag) {
         this.sheared = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

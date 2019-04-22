@@ -81,7 +81,7 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
             this.flower.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

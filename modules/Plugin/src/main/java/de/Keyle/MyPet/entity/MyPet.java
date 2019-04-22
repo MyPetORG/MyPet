@@ -281,7 +281,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         this.petName = newName;
         if (status == PetState.Here) {
             if (Configuration.Name.Tag.SHOW) {
-                getEntity().get().getHandle().updateNameTag();
+                getEntity().ifPresent(entity -> entity.getHandle().updateNameTag());
             }
         }
     }
@@ -655,7 +655,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         }
                     }
                     if (saturation == 1 && getHealth() >= 2) {
-                        getEntity().get().damage(1.);
+                        getEntity().ifPresent(entity -> entity.damage(1.));
                     }
                 }
             }

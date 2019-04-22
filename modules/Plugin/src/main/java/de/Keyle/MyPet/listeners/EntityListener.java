@@ -690,10 +690,14 @@ public class EntityListener implements Listener {
                     }
                     if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
-                        if (myPet.getStatus() == PetState.Here && target != myPet.getEntity().get()) {
-                            if (myPet.getDamage() > 0 || myPet.getRangedDamage() > 0) {
-                                myPet.getEntity().get().setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
-                            }
+                        if (myPet.getStatus() == PetState.Here) {
+                            myPet.getEntity().ifPresent(entity -> {
+                                if (target != entity) {
+                                    if (myPet.getDamage() > 0 || myPet.getRangedDamage() > 0) {
+                                        entity.setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
+                                    }
+                                }
+                            });
                         }
                     }
                 }

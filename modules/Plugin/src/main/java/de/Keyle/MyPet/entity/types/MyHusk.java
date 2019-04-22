@@ -108,14 +108,14 @@ public class MyHusk extends MyPet implements de.Keyle.MyPet.api.entity.types.MyH
     public void setBaby(boolean flag) {
         this.isBaby = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
         if (item == null) {
             equipment.remove(slot);
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             return;
         }
 
@@ -123,7 +123,7 @@ public class MyHusk extends MyPet implements de.Keyle.MyPet.api.entity.types.MyH
         item.setAmount(1);
         equipment.put(slot, item);
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

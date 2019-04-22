@@ -56,7 +56,7 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
             this.chest.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -77,7 +77,7 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
             this.saddle.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -144,7 +144,7 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setBaby(boolean flag) {
         this.baby = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

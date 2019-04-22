@@ -84,7 +84,7 @@ public class MyIllusioner extends MyPet implements de.Keyle.MyPet.api.entity.typ
         if (slot == EquipmentSlot.MainHand) {
             if (item == null) {
                 weapon = null;
-                getEntity().get().getHandle().updateVisuals();
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
                 return;
             }
 
@@ -92,7 +92,7 @@ public class MyIllusioner extends MyPet implements de.Keyle.MyPet.api.entity.typ
             item.setAmount(1);
             weapon = item;
             if (status == PetState.Here) {
-                getEntity().get().getHandle().updateVisuals();
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             }
         }
     }

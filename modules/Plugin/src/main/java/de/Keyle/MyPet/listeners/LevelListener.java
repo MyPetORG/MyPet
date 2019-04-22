@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
@@ -107,21 +106,22 @@ public class LevelListener implements Listener {
         }
 
         if (myPet.getStatus() == MyPet.PetState.Here) {
-            MyPetBukkitEntity entity = myPet.getEntity().get();
-            entity.getHandle().updateNameTag();
-            if (!event.isQuiet()) {
-                myPet.setHealth(myPet.getMaxHealth());
-                myPet.setSaturation(100);
+            myPet.getEntity().ifPresent(entity -> {
+                entity.getHandle().updateNameTag();
+                if (!event.isQuiet()) {
+                    myPet.setHealth(myPet.getMaxHealth());
+                    myPet.setSaturation(100);
 
-                new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
-                    @Override
-                    protected void playParticleEffect(Location location) {
-                        MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.CRIT_MAGIC.get(), 0, 0, 0, 0, 1, 32);
-                    }
-                }.loop(2);
+                    new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
+                        @Override
+                        protected void playParticleEffect(Location location) {
+                            MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.CRIT_MAGIC.get(), 0, 0, 0, 0, 1, 32);
+                        }
+                    }.loop(2);
 
-                entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_UP.get()), 1F, 0.7F);
-            }
+                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_UP.get()), 1F, 0.7F);
+                }
+            });
         }
     }
 
@@ -151,21 +151,22 @@ public class LevelListener implements Listener {
         }
 
         if (myPet.getStatus() == MyPet.PetState.Here) {
-            MyPetBukkitEntity entity = myPet.getEntity().get();
-            entity.getHandle().updateNameTag();
-            if (!event.isQuiet()) {
-                myPet.setHealth(myPet.getMaxHealth());
-                myPet.setSaturation(100);
+            myPet.getEntity().ifPresent(entity -> {
+                entity.getHandle().updateNameTag();
+                if (!event.isQuiet()) {
+                    myPet.setHealth(myPet.getMaxHealth());
+                    myPet.setSaturation(100);
 
-                new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, new EntityLocationHolder(entity)) {
-                    @Override
-                    protected void playParticleEffect(Location location) {
-                        MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.BLOCK_CRACK.get(), 0, 0, 0, 0, 1, 32, ParticleCompat.REDSTONE_BLOCK_DATA);
-                    }
-                }.once();
+                    new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, new EntityLocationHolder(entity)) {
+                        @Override
+                        protected void playParticleEffect(Location location) {
+                            MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.BLOCK_CRACK.get(), 0, 0, 0, 0, 1, 32, ParticleCompat.REDSTONE_BLOCK_DATA);
+                        }
+                    }.once();
 
-                entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_DOWN.get()), 1F, 0.7F);
-            }
+                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_DOWN.get()), 1F, 0.7F);
+                }
+            });
         }
     }
 

@@ -91,62 +91,63 @@ public class StompImpl implements Stomp {
         double posY = location.getY();
         double posZ = location.getZ();
 
-        Entity petEntity = myPet.getEntity().get();
-        for (Entity e : petEntity.getNearbyEntities(2.5, 2.5, 2.5)) {
-            if (e instanceof LivingEntity) {
-                final LivingEntity livingEntity = (LivingEntity) e;
+        myPet.getEntity().ifPresent(petEntity -> {
+            for (Entity e : petEntity.getNearbyEntities(2.5, 2.5, 2.5)) {
+                if (e instanceof LivingEntity) {
+                    final LivingEntity livingEntity = (LivingEntity) e;
 
-                if (livingEntity instanceof Player) {
-                    Player targetPlayer = (Player) livingEntity;
-                    if (myPet.getOwner().equals(targetPlayer)) {
-                        continue;
-                    } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
-                        continue;
-                    }
-                } else if (livingEntity instanceof Tameable) {
-                    Tameable tameable = (Tameable) livingEntity;
-                    if (tameable.isTamed() && tameable.getOwner() != null) {
-                        AnimalTamer tameableOwner = tameable.getOwner();
-                        if (myPet.getOwner().equals(tameableOwner)) {
+                    if (livingEntity instanceof Player) {
+                        Player targetPlayer = (Player) livingEntity;
+                        if (myPet.getOwner().equals(targetPlayer)) {
                             continue;
-                        } else {
-                            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
+                        } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
+                            continue;
+                        }
+                    } else if (livingEntity instanceof Tameable) {
+                        Tameable tameable = (Tameable) livingEntity;
+                        if (tameable.isTamed() && tameable.getOwner() != null) {
+                            AnimalTamer tameableOwner = tameable.getOwner();
+                            if (myPet.getOwner().equals(tameableOwner)) {
                                 continue;
+                            } else {
+                                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
+                                    continue;
+                                }
                             }
                         }
+                    } else if (livingEntity instanceof MyPetBukkitEntity) {
+                        MyPet targetMyPet = ((MyPetBukkitEntity) livingEntity).getMyPet();
+                        if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                            continue;
+                        }
                     }
-                } else if (livingEntity instanceof MyPetBukkitEntity) {
-                    MyPet targetMyPet = ((MyPetBukkitEntity) livingEntity).getMyPet();
-                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
                         continue;
                     }
-                }
-                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
-                    continue;
-                }
 
-                ((LivingEntity) e).damage(this.damage.getValue().doubleValue(), petEntity);
+                    ((LivingEntity) e).damage(this.damage.getValue().doubleValue(), petEntity);
 
-                double distancePercent = MyPetApi.getPlatformHelper().distance(livingEntity.getLocation(), new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
-                if (distancePercent <= 1.0D) {
-                    double distanceX = livingEntity.getLocation().getX() - posX;
-                    double distanceY = livingEntity.getLocation().getX() + livingEntity.getEyeHeight() - posY;
-                    double distanceZ = livingEntity.getLocation().getX() - posZ;
-                    double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
-                    if (distance != 0.0D) {
-                        double motFactor = (1.0D - distancePercent);
-                        final Vector velocity = livingEntity.getVelocity();
-                        velocity.multiply(motFactor);
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                livingEntity.setVelocity(velocity);
-                            }
-                        }.runTaskLater(MyPetApi.getPlugin(), 0);
+                    double distancePercent = MyPetApi.getPlatformHelper().distance(livingEntity.getLocation(), new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
+                    if (distancePercent <= 1.0D) {
+                        double distanceX = livingEntity.getLocation().getX() - posX;
+                        double distanceY = livingEntity.getLocation().getX() + livingEntity.getEyeHeight() - posY;
+                        double distanceZ = livingEntity.getLocation().getX() - posZ;
+                        double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+                        if (distance != 0.0D) {
+                            double motFactor = (1.0D - distancePercent);
+                            final Vector velocity = livingEntity.getVelocity();
+                            velocity.multiply(motFactor);
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    livingEntity.setVelocity(velocity);
+                                }
+                            }.runTaskLater(MyPetApi.getPlugin(), 0);
+                        }
                     }
                 }
             }
-        }
+        });
     }
 
     public UpgradeComputer<Integer> getChance() {

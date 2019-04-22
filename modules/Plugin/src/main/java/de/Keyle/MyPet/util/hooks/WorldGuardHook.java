@@ -268,17 +268,19 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
         @Override
         public double modify(double experience, double baseExperience) {
-            try {
-                Location location = myPet.getEntity().get().getLocation();
-                Collection<Double> values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_ADD_FLAG);
-                for (double d : values) {
-                    experience += d;
+            if (myPet.getEntity().isPresent()) {
+                try {
+                    Location location = myPet.getEntity().get().getLocation();
+                    Collection<Double> values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_ADD_FLAG);
+                    for (double d : values) {
+                        experience += d;
+                    }
+                    values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_MULT_FLAG);
+                    for (double d : values) {
+                        experience *= d;
+                    }
+                } catch (Throwable ignored) {
                 }
-                values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_MULT_FLAG);
-                for (double d : values) {
-                    experience *= d;
-                }
-            } catch (Throwable ignored) {
             }
             return experience;
         }

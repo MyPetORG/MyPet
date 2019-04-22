@@ -37,6 +37,7 @@ import java.util.*;
 import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
 
 public class BehaviorImpl implements Behavior {
+
     protected MyPet myPet;
     protected Set<BehaviorMode> activeBehaviors = new HashSet<>();
     protected BehaviorMode selectedBehavior = BehaviorMode.Normal;
@@ -203,7 +204,8 @@ public class BehaviorImpl implements Behavior {
 
     public void schedule() {
         if (selectedBehavior == Aggressive && random.nextBoolean() && myPet.getStatus() == MyPet.PetState.Here) {
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, myPet.getEntity().get().getEyeHeight(), 0), ParticleCompat.VILLAGER_ANGRY.get(), 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
+            myPet.getEntity().ifPresent(entity -> MyPetApi.getPlatformHelper()
+                    .playParticleEffect(entity.getLocation().add(0, entity.getEyeHeight(), 0), ParticleCompat.VILLAGER_ANGRY.get(), 0.2F, 0.2F, 0.2F, 0.5F, 1, 20));
         }
     }
 

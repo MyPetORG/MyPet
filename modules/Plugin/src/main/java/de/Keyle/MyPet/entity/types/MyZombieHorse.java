@@ -56,7 +56,7 @@ public class MyZombieHorse extends MyPet implements de.Keyle.MyPet.api.entity.ty
             this.saddle.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -100,7 +100,7 @@ public class MyZombieHorse extends MyPet implements de.Keyle.MyPet.api.entity.ty
     public void setBaby(boolean flag) {
         this.baby = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

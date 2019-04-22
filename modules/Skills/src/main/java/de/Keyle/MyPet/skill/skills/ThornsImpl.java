@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -97,13 +96,12 @@ public class ThornsImpl implements Thorns {
         if (damager instanceof Creeper) {
             return;
         }
-        if (myPet.getEntity().isPresent()) {
-            MyPetBukkitEntity entity = myPet.getEntity().get();
+        myPet.getEntity().ifPresent(entity -> {
             damager.damage(calculateReflectedDamage(event.getDamage()), entity);
             entity.getHandle().makeSound(SoundCompat.THORNS_HIT.get(), 0.2F, 1.0F);
             MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), ParticleCompat.CRIT_MAGIC.get(), 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
             MyPetApi.getPlatformHelper().playParticleEffect(entity.getLocation().add(0, 1, 0), ParticleCompat.CRIT.get(), 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
-        }
+        });
     }
 
     @Override

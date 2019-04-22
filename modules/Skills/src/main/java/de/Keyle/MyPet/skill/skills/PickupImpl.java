@@ -120,51 +120,53 @@ public class PickupImpl implements Pickup {
             return;
         }
         if (isActive() && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isActive(BackpackImpl.class)) {
-            double range = this.range.getValue().doubleValue();
-            for (Entity entity : myPet.getEntity().get().getNearbyEntities(range, range, range)) {
-                if (!entity.isDead()) {
-                    if (entity instanceof Item) {
-                        Item itemEntity = (Item) entity;
-                        ItemStack itemStack = itemEntity.getItemStack();
+            myPet.getEntity().ifPresent(petEntity -> {
+                double range = this.range.getValue().doubleValue();
+                for (Entity entity : petEntity.getNearbyEntities(range, range, range)) {
+                    if (!entity.isDead()) {
+                        if (entity instanceof Item) {
+                            Item itemEntity = (Item) entity;
+                            ItemStack itemStack = itemEntity.getItemStack();
 
-                        if (itemEntity.getPickupDelay() <= 0 && itemStack.getAmount() > 0) {
-                            MyPetPickupItemEvent petPickupEvent = new MyPetPickupItemEvent(myPet, itemEntity);
-                            Bukkit.getServer().getPluginManager().callEvent(petPickupEvent);
+                            if (itemEntity.getPickupDelay() <= 0 && itemStack.getAmount() > 0) {
+                                MyPetPickupItemEvent petPickupEvent = new MyPetPickupItemEvent(myPet, itemEntity);
+                                Bukkit.getServer().getPluginManager().callEvent(petPickupEvent);
 
-                            if (petPickupEvent.isCancelled()) {
-                                continue;
+                                if (petPickupEvent.isCancelled()) {
+                                    continue;
+                                }
+
+                                PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, 0);
+                                Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
+
+                                if (playerPickupEvent.isCancelled()) {
+                                    continue;
+                                }
+
+                                itemStack = itemEntity.getItemStack();
+
+                                CustomInventory inv = myPet.getSkills().get(BackpackImpl.class).getInventory();
+                                int itemAmount = inv.addItem(itemStack);
+                                if (itemAmount == 0) {
+                                    MyPetApi.getPlatformHelper().doPickupAnimation(petEntity, itemEntity);
+                                    petEntity.getHandle().makeSound(SoundCompat.ITEM_PICKUP.get(), 0.2F, 1.0F);
+                                    itemStack.setAmount(0);
+                                    itemEntity.remove();
+                                } else {
+                                    itemStack.setAmount(itemAmount);
+                                    itemEntity.setItemStack(itemStack);
+                                }
                             }
-
-                            PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, 0);
-                            Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
-
-                            if (playerPickupEvent.isCancelled()) {
-                                continue;
-                            }
-
-                            itemStack = itemEntity.getItemStack();
-
-                            CustomInventory inv = myPet.getSkills().get(BackpackImpl.class).getInventory();
-                            int itemAmount = inv.addItem(itemStack);
-                            if (itemAmount == 0) {
-                                MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity().get(), itemEntity);
-                                myPet.getEntity().get().getHandle().makeSound(SoundCompat.ITEM_PICKUP.get(), 0.2F, 1.0F);
-                                itemStack.setAmount(0);
-                                itemEntity.remove();
-                            } else {
-                                itemStack.setAmount(itemAmount);
-                                itemEntity.setItemStack(itemStack);
-                            }
+                        } else if (expPickup.getValue() && entity instanceof ExperienceOrb) {
+                            ExperienceOrb expEntity = (ExperienceOrb) entity;
+                            myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
+                            MyPetApi.getPlatformHelper().doPickupAnimation(petEntity, expEntity);
+                            expEntity.setExperience(0);
+                            expEntity.remove();
                         }
-                    } else if (expPickup.getValue() && entity instanceof ExperienceOrb) {
-                        ExperienceOrb expEntity = (ExperienceOrb) entity;
-                        myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
-                        MyPetApi.getPlatformHelper().doPickupAnimation(myPet.getEntity().get(), expEntity);
-                        expEntity.setExperience(0);
-                        expEntity.remove();
                     }
                 }
-            }
+            });
         }
     }
 

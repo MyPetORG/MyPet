@@ -70,24 +70,27 @@ public class HealImpl implements Heal {
 
     public void schedule() {
         if (myPet.getStatus() == PetState.Here) {
-            if (heal.getValue().doubleValue() > 0) {
-                if (timeCounter-- <= 0) {
-                    if (myPet.getHealth() < myPet.getMaxHealth()) {
-                        if (!particles) {
-                            particles = true;
-                            myPet.getEntity().get().getHandle().showPotionParticles(Color.LIME);
+            myPet.getEntity().ifPresent(entity -> {
+                if (heal.getValue().doubleValue() > 0) {
+                    if (timeCounter-- <= 0) {
+
+                        if (myPet.getHealth() < myPet.getMaxHealth()) {
+                            if (!particles) {
+                                particles = true;
+                                entity.getHandle().showPotionParticles(Color.LIME);
+                            }
+                            entity.setHealth(myPet.getHealth() + heal.getValue().doubleValue());
                         }
-                        myPet.getEntity().get().setHealth(myPet.getHealth() + heal.getValue().doubleValue());
+                        timeCounter = timer.getValue();
+                    } else {
+                        particles = false;
                     }
-                    timeCounter = timer.getValue();
-                } else {
-                    particles = false;
                 }
-            }
-            if (particles) {
-                particles = false;
-                myPet.getEntity().get().getHandle().hidePotionParticles();
-            }
+                if (particles) {
+                    particles = false;
+                    entity.getHandle().hidePotionParticles();
+                }
+            });
         } else if (particles) {
             particles = false;
         }

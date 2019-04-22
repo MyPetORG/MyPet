@@ -117,7 +117,7 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
             }
         }
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
                 removePet();
                 createEntity();
@@ -140,7 +140,7 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
             }
         }
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
                 removePet();
                 createEntity();
@@ -161,7 +161,7 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
         if (Util.isBetween(0, 2, type)) {
             this.type = type;
             if (status == PetState.Here) {
-                getEntity().get().getHandle().updateVisuals();
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
                     removePet();
                     createEntity();
@@ -173,14 +173,14 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
         if (item == null) {
             equipment.remove(slot);
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             return;
         }
         item = item.clone();
         item.setAmount(1);
         equipment.put(slot, item);
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

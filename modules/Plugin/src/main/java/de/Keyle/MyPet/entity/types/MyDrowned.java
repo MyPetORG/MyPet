@@ -97,7 +97,7 @@ public class MyDrowned extends MyPet implements de.Keyle.MyPet.api.entity.types.
     public void setBaby(boolean flag) {
         this.isBaby = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -116,7 +116,7 @@ public class MyDrowned extends MyPet implements de.Keyle.MyPet.api.entity.types.
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
         if (item == null) {
             equipment.remove(slot);
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             return;
         }
 
@@ -124,7 +124,7 @@ public class MyDrowned extends MyPet implements de.Keyle.MyPet.api.entity.types.
         item.setAmount(1);
         equipment.put(slot, item);
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

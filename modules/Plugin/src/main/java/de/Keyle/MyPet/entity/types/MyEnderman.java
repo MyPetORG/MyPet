@@ -106,7 +106,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
     public void setScreaming(boolean flag) {
         this.isScreaming = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -120,12 +120,12 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
             this.block.setAmount(1);
 
             if (status == PetState.Here) {
-                getEntity().get().getHandle().updateVisuals();
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             }
         } else {
             this.block = null;
             if (status == PetState.Here) {
-                getEntity().get().getHandle().updateVisuals();
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             }
         }
     }

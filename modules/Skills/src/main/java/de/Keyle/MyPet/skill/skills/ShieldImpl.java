@@ -85,11 +85,13 @@ public class ShieldImpl implements Shield {
     public void apply(EntityDamageEvent event) {
         double redirectedDamage = calculateRedirectedDamage(event.getFinalDamage());
         if (myPet.getStatus() == PetState.Here && myPet.getHealth() - redirectedDamage > 0) {
-            myPet.getEntity().get().damage(redirectedDamage);
-            event.setDamage(event.getDamage() - redirectedDamage);
-            myPet.getEntity().get().getHandle().makeSound(SoundCompat.ENDERMAN_TELEPORT.get(), 0.2F, 1.0F);
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), ParticleCompat.CRIT_MAGIC.get(), 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), ParticleCompat.CRIT.get(), 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+            myPet.getEntity().ifPresent(myPetBukkitEntity -> {
+                myPetBukkitEntity.damage(redirectedDamage);
+                event.setDamage(event.getDamage() - redirectedDamage);
+                myPetBukkitEntity.getHandle().makeSound(SoundCompat.ENDERMAN_TELEPORT.get(), 0.2F, 1.0F);
+                MyPetApi.getPlatformHelper().playParticleEffect(myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), ParticleCompat.CRIT_MAGIC.get(), 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
+                MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), ParticleCompat.CRIT.get(), 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+            });
         }
     }
 

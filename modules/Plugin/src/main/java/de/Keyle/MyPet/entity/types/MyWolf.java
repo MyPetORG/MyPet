@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
 
     public void setCollarColor(DyeColor value) {
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
         this.collarColor = value;
     }
@@ -87,7 +87,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     public void setAngry(boolean flag) {
         this.isAngry = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -98,7 +98,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     public void setBaby(boolean flag) {
         this.isBaby = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -109,7 +109,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     public void setTamed(boolean flag) {
         this.isTamed = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

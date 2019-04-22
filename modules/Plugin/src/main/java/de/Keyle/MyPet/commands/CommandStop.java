@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -53,7 +54,7 @@ public class CommandStop implements CommandTabCompleter {
                     return true;
                 }
                 sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Stop.Attack", petOwner), myPet.getPetName()));
-                myPet.getEntity().get().forgetTarget();
+                myPet.getEntity().ifPresent(MyPetBukkitEntity::forgetTarget);
             } else {
                 sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
             }

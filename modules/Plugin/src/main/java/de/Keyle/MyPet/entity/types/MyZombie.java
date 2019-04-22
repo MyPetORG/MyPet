@@ -124,7 +124,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setBaby(boolean flag) {
         this.isBaby = flag;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
@@ -137,7 +137,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setHusk(boolean flag) {
         type = Type.HUSK;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
                 removePet();
                 createEntity();
@@ -152,14 +152,14 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setVillager(boolean flag) {
         type = Type.VILLAGER;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
     public void setProfession(int profession) {
         this.profession = profession;
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.11") >= 0) {
                 removePet();
                 createEntity();
@@ -182,7 +182,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         if (Util.isBetween(0, 2, type)) {
             this.type = Type.values()[type];
             if (status == PetState.Here) {
-                getEntity().get().getHandle().updateVisuals();
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             }
         }
     }
@@ -212,7 +212,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
         if (item == null) {
             equipment.remove(slot);
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             return;
         }
 
@@ -220,7 +220,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         item.setAmount(1);
         equipment.put(slot, item);
         if (status == PetState.Here) {
-            getEntity().get().getHandle().updateVisuals();
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
