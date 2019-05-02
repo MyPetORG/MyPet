@@ -6212,5 +6212,373 @@
     "legacy-id": 2267,
     "id": "music_disc_wait",
     "introduced": "1.7.10"
+  },
+  {
+    "id": "cornflower",
+    "introduced": "1.14"
+  },
+  {
+    "id": "lily_of_the_valley",
+    "introduced": "1.14"
+  },
+  {
+    "id": "wither_rose",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_stone_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "cut_sandstone_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "cut_red_sandstone_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "brick_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "prismarine_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "red_sandstone_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "mossy_stone_brick_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "granite_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "stone_brick_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "nether_brick_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "andesite_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "red_nether_brick_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "sandstone_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "end_stone_brick_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "diorite_wall",
+    "introduced": "1.14"
+  },
+  {
+    "id": "polished_granite_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_red_sandstone_stairs\t",
+    "introduced": "1.14"
+  },
+  {
+    "id": "mossy_stone_brick_stairs\t",
+    "introduced": "1.14"
+  },
+  {
+    "id": "polished_diorite_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "mossy_cobblestone_stairs\t",
+    "introduced": "1.14"
+  },
+  {
+    "id": "end_stone_brick_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "stone_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_sandstone_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_quartz_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "granite_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "andesite_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "red_nether_brick_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "polished_andesite_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "diorite_stairs",
+    "introduced": "1.14"
+  },
+  {
+    "id": "polished_granite_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_red_sandstone_slab\t",
+    "introduced": "1.14"
+  },
+  {
+    "id": "mossy_stone_brick_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "polished_diorite_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "mossy_cobblestone_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "end_stone_brick_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_sandstone_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_quartz_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smooth_quartz_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "granite_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "andesite_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "red_nether_brick_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "polished_andesite_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "diorite_slab",
+    "introduced": "1.14"
+  },
+  {
+    "id": "scaffolding",
+    "introduced": "1.14"
+  },
+  {
+    "id": "jigsaw",
+    "introduced": "1.14"
+  },
+  {
+    "id": "composter",
+    "introduced": "1.14"
+  },
+  {
+    "id": "oak_sign",
+    "introduced": "1.14"
+  },
+  {
+    "id": "spruce_sign",
+    "introduced": "1.14"
+  },
+  {
+    "id": "birch_sign",
+    "introduced": "1.14"
+  },
+  {
+    "id": "jungle_sign",
+    "introduced": "1.14"
+  },
+  {
+    "id": "acacia_sign",
+    "introduced": "1.14"
+  },
+  {
+    "id": "dark_oak_sign",
+    "introduced": "1.14"
+  },
+  {
+    "id": "bamboo",
+    "introduced": "1.14"
+  },
+  {
+    "id": "red_dye",
+    "introduced": "1.14"
+  },
+  {
+    "id": "green_dye",
+    "introduced": "1.14"
+  },
+  {
+    "id": "yellow_dye",
+    "introduced": "1.14"
+  },
+  {
+    "id": "blue_dye",
+    "introduced": "1.14"
+  },
+  {
+    "id": "brown_dye",
+    "introduced": "1.14"
+  },
+  {
+    "id": "black_dye",
+    "introduced": "1.14"
+  },
+  {
+    "id": "white_dye",
+    "introduced": "1.14"
+  },
+  {
+    "id": "cat_spawn_egg",
+    "introduced": "1.14"
+  },
+  {
+    "id": "fox_spawn_egg",
+    "introduced": "1.14"
+  },
+  {
+    "id": "panda_spawn_egg",
+    "introduced": "1.14"
+  },
+  {
+    "id": "pillager_spawn_egg",
+    "introduced": "1.14"
+  },
+  {
+    "id": "ravager_spawn_egg",
+    "introduced": "1.14"
+  },
+  {
+    "id": "trader_llama_spawn_egg",
+    "introduced": "1.14"
+  },
+  {
+    "id": "wandering_trader_spawn_egg",
+    "introduced": "1.14"
+  },
+  {
+    "id": "leather_horse_armor",
+    "introduced": "1.14"
+  },
+  {
+    "id": "crossbow",
+    "introduced": "1.14"
+  },
+  {
+    "id": "suspicious_stew",
+    "introduced": "1.14"
+  },
+  {
+    "id": "loom",
+    "introduced": "1.14"
+  },
+  {
+    "id": "flower_banner_pattern",
+    "introduced": "1.14"
+  },
+  {
+    "id": "creeper_banner_pattern",
+    "introduced": "1.14"
+  },
+  {
+    "id": "skull_banner_pattern",
+    "introduced": "1.14"
+  },
+  {
+    "id": "mojang_banner_pattern",
+    "introduced": "1.14"
+  },
+  {
+    "id": "globe_banner_pattern",
+    "introduced": "1.14"
+  },
+  {
+    "id": "barrel",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smoker",
+    "introduced": "1.14"
+  },
+  {
+    "id": "blast_furnace",
+    "introduced": "1.14"
+  },
+  {
+    "id": "cartography_table",
+    "introduced": "1.14"
+  },
+  {
+    "id": "fletching_table",
+    "introduced": "1.14"
+  },
+  {
+    "id": "grindstone",
+    "introduced": "1.14"
+  },
+  {
+    "id": "lectern",
+    "introduced": "1.14"
+  },
+  {
+    "id": "smithing_table",
+    "introduced": "1.14"
+  },
+  {
+    "id": "stonecutter",
+    "introduced": "1.14"
+  },
+  {
+    "id": "bell",
+    "introduced": "1.14"
+  },
+  {
+    "id": "lantern",
+    "introduced": "1.14"
+  },
+  {
+    "id": "sweet_berries",
+    "introduced": "1.14"
+  },
+  {
+    "id": "campfire",
+    "introduced": "1.14"
   }
 ]
