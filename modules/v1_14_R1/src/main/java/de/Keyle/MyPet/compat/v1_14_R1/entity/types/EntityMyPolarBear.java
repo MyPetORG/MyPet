@@ -75,8 +75,8 @@ public class EntityMyPolarBear extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(rearWatcher, false);
+        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(rearWatcher, false);
 
     }
 
@@ -85,7 +85,7 @@ public class EntityMyPolarBear extends EntityMyPet {
         try {
             flag = super.attack(entity);
             if (flag) {
-                this.datawatcher.set(rearWatcher, true);
+                getDataWatcher().set(rearWatcher, true);
                 rearCounter = 10;
             }
         } catch (Exception e) {
@@ -97,14 +97,14 @@ public class EntityMyPolarBear extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (rearCounter > -1 && rearCounter-- == 0) {
-            this.datawatcher.set(rearWatcher, false);
+            getDataWatcher().set(rearWatcher, false);
             rearCounter = -1;
         }
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
     }
 
     public void playPetStepSound() {

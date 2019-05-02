@@ -25,9 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_14_R1.util.FieldCompat;
 import net.minecraft.server.v1_14_R1.EntityArmorStand;
 import net.minecraft.server.v1_14_R1.EntityLiving;
 import net.minecraft.server.v1_14_R1.EnumHand;
@@ -67,13 +65,7 @@ public class MeleeAttack implements AIGoal {
         if (targetEntity instanceof EntityArmorStand) {
             return false;
         }
-        double minY;
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), targetEntity.getBoundingBox());
-        } else {
-            minY = targetEntity.getBoundingBox().minY;
-        }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, minY, targetEntity.locZ) >= 20) {
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.getBoundingBox().minY, targetEntity.locZ) >= 20) {
             return false;
         }
         this.targetEntity = targetEntity;
@@ -87,13 +79,7 @@ public class MeleeAttack implements AIGoal {
         } else if (this.targetEntity.getBukkitEntity() != this.petEntity.getTarget()) {
             return true;
         }
-        double minY;
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), targetEntity.getBoundingBox());
-        } else {
-            minY = targetEntity.getBoundingBox().minY;
-        }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, minY, targetEntity.locZ) >= 20) {
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.getBoundingBox().minY, targetEntity.locZ) >= 20) {
             return true;
         }
         return false;
@@ -120,13 +106,7 @@ public class MeleeAttack implements AIGoal {
             this.timeUntilNextNavigationUpdate = (4 + this.petEntity.getRandom().nextInt(7));
             this.petEntity.getPetNavigation().navigateTo((LivingEntity) targetEntity.getBukkitEntity());
         }
-        double minY;
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), targetEntity.getBoundingBox());
-        } else {
-            minY = targetEntity.getBoundingBox().minY;
-        }
-        if (this.petEntity.e(targetEntity.locX, minY, targetEntity.locZ) - (targetEntity.getHeight() * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
+        if (this.petEntity.e(targetEntity.locX, targetEntity.getBoundingBox().minY, targetEntity.locZ) - (targetEntity.getHeight() * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
             if (this.petEntity.getEntitySenses().a(targetEntity)) {
                 this.ticksUntilNextHitLeft = ticksUntilNextHit;
                 if (this.petEntity instanceof MyPetEquipment) {

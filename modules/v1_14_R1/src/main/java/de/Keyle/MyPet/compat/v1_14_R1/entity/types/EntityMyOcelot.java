@@ -44,11 +44,11 @@ public class EntityMyOcelot extends EntityMyPet {
     }
 
     public void applySitting(boolean sitting) {
-        int i = this.datawatcher.get(sitWatcher);
+        int i = getDataWatcher().get(sitWatcher);
         if (sitting) {
-            this.datawatcher.set(sitWatcher, (byte) (i | 0x1));
+            getDataWatcher().set(sitWatcher, (byte) (i | 0x1));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (i & 0xFFFFFFFE));
+            getDataWatcher().set(sitWatcher, (byte) (i & 0xFFFFFFFE));
         }
     }
 
@@ -73,13 +73,13 @@ public class EntityMyOcelot extends EntityMyPet {
             if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack.getItem() instanceof ItemDye) {
                     boolean colorChanged = false;
-                    if (itemStack.getItem() == Items.DANDELION_YELLOW && getMyPet().getCatType() != Type.WILD_OCELOT) {
+                    if (itemStack.getItem() == Items.YELLOW_DYE && getMyPet().getCatType() != Type.WILD_OCELOT) {
                         getMyPet().setCatType(Type.WILD_OCELOT);
                         colorChanged = true;
                     } else if (itemStack.getItem() == Items.INK_SAC && getMyPet().getCatType() != Type.BLACK_CAT) {
                         getMyPet().setCatType(Type.BLACK_CAT);
                         colorChanged = true;
-                    } else if (itemStack.getItem() == Items.ROSE_RED && getMyPet().getCatType() != Type.RED_CAT) {
+                    } else if (itemStack.getItem() == Items.RED_DYE && getMyPet().getCatType() != Type.RED_CAT) {
                         getMyPet().setCatType(Type.RED_CAT);
                         colorChanged = true;
                     } else if (itemStack.getItem() == Items.GRAY_DYE && getMyPet().getCatType() != Type.SIAMESE_CAT) {
@@ -112,16 +112,16 @@ public class EntityMyOcelot extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(sitWatcher, (byte) 0);            // tamed/sitting
-        this.datawatcher.register(ownerWatcher, Optional.empty()); // owner
-        this.datawatcher.register(typeWatcher, 0);                  // cat type
+        getDataWatcher().register(ageWatcher, false);               // age
+        getDataWatcher().register(sitWatcher, (byte) 0);            // tamed/sitting
+        getDataWatcher().register(ownerWatcher, Optional.empty()); // owner
+        getDataWatcher().register(typeWatcher, 0);                  // cat type
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(typeWatcher, getMyPet().getCatType().ordinal());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(typeWatcher, getMyPet().getCatType().ordinal());
     }
 
     public MyOcelot getMyPet() {

@@ -66,6 +66,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     public void load(MaterialHolder material, String data) {
         MinecraftKey key = new MinecraftKey(material.getId());
         Item item = IRegistry.ITEM.get(key);
+        //TODO AIR now?
         if (item == null) {
             Block block = IRegistry.BLOCK.get(key);
             item = block.getItem();

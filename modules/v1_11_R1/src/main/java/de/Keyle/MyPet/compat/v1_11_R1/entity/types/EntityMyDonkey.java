@@ -139,6 +139,7 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
     }
 
     protected void initDatawatcher() {
+        super.initDatawatcher();
         this.datawatcher.register(ageWatcher, false);
         this.datawatcher.register(saddleWatcher, (byte) 0);
         this.datawatcher.register(ownerWatcher, Optional.absent());

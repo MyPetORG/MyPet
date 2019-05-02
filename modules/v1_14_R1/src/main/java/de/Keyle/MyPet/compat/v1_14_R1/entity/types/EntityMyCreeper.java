@@ -54,14 +54,14 @@ public class EntityMyCreeper extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fuseWatcher, -1);        // fuse
-        this.datawatcher.register(poweredWatcher, false);  // powered
-        this.datawatcher.register(watcher, false);         // N/A
+        getDataWatcher().register(fuseWatcher, -1);
+        getDataWatcher().register(poweredWatcher, false);
+        getDataWatcher().register(watcher, false);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(poweredWatcher, getMyPet().isPowered());
+        getDataWatcher().set(poweredWatcher, getMyPet().isPowered());
     }
 
     public MyCreeper getMyPet() {

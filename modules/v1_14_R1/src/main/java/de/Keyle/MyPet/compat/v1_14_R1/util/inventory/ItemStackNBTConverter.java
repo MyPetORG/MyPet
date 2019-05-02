@@ -27,8 +27,6 @@ import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,12 +35,6 @@ import java.util.Set;
 public class ItemStackNBTConverter {
 
     private static Field TAG_LIST_LIST = ReflectionUtil.getField(NBTTagList.class, "list");
-    private static Method METHOD_BYTE_g = ReflectionUtil.getMethod(NBTTagByte.class, "g");
-    private static Method METHOD_SHORT_f = ReflectionUtil.getMethod(NBTTagShort.class, "f");
-    private static Method METHOD_INT_e = ReflectionUtil.getMethod(NBTTagInt.class, "e");
-    private static Method METHOD_LONG_d = ReflectionUtil.getMethod(NBTTagLong.class, "d");
-    private static Method METHOD_FLOAT_i = ReflectionUtil.getMethod(NBTTagFloat.class, "i");
-    private static Method METHOD_STRING_b_ = ReflectionUtil.getMethod(NBTTagString.class, "b_");
 
     public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
@@ -102,72 +94,46 @@ public class ItemStackNBTConverter {
 
     @SuppressWarnings("unchecked")
     public static TagBase vanillaCompoundToCompound(NBTBase vanillaTag) {
-        try {
-            switch (vanillaTag.getTypeId()) {
-                case 1:
-                    return new TagByte(((NBTTagByte) vanillaTag).asByte());
-                case 2:
-                    return new TagShort(((NBTTagShort) vanillaTag).asShort());
-                case 3:
-                    return new TagInt(((NBTTagInt) vanillaTag).asInt());
-                case 4:
-                    return new TagLong(((NBTTagLong) vanillaTag).asLong());
-                case 5:
-                    return new TagFloat(((NBTTagFloat) vanillaTag).asFloat());
-                case 6:
-                    return new TagDouble(((NBTTagDouble) vanillaTag).asDouble());
-                case 7:
-                    return new TagByteArray(((NBTTagByteArray) vanillaTag).c());
-                case 8:
-                    return new TagString(vanillaTag.asString());
-                case 9:
-                    NBTTagList tagList = (NBTTagList) vanillaTag;
-                    List compoundList = new ArrayList();
-                    try {
-                        ArrayList list = (ArrayList) TAG_LIST_LIST.get(tagList);
-                        for (Object aList : list) {
-                            compoundList.add(vanillaCompoundToCompound((NBTBase) aList));
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+        switch (vanillaTag.getTypeId()) {
+            case 1:
+                return new TagByte(((NBTTagByte) vanillaTag).asByte());
+            case 2:
+                return new TagShort(((NBTTagShort) vanillaTag).asShort());
+            case 3:
+                return new TagInt(((NBTTagInt) vanillaTag).asInt());
+            case 4:
+                return new TagLong(((NBTTagLong) vanillaTag).asLong());
+            case 5:
+                return new TagFloat(((NBTTagFloat) vanillaTag).asFloat());
+            case 6:
+                return new TagDouble(((NBTTagDouble) vanillaTag).asDouble());
+            case 7:
+                return new TagByteArray(((NBTTagByteArray) vanillaTag).getBytes());
+            case 8:
+                return new TagString(vanillaTag.asString());
+            case 9:
+                NBTTagList tagList = (NBTTagList) vanillaTag;
+                List compoundList = new ArrayList();
+                try {
+                    ArrayList list = (ArrayList) TAG_LIST_LIST.get(tagList);
+                    for (Object aList : list) {
+                        compoundList.add(vanillaCompoundToCompound((NBTBase) aList));
                     }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
 
-                    return new TagList(compoundList);
-                case 10:
-                    TagCompound compound = new TagCompound();
-                    NBTTagCompound tagCompound = ((NBTTagCompound) vanillaTag);
-                    Set<String> keys = tagCompound.getKeys();
-                    for (String tagName : keys) {
-                        compound.getCompoundData().put(tagName, vanillaCompoundToCompound(tagCompound.get(tagName)));
-                    }
-                    return compound;
-                case 11:
-                    return new TagIntArray(((NBTTagIntArray) vanillaTag).d());
-            }
-        } catch (NoSuchMethodError e) {
-            return vanillaCompoundToCompoundLegacy(vanillaTag);
-        }
-        return null;
-    }
-
-    public static TagBase vanillaCompoundToCompoundLegacy(NBTBase vanillaTag) {
-        try {
-            switch (vanillaTag.getTypeId()) {
-                case 1:
-                    return new TagByte((Byte) METHOD_BYTE_g.invoke(vanillaTag));
-                case 2:
-                    return new TagShort((Short) METHOD_SHORT_f.invoke(vanillaTag));
-                case 3:
-                    return new TagInt((Integer) METHOD_INT_e.invoke(vanillaTag));
-                case 4:
-                    return new TagLong((Long) METHOD_LONG_d.invoke(vanillaTag));
-                case 5:
-                    return new TagFloat((Float) METHOD_FLOAT_i.invoke(vanillaTag));
-                case 8:
-                    return new TagString(METHOD_STRING_b_.invoke(vanillaTag).toString());
-            }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+                return new TagList(compoundList);
+            case 10:
+                TagCompound compound = new TagCompound();
+                NBTTagCompound tagCompound = ((NBTTagCompound) vanillaTag);
+                Set<String> keys = tagCompound.getKeys();
+                for (String tagName : keys) {
+                    compound.getCompoundData().put(tagName, vanillaCompoundToCompound(tagCompound.get(tagName)));
+                }
+                return compound;
+            case 11:
+                return new TagIntArray(((NBTTagIntArray) vanillaTag).getInts());
         }
         return null;
     }

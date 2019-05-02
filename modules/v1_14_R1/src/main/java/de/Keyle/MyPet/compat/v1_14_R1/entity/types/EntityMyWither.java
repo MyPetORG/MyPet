@@ -55,32 +55,32 @@ public class EntityMyWither extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(targetWatcher, 0);          // target entityID
-        this.datawatcher.register(watcher_1, 0);              // N/A
-        this.datawatcher.register(watcher_2, 0);              // N/A
-        this.datawatcher.register(invulnerabilityWatcher, 0); // invulnerability (blue, size)
+        getDataWatcher().register(targetWatcher, 0);          // target entityID
+        getDataWatcher().register(watcher_1, 0);              // N/A
+        getDataWatcher().register(watcher_2, 0);              // N/A
+        getDataWatcher().register(invulnerabilityWatcher, 0); // invulnerability (blue, size)
     }
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Wither.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(invulnerabilityWatcher, getMyPet().isBaby() ? 600 : 0);
+        getDataWatcher().set(invulnerabilityWatcher, getMyPet().isBaby() ? 600 : 0);
     }
 
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.Wither.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 

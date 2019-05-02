@@ -50,7 +50,7 @@ public class EntityMyCaveSpider extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(watcher, (byte) 0); // N/A
+        getDataWatcher().register(watcher, (byte) 0); // N/A
     }
 
     public void playPetStepSound() {

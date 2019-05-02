@@ -64,8 +64,8 @@ public class EntityMyDolphin extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(treasurePosWatcher, BlockPosition.ZERO);
-        this.datawatcher.register(gotFishWatcher, false);
-        this.datawatcher.register(moistnessWatcher, 2400);
+        getDataWatcher().register(treasurePosWatcher, BlockPosition.ZERO);
+        getDataWatcher().register(gotFishWatcher, false);
+        getDataWatcher().register(moistnessWatcher, 2400);
     }
 }

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.*;
@@ -39,6 +40,8 @@ import java.util.Map;
 public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombieVillager {
     protected boolean isBaby = false;
     protected int profession = 0;
+    protected MyVillager.Type type = MyVillager.Type.Plains;
+    protected int level = 1;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyZombieVillager(MyPetPlayer petOwner) {
@@ -49,6 +52,9 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("Profession", new TagInt(getProfession()));
+        info.getCompoundData().put("Type", new TagInt(getType().ordinal()));
+        info.getCompoundData().put("TradingLevel", new TagInt(getTradingLevel()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -70,6 +76,12 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
         }
         if (info.getCompoundData().containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
+        }
+        if (info.getCompoundData().containsKey("Type")) {
+            setType(MyVillager.Type.values()[info.getAs("Type", TagInt.class).getIntData()]);
+        }
+        if (info.getCompoundData().containsKey("TradingLevel")) {
+            setTradingLevel(info.getAs("TradingLevel", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
@@ -144,16 +156,41 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
         }
     }
 
-    public void setProfession(int type) {
-        this.profession = type;
+    public int getProfession() {
+        return profession;
+    }
+
+    public void setProfession(int value) {
+        this.profession = value;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
     @Override
-    public int getProfession() {
-        return profession;
+    public MyVillager.Type getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(MyVillager.Type value) {
+        this.type = value;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    @Override
+    public int getTradingLevel() {
+        return level;
+    }
+
+    @Override
+    public void setTradingLevel(int level) {
+        this.level = Math.max(1, level);
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
     }
 
     @Override

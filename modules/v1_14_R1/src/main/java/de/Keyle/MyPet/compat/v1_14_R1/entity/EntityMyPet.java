@@ -25,10 +25,8 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
-import de.Keyle.MyPet.api.entity.JumpHelper;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
+import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -50,7 +48,6 @@ import de.Keyle.MyPet.compat.v1_14_R1.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMyHorse;
-import de.Keyle.MyPet.compat.v1_14_R1.util.FieldCompat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_14_R1.*;
@@ -79,9 +76,9 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
 
-public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
+public abstract class EntityMyPet extends EntityInsentient implements MyPetMinecraftEntity {
 
-    protected static final DataWatcherObject<Byte> potionParticleWatcher = aw;
+    protected static final DataWatcherObject<Byte> potionParticleWatcher = ar;
 
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected EntityLiving target = null;
@@ -104,22 +101,21 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected float limitCounter = 0;
     protected DamageSource deathReason = null;
 
-    private static Field jump = ReflectionUtil.getField(EntityLiving.class, "bg");
+    private static Field jump = ReflectionUtil.getField(EntityLiving.class, "jumping");
 
-    public EntityMyPet(EntityTypes<?> entitytypes, World world, MyPet myPet) {
+    public EntityMyPet(EntityTypes<? extends EntityInsentient> entitytypes, World world, MyPet myPet) {
         super(entitytypes, world);
 
         try {
-            setSize();
-
             this.myPet = myPet;
             this.isMyPet = true;
+            this.updateSize();
             this.petPathfinderSelector = new AIGoalSelector();
             this.petTargetSelector = new AIGoalSelector();
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
             this.petNavigation = new VanillaNavigation(this);
             this.sitPathfinder = new Sit(this);
-            this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
+            this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(myPet.getMaxHealth());
             this.setHealth((float) Math.min(myPet.getHealth(), myPet.getMaxHealth()));
             this.updateNameTag();
             this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(walkSpeed);
@@ -160,23 +156,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public MyPet getMyPet() {
         return myPet;
-    }
-
-    public void setSize() {
-        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
-        if (es != null) {
-            float width = es.width();
-            float height = es.height() == java.lang.Float.NaN ? width : es.height();
-            this.setSize(width, height);
-        }
-    }
-
-    public float getHeadHeight() {
-        float height = super.getHeadHeight();
-        if (hasRider()) {
-            height += 1;
-        }
-        return height;
     }
 
     public boolean hasRider() {
@@ -648,9 +627,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         super.die(damagesource);
     }
 
-    protected void initDatawatcher() {
-    }
-
     /**
      * Returns the speed of played sounds
      * The faster the higher the sound will be
@@ -691,8 +667,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (getLivingSound() != null) {
             SoundEffect se = IRegistry.SOUND_EVENT.get(new MinecraftKey(getLivingSound()));
             if (se != null) {
-                for (int j = 0; j < this.world.players.size(); ++j) {
-                    EntityPlayer entityplayer = (EntityPlayer) this.world.players.get(j);
+                for (int j = 0; j < this.world.getPlayers().size(); ++j) {
+                    EntityPlayer entityplayer = (EntityPlayer) this.world.getPlayers().get(j);
 
                     float volume = 1f;
                     if (MyPetApi.getPlayerManager().isMyPetPlayer(entityplayer.getBukkitEntity())) {
@@ -718,7 +694,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * returns the first passenger
      */
     public Entity getFirstPassenger() {
-        return this.bP().isEmpty() ? null : this.bP().get(0);
+        return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
     private void ride(float motionSideways, float f, float motionForward, float speedModifier) {
@@ -733,36 +709,34 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             swimmSpeed = 0.02F;
 
             this.a(motionSideways, motionForward, f, swimmSpeed);
-            this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
-            this.motX *= (double) speed;
-            this.motY *= 0.800000011920929D;
-            this.motZ *= (double) speed;
-            this.motY -= 0.02D;
-            if (this.positionChanged && this.c(this.motX, this.motY + 0.6000000238418579D - this.locY + locY, this.motZ)) {
-                this.motY = 0.30000001192092896D;
+            this.move(EnumMoveType.SELF, this.getMot());
+            double motX = this.getMot().x * (double) speed;
+            double motY = this.getMot().y * 0.800000011920929D;
+            double motZ = this.getMot().z * (double) speed;
+            motY -= 0.02D;
+            if (this.positionChanged && this.d(this.getMot().x, this.getMot().y + 0.6000000238418579D - this.locY + locY, this.getMot().z)) {
+                motY = 0.30000001192092896D;
             }
+            this.setMot(motX, motY, motZ);
         } else if (this.ax()) { // in lava
             locY = this.locY;
             this.a(motionSideways, motionForward, f, 0.02F);
-            this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
-            this.motX *= 0.5D;
-            this.motY *= 0.5D;
-            this.motZ *= 0.5D;
-            this.motY -= 0.02D;
-            if (this.positionChanged && this.c(this.motX, this.motY + 0.6000000238418579D - this.locY + locY, this.motZ)) {
-                this.motY = 0.30000001192092896D;
+            this.move(EnumMoveType.SELF, this.getMot());
+            double motX = this.getMot().x * 0.5D;
+            double motY = this.getMot().y * 0.5D;
+            double motZ = this.getMot().z * 0.5D;
+            motY -= 0.02D;
+            if (this.positionChanged && this.d(this.getMot().x, this.getMot().y + 0.6000000238418579D - this.locY + locY, this.getMot().z)) {
+                motY = 0.30000001192092896D;
             }
+            this.setMot(motX, motY, motZ);
         } else {
             double minY;
-            if (FieldCompat.AxisAlignedBB_Fields.get()) {
-                minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.getBoundingBox());
-            } else {
-                minY = this.getBoundingBox().minY;
-            }
+            minY = this.getBoundingBox().minY;
 
             float friction = 0.91F;
             if (this.onGround) {
-                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(minY) - 1, MathHelper.floor(this.locZ))).getBlock().n() * 0.91F;
+                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(minY) - 1, MathHelper.floor(this.locZ))).getBlock().m() * 0.91F;
             }
 
             speed = speedModifier * (0.16277136F / (friction * friction * friction));
@@ -770,32 +744,40 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.a(motionSideways, motionForward, f, speed);
             friction = 0.91F;
             if (this.onGround) {
-                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(minY) - 1, MathHelper.floor(this.locZ))).getBlock().n() * 0.91F;
+                friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(minY) - 1, MathHelper.floor(this.locZ))).getBlock().m() * 0.91F;
             }
 
-            if (this.z_()) {
+            double motX = this.getMot().x;
+            double motY = this.getMot().y;
+            double motZ = this.getMot().z;
+
+            if (this.isClimbing()) {
                 swimmSpeed = 0.15F;
-                this.motX = MathHelper.a(this.motX, (double) (-swimmSpeed), (double) swimmSpeed);
-                this.motZ = MathHelper.a(this.motZ, (double) (-swimmSpeed), (double) swimmSpeed);
+                motX = MathHelper.a(motX, (double) (-swimmSpeed), (double) swimmSpeed);
+                motZ = MathHelper.a(motZ, (double) (-swimmSpeed), (double) swimmSpeed);
                 this.fallDistance = 0.0F;
-                if (this.motY < -0.15D) {
-                    this.motY = -0.15D;
+                if (motY < -0.15D) {
+                    motY = -0.15D;
                 }
             }
 
-            this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
-            if (this.positionChanged && this.z_()) {
-                this.motY = 0.2D;
+            Vec3D mot = new Vec3D(motX, motY, motZ);
+
+            this.move(EnumMoveType.SELF, mot);
+            if (this.positionChanged && this.isClimbing()) {
+                motY = 0.2D;
             }
 
-            this.motY -= 0.08D;
+            motY -= 0.08D;
 
-            this.motY *= 0.9800000190734863D;
-            this.motX *= (double) friction;
-            this.motZ *= (double) friction;
+            motY *= 0.9800000190734863D;
+            motX *= (double) friction;
+            motZ *= (double) friction;
+
+            this.setMot(motX, motY, motZ);
         }
 
-        this.aF = this.aG;
+        this.aE = this.aF;
         locY = this.locX - this.lastX;
         double d1 = this.locZ - this.lastZ;
         f2 = MathHelper.sqrt(locY * locY + d1 * d1) * 4.0F;
@@ -803,8 +785,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             f2 = 1.0F;
         }
 
-        this.aG += (f2 - this.aG) * 0.4F;
-        this.aH += this.aG;
+        this.aF += (f2 - this.aF) * 0.4F;
+        this.aG += this.aF;
     }
 
     public void makeSound(String sound, float volume, float pitch) {
@@ -828,27 +810,19 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     /**
      * do NOT drop anything
      */
-    protected void dropDeathLoot(boolean flag, int i) {
-    }
-
-    /**
-     * do NOT drop anything
-     */
-    protected void dropEquipment(boolean flag, int i) {
+    protected void dropDeathLoot(DamageSource damagesource, int i, boolean flag) {
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    /**
-     * -> initDatawatcher()
-     */
-    protected void x_() {
-        super.x_();
-        try {
-            initDatawatcher();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public net.minecraft.server.v1_14_R1.EntitySize a(EntityPose entitypose) {
+        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
+        if (es != null) {
+            float width = es.width();
+            float height = java.lang.Float.isNaN(es.height()) ? width : es.height();
+            return new net.minecraft.server.v1_14_R1.EntitySize(width, height, false);
         }
+        return super.a(entitypose);
     }
 
     /**
@@ -895,7 +869,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected SoundEffect d(DamageSource damagesource) {
+    protected SoundEffect getSoundHurt(DamageSource damagesource) {
         try {
             return IRegistry.SOUND_EVENT.get(new MinecraftKey(getHurtSound()));
         } catch (Exception e) {
@@ -908,7 +882,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected SoundEffect cs() {
+    protected SoundEffect getSoundDeath() {
         try {
             return IRegistry.SOUND_EVENT.get(new MinecraftKey(getDeathSound()));
         } catch (Exception e) {
@@ -920,20 +894,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     /**
      * Returns the speed of played sounds
      */
-    protected float cE() {
+    protected float cU() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.cE();
-    }
-
-    /*
-     *  old movementTick method
-     */
-    public void k() {
-        movementTick();
+        return super.cU();
     }
 
     public void movementTick() {
@@ -942,61 +909,59 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
 
         if (this.bl > 0 && !this.bT()) {
-            double d0 = this.locX + (this.bj - this.locX) / (double) this.bl;
-            double d1 = this.locY + (this.bk - this.locY) / (double) this.bl;
-            double d2 = this.locZ + (this.bl - this.locZ) / (double) this.bl;
-            double d3 = MathHelper.g(this.bm - (double) this.yaw);
-            this.yaw = (float) ((double) this.yaw + d3 / (double) this.bl);
-            this.pitch = (float) ((double) this.pitch + (this.bn - (double) this.pitch) / (double) this.bl);
-            --this.bl;
+            double d0 = this.locX + (this.bj - this.locX) / (double) this.bf;
+            double d1 = this.locY + (this.bk - this.locY) / (double) this.bf;
+            double d2 = this.locZ + (this.bl - this.locZ) / (double) this.bf;
+            double d3 = MathHelper.g(this.bg - (double) this.yaw);
+            this.yaw = (float) ((double) this.yaw + d3 / (double) this.bf);
+            this.pitch = (float) ((double) this.pitch + (this.bh - (double) this.pitch) / (double) this.bf);
+            --this.bf;
             this.setPosition(d0, d1, d2);
             this.setYawPitch(this.yaw, this.pitch);
-        } else if (!this.cP()) {
-            this.motX *= 0.98D;
-            this.motY *= 0.98D;
-            this.motZ *= 0.98D;
+        } else if (!this.de()) {
+            this.setMot(this.getMot().d(0.98D, 0.98D, 0.98D));
         }
 
-        if (Math.abs(this.motX) < 0.003D) {
-            this.motX = 0.0D;
+        Vec3D vec3d = this.getMot();
+        double motX = vec3d.x;
+        double motY = vec3d.y;
+        double motZ = vec3d.z;
+
+        if (Math.abs(vec3d.x) < 0.003D) {
+            motX = 0.0D;
         }
 
-        if (Math.abs(this.motY) < 0.003D) {
-            this.motY = 0.0D;
+        if (Math.abs(vec3d.y) < 0.003D) {
+            motY = 0.0D;
         }
 
-        if (Math.abs(this.motZ) < 0.003D) {
-            this.motZ = 0.0D;
+        if (Math.abs(vec3d.z) < 0.003D) {
+            motZ = 0.0D;
         }
+
+        this.setMot(motX, motY, motZ);
 
         this.doMyPetTick();
 
-        if (this.bg) {
-            if (this.W > 0.0D && (!this.onGround || this.W > 0.4D)) {
+        if (this.jumping) {
+            if (this.Q > 0.0D && (!this.onGround || this.Q > 0.4D)) {
                 this.c(TagsFluid.WATER);
             } else if (this.ax()) {
                 this.c(TagsFluid.LAVA);
             } else if (this.onGround && this.jumpDelay == 0) {
-                this.cH();
+                this.jump();
                 this.jumpDelay = 10;
             }
         } else {
             this.jumpDelay = 0;
         }
 
-        this.bh *= 0.98F;
-        this.bj *= 0.98F;
-        this.bk *= 0.9F;
-        this.n();
-        this.a(this.bh, this.bi, this.bj);
-        this.cN();
-    }
-
-    /**
-     * -> addPassenger(Entity)
-     */
-    protected boolean o(Entity entity) {
-        return addPassenger(entity);
+        this.bb *= 0.98F;
+        this.bd *= 0.98F;
+        this.be *= 0.9F;
+        // this.n(); //no Elytra flight
+        this.e(new Vec3D((double) this.bb, (double) this.bc, (double) this.bd));
+        this.collideNearby();
     }
 
     protected boolean addPassenger(Entity entity) {
@@ -1015,7 +980,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 if (cancelled) {
                     returnVal = false;
                 } else {
-                    if (!(this.bO() instanceof EntityHuman)) {
+                    if (!(this.getRidingPassenger() instanceof EntityHuman)) {
                         this.passengers.add(0, entity);
                     } else {
                         this.passengers.add(entity);
@@ -1121,9 +1086,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     /**
      * -> falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!this.isFlying) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 
@@ -1141,7 +1106,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         EntityLiving passenger = (EntityLiving) this.getFirstPassenger();
 
         if (this.a(TagsFluid.WATER)) {
-            this.motY += 0.4;
+            this.setMot(this.getMot().add(0, 0.4, 0));
         }
 
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
@@ -1154,11 +1119,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.lastYaw = (this.yaw = passenger.yaw);
         this.pitch = passenger.pitch * 0.5F;
         setYawPitch(this.yaw, this.pitch);
-        this.aP = (this.aN = this.yaw);
+        this.aM = (this.aK = this.yaw);
 
         // get motion from passenger (player)
-        motionSideways = passenger.bh * 0.5F;
-        motionForward = passenger.bj;
+        motionSideways = passenger.bb * 0.5F;
+        motionForward = passenger.bd;
 
         // backwards is slower
         if (motionForward <= 0.0F) {
@@ -1233,7 +1198,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     if (this instanceof IJumpable) {
                         getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).setValue(jumpVelocity);
                     }
-                    this.motY = jumpVelocity;
+                    this.setMot(this.getMot().x, jumpVelocity, this.getMot().z);
                 } else if (rideSkill.getCanFly().getValue()) {
                     if (limitCounter <= 0 && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
                         canFly = false;
@@ -1245,8 +1210,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         flyCheckCounter = 5;
                     }
                     if (canFly) {
-                        if (this.motY < ascendSpeed) {
-                            this.motY = ascendSpeed;
+                        if (this.getMot().y < ascendSpeed) {
+                            this.setMot(this.getMot().x, ascendSpeed, this.getMot().z);
                             this.fallDistance = 0;
                             this.isFlying = true;
                         }
@@ -1289,7 +1254,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
      * Returns the default sound of the MyPet
      * -> getLivingSound()
      */
-    protected SoundEffect D() {
+    protected SoundEffect getSoundAmbient() {
         try {
             if (getLivingSound() != null && playIdleSound()) {
                 makeLivingSound();
@@ -1301,8 +1266,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         return null;
     }
 
-    public DamageSource cr() {
-        DamageSource source = super.cr();
+    public DamageSource cD() {
+        DamageSource source = super.cD();
         if (deathReason != null) {
             return deathReason;
         }

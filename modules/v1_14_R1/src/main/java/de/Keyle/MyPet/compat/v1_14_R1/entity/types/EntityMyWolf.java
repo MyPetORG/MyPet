@@ -50,11 +50,11 @@ public class EntityMyWolf extends EntityMyPet {
     }
 
     public void applySitting(boolean sitting) {
-        int i = this.datawatcher.get(sitWatcher);
+        int i = getDataWatcher().get(sitWatcher);
         if (sitting) {
-            this.datawatcher.set(sitWatcher, (byte) (i | 0x1));
+            getDataWatcher().set(sitWatcher, (byte) (i | 0x1));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (i & 0xFFFFFFFE));
+            getDataWatcher().set(sitWatcher, (byte) (i & 0xFFFFFFFE));
         }
     }
 
@@ -91,7 +91,7 @@ public class EntityMyWolf extends EntityMyPet {
                             }
                             return true;
                         } else {
-                            this.datawatcher.set(collarWatcher, 0);
+                            getDataWatcher().set(collarWatcher, 0);
                             updateVisuals();
                             return false;
                         }
@@ -114,38 +114,38 @@ public class EntityMyWolf extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(sitWatcher, (byte) 0);
-        this.datawatcher.register(ownerWatcher, Optional.empty());
-        this.datawatcher.register(tailWatcher, 30F);
-        this.datawatcher.register(watcher, false); // not used
-        this.datawatcher.register(collarWatcher, 14);
+        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(sitWatcher, (byte) 0);
+        getDataWatcher().register(ownerWatcher, Optional.empty());
+        getDataWatcher().register(tailWatcher, 30F);
+        getDataWatcher().register(watcher, false); // not used
+        getDataWatcher().register(collarWatcher, 14);
     }
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeInstance(GenericAttributes.maxHealth).setValue(20.0D);
+        getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(20.0D);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
 
-        byte b0 = this.datawatcher.get(sitWatcher);
+        byte b0 = getDataWatcher().get(sitWatcher);
         if (getMyPet().isTamed()) {
-            this.datawatcher.set(sitWatcher, (byte) (b0 | 0x4));
+            getDataWatcher().set(sitWatcher, (byte) (b0 | 0x4));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (b0 & 0xFFFFFFFB));
+            getDataWatcher().set(sitWatcher, (byte) (b0 & 0xFFFFFFFB));
         }
 
-        b0 = this.datawatcher.get(sitWatcher);
+        b0 = getDataWatcher().get(sitWatcher);
         if (getMyPet().isAngry()) {
-            this.datawatcher.set(sitWatcher, (byte) (b0 | 0x2));
+            getDataWatcher().set(sitWatcher, (byte) (b0 | 0x2));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (b0 & 0xFFFFFFFD));
+            getDataWatcher().set(sitWatcher, (byte) (b0 & 0xFFFFFFFD));
         }
 
-        this.datawatcher.set(collarWatcher, (int) getMyPet().getCollarColor().getWoolData());
+        getDataWatcher().set(collarWatcher, (int) getMyPet().getCollarColor().getWoolData());
     }
 
     @Override
@@ -177,17 +177,17 @@ public class EntityMyWolf extends EntityMyPet {
             if (this.shakeCounter > 0.4F) {
                 int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
                 for (; i >= 0; i--) {
-                    float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-                    float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+                    float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
+                    float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
 
-                    this.world.addParticle(Particles.R, this.locX + offsetX, this.locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
+                    this.world.addParticle(Particles.SPLASH, this.locX + offsetX, this.locY + 0.8F, this.locZ + offsetZ, this.getMot().x, this.getMot().y, this.getMot().z);
                 }
             }
         }
 
         float tailHeight = 30F * (getHealth() / getMaxHealth());
-        if (this.datawatcher.get(tailWatcher) != tailHeight) {
-            this.datawatcher.set(tailWatcher, tailHeight); // update tail height
+        if (getDataWatcher().get(tailWatcher) != tailHeight) {
+            getDataWatcher().set(tailWatcher, tailHeight); // update tail height
         }
     }
 
@@ -200,7 +200,7 @@ public class EntityMyWolf extends EntityMyPet {
         super.setHealth(i);
 
         float tailHeight = 30F * (i / getMaxHealth());
-        this.datawatcher.set(tailWatcher, tailHeight);
+        getDataWatcher().set(tailWatcher, tailHeight);
     }
 
     public MyWolf getMyPet() {

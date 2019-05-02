@@ -20,139 +20,113 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.services;
 
-import com.mojang.datafixers.DataFixTypes;
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
+import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.api.util.service.Load;
-import de.Keyle.MyPet.compat.v1_14_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagShort;
-import de.keyle.knbt.TagString;
-import net.minecraft.server.v1_14_R1.GameProfileSerializer;
-import net.minecraft.server.v1_14_R1.NBTTagCompound;
-import net.minecraft.server.v1_14_R1.World;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import de.keyle.knbt.TagInt;
 
 @Load(Load.State.AfterHooks)
 public class RepositoryMyPetConverterService extends de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService {
 
     public void v1_14_R1(StoredMyPet pet) {
-        TagCompound skills = pet.getSkillInfo();
-
-        if (skills.containsKey("Inventory")) {
-            TagCompound invTag = skills.getAs("Inventory", TagCompound.class);
-            skills.remove("Inventory");
-            skills.put("Backpack", invTag);
-
-            TagList items = invTag.getAs("Items", TagList.class);
-            for (TagCompound item : items.getListAs(TagCompound.class)) {
-                updateItemId(item);
-            }
-            try {
-                invTag.put("Items", updateItemstacks(items));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        pet.setSkills(skills);
-
         TagCompound info = pet.getInfo();
 
         switch (pet.getPetType()) {
-            case Horse:
-                if (info.containsKeyAs("Armor", TagCompound.class)) {
-                    TagCompound itemTag = info.get("Armor");
-                    updateItemId(itemTag);
-                    itemTag = updateItemstack(itemTag);
-                    info.put("Armor", itemTag);
-                }
-            case Donkey:
-            case Mule:
-                if (info.containsKeyAs("Chest", TagCompound.class)) {
-                    TagCompound itemTag = info.get("Chest");
-                    updateItemId(itemTag);
-                    itemTag = updateItemstack(itemTag);
-                    info.put("Chest", itemTag);
-                }
-            case SkeletonHorse:
-            case ZombieHorse:
-            case Pig:
-                if (info.containsKeyAs("Saddle", TagCompound.class)) {
-                    TagCompound itemTag = info.get("Saddle");
-                    updateItemId(itemTag);
-                    itemTag = updateItemstack(itemTag);
-                    info.put("Saddle", itemTag);
+            case Villager:
+            case ZombieVillager:
+                if (info.containsKeyAs("Profession", TagInt.class)) {
+                    int professionId = info.getAs("Profession", TagInt.class).getIntData();
+                    int career = 1;
+                    if (info.containsKey("OriginalData")) {
+                        TagCompound originalData = info.get("OriginalData");
+                        if (originalData.containsKey("Career")) {
+                            career = originalData.getAs("Career", TagInt.class).getIntData();
+                        }
+                    }
+                    switch (professionId) {
+                        case 0:
+                            switch (career) {
+                                case 1:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.FARMER.ordinal()));
+                                    break;
+                                case 2:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.FISHERMAN.ordinal()));
+                                    break;
+                                case 3:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.SHEPHERD.ordinal()));
+                                    break;
+                                case 4:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.FLETCHER.ordinal()));
+                                    break;
+                            }
+                            break;
+                        case 1:
+                            switch (career) {
+                                case 1:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.LIBRARIAN.ordinal()));
+                                    break;
+                                case 2:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.CARTOGRAPHER.ordinal()));
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            info.put("Profession", new TagInt(MyVillager.Profession.CLERIC.ordinal()));
+                            break;
+                        case 3:
+                            switch (career) {
+                                case 1:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.ARMORER.ordinal()));
+                                    break;
+                                case 2:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.WEAPONSMITH.ordinal()));
+                                    break;
+                                case 3:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.TOOLSMITH.ordinal()));
+                                    break;
+                            }
+                            break;
+                        case 4:
+                            switch (career) {
+                                case 1:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.BUTCHER.ordinal()));
+                                    break;
+                                case 2:
+                                    info.put("Profession", new TagInt(MyVillager.Profession.LEATHERWORKER.ordinal()));
+                                    break;
+                            }
+                            break;
+                        case 5:
+                            info.put("Profession", new TagInt(MyVillager.Profession.NITWIT.ordinal()));
+                            break;
+                    }
                 }
                 break;
-            case Enderman:
-                if (info.containsKeyAs("Block", TagCompound.class)) {
-                    TagCompound itemTag = info.get("Block");
-                    updateItemId(itemTag);
-                    itemTag = updateItemstack(itemTag);
-                    info.put("Block", itemTag);
-                }
-                break;
-            case IronGolem:
-                if (info.containsKeyAs("Flower", TagCompound.class)) {
-                    TagCompound itemTag = info.get("Flower");
-                    updateItemId(itemTag);
-                    itemTag = updateItemstack(itemTag);
-                    info.put("Flower", itemTag);
-                }
-                break;
-            case Llama:
-                if (info.containsKeyAs("Chest", TagCompound.class)) {
-                    TagCompound itemTag = info.get("Chest");
-                    updateItemId(itemTag);
-                    itemTag = updateItemstack(itemTag);
-                    info.put("Chest", itemTag);
-                }
-                if (info.containsKeyAs("Decor", TagCompound.class)) {
-                    TagCompound itemTag = info.get("Decor");
-                    updateItemId(itemTag);
-                    itemTag = updateItemstack(itemTag);
-                    info.put("Decor", itemTag);
+            case Ocelot:
+                if (info.containsKey("CatType")) {
+                    int catType = info.getAs("CatType", TagInt.class).getIntData();
+                    if (catType > 0) {
+                        // BLACK_CAT(1),
+                        // RED_CAT(2),
+                        // SIAMESE_CAT(3);
+                        //pet.setPetType(MyPetType.Cat);
+                        switch (catType) {
+                            case 1:
+                                //TODO
+                                break;
+                            case 2:
+                                //TODO
+                                break;
+                            case 3:
+                                //TODO
+                                break;
+                        }
+                    }
                 }
                 break;
         }
 
         pet.setInfo(info);
-    }
-
-    public TagCompound updateItemstack(TagCompound item) {
-        TagList chestList = new TagList();
-        chestList.addTag(item);
-        chestList = updateItemstacks(chestList);
-        return chestList.getTag(0);
-    }
-
-
-    public TagList updateItemstacks(TagList items) {
-        NBTTagCompound fakePlayer = new NBTTagCompound();
-        fakePlayer.set("Inventory", ItemStackNBTConverter.compoundToVanillaCompound(items));
-
-        World w = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
-        NBTTagCompound updatedFakePlayer = GameProfileSerializer.a(w.getDataManager().i(), DataFixTypes.PLAYER, fakePlayer, 1343);
-
-        return (TagList) ItemStackNBTConverter.vanillaCompoundToCompound(updatedFakePlayer.get("Inventory"));
-    }
-
-    public void updateItemId(TagCompound item) {
-        short damage = item.getAs("Damage", TagShort.class).getShortData();
-        int id = item.getAs("id", TagShort.class).getShortData();
-
-        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-        MaterialHolder materialHolder = itemDatabase.getByLegacyId(id, damage);
-        if (materialHolder == null) {
-            materialHolder = itemDatabase.getByLegacyId(id);
-        }
-        if (materialHolder != null) {
-            item.put("id", new TagString("minecraft:" + materialHolder.getLegacyName().getName()));
-        }
     }
 }

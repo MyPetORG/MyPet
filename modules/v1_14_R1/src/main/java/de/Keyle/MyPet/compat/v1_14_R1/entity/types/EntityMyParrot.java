@@ -69,23 +69,23 @@ public class EntityMyParrot extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(AGE_WATCHER, false);
-        this.datawatcher.register(SIT_WATCHER, (byte) 0);
-        this.datawatcher.register(OWNER_WATCHER, Optional.empty());
-        this.datawatcher.register(VARIANT_WATCHER, 0);
+        getDataWatcher().register(AGE_WATCHER, false);
+        getDataWatcher().register(SIT_WATCHER, (byte) 0);
+        getDataWatcher().register(OWNER_WATCHER, Optional.empty());
+        getDataWatcher().register(VARIANT_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(VARIANT_WATCHER, getMyPet().getVariant());
+        getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
         if (Configuration.MyPet.Parrot.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
     }
@@ -93,9 +93,9 @@ public class EntityMyParrot extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 }

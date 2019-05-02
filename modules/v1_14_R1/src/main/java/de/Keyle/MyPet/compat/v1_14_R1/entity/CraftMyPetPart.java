@@ -22,16 +22,15 @@ package de.Keyle.MyPet.compat.v1_14_R1.entity;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.craftbukkit.v1_14_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 @Compat("v1_14_R1")
 public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
 
-    protected MyPetPlayer petOwner;
     protected EntityMyPetPart petEntity;
 
     public CraftMyPetPart(CraftServer server, EntityMyPetPart entityMyPet) {
@@ -63,6 +62,7 @@ public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
     public void setPersistent(boolean b) {
     }
 
+    @NotNull
     @Override
     public EntityType getType() {
         return EntityType.UNKNOWN;

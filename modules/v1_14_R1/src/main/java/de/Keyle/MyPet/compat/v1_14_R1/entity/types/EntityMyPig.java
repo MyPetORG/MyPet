@@ -59,7 +59,7 @@ public class EntityMyPig extends EntityMyPet {
         if (enumhand == EnumHand.OFF_HAND) {
             if (itemStack != null) {
                 if (itemStack.getItem() == Items.LEAD) {
-                    ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));
+                    ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutAttachEntity(this, null));
                     entityhuman.a(EnumHand.OFF_HAND, ItemStack.a);
                     new BukkitRunnable() {
                         public void run() {
@@ -94,13 +94,13 @@ public class EntityMyPig extends EntityMyPet {
             } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
                 EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
                 entityitem.pickupDelay = 10;
-                entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                 this.world.addEntity(entityitem);
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setSaddle(null);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
 
                 return true;
@@ -120,14 +120,14 @@ public class EntityMyPig extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);    // age
-        this.datawatcher.register(saddleWatcher, false); // saddle
+        getDataWatcher().register(ageWatcher, false);    // age
+        getDataWatcher().register(saddleWatcher, false); // saddle
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(saddleWatcher, getMyPet().hasSaddle());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(saddleWatcher, getMyPet().hasSaddle());
     }
 
     public void playPetStepSound() {

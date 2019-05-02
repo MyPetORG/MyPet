@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.keyle.knbt.TagCompound;
@@ -156,14 +157,14 @@ public class MyPetSelectionGui {
 
             if (previousPage != page) {
                 menu.setOption(45, new IconMenuItem()
-                        .setMaterial(Material.SIGN)
+                        .setMaterial(EnumSelector.find(Material.class, "SIGN", "OAK_SIGN"))
                         .setTitle("" + previousPage + " ≪≪")
                 );
             }
 
             if (previousPage != page) {
                 menu.setOption(53, new IconMenuItem()
-                        .setMaterial(Material.SIGN)
+                        .setMaterial(EnumSelector.find(Material.class, "SIGN", "OAK_SIGN"))
                         .setTitle(ChatColor.BOLD + "≫≫ " + ChatColor.RESET + nextPage)
                 );
             }

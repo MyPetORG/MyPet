@@ -55,11 +55,11 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
      * 128 mouth open
      */
     protected void applyVisual(int value, boolean flag) {
-        int i = this.datawatcher.get(saddleWatcher);
+        int i = getDataWatcher().get(saddleWatcher);
         if (flag) {
-            this.datawatcher.set(saddleWatcher, (byte) (i | value));
+            getDataWatcher().set(saddleWatcher, (byte) (i | value));
         } else {
-            this.datawatcher.set(saddleWatcher, (byte) (i & (~value)));
+            getDataWatcher().set(saddleWatcher, (byte) (i & (~value)));
         }
     }
 
@@ -106,13 +106,13 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
                 if (getMyPet().hasChest()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getChest()));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
                 if (getMyPet().hasSaddle()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
 
@@ -120,7 +120,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
                 getMyPet().setChest(null);
                 getMyPet().setSaddle(null);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
 
                 return true;
@@ -139,10 +139,11 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
     }
 
     protected void initDatawatcher() {
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(saddleWatcher, (byte) 0);
-        this.datawatcher.register(ownerWatcher, Optional.empty());
-        this.datawatcher.register(chestWatcher, false);
+        super.initDatawatcher();
+        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(saddleWatcher, (byte) 0);
+        getDataWatcher().register(ownerWatcher, Optional.empty());
+        getDataWatcher().register(chestWatcher, false);
     }
 
     protected void initAttributes() {
@@ -152,8 +153,8 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(chestWatcher, getMyPet().hasChest());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(chestWatcher, getMyPet().hasChest());
         applyVisual(4, getMyPet().hasSaddle());
     }
 
@@ -191,22 +192,24 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
 
     @Override
     public void playStepSound(BlockPosition pos, Block block) {
-        SoundEffectType soundeffecttype = block.getStepSound();
-        if (this.world.getType(pos) == Blocks.SNOW) {
-            soundeffecttype = Blocks.SNOW_BLOCK.getStepSound();
-        }
-        if (this.isVehicle()) {
-            ++this.soundCounter;
-            if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
-                this.a(SoundEffects.ENTITY_HORSE_GALLOP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
-            } else if (this.soundCounter <= 5) {
-                this.a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+        if (!block.getBlockData().getMaterial().isLiquid()) {
+            SoundEffectType soundeffecttype = block.getStepSound(block.getBlockData());
+            if (this.world.getType(pos) == Blocks.SNOW.getBlockData()) {
+                soundeffecttype = Blocks.SNOW_BLOCK.getStepSound(block.getBlockData());
             }
-        } else if (!block.getBlockData().getMaterial().isLiquid()) {
-            this.soundCounter += 1;
-            a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
-        } else {
-            a(SoundEffects.ENTITY_HORSE_STEP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+            if (this.isVehicle()) {
+                ++this.soundCounter;
+                if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
+                    this.a(SoundEffects.ENTITY_HORSE_GALLOP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                } else if (this.soundCounter <= 5) {
+                    this.a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                }
+            } else if (!block.getBlockData().getMaterial().isLiquid()) {
+                this.soundCounter += 1;
+                a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+            } else {
+                a(SoundEffects.ENTITY_HORSE_STEP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+            }
         }
     }
 
@@ -216,7 +219,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
 
     /* Jump power methods */
     @Override
-    public boolean G_() {
+    public boolean F_() {
         return true;
     }
 
@@ -226,6 +229,6 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
     }
 
     @Override
-    public void I_() {
+    public void c() {
     }
 }

@@ -99,12 +99,12 @@ public class EntityMySheep extends EntityMyPet {
                 for (int j = 0; j < woolDropCount; ++j) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, new ItemStack(colorMap.get(EnumColor.values()[getMyPet().getColor().ordinal()])));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
                 return true;
             } else if (Configuration.MyPet.Sheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
@@ -123,16 +123,16 @@ public class EntityMySheep extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);      // age
-        this.datawatcher.register(colorWatcher, (byte) 0); // color/sheared
+        getDataWatcher().register(ageWatcher, false);      // age
+        getDataWatcher().register(colorWatcher, (byte) 0); // color/sheared
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
 
         byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
-        this.datawatcher.set(colorWatcher, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
+        getDataWatcher().set(colorWatcher, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
     }
 
     public void playPetStepSound() {

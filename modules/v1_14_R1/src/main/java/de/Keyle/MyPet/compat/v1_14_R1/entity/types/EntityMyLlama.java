@@ -89,13 +89,13 @@ public class EntityMyLlama extends EntityMyPet {
                 if (getMyPet().hasChest()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getChest()));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
                 if (getMyPet().hasDecor()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getDecor()));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
 
@@ -103,7 +103,7 @@ public class EntityMyLlama extends EntityMyPet {
                 getMyPet().setChest(null);
                 getMyPet().setDecor(null);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
 
                 return true;
@@ -123,28 +123,28 @@ public class EntityMyLlama extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(saddleChestWatcher, (byte) 0);    // saddle & chest
-        this.datawatcher.register(ownerWatcher, Optional.empty()); // owner
-        this.datawatcher.register(chestWatcher, true);
-        this.datawatcher.register(strengthWatcher, 0);
-        this.datawatcher.register(colorWatcher, 0);
-        this.datawatcher.register(variantWatcher, 0);
+        getDataWatcher().register(ageWatcher, false);               // age
+        getDataWatcher().register(saddleChestWatcher, (byte) 0);    // saddle & chest
+        getDataWatcher().register(ownerWatcher, Optional.empty()); // owner
+        getDataWatcher().register(chestWatcher, true);
+        getDataWatcher().register(strengthWatcher, 0);
+        getDataWatcher().register(colorWatcher, 0);
+        getDataWatcher().register(variantWatcher, 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(chestWatcher, getMyPet().hasChest());
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(chestWatcher, getMyPet().hasChest());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
         if (getMyPet().hasDecor()) {
             ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
             Block block = Block.asBlock(is.getItem());
             int color = block instanceof BlockCarpet ? ((BlockCarpet) block).d().getColorIndex() : 0;
-            this.datawatcher.set(colorWatcher, color);
+            getDataWatcher().set(colorWatcher, color);
         } else {
-            this.datawatcher.set(colorWatcher, -1);
+            getDataWatcher().set(colorWatcher, -1);
         }
-        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
+        getDataWatcher().set(variantWatcher, getMyPet().getVariant());
     }
 
     public MyLlama getMyPet() {

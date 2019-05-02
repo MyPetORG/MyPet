@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;
+import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -59,7 +60,22 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("BlockID")) {
+        if (info.getCompoundData().containsKey("BlockName")) {
+            ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+            String id = info.getAs("BlockName", TagString.class).getStringData();
+            MaterialHolder materialHolder = itemDatabase.getByID(id);
+            if (materialHolder != null) {
+                Material material = materialHolder.getMaterial();
+                MyPetApi.getLogger().info("isCompatible:" + MyPetApi.getCompatUtil().isCompatible("1.13"));
+                if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                    setBlock(new ItemStack(material, 1));
+                } else {
+                    short data = materialHolder.getLegacyId().getData();
+                    setBlock(new ItemStack(material, 1, data));
+                }
+                setBlock(new ItemStack(material, 1));
+            }
+        } else if (info.getCompoundData().containsKey("BlockID")) {
             int id;
             byte data = 0;
             if (info.containsKeyAs("BlockID", TagShort.class)) {

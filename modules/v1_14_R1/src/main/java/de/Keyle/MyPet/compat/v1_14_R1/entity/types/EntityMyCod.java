@@ -60,6 +60,6 @@ public class EntityMyCod extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fromBucketWatcher, false);
+        getDataWatcher().register(fromBucketWatcher, false);
     }
 }

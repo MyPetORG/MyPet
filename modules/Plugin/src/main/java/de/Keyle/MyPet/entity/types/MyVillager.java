@@ -29,7 +29,10 @@ import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 
 public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVillager {
+
     protected int profession = 0;
+    protected Type type = Type.Plains;
+    protected int level = 1;
     protected boolean isBaby = false;
     protected TagCompound originalData = null;
 
@@ -41,6 +44,8 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Profession", new TagInt(getProfession()));
+        info.getCompoundData().put("Type", new TagInt(getType().ordinal()));
+        info.getCompoundData().put("VillagerLevel", new TagInt(getVillagerLevel()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         if (originalData != null) {
             info.getCompoundData().put("OriginalData", originalData);
@@ -52,6 +57,12 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
+        }
+        if (info.getCompoundData().containsKey("Type")) {
+            setType(Type.values()[info.getAs("Type", TagInt.class).getIntData()]);
+        }
+        if (info.getCompoundData().containsKey("VillagerLevel")) {
+            setVillagerLevel(info.getAs("VillagerLevel", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
@@ -71,10 +82,36 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     }
 
     public void setProfession(int value) {
+        this.profession = value;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-        this.profession = value;
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(Type value) {
+        this.type = value;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    @Override
+    public int getVillagerLevel() {
+        return level;
+    }
+
+    @Override
+    public void setVillagerLevel(int level) {
+        this.level = Math.max(1, level);
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
     }
 
     public boolean isBaby() {
@@ -102,6 +139,6 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public String toString() {
-        return "MyVillager{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", profession=" + getProfession() + ", baby=" + isBaby() + ", worldgroup=" + worldGroup + "}";
+        return "MyVillager{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", profession=" + getProfession() + ", type=" + getType().name() + ", baby=" + isBaby() + ", worldgroup=" + worldGroup + "}";
     }
 }

@@ -33,16 +33,18 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
+import net.minecraft.server.v1_14_R1.EntityZombieVillager;
+import net.minecraft.server.v1_14_R1.IRegistry;
+import net.minecraft.server.v1_14_R1.MinecraftKey;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftTropicalFish;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftVillagerZombie;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Compat("v1_14_R1")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
@@ -51,9 +53,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public TagCompound convertEntity(LivingEntity entity) {
         TagCompound properties = new TagCompound();
         switch (entity.getType()) {
-            case OCELOT:
-                convertOcelot((Ocelot) entity, properties);
-                break;
             case WOLF:
                 convertWolf((Wolf) entity, properties);
                 break;
@@ -145,9 +144,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((IronGolem) normalEntity).setPlayerCreated(true);
         } else if (myPet instanceof MyMagmaCube) {
             ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
-        } else if (myPet instanceof MyOcelot) {
-            ((Ocelot) normalEntity).setCatType(Ocelot.Type.WILD_OCELOT);
-            ((Ocelot) normalEntity).setTamed(false);
         } else if (myPet instanceof MyPig) {
             ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
         } else if (myPet instanceof MySheep) {
@@ -155,7 +151,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
         } else if (myPet instanceof MyVillager) {
             MyVillager villagerPet = (MyVillager) myPet;
-            Villager.Profession profession = Villager.Profession.values()[villagerPet.getProfession() + 1];
+            Villager.Profession profession = Villager.Profession.values()[villagerPet.getProfession()];
             ((Villager) normalEntity).setProfession(profession);
             if (villagerPet.hasOriginalData()) {
                 TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
@@ -170,7 +166,11 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
         } else if (myPet instanceof MyZombieVillager) {
             Villager.Profession profession = Villager.Profession.values()[((MyZombieVillager) myPet).getProfession()];
-            ((ZombieVillager) normalEntity).setVillagerProfession(profession);
+            EntityZombieVillager nmsEntity = ((CraftVillagerZombie) normalEntity).getHandle();
+            nmsEntity.setVillagerData(nmsEntity.getVillagerData()
+                    .withType(IRegistry.VILLAGER_TYPE.get(new MinecraftKey(((MyZombieVillager) myPet).getType().name().toLowerCase(Locale.ROOT))))
+                    .withLevel(((MyZombieVillager) myPet).getTradingLevel())
+                    .withProfession(IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(profession.name().toLowerCase(Locale.ROOT)))));
         } else if (myPet instanceof MyWitherSkeleton) {
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD));
         } else if (myPet instanceof MySkeleton) {
@@ -294,6 +294,17 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertZombieVillager(ZombieVillager zombie, TagCompound properties) {
         properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal()));
+
+        TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(zombie);
+        Set<String> allowedTags = Sets.newHashSet("VillagerData");
+        Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
+        for (String key : keys) {
+            if (allowedTags.contains(key)) {
+                continue;
+            }
+            villagerTag.remove(key);
+        }
+        properties.getCompoundData().put("VillagerData", villagerTag);
     }
 
     public void convertZombie(Zombie zombie, TagCompound properties) {
@@ -358,11 +369,15 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertVillager(Villager villager, TagCompound properties) {
-        int profession = villager.getProfession().ordinal() - 1;
+        int profession = villager.getProfession().ordinal();
         properties.getCompoundData().put("Profession", new TagInt(profession));
+        int type = villager.getVillagerType().ordinal();
+        properties.getCompoundData().put("Type", new TagInt(type));
+        int level = ((CraftVillager) villager).getHandle().getVillagerData().getLevel();
+        properties.getCompoundData().put("Level", new TagInt(level));
 
         TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
-        Set<String> allowedTags = Sets.newHashSet("Riches", "Career", "CareerLevel", "Willing", "Inventory", "Offers");
+        Set<String> allowedTags = Sets.newHashSet("FoodLevel", "Gossips", "Offers", "LastRestock", "BuddyGolem", "Inventory", "Xp");
         Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
         for (String key : keys) {
             if (allowedTags.contains(key)) {
@@ -376,11 +391,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public void convertSheep(Sheep sheep, TagCompound properties) {
         properties.getCompoundData().put("Color", new TagInt(sheep.getColor().getDyeData()));
         properties.getCompoundData().put("Sheared", new TagByte(sheep.isSheared()));
-    }
-
-    public void convertOcelot(Ocelot ocelot, TagCompound properties) {
-        properties.getCompoundData().put("CatType", new TagInt(ocelot.getCatType().getId()));
-        properties.getCompoundData().put("Sitting", new TagByte(ocelot.isSitting()));
     }
 
     public void convertWolf(Wolf wolf, TagCompound properties) {

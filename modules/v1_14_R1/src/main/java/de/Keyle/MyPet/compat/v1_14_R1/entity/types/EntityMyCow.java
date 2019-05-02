@@ -77,12 +77,12 @@ public class EntityMyCow extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // age
+        getDataWatcher().register(ageWatcher, false); // age
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
     }
 
     public void playPetStepSound() {

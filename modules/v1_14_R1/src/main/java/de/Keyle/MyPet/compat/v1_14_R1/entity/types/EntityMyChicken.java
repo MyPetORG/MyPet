@@ -75,20 +75,20 @@ public class EntityMyChicken extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // age
+        getDataWatcher().register(ageWatcher, false); // age
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
     }
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
         if (Configuration.MyPet.Chicken.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
 
@@ -110,9 +110,9 @@ public class EntityMyChicken extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 }

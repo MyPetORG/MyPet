@@ -66,12 +66,12 @@ public class EntityMyTropicalFish extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
+        getDataWatcher().set(variantWatcher, getMyPet().getVariant());
     }
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fromBucketWatcher, false);
-        this.datawatcher.register(variantWatcher, 0);
+        getDataWatcher().register(fromBucketWatcher, false);
+        getDataWatcher().register(variantWatcher, 0);
     }
 }

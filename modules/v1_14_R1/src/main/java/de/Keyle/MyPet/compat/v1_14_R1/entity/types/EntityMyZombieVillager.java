@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.api.entity.types.MyZombieVillager;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_14_R1.*;
@@ -40,7 +41,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
     private static final DataWatcherObject<Boolean> unusedWatcher1 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Boolean> unusedWatcher2 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Boolean> shiverwatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<VillagerData> professionWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.q);
 
     public EntityMyZombieVillager(World world, MyPet myPet) {
         super(EntityTypes.ZOMBIE_VILLAGER, world, myPet);
@@ -88,7 +89,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                         getMyPet().setEquipment(slot, null);
                         hadEquipment = true;
@@ -96,17 +97,17 @@ public class EntityMyZombieVillager extends EntityMyPet {
                 }
                 if (hadEquipment) {
                     if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                        itemStack.damage(1, entityhuman);
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                     }
                 }
                 return true;
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
+                EquipmentSlot slot = EquipmentSlot.getSlotById(h(itemStack).c());
                 ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                 if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
                 getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
@@ -138,13 +139,16 @@ public class EntityMyZombieVillager extends EntityMyPet {
         getDataWatcher().register(unusedWatcher1, false);
         getDataWatcher().register(unusedWatcher2, false);
         getDataWatcher().register(shiverwatcher, false);
-        getDataWatcher().register(professionWatcher, 0);
+        getDataWatcher().register(professionWatcher, new VillagerData(VillagerType.c, VillagerProfession.NONE, 1));
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(babyWatcher, getMyPet().isBaby());
-        this.datawatcher.set(professionWatcher, getMyPet().getProfession());
+        getDataWatcher().set(babyWatcher, getMyPet().isBaby());
+        String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
+        VillagerProfession profession = IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(professionKey));
+        VillagerType type = IRegistry.VILLAGER_TYPE.get(new MinecraftKey(getMyPet().getType().getKey()));
+        getDataWatcher().set(professionWatcher, new VillagerData(type, profession, getMyPet().getTradingLevel()));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {
@@ -164,7 +168,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
     }
 
     public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.values()[slot.get19Slot()], itemStack));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.values()[slot.get19Slot()], itemStack));
     }
 
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {

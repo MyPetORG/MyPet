@@ -40,12 +40,12 @@ public class EntityMyTurtle extends EntityMyPet {
 
     public EntityMyTurtle(World world, MyPet myPet) {
         super(EntityTypes.TURTLE, world, myPet);
-        this.datawatcher.register(homePosWatcher, BlockPosition.ZERO);
-        this.datawatcher.register(hasEggWatcher, false);
-        this.datawatcher.register(travelPosWatcher, BlockPosition.ZERO);
-        this.datawatcher.register(unusedWatcher2, false);
-        this.datawatcher.register(unusedWatcher3, false);
-        this.datawatcher.register(unusedWatcher1, false);
+        getDataWatcher().register(homePosWatcher, BlockPosition.ZERO);
+        getDataWatcher().register(hasEggWatcher, false);
+        getDataWatcher().register(travelPosWatcher, BlockPosition.ZERO);
+        getDataWatcher().register(unusedWatcher2, false);
+        getDataWatcher().register(unusedWatcher3, false);
+        getDataWatcher().register(unusedWatcher1, false);
     }
 
     @Override
@@ -84,12 +84,12 @@ public class EntityMyTurtle extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);
+        getDataWatcher().register(ageWatcher, false);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
     }
 
     public MyTurtle getMyPet() {

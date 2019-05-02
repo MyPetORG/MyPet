@@ -31,7 +31,7 @@ import net.minecraft.server.v1_14_R1.*;
 public class EntityMyVillager extends EntityMyPet {
 
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<VillagerData> professionWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.q);
 
     public EntityMyVillager(World world, MyPet myPet) {
         super(EntityTypes.VILLAGER, world, myPet);
@@ -71,14 +71,17 @@ public class EntityMyVillager extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // age
-        this.datawatcher.register(professionWatcher, 0); // profession
+        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(professionWatcher, new VillagerData(VillagerType.c, VillagerProfession.NONE, 1));
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(professionWatcher, getMyPet().getProfession());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
+        VillagerProfession profession = IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(professionKey));
+        VillagerType type = IRegistry.VILLAGER_TYPE.get(new MinecraftKey(getMyPet().getType().getKey()));
+        getDataWatcher().set(professionWatcher, new VillagerData(type, profession, getMyPet().getVillagerLevel()));
     }
 
     public MyVillager getMyPet() {

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -112,6 +112,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
+        petTypeOptionList.add("profession:");
+        petTypeOptionMap.put("zombievillager", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("baby");
         petTypeOptionList.add("angry");
         petTypeOptionList.add("tamed");
         petTypeOptionList.add("collar:");
@@ -143,6 +148,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("horse:");
         petTypeOptionList.add("variant:");
         petTypeOptionMap.put("horse", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<>();
+        petTypeOptionList.add("baby");
+        petTypeOptionMap.put("zombiehorse", petTypeOptionList);
 
         petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");

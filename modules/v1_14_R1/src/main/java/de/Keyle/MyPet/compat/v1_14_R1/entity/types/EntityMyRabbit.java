@@ -82,21 +82,21 @@ public class EntityMyRabbit extends EntityMyPet {
     @Override
     public void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // is baby
-        this.datawatcher.register(variantWatcher, 0); // variant
+        getDataWatcher().register(ageWatcher, false); // is baby
+        getDataWatcher().register(variantWatcher, 0); // variant
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(variantWatcher, (int) getMyPet().getVariant().getId());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(variantWatcher, (int) getMyPet().getVariant().getId());
     }
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (this.onGround && getNavigation().m() != null && jumpDelay-- <= 0) {
-            getControllerJump().a();
+        if (this.onGround && getNavigation().l() != null && jumpDelay-- <= 0) {
+            getControllerJump().jump();
             jumpDelay = (this.random.nextInt(10) + 10);
             if (getTarget() != null) {
                 jumpDelay /= 3;

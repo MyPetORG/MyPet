@@ -34,7 +34,7 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyVindicator extends EntityMyPet {
 
-    protected static final DataWatcherObject<Byte> targetWatcher = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Boolean> raidWatcher = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.i);
 
     public EntityMyVindicator(World world, MyPet myPet) {
         super(EntityTypes.VINDICATOR, world, myPet);
@@ -82,7 +82,7 @@ public class EntityMyVindicator extends EntityMyPet {
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                         getMyPet().setEquipment(slot, null);
                         hadEquipment = true;
@@ -90,18 +90,18 @@ public class EntityMyVindicator extends EntityMyPet {
                 }
                 if (hadEquipment) {
                     if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                        itemStack.damage(1, entityhuman);
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                     }
                 }
                 return true;
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
+                EquipmentSlot slot = EquipmentSlot.getSlotById(h(itemStack).c());
                 if (slot == EquipmentSlot.MainHand) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                     }
                     getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
@@ -120,13 +120,11 @@ public class EntityMyVindicator extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(targetWatcher, (byte) 0);
+        getDataWatcher().register(raidWatcher, false);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(targetWatcher, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
-
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {
                 setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)));
@@ -139,7 +137,7 @@ public class EntityMyVindicator extends EntityMyPet {
     }
 
     public void setPetEquipment(ItemStack itemStack) {
-        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
     }
 
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {

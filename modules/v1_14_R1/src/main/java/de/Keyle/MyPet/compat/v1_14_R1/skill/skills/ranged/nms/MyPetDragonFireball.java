@@ -75,11 +75,13 @@ public class MyPetDragonFireball extends EntityDragonFireball implements EntityM
 
     @Override
     protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.entity != null) {
-            if (movingObjectPosition.entity instanceof EntityLiving) {
-                movingObjectPosition.entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
+        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
+            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
+            if (entity instanceof EntityLiving) {
+                entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
             }
         }
+
         die();
     }
 

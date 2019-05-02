@@ -75,9 +75,10 @@ public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyP
 
     @Override
     protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.entity != null) {
-            if (movingObjectPosition.entity instanceof EntityLiving) {
-                movingObjectPosition.entity.damageEntity(DamageSource.fireball(this, this.shooter), damage);
+        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
+            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
+            if (entity instanceof EntityLiving) {
+                entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
             }
         }
         die();

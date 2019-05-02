@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -28,7 +28,15 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 @DefaultInfo(food = {"rotten_flesh"})
 public interface MyZombieVillager extends MyPet, MyPetEquipment, MyPetBaby {
-    void setProfession(int type);
-
     int getProfession();
+
+    void setProfession(int value);
+
+    MyVillager.Type getType();
+
+    void setType(MyVillager.Type value);
+
+    int getTradingLevel();
+
+    void setTradingLevel(int level);
 }

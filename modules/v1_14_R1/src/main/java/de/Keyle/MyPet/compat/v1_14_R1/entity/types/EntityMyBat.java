@@ -62,14 +62,14 @@ public class EntityMyBat extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(hangingWatcher, (byte) 0xFFFFFFFE); // hanging
+        getDataWatcher().register(hangingWatcher, (byte) 0xFFFFFFFE); // hanging
     }
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Bat.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
     }
@@ -77,9 +77,9 @@ public class EntityMyBat extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.Bat.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 }

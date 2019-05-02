@@ -39,6 +39,8 @@ public class EntityMyVex extends EntityMyPet {
 
     protected static final DataWatcherObject<Byte> glowingWatcher = DataWatcher.a(EntityMyVex.class, DataWatcherRegistry.a);
 
+    protected boolean isAggressive = false;
+
     public EntityMyVex(World world, MyPet myPet) {
         super(EntityTypes.VEX, world, myPet);
     }
@@ -85,7 +87,7 @@ public class EntityMyVex extends EntityMyPet {
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                         getMyPet().setEquipment(slot, null);
                         hadEquipment = true;
@@ -93,18 +95,18 @@ public class EntityMyVex extends EntityMyPet {
                 }
                 if (hadEquipment) {
                     if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                        itemStack.damage(1, entityhuman);
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                     }
                 }
                 return true;
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
+                EquipmentSlot slot = EquipmentSlot.getSlotById(h(itemStack).c());
                 if (slot == EquipmentSlot.MainHand) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                     }
                     getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
@@ -128,7 +130,7 @@ public class EntityMyVex extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(glowingWatcher, (byte) (getMyPet().isGlowing() ? 1 : 0));
+        getDataWatcher().set(glowingWatcher, (byte) (getMyPet().isGlowing() || isAggressive ? 1 : 0));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {
@@ -142,7 +144,7 @@ public class EntityMyVex extends EntityMyPet {
     }
 
     public void setPetEquipment(ItemStack itemStack) {
-        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
     }
 
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
@@ -158,8 +160,8 @@ public class EntityMyVex extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Vex.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
     }
@@ -169,12 +171,14 @@ public class EntityMyVex extends EntityMyPet {
         BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
         Behavior.BehaviorMode behavior = skill.getBehavior();
         if (behavior == Behavior.BehaviorMode.Aggressive) {
-            if (!getMyPet().isGlowing()) {
-                getMyPet().setGlowing(true);
+            if (!isAggressive) {
+                isAggressive = true;
+                this.updateVisuals();
             }
         } else {
-            if (getMyPet().isGlowing()) {
-                getMyPet().setGlowing(false);
+            if (isAggressive) {
+                isAggressive = false;
+                this.updateVisuals();
             }
         }
     }
@@ -182,9 +186,9 @@ public class EntityMyVex extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.Vex.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 }

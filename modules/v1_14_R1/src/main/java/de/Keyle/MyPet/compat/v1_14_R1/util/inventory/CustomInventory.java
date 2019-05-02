@@ -32,7 +32,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
@@ -43,7 +42,6 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -226,9 +224,6 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         return true;
     }
 
-    public void startOpen(EntityHuman paramEntityHuman) {
-    }
-
     public void onOpen(CraftHumanEntity who) {
         this.transaction.add(who);
     }
@@ -266,11 +261,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 
     @Override
     public void open(Player player) {
-        EntityPlayer eh = ((CraftPlayer) player).getHandle();
-        eh.openContainer(this);
-    }
-
-    public void closeContainer(EntityHuman paramEntityHuman) {
+        player.openInventory(getBukkitInventory());
     }
 
     public List<HumanEntity> getViewers() {
@@ -307,52 +298,13 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     public void update() {
     }
 
-    public boolean b(int paramInt, ItemStack paramItemStack) {
-        return true;
-    }
-
-    @Override
-    public int getProperty(int i) {
-        return 0;
-    }
-
-    @Override
-    public void setProperty(int i, int i1) {
-
-    }
-
     @Override
     public void clear() {
     }
 
     @Override
-    public int h() {
-        return 0;
-    }
-
-    @Override
-    public boolean P_() {
+    public boolean isNotEmpty() {
         return items.size() == 0;
     }
 
-    @Override
-    public boolean hasCustomName() {
-        return this.inventroyName != null;
-    }
-
-    @Override
-    public IChatBaseComponent getScoreboardDisplayName() {
-        return new ChatComponentText(this.inventroyName);
-    }
-
-    @Nullable
-    @Override
-    public IChatBaseComponent getCustomName() {
-        return new ChatComponentText(this.inventroyName);
-    }
-
-    @Override
-    public IChatBaseComponent getDisplayName() {
-        return new ChatComponentText(this.inventroyName);
-    }
 }

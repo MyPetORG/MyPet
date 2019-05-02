@@ -67,12 +67,12 @@ public class EntityMyEnderman extends EntityMyPet {
             if (itemStack.getItem() == Items.SHEARS && getMyPet().hasBlock() && getOwner().getPlayer().isSneaking()) {
                 EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getBlock()));
                 entityitem.pickupDelay = 10;
-                entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setBlock(null);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
 
                 return true;
@@ -92,8 +92,8 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(blockWatcher, Optional.empty());
-        this.datawatcher.register(screamingWatcher, false);
+        getDataWatcher().register(blockWatcher, Optional.empty());
+        getDataWatcher().register(screamingWatcher, false);
     }
 
     @Override
@@ -105,8 +105,8 @@ public class EntityMyEnderman extends EntityMyPet {
         } else {
             block = Optional.empty();
         }
-        this.datawatcher.set(blockWatcher, block);
-        this.datawatcher.set(screamingWatcher, getMyPet().isScreaming());
+        getDataWatcher().set(blockWatcher, block);
+        getDataWatcher().set(screamingWatcher, getMyPet().isScreaming());
     }
 
     protected void doMyPetTick() {

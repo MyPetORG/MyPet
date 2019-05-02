@@ -34,8 +34,8 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyIllusioner extends EntityMyPet {
 
-    protected static final DataWatcherObject<Byte> TARGET_WATCHER = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Byte> SPELL_COOLDOWN_WATCHER = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Boolean> raidWatcher = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.i);
+    protected static final DataWatcherObject<Byte> spellWatcher = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.a);
 
     public EntityMyIllusioner(World world, MyPet myPet) {
         super(EntityTypes.ILLUSIONER, world, myPet);
@@ -83,7 +83,7 @@ public class EntityMyIllusioner extends EntityMyPet {
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                         getMyPet().setEquipment(slot, null);
                         hadEquipment = true;
@@ -91,18 +91,18 @@ public class EntityMyIllusioner extends EntityMyPet {
                 }
                 if (hadEquipment) {
                     if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                        itemStack.damage(1, entityhuman);
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                     }
                 }
                 return true;
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
+                EquipmentSlot slot = EquipmentSlot.getSlotById(h(itemStack).c());
                 if (slot == EquipmentSlot.MainHand) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                     }
                     getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
@@ -121,13 +121,13 @@ public class EntityMyIllusioner extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(TARGET_WATCHER, (byte) 0);
-        getDataWatcher().register(SPELL_COOLDOWN_WATCHER, (byte) 0);
+        getDataWatcher().register(raidWatcher, false);
+        getDataWatcher().register(spellWatcher, (byte) 0);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(TARGET_WATCHER, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
+        getDataWatcher().set(spellWatcher, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {
@@ -141,7 +141,7 @@ public class EntityMyIllusioner extends EntityMyPet {
     }
 
     public void setPetEquipment(ItemStack itemStack) {
-        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
     }
 
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {

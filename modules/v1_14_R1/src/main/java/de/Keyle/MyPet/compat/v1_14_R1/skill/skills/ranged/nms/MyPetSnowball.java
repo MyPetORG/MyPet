@@ -63,13 +63,14 @@ public class MyPetSnowball extends EntitySnowball implements EntityMyPetProjecti
 
     @Override
     protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.entity != null) {
-            if (movingObjectPosition.entity instanceof EntityLiving) {
-                movingObjectPosition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
+            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
+            if (entity instanceof EntityLiving) {
+                entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
             }
         }
         for (int i = 0; i < 8; i++) {
-            this.world.addParticle(Particles.E, this.locX, this.locY, this.locZ, 0.0D, 0.0D, 0.0D);
+            this.world.addParticle(Particles.ITEM_SNOWBALL, this.locX, this.locY, this.locZ, 0.0D, 0.0D, 0.0D);
         }
         die();
     }

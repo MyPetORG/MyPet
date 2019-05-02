@@ -33,14 +33,21 @@ import net.minecraft.server.v1_14_R1.World;
 @EntitySize(width = 4.F, height = 4.F)
 public class EntityMyEnderDragon extends EntityMyPet {
 
-    public EntityMyPetPart[] children = new EntityMyPetPart[8];
+    public EntityMyPetPart[] children;
 
     public EntityMyEnderDragon(World world, MyPet myPet) {
         super(EntityTypes.ENDER_DRAGON, world, myPet);
 
-        for (int i = 0; i < 8; i++) {
-            this.children[i] = new EntityMyPetPart(this);
-        }
+        children = new EntityMyPetPart[]{
+                new EntityMyPetPart(this, "head", 1.0F, 1.0F),
+                new EntityMyPetPart(this, "neck", 3.0F, 3.0F),
+                new EntityMyPetPart(this, "body", 5.0F, 3.0F),
+                new EntityMyPetPart(this, "tail", 2.0F, 2.0F),
+                new EntityMyPetPart(this, "tail", 2.0F, 2.0F),
+                new EntityMyPetPart(this, "tail", 2.0F, 2.0F),
+                new EntityMyPetPart(this, "wing", 4.0F, 2.0F),
+                new EntityMyPetPart(this, "wing", 4.0F, 2.0F),
+        };
     }
 
     @Override
@@ -65,8 +72,8 @@ public class EntityMyEnderDragon extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.EnderDragon.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
     }
@@ -75,9 +82,9 @@ public class EntityMyEnderDragon extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.EnderDragon.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 

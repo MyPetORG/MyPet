@@ -39,6 +39,8 @@ public class EntityMyVex extends EntityMyPet {
 
     protected static final DataWatcherObject<Byte> glowingWatcher = DataWatcher.a(EntityMyVex.class, DataWatcherRegistry.a);
 
+    protected boolean isAggressive = false;
+
     public EntityMyVex(World world, MyPet myPet) {
         super(EntityTypes.VEX, world, myPet);
     }
@@ -128,7 +130,7 @@ public class EntityMyVex extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(glowingWatcher, (byte) (getMyPet().isGlowing() ? 1 : 0));
+        getDataWatcher().set(glowingWatcher, (byte) (getMyPet().isGlowing() || isAggressive ? 1 : 0));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {
@@ -169,12 +171,14 @@ public class EntityMyVex extends EntityMyPet {
         BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
         Behavior.BehaviorMode behavior = skill.getBehavior();
         if (behavior == Behavior.BehaviorMode.Aggressive) {
-            if (!getMyPet().isGlowing()) {
-                getMyPet().setGlowing(true);
+            if (!isAggressive) {
+                isAggressive = true;
+                this.updateVisuals();
             }
         } else {
-            if (getMyPet().isGlowing()) {
-                getMyPet().setGlowing(false);
+            if (isAggressive) {
+                isAggressive = false;
+                this.updateVisuals();
             }
         }
     }

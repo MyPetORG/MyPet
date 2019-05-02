@@ -79,7 +79,7 @@ public class EntityMySkeleton extends EntityMyPet {
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                         entityitem.pickupDelay = 10;
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                         getMyPet().setEquipment(slot, null);
                         hadEquipment = true;
@@ -87,17 +87,17 @@ public class EntityMySkeleton extends EntityMyPet {
                 }
                 if (hadEquipment) {
                     if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                        itemStack.damage(1, entityhuman);
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                     }
                 }
                 return true;
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(e(itemStack).c());
+                EquipmentSlot slot = EquipmentSlot.getSlotById(h(itemStack).c());
                 ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                 if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
                 getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
@@ -139,7 +139,7 @@ public class EntityMySkeleton extends EntityMyPet {
     }
 
     public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.values()[slot.get19Slot()], itemStack));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.values()[slot.get19Slot()], itemStack));
     }
 
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {

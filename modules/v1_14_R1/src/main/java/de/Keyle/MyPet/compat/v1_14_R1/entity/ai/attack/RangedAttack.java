@@ -25,10 +25,8 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.skill.skills.ranged.nms.*;
-import de.Keyle.MyPet.compat.v1_14_R1.util.FieldCompat;
 import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftLivingEntity;
 
@@ -70,13 +68,7 @@ public class RangedAttack implements AIGoal {
             return false;
         }
         double meleeDamage = myPet.getDamage();
-        double minY;
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), target.getBoundingBox());
-        } else {
-            minY = target.getBoundingBox().minY;
-        }
-        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, minY, target.locZ) < 4) {
+        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, target.getBoundingBox().minY, target.locZ) < 4) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
             if (meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return false;
@@ -95,13 +87,7 @@ public class RangedAttack implements AIGoal {
             return true;
         }
         double meleeDamage = myPet.getDamage();
-        double minY;
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.target.getBoundingBox());
-        } else {
-            minY = this.target.getBoundingBox().minY;
-        }
-        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, minY, target.locZ) < 4) {
+        if (meleeDamage > 0 && this.entityMyPet.e(target.locX, this.target.getBoundingBox().minY, target.locZ) < 4) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
             if (meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return true;
@@ -120,13 +106,7 @@ public class RangedAttack implements AIGoal {
 
     @Override
     public void tick() {
-        double minY;
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.target.getBoundingBox());
-        } else {
-            minY = this.target.getBoundingBox().minY;
-        }
-        double distanceToTarget = this.entityMyPet.e(this.target.locX, minY, this.target.locZ);
+        double distanceToTarget = this.entityMyPet.e(this.target.locX, this.target.getBoundingBox().minY, this.target.locZ);
         boolean canSee = this.entityMyPet.getEntitySenses().a(this.target); // a -> canSee
 
         if (canSee) {
@@ -165,13 +145,7 @@ public class RangedAttack implements AIGoal {
     public void shootProjectile(EntityLiving target, float damage, Projectile projectile) {
         World world = target.world;
 
-        double minY;
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minY = (double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), this.target.getBoundingBox());
-        } else {
-            minY = this.target.getBoundingBox().minY;
-        }
-
+        double minY = this.target.getBoundingBox().minY;
         switch (projectile) {
             case Snowball: {
                 MyPetSnowball snowball = new MyPetSnowball(world, entityMyPet);

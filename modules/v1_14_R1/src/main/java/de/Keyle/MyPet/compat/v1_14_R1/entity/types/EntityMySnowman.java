@@ -54,7 +54,7 @@ public class EntityMySnowman extends EntityMyPet {
                 getMyPet().setSheared(true);
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
                 return true;
             }
@@ -64,11 +64,11 @@ public class EntityMySnowman extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        byte oldValue = this.datawatcher.get(shearedWatcher);
+        byte oldValue = getDataWatcher().get(shearedWatcher);
         if (getMyPet().isSheared()) {
-            this.datawatcher.set(shearedWatcher, (byte) (oldValue & 0xFFFFFFEF));
+            getDataWatcher().set(shearedWatcher, (byte) (oldValue & 0xFFFFFFEF));
         } else {
-            this.datawatcher.set(shearedWatcher, (byte) (oldValue | 0x10));
+            getDataWatcher().set(shearedWatcher, (byte) (oldValue | 0x10));
         }
     }
 
@@ -76,7 +76,7 @@ public class EntityMySnowman extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(shearedWatcher, (byte) 0);
+        getDataWatcher().register(shearedWatcher, (byte) 0);
     }
 
     @Override

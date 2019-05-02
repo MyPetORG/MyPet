@@ -26,8 +26,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_14_R1.util.FieldCompat;
 import de.Keyle.MyPet.compat.v1_14_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_14_R1.*;
@@ -68,10 +66,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
         ParticleParam particle = null;
 
-        if (effect.f() != null && data != null) {
+        if (effect.d() != null && data != null) {
             try {
                 //noinspection unchecked
-                particle = effect.f().b(effect, new StringReader(" " + data.get().toString()));
+                particle = effect.d().b(effect, new StringReader(" " + data.get().toString()));
             } catch (CommandSyntaxException e) {
                 e.printStackTrace();
             }
@@ -112,10 +110,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
         ParticleParam particle = null;
 
-        if (effect.f() != null && data != null) {
+        if (effect.d() != null && data != null) {
             try {
                 //noinspection unchecked
-                particle = effect.f().b(effect, new StringReader(" " + data.get().toString()));
+                particle = effect.d().b(effect, new StringReader(" " + data.get().toString()));
             } catch (CommandSyntaxException e) {
                 e.printStackTrace();
             }
@@ -145,28 +143,13 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @SuppressWarnings("unchecked")
     public List getBlockBBsInBB(net.minecraft.server.v1_14_R1.World world, AxisAlignedBB axisalignedbb) {
         UnsafeList unsafeList = new UnsafeList();
-        int minX;
-        int maxX;
-        int minY;
-        int maxY;
-        int minZ;
-        int maxZ;
 
-        if (FieldCompat.AxisAlignedBB_Fields.get()) {
-            minX = MathHelper.floor((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minX.get(), axisalignedbb));
-            maxX = (int) Math.ceil((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_maxX.get(), axisalignedbb));
-            minY = MathHelper.floor((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minY.get(), axisalignedbb));
-            maxY = (int) Math.ceil((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_maxY.get(), axisalignedbb));
-            minZ = MathHelper.floor((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_minZ.get(), axisalignedbb));
-            maxZ = (int) Math.ceil((Double) ReflectionUtil.getFieldValue(FieldCompat.AxisAlignedBB_maxZ.get(), axisalignedbb));
-        } else {
-            minX = MathHelper.floor(axisalignedbb.minX);
-            maxX = (int) Math.ceil(axisalignedbb.maxX);
-            minY = MathHelper.floor(axisalignedbb.minY);
-            maxY = (int) Math.ceil(axisalignedbb.maxY);
-            minZ = MathHelper.floor(axisalignedbb.minZ);
-            maxZ = (int) Math.ceil(axisalignedbb.maxZ);
-        }
+        int minX = MathHelper.floor(axisalignedbb.minX);
+        int maxX = (int) Math.ceil(axisalignedbb.maxX);
+        int minY = MathHelper.floor(axisalignedbb.minY);
+        int maxY = (int) Math.ceil(axisalignedbb.maxY);
+        int minZ = MathHelper.floor(axisalignedbb.minZ);
+        int maxZ = (int) Math.ceil(axisalignedbb.maxZ);
 
         VoxelShape vec3d;
         boolean isEmpty;
@@ -178,18 +161,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                         BlockPosition bp = new BlockPosition(x, y, z);
                         IBlockData blockData = world.getType(bp);
                         if (blockData != null && blockData.getMaterial().isSolid()) {
-                            if (FieldCompat.AxisAlignedBB_Fields.get()) {
-                                try {
-                                    vec3d = (VoxelShape) FieldCompat.IBlockData_getCollisionShape.get().invoke(blockData, world, bp);
-                                    isEmpty = (boolean) FieldCompat.VoxelShape_isEmpty.get().invoke(vec3d);
-                                } catch (Exception e) {
-                                    vec3d = null;
-                                    isEmpty = true;
-                                }
-                            } else {
-                                vec3d = blockData.getCollisionShape(world, bp);
-                                isEmpty = vec3d.isEmpty();
-                            }
+                            vec3d = blockData.getCollisionShape(world, bp);
+                            isEmpty = vec3d.isEmpty();
                             if (!isEmpty) {
                                 for (AxisAlignedBB bb : vec3d.d()) {
                                     if (bb.a(bp).c(axisalignedbb)) {
@@ -228,38 +201,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         net.minecraft.server.v1_14_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
 
-        // Just a temporary fix until I come up with a better solution
-        if (bukkitEntity instanceof Villager) {
+        if (vanillaNBT != null && bukkitEntity instanceof Villager) {
             EntityVillager villager = (EntityVillager) entity;
-
-            villager.setProfession(vanillaNBT.getInt("Profession"));
-            villager.riches = vanillaNBT.getInt("Riches");
-            villager.careerId = vanillaNBT.getInt("Career");
-            ReflectionUtil.setFieldValue("bQ", villager, vanillaNBT.getInt("CareerLevel"));
-            ReflectionUtil.setFieldValue("bM", villager, vanillaNBT.getBoolean("Willing"));
-            if (vanillaNBT.hasKeyOfType("Offers", 10)) {
-                NBTTagCompound nbttaglist = vanillaNBT.getCompound("Offers");
-                ReflectionUtil.setFieldValue("trades", villager, new MerchantRecipeList(nbttaglist));
-            }
-
-            NBTTagList invTag = vanillaNBT.getList("Inventory", 10);
-
-            for (int i = 0; i < invTag.size(); ++i) {
-                ItemStack itemstack = ItemStack.a(invTag.getCompound(i));
-                villager.inventory.a(itemstack);
-            }
-
-            villager.p(true);
-
-            if (villager.isBaby()) {
-                villager.goalSelector.a(8, new PathfinderGoalPlay(villager, 0.32D));
-            } else if (villager.getProfession() == 0) {
-                villager.goalSelector.a(6, new PathfinderGoalVillagerFarm(villager, 0.6D));
-            }
+            villager.a(vanillaNBT);
         }
-
-        // can not be used in 1.10
-        //entity.f(vanillaNBT);
     }
 
     @Override
@@ -301,7 +246,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
         {
             ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            int slot = EntityInsentient.e(itemstack).c();
+            int slot = EntityInsentient.h(itemstack).c();
             if (slot == 0) {
                 if (itemstack.getItem() instanceof ItemSword) {
                     return true;
@@ -391,9 +336,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public String getLastDamageSource(LivingEntity e) {
         EntityLiving el = ((CraftLivingEntity) e).getHandle();
-        if (el.cr() == null) {
+        if (el.cD() == null) {
             return null;
         }
-        return ((ChatMessage) el.cr().getLocalizedDeathMessage(el)).k();
+        return ((ChatMessage) el.cD().getLocalizedDeathMessage(el)).k();
     }
 }

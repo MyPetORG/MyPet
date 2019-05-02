@@ -66,12 +66,12 @@ public class EntityMyPufferfish extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(puffStateWatcher, getMyPet().getPuffState().ordinal());
+        getDataWatcher().set(puffStateWatcher, getMyPet().getPuffState().ordinal());
     }
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fromBucketWatcher, false);
-        this.datawatcher.register(puffStateWatcher, 0);
+        getDataWatcher().register(fromBucketWatcher, false);
+        getDataWatcher().register(puffStateWatcher, 0);
     }
 }

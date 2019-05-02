@@ -20,12 +20,16 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_14_R1.*;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 
 import java.util.Optional;
@@ -38,7 +42,6 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.a);
     protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.o);
     private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> armorWatcher = DataWatcher.a(EntityMyHorse.class, DataWatcherRegistry.b);
 
     int soundCounter = 0;
     int rearCounter = -1;
@@ -55,11 +58,11 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
      * 64 rear
      */
     protected void applyVisual(int value, boolean flag) {
-        int i = this.datawatcher.get(saddleChestWatcher);
+        int i = getDataWatcher().get(saddleChestWatcher);
         if (flag) {
-            this.datawatcher.set(saddleChestWatcher, (byte) (i | value));
+            getDataWatcher().set(saddleChestWatcher, (byte) (i | value));
         } else {
-            this.datawatcher.set(saddleChestWatcher, (byte) (i & (~value)));
+            getDataWatcher().set(saddleChestWatcher, (byte) (i & (~value)));
         }
     }
 
@@ -109,7 +112,7 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
                     }
                 }
                 return true;
-            } else if (getHorseArmor(is) > 0 && !getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (!getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setArmor(is);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -122,19 +125,19 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
                 if (getMyPet().hasArmor()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getArmor()));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
                 if (getMyPet().hasChest()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getChest()));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
                 if (getMyPet().hasSaddle()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
                     entityitem.pickupDelay = 10;
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.world.addEntity(entityitem);
                 }
 
@@ -143,7 +146,7 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
                 getMyPet().setSaddle(null);
                 getMyPet().setArmor(null);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
 
                 return true;
@@ -161,19 +164,12 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
         return false;
     }
 
-    private int getHorseArmor(org.bukkit.inventory.ItemStack itemstack) {
-        ItemStack is = CraftItemStack.asNMSCopy(itemstack);
-        EnumHorseArmor horseArmor = EnumHorseArmor.a(is);
-        return horseArmor.a();
-    }
-
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(saddleChestWatcher, (byte) 0);
-        this.datawatcher.register(ownerWatcher, Optional.empty());
-        this.datawatcher.register(variantWatcher, 0);
-        this.datawatcher.register(armorWatcher, 0);
+        getDataWatcher().register(ageWatcher, false);
+        getDataWatcher().register(saddleChestWatcher, (byte) 0);
+        getDataWatcher().register(ownerWatcher, Optional.empty());
+        getDataWatcher().register(variantWatcher, 0);
     }
 
     protected void initAttributes() {
@@ -183,10 +179,14 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(armorWatcher, getHorseArmor(getMyPet().getArmor()));
-        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
+        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(variantWatcher, getMyPet().getVariant());
         applyVisual(4, getMyPet().hasSaddle());
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                setPetEquipment(EquipmentSlot.Chestplate, CraftItemStack.asNMSCopy(getMyPet().getArmor()));
+            }
+        }, 5L);
     }
 
     public void onLivingUpdate() {
@@ -210,9 +210,9 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     @Override
     public void playStepSound(BlockPosition pos, Block block) {
         if (!block.getBlockData().getMaterial().isLiquid()) {
-            SoundEffectType soundeffecttype = block.getStepSound();
-            if (this.world.getType(pos.up()).getBlock() == Blocks.SNOW_BLOCK) {
-                soundeffecttype = Blocks.SNOW_BLOCK.getStepSound();
+            SoundEffectType soundeffecttype = block.getStepSound(block.getBlockData());
+            if (this.world.getType(pos) == Blocks.SNOW.getBlockData()) {
+                soundeffecttype = Blocks.SNOW_BLOCK.getStepSound(block.getBlockData());
             }
             if (this.isVehicle()) {
                 ++this.soundCounter;
@@ -230,13 +230,27 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
         }
     }
 
+    public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.values()[slot.get19Slot()], itemStack));
+    }
+
+    public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
+        if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
+            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.c());
+            if (slot == EquipmentSlot.Chestplate && getMyPet().getArmor() != null) {
+                return CraftItemStack.asNMSCopy(getMyPet().getArmor());
+            }
+        }
+        return super.getEquipment(vanillaSlot);
+    }
+
     public MyHorse getMyPet() {
         return (MyHorse) myPet;
     }
 
     /* Jump power methods */
     @Override
-    public boolean G_() {
+    public boolean F_() {
         return true;
     }
 
@@ -246,6 +260,6 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     }
 
     @Override
-    public void I_() {
+    public void c() {
     }
 }

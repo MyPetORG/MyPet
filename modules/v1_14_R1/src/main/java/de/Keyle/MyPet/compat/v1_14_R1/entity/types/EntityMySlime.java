@@ -56,27 +56,35 @@ public class EntityMySlime extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(sizeWatcher, 1); //size
+        getDataWatcher().register(sizeWatcher, 1); //size
     }
 
     @Override
     public void updateVisuals() {
         int size = Math.max(1, getMyPet().getSize());
-        this.datawatcher.set(sizeWatcher, size);
-        EntitySize es = EntityMySlime.class.getAnnotation(EntitySize.class);
-        if (es != null) {
-            this.setSize(es.width() * size, es.width() * size);
-        }
+        getDataWatcher().set(sizeWatcher, size);
+        this.updateSize();
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
         }
+    }
+
+    public net.minecraft.server.v1_14_R1.EntitySize a(EntityPose entitypose) {
+        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
+        if (es != null) {
+            int size = Math.max(1, getMyPet().getSize());
+            float width = es.width();
+            float height = java.lang.Float.isNaN(es.height()) ? width : es.height();
+            return new net.minecraft.server.v1_14_R1.EntitySize(width * size, height * size, false);
+        }
+        return super.a(entitypose);
     }
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
         if (this.onGround && jumpDelay-- <= 0) {
-            getControllerJump().a();
+            getControllerJump().jump();
             jumpDelay = (this.random.nextInt(20) + 50);
             makeSound("entity.slime.jump", 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }

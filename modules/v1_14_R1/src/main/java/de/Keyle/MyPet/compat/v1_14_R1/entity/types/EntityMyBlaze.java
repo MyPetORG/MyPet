@@ -74,7 +74,7 @@ public class EntityMyBlaze extends EntityMyPet {
                 getMyPet().setOnFire(true);
                 makeSound("item.flintandsteel.use", 1.0F, 1.0F);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
                 return true;
             }
@@ -89,14 +89,14 @@ public class EntityMyBlaze extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(onFireWatcher, (byte) (getMyPet().isOnFire() ? 1 : 0));
+        getDataWatcher().set(onFireWatcher, (byte) (getMyPet().isOnFire() ? 1 : 0));
     }
 
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Blaze.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
     }
@@ -108,9 +108,9 @@ public class EntityMyBlaze extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 }

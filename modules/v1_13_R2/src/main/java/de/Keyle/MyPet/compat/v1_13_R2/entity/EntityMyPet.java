@@ -792,7 +792,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.motZ *= (double) friction;
         }
 
-        this.aF = this.aG;
+        this.aI = this.aJ;
         locY = this.locX - this.lastX;
         double d1 = this.locZ - this.lastZ;
         f2 = MathHelper.sqrt(locY * locY + d1 * d1) * 4.0F;
@@ -800,8 +800,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             f2 = 1.0F;
         }
 
-        this.aG += (f2 - this.aG) * 0.4F;
-        this.aH += this.aG;
+        this.aJ += (f2 - this.aJ) * 0.4F;
+        this.aK += this.aJ;
     }
 
     public void makeSound(String sound, float volume, float pitch) {
@@ -1151,7 +1151,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.lastYaw = (this.yaw = passenger.yaw);
         this.pitch = passenger.pitch * 0.5F;
         setYawPitch(this.yaw, this.pitch);
-        this.aP = (this.aN = this.yaw);
+        this.aS = (this.aQ = this.yaw);
 
         // get motion from passenger (player)
         motionSideways = passenger.bh * 0.5F;

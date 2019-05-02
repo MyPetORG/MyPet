@@ -22,22 +22,23 @@ package de.Keyle.MyPet.compat.v1_14_R1.entity;
 
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftPart;
-import net.minecraft.server.v1_14_R1.DamageSource;
-import net.minecraft.server.v1_14_R1.Entity;
-import net.minecraft.server.v1_14_R1.EntityTypes;
-import net.minecraft.server.v1_14_R1.NBTTagCompound;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 
 public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 
     public final EntityMyPet owner;
+    private final EntitySize size;
+    private final String part;
 
-    public EntityMyPetPart(EntityMyPet owner) {
+    public EntityMyPetPart(EntityMyPet owner, String part, float width, float height) {
         super(EntityTypes.ENDER_DRAGON, owner.world);
         this.owner = owner;
+        this.part = part;
+        this.size = EntitySize.b(width, height);
     }
 
-    protected void x_() {
+    protected void initDatawatcher() {
     }
 
     protected void a(NBTTagCompound var1) {
@@ -56,6 +57,14 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 
     public boolean s(Entity var1) {
         return this == var1 || this.owner == var1;
+    }
+
+    public Packet<?> N() {
+        throw new UnsupportedOperationException();
+    }
+
+    public EntitySize a(EntityPose entitypose) {
+        return this.size;
     }
 
     public MyPetMinecraftEntity getPetOwner() {

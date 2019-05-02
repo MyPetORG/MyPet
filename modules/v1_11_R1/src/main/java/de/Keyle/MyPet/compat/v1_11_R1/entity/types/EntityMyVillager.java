@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ import net.minecraft.server.v1_11_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
+
     private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
 

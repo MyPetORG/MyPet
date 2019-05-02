@@ -35,12 +35,11 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
     @Setter @Getter protected float damage = 0;
 
     public MyPetLlamaSpit(World world, EntityMyPet entityMyPet) {
-        super(world);
+        super(EntityTypes.LLAMA_SPIT, world);
         this.shooter = entityMyPet;
-        this.setPosition(entityMyPet.locX - (double) (entityMyPet.width + 1.0F) * 0.5D * (double) MathHelper.sin(entityMyPet.aN * 0.017453292F),
+        this.setPosition(entityMyPet.locX - (double) (entityMyPet.getWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entityMyPet.aN * 0.017453292F),
                 entityMyPet.locY + (double) entityMyPet.getHeadHeight() - 0.10000000149011612D,
-                entityMyPet.locZ + (double) (entityMyPet.width + 1.0F) * 0.5D * (double) MathHelper.cos(entityMyPet.aN * 0.017453292F));
-        this.setSize(0.25F, 0.25F);
+                entityMyPet.locZ + (double) (entityMyPet.getWidth() + 1.0F) * 0.5D * (double) MathHelper.cos(entityMyPet.aN * 0.017453292F));
     }
 
     @Override
@@ -68,9 +67,12 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
         return false;
     }
 
-    public void a(MovingObjectPosition movingobjectposition) {
-        if (movingobjectposition.entity != null && this.shooter != null) {
-            movingobjectposition.entity.damageEntity(DamageSource.a(this, this.shooter).c(), getDamage());
+    public void a(MovingObjectPosition movingObjectPosition) {
+        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
+            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
+            if (entity instanceof EntityLiving) {
+                entity.damageEntity(DamageSource.a(this, getShooter()), damage);
+            }
         }
         this.die();
     }

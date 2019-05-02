@@ -46,7 +46,7 @@ public class EntityMyIronGolem extends EntityMyPet {
             this.world.broadcastEntityEffect(this, (byte) 4);
             flag = super.attack(entity);
             if (Configuration.MyPet.IronGolem.CAN_TOSS_UP && flag) {
-                entity.motY += 0.4000000059604645D;
+                entity.setMot(entity.getMot().add(0, 0.4000000059604645D, 0));
                 this.makeSound("entity.iron_golem.attack", 1.0F, 1.0F);
             }
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(watcher, (byte) 0); // N/A
+        getDataWatcher().register(watcher, (byte) 0); // N/A
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
@@ -92,13 +92,13 @@ public class EntityMyIronGolem extends EntityMyPet {
             } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
                 EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getFlower()));
                 entityitem.pickupDelay = 10;
-                entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                 this.world.addEntity(entityitem);
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setFlower(null);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman);
+                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
                 }
 
                 return true;

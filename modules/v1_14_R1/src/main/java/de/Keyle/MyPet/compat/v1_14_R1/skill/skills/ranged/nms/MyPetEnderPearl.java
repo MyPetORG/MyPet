@@ -63,13 +63,14 @@ public class MyPetEnderPearl extends EntityEnderPearl implements EntityMyPetProj
 
     @Override
     protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.entity != null) {
-            if (movingObjectPosition.entity instanceof EntityLiving) {
-                movingObjectPosition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
+            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
+            if (entity instanceof EntityLiving) {
+                entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
             }
         }
         for (int i = 0; i < 32; ++i) {
-            this.world.addParticle(Particles.K, this.locX, this.locY + this.random.nextDouble() * 2.0D, this.locZ, this.random.nextGaussian(), 0.0D, this.random.nextGaussian());
+            this.world.addParticle(Particles.PORTAL, this.locX, this.locY + this.random.nextDouble() * 2.0D, this.locZ, this.random.nextGaussian(), 0.0D, this.random.nextGaussian());
         }
         die();
     }

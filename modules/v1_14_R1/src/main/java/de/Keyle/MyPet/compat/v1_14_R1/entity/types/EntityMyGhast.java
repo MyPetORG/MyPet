@@ -57,8 +57,8 @@ public class EntityMyGhast extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Ghast.CAN_GLIDE) {
-            if (!this.onGround && this.motY < 0.0D) {
-                this.motY *= 0.6D;
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
     }
@@ -66,9 +66,9 @@ public class EntityMyGhast extends EntityMyPet {
     /**
      * -> disable falldamage
      */
-    public void c(float f, float f1) {
+    public void b(float f, float f1) {
         if (!Configuration.MyPet.Ghast.CAN_GLIDE) {
-            super.c(f, f1);
+            super.b(f, f1);
         }
     }
 }
