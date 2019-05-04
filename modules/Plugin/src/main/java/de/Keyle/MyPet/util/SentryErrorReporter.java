@@ -101,9 +101,16 @@ public class SentryErrorReporter implements ErrorReporter {
         if (!enabled) {
             return;
         }
-        if (!filter(t)) {
+        boolean myPetWasCause = filter(t);
+        Throwable throwable = t;
+        while (throwable.getCause() != null) {
+            throwable = throwable.getCause();
+            myPetWasCause = myPetWasCause || filter(throwable);
+        }
+        if (!myPetWasCause) {
             return;
         }
+
         for (String c : context) {
             this.context.recordBreadcrumb(
                     new BreadcrumbBuilder().setMessage(c).build()
