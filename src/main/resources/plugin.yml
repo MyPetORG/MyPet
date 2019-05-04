@@ -175,6 +175,7 @@ permissions:
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
       MyPet.leash.Stray: true
+      MyPet.leash.TraderLlama: true
       MyPet.leash.TropicalFish: true
       MyPet.leash.Turtle: true
       MyPet.leash.Vex: true
@@ -239,6 +240,7 @@ permissions:
       MyPet.command.trade.offer.Spider: true
       MyPet.command.trade.offer.Squid: true
       MyPet.command.trade.offer.Stray: true
+      MyPet.command.trade.offer.TraderLlama: true
       MyPet.command.trade.offer.TropicalFish: true
       MyPet.command.trade.offer.Turtle: true
       MyPet.command.trade.offer.Vex: true
@@ -303,6 +305,7 @@ permissions:
       MyPet.command.trade.receive.Spider: true
       MyPet.command.trade.receive.Squid: true
       MyPet.command.trade.receive.Stray: true
+      MyPet.command.trade.receive.TraderLlama: true
       MyPet.command.trade.receive.TropicalFish: true
       MyPet.command.trade.receive.Turtle: true
       MyPet.command.trade.receive.Vex: true

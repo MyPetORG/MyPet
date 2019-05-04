@@ -77,6 +77,7 @@ public enum MyPetClass {
     Spider(MySpider.class),
     Squid(MySquid.class),
     Stray(MyStray.class),
+    TraderLlama(MyTraderLlama.class),
     TropicalFish(MyTropicalFish.class),
     Turtle(MyTurtle.class),
     WanderingTrader(MyWanderingTrader.class),

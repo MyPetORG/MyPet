@@ -77,6 +77,7 @@ public enum MyPetType {
     Spider("SPIDER", 52, MySpider.class),
     Squid("SQUID", 94, MySquid.class),
     Stray("STRAY", 6, "1.11", MyStray.class),
+    TraderLlama("TRADER_LLAMA", 0, "1.14", MyTraderLlama.class),
     TropicalFish("TROPICAL_FISH", 0, "1.13", MyTropicalFish.class),
     Turtle("TURTLE", 0, "1.13", MyTurtle.class),
     WanderingTrader("WANDERING_TRADER", 0, "1.14", MyWanderingTrader.class),

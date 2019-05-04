@@ -220,7 +220,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case WanderingTrader:
                 icon.setMaterial(Material.WANDERING_TRADER_SPAWN_EGG);
                 break;
-            //TODO add new MOBS
+            case TraderLlama:
+                icon.setMaterial(Material.TRADER_LLAMA_SPAWN_EGG);
+                break;
         }
     }
 }

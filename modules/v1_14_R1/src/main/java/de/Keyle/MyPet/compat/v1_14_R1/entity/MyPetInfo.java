@@ -34,6 +34,9 @@ public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
         if (bukkitType == EntityType.ENDER_DRAGON) {
             return MyPetApi.getPluginHookManager().isHookActive("ProtocolLib"); //ToDo & active
         }
+        if (bukkitType == EntityType.TRADER_LLAMA) {
+            return false; //ToDo fix
+        }
 
         try {
             MyPetType type = MyPetType.byEntityTypeName(bukkitType.name());
