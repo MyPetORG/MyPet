@@ -25,10 +25,13 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 
 public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.types.MyMooshroom {
+
     protected boolean isBaby = false;
+    protected Type cowType = Type.Red;
 
     public MyMooshroom(MyPetPlayer petOwner) {
         super(petOwner);
@@ -38,6 +41,7 @@ public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.type
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("CowType", new TagInt(getType().ordinal()));
         return info;
     }
 
@@ -46,11 +50,27 @@ public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.type
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
+        if (info.getCompoundData().containsKey("CowType")) {
+            setType(Type.values()[info.getAs("CowType", TagInt.class).getIntData()]);
+        }
     }
 
     @Override
     public MyPetType getPetType() {
         return MyPetType.Mooshroom;
+    }
+
+    @Override
+    public Type getType() {
+        return cowType;
+    }
+
+    @Override
+    public void setType(Type type) {
+        this.cowType = type;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
     }
 
     public boolean isBaby() {

@@ -104,6 +104,7 @@ public class EntityMyMooshroom extends EntityMyPet {
     @Override
     public void updateVisuals() {
         getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+        getDataWatcher().set(COLOR_WATCHER, getMyPet().getType().getType());
     }
 
     public void playPetStepSound() {

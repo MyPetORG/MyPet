@@ -125,6 +125,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case CAT:
                 convertCat((Cat) entity, properties);
                 break;
+            case MUSHROOM_COW:
+                convertMushroomCow((MushroomCow) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -219,6 +222,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyCat) {
             ((Cat) normalEntity).setCatType(((MyCat) myPet).getCatType());
             ((Cat) normalEntity).setCollarColor(((MyCat) myPet).getCollarColor());
+        } else if (myPet instanceof MyMooshroom) {
+            ((MushroomCow) normalEntity).setVariant(MushroomCow.Variant.values()[((MyMooshroom) myPet).getType().ordinal()]);
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -421,5 +426,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public void convertCat(Cat cat, TagCompound properties) {
         properties.getCompoundData().put("CollarColor", new TagInt(cat.getCollarColor().ordinal()));
         properties.getCompoundData().put("CatType", new TagInt(cat.getCatType().ordinal()));
+    }
+
+    public void convertMushroomCow(MushroomCow mushroomCow, TagCompound properties) {
+        properties.getCompoundData().put("CowType", new TagInt(mushroomCow.getVariant().ordinal()));
     }
 }

@@ -202,6 +202,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case ZombieVillager:
                 icon.setMaterial(Material.ZOMBIE_VILLAGER_SPAWN_EGG);
                 break;
+            case Cat:
+                icon.setMaterial(Material.CAT_SPAWN_EGG);
+                break;
             //TODO add new MOBS
         }
     }

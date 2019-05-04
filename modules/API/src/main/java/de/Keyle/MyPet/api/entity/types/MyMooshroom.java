@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,8 +23,24 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import lombok.Getter;
 
 
 @DefaultInfo(food = {"wheat"})
 public interface MyMooshroom extends MyPet, MyPetBaby {
+
+    enum Type {
+        Red("red"),
+        Brown("brown");
+
+        @Getter private String type;
+
+        Type(String type) {
+            this.type = type;
+        }
+    }
+
+    Type getType();
+
+    void setType(Type type);
 }
