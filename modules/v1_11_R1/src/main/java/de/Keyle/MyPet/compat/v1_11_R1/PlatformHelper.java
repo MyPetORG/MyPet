@@ -30,9 +30,11 @@ import de.Keyle.MyPet.compat.v1_11_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_11_R1.*;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_11_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
@@ -46,9 +48,11 @@ import org.json.simple.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 
 @Compat("v1_11_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
+
     Field EntityPlayer_locale_FIELD = ReflectionUtil.getField(EntityPlayer.class, "locale");
 
     /**
@@ -347,6 +351,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 .getPlayerList()
                 .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
                         new PacketPlayOutNamedSoundEffect(SoundEffects.dx, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+    }
+
+    @Override
+    public Entity getEntityByUUID(UUID uuid) {
+        net.minecraft.server.v1_11_R1.Entity e = ((CraftServer) Bukkit.getServer()).getServer().a(uuid);
+        return e != null ? e.getBukkitEntity() : null;
     }
 
     public String getLastDamageSource(LivingEntity e) {
