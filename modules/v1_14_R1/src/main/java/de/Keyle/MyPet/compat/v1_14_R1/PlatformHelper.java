@@ -274,6 +274,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                     return true;
                 } else if (itemstack.getItem() instanceof ItemSign) {
                     return true;
+                } else if (itemstack.getItem() instanceof ItemCrossbow) {
+                    return true;
                 }
                 return false;
             }

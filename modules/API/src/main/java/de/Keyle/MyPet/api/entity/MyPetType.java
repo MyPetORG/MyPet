@@ -62,6 +62,7 @@ public enum MyPetType {
     Phantom("PHANTOM", 0, "1.13", MyPhantom.class),
     Pig("PIG", 90, MyPig.class),
     PigZombie("PIG_ZOMBIE", 57, MyPigZombie.class),
+    Pillager("PILLAGER", 0, "1.14", MyPillager.class),
     PolarBear("POLAR_BEAR", 102, "1.10", MyPolarBear.class),
     Pufferfish("PUFFERFISH", 0, "1.13", MyPufferfish.class),
     Rabbit("RABBIT", 101, "1.8", MyRabbit.class),

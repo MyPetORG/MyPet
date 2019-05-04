@@ -211,6 +211,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Panda:
                 icon.setMaterial(Material.PANDA_SPAWN_EGG);
                 break;
+            case Pillager:
+                icon.setMaterial(Material.PILLAGER_SPAWN_EGG);
+                break;
             //TODO add new MOBS
         }
     }

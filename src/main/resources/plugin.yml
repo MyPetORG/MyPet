@@ -160,6 +160,7 @@ permissions:
       MyPet.leash.Phantom: true
       MyPet.leash.Pig: true
       MyPet.leash.PigZombie: true
+      MyPet.leash.Pillager: true
       MyPet.leash.PolarBear: true
       MyPet.leash.Pufferfish: true
       MyPet.leash.Rabbit: true
@@ -221,6 +222,7 @@ permissions:
       MyPet.command.trade.offer.Phantom: true
       MyPet.command.trade.offer.Pig: true
       MyPet.command.trade.offer.PigZombie: true
+      MyPet.command.trade.offer.Pillager: true
       MyPet.command.trade.offer.PolarBear: true
       MyPet.command.trade.offer.Pufferfish: true
       MyPet.command.trade.offer.Rabbit: true
@@ -282,6 +284,7 @@ permissions:
       MyPet.command.trade.receive.Phantom: true
       MyPet.command.trade.receive.Pig: true
       MyPet.command.trade.receive.PigZombie: true
+      MyPet.command.trade.receive.Pillager: true
       MyPet.command.trade.receive.PolarBear: true
       MyPet.command.trade.receive.Pufferfish: true
       MyPet.command.trade.receive.Rabbit: true
