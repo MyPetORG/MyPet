@@ -57,6 +57,7 @@ public enum MyPetClass {
     Mooshroom(MyMooshroom.class),
     Mule(MyMule.class),
     Ocelot(MyOcelot.class),
+    Panda(MyPanda.class),
     Parrot(MyParrot.class),
     Phantom(MyPhantom.class),
     Pig(MyPig.class),

@@ -57,6 +57,7 @@ public enum MyPetType {
     Mooshroom("MUSHROOM_COW", 96, MyMooshroom.class, "MushroomCow"),
     Mule("MULE", 32, "1.11", MyMule.class),
     Ocelot("OCELOT", 98, MyOcelot.class, "Ozelot"),
+    Panda("PANDA", 0, "1.14", MyPanda.class),
     Parrot("PARROT", 105, "1.12", MyParrot.class),
     Phantom("PHANTOM", 0, "1.13", MyPhantom.class),
     Pig("PIG", 90, MyPig.class),

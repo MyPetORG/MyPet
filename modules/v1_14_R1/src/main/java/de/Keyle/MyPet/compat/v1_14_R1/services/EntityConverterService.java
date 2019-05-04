@@ -131,6 +131,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case FOX:
                 convertFox((Fox) entity, properties);
                 break;
+            case PANDA:
+                convertPanda((Panda) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -227,6 +230,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Cat) normalEntity).setCollarColor(((MyCat) myPet).getCollarColor());
         } else if (myPet instanceof MyMooshroom) {
             ((MushroomCow) normalEntity).setVariant(MushroomCow.Variant.values()[((MyMooshroom) myPet).getType().ordinal()]);
+        } else if (myPet instanceof MyPanda) {
+            ((Panda) normalEntity).setMainGene(((MyPanda) myPet).getMainGene());
+            ((Panda) normalEntity).setHiddenGene(((MyPanda) myPet).getHiddenGene());
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -437,5 +443,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertFox(Fox fox, TagCompound properties) {
         properties.getCompoundData().put("FoxType", new TagInt(fox.getFoxType().ordinal()));
+    }
+
+    public void convertPanda(Panda panda, TagCompound properties) {
+        properties.getCompoundData().put("MainGene", new TagInt(panda.getMainGene().ordinal()));
+        properties.getCompoundData().put("HiddenGene", new TagInt(panda.getHiddenGene().ordinal()));
     }
 }
