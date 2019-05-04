@@ -35,9 +35,9 @@ import java.util.UUID;
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
 
-    protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.h);
-    protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.m);
+    protected static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.h);
+    protected static final DataWatcherObject<Byte> SADDLE_CHEST_WATCHER = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.m);
 
     int soundCounter = 0;
     int rearCounter = -1;
@@ -55,11 +55,11 @@ public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
      * 128 mouth open
      */
     protected void applyVisual(int value, boolean flag) {
-        int i = this.datawatcher.get(saddleChestWatcher);
+        int i = this.datawatcher.get(SADDLE_CHEST_WATCHER);
         if (flag) {
-            this.datawatcher.set(saddleChestWatcher, (byte) (i | value));
+            this.datawatcher.set(SADDLE_CHEST_WATCHER, (byte) (i | value));
         } else {
-            this.datawatcher.set(saddleChestWatcher, (byte) (i & (~value)));
+            this.datawatcher.set(SADDLE_CHEST_WATCHER, (byte) (i & (~value)));
         }
     }
 
@@ -147,9 +147,9 @@ public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(saddleChestWatcher, (byte) 0);
-        this.datawatcher.register(ownerWatcher, Optional.absent());
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(SADDLE_CHEST_WATCHER, (byte) 0);
+        this.datawatcher.register(OWNER_WATCHER, Optional.absent());
     }
 
     protected void initAttributes() {
@@ -159,7 +159,7 @@ public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
         applyVisual(4, getMyPet().hasSaddle());
     }
 

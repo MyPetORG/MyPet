@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -102,12 +102,12 @@ public class EntityMyWolf extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, (byte) 0);     // age
-        this.datawatcher.a(16, (byte) 0);     // tamed/angry/sitting
-        this.datawatcher.a(17, "");           // wolf owner name
-        this.datawatcher.a(18, 30F);          // tail height
-        this.datawatcher.a(19, (byte) 0);     // N/A
-        this.datawatcher.a(20, (byte) 14);    // collar color
+        this.datawatcher.a(12, (byte) 0);  // age
+        this.datawatcher.a(16, (byte) 0);  // tamed/angry/sitting
+        this.datawatcher.a(17, "");        // wolf owner name
+        this.datawatcher.a(18, 30F);       // tail height
+        this.datawatcher.a(19, (byte) 0);  // N/A
+        this.datawatcher.a(20, (byte) 14); // collar color
     }
 
     @Override

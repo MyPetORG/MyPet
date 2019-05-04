@@ -30,9 +30,9 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyPet {
 
-    private static final DataWatcherObject<BlockPosition> treasurePosWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.l);
-    private static final DataWatcherObject<Boolean> gotFishWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> moistnessWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<BlockPosition> TREASURE_POS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.l);
+    private static final DataWatcherObject<Boolean> GOT_FISH_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> MOISTNESS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
 
     public EntityMyDolphin(World world, MyPet myPet) {
         super(EntityTypes.DOLPHIN, world, myPet);
@@ -64,8 +64,8 @@ public class EntityMyDolphin extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        getDataWatcher().register(treasurePosWatcher, BlockPosition.ZERO);
-        getDataWatcher().register(gotFishWatcher, false);
-        getDataWatcher().register(moistnessWatcher, 2400);
+        getDataWatcher().register(TREASURE_POS_WATCHER, BlockPosition.ZERO);
+        getDataWatcher().register(GOT_FISH_WATCHER, false);
+        getDataWatcher().register(MOISTNESS_WATCHER, 2400);
     }
 }

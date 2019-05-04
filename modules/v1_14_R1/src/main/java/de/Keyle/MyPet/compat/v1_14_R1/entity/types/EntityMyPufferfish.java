@@ -31,8 +31,8 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.5F, height = 0.5f)
 public class EntityMyPufferfish extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> fromBucketWatcher = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> puffStateWatcher = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> PUFF_WATCHER = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.b);
 
     public EntityMyPufferfish(World world, MyPet myPet) {
         super(EntityTypes.PUFFERFISH, world, myPet);
@@ -66,12 +66,12 @@ public class EntityMyPufferfish extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(puffStateWatcher, getMyPet().getPuffState().ordinal());
+        getDataWatcher().set(PUFF_WATCHER, getMyPet().getPuffState().ordinal());
     }
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(fromBucketWatcher, false);
-        getDataWatcher().register(puffStateWatcher, 0);
+        getDataWatcher().register(FROM_BUCKET_WATCHER, false);
+        getDataWatcher().register(PUFF_WATCHER, 0);
     }
 }

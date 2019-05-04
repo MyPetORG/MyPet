@@ -30,7 +30,7 @@ import net.minecraft.server.v1_9_R1.*;
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyChicken.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyChicken.class, DataWatcherRegistry.h);
 
     private int nextEggTimer;
 
@@ -74,12 +74,12 @@ public class EntityMyChicken extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // age
+        this.datawatcher.register(AGE_WATCHER, false);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
     }
 
     public void onLivingUpdate() {

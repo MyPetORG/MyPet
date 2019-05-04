@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,8 +31,8 @@ import net.minecraft.server.v1_13_R2.*;
 @EntitySize(width = 0.5F, height = 0.4f)
 public class EntityMyTropicalFish extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> fromBucketWatcher = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.b);
 
     public EntityMyTropicalFish(World world, MyPet myPet) {
         super(EntityTypes.TROPICAL_FISH, world, myPet);
@@ -66,12 +66,12 @@ public class EntityMyTropicalFish extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
+        this.datawatcher.set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fromBucketWatcher, false);
-        this.datawatcher.register(variantWatcher, 0);
+        this.datawatcher.register(FROM_BUCKET_WATCHER, false);
+        this.datawatcher.register(VARIANT_WATCHER, 0);
     }
 }

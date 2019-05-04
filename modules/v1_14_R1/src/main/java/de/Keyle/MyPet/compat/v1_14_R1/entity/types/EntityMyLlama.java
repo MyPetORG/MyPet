@@ -34,13 +34,13 @@ import java.util.UUID;
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyLlama extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.o);
-    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> strengthWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> colorWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Byte> SADDLE_CHEST_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.o);
+    private static final DataWatcherObject<Boolean> CHEST_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> STRENGTH_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> COLOR_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
 
     public EntityMyLlama(World world, MyPet myPet) {
         super(EntityTypes.LLAMA, world, myPet);
@@ -123,28 +123,28 @@ public class EntityMyLlama extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);               // age
-        getDataWatcher().register(saddleChestWatcher, (byte) 0);    // saddle & chest
-        getDataWatcher().register(ownerWatcher, Optional.empty()); // owner
-        getDataWatcher().register(chestWatcher, true);
-        getDataWatcher().register(strengthWatcher, 0);
-        getDataWatcher().register(colorWatcher, 0);
-        getDataWatcher().register(variantWatcher, 0);
+        getDataWatcher().register(AGE_WATCHER, false);
+        getDataWatcher().register(SADDLE_CHEST_WATCHER, (byte) 0);    // saddle & chest
+        getDataWatcher().register(OWNER_WATCHER, Optional.empty()); // owner
+        getDataWatcher().register(CHEST_WATCHER, true);
+        getDataWatcher().register(STRENGTH_WATCHER, 0);
+        getDataWatcher().register(COLOR_WATCHER, 0);
+        getDataWatcher().register(VARIANT_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(chestWatcher, getMyPet().hasChest());
-        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(CHEST_WATCHER, getMyPet().hasChest());
+        getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
         if (getMyPet().hasDecor()) {
             ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
             Block block = Block.asBlock(is.getItem());
             int color = block instanceof BlockCarpet ? ((BlockCarpet) block).d().getColorIndex() : 0;
-            getDataWatcher().set(colorWatcher, color);
+            getDataWatcher().set(COLOR_WATCHER, color);
         } else {
-            getDataWatcher().set(colorWatcher, -1);
+            getDataWatcher().set(COLOR_WATCHER, -1);
         }
-        getDataWatcher().set(variantWatcher, getMyPet().getVariant());
+        getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
     public MyLlama getMyPet() {

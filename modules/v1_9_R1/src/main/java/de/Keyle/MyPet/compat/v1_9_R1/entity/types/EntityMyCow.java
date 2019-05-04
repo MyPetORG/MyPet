@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,7 +29,8 @@ import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyCow.class, DataWatcherRegistry.h);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyCow.class, DataWatcherRegistry.h);
 
     public EntityMyCow(World world, MyPet myPet) {
         super(world, myPet);
@@ -75,12 +76,12 @@ public class EntityMyCow extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // age
+        this.datawatcher.register(AGE_WATCHER, false);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
     }
 
     public void playPetStepSound() {

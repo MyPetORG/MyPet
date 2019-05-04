@@ -31,7 +31,7 @@ import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
 
-    protected static final DataWatcherObject<Byte> watcher = DataWatcher.a(EntityMyIronGolem.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Byte> UNUSED_WATCHER = DataWatcher.a(EntityMyIronGolem.class, DataWatcherRegistry.a);
 
     int flowerCounter = 0;
     boolean flower = false;
@@ -71,7 +71,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(watcher, (byte) 0); // N/A
+        this.datawatcher.register(UNUSED_WATCHER, (byte) 0); // N/A
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

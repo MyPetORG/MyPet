@@ -35,10 +35,10 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> babyWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> unusedWatcher1 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> unusedWatcher2 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> BABY_WATCHER = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> TYPE_WATCHER = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
 
     public EntityMyZombie(World world, MyPet myPet) {
         super(EntityTypes.ZOMBIE, world, myPet);
@@ -131,15 +131,15 @@ public class EntityMyZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(babyWatcher, false);
-        getDataWatcher().register(typeWatcher, 0);
-        getDataWatcher().register(unusedWatcher1, false);
-        getDataWatcher().register(unusedWatcher2, false);
+        getDataWatcher().register(BABY_WATCHER, false);
+        getDataWatcher().register(TYPE_WATCHER, 0);
+        getDataWatcher().register(UNUSED_WATCHER_1, false);
+        getDataWatcher().register(UNUSED_WATCHER_2, false);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(babyWatcher, getMyPet().isBaby());
+        getDataWatcher().set(BABY_WATCHER, getMyPet().isBaby());
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {

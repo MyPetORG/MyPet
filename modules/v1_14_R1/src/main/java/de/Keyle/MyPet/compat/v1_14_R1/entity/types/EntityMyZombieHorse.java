@@ -35,9 +35,9 @@ import java.util.UUID;
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
 
-    protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyZombieHorse.class, DataWatcherRegistry.i);
-    protected static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyZombieHorse.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyZombieHorse.class, DataWatcherRegistry.o);
+    protected static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyZombieHorse.class, DataWatcherRegistry.i);
+    protected static final DataWatcherObject<Byte> SADDLE_CHEST_WATCHER = DataWatcher.a(EntityMyZombieHorse.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyZombieHorse.class, DataWatcherRegistry.o);
 
     int soundCounter = 0;
     int rearCounter = -1;
@@ -55,11 +55,11 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
      * 128 mouth open
      */
     protected void applyVisual(int value, boolean flag) {
-        int i = getDataWatcher().get(saddleChestWatcher);
+        int i = getDataWatcher().get(SADDLE_CHEST_WATCHER);
         if (flag) {
-            getDataWatcher().set(saddleChestWatcher, (byte) (i | value));
+            getDataWatcher().set(SADDLE_CHEST_WATCHER, (byte) (i | value));
         } else {
-            getDataWatcher().set(saddleChestWatcher, (byte) (i & (~value)));
+            getDataWatcher().set(SADDLE_CHEST_WATCHER, (byte) (i & (~value)));
         }
     }
 
@@ -147,9 +147,9 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);
-        getDataWatcher().register(saddleChestWatcher, (byte) 0);
-        getDataWatcher().register(ownerWatcher, Optional.empty());
+        getDataWatcher().register(AGE_WATCHER, false);
+        getDataWatcher().register(SADDLE_CHEST_WATCHER, (byte) 0);
+        getDataWatcher().register(OWNER_WATCHER, Optional.empty());
     }
 
     protected void initAttributes() {
@@ -159,7 +159,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
         applyVisual(4, getMyPet().hasSaddle());
     }
 

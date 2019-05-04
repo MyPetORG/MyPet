@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -33,7 +33,8 @@ import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyVindicator extends EntityMyPet {
-    protected static final DataWatcherObject<Byte> targetWatcher = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.a);
+
+    protected static final DataWatcherObject<Byte> TARGET_WATCHER = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.a);
 
     public EntityMyVindicator(World world, MyPet myPet) {
         super(world, myPet);
@@ -119,12 +120,12 @@ public class EntityMyVindicator extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(targetWatcher, (byte) 0);
+        getDataWatcher().register(TARGET_WATCHER, (byte) 0);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(targetWatcher, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
+        getDataWatcher().set(TARGET_WATCHER, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {

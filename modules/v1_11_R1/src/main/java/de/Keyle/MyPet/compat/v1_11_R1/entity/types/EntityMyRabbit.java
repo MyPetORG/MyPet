@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@ import net.minecraft.server.v1_11_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.b);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.b);
 
     int jumpDelay;
 
@@ -81,14 +82,14 @@ public class EntityMyRabbit extends EntityMyPet {
     @Override
     public void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // is baby
-        this.datawatcher.register(variantWatcher, 0); // variant
+        this.datawatcher.register(AGE_WATCHER, false); // is baby
+        this.datawatcher.register(VARIANT_WATCHER, 0); // variant
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(variantWatcher, (int) getMyPet().getVariant().getId());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
+        this.datawatcher.set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
     }
 
     public void onLivingUpdate() {

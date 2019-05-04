@@ -34,7 +34,7 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyVindicator extends EntityMyPet {
 
-    protected static final DataWatcherObject<Boolean> raidWatcher = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.i);
+    protected static final DataWatcherObject<Boolean> RAID_WATCHER = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.i);
 
     public EntityMyVindicator(World world, MyPet myPet) {
         super(EntityTypes.VINDICATOR, world, myPet);
@@ -120,7 +120,7 @@ public class EntityMyVindicator extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(raidWatcher, false);
+        getDataWatcher().register(RAID_WATCHER, false);
     }
 
     @Override

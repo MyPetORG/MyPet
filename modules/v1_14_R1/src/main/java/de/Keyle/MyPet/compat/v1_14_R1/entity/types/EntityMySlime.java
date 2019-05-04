@@ -30,7 +30,7 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMySlime extends EntityMyPet {
 
-    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntityMySlime.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> SIZE_WATCHER = DataWatcher.a(EntityMySlime.class, DataWatcherRegistry.b);
 
     int jumpDelay;
 
@@ -56,13 +56,13 @@ public class EntityMySlime extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(sizeWatcher, 1); //size
+        getDataWatcher().register(SIZE_WATCHER, 1); //size
     }
 
     @Override
     public void updateVisuals() {
         int size = Math.max(1, getMyPet().getSize());
-        getDataWatcher().set(sizeWatcher, size);
+        getDataWatcher().set(SIZE_WATCHER, size);
         this.updateSize();
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));

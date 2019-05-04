@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import net.minecraft.server.v1_13_R2.*;
 @EntitySize(width = 0.7F, height = 0.45F)
 public class EntityMyCaveSpider extends EntityMyPet {
 
-    private static final DataWatcherObject<Byte> watcher = DataWatcher.a(EntityMyCaveSpider.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Byte> UNUSED_WATCHER = DataWatcher.a(EntityMyCaveSpider.class, DataWatcherRegistry.a);
 
     public EntityMyCaveSpider(World world, MyPet myPet) {
         super(EntityTypes.CAVE_SPIDER, world, myPet);
@@ -50,7 +50,7 @@ public class EntityMyCaveSpider extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(watcher, (byte) 0); // N/A
+        this.datawatcher.register(UNUSED_WATCHER, (byte) 0); // N/A
     }
 
     public void playPetStepSound() {

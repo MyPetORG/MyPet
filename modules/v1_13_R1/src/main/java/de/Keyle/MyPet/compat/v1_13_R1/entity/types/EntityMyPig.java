@@ -34,8 +34,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPig.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> saddleWatcher = DataWatcher.a(EntityMyPig.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPig.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> SADDLE_WATCHER = DataWatcher.a(EntityMyPig.class, DataWatcherRegistry.i);
 
     public EntityMyPig(World world, MyPet myPet) {
         super(EntityTypes.PIG, world, myPet);
@@ -120,14 +120,14 @@ public class EntityMyPig extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);    // age
-        this.datawatcher.register(saddleWatcher, false); // saddle
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(SADDLE_WATCHER, false);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(saddleWatcher, getMyPet().hasSaddle());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
+        this.datawatcher.set(SADDLE_WATCHER, getMyPet().hasSaddle());
     }
 
     public void playPetStepSound() {

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,8 +31,9 @@ import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Byte> colorWatcher = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.a);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Byte> COLOR_WATCHER = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.a);
 
     public EntityMySheep(World world, MyPet myPet) {
         super(world, myPet);
@@ -98,16 +99,16 @@ public class EntityMySheep extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);      // age
-        this.datawatcher.register(colorWatcher, (byte) 0); // color/sheared
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(COLOR_WATCHER, (byte) 0); // color/sheared
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
 
         byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
-        this.datawatcher.set(colorWatcher, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
+        this.datawatcher.set(COLOR_WATCHER, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
     }
 
     public void playPetStepSound() {

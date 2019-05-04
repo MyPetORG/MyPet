@@ -36,7 +36,7 @@ import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPigZombie extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.i);
 
     public EntityMyPigZombie(World world, MyPet myPet) {
         super(EntityTypes.ZOMBIE_PIGMAN, world, myPet);
@@ -114,7 +114,7 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false); // is baby
+        getDataWatcher().register(AGE_WATCHER, false); // is baby
     }
 
     /**
@@ -127,7 +127,7 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == PetState.Here) {

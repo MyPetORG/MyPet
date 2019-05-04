@@ -36,8 +36,8 @@ import java.util.Optional;
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
 
-    private static final DataWatcherObject<Optional<IBlockData>> blockWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Boolean> screamingWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Optional<IBlockData>> BLOCK_WATCHER = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> SCREAMING_WATCHER = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.i);
 
     public EntityMyEnderman(World world, MyPet myPet) {
         super(EntityTypes.ENDERMAN, world, myPet);
@@ -92,8 +92,8 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(blockWatcher, Optional.empty());
-        getDataWatcher().register(screamingWatcher, false);
+        getDataWatcher().register(BLOCK_WATCHER, Optional.empty());
+        getDataWatcher().register(SCREAMING_WATCHER, false);
     }
 
     @Override
@@ -105,8 +105,8 @@ public class EntityMyEnderman extends EntityMyPet {
         } else {
             block = Optional.empty();
         }
-        getDataWatcher().set(blockWatcher, block);
-        getDataWatcher().set(screamingWatcher, getMyPet().isScreaming());
+        getDataWatcher().set(BLOCK_WATCHER, block);
+        getDataWatcher().set(SCREAMING_WATCHER, getMyPet().isScreaming());
     }
 
     protected void doMyPetTick() {

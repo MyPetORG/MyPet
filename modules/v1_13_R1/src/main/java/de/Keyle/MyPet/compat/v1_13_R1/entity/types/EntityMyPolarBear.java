@@ -30,8 +30,8 @@ import net.minecraft.server.v1_13_R1.*;
 @EntitySize(width = 1.3F, height = 1.4F)
 public class EntityMyPolarBear extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPolarBear.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> rearWatcher = DataWatcher.a(EntityMyPolarBear.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPolarBear.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> REAR_WATCHER = DataWatcher.a(EntityMyPolarBear.class, DataWatcherRegistry.i);
 
     int rearCounter = -1;
 
@@ -75,8 +75,8 @@ public class EntityMyPolarBear extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(rearWatcher, false);
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(REAR_WATCHER, false);
 
     }
 
@@ -85,7 +85,7 @@ public class EntityMyPolarBear extends EntityMyPet {
         try {
             flag = super.attack(entity);
             if (flag) {
-                this.datawatcher.set(rearWatcher, true);
+                this.datawatcher.set(REAR_WATCHER, true);
                 rearCounter = 10;
             }
         } catch (Exception e) {
@@ -97,14 +97,14 @@ public class EntityMyPolarBear extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (rearCounter > -1 && rearCounter-- == 0) {
-            this.datawatcher.set(rearWatcher, false);
+            this.datawatcher.set(REAR_WATCHER, false);
             rearCounter = -1;
         }
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
     }
 
     public void playPetStepSound() {

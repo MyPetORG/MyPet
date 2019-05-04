@@ -29,7 +29,7 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.5F, height = 0.45f)
 public class EntityMyBat extends EntityMyPet {
 
-    private static final DataWatcherObject<Byte> hangingWatcher = DataWatcher.a(EntityMyBat.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Byte> HANGING_WATCHER = DataWatcher.a(EntityMyBat.class, DataWatcherRegistry.a);
 
     public EntityMyBat(World world, MyPet myPet) {
         super(EntityTypes.BAT, world, myPet);
@@ -62,7 +62,7 @@ public class EntityMyBat extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(hangingWatcher, (byte) 0xFFFFFFFE); // hanging
+        getDataWatcher().register(HANGING_WATCHER, (byte) 0xFFFFFFFE); // hanging
     }
 
     public void onLivingUpdate() {

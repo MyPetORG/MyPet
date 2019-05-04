@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,9 +31,10 @@ import net.minecraft.server.v1_9_R2.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreeper extends EntityMyPet {
-    private static final DataWatcherObject<Integer> fuseWatcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> poweredWatcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
+
+    private static final DataWatcherObject<Integer> FUSE_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> POWERED_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.h);
 
     public EntityMyCreeper(World world, MyPet myPet) {
         super(world, myPet);
@@ -56,14 +57,14 @@ public class EntityMyCreeper extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fuseWatcher, -1);        // fuse
-        this.datawatcher.register(poweredWatcher, false);  // powered
-        this.datawatcher.register(watcher, false);         // N/A
+        this.datawatcher.register(FUSE_WATCHER, -1);        // fuse
+        this.datawatcher.register(POWERED_WATCHER, false);  // powered
+        this.datawatcher.register(UNUSED_WATCHER, false);         // N/A
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(poweredWatcher, getMyPet().isPowered());
+        this.datawatcher.set(POWERED_WATCHER, getMyPet().isPowered());
     }
 
     public MyCreeper getMyPet() {

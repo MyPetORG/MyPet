@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import net.minecraft.server.v1_13_R2.*;
 @EntitySize(width = 0.5F, height = 0.3f)
 public class EntityMyCod extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> fromBucketWatcher = DataWatcher.a(EntityMyCod.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMyCod.class, DataWatcherRegistry.i);
 
     public EntityMyCod(World world, MyPet myPet) {
         super(EntityTypes.COD, world, myPet);
@@ -60,6 +60,6 @@ public class EntityMyCod extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fromBucketWatcher, false);
+        this.datawatcher.register(FROM_BUCKET_WATCHER, false);
     }
 }

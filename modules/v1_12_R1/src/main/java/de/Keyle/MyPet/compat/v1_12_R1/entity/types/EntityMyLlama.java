@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -33,13 +33,14 @@ import java.util.UUID;
 
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyLlama extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Byte> saddleChestWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.m);
-    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> strengthWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> colorWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Byte> SADDLE_CHEST_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Boolean> CHEST_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> STRENGTH_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> COLOR_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
 
     public EntityMyLlama(World world, MyPet myPet) {
         super(world, myPet);
@@ -122,25 +123,25 @@ public class EntityMyLlama extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(saddleChestWatcher, (byte) 0);    // saddle & chest
-        this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        this.datawatcher.register(chestWatcher, true);
-        this.datawatcher.register(strengthWatcher, 0);
-        this.datawatcher.register(colorWatcher, 0);
-        this.datawatcher.register(variantWatcher, 0);
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(SADDLE_CHEST_WATCHER, (byte) 0);
+        this.datawatcher.register(OWNER_WATCHER, Optional.absent());
+        this.datawatcher.register(CHEST_WATCHER, true);
+        this.datawatcher.register(STRENGTH_WATCHER, 0);
+        this.datawatcher.register(COLOR_WATCHER, 0);
+        this.datawatcher.register(VARIANT_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(chestWatcher, getMyPet().hasChest());
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(CHEST_WATCHER, getMyPet().hasChest());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
         if (getMyPet().hasDecor()) {
-            this.datawatcher.set(colorWatcher, (int) getMyPet().getDecor().getData().getData());
+            this.datawatcher.set(COLOR_WATCHER, (int) getMyPet().getDecor().getData().getData());
         } else {
-            this.datawatcher.set(colorWatcher, -1);
+            this.datawatcher.set(COLOR_WATCHER, -1);
         }
-        this.datawatcher.set(variantWatcher, getMyPet().getVariant());
+        this.datawatcher.set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
     public MyLlama getMyPet() {

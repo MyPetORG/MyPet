@@ -34,8 +34,8 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyIllusioner extends EntityMyPet {
 
-    protected static final DataWatcherObject<Boolean> raidWatcher = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.i);
-    protected static final DataWatcherObject<Byte> spellWatcher = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Boolean> RAID_WATCHER = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.i);
+    protected static final DataWatcherObject<Byte> SPELL_WATCHER = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.a);
 
     public EntityMyIllusioner(World world, MyPet myPet) {
         super(EntityTypes.ILLUSIONER, world, myPet);
@@ -121,13 +121,13 @@ public class EntityMyIllusioner extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(raidWatcher, false);
-        getDataWatcher().register(spellWatcher, (byte) 0);
+        getDataWatcher().register(RAID_WATCHER, false);
+        getDataWatcher().register(SPELL_WATCHER, (byte) 0);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(spellWatcher, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
+        getDataWatcher().set(SPELL_WATCHER, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {

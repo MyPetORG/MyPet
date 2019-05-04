@@ -30,7 +30,7 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.5100001F, height = 0.5100001F)
 public class EntityMyMagmaCube extends EntityMyPet {
 
-    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntityMyMagmaCube.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> SIZE_WATCHER = DataWatcher.a(EntityMyMagmaCube.class, DataWatcherRegistry.b);
 
     int jumpDelay;
 
@@ -54,7 +54,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(sizeWatcher, 1); //size
+        getDataWatcher().register(SIZE_WATCHER, 1); //size
     }
 
     public void onLivingUpdate() {
@@ -70,7 +70,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
     @Override
     public void updateVisuals() {
         int size = Math.max(1, getMyPet().getSize());
-        getDataWatcher().set(sizeWatcher, size);
+        getDataWatcher().set(SIZE_WATCHER, size);
         this.updateSize();
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));

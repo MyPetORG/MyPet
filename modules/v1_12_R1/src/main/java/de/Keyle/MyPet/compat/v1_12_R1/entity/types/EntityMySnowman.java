@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -28,7 +28,8 @@ import net.minecraft.server.v1_12_R1.*;
 
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
-    private static final DataWatcherObject<Byte> shearedWatcher = DataWatcher.a(EntityMySnowman.class, DataWatcherRegistry.a);
+
+    private static final DataWatcherObject<Byte> SHEARED_WATCHER = DataWatcher.a(EntityMySnowman.class, DataWatcherRegistry.a);
 
     public EntityMySnowman(World world, MyPet myPet) {
         super(world, myPet);
@@ -63,11 +64,11 @@ public class EntityMySnowman extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        byte oldValue = this.datawatcher.get(shearedWatcher);
+        byte oldValue = this.datawatcher.get(SHEARED_WATCHER);
         if (getMyPet().isSheared()) {
-            this.datawatcher.set(shearedWatcher, (byte) (oldValue & 0xFFFFFFEF));
+            this.datawatcher.set(SHEARED_WATCHER, (byte) (oldValue & 0xFFFFFFEF));
         } else {
-            this.datawatcher.set(shearedWatcher, (byte) (oldValue | 0x10));
+            this.datawatcher.set(SHEARED_WATCHER, (byte) (oldValue | 0x10));
         }
     }
 
@@ -75,7 +76,7 @@ public class EntityMySnowman extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(shearedWatcher, (byte) 0);
+        this.datawatcher.register(SHEARED_WATCHER, (byte) 0);
     }
 
     @Override

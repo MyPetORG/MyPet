@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@ import net.minecraft.server.v1_9_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> PROFESSION_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
 
     public EntityMyVillager(World world, MyPet myPet) {
         super(world, myPet);
@@ -69,14 +70,14 @@ public class EntityMyVillager extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // age
-        this.datawatcher.register(professionWatcher, 0); // profession
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(PROFESSION_WATCHER, 0); // profession
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(professionWatcher, getMyPet().getProfession());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
+        this.datawatcher.set(PROFESSION_WATCHER, getMyPet().getProfession());
     }
 
     public MyVillager getMyPet() {

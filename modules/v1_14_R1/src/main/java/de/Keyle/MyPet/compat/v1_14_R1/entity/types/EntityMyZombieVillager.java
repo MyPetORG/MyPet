@@ -36,12 +36,12 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombieVillager extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> babyWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> unusedWatcher1 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> unusedWatcher2 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> shiverwatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<VillagerData> professionWatcher = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.q);
+    private static final DataWatcherObject<Boolean> BABY_WATCHER = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> TYPE_WATCHER = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> SHIVER_WATCHER = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<VillagerData> PROFESSION_WATCHER = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.q);
 
     public EntityMyZombieVillager(World world, MyPet myPet) {
         super(EntityTypes.ZOMBIE_VILLAGER, world, myPet);
@@ -134,21 +134,21 @@ public class EntityMyZombieVillager extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(babyWatcher, false);
-        getDataWatcher().register(typeWatcher, 0);
-        getDataWatcher().register(unusedWatcher1, false);
-        getDataWatcher().register(unusedWatcher2, false);
-        getDataWatcher().register(shiverwatcher, false);
-        getDataWatcher().register(professionWatcher, new VillagerData(VillagerType.c, VillagerProfession.NONE, 1));
+        getDataWatcher().register(BABY_WATCHER, false);
+        getDataWatcher().register(TYPE_WATCHER, 0);
+        getDataWatcher().register(UNUSED_WATCHER_1, false);
+        getDataWatcher().register(UNUSED_WATCHER_2, false);
+        getDataWatcher().register(SHIVER_WATCHER, false);
+        getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.c, VillagerProfession.NONE, 1));
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(babyWatcher, getMyPet().isBaby());
+        getDataWatcher().set(BABY_WATCHER, getMyPet().isBaby());
         String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
         VillagerProfession profession = IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(professionKey));
         VillagerType type = IRegistry.VILLAGER_TYPE.get(new MinecraftKey(getMyPet().getType().getKey()));
-        getDataWatcher().set(professionWatcher, new VillagerData(type, profession, getMyPet().getTradingLevel()));
+        getDataWatcher().set(PROFESSION_WATCHER, new VillagerData(type, profession, getMyPet().getTradingLevel()));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {

@@ -31,8 +31,8 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.5F, height = 0.4f)
 public class EntityMyTropicalFish extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> fromBucketWatcher = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.b);
 
     public EntityMyTropicalFish(World world, MyPet myPet) {
         super(EntityTypes.TROPICAL_FISH, world, myPet);
@@ -66,12 +66,12 @@ public class EntityMyTropicalFish extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(variantWatcher, getMyPet().getVariant());
+        getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(fromBucketWatcher, false);
-        getDataWatcher().register(variantWatcher, 0);
+        getDataWatcher().register(FROM_BUCKET_WATCHER, false);
+        getDataWatcher().register(VARIANT_WATCHER, 0);
     }
 }

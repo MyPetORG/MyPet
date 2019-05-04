@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import net.minecraft.server.v1_13_R2.*;
 @EntitySize(width = 0.5100001F, height = 0.5100001F)
 public class EntityMyMagmaCube extends EntityMyPet {
 
-    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntityMyMagmaCube.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> SIZE_WATCHER = DataWatcher.a(EntityMyMagmaCube.class, DataWatcherRegistry.b);
 
     int jumpDelay;
 
@@ -54,7 +54,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(sizeWatcher, 1); //size
+        this.datawatcher.register(SIZE_WATCHER, 1); //size
     }
 
     public void onLivingUpdate() {
@@ -70,7 +70,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
     @Override
     public void updateVisuals() {
         int size = Math.max(1, getMyPet().getSize());
-        this.datawatcher.set(sizeWatcher, size);
+        this.datawatcher.set(SIZE_WATCHER, size);
         EntitySize es = EntityMyMagmaCube.class.getAnnotation(EntitySize.class);
         if (es != null) {
             this.setSize(es.width() * size, es.width() * size);

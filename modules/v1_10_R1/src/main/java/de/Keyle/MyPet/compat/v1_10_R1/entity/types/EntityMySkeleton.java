@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,8 +34,9 @@ import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMySkeleton extends EntityMyPet {
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMySkeleton.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMySkeleton.class, DataWatcherRegistry.h);
+
+    private static final DataWatcherObject<Integer> TYPE_WATCHER = DataWatcher.a(EntityMySkeleton.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER = DataWatcher.a(EntityMySkeleton.class, DataWatcherRegistry.h);
 
     public EntityMySkeleton(World world, MyPet myPet) {
         super(world, myPet);
@@ -117,8 +118,8 @@ public class EntityMySkeleton extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(typeWatcher, 0); // skeleton type
-        this.datawatcher.register(watcher, false);
+        this.datawatcher.register(TYPE_WATCHER, 0);
+        this.datawatcher.register(UNUSED_WATCHER, false);
     }
 
     public void playPetStepSound() {
@@ -133,7 +134,7 @@ public class EntityMySkeleton extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(typeWatcher, getMyPet().getType());
+        this.datawatcher.set(TYPE_WATCHER, getMyPet().getType());
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == PetState.Here) {

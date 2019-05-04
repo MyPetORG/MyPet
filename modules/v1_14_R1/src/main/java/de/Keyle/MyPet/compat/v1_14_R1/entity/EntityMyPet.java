@@ -78,7 +78,7 @@ import java.util.List;
 
 public abstract class EntityMyPet extends EntityInsentient implements MyPetMinecraftEntity {
 
-    protected static final DataWatcherObject<Byte> potionParticleWatcher = ar;
+    protected static final DataWatcherObject<Byte> POTION_PARTICLE_WATCHER = ar;
 
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected EntityLiving target = null;
@@ -298,7 +298,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
     @Override
     public void showPotionParticles(Color color) {
-        getDataWatcher().set(potionParticleWatcher, (byte) color.asRGB());
+        getDataWatcher().set(POTION_PARTICLE_WATCHER, (byte) color.asRGB());
     }
 
     @Override
@@ -307,7 +307,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         if (!effects.isEmpty()) {
             potionEffects = PotionUtil.a(effects.values());
         }
-        getDataWatcher().set(potionParticleWatcher, (byte) potionEffects);
+        getDataWatcher().set(POTION_PARTICLE_WATCHER, (byte) potionEffects);
     }
 
     public MyPetPlayer getOwner() {

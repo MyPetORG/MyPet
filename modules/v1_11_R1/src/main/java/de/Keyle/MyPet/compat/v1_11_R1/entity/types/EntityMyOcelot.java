@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -33,21 +33,22 @@ import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.h);
-    protected static final DataWatcherObject<Byte> sitWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.m);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.b);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.h);
+    protected static final DataWatcherObject<Byte> SIT_WATCHER = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Integer> TYPE_WATCHER = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.b);
 
     public EntityMyOcelot(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     public void applySitting(boolean sitting) {
-        int i = this.datawatcher.get(sitWatcher);
+        int i = this.datawatcher.get(SIT_WATCHER);
         if (sitting) {
-            this.datawatcher.set(sitWatcher, (byte) (i | 0x1));
+            this.datawatcher.set(SIT_WATCHER, (byte) (i | 0x1));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (i & 0xFFFFFFFE));
+            this.datawatcher.set(SIT_WATCHER, (byte) (i & 0xFFFFFFFE));
         }
     }
 
@@ -111,16 +112,16 @@ public class EntityMyOcelot extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);               // age
-        this.datawatcher.register(sitWatcher, (byte) 0);            // tamed/sitting
-        this.datawatcher.register(ownerWatcher, Optional.absent()); // owner
-        this.datawatcher.register(typeWatcher, 0);                  // cat type
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(SIT_WATCHER, (byte) 0);
+        this.datawatcher.register(OWNER_WATCHER, Optional.absent());
+        this.datawatcher.register(TYPE_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(typeWatcher, getMyPet().getCatType().ordinal());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
+        this.datawatcher.set(TYPE_WATCHER, getMyPet().getCatType().ordinal());
     }
 
     public MyOcelot getMyPet() {

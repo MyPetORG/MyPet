@@ -34,7 +34,7 @@ import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyVindicator extends EntityMyPet {
 
-    protected static final DataWatcherObject<Byte> targetWatcher = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Byte> TARGET_WATCHER = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.a);
 
     public EntityMyVindicator(World world, MyPet myPet) {
         super(EntityTypes.VINDICATOR, world, myPet);
@@ -120,12 +120,12 @@ public class EntityMyVindicator extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(targetWatcher, (byte) 0);
+        getDataWatcher().register(TARGET_WATCHER, (byte) 0);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(targetWatcher, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
+        getDataWatcher().set(TARGET_WATCHER, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {

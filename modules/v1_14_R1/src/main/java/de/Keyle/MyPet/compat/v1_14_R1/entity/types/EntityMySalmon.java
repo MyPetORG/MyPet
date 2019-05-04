@@ -30,7 +30,7 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.7F, height = 0.4f)
 public class EntityMySalmon extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> fromBucketWatcher = DataWatcher.a(EntityMySalmon.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMySalmon.class, DataWatcherRegistry.i);
 
     public EntityMySalmon(World world, MyPet myPet) {
         super(EntityTypes.SALMON, world, myPet);
@@ -60,6 +60,6 @@ public class EntityMySalmon extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(fromBucketWatcher, false);
+        getDataWatcher().register(FROM_BUCKET_WATCHER, false);
     }
 }

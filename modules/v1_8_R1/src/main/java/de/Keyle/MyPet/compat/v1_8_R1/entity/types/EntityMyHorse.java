@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -207,12 +207,12 @@ public class EntityMyHorse extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, (byte) 0); // age
-        this.datawatcher.a(16, 0);     // saddle & chest
-        this.datawatcher.a(19, (byte) 0); // horse type
-        this.datawatcher.a(20, 0);     // variant
-        this.datawatcher.a(21, String.valueOf(""));     // N/A
-        this.datawatcher.a(22, 0);     // armor
+        this.datawatcher.a(12, (byte) 0);           // age
+        this.datawatcher.a(16, 0);                  // saddle & chest
+        this.datawatcher.a(19, (byte) 0);           // horse type
+        this.datawatcher.a(20, 0);                  // variant
+        this.datawatcher.a(21, String.valueOf("")); // N/A
+        this.datawatcher.a(22, 0);                  // armor
     }
 
     @Override

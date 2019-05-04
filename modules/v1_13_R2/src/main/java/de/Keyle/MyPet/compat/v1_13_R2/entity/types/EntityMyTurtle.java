@@ -30,22 +30,22 @@ import net.minecraft.server.v1_13_R2.*;
 @EntitySize(width = 1.2F, height = 0.4F)
 public class EntityMyTurtle extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<BlockPosition> homePosWatcher = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.l);
-    private static final DataWatcherObject<Boolean> hasEggWatcher = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> unusedWatcher1 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<BlockPosition> travelPosWatcher = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.l);
-    private static final DataWatcherObject<Boolean> unusedWatcher2 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> unusedWatcher3 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<BlockPosition> HOME_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.l);
+    private static final DataWatcherObject<Boolean> HAS_EGG_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<BlockPosition> TRAVEL_POS_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.l);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_3 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
 
     public EntityMyTurtle(World world, MyPet myPet) {
         super(EntityTypes.TURTLE, world, myPet);
-        this.datawatcher.register(homePosWatcher, BlockPosition.ZERO);
-        this.datawatcher.register(hasEggWatcher, false);
-        this.datawatcher.register(travelPosWatcher, BlockPosition.ZERO);
-        this.datawatcher.register(unusedWatcher2, false);
-        this.datawatcher.register(unusedWatcher3, false);
-        this.datawatcher.register(unusedWatcher1, false);
+        this.datawatcher.register(HOME_WATCHER, BlockPosition.ZERO);
+        this.datawatcher.register(HAS_EGG_WATCHER, false);
+        this.datawatcher.register(TRAVEL_POS_WATCHER, BlockPosition.ZERO);
+        this.datawatcher.register(UNUSED_WATCHER_2, false);
+        this.datawatcher.register(UNUSED_WATCHER_3, false);
+        this.datawatcher.register(UNUSED_WATCHER_1, false);
     }
 
     @Override
@@ -84,12 +84,12 @@ public class EntityMyTurtle extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);
+        this.datawatcher.register(AGE_WATCHER, false);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
     }
 
     public MyTurtle getMyPet() {

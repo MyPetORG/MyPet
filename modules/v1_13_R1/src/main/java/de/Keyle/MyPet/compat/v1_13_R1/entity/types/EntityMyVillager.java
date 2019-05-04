@@ -30,8 +30,8 @@ import net.minecraft.server.v1_13_R1.*;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> professionWatcher = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> PROFESSION_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
 
     public EntityMyVillager(World world, MyPet myPet) {
         super(EntityTypes.VILLAGER, world, myPet);
@@ -71,14 +71,14 @@ public class EntityMyVillager extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false); // age
-        this.datawatcher.register(professionWatcher, 0); // profession
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(PROFESSION_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(professionWatcher, getMyPet().getProfession());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
+        this.datawatcher.set(PROFESSION_WATCHER, getMyPet().getProfession());
     }
 
     public MyVillager getMyPet() {

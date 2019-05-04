@@ -30,10 +30,10 @@ import net.minecraft.server.v1_13_R2.*;
 @EntitySize(width = 1.9F, height = 3.5F)
 public class EntityMyWither extends EntityMyPet {
 
-    private static final DataWatcherObject<Integer> targetWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> watcher_1 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> watcher_2 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> invulnerabilityWatcher = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> TARGET_WATCHER = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> INVULNERABILITY_WATCHER = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
 
     public EntityMyWither(World world, MyPet myPet) {
         super(EntityTypes.WITHER, world, myPet);
@@ -55,10 +55,10 @@ public class EntityMyWither extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(targetWatcher, 0);          // target entityID
-        this.datawatcher.register(watcher_1, 0);              // N/A
-        this.datawatcher.register(watcher_2, 0);              // N/A
-        this.datawatcher.register(invulnerabilityWatcher, 0); // invulnerability (blue, size)
+        this.datawatcher.register(TARGET_WATCHER, 0);
+        this.datawatcher.register(UNUSED_WATCHER_1, 0);
+        this.datawatcher.register(UNUSED_WATCHER_2, 0);
+        this.datawatcher.register(INVULNERABILITY_WATCHER, 0);
     }
 
     public void onLivingUpdate() {
@@ -72,7 +72,7 @@ public class EntityMyWither extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(invulnerabilityWatcher, getMyPet().isBaby() ? 600 : 0);
+        this.datawatcher.set(INVULNERABILITY_WATCHER, getMyPet().isBaby() ? 600 : 0);
     }
 
     /**

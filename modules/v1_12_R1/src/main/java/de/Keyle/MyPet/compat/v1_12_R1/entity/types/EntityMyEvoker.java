@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,7 +31,8 @@ import net.minecraft.server.v1_12_R1.World;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyEvoker extends EntityMyPet {
-    protected static final DataWatcherObject<Byte> spellWatcher = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.a);
+
+    protected static final DataWatcherObject<Byte> SPELL_WATCHER = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.a);
 
     public EntityMyEvoker(World world, MyPet myPet) {
         super(world, myPet);
@@ -62,7 +63,7 @@ public class EntityMyEvoker extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(spellWatcher, (byte) 0);
+        getDataWatcher().register(SPELL_WATCHER, (byte) 0);
     }
 
     public MyEvoker getMyPet() {

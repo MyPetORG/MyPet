@@ -32,8 +32,8 @@ import org.bukkit.Bukkit;
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<String> colorWatcher = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.d);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<String> COLOR_WATCHER = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.d);
 
     public EntityMyMooshroom(World world, MyPet myPet) {
         super(EntityTypes.MOOSHROOM, world, myPet);
@@ -97,13 +97,13 @@ public class EntityMyMooshroom extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);
-        getDataWatcher().register(colorWatcher, "red");
+        getDataWatcher().register(AGE_WATCHER, false);
+        getDataWatcher().register(COLOR_WATCHER, "red");
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
     }
 
     public void playPetStepSound() {

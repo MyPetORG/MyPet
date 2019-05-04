@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,8 +34,9 @@ import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> TYPE_WATCHER = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Boolean> shiverWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
     private static final DataWatcherObject<Boolean> unusedWatcher = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.h);
 
@@ -137,24 +138,24 @@ public class EntityMyZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);
-        getDataWatcher().register(typeWatcher, 0);
+        getDataWatcher().register(AGE_WATCHER, false);
+        getDataWatcher().register(TYPE_WATCHER, 0);
         getDataWatcher().register(shiverWatcher, false);
         getDataWatcher().register(unusedWatcher, false);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
         switch (getMyPet().getZombieType()) {
             case NORMAL:
-                this.datawatcher.set(typeWatcher, 0);
+                this.datawatcher.set(TYPE_WATCHER, 0);
                 break;
             case HUSK:
-                this.datawatcher.set(typeWatcher, 6);
+                this.datawatcher.set(TYPE_WATCHER, 6);
                 break;
             case VILLAGER:
-                this.datawatcher.set(typeWatcher, 1 + (getMyPet().getProfession() % 5));
+                this.datawatcher.set(TYPE_WATCHER, 1 + (getMyPet().getProfession() % 5));
                 break;
         }
 

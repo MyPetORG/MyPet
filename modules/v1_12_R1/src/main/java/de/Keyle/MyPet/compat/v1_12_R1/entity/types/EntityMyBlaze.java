@@ -30,7 +30,7 @@ import net.minecraft.server.v1_12_R1.*;
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
 
-    private static final DataWatcherObject<Byte> onFireWatcher = DataWatcher.a(EntityMyBlaze.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Byte> BURNING_WATCHER = DataWatcher.a(EntityMyBlaze.class, DataWatcherRegistry.a);
 
     public EntityMyBlaze(World world, MyPet myPet) {
         super(world, myPet);
@@ -84,12 +84,12 @@ public class EntityMyBlaze extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(onFireWatcher, (byte) 0); // burning
+        getDataWatcher().register(BURNING_WATCHER, (byte) 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(onFireWatcher, (byte) (getMyPet().isOnFire() ? 1 : 0));
+        this.datawatcher.set(BURNING_WATCHER, (byte) (getMyPet().isOnFire() ? 1 : 0));
     }
 
     public void onLivingUpdate() {

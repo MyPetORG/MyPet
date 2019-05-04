@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -33,12 +33,13 @@ import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.h);
-    protected static final DataWatcherObject<Byte> sitWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.m);
-    private static final DataWatcherObject<Float> tailWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.c);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.h);
-    private static final DataWatcherObject<Integer> collarWatcher = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.b);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.h);
+    protected static final DataWatcherObject<Byte> SIT_WATCHER = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.m);
+    private static final DataWatcherObject<Float> TAIL_WATCHER = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.c);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.h);
+    private static final DataWatcherObject<Integer> COLLAR_COLOR_WATCHER = DataWatcher.a(EntityMyWolf.class, DataWatcherRegistry.b);
 
     protected boolean shaking;
     protected boolean isWet;
@@ -49,11 +50,11 @@ public class EntityMyWolf extends EntityMyPet {
     }
 
     public void applySitting(boolean sitting) {
-        int i = this.datawatcher.get(sitWatcher);
+        int i = this.datawatcher.get(SIT_WATCHER);
         if (sitting) {
-            this.datawatcher.set(sitWatcher, (byte) (i | 0x1));
+            this.datawatcher.set(SIT_WATCHER, (byte) (i | 0x1));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (i & 0xFFFFFFFE));
+            this.datawatcher.set(SIT_WATCHER, (byte) (i & 0xFFFFFFFE));
         }
     }
 
@@ -89,7 +90,7 @@ public class EntityMyWolf extends EntityMyPet {
                             }
                             return true;
                         } else {
-                            this.datawatcher.set(collarWatcher, 0);
+                            this.datawatcher.set(COLLAR_COLOR_WATCHER, 0);
                             updateVisuals();
                             return false;
                         }
@@ -111,12 +112,12 @@ public class EntityMyWolf extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(sitWatcher, (byte) 0);
-        this.datawatcher.register(ownerWatcher, Optional.absent());
-        this.datawatcher.register(tailWatcher, 30F);
-        this.datawatcher.register(watcher, false); // not used
-        this.datawatcher.register(collarWatcher, 14);
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(SIT_WATCHER, (byte) 0);
+        this.datawatcher.register(OWNER_WATCHER, Optional.absent());
+        this.datawatcher.register(TAIL_WATCHER, 30F);
+        this.datawatcher.register(UNUSED_WATCHER, false);
+        this.datawatcher.register(COLLAR_COLOR_WATCHER, 14);
     }
 
     protected void initAttributes() {
@@ -126,23 +127,23 @@ public class EntityMyWolf extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
 
-        byte b0 = this.datawatcher.get(sitWatcher);
+        byte b0 = this.datawatcher.get(SIT_WATCHER);
         if (getMyPet().isTamed()) {
-            this.datawatcher.set(sitWatcher, (byte) (b0 | 0x4));
+            this.datawatcher.set(SIT_WATCHER, (byte) (b0 | 0x4));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (b0 & 0xFFFFFFFB));
+            this.datawatcher.set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
         }
 
-        b0 = this.datawatcher.get(sitWatcher);
+        b0 = this.datawatcher.get(SIT_WATCHER);
         if (getMyPet().isAngry()) {
-            this.datawatcher.set(sitWatcher, (byte) (b0 | 0x2));
+            this.datawatcher.set(SIT_WATCHER, (byte) (b0 | 0x2));
         } else {
-            this.datawatcher.set(sitWatcher, (byte) (b0 & 0xFFFFFFFD));
+            this.datawatcher.set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFD));
         }
 
-        this.datawatcher.set(collarWatcher, (int) getMyPet().getCollarColor().getWoolData());
+        this.datawatcher.set(COLLAR_COLOR_WATCHER, (int) getMyPet().getCollarColor().getWoolData());
     }
 
     @Override
@@ -184,8 +185,8 @@ public class EntityMyWolf extends EntityMyPet {
         }
 
         float tailHeight = 30F * (getHealth() / getMaxHealth());
-        if (this.datawatcher.get(tailWatcher) != tailHeight) {
-            this.datawatcher.set(tailWatcher, tailHeight); // update tail height
+        if (this.datawatcher.get(TAIL_WATCHER) != tailHeight) {
+            this.datawatcher.set(TAIL_WATCHER, tailHeight);
         }
     }
 
@@ -198,7 +199,7 @@ public class EntityMyWolf extends EntityMyPet {
         super.setHealth(i);
 
         float tailHeight = 30F * (i / getMaxHealth());
-        this.datawatcher.set(tailWatcher, tailHeight);
+        this.datawatcher.set(TAIL_WATCHER, tailHeight);
     }
 
     public MyWolf getMyPet() {

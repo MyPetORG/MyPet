@@ -34,10 +34,10 @@ import java.util.UUID;
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyDonkey extends EntityMyPet implements IJumpable {
 
-    protected static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.i);
-    protected static final DataWatcherObject<Byte> saddleWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.o);
-    private static final DataWatcherObject<Boolean> chestWatcher = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.i);
+    protected static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.i);
+    protected static final DataWatcherObject<Byte> SADDLE_WATCHER = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.o);
+    private static final DataWatcherObject<Boolean> CHEST_WATCHER = DataWatcher.a(EntityMyDonkey.class, DataWatcherRegistry.i);
 
     int soundCounter = 0;
     int rearCounter = -1;
@@ -55,11 +55,11 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
      * 128 mouth open
      */
     protected void applyVisual(int value, boolean flag) {
-        int i = this.datawatcher.get(saddleWatcher);
+        int i = this.datawatcher.get(SADDLE_WATCHER);
         if (flag) {
-            this.datawatcher.set(saddleWatcher, (byte) (i | value));
+            this.datawatcher.set(SADDLE_WATCHER, (byte) (i | value));
         } else {
-            this.datawatcher.set(saddleWatcher, (byte) (i & (~value)));
+            this.datawatcher.set(SADDLE_WATCHER, (byte) (i & (~value)));
         }
     }
 
@@ -140,10 +140,10 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(ageWatcher, false);
-        this.datawatcher.register(saddleWatcher, (byte) 0);
-        this.datawatcher.register(ownerWatcher, Optional.empty());
-        this.datawatcher.register(chestWatcher, false);
+        this.datawatcher.register(AGE_WATCHER, false);
+        this.datawatcher.register(SADDLE_WATCHER, (byte) 0);
+        this.datawatcher.register(OWNER_WATCHER, Optional.empty());
+        this.datawatcher.register(CHEST_WATCHER, false);
     }
 
     protected void initAttributes() {
@@ -153,8 +153,8 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
-        this.datawatcher.set(chestWatcher, getMyPet().hasChest());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
+        this.datawatcher.set(CHEST_WATCHER, getMyPet().hasChest());
         applyVisual(4, getMyPet().hasSaddle());
     }
 

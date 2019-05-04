@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,8 +34,9 @@ import org.bukkit.craftbukkit.v1_11_R1.util.CraftMagicNumbers;
 
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
-    private static final DataWatcherObject<Optional<IBlockData>> blockWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.g);
-    private static final DataWatcherObject<Boolean> screamingWatcher = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.h);
+
+    private static final DataWatcherObject<Optional<IBlockData>> BLOCK_WATCHER = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.g);
+    private static final DataWatcherObject<Boolean> SCREAMING_WATCHER = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.h);
 
     public EntityMyEnderman(World world, MyPet myPet) {
         super(world, myPet);
@@ -98,16 +99,16 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(blockWatcher, Optional.absent());  // block data
-        this.datawatcher.register(screamingWatcher, false);          // face(angry)
+        this.datawatcher.register(BLOCK_WATCHER, Optional.absent());
+        this.datawatcher.register(SCREAMING_WATCHER, false);
     }
 
     @Override
     @SuppressWarnings("Guava")
     public void updateVisuals() {
         IBlockData data = CraftMagicNumbers.getBlock(getBlockID()).fromLegacyData(getBlockData());
-        this.datawatcher.set(blockWatcher, Optional.fromNullable(data));
-        this.datawatcher.set(screamingWatcher, getMyPet().isScreaming());
+        this.datawatcher.set(BLOCK_WATCHER, Optional.fromNullable(data));
+        this.datawatcher.set(SCREAMING_WATCHER, getMyPet().isScreaming());
     }
 
     protected void doMyPetTick() {

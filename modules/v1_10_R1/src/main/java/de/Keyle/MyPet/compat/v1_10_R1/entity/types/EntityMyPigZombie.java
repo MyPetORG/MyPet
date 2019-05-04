@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -35,7 +35,8 @@ import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPigZombie extends EntityMyPet {
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.h);
+
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.h);
 
     public EntityMyPigZombie(World world, MyPet myPet) {
         super(world, myPet);
@@ -111,7 +112,7 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false); // is baby
+        getDataWatcher().register(AGE_WATCHER, false);
     }
 
     /**
@@ -124,7 +125,7 @@ public class EntityMyPigZombie extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(ageWatcher, getMyPet().isBaby());
+        this.datawatcher.set(AGE_WATCHER, getMyPet().isBaby());
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == PetState.Here) {

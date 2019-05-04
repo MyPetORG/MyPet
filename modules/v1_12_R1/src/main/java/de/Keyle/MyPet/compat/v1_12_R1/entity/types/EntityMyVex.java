@@ -37,7 +37,7 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 @EntitySize(width = 0.4F, height = 0.8F)
 public class EntityMyVex extends EntityMyPet {
 
-    protected static final DataWatcherObject<Byte> glowingWatcher = DataWatcher.a(EntityMyVex.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Byte> CHARGING_WATCHER = DataWatcher.a(EntityMyVex.class, DataWatcherRegistry.a);
 
     protected boolean isAggressive = false;
 
@@ -125,12 +125,12 @@ public class EntityMyVex extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(glowingWatcher, (byte) 0);
+        getDataWatcher().register(CHARGING_WATCHER, (byte) 0);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(glowingWatcher, (byte) (getMyPet().isGlowing() || isAggressive ? 1 : 0));
+        getDataWatcher().set(CHARGING_WATCHER, (byte) (getMyPet().isGlowing() || isAggressive ? 1 : 0));
 
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {

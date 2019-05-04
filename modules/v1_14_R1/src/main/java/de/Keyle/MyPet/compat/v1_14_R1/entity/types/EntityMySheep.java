@@ -35,8 +35,8 @@ import java.util.Map;
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Byte> colorWatcher = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.a);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Byte> COLOR_WATCHER = DataWatcher.a(EntityMySheep.class, DataWatcherRegistry.a);
 
     private static Map<EnumColor, Block> colorMap = new HashMap<>();
 
@@ -123,16 +123,16 @@ public class EntityMySheep extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);      // age
-        getDataWatcher().register(colorWatcher, (byte) 0); // color/sheared
+        getDataWatcher().register(AGE_WATCHER, false);
+        getDataWatcher().register(COLOR_WATCHER, (byte) 0); // color/sheared
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
+        getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 
         byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
-        getDataWatcher().set(colorWatcher, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
+        getDataWatcher().set(COLOR_WATCHER, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
     }
 
     public void playPetStepSound() {

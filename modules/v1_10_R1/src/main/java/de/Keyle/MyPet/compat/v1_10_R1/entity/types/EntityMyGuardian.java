@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,7 +31,8 @@ import net.minecraft.server.v1_10_R1.World;
 
 @EntitySize(width = 0.7F, height = 0.85F)
 public class EntityMyGuardian extends EntityMyPet {
-    private static final DataWatcherObject<Byte> elderWatcher = DataWatcher.a(EntityMyGuardian.class, DataWatcherRegistry.a);
+
+    private static final DataWatcherObject<Byte> ELDER_WATCHER = DataWatcher.a(EntityMyGuardian.class, DataWatcherRegistry.a);
 
     public EntityMyGuardian(World world, MyPet myPet) {
         super(world, myPet);
@@ -63,16 +64,16 @@ public class EntityMyGuardian extends EntityMyPet {
     @Override
     public void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(elderWatcher, (byte) 0); // elder
+        this.datawatcher.register(ELDER_WATCHER, (byte) 0);
     }
 
     @Override
     public void updateVisuals() {
-        byte old = this.datawatcher.get(elderWatcher);
+        byte old = this.datawatcher.get(ELDER_WATCHER);
         if (getMyPet().isElder()) {
-            this.datawatcher.set(elderWatcher, (byte) (old | 4));
+            this.datawatcher.set(ELDER_WATCHER, (byte) (old | 4));
         } else {
-            this.datawatcher.set(elderWatcher, (byte) (old & ~4));
+            this.datawatcher.set(ELDER_WATCHER, (byte) (old & ~4));
         }
     }
 

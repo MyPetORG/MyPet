@@ -72,7 +72,7 @@ import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
 
-    protected static final DataWatcherObject<Byte> potionParticleWatcher = au;
+    protected static final DataWatcherObject<Byte> POTION_PARTICLE_WATCHER = au;
 
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected EntityLiving target = null;
@@ -310,7 +310,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     @Override
     public void showPotionParticles(Color color) {
-        getDataWatcher().set(potionParticleWatcher, (byte) color.asRGB());
+        getDataWatcher().set(POTION_PARTICLE_WATCHER, (byte) color.asRGB());
     }
 
     @Override
@@ -319,7 +319,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         if (!effects.isEmpty()) {
             potionEffects = PotionUtil.a(effects.values());
         }
-        getDataWatcher().set(potionParticleWatcher, (byte) potionEffects);
+        getDataWatcher().set(POTION_PARTICLE_WATCHER, (byte) potionEffects);
     }
 
     public MyPetPlayer getOwner() {
@@ -1025,9 +1025,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 }
 
                 if (!hasRider()) {
-                    petTargetSelector.tick(); // target selector
-                    petPathfinderSelector.tick(); // pathfinder selector
-                    petNavigation.tick(); // navigation
+                    petTargetSelector.tick();
+                    petPathfinderSelector.tick();
+                    petNavigation.tick();
                 }
 
                 Ride rideSkill = myPet.getSkills().get(RideImpl.class);

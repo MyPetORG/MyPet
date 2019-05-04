@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,8 +31,8 @@ import net.minecraft.server.v1_13_R1.*;
 @EntitySize(width = 0.5F, height = 0.5f)
 public class EntityMyPufferfish extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> fromBucketWatcher = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> puffStateWatcher = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> PUFF_WATCHER = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.b);
 
     public EntityMyPufferfish(World world, MyPet myPet) {
         super(EntityTypes.PUFFERFISH, world, myPet);
@@ -66,12 +66,12 @@ public class EntityMyPufferfish extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.datawatcher.set(puffStateWatcher, getMyPet().getPuffState().ordinal());
+        this.datawatcher.set(PUFF_WATCHER, getMyPet().getPuffState().ordinal());
     }
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.register(fromBucketWatcher, false);
-        this.datawatcher.register(puffStateWatcher, 0);
+        this.datawatcher.register(FROM_BUCKET_WATCHER, false);
+        this.datawatcher.register(PUFF_WATCHER, 0);
     }
 }

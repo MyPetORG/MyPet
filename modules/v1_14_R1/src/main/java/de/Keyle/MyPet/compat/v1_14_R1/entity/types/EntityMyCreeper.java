@@ -29,9 +29,9 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreeper extends EntityMyPet {
 
-    private static final DataWatcherObject<Integer> fuseWatcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> poweredWatcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> watcher = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> FUSE_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> POWERED_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> UNUSED_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.i);
 
     public EntityMyCreeper(World world, MyPet myPet) {
         super(EntityTypes.CREEPER, world, myPet);
@@ -54,14 +54,14 @@ public class EntityMyCreeper extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(fuseWatcher, -1);
-        getDataWatcher().register(poweredWatcher, false);
-        getDataWatcher().register(watcher, false);
+        getDataWatcher().register(FUSE_WATCHER, -1);
+        getDataWatcher().register(POWERED_WATCHER, false);
+        getDataWatcher().register(UNUSED_WATCHER, false);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(poweredWatcher, getMyPet().isPowered());
+        getDataWatcher().set(POWERED_WATCHER, getMyPet().isPowered());
     }
 
     public MyCreeper getMyPet() {

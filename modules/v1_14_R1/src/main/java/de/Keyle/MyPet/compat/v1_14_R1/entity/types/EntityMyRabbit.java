@@ -30,8 +30,8 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> variantWatcher = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.b);
 
     int jumpDelay;
 
@@ -82,14 +82,14 @@ public class EntityMyRabbit extends EntityMyPet {
     @Override
     public void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false); // is baby
-        getDataWatcher().register(variantWatcher, 0); // variant
+        getDataWatcher().register(AGE_WATCHER, false); // is baby
+        getDataWatcher().register(VARIANT_WATCHER, 0); // variant
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
-        getDataWatcher().set(variantWatcher, (int) getMyPet().getVariant().getId());
+        getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+        getDataWatcher().set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
     }
 
     public void onLivingUpdate() {

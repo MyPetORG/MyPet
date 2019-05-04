@@ -31,7 +31,7 @@ import net.minecraft.server.v1_13_R2.*;
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMyPhantom extends EntityMyPet {
 
-    private static final DataWatcherObject<Integer> sizeWatcher = DataWatcher.a(EntityMyPhantom.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> SIZE_WATCHER = DataWatcher.a(EntityMyPhantom.class, DataWatcherRegistry.b);
 
     public EntityMyPhantom(World world, MyPet myPet) {
         super(EntityTypes.PHANTOM, world, myPet);
@@ -55,13 +55,13 @@ public class EntityMyPhantom extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(sizeWatcher, 0);
+        this.datawatcher.register(SIZE_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
         int size = Math.max(1, getMyPet().getSize());
-        this.datawatcher.set(sizeWatcher, size);
+        this.datawatcher.set(SIZE_WATCHER, size);
         EntitySize es = EntityMyPhantom.class.getAnnotation(EntitySize.class);
         if (es != null) {
             this.setSize(es.width() * size, es.width() * size);

@@ -29,8 +29,8 @@ import net.minecraft.server.v1_14_R1.*;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyEvoker extends EntityMyPet {
 
-    protected static final DataWatcherObject<Boolean> raidWatcher = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.i);
-    protected static final DataWatcherObject<Byte> spellWatcher = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Boolean> RAID_WATCHER = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.i);
+    protected static final DataWatcherObject<Byte> SPELL_WATCHER = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.a);
 
     public EntityMyEvoker(World world, MyPet myPet) {
         super(EntityTypes.EVOKER, world, myPet);
@@ -61,8 +61,8 @@ public class EntityMyEvoker extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(raidWatcher, false);
-        getDataWatcher().register(spellWatcher, (byte) 0);
+        getDataWatcher().register(RAID_WATCHER, false);
+        getDataWatcher().register(SPELL_WATCHER, (byte) 0);
     }
 
     public MyEvoker getMyPet() {

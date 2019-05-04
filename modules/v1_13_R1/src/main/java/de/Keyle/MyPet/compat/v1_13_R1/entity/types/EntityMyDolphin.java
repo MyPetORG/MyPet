@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,9 +30,9 @@ import net.minecraft.server.v1_13_R1.*;
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyPet {
 
-    private static final DataWatcherObject<BlockPosition> treasurePosWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.l);
-    private static final DataWatcherObject<Boolean> gotFishWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> moistnessWatcher = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<BlockPosition> TREASURE_POS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.l);
+    private static final DataWatcherObject<Boolean> GOT_FISH_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> MOISTNESS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
 
     public EntityMyDolphin(World world, MyPet myPet) {
         super(EntityTypes.DOLPHIN, world, myPet);
@@ -64,8 +64,8 @@ public class EntityMyDolphin extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        this.datawatcher.register(treasurePosWatcher, BlockPosition.ZERO);
-        this.datawatcher.register(gotFishWatcher, false);
-        this.datawatcher.register(moistnessWatcher, 2400);
+        this.datawatcher.register(TREASURE_POS_WATCHER, BlockPosition.ZERO);
+        this.datawatcher.register(GOT_FISH_WATCHER, false);
+        this.datawatcher.register(MOISTNESS_WATCHER, 2400);
     }
 }
