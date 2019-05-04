@@ -180,6 +180,7 @@ permissions:
       MyPet.leash.Vex: true
       MyPet.leash.Villager: true
       MyPet.leash.Vindicator: true
+      MyPet.leash.WanderingTrader: true
       MyPet.leash.Witch: true
       MyPet.leash.Wither: true
       MyPet.leash.WitherSkeleton: true
@@ -243,6 +244,7 @@ permissions:
       MyPet.command.trade.offer.Vex: true
       MyPet.command.trade.offer.Villager: true
       MyPet.command.trade.offer.Vindicator: true
+      MyPet.command.trade.offer.WanderingTrader: true
       MyPet.command.trade.offer.Witch: true
       MyPet.command.trade.offer.Wither: true
       MyPet.command.trade.offer.WitherSkeleton: true
@@ -306,6 +308,7 @@ permissions:
       MyPet.command.trade.receive.Vex: true
       MyPet.command.trade.receive.Villager: true
       MyPet.command.trade.receive.Vindicator: true
+      MyPet.command.trade.receive.WanderingTrader: true
       MyPet.command.trade.receive.Witch: true
       MyPet.command.trade.receive.Wither: true
       MyPet.command.trade.receive.WitherSkeleton: true

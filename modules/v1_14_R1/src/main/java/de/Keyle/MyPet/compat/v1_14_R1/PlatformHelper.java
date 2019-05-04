@@ -200,10 +200,14 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void applyTagToEntity(TagCompound tag, Entity bukkitEntity) {
         net.minecraft.server.v1_14_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
-
-        if (vanillaNBT != null && bukkitEntity instanceof Villager) {
-            EntityVillager villager = (EntityVillager) entity;
-            villager.a(vanillaNBT);
+        if (vanillaNBT != null) {
+            if (bukkitEntity instanceof Villager) {
+                EntityVillager villager = (EntityVillager) entity;
+                villager.a(vanillaNBT);
+            } else if (bukkitEntity instanceof WanderingTrader) {
+                EntityVillagerTrader villager = (EntityVillagerTrader) entity;
+                villager.a(vanillaNBT);
+            }
         }
     }
 

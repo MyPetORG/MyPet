@@ -79,6 +79,7 @@ public enum MyPetClass {
     Stray(MyStray.class),
     TropicalFish(MyTropicalFish.class),
     Turtle(MyTurtle.class),
+    WanderingTrader(MyWanderingTrader.class),
     Witch(MyWitch.class),
     Wither(MyWither.class),
     WitherSkeleton(MyWitherSkeleton.class),

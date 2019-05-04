@@ -134,6 +134,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case PANDA:
                 convertPanda((Panda) entity, properties);
                 break;
+            case WANDERING_TRADER:
+                convertWanderingTrader((WanderingTrader) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -233,6 +236,15 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyPanda) {
             ((Panda) normalEntity).setMainGene(((MyPanda) myPet).getMainGene());
             ((Panda) normalEntity).setHiddenGene(((MyPanda) myPet).getHiddenGene());
+        } else if (myPet instanceof WanderingTrader) {
+            MyWanderingTrader traderPet = (MyWanderingTrader) myPet;
+            if (traderPet.hasOriginalData()) {
+                TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
+                for (String key : traderPet.getOriginalData().getCompoundData().keySet()) {
+                    villagerTag.put(key, traderPet.getOriginalData().get(key));
+                }
+                MyPetApi.getPlatformHelper().applyTagToEntity(villagerTag, normalEntity);
+            }
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -406,6 +418,19 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             villagerTag.remove(key);
         }
         properties.getCompoundData().put("OriginalData", villagerTag);
+    }
+
+    public void convertWanderingTrader(WanderingTrader wanderingTrader, TagCompound properties) {
+        TagCompound traderTag = MyPetApi.getPlatformHelper().entityToTag(wanderingTrader);
+        Set<String> allowedTags = Sets.newHashSet("DespawnDelay", "WanderTarget", "Offers", "Inventory");
+        Set<String> keys = new HashSet<>(traderTag.getCompoundData().keySet());
+        for (String key : keys) {
+            if (allowedTags.contains(key)) {
+                continue;
+            }
+            traderTag.remove(key);
+        }
+        properties.getCompoundData().put("OriginalData", traderTag);
     }
 
     public void convertSheep(Sheep sheep, TagCompound properties) {
