@@ -128,6 +128,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case MUSHROOM_COW:
                 convertMushroomCow((MushroomCow) entity, properties);
                 break;
+            case FOX:
+                convertFox((Fox) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -430,5 +433,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertMushroomCow(MushroomCow mushroomCow, TagCompound properties) {
         properties.getCompoundData().put("CowType", new TagInt(mushroomCow.getVariant().ordinal()));
+    }
+
+    public void convertFox(Fox fox, TagCompound properties) {
+        properties.getCompoundData().put("FoxType", new TagInt(fox.getFoxType().ordinal()));
     }
 }

@@ -44,6 +44,7 @@ public enum MyPetType {
     Enderman("ENDERMAN", 58, MyEnderman.class),
     Endermite("ENDERMITE", 67, "1.8", MyEndermite.class),
     Evoker("EVOKER", 34, "1.11", MyEvoker.class, "EvocationIllager"),
+    Fox("FOX", 0, "1.14", MyFox.class),
     Ghast("GHAST", 56, MyGhast.class),
     Giant("GIANT", 53, MyGiant.class),
     Guardian("GUARDIAN", 68, "1.8", MyGuardian.class),

@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMyCat;
+import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMyFox;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMyWolf;
 
 @Compat("v1_14_R1")
@@ -38,7 +39,7 @@ public class Sit implements AIGoal {
 
     @Override
     public boolean shouldStart() {
-        if (!(this.entityMyPet instanceof EntityMyWolf) && !(this.entityMyPet instanceof EntityMyCat)) {
+        if (!(this.entityMyPet instanceof EntityMyWolf) && !(this.entityMyPet instanceof EntityMyCat) && !(this.entityMyPet instanceof EntityMyFox)) {
             return false;
         } else if (this.entityMyPet.isInWater()) {
             return false;
@@ -55,6 +56,8 @@ public class Sit implements AIGoal {
             ((EntityMyWolf) this.entityMyPet).applySitting(true);
         } else if (this.entityMyPet instanceof EntityMyCat) {
             ((EntityMyCat) this.entityMyPet).applySitting(true);
+        } else if (this.entityMyPet instanceof EntityMyFox) {
+            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, true);
         }
         entityMyPet.setGoalTarget(null);
     }
@@ -65,6 +68,8 @@ public class Sit implements AIGoal {
             ((EntityMyWolf) this.entityMyPet).applySitting(false);
         } else if (this.entityMyPet instanceof EntityMyCat) {
             ((EntityMyCat) this.entityMyPet).applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyFox) {
+            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, false);
         }
     }
 

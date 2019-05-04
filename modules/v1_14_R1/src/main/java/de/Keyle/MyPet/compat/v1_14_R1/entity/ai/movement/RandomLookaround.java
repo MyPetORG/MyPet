@@ -27,10 +27,10 @@ import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 @Compat("v1_14_R1")
 public class RandomLookaround implements AIGoal {
 
-    private EntityMyPet petEntity;
-    private double directionX;
-    private double directionZ;
-    private int ticksUntilStopLookingAround = 0;
+    protected EntityMyPet petEntity;
+    protected double directionX;
+    protected double directionZ;
+    protected int ticksUntilStopLookingAround = 0;
 
     public RandomLookaround(EntityMyPet petEntity) {
         this.petEntity = petEntity;

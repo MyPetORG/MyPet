@@ -142,6 +142,7 @@ permissions:
       MyPet.leash.Enderman: true
       MyPet.leash.Endermite: true
       MyPet.leash.Evoker: true
+      MyPet.leash.Fox: true
       MyPet.leash.Giant: true
       MyPet.leash.Ghast: true
       MyPet.leash.Guardian: true
@@ -202,6 +203,7 @@ permissions:
       MyPet.command.trade.offer.Enderman: true
       MyPet.command.trade.offer.Endermite: true
       MyPet.command.trade.offer.Evoker: true
+      MyPet.command.trade.offer.Fox: true
       MyPet.command.trade.offer.Giant: true
       MyPet.command.trade.offer.Ghast: true
       MyPet.command.trade.offer.Guardian: true
@@ -261,6 +263,7 @@ permissions:
       MyPet.command.trade.receive.Enderman: true
       MyPet.command.trade.receive.Endermite: true
       MyPet.command.trade.receive.Evoker: true
+      MyPet.command.trade.receive.Fox: true
       MyPet.command.trade.receive.Giant: true
       MyPet.command.trade.receive.Ghast: true
       MyPet.command.trade.receive.Guardian: true
