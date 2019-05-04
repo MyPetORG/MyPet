@@ -66,6 +66,7 @@ public enum MyPetType {
     PolarBear("POLAR_BEAR", 102, "1.10", MyPolarBear.class),
     Pufferfish("PUFFERFISH", 0, "1.13", MyPufferfish.class),
     Rabbit("RABBIT", 101, "1.8", MyRabbit.class),
+    Ravager("RAVAGER", 0, "1.14", MyRavager.class),
     Salmon("SALMON", 0, "1.13", MySalmon.class),
     Sheep("SHEEP", 91, MySheep.class),
     Silverfish("SILVERFISH", 60, MySilverfish.class),
