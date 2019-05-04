@@ -122,6 +122,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case PHANTOM:
                 convertPhantom((Phantom) entity, properties);
                 break;
+            case CAT:
+                convertCat((Cat) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -213,6 +216,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((PufferFish) normalEntity).setPuffState(((MyPufferfish) myPet).getPuffState().ordinal());
         } else if (myPet instanceof MyPhantom) {
             ((Phantom) normalEntity).setSize(((MyPhantom) myPet).getSize());
+        } else if (myPet instanceof MyCat) {
+            ((Cat) normalEntity).setCatType(((MyCat) myPet).getCatType());
+            ((Cat) normalEntity).setCollarColor(((MyCat) myPet).getCollarColor());
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -410,5 +416,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertPhantom(Phantom phantom, TagCompound properties) {
         properties.getCompoundData().put("Size", new TagInt(phantom.getSize()));
+    }
+
+    public void convertCat(Cat cat, TagCompound properties) {
+        properties.getCompoundData().put("CollarColor", new TagInt(cat.getCollarColor().ordinal()));
+        properties.getCompoundData().put("CatType", new TagInt(cat.getCatType().ordinal()));
     }
 }

@@ -128,6 +128,7 @@ permissions:
     children:
       MyPet.leash.Bat: true
       MyPet.leash.Blaze: true
+      MyPet.leash.Cat: true
       MyPet.leash.CaveSpider: true
       MyPet.leash.Chicken: true
       MyPet.leash.Cod: true
@@ -187,6 +188,7 @@ permissions:
     children:
       MyPet.command.trade.offer.Bat: true
       MyPet.command.trade.offer.Blaze: true
+      MyPet.command.trade.offer.Cat: true
       MyPet.command.trade.offer.CaveSpider: true
       MyPet.command.trade.offer.Chicken: true
       MyPet.command.trade.offer.Cod: true
@@ -245,6 +247,7 @@ permissions:
     children:
       MyPet.command.trade.receive.Bat: true
       MyPet.command.trade.receive.Blaze: true
+      MyPet.command.trade.receive.Cat: true
       MyPet.command.trade.receive.CaveSpider: true
       MyPet.command.trade.receive.Chicken: true
       MyPet.command.trade.receive.Cod: true

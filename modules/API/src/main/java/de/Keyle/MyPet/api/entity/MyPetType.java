@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ import java.util.List;
 public enum MyPetType {
     Bat("BAT", 65, MyBat.class),
     Blaze("BLAZE", 61, MyBlaze.class),
+    Cat("CAT", 0, "1.14", MyCat.class),
     CaveSpider("CAVE_SPIDER", 59, MyCaveSpider.class),
     Chicken("CHICKEN", 93, MyChicken.class),
     Cod("COD", 0, "1.13", MyCod.class),

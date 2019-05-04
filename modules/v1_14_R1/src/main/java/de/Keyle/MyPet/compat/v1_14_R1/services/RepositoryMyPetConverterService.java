@@ -20,11 +20,13 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.services;
 
+import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
+import org.bukkit.entity.Cat;
 
 @Load(Load.State.AfterHooks)
 public class RepositoryMyPetConverterService extends de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService {
@@ -105,21 +107,21 @@ public class RepositoryMyPetConverterService extends de.Keyle.MyPet.api.util.ser
                 break;
             case Ocelot:
                 if (info.containsKey("CatType")) {
+                    pet.setPetType(MyPetType.Cat);
                     int catType = info.getAs("CatType", TagInt.class).getIntData();
                     if (catType > 0) {
-                        // BLACK_CAT(1),
-                        // RED_CAT(2),
-                        // SIAMESE_CAT(3);
-                        //pet.setPetType(MyPetType.Cat);
                         switch (catType) {
                             case 1:
-                                //TODO
+                                info.put("CatType", new TagInt(Cat.Type.BLACK.ordinal()));
                                 break;
                             case 2:
-                                //TODO
+                                info.put("CatType", new TagInt(Cat.Type.RED.ordinal()));
                                 break;
                             case 3:
-                                //TODO
+                                info.put("CatType", new TagInt(Cat.Type.SIAMESE.ordinal()));
+                                break;
+                            default:
+                                info.put("CatType", new TagInt(Cat.Type.TABBY.ordinal()));
                                 break;
                         }
                     }

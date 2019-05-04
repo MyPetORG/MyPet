@@ -23,7 +23,7 @@ package de.Keyle.MyPet.compat.v1_14_R1.entity.ai.movement;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMyOcelot;
+import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMyCat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMyWolf;
 
 @Compat("v1_14_R1")
@@ -38,7 +38,7 @@ public class Sit implements AIGoal {
 
     @Override
     public boolean shouldStart() {
-        if (!(this.entityMyPet instanceof EntityMyOcelot) && !(this.entityMyPet instanceof EntityMyWolf)) {
+        if (!(this.entityMyPet instanceof EntityMyWolf) && !(this.entityMyPet instanceof EntityMyCat)) {
             return false;
         } else if (this.entityMyPet.isInWater()) {
             return false;
@@ -51,20 +51,20 @@ public class Sit implements AIGoal {
     @Override
     public void start() {
         this.entityMyPet.getPetNavigation().stop();
-        if (this.entityMyPet instanceof EntityMyOcelot) {
-            ((EntityMyOcelot) this.entityMyPet).applySitting(true);
-        } else if (this.entityMyPet instanceof EntityMyWolf) {
+        if (this.entityMyPet instanceof EntityMyWolf) {
             ((EntityMyWolf) this.entityMyPet).applySitting(true);
+        } else if (this.entityMyPet instanceof EntityMyCat) {
+            ((EntityMyCat) this.entityMyPet).applySitting(true);
         }
         entityMyPet.setGoalTarget(null);
     }
 
     @Override
     public void finish() {
-        if (this.entityMyPet instanceof EntityMyOcelot) {
-            ((EntityMyOcelot) this.entityMyPet).applySitting(false);
-        } else if (this.entityMyPet instanceof EntityMyWolf) {
+        if (this.entityMyPet instanceof EntityMyWolf) {
             ((EntityMyWolf) this.entityMyPet).applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyCat) {
+            ((EntityMyCat) this.entityMyPet).applySitting(false);
         }
     }
 

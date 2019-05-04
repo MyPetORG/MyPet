@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ import java.lang.reflect.Constructor;
 public enum MyPetClass {
     Bat(MyBat.class),
     Blaze(MyBlaze.class),
+    Cat(MyCat.class),
     CaveSpider(MyCaveSpider.class),
     Chicken(MyChicken.class),
     Cod(MyCod.class),

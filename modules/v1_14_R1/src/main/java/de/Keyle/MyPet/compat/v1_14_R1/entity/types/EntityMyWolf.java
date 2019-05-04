@@ -145,7 +145,7 @@ public class EntityMyWolf extends EntityMyPet {
             getDataWatcher().set(sitWatcher, (byte) (b0 & 0xFFFFFFFD));
         }
 
-        getDataWatcher().set(collarWatcher, (int) getMyPet().getCollarColor().getWoolData());
+        getDataWatcher().set(collarWatcher, getMyPet().getCollarColor().ordinal());
     }
 
     @Override

@@ -45,6 +45,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public EntityRegistry() {
         entityClasses.put(Bat, EntityMyBat.class);
         entityClasses.put(Blaze, EntityMyBlaze.class);
+        entityClasses.put(Cat, EntityMyCat.class);
         entityClasses.put(CaveSpider, EntityMyCaveSpider.class);
         entityClasses.put(Chicken, EntityMyChicken.class);
         entityClasses.put(Cod, EntityMyCod.class);

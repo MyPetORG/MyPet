@@ -26,42 +26,27 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyOcelot;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.entity.Ocelot.Type;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> ageWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.i);
-    protected static final DataWatcherObject<Byte> sitWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.a);
-    protected static final DataWatcherObject<Optional<UUID>> ownerWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.o);
-    private static final DataWatcherObject<Integer> typeWatcher = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> TRUSTING_WATCHER = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.i);
 
     public EntityMyOcelot(World world, MyPet myPet) {
         super(EntityTypes.OCELOT, world, myPet);
     }
 
-    public void applySitting(boolean sitting) {
-        int i = getDataWatcher().get(sitWatcher);
-        if (sitting) {
-            getDataWatcher().set(sitWatcher, (byte) (i | 0x1));
-        } else {
-            getDataWatcher().set(sitWatcher, (byte) (i & 0xFFFFFFFE));
-        }
-    }
-
     protected String getDeathSound() {
-        return "entity.cat.death";
+        return "entity.ocelot.death";
     }
 
     protected String getHurtSound() {
-        return "entity.cat.hurt";
+        return "entity.ocelot.hurt";
     }
 
     protected String getLivingSound() {
-        return this.random.nextInt(4) == 0 ? "entity.cat.purr" : "entity.cat.ambient";
+        return "entity.ocelot.ambient";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
@@ -71,31 +56,7 @@ public class EntityMyOcelot extends EntityMyPet {
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
-                if (itemStack.getItem() instanceof ItemDye) {
-                    boolean colorChanged = false;
-                    if (itemStack.getItem() == Items.YELLOW_DYE && getMyPet().getCatType() != Type.WILD_OCELOT) {
-                        getMyPet().setCatType(Type.WILD_OCELOT);
-                        colorChanged = true;
-                    } else if (itemStack.getItem() == Items.INK_SAC && getMyPet().getCatType() != Type.BLACK_CAT) {
-                        getMyPet().setCatType(Type.BLACK_CAT);
-                        colorChanged = true;
-                    } else if (itemStack.getItem() == Items.RED_DYE && getMyPet().getCatType() != Type.RED_CAT) {
-                        getMyPet().setCatType(Type.RED_CAT);
-                        colorChanged = true;
-                    } else if (itemStack.getItem() == Items.GRAY_DYE && getMyPet().getCatType() != Type.SIAMESE_CAT) {
-                        getMyPet().setCatType(Type.SIAMESE_CAT);
-                        colorChanged = true;
-                    }
-                    if (colorChanged) {
-                        if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                            itemStack.subtract(1);
-                            if (itemStack.getCount() <= 0) {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
-                            }
-                        }
-                        return true;
-                    }
-                } else if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                     if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
@@ -112,16 +73,13 @@ public class EntityMyOcelot extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        getDataWatcher().register(ageWatcher, false);               // age
-        getDataWatcher().register(sitWatcher, (byte) 0);            // tamed/sitting
-        getDataWatcher().register(ownerWatcher, Optional.empty()); // owner
-        getDataWatcher().register(typeWatcher, 0);                  // cat type
+        getDataWatcher().register(AGE_WATCHER, false);
+        getDataWatcher().register(TRUSTING_WATCHER, false);
     }
 
     @Override
     public void updateVisuals() {
-        getDataWatcher().set(ageWatcher, getMyPet().isBaby());
-        getDataWatcher().set(typeWatcher, getMyPet().getCatType().ordinal());
+        getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
     }
 
     public MyOcelot getMyPet() {

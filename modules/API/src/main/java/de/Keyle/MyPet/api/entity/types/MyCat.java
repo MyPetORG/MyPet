@@ -23,11 +23,21 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
-import org.bukkit.entity.Ocelot.Type;
+import org.bukkit.DyeColor;
+import org.bukkit.entity.Cat.Type;
 
-@DefaultInfo(food = {"cod", "salmon"})
-public interface MyOcelot extends MyPet, MyPetBaby {
+@DefaultInfo(food = {"cod"}, leashFlags = {"Tamed"})
+public interface MyCat extends MyPet, MyPetBaby {
+
     Type getCatType();
 
     void setCatType(Type value);
+
+    DyeColor getCollarColor();
+
+    void setCollarColor(DyeColor value);
+
+    boolean isTamed();
+
+    void setTamed(boolean flag);
 }
