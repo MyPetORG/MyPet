@@ -238,8 +238,10 @@ public class PlayerListener implements Listener {
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
                     MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
                     if (myPetPlayerDamagee.hasMyPet()) {
-                        if (myPetPlayerDamagee.getMyPet() == projectile.getMyPetProjectile().getShooter().getMyPet()) {
-                            event.setCancelled(true);
+                        if (projectile != null && projectile.getShooter() != null) {
+                            if (myPetPlayerDamagee.getMyPet() == projectile.getMyPetProjectile().getShooter().getMyPet()) {
+                                event.setCancelled(true);
+                            }
                         }
                     }
                 }
