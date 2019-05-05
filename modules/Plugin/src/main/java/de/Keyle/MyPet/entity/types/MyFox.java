@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -27,10 +29,14 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Fox.Type;
+import org.bukkit.inventory.ItemStack;
 
 public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFox {
 
+    protected ItemStack weapon;
     protected boolean isBaby = false;
     protected Type foxType = Type.RED;
 
@@ -61,10 +67,54 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
     }
 
     @Override
+    public ItemStack[] getEquipment() {
+        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
+        for (int i = 0; i < EquipmentSlot.values().length; i++) {
+            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
+        }
+        return equipment;
+    }
+
+    @Override
+    public ItemStack getEquipment(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MainHand ? weapon : null;
+    }
+
+    @Override
+    public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        if (slot == EquipmentSlot.MainHand) {
+            if (item == null) {
+                weapon = null;
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+                return;
+            }
+
+            item = item.clone();
+            item.setAmount(1);
+            weapon = item;
+            if (status == PetState.Here) {
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            }
+        }
+    }
+
+    @Override
+    public void dropEquipment() {
+        if (getStatus() == PetState.Here) {
+            if (weapon != null && weapon.getType() != Material.AIR) {
+                Location dropLocation = getLocation().get();
+                dropLocation.getWorld().dropItem(dropLocation, weapon);
+            }
+        }
+    }
+
+    @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("FoxType", new TagInt(getType().ordinal()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
+        info.getCompoundData().put("MouthItem", item);
         return info;
     }
 
@@ -75,6 +125,15 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
         }
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.getCompoundData().containsKey("MouthItem")) {
+            TagCompound item = info.getAs("MouthItem", TagCompound.class);
+            try {
+                ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+                setEquipment(EquipmentSlot.MainHand, itemStack);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
+            }
         }
     }
 

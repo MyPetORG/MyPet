@@ -20,12 +20,17 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyFox;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_14_R1.*;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -63,7 +68,23 @@ public class EntityMyFox extends EntityMyPet {
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
-                if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack.getItem() != Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                    ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand));
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                        EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
+                        entityitem.pickupDelay = 10;
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
+                        this.world.addEntity(entityitem);
+                    }
+                    getMyPet().setEquipment(EquipmentSlot.MainHand, CraftItemStack.asBukkitCopy(itemStack));
+                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                        itemStack.subtract(1);
+                        if (itemStack.getCount() <= 0) {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        }
+                    }
+                    return true;
+                } else if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                     if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
@@ -71,6 +92,25 @@ public class EntityMyFox extends EntityMyPet {
                         }
                     }
                     getMyPet().setBaby(false);
+                    return true;
+                } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                    boolean hadEquipment = false;
+                    for (EquipmentSlot slot : EquipmentSlot.values()) {
+                        ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                        if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
+                            EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, itemInSlot);
+                            entityitem.pickupDelay = 10;
+                            entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
+                            this.world.addEntity(entityitem);
+                            getMyPet().setEquipment(slot, null);
+                            hadEquipment = true;
+                        }
+                    }
+                    if (hadEquipment) {
+                        if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                            itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
+                        }
+                    }
                     return true;
                 }
             }
@@ -91,6 +131,12 @@ public class EntityMyFox extends EntityMyPet {
     public void updateVisuals() {
         getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
         getDataWatcher().set(FOX_TYPE_WATCHER, getMyPet().getType().ordinal());
+
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)));
+            }
+        }, 5L);
     }
 
     /*
@@ -115,6 +161,20 @@ public class EntityMyFox extends EntityMyPet {
         super.movementTick();
         // foxes can't look up
         this.pitch = 0F;
+    }
+
+    public void setPetEquipment(ItemStack itemStack) {
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
+    }
+
+    public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
+        if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
+            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.c());
+            if (getMyPet().getEquipment(slot) != null) {
+                return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+            }
+        }
+        return super.getEquipment(vanillaSlot);
     }
 
     public MyFox getMyPet() {
