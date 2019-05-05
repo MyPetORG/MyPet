@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPillager {
 
     protected ItemStack weapon;
+    protected ItemStack banner;
 
     public MyPillager(MyPetPlayer petOwner) {
         super(petOwner);
@@ -54,6 +55,8 @@ public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types
         TagCompound info = super.writeExtendedInfo();
         TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
         info.getCompoundData().put("Weapon", item);
+        item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.Helmet));
+        info.getCompoundData().put("Banner", item);
         return info;
     }
 
@@ -64,6 +67,15 @@ public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types
             try {
                 ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
                 setEquipment(EquipmentSlot.MainHand, itemStack);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
+            }
+        }
+        if (info.getCompoundData().containsKey("Banner")) {
+            TagCompound item = info.getAs("Banner", TagCompound.class);
+            try {
+                ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+                setEquipment(EquipmentSlot.Helmet, itemStack);
             } catch (Exception e) {
                 MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
             }
@@ -81,21 +93,35 @@ public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public ItemStack getEquipment(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MainHand ? weapon : null;
+        if (slot == EquipmentSlot.MainHand) {
+            return weapon;
+        } else if (slot == EquipmentSlot.Helmet) {
+            return banner;
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
-        if (slot == EquipmentSlot.MainHand) {
+        if (slot == EquipmentSlot.MainHand || slot == EquipmentSlot.Helmet) {
             if (item == null) {
-                weapon = null;
+                if (slot == EquipmentSlot.MainHand) {
+                    weapon = null;
+                } else {
+                    banner = null;
+                }
                 getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
                 return;
             }
 
             item = item.clone();
             item.setAmount(1);
-            weapon = item;
+            if (slot == EquipmentSlot.MainHand) {
+                weapon = item;
+            } else {
+                banner = item;
+            }
             if (status == PetState.Here) {
                 getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
             }
@@ -108,6 +134,10 @@ public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types
             if (weapon != null && weapon.getType() != Material.AIR) {
                 Location dropLocation = getLocation().get();
                 dropLocation.getWorld().dropItem(dropLocation, weapon);
+            }
+            if (banner != null && banner.getType() != Material.AIR) {
+                Location dropLocation = getLocation().get();
+                dropLocation.getWorld().dropItem(dropLocation, banner);
             }
         }
     }
