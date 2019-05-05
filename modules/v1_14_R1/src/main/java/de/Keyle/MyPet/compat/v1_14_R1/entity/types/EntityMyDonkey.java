@@ -43,7 +43,7 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
     int rearCounter = -1;
 
     public EntityMyDonkey(World world, MyPet myPet) {
-        super(EntityTypes.DONKEY, world, myPet);
+        super(world, myPet);
     }
 
     /**

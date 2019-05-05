@@ -36,7 +36,7 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 public class EntityMyStray extends EntityMyPet {
 
     public EntityMyStray(World world, MyPet myPet) {
-        super(EntityTypes.STRAY, world, myPet);
+        super(world, myPet);
     }
 
     protected String getDeathSound() {

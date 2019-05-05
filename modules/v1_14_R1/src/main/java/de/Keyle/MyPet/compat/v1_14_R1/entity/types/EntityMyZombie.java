@@ -41,7 +41,7 @@ public class EntityMyZombie extends EntityMyPet {
     private static final DataWatcherObject<Boolean> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
 
     public EntityMyZombie(World world, MyPet myPet) {
-        super(EntityTypes.ZOMBIE, world, myPet);
+        super(world, myPet);
     }
 
     /**

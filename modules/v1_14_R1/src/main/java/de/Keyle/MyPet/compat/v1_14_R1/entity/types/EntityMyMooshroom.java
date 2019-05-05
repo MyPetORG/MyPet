@@ -36,7 +36,7 @@ public class EntityMyMooshroom extends EntityMyPet {
     private static final DataWatcherObject<String> COLOR_WATCHER = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.d);
 
     public EntityMyMooshroom(World world, MyPet myPet) {
-        super(EntityTypes.MOOSHROOM, world, myPet);
+        super(world, myPet);
     }
 
     @Override

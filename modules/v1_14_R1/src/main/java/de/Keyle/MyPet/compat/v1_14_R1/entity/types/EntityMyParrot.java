@@ -25,7 +25,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyParrot;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DataWatcherObject;
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_14_R1.World;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +42,7 @@ public class EntityMyParrot extends EntityMyPet {
     private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.b);
 
     public EntityMyParrot(World world, MyPet myPet) {
-        super(EntityTypes.PARROT, world, myPet);
+        super(world, myPet);
     }
 
     public MyParrot getMyPet() {

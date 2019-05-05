@@ -34,7 +34,7 @@ public class EntityMyVillager extends EntityMyPet {
     private static final DataWatcherObject<VillagerData> PROFESSION_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.q);
 
     public EntityMyVillager(World world, MyPet myPet) {
-        super(EntityTypes.VILLAGER, world, myPet);
+        super(world, myPet);
     }
 
     protected String getDeathSound() {

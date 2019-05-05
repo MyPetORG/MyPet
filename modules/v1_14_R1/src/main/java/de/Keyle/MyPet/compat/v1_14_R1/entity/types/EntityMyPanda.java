@@ -31,15 +31,15 @@ import net.minecraft.server.v1_14_R1.*;
 public class EntityMyPanda extends EntityMyPet {
 
     private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Integer> UNUSED_WATCHER_3 = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> ASK_FOR_BAMBOO_TICKS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> SNEEZE_PROGRESS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
+    private static final DataWatcherObject<Integer> EATING_TICKS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Byte> MAIN_GENE_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.a);
     private static final DataWatcherObject<Byte> HIDDEN_GENE_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.a);
     private static final DataWatcherObject<Byte> ACTIONS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.a);
 
     public EntityMyPanda(World world, MyPet myPet) {
-        super(EntityTypes.PANDA, world, myPet);
+        super(world, myPet);
     }
 
     protected String getDeathSound() {
@@ -79,12 +79,12 @@ public class EntityMyPanda extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
-        getDataWatcher().register(UNUSED_WATCHER_1, 0);
-        getDataWatcher().register(UNUSED_WATCHER_2, 0);
+        getDataWatcher().register(ASK_FOR_BAMBOO_TICKS_WATCHER, 0);
+        getDataWatcher().register(SNEEZE_PROGRESS_WATCHER, 0);
         getDataWatcher().register(MAIN_GENE_WATCHER, (byte) 0);
         getDataWatcher().register(HIDDEN_GENE_WATCHER, (byte) 0);
         getDataWatcher().register(ACTIONS_WATCHER, (byte) 0);
-        getDataWatcher().register(UNUSED_WATCHER_3, 0);
+        getDataWatcher().register(EATING_TICKS_WATCHER, 0);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
     private static final DataWatcherObject<VillagerData> PROFESSION_WATCHER = DataWatcher.a(EntityMyZombieVillager.class, DataWatcherRegistry.q);
 
     public EntityMyZombieVillager(World world, MyPet myPet) {
-        super(EntityTypes.ZOMBIE_VILLAGER, world, myPet);
+        super(world, myPet);
     }
 
     /**

@@ -34,7 +34,7 @@ public class EntityMyPhantom extends EntityMyPet {
     private static final DataWatcherObject<Integer> SIZE_WATCHER = DataWatcher.a(EntityMyPhantom.class, DataWatcherRegistry.b);
 
     public EntityMyPhantom(World world, MyPet myPet) {
-        super(EntityTypes.PHANTOM, world, myPet);
+        super(world, myPet);
     }
 
     @Override

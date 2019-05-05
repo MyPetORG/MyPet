@@ -40,7 +40,7 @@ public class EntityMyEnderman extends EntityMyPet {
     private static final DataWatcherObject<Boolean> SCREAMING_WATCHER = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.i);
 
     public EntityMyEnderman(World world, MyPet myPet) {
-        super(EntityTypes.ENDERMAN, world, myPet);
+        super(world, myPet);
     }
 
     @Override

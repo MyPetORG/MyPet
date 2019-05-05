@@ -32,10 +32,7 @@ public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
     @Override
     public boolean isLeashableEntityType(EntityType bukkitType) {
         if (bukkitType == EntityType.ENDER_DRAGON) {
-            return MyPetApi.getPluginHookManager().isHookActive("ProtocolLib"); //ToDo & active
-        }
-        if (bukkitType == EntityType.TRADER_LLAMA) {
-            return false; //ToDo fix
+            return MyPetApi.getPluginHookManager().isHookActive("ProtocolLib");
         }
 
         try {

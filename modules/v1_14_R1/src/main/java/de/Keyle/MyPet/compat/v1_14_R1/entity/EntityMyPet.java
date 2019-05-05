@@ -103,8 +103,8 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "jumping");
 
-    public EntityMyPet(EntityTypes<? extends EntityInsentient> entitytypes, World world, MyPet myPet) {
-        super(entitytypes, world);
+    public EntityMyPet(World world, MyPet myPet) {
+        super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
 
         try {
             this.myPet = myPet;

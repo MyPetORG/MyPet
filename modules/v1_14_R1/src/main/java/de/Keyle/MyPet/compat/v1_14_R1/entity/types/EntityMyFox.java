@@ -40,7 +40,7 @@ public class EntityMyFox extends EntityMyPet {
     private static final DataWatcherObject<Optional<UUID>> FRIEND_B_WATCHER = DataWatcher.a(EntityMyFox.class, DataWatcherRegistry.o);
 
     public EntityMyFox(World world, MyPet myPet) {
-        super(EntityTypes.FOX, world, myPet);
+        super(world, myPet);
         this.getControllerLook().a(this, 60.0F, 30.0F);
     }
 

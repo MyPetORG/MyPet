@@ -20,92 +20,45 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity;
 
+import com.google.common.base.CaseFormat;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_14_R1.entity.types.*;
-import net.minecraft.server.v1_14_R1.World;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import static de.Keyle.MyPet.api.entity.MyPetType.*;
 
 @Compat("v1_14_R1")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
-    protected static Map<MyPetType, Class<? extends EntityMyPet>> entityClasses = new HashMap<>();
+    Map<MyPetType, Class<? extends EntityMyPet>> entityClasses = new HashMap<>();
+    Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
 
     public EntityRegistry() {
-        entityClasses.put(Bat, EntityMyBat.class);
-        entityClasses.put(Blaze, EntityMyBlaze.class);
-        entityClasses.put(Cat, EntityMyCat.class);
-        entityClasses.put(CaveSpider, EntityMyCaveSpider.class);
-        entityClasses.put(Chicken, EntityMyChicken.class);
-        entityClasses.put(Cod, EntityMyCod.class);
-        entityClasses.put(Cow, EntityMyCow.class);
-        entityClasses.put(Creeper, EntityMyCreeper.class);
-        entityClasses.put(Donkey, EntityMyDonkey.class);
-        entityClasses.put(Dolphin, EntityMyDolphin.class);
-        entityClasses.put(Drowned, EntityMyDrowned.class);
-        entityClasses.put(ElderGuardian, EntityMyElderGuardian.class);
-        entityClasses.put(EnderDragon, EntityMyEnderDragon.class);
-        entityClasses.put(Enderman, EntityMyEnderman.class);
-        entityClasses.put(Endermite, EntityMyEndermite.class);
-        entityClasses.put(Evoker, EntityMyEvoker.class);
-        entityClasses.put(Fox, EntityMyFox.class);
-        entityClasses.put(Ghast, EntityMyGhast.class);
-        entityClasses.put(Giant, EntityMyGiant.class);
-        entityClasses.put(Guardian, EntityMyGuardian.class);
-        entityClasses.put(Horse, EntityMyHorse.class);
-        entityClasses.put(Husk, EntityMyHusk.class);
-        entityClasses.put(Illusioner, EntityMyIllusioner.class);
-        entityClasses.put(IronGolem, EntityMyIronGolem.class);
-        entityClasses.put(Llama, EntityMyLlama.class);
-        entityClasses.put(MagmaCube, EntityMyMagmaCube.class);
-        entityClasses.put(Mooshroom, EntityMyMooshroom.class);
-        entityClasses.put(Mule, EntityMyMule.class);
-        entityClasses.put(Ocelot, EntityMyOcelot.class);
-        entityClasses.put(Panda, EntityMyPanda.class);
-        entityClasses.put(Parrot, EntityMyParrot.class);
-        entityClasses.put(Phantom, EntityMyPhantom.class);
-        entityClasses.put(Pig, EntityMyPig.class);
-        entityClasses.put(PigZombie, EntityMyPigZombie.class);
-        entityClasses.put(Pillager, EntityMyPillager.class);
-        entityClasses.put(PolarBear, EntityMyPolarBear.class);
-        entityClasses.put(Pufferfish, EntityMyPufferfish.class);
-        entityClasses.put(Rabbit, EntityMyRabbit.class);
-        entityClasses.put(Ravager, EntityMyRavager.class);
-        entityClasses.put(Salmon, EntityMySalmon.class);
-        entityClasses.put(Sheep, EntityMySheep.class);
-        entityClasses.put(Silverfish, EntityMySilverfish.class);
-        entityClasses.put(Skeleton, EntityMySkeleton.class);
-        entityClasses.put(SkeletonHorse, EntityMySkeletonHorse.class);
-        entityClasses.put(Slime, EntityMySlime.class);
-        entityClasses.put(Snowman, EntityMySnowman.class);
-        entityClasses.put(Spider, EntityMySpider.class);
-        entityClasses.put(Squid, EntityMySquid.class);
-        entityClasses.put(Stray, EntityMyStray.class);
-        entityClasses.put(TraderLlama, EntityMyTraderLlama.class);
-        entityClasses.put(TropicalFish, EntityMyTropicalFish.class);
-        entityClasses.put(Turtle, EntityMyTurtle.class);
-        entityClasses.put(WanderingTrader, EntityMyWanderingTrader.class);
-        entityClasses.put(Witch, EntityMyWitch.class);
-        entityClasses.put(Wither, EntityMyWither.class);
-        entityClasses.put(WitherSkeleton, EntityMyWitherSkeleton.class);
-        entityClasses.put(Wolf, EntityMyWolf.class);
-        entityClasses.put(Vex, EntityMyVex.class);
-        entityClasses.put(Villager, EntityMyVillager.class);
-        entityClasses.put(Vindicator, EntityMyVindicator.class);
-        entityClasses.put(Zombie, EntityMyZombie.class);
-        entityClasses.put(ZombieHorse, EntityMyZombieHorse.class);
-        entityClasses.put(ZombieVillager, EntityMyZombieVillager.class);
+    }
+
+    protected void registerEntityType(MyPetType petType, String key) {
+        EntitySize size = IRegistry.ENTITY_TYPE.get(new MinecraftKey(key.toLowerCase())).j();
+        entityTypes.put(petType, IRegistry.a(IRegistry.ENTITY_TYPE, "mypet_" + key.toLowerCase(), EntityTypes.a.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
+        overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void registerEntity(MyPetType type) {
+        Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMy" + type.name());
+        entityClasses.put(type, entityClass);
+        String key = type.getTypeID().toString();
+        registerEntityType(type, key);
     }
 
     @Override
@@ -139,9 +92,38 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     @Override
     public void registerEntityTypes() {
+        for (MyPetType type : MyPetType.values()) {
+            registerEntity(type);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getEntityType(MyPetType petType) {
+        return (T) this.entityTypes.get(petType);
     }
 
     @Override
     public void unregisterEntityTypes() {
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    protected void overwriteEntityID(EntityTypes types, int id) {
+        RegistryID registryID = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials.class, IRegistry.ENTITY_TYPE, "b");
+        int[] c = (int[]) ReflectionUtil.getFieldValue(RegistryID.class, registryID, "c");
+        Method b = ReflectionUtil.getMethod(RegistryID.class, "b", Object.class, int.class);
+        Method d = ReflectionUtil.getMethod(RegistryID.class, "d", Object.class);
+        try {
+            int dVal = (int) d.invoke(registryID, types);
+            int bVal = (int) b.invoke(registryID, types, dVal);
+            c[bVal] = id;
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected int getEntityTypeId(MyPetType type) {
+        String mcName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, type.name());
+        EntityTypes types = IRegistry.ENTITY_TYPE.get(new MinecraftKey(mcName));
+        return IRegistry.ENTITY_TYPE.a(types);
     }
 }

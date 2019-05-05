@@ -36,7 +36,7 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 public class EntityMySkeleton extends EntityMyPet {
 
     public EntityMySkeleton(World world, MyPet myPet) {
-        super(EntityTypes.SKELETON, world, myPet);
+        super(world, myPet);
     }
 
     protected String getDeathSound() {

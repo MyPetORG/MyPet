@@ -34,13 +34,6 @@ import java.util.UUID;
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyTraderLlama extends EntityMyPet {
 
-    protected static EntityTypes<EntityMyTraderLlama> TRADER_LLAMA;
-
-    static {
-        TRADER_LLAMA = (EntityTypes) IRegistry.a(IRegistry.ENTITY_TYPE, "mypet_trader_llama", EntityTypes.a.a(EnumCreatureType.CREATURE).b().a().a(0.9F, 1.87F).a("trader_llama"));
-        ;
-    }
-
     private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyTraderLlama.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Byte> SADDLE_CHEST_WATCHER = DataWatcher.a(EntityMyTraderLlama.class, DataWatcherRegistry.a);
     private static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyTraderLlama.class, DataWatcherRegistry.o);
@@ -50,7 +43,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
     private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyTraderLlama.class, DataWatcherRegistry.b);
 
     public EntityMyTraderLlama(World world, MyPet myPet) {
-        super(EntityTypes.TRADER_LLAMA, world, myPet);
+        super(world, myPet);
     }
 
     @Override

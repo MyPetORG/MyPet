@@ -27,7 +27,6 @@ import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.ai.attack.MeleeAttack;
 import net.minecraft.server.v1_14_R1.Entity;
-import net.minecraft.server.v1_14_R1.EntityTypes;
 import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 4.F, height = 4.F)
@@ -36,7 +35,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
     public EntityMyPetPart[] children;
 
     public EntityMyEnderDragon(World world, MyPet myPet) {
-        super(EntityTypes.ENDER_DRAGON, world, myPet);
+        super(world, myPet);
 
         children = new EntityMyPetPart[]{
                 new EntityMyPetPart(this, "head", 1.0F, 1.0F),

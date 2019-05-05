@@ -24,7 +24,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCreeper;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DataWatcherObject;
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreeper extends EntityMyPet {
@@ -34,7 +37,7 @@ public class EntityMyCreeper extends EntityMyPet {
     private static final DataWatcherObject<Boolean> UNUSED_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.i);
 
     public EntityMyCreeper(World world, MyPet myPet) {
-        super(EntityTypes.CREEPER, world, myPet);
+        super(world, myPet);
     }
 
     @Override

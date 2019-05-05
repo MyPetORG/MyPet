@@ -39,7 +39,7 @@ public class EntityMyPigZombie extends EntityMyPet {
     private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.i);
 
     public EntityMyPigZombie(World world, MyPet myPet) {
-        super(EntityTypes.ZOMBIE_PIGMAN, world, myPet);
+        super(world, myPet);
     }
 
     @Override

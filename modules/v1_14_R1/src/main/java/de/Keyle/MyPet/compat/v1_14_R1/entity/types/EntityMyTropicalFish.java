@@ -26,7 +26,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTropicalFish;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DataWatcherObject;
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 0.5F, height = 0.4f)
 public class EntityMyTropicalFish extends EntityMyPet {
@@ -35,7 +38,7 @@ public class EntityMyTropicalFish extends EntityMyPet {
     private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.b);
 
     public EntityMyTropicalFish(World world, MyPet myPet) {
-        super(EntityTypes.TROPICAL_FISH, world, myPet);
+        super(world, myPet);
     }
 
     @Override

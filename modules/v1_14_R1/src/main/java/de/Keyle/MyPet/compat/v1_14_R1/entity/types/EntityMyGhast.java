@@ -25,14 +25,13 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.server.v1_14_R1.EntityTypes;
 import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 4.F, height = 4.F)
 public class EntityMyGhast extends EntityMyPet {
 
     public EntityMyGhast(World world, MyPet myPet) {
-        super(EntityTypes.GHAST, world, myPet);
+        super(world, myPet);
     }
 
     @Override

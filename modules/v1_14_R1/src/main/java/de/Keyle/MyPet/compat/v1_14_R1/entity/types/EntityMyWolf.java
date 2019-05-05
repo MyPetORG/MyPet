@@ -46,7 +46,7 @@ public class EntityMyWolf extends EntityMyPet {
     protected float shakeCounter;
 
     public EntityMyWolf(World world, MyPet myPet) {
-        super(EntityTypes.WOLF, world, myPet);
+        super(world, myPet);
     }
 
     public void applySitting(boolean sitting) {

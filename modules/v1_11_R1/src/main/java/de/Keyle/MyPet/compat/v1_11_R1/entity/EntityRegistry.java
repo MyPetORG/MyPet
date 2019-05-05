@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -139,7 +139,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
         for (MyPetType type : entityClasses.keySet()) {
             try {
-                registry.a(type.getTypeID(), null, entityClasses.get(type));
+                registry.a((Integer) type.getTypeID(), null, entityClasses.get(type));
             } catch (NullPointerException ignored) {
                 // NPE means that the entity was registered successfully but the key was not
             }

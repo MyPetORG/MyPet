@@ -24,14 +24,13 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyElderGuardian;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.EntityTypes;
 import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 0.7F, height = 0.85F)
 public class EntityMyElderGuardian extends EntityMyPet {
 
     public EntityMyElderGuardian(World world, MyPet myPet) {
-        super(EntityTypes.ELDER_GUARDIAN, world, myPet);
+        super(world, myPet);
     }
 
     @Override

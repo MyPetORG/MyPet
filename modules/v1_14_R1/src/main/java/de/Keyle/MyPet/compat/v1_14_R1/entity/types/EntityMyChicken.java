@@ -35,7 +35,7 @@ public class EntityMyChicken extends EntityMyPet {
     private int nextEggTimer;
 
     public EntityMyChicken(World world, MyPet myPet) {
-        super(EntityTypes.CHICKEN, world, myPet);
+        super(world, myPet);
         nextEggTimer = (random.nextInt(6000) + 6000);
     }
 

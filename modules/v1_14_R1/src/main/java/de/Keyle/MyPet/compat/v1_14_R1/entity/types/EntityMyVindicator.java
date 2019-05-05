@@ -37,7 +37,7 @@ public class EntityMyVindicator extends EntityMyPet {
     protected static final DataWatcherObject<Boolean> RAID_WATCHER = DataWatcher.a(EntityMyVindicator.class, DataWatcherRegistry.i);
 
     public EntityMyVindicator(World world, MyPet myPet) {
-        super(EntityTypes.VINDICATOR, world, myPet);
+        super(world, myPet);
     }
 
     /**

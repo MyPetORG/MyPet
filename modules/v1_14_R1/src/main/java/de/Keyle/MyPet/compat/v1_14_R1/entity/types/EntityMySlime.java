@@ -35,7 +35,7 @@ public class EntityMySlime extends EntityMyPet {
     int jumpDelay;
 
     public EntityMySlime(World world, MyPet myPet) {
-        super(EntityTypes.SLIME, world, myPet);
+        super(world, myPet);
         this.jumpDelay = (this.random.nextInt(20) + 10);
     }
 

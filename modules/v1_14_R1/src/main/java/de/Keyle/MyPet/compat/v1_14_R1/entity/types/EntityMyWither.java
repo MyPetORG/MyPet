@@ -25,7 +25,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWither;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DataWatcherObject;
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 1.9F, height = 3.5F)
 public class EntityMyWither extends EntityMyPet {
@@ -36,7 +39,7 @@ public class EntityMyWither extends EntityMyPet {
     private static final DataWatcherObject<Integer> INVULNERABILITY_WATCHER = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
 
     public EntityMyWither(World world, MyPet myPet) {
-        super(EntityTypes.WITHER, world, myPet);
+        super(world, myPet);
     }
 
     @Override

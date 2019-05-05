@@ -36,7 +36,7 @@ public class EntityMyRabbit extends EntityMyPet {
     int jumpDelay;
 
     public EntityMyRabbit(World world, MyPet myPet) {
-        super(EntityTypes.RABBIT, world, myPet);
+        super(world, myPet);
         this.jumpDelay = (this.random.nextInt(20) + 10);
     }
 

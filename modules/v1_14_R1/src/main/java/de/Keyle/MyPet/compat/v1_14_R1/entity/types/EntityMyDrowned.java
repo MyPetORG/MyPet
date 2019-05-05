@@ -42,7 +42,7 @@ public class EntityMyDrowned extends EntityMyPet {
 
 
     public EntityMyDrowned(World world, MyPet myPet) {
-        super(EntityTypes.DROWNED, world, myPet);
+        super(world, myPet);
     }
 
     /**

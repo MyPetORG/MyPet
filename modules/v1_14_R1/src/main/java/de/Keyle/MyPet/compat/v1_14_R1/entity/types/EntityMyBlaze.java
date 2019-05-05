@@ -33,7 +33,7 @@ public class EntityMyBlaze extends EntityMyPet {
     private static final DataWatcherObject<Byte> BURNING_WATCHER = DataWatcher.a(EntityMyBlaze.class, DataWatcherRegistry.a);
 
     public EntityMyBlaze(World world, MyPet myPet) {
-        super(EntityTypes.BLAZE, world, myPet);
+        super(world, myPet);
     }
 
     @Override

@@ -36,7 +36,7 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 public class EntityMyGiant extends EntityMyPet {
 
     public EntityMyGiant(World world, MyPet myPet) {
-        super(EntityTypes.GIANT, world, myPet);
+        super(world, myPet);
     }
 
     @Override

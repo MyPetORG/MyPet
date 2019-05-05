@@ -43,7 +43,7 @@ public class EntityMyLlama extends EntityMyPet {
     private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyLlama.class, DataWatcherRegistry.b);
 
     public EntityMyLlama(World world, MyPet myPet) {
-        super(EntityTypes.LLAMA, world, myPet);
+        super(world, myPet);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
     int jumpDelay;
 
     public EntityMyMagmaCube(World world, MyPet myPet) {
-        super(EntityTypes.MAGMA_CUBE, world, myPet);
+        super(world, myPet);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class EntityMyIllusioner extends EntityMyPet {
     protected static final DataWatcherObject<Byte> SPELL_WATCHER = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.a);
 
     public EntityMyIllusioner(World world, MyPet myPet) {
-        super(EntityTypes.ILLUSIONER, world, myPet);
+        super(world, myPet);
     }
 
     /**

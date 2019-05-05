@@ -39,7 +39,7 @@ public class EntityMyTurtle extends EntityMyPet {
     private static final DataWatcherObject<Boolean> UNUSED_WATCHER_3 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
 
     public EntityMyTurtle(World world, MyPet myPet) {
-        super(EntityTypes.TURTLE, world, myPet);
+        super(world, myPet);
         getDataWatcher().register(HOME_WATCHER, BlockPosition.ZERO);
         getDataWatcher().register(HAS_EGG_WATCHER, false);
         getDataWatcher().register(TRAVEL_POS_WATCHER, BlockPosition.ZERO);

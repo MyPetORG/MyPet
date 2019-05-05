@@ -24,7 +24,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEvoker;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DataWatcherObject;
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyEvoker extends EntityMyPet {
@@ -33,7 +36,7 @@ public class EntityMyEvoker extends EntityMyPet {
     protected static final DataWatcherObject<Byte> SPELL_WATCHER = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.a);
 
     public EntityMyEvoker(World world, MyPet myPet) {
-        super(EntityTypes.EVOKER, world, myPet);
+        super(world, myPet);
     }
 
     /**

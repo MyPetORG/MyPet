@@ -32,7 +32,7 @@ public class EntityMySnowman extends EntityMyPet {
     private static final DataWatcherObject<Byte> SHEARED_WATCHER = DataWatcher.a(EntityMySnowman.class, DataWatcherRegistry.a);
 
     public EntityMySnowman(World world, MyPet myPet) {
-        super(EntityTypes.SNOW_GOLEM, world, myPet);
+        super(world, myPet);
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

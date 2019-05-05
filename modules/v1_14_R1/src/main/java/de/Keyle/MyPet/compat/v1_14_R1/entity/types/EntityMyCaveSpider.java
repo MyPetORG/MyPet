@@ -23,7 +23,10 @@ package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DataWatcherObject;
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 0.7F, height = 0.45F)
 public class EntityMyCaveSpider extends EntityMyPet {
@@ -31,7 +34,7 @@ public class EntityMyCaveSpider extends EntityMyPet {
     private static final DataWatcherObject<Byte> UNUSED_WATCHER = DataWatcher.a(EntityMyCaveSpider.class, DataWatcherRegistry.a);
 
     public EntityMyCaveSpider(World world, MyPet myPet) {
-        super(EntityTypes.CAVE_SPIDER, world, myPet);
+        super(world, myPet);
     }
 
     @Override

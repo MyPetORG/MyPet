@@ -60,7 +60,7 @@ public class EntityMySheep extends EntityMyPet {
     }
 
     public EntityMySheep(World world, MyPet myPet) {
-        super(EntityTypes.SHEEP, world, myPet);
+        super(world, myPet);
     }
 
     @Override

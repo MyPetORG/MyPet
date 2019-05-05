@@ -42,7 +42,7 @@ public class EntityMyVex extends EntityMyPet {
     protected boolean isAggressive = false;
 
     public EntityMyVex(World world, MyPet myPet) {
-        super(EntityTypes.VEX, world, myPet);
+        super(world, myPet);
     }
 
     /**

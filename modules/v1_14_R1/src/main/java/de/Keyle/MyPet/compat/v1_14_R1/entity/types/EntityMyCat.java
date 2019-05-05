@@ -44,7 +44,7 @@ public class EntityMyCat extends EntityMyPet {
     protected static final DataWatcherObject<Integer> COLLAR_COLOR_WATCHER = DataWatcher.a(EntityMyCat.class, DataWatcherRegistry.b);
 
     public EntityMyCat(World world, MyPet myPet) {
-        super(EntityTypes.CAT, world, myPet);
+        super(world, myPet);
     }
 
     public void applySitting(boolean sitting) {

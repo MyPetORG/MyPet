@@ -35,7 +35,7 @@ public class EntityMyDolphin extends EntityMyPet {
     private static final DataWatcherObject<Integer> MOISTNESS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
 
     public EntityMyDolphin(World world, MyPet myPet) {
-        super(EntityTypes.DOLPHIN, world, myPet);
+        super(world, myPet);
     }
 
     @Override

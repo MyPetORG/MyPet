@@ -43,7 +43,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
     int rearCounter = -1;
 
     public EntityMyMule(World world, MyPet myPet) {
-        super(EntityTypes.MULE, world, myPet);
+        super(world, myPet);
     }
 
     /**

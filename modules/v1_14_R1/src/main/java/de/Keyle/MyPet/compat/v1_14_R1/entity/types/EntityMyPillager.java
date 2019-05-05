@@ -38,7 +38,7 @@ public class EntityMyPillager extends EntityMyPet {
     private static final DataWatcherObject<Boolean> CROSSBOW_WATCHER = DataWatcher.a(EntityMyPillager.class, DataWatcherRegistry.i);
 
     public EntityMyPillager(World world, MyPet myPet) {
-        super(EntityTypes.PILLAGER, world, myPet);
+        super(world, myPet);
     }
 
     /**

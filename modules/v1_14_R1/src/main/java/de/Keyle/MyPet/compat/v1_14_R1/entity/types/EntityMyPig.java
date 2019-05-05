@@ -38,7 +38,7 @@ public class EntityMyPig extends EntityMyPet {
     private static final DataWatcherObject<Boolean> SADDLE_WATCHER = DataWatcher.a(EntityMyPig.class, DataWatcherRegistry.i);
 
     public EntityMyPig(World world, MyPet myPet) {
-        super(EntityTypes.PIG, world, myPet);
+        super(world, myPet);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class EntityMyHusk extends EntityMyPet {
     private static final DataWatcherObject<Boolean> UNUSED_WATCHER = DataWatcher.a(EntityMyHusk.class, DataWatcherRegistry.i);
 
     public EntityMyHusk(World world, MyPet myPet) {
-        super(EntityTypes.HUSK, world, myPet);
+        super(world, myPet);
     }
 
     /**

@@ -23,14 +23,13 @@ package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.EntityTypes;
 import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 0.4F, height = 0.1F)
 public class EntityMyEndermite extends EntityMyPet {
 
     public EntityMyEndermite(World world, MyPet myPet) {
-        super(EntityTypes.ENDERMITE, world, myPet);
+        super(world, myPet);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class EntityMyIronGolem extends EntityMyPet {
     boolean flower = false;
 
     public EntityMyIronGolem(World world, MyPet myPet) {
-        super(EntityTypes.IRON_GOLEM, world, myPet);
+        super(world, myPet);
     }
 
     public boolean attack(Entity entity) {

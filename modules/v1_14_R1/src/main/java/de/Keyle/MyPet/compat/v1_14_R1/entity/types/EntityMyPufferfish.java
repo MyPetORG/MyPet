@@ -26,7 +26,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPufferfish;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DataWatcherObject;
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_14_R1.World;
 
 @EntitySize(width = 0.5F, height = 0.5f)
 public class EntityMyPufferfish extends EntityMyPet {
@@ -35,7 +38,7 @@ public class EntityMyPufferfish extends EntityMyPet {
     private static final DataWatcherObject<Integer> PUFF_WATCHER = DataWatcher.a(EntityMyPufferfish.class, DataWatcherRegistry.b);
 
     public EntityMyPufferfish(World world, MyPet myPet) {
-        super(EntityTypes.PUFFERFISH, world, myPet);
+        super(world, myPet);
     }
 
     @Override

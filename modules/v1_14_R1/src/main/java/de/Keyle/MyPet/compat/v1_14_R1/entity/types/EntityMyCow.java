@@ -33,7 +33,7 @@ public class EntityMyCow extends EntityMyPet {
     private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyCow.class, DataWatcherRegistry.i);
 
     public EntityMyCow(World world, MyPet myPet) {
-        super(EntityTypes.COW, world, myPet);
+        super(world, myPet);
     }
 
     @Override

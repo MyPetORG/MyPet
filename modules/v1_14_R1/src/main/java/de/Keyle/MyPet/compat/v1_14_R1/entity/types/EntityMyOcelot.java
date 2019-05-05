@@ -34,7 +34,7 @@ public class EntityMyOcelot extends EntityMyPet {
     private static final DataWatcherObject<Boolean> TRUSTING_WATCHER = DataWatcher.a(EntityMyOcelot.class, DataWatcherRegistry.i);
 
     public EntityMyOcelot(World world, MyPet myPet) {
-        super(EntityTypes.OCELOT, world, myPet);
+        super(world, myPet);
     }
 
     protected String getDeathSound() {
