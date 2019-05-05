@@ -137,7 +137,14 @@ public class SentryErrorReporter implements ErrorReporter {
         long myPetTraces = Arrays.stream(t.getStackTrace())
                 .filter(trace -> trace.getClassName().contains("mypet") && trace.getClassName().contains("npc"))
                 .count();
-        return myPetTraces == 0;
+        if (myPetTraces > 0) {
+            return false;
+        }
+        myPetTraces = Arrays.stream(t.getStackTrace())
+                .limit(15)
+                .filter(stackTraceElement -> stackTraceElement.getClassName().contains("MyPet"))
+                .count();
+        return myPetTraces >= 1;
     }
 
     protected class MyPetExceptionAppender extends AbstractAppender {
