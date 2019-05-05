@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity;
 
-import com.google.common.base.CaseFormat;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
@@ -122,8 +121,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     }
 
     protected int getEntityTypeId(MyPetType type) {
-        String mcName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, type.name());
-        EntityTypes types = IRegistry.ENTITY_TYPE.get(new MinecraftKey(mcName));
+        EntityTypes types = IRegistry.ENTITY_TYPE.get(new MinecraftKey(type.getTypeID().toString()));
         return IRegistry.ENTITY_TYPE.a(types);
     }
 }

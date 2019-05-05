@@ -64,19 +64,14 @@ public class EntityMySnowman extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        byte oldValue = getDataWatcher().get(SHEARED_WATCHER);
-        if (getMyPet().isSheared()) {
-            getDataWatcher().set(SHEARED_WATCHER, (byte) (oldValue & 0xFFFFFFEF));
-        } else {
-            getDataWatcher().set(SHEARED_WATCHER, (byte) (oldValue | 0x10));
-        }
+        getDataWatcher().set(SHEARED_WATCHER, (byte) (getMyPet().isSheared() ? 0 : 16));
     }
 
     @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
 
-        getDataWatcher().register(SHEARED_WATCHER, (byte) 0);
+        getDataWatcher().register(SHEARED_WATCHER, (byte) 16);
     }
 
     @Override
