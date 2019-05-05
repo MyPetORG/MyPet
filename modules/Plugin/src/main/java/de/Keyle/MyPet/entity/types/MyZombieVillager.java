@@ -53,7 +53,7 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Profession", new TagInt(getProfession()));
-        info.getCompoundData().put("Type", new TagInt(getType().ordinal()));
+        info.getCompoundData().put("VillagerType", new TagInt(getType().ordinal()));
         info.getCompoundData().put("TradingLevel", new TagInt(getTradingLevel()));
 
         List<TagCompound> itemList = new ArrayList<>();
@@ -77,8 +77,8 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
         if (info.getCompoundData().containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("Type")) {
-            setType(MyVillager.Type.values()[info.getAs("Type", TagInt.class).getIntData()]);
+        if (info.getCompoundData().containsKey("VillagerType")) {
+            setType(MyVillager.Type.values()[info.getAs("VillagerType", TagInt.class).getIntData()]);
         }
         if (info.getCompoundData().containsKey("TradingLevel")) {
             setTradingLevel(info.getAs("TradingLevel", TagInt.class).getIntData());

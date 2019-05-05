@@ -44,7 +44,7 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Profession", new TagInt(getProfession()));
-        info.getCompoundData().put("Type", new TagInt(getType().ordinal()));
+        info.getCompoundData().put("VillagerType", new TagInt(getType().ordinal()));
         info.getCompoundData().put("VillagerLevel", new TagInt(getVillagerLevel()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         if (originalData != null) {
@@ -58,8 +58,8 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
         if (info.getCompoundData().containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("Type")) {
-            setType(Type.values()[info.getAs("Type", TagInt.class).getIntData()]);
+        if (info.getCompoundData().containsKey("VillagerType")) {
+            setType(Type.values()[info.getAs("VillagerType", TagInt.class).getIntData()]);
         }
         if (info.getCompoundData().containsKey("VillagerLevel")) {
             setVillagerLevel(info.getAs("VillagerLevel", TagInt.class).getIntData());

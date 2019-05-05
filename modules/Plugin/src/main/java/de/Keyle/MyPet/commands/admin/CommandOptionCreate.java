@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandOptionCreator;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -60,130 +61,219 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         commonTypeOptionList.add("skilltree:");
         commonTypeOptionList.add("name:");
 
-        List<String> petTypeOptionList = new ArrayList<>();
+        petTypeOptionMap.put("blaze", new CommandOptionCreator()
+                .add("fire")
+                .get());
 
-        petTypeOptionList.add("fire");
-        petTypeOptionMap.put("blaze", petTypeOptionList);
+        petTypeOptionMap.put("chicken", new CommandOptionCreator()
+                .add("baby")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionMap.put("chicken", petTypeOptionList);
-        petTypeOptionMap.put("cow", petTypeOptionList);
-        petTypeOptionMap.put("mooshroom", petTypeOptionList);
+        petTypeOptionMap.put("cat", new CommandOptionCreator()
+                .add("baby")
+                .add("type:")
+                .add("collar:")
+                .add("tamed")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("powered");
-        petTypeOptionMap.put("creeper", petTypeOptionList);
+        petTypeOptionMap.put("cow", new CommandOptionCreator()
+                .add("baby")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("block:");
-        petTypeOptionMap.put("enderman", petTypeOptionList);
+        petTypeOptionMap.put("creeper", new CommandOptionCreator()
+                .add("powered")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("size:");
-        petTypeOptionMap.put("magmacube", petTypeOptionList);
-        petTypeOptionMap.put("slime", petTypeOptionList);
-        petTypeOptionMap.put("phantom", petTypeOptionList);
+        petTypeOptionMap.put("donkey", new CommandOptionCreator()
+                .add("baby")
+                .add("saddle")
+                .add("chest")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("cat:");
-        petTypeOptionMap.put("ocelot", petTypeOptionList);
+        petTypeOptionMap.put("drowned", new CommandOptionCreator()
+                .add("baby")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("saddle");
-        petTypeOptionMap.put("pig", petTypeOptionList);
+        petTypeOptionMap.put("enderman", new CommandOptionCreator()
+                .add("block:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("color:");
-        petTypeOptionMap.put("sheep", petTypeOptionList);
+        petTypeOptionMap.put("fox", new CommandOptionCreator()
+                .add("type:red")
+                .add("type:white")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("wither");
-        petTypeOptionList.add("stray");
-        petTypeOptionMap.put("skeleton", petTypeOptionList);
+        petTypeOptionMap.put("guardian", new CommandOptionCreator()
+                .add("1.7.10", "1.11", "elder")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("profession:");
-        petTypeOptionMap.put("villager", petTypeOptionList);
+        petTypeOptionMap.put("horse", new CommandOptionCreator()
+                .add("baby")
+                .add("saddle")
+                .add("variant:")
+                .add("horse:")
+                .add("1.7.10", "1.11", "chest")
+                .add("1.7.10", "1.11", "donkey:")
+                .add("1.7.10", "1.11", "mule:")
+                .add("1.7.10", "1.11", "zombie:")
+                .add("1.7.10", "1.11", "skeleton:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("profession:");
-        petTypeOptionMap.put("zombievillager", petTypeOptionList);
+        petTypeOptionMap.put("irongolem", new CommandOptionCreator()
+                .add("flower")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("angry");
-        petTypeOptionList.add("tamed");
-        petTypeOptionList.add("collar:");
-        petTypeOptionMap.put("wolf", petTypeOptionList);
+        petTypeOptionMap.put("llama", new CommandOptionCreator()
+                .add("baby")
+                //.add("chest")
+                .add("variant:")
+                //.add("decor:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("husk");
-        petTypeOptionList.add("villager");
-        petTypeOptionList.add("profession:");
-        petTypeOptionMap.put("zombie", petTypeOptionList);
+        petTypeOptionMap.put("magmacube", new CommandOptionCreator()
+                .add("size:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionMap.put("pigzombie", petTypeOptionList);
-        petTypeOptionMap.put("polarbear", petTypeOptionList);
-        petTypeOptionMap.put("wither", petTypeOptionList);
-        petTypeOptionMap.put("turtle", petTypeOptionList);
-        petTypeOptionMap.put("drowned", petTypeOptionList);
+        petTypeOptionMap.put("mooshroom", new CommandOptionCreator()
+                .add("baby")
+                .add("1.14", "type:brown")
+                .add("1.14", "type:red")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("chest");
-        petTypeOptionList.add("saddle");
-        petTypeOptionList.add("donkey");
-        petTypeOptionList.add("mule");
-        petTypeOptionList.add("zombie");
-        petTypeOptionList.add("skeleton");
-        petTypeOptionList.add("horse:");
-        petTypeOptionList.add("variant:");
-        petTypeOptionMap.put("horse", petTypeOptionList);
+        petTypeOptionMap.put("mule", new CommandOptionCreator()
+                .add("baby")
+                .add("saddle")
+                .add("chest")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionMap.put("zombiehorse", petTypeOptionList);
+        petTypeOptionMap.put("ocelot", new CommandOptionCreator()
+                .add("baby")
+                .add("1.7.10", "1.14", "cat:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("variant:");
-        petTypeOptionMap.put("rabbit", petTypeOptionList);
+        petTypeOptionMap.put("panda", new CommandOptionCreator()
+                .add("baby")
+                //.add("main-gene:")
+                //.add("hidden-gene:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("elder");
-        petTypeOptionMap.put("guardian", petTypeOptionList);
+        petTypeOptionMap.put("parrot", new CommandOptionCreator()
+                .add("variant:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("glowing");
-        petTypeOptionMap.put("vex", petTypeOptionList);
+        petTypeOptionMap.put("phantom", new CommandOptionCreator()
+                .add("size:")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("variant:");
-        petTypeOptionMap.put("llama", petTypeOptionList);
+        petTypeOptionMap.put("pig", new CommandOptionCreator()
+                .add("baby")
+                .add("saddle")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("variant:");
-        petTypeOptionMap.put("parrot", petTypeOptionList);
-        petTypeOptionMap.put("tropicalfish", petTypeOptionList);
+        petTypeOptionMap.put("pigzombie", new CommandOptionCreator()
+                .add("baby")
+                .get());
 
-        petTypeOptionList = new ArrayList<>();
-        petTypeOptionList.add("puff:none");
-        petTypeOptionList.add("puff:semi");
-        petTypeOptionList.add("puff:fully");
-        petTypeOptionMap.put("pufferfish", petTypeOptionList);
+        petTypeOptionMap.put("polarbear", new CommandOptionCreator()
+                .add("baby")
+                .get());
+
+        petTypeOptionMap.put("pufferfish", new CommandOptionCreator()
+                .add("puff:none")
+                .add("puff:semi")
+                .add("puff:fully")
+                .get());
+
+        petTypeOptionMap.put("rabbit", new CommandOptionCreator()
+                .add("baby")
+                .add("variant:")
+                .get());
+
+        petTypeOptionMap.put("sheep", new CommandOptionCreator()
+                .add("baby")
+                .add("color:")
+                .add("sheared")
+                .get());
+
+        petTypeOptionMap.put("skeleton", new CommandOptionCreator()
+                .add("baby")
+                .add("1.10", "1.11", "stray")
+                .add("1.7.10", "1.11", "wither")
+                .get());
+
+        petTypeOptionMap.put("skeletonhorse", new CommandOptionCreator()
+                .add("baby")
+                .add("saddle")
+                .get());
+
+        petTypeOptionMap.put("slime", new CommandOptionCreator()
+                .add("size:")
+                .get());
+
+        petTypeOptionMap.put("snowman", new CommandOptionCreator()
+                .add("sheared")
+                .get());
+
+        petTypeOptionMap.put("traderllama", new CommandOptionCreator()
+                .add("baby")
+                .add("chest")
+                .add("variant:")
+                .add("decor:")
+                .get());
+
+        petTypeOptionMap.put("tropicalfish", new CommandOptionCreator()
+                .add("variant:")
+                .get());
+
+        petTypeOptionMap.put("turtle", new CommandOptionCreator()
+                .add("baby")
+                .get());
+
+        petTypeOptionMap.put("vex", new CommandOptionCreator()
+                .add("glowing")
+                .get());
+
+        petTypeOptionMap.put("villager", new CommandOptionCreator()
+                .add("baby")
+                .add("profession:")
+                .add("1.14", "level:")
+                .add("1.14", "type:")
+                .get());
+
+        petTypeOptionMap.put("wither", new CommandOptionCreator()
+                .add("baby")
+                .get());
+
+        petTypeOptionMap.put("wolf", new CommandOptionCreator()
+                .add("baby")
+                .add("angry")
+                .add("tamed")
+                .add("collar:")
+                .get());
+
+        petTypeOptionMap.put("zombie", new CommandOptionCreator()
+                .add("baby")
+                .add("1.10", "1.11", "husk")
+                .add("1.7.10", "1.11", "villager")
+                .add("1.7.10", "1.11", "profession:")
+                .get());
+
+        petTypeOptionMap.put("zombiehorse", new CommandOptionCreator()
+                .add("baby")
+                .add("saddle")
+                .get());
+
+        petTypeOptionMap.put("zombievillager", new CommandOptionCreator()
+                .add("baby")
+                .add("profession:")
+                .add("1.14", "level:")
+                .add("1.14", "type:")
+                .get());
 
         for (MyPetType petType : MyPetType.values()) {
-            petTypeList.add(petType.name());
+            if (petType.checkMinecraftVersion()) {
+                petTypeList.add(petType.name());
+            }
         }
     }
 
@@ -392,7 +482,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             variant = 0;
                         }
                         compound.getCompoundData().put("Variant", new TagByte(variant));
-                    } else if (petType == MyPetType.Llama) {
+                    } else if (petType == MyPetType.Llama || petType == MyPetType.TraderLlama) {
                         if (variant > 3 || variant < 0) {
                             variant = 0;
                         }
@@ -414,10 +504,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 String professionString = arg.replace("profession:", "");
                 if (Util.isInt(professionString)) {
                     int profession = Integer.parseInt(professionString);
-                    profession = Math.min(Math.max(0, profession), 5);
+                    profession = Math.min(Math.max(0, profession), MyPetApi.getCompatUtil().isCompatible("1.14") ? 15 : 5);
                     if (petType == MyPetType.Villager) {
                         compound.getCompoundData().put("Profession", new TagInt(profession));
-                    } else if (petType == MyPetType.Zombie) {
+                    } else if (petType == MyPetType.Zombie || petType == MyPetType.ZombieVillager) {
                         compound.getCompoundData().put("Villager", new TagByte(true));
                         compound.getCompoundData().put("Profession", new TagInt(profession));
                     }
@@ -453,6 +543,48 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         break;
                     case "puff:fully":
                         compound.getCompoundData().put("PuffState", new TagInt(2));
+                        break;
+                }
+            } else if (arg.startsWith("type:")) {
+                switch (petType) {
+                    case Fox:
+                        switch (arg) {
+                            case "type:white":
+                                compound.getCompoundData().put("FoxType", new TagInt(1));
+                                break;
+                            case "type:red":
+                            default:
+                                compound.getCompoundData().put("FoxType", new TagInt(0));
+                                break;
+                        }
+                        break;
+                    case Mooshroom:
+                        switch (arg) {
+                            case "type:brown":
+                                compound.getCompoundData().put("CowType", new TagInt(1));
+                                break;
+                            case "type:red":
+                            default:
+                                compound.getCompoundData().put("CowType", new TagInt(0));
+                                break;
+                        }
+                        break;
+                    case Cat:
+                        String catTypeString = arg.replace("type:", "");
+                        if (Util.isInt(catTypeString)) {
+                            int catType = Integer.parseInt(catTypeString);
+                            catType = Util.clamp(catType, 0, 10);
+                            compound.getCompoundData().put("CatType", new TagInt(catType));
+                        }
+                        break;
+                    case Villager:
+                    case ZombieVillager:
+                        String villagerTypeString = arg.replace("type:", "");
+                        if (Util.isInt(villagerTypeString)) {
+                            int villagerType = Integer.parseInt(villagerTypeString);
+                            villagerType = Util.clamp(villagerType, 0, 6);
+                            compound.getCompoundData().put("Type", new TagInt(villagerType));
+                        }
                         break;
                 }
             }
