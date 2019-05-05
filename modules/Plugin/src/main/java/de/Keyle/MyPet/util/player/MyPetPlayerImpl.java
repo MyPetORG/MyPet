@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,12 +31,13 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.util.CaptureHelper;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -494,7 +495,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         }
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
-                        if (CaptureHelper.checkTamable((LivingEntity) entity, p)) {
+                        if (checkTamable((LivingEntity) entity, p)) {
                             MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.LIME_GREEN_WOOL_DATA);
                         } else {
                             MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.RED_WOOL_DATA);
@@ -506,6 +507,17 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 }
             }
         }
+    }
+
+    protected boolean checkTamable(LivingEntity leashTarget, Player p) {
+        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(MyPetType.byEntityTypeName(leashTarget.getType().name()))) {
+            String flagName = flagSettings.getName();
+            LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
+            if (flag != null && !flag.check(p, leashTarget, 0, flagSettings)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
