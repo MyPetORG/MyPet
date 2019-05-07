@@ -697,7 +697,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
-    private void ride(float motionSideways, float f, float motionForward, float speedModifier) {
+    private void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
         double locY;
         float f2;
         float speed;
@@ -708,7 +708,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             speed = 0.8F;
             swimmSpeed = 0.02F;
 
-            this.a(motionSideways, motionForward, f, swimmSpeed);
+            this.a(swimmSpeed, new Vec3D(motionSideways, motionUpwards, motionForward));
             this.move(EnumMoveType.SELF, this.getMot());
             double motX = this.getMot().x * (double) speed;
             double motY = this.getMot().y * 0.800000011920929D;
@@ -720,7 +720,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             this.setMot(motX, motY, motZ);
         } else if (this.ax()) { // in lava
             locY = this.locY;
-            this.a(motionSideways, motionForward, f, 0.02F);
+            this.a(0.02F, new Vec3D(motionSideways, motionUpwards, motionForward));
             this.move(EnumMoveType.SELF, this.getMot());
             double motX = this.getMot().x * 0.5D;
             double motY = this.getMot().y * 0.5D;
@@ -741,7 +741,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
             speed = speedModifier * (0.16277136F / (friction * friction * friction));
 
-            this.a(motionSideways, motionForward, f, speed);
+            this.a(speed, new Vec3D(motionSideways, motionUpwards, motionForward));
             friction = 0.91F;
             if (this.onGround) {
                 friction = this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(minY) - 1, MathHelper.floor(this.locZ))).getBlock().m() * 0.91F;
@@ -1092,9 +1092,9 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         }
     }
 
-    public void a(float motionSideways, float motionForward, float f) {
+    public void e(Vec3D vec3d) {
         if (!hasRider || !this.isVehicle()) {
-            super.a(motionSideways, motionForward, f);
+            super.e(vec3d);
             return;
         }
 
@@ -1122,8 +1122,8 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         this.aM = (this.aK = this.yaw);
 
         // get motion from passenger (player)
-        motionSideways = passenger.bb * 0.5F;
-        motionForward = passenger.bd;
+        double motionSideways = passenger.bb * 0.5F;
+        double motionForward = passenger.bd;
 
         // backwards is slower
         if (motionForward <= 0.0F) {
@@ -1143,7 +1143,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             ascendSpeed *= factor;
         }
 
-        ride(motionSideways, motionForward, f, speed); // apply motion
+        ride(motionSideways, motionForward, vec3d.y, speed); // apply motion
 
         // throw player move event
         if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING && !(this instanceof EntityMyHorse)) {
