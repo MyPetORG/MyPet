@@ -215,7 +215,7 @@ public enum MyPetType {
             .v("1.13", "stray")
             .search()),
     TraderLlama("TRADER_LLAMA", "1.14", MyTraderLlama.class, new Compat<>()
-            .v("1.14", "zombie_villager")
+            .v("1.14", "trader_llama")
             .search()),
     TropicalFish("TROPICAL_FISH", "1.13", MyTropicalFish.class, new Compat<>()
             .v("1.13", "tropical_fish")
@@ -224,7 +224,7 @@ public enum MyPetType {
             .v("1.13", "turtle")
             .search()),
     WanderingTrader("WANDERING_TRADER", "1.14", MyWanderingTrader.class, new Compat<>()
-            .v("1.14", "zombie_villager")
+            .v("1.14", "wandering_trader")
             .search()),
     Witch("WITCH", "1.7.10", MyWitch.class, new Compat<>()
             .v("1.7.10", 66)
