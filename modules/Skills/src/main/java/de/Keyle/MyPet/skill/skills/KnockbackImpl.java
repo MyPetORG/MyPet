@@ -71,10 +71,11 @@ public class KnockbackImpl implements Knockback {
     }
 
     public void apply(LivingEntity target) {
+        double yaw = myPet.getLocation().get().getYaw() % 360;
         target.setVelocity(new Vector(
-                -Math.sin(myPet.getLocation().get().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F,
+                -Math.sin(yaw * Math.PI / 180.0F) * 2 * 0.5F,
                 0.1D,
-                Math.cos(myPet.getLocation().get().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F
+                Math.cos(yaw * Math.PI / 180.0F) * 2 * 0.5F
         ));
     }
 
