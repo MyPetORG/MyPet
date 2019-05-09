@@ -20,14 +20,13 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyRavager;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_14_R1.DataWatcher;
-import net.minecraft.server.v1_14_R1.DataWatcherObject;
-import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
-import net.minecraft.server.v1_14_R1.World;
+import de.Keyle.MyPet.skill.skills.RideImpl;
+import net.minecraft.server.v1_14_R1.*;
 
 @EntitySize(width = 1.95F, height = 2.2F)
 public class EntityMyRavager extends EntityMyPet {
@@ -60,6 +59,16 @@ public class EntityMyRavager extends EntityMyPet {
 
     public void playPetStepSound() {
         makeSound("entity.ravager.step", 0.15F, 1.0F);
+    }
+
+    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
+            if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
+                getOwner().sendMessage("Unfortunately, Ravagers can not be ridden at the moment (Minecraft 1.14 problem)");
+                return true;
+            }
+        }
+        return super.handlePlayerInteraction(entityhuman, enumhand, itemStack);
     }
 
     public MyRavager getMyPet() {
