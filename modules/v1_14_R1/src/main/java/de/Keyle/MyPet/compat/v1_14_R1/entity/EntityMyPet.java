@@ -535,7 +535,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         if (hasRider) {
             if (!isVehicle()) {
                 hasRider = false;
-                this.Q = 0.5F; // climb height -> halfslab
+                this.K = 0.5F; // climb height -> halfslab
                 Location playerLoc = getOwner().getPlayer().getLocation();
                 Location petLoc = getBukkitEntity().getLocation();
                 petLoc.setYaw(playerLoc.getYaw());
@@ -547,7 +547,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                 for (Entity e : passengers) {
                     if (e instanceof EntityPlayer && getOwner().equals(e)) {
                         hasRider = true;
-                        this.Q = 1.0F; // climb height -> 1 block
+                        this.K = 1.0F; // climb height -> 1 block
                         petTargetSelector.finish();
                         petPathfinderSelector.finish();
                     } else {
