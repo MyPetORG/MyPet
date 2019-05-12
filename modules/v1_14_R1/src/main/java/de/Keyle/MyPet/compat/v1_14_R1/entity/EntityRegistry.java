@@ -32,6 +32,7 @@ import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -46,18 +47,18 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public EntityRegistry() {
     }
 
-    protected void registerEntityType(MyPetType petType, String key) {
-        EntitySize size = IRegistry.ENTITY_TYPE.get(new MinecraftKey(key.toLowerCase())).j();
-        entityTypes.put(petType, IRegistry.a(IRegistry.ENTITY_TYPE, "mypet_" + key.toLowerCase(), EntityTypes.a.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
-        overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType));
+    protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+        EntitySize size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).j();
+        entityTypes.put(petType, IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.a.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
+        overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
     }
 
     @SuppressWarnings("unchecked")
-    protected void registerEntity(MyPetType type) {
+    protected void registerEntity(MyPetType type, RegistryBlocks entityRegistry) {
         Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMy" + type.name());
         entityClasses.put(type, entityClass);
         String key = type.getTypeID().toString();
-        registerEntityType(type, key);
+        registerEntityType(type, key, entityRegistry);
     }
 
     @Override
@@ -91,8 +92,9 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     @Override
     public void registerEntityTypes() {
+        RegistryBlocks entityRegistry = (RegistryBlocks) getRegistry(IRegistry.ENTITY_TYPE);
         for (MyPetType type : MyPetType.values()) {
-            registerEntity(type);
+            registerEntity(type, entityRegistry);
         }
     }
 
@@ -105,9 +107,32 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public void unregisterEntityTypes() {
     }
 
+    public RegistryMaterials getRegistry(RegistryMaterials registryMaterials) {
+        if (!registryMaterials.getClass().getName().equals(RegistryMaterials.class.getName())) {
+            MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
+            for (Field field : registryMaterials.getClass().getDeclaredFields()) {
+                if (field.getType() == RegistryMaterials.class) {
+                    field.setAccessible(true);
+                    try {
+                        RegistryMaterials reg = (RegistryMaterials) field.get(registryMaterials);
+
+                        if (!reg.getClass().getName().equals(RegistryBlocks.class.getName())) {
+                            reg = getRegistry(reg);
+                        }
+
+                        return reg;
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return registryMaterials;
+    }
+
     @SuppressWarnings("ConstantConditions")
-    protected void overwriteEntityID(EntityTypes types, int id) {
-        RegistryID registryID = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials.class, IRegistry.ENTITY_TYPE, "b");
+    protected void overwriteEntityID(EntityTypes types, int id, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+        RegistryID registryID = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "b");
         int[] c = (int[]) ReflectionUtil.getFieldValue(RegistryID.class, registryID, "c");
         Method b = ReflectionUtil.getMethod(RegistryID.class, "b", Object.class, int.class);
         Method d = ReflectionUtil.getMethod(RegistryID.class, "d", Object.class);
@@ -120,8 +145,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         }
     }
 
-    protected int getEntityTypeId(MyPetType type) {
-        EntityTypes types = IRegistry.ENTITY_TYPE.get(new MinecraftKey(type.getTypeID().toString()));
-        return IRegistry.ENTITY_TYPE.a(types);
+    protected int getEntityTypeId(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+        EntityTypes types = entityRegistry.get(new MinecraftKey(type.getTypeID().toString()));
+        return entityRegistry.a(types);
     }
 }
