@@ -127,20 +127,30 @@ public class SentryErrorReporter implements ErrorReporter {
         ) {
             return false;
         }
+        Optional<StackTraceElement> element;
         if (t instanceof NullPointerException) {
-            long myPetTraces = Arrays.stream(t.getStackTrace())
+            element = Arrays.stream(t.getStackTrace())
                     .limit(3)
                     .filter(stackTraceElement -> stackTraceElement.getClassName().contains("MyPet"))
-                    .count();
-            return myPetTraces >= 1;
+                    .findFirst();
+            if (!element.isPresent()) {
+                return false;
+            }
+            element = Arrays.stream(t.getStackTrace())
+                    .filter(trace -> trace.toString().contains("BukkitAdapter.adapt"))
+                    .findFirst();
+            if (element.isPresent()) {
+                return false;
+            }
         }
-        long myPetTraces = Arrays.stream(t.getStackTrace())
+
+        element = Arrays.stream(t.getStackTrace())
                 .filter(trace -> trace.getClassName().contains("mypet") && trace.getClassName().contains("npc"))
-                .count();
-        if (myPetTraces > 0) {
+                .findFirst();
+        if (element.isPresent()) {
             return false;
         }
-        myPetTraces = Arrays.stream(t.getStackTrace())
+        long myPetTraces = Arrays.stream(t.getStackTrace())
                 .limit(15)
                 .filter(stackTraceElement -> stackTraceElement.getClassName().contains("MyPet"))
                 .count();
