@@ -331,12 +331,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         world.getServer()
                 .getServer()
                 .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.worldProvider.getDimensionManager(),
                         new PacketPlayOutSpawnEntityWeather(lightning));
         world.getServer()
                 .getServer()
                 .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.worldProvider.getDimensionManager(),
                         new PacketPlayOutNamedSoundEffect(SoundEffects.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
     }
 
