@@ -139,7 +139,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
         getDataWatcher().register(UNUSED_WATCHER_1, false);
         getDataWatcher().register(UNUSED_WATCHER_2, false);
         getDataWatcher().register(SHIVER_WATCHER, false);
-        getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.c, VillagerProfession.NONE, 1));
+        getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.a("plains"), VillagerProfession.NONE, 1));
     }
 
     @Override

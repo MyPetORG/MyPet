@@ -72,7 +72,7 @@ public class EntityMyVillager extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
-        getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.c, VillagerProfession.NONE, 1));
+        getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.a("plains"), VillagerProfession.NONE, 1));
     }
 
     @Override
