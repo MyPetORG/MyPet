@@ -155,7 +155,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
             }
         }
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!");
-        MyPetApi.getLogger().info("Silltrees reloaded!");
+        MyPetApi.getLogger().info("Skilltrees reloaded!");
     }
 
     protected void reloadShops(CommandSender sender) {
