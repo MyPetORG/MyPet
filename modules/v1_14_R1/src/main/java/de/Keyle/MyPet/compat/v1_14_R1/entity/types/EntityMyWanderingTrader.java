@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWanderingTrader;
@@ -33,6 +34,7 @@ import net.minecraft.server.v1_14_R1.World;
 public class EntityMyWanderingTrader extends EntityMyPet {
 
     private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyWanderingTrader.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> UNUSED_WATCHER = DataWatcher.a(EntityMyWanderingTrader.class, DataWatcherRegistry.b);
 
     public EntityMyWanderingTrader(World world, MyPet myPet) {
         super(world, myPet);
@@ -53,6 +55,9 @@ public class EntityMyWanderingTrader extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
+        if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
+            getDataWatcher().register(UNUSED_WATCHER, 0);
+        }
     }
 
     public MyWanderingTrader getMyPet() {

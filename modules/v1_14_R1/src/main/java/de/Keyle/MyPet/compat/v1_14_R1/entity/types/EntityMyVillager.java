@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -31,6 +32,7 @@ import net.minecraft.server.v1_14_R1.*;
 public class EntityMyVillager extends EntityMyPet {
 
     private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> UNUSED_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<VillagerData> PROFESSION_WATCHER = DataWatcher.a(EntityMyVillager.class, DataWatcherRegistry.q);
 
     public EntityMyVillager(World world, MyPet myPet) {
@@ -72,6 +74,9 @@ public class EntityMyVillager extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
+        if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
+            getDataWatcher().register(UNUSED_WATCHER, 0);
+        }
         getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.a("plains"), VillagerProfession.NONE, 1));
     }
 
