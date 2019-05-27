@@ -71,10 +71,13 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
 
     @Override
     public void onDisable() {
-        if (CitizensAPI.hasImplementation()) {
-            CitizensAPI.getTraitFactory().deregisterTrait(storageTrait);
-            CitizensAPI.getTraitFactory().deregisterTrait(walletTrait);
-            CitizensAPI.getTraitFactory().deregisterTrait(shopTrait);
+        try {
+            if (CitizensAPI.hasImplementation()) {
+                CitizensAPI.getTraitFactory().deregisterTrait(storageTrait);
+                CitizensAPI.getTraitFactory().deregisterTrait(walletTrait);
+                CitizensAPI.getTraitFactory().deregisterTrait(shopTrait);
+            }
+        } catch (Error ignored) {
         }
     }
 
