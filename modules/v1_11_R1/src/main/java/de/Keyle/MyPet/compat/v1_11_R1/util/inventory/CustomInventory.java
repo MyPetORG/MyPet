@@ -72,7 +72,9 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public void setSize(int size) {
-        this.size = Util.clamp(size, 0, 64);
+        size = (int) (size / 9.);
+        size *= 9;
+        this.size = Util.clamp(size, 0, 54);
         for (int i = items.size(); i < this.size; i++) {
             items.set(i, ItemStack.a);
         }
