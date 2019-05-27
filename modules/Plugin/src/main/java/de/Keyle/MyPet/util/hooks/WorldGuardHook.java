@@ -166,19 +166,21 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public StateFlag.State getState(Location loc, Player player, StateFlag... flags) {
         if (is7) {
             RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            return rc.createQuery().queryState(
-                    BukkitAdapter.adapt(loc),
-                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
-                    flags);
+            if (rc != null) {
+                return rc.createQuery().queryState(
+                        BukkitAdapter.adapt(loc),
+                        player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                        flags);
+            }
         } else {
             try {
                 RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
                 ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
                 return set.queryState(player != null ? wgp.wrapPlayer(player) : null, flags);
             } catch (Exception ignored) {
-                return StateFlag.State.ALLOW;
             }
         }
+        return StateFlag.State.ALLOW;
     }
 
     public Collection<Double> getDoubleValue(Location loc, Player player, DoubleFlag flag) {
