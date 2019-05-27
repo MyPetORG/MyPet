@@ -82,7 +82,7 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
     public void on(PlayerExperienceGainEvent event) {
         if (GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
-            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            if (player != null && MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                 if (petPlayer.hasMyPet()) {
                     MyPet myPet = petPlayer.getMyPet();
@@ -102,7 +102,7 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
     public void on(PlayerExperienceLostEvent event) {
         if (GRANT_EXP) {
             Player player = event.getPlayerData().getPlayer();
-            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            if (player != null && MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                 if (petPlayer.hasMyPet()) {
                     MyPet myPet = petPlayer.getMyPet();
