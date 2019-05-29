@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -224,6 +224,9 @@ public class ShopMyPet implements StoredMyPet {
     }
 
     public void load(ConfigurationSection config) {
+        if (config == null) {
+            return;
+        }
         price = config.getDouble("Price", 0);
         position = config.getInt("Position", -1);
         petType = MyPetType.byName(config.getString("PetType", "Pig"));
