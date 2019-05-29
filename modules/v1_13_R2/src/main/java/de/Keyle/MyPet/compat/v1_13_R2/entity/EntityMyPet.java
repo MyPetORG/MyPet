@@ -250,7 +250,11 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 suffix = suffix.replace("<owner>", getOwner().getName());
                 suffix = suffix.replace("<level>", "" + getMyPet().getExperience().getLevel());
                 this.setCustomNameVisible(getCustomNameVisible());
-                super.setCustomName(CraftChatMessage.fromStringOrNull(Util.cutString(prefix + myPet.getPetName() + suffix, 64)));
+                String name = myPet.getPetName();
+                if (!Permissions.has(getOwner(), "MyPet.command.name.color")) {
+                    name = ChatColor.stripColor(name);
+                }
+                super.setCustomName(CraftChatMessage.fromStringOrNull(Util.cutString(prefix + name + suffix, 64)));
             }
         } catch (Exception e) {
             e.printStackTrace();

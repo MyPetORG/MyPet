@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -84,11 +84,10 @@ public class CommandName implements CommandTabCompleter {
                 name = Util.cutString(name, 64);
 
                 if (nameWihtoutColors.length() <= Configuration.Name.MAX_LENGTH) {
+                    myPet.setPetName(name);
                     if (Permissions.has(petOwner, "MyPet.command.name.color")) {
-                        myPet.setPetName(name);
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), name));
                     } else {
-                        myPet.setPetName(nameWihtoutColors);
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), nameWihtoutColors));
                     }
                 } else {
