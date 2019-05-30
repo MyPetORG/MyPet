@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
-import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagCompound;
@@ -36,7 +35,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-public class BackpackImpl implements Backpack {
+public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
 
     protected UpgradeComputer<Number> rows = new UpgradeComputer<>(0);
     protected UpgradeComputer<Boolean> dropOnDeath = new UpgradeComputer<>(false);
@@ -75,7 +74,7 @@ public class BackpackImpl implements Backpack {
                 myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()));
                 return false;
             }
-            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Inventory.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
+            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
                 myPet.getOwner().sendMessage(Translation.getString("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }

@@ -149,8 +149,8 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Exp.Modifier.Use-Permissions", LevelSystem.Experience.Modifier.PERMISSION);
 
         config.addDefault("MyPet.Skill.Control.Item", "lead");
-        config.addDefault("MyPet.Skill.Inventory.Creative", Skilltree.Skill.Inventory.OPEN_IN_CREATIVE);
-        config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES);
+        config.addDefault("MyPet.Skill.Backpack.Creative", Skilltree.Skill.Backpack.OPEN_IN_CREATIVE);
+        config.addDefault("MyPet.Skill.Backpack.DropWhenOwnerDies", Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES);
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME);
         config.addDefault("MyPet.Skill.Beacon.Party-Support", Skilltree.Skill.Beacon.PARTY_SUPPORT);
         config.addDefault("MyPet.Skill.Ride.Item", "lead");
@@ -316,8 +316,8 @@ public class ConfigurationLoader {
 
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Skilltree.Skill.Beacon.PARTY_SUPPORT = config.getBoolean("MyPet.Skill.Beacon.Party-Support", true);
-        Skilltree.Skill.Inventory.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
-        Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
+        Skilltree.Skill.Backpack.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Backpack.Creative", true);
+        Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Backpack.DropWhenOwnerDies", false);
         Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);
         Skilltree.Skill.Ride.PREVENT_TELEPORTATION = config.getBoolean("MyPet.Skill.Ride.Prevent-Teleportation-While-Riding", false);
         Skilltree.SWITCH_FEE_FIXED = config.getDouble("MyPet.Skilltree.SwitchFee.Fixed", 0.0);
@@ -564,6 +564,11 @@ public class ConfigurationLoader {
         }
         if (config.contains("MyPet.Backup")) {
             config.getConfigurationSection("MyPet").set("Backup", null);
+        }
+        if (config.contains("MyPet.Skill.Inventory.Creative")) {
+            Skilltree.Skill.Backpack.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
+            Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
+            config.getConfigurationSection("MyPet.Skill").set("Inventory", null);
         }
         if (config.contains("MyPet.Exp.Active")) {
             for (EntityType entityType : EntityType.values()) {

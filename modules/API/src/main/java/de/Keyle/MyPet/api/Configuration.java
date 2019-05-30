@@ -182,7 +182,7 @@ public class Configuration {
                 public static boolean PARTY_SUPPORT = true;
             }
 
-            public static class Inventory {
+            public static class Backpack {
 
                 public static boolean OPEN_IN_CREATIVE = false;
                 public static boolean DROP_WHEN_OWNER_DIES = false;

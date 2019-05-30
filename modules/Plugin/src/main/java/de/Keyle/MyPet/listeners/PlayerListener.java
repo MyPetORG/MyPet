@@ -468,7 +468,7 @@ public class PlayerListener implements Listener {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getEntity());
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (myPet.getStatus() == MyPet.PetState.Here && Configuration.Skilltree.Skill.Inventory.DROP_WHEN_OWNER_DIES) {
+                if (myPet.getStatus() == MyPet.PetState.Here && Configuration.Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES) {
                     if (myPet.getSkills().isActive(BackpackImpl.class)) {
                         CustomInventory inv = myPet.getSkills().get(BackpackImpl.class).getInventory();
                         inv.dropContentAt(myPet.getLocation().get());
