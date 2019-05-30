@@ -236,6 +236,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                 if (!Permissions.has(getOwner(), "MyPet.command.name.color")) {
                     name = ChatColor.stripColor(name);
                 }
+                MyPetApi.getLogger().info("\"" + Util.cutString(prefix + name + suffix, 64).replaceAll(String.valueOf(ChatColor.COLOR_CHAR), "&") + "\"");
                 super.setCustomName(CraftChatMessage.fromStringOrNull(Util.cutString(prefix + name + suffix, 64)));
             }
         } catch (Exception e) {
