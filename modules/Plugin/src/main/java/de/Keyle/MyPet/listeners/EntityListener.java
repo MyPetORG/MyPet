@@ -87,6 +87,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMyPet(CreatureSpawnEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(false);
         }
@@ -94,6 +99,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void on(CreatureSpawnEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (WorldGroup.getGroupByWorld(event.getLocation().getWorld()).isDisabled()) {
             return;
         }
@@ -107,6 +117,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onMyPet(EntityPortalEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             event.setCancelled(true);
         }
@@ -114,6 +129,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onMyPet(EntityInteractEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             if (event.getBlock().getType() == EnumSelector.find(Material.class, "SOIL", "FARMLAND")) {
                 event.setCancelled(true);
@@ -125,6 +145,11 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onMyPet(EntityCombustByEntityEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
@@ -150,6 +175,11 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onMyPet(final EntityDamageByEntityEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
@@ -344,6 +374,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void on(EntityShootBowEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
@@ -405,6 +440,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void on(ProjectileLaunchEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player && !(projectile instanceof Arrow)) {
             Player player = (Player) projectile.getShooter();
@@ -422,6 +462,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final EntityDamageByEntityEvent event) {
+        //noinspection ConstantConditions
         if (event.getEntity() == null) {
             // catch invalid events (i.e. EnchantmentAPI)
             return;
@@ -596,6 +637,11 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onMyPet(final EntityDamageEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
             if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
                 return;
@@ -646,6 +692,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMonitor(final EntityDamageByEntityEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         Entity target = event.getEntity();
         if (WorldGroup.getGroupByWorld(target.getWorld()).isDisabled()) {
             return;
@@ -741,6 +792,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamageByEntityResult(final EntityDamageByEntityEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         Entity damagedEntity = event.getEntity();
         // --  fix unwanted screaming of Endermen --
         if (damagedEntity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) damagedEntity).getPetType() == MyPetType.Enderman) {
@@ -751,6 +807,11 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMyPet(final EntityDeathEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         LivingEntity deadEntity = event.getEntity();
         if (WorldGroup.getGroupByWorld(deadEntity.getWorld()).isDisabled()) {
             return;
@@ -862,6 +923,11 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void on(final EntityDeathEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         LivingEntity deadEntity = event.getEntity();
         if (deadEntity instanceof MyPetBukkitEntity) {
             return;
@@ -992,6 +1058,11 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void on(final EntityTargetEvent event) {
+        //noinspection ConstantConditions
+        if (event.getEntity() == null) {
+            // catch invalid events (i.e. EnchantmentAPI)
+            return;
+        }
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
