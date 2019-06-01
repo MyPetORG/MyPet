@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_13_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_13_R1.*;
@@ -364,5 +365,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             return null;
         }
         return ((ChatMessage) el.cr().getLocalizedDeathMessage(el)).h();
+    }
+
+    @Override
+    public String itemstackToString(org.bukkit.inventory.ItemStack itemStack) {
+        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+        String itemstack = itemDatabase.getByID(itemStack.getType().getKey().getKey()).getId();
+        if (itemStack.hasItemMeta()) {
+            itemstack += " " + CraftItemStack.asNMSCopy(itemStack).getTag().toString();
+        }
+        return itemstack;
     }
 }

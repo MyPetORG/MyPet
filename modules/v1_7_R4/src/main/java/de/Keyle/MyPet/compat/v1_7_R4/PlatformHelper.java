@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_7_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_7_R4.util.inventory.ItemStackNBTConverter;
@@ -332,5 +333,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             return null;
         }
         return ((ChatMessage) el.combatTracker.b()).i();
+    }
+
+    @Override
+    public String itemstackToString(org.bukkit.inventory.ItemStack itemStack) {
+        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
+        String itemstack = itemDatabase.getByLegacyId(itemStack.getTypeId(), itemStack.getData().getData()).getId();
+        if (itemStack.hasItemMeta()) {
+            itemstack += " " + CraftItemStack.asNMSCopy(itemStack).getTag().toString();
+        }
+        return itemstack;
     }
 }

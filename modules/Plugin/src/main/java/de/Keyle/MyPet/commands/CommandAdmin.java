@@ -54,6 +54,7 @@ public class CommandAdmin implements CommandTabCompleter {
         COMMAND_OPTIONS.put("ticket", new CommandOptionTicket());
         COMMAND_OPTIONS.put("switch", new CommandOptionSwitch());
         COMMAND_OPTIONS.put("update", new CommandOptionUpdate());
+        COMMAND_OPTIONS.put("info", new CommandOptionInfo());
         //COMMAND_OPTIONS.put("test", new CommandOptionTest());
 
         COMMAND_OPTIONS.put("build", (sender, parameter) -> {
