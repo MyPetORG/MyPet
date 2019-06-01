@@ -153,7 +153,16 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     @Override
     public Inventory getBukkitInventory() {
         if (bukkitInventory == null) {
-            bukkitInventory = new CraftInventory(this);
+            bukkitInventory = new CraftInventory(this) {
+
+                public String getTitle() {
+                    return inventroyName;
+                }
+
+                public String getName() {
+                    return inventroyName;
+                }
+            };
         }
         return bukkitInventory;
     }
