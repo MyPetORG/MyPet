@@ -47,6 +47,11 @@ public class CombatLogXHook implements PluginHook {
 
     @Override
     public boolean onEnable() {
+        try {
+            TagType.PLAYER.ordinal();
+        } catch (Throwable e) {
+            return false;
+        }
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
         return true;
     }
