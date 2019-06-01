@@ -39,6 +39,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
@@ -117,8 +118,12 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE);
 
         MyPetApi.getPluginHookManager().getConfig().loadConfig();
+
         for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
-            hook.loadConfig(MyPetApi.getPluginHookManager().getConfig().getConfig().getConfigurationSection(hook.getPluginName()));
+            ConfigurationSection pluginSection = MyPetApi.getPluginHookManager().getConfig().getConfig().getConfigurationSection(hook.getPluginName());
+            if (pluginSection != null) {
+                hook.loadConfig(pluginSection);
+            }
         }
         if (!(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage("[" + ChatColor.DARK_GREEN + "MyPet" + ChatColor.RESET + "] config reloaded!");
