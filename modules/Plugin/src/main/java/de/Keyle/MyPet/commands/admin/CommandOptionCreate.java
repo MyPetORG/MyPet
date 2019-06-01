@@ -193,6 +193,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("baby")
                 .add("color:")
                 .add("sheared")
+                .add("rainbow")
                 .get());
 
         petTypeOptionMap.put("skeleton", new CommandOptionCreator()
@@ -458,6 +459,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Type", new TagByte((byte) 4));
             } else if (arg.equalsIgnoreCase("glowing")) {
                 compound.getCompoundData().put("Glowing", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("rainbow")) {
+                compound.getCompoundData().put("Rainbow", new TagByte(true));
             } else if (arg.startsWith("size:")) {
                 String size = arg.replace("size:", "");
                 if (Util.isInt(size)) {

@@ -26,13 +26,17 @@ import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 
 public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.MySheep {
+
     protected DyeColor color = DyeColor.WHITE;
     protected boolean isSheared = false;
     protected boolean isBaby = false;
+    @Getter @Setter protected boolean isRainbow = false;
 
     public MySheep(MyPetPlayer petOwner) {
         super(petOwner);
@@ -40,6 +44,14 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     public DyeColor getColor() {
         return color;
+    }
+
+    @Override
+    public void schedule() {
+        super.schedule();
+        if (isRainbow) {
+            this.setColor(DyeColor.values()[(getColor().ordinal() + 1) % (DyeColor.values().length - 1)]);
+        }
     }
 
     public void setColor(DyeColor color) {
@@ -55,6 +67,7 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         info.getCompoundData().put("Color", new TagByte(getColor().getDyeData()));
         info.getCompoundData().put("Sheared", new TagByte(isSheared()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("Rainbow", new TagByte(isRainbow()));
         return info;
     }
 
@@ -70,6 +83,9 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.getCompoundData().containsKey("Rainbow")) {
+            setRainbow(info.getAs("Rainbow", TagByte.class).getBooleanData());
         }
     }
 
