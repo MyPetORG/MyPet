@@ -30,12 +30,10 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
 import de.keyle.knbt.TagShort;
 import de.keyle.knbt.TagString;
-import net.minecraft.server.v1_14_R1.ItemStack;
-import net.minecraft.server.v1_14_R1.NBTTagCompound;
-import net.minecraft.server.v1_14_R1.NBTTagList;
-import net.minecraft.server.v1_14_R1.NBTTagString;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_14_R1.util.CraftChatMessage;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 
@@ -129,7 +127,6 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.STONE));
         }
 
-        NBTTagList emptyList = new NBTTagList();
         if (is.getTag() == null) {
             is.setTag(new NBTTagCompound());
         }
@@ -142,9 +139,6 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             }
         }
 
-        // remove item attributes like attack damage
-        is.getTag().set("AttributeModifiers", emptyList);
-
         //add enchantment glowing
         if (icon.isGlowing()) {
             TagCompound enchTag = new TagCompound();
@@ -154,10 +148,12 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             enchList.addTag(enchTag);
 
             is.getTag().set("Enchantments", ItemStackNBTConverter.compoundToVanillaCompound(enchList));
-            is.getTag().setInt("HideFlags", 63);
         } else {
             is.getTag().remove("Enchantments");
         }
+
+        // hide item attributes like attack damage
+        is.getTag().setInt("HideFlags", 63);
 
         // Prepare display tag
         NBTTagCompound display;
@@ -178,7 +174,8 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             NBTTagList loreTag = new NBTTagList();
             display.set("Lore", loreTag);
             for (String loreLine : icon.getLore()) {
-                loreTag.add(new NBTTagString(loreLine));
+                IChatBaseComponent cm = CraftChatMessage.fromStringOrNull(loreLine);
+                loreTag.add(new NBTTagString(IChatBaseComponent.ChatSerializer.a(cm)));
             }
         }
 
