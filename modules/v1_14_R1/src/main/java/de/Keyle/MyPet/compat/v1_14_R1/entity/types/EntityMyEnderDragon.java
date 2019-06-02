@@ -26,11 +26,17 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.ai.attack.MeleeAttack;
+import net.minecraft.server.v1_14_R1.DamageSource;
 import net.minecraft.server.v1_14_R1.Entity;
 import net.minecraft.server.v1_14_R1.World;
+import net.minecraft.server.v1_14_R1.WorldServer;
+
+import java.util.Arrays;
 
 @EntitySize(width = 4.F, height = 4.F)
 public class EntityMyEnderDragon extends EntityMyPet {
+
+    protected boolean registered = false;
 
     public EntityMyPetPart[] children;
 
@@ -75,8 +81,15 @@ public class EntityMyEnderDragon extends EntityMyPet {
                 this.setMot(getMot().d(1, 0.6D, 1));
             }
         }
+        if (!registered && this.valid) {
+            if (this.getWorld() instanceof WorldServer) {
+                WorldServer world = (WorldServer) this.getWorld();
+                Arrays.stream(this.children)
+                        .forEach(entityMyPetPart -> world.entitiesById.put(entityMyPetPart.getId(), entityMyPetPart));
+            }
+            this.registered = true;
+        }
     }
-
 
     /**
      * -> disable falldamage
@@ -87,7 +100,15 @@ public class EntityMyEnderDragon extends EntityMyPet {
         }
     }
 
-    public Entity[] bi() {
-        return this.children;
+    @Override
+    public void die() {
+        super.die();
+        Arrays.stream(this.children).forEach(Entity::die);
+    }
+
+    @Override
+    public void die(DamageSource damagesource) {
+        super.die(damagesource);
+        Arrays.stream(this.children).forEach(Entity::die);
     }
 }

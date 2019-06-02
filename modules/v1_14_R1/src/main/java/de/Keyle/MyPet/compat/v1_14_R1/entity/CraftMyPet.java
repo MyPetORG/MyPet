@@ -82,7 +82,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     @Override
     public void removeEntity() {
-        getHandle().dead = true;
+        getHandle().die();
     }
 
     public MyPetType getPetType() {
