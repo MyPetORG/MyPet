@@ -148,8 +148,6 @@ public class Updater {
         } else {
             url += "release";
         }
-        String hashUrl = url + "/hash?api_token=" + Configuration.Update.TOKEN;
-        url += "?api_token=" + Configuration.Update.TOKEN;
         File pluginFile;
         if (Configuration.Update.REPLACE_OLD) {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/" + MyPetApi.getPlugin().getFile().getName());
@@ -163,7 +161,7 @@ public class Updater {
         String finalUrl = url;
         Runnable downloadRunner = () -> {
             MyPetApi.getLogger().info(ChatColor.RED + "Start update download: " + ChatColor.RESET + latest);
-            String localHash = "";
+            String localHash;
             String remoteHash = "";
 
             try {
@@ -195,7 +193,7 @@ public class Updater {
 
             // Check hash now to be sure we downloaded the correct file
             try {
-                URL website = new URL(hashUrl);
+                URL website = new URL(finalUrl + "/hash");
                 HttpURLConnection httpConn = (HttpURLConnection) website.openConnection();
                 int responseCode = httpConn.getResponseCode();
 

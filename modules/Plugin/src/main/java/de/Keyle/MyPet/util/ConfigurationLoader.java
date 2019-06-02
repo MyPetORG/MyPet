@@ -59,7 +59,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Update.Check", Update.CHECK);
         config.addDefault("MyPet.Update.Download", Update.DOWNLOAD);
         config.addDefault("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
-        config.addDefault("MyPet.Update.Token", Update.TOKEN);
         config.addDefault("MyPet.Update.In-Background", Update.ASYNC);
         config.addDefault("MyPet.Update.OP-Notification", Update.SHOW_OP);
 
@@ -311,7 +310,6 @@ public class ConfigurationLoader {
         Update.CHECK = config.getBoolean("MyPet.Update.Check", Update.CHECK);
         Update.DOWNLOAD = config.getBoolean("MyPet.Update.Download", Update.DOWNLOAD);
         Update.REPLACE_OLD = config.getBoolean("MyPet.Update.ReplaceOld", Update.REPLACE_OLD);
-        Update.TOKEN = config.getString("MyPet.Update.Token", Update.TOKEN);
         Update.SHOW_OP = config.getBoolean("MyPet.Update.OP-Notification", Update.SHOW_OP);
 
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
@@ -594,6 +592,9 @@ public class ConfigurationLoader {
         if (config.contains("MyPet.Hooks")) {
             MyPetApi.getLogger().warning("The config for all MyPet hooks moved to hooks-config.yml. All settings have been reset!");
             config.getConfigurationSection("MyPet").set("Hooks", null);
+        }
+        if (config.contains("MyPet.Update.Token")) {
+            config.getConfigurationSection("MyPet.Update").set("Token", null);
         }
 
         MyPetApi.getPlugin().saveConfig();

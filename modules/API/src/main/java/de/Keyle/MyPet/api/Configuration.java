@@ -58,7 +58,6 @@ public class Configuration {
         public static boolean DOWNLOAD = false;
         public static boolean REPLACE_OLD = false;
         public static boolean SHOW_OP = true;
-        public static String TOKEN = "";
     }
 
     public static class Repository {
