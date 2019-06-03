@@ -25,13 +25,13 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.skill.skills.ranged.bukkit.CraftMyPetSmallFireball;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 
 @Compat("v1_14_R1")
 public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyPetProjectile {
 
     protected float damage = 0;
     protected int deathCounter = 100;
+    protected CraftMyPetSmallFireball bukkitEntity = null;
 
     public MyPetSmallFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2);
@@ -58,7 +58,7 @@ public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyP
     }
 
     @Override
-    public CraftEntity getBukkitEntity() {
+    public CraftMyPetSmallFireball getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPetSmallFireball(this.world.getServer(), this);
         }

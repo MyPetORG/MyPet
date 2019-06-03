@@ -25,10 +25,11 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.skill.skills.ranged.bukkit.CraftMyPetArrow;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 
 @Compat("v1_14_R1")
 public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjectile {
+
+    protected CraftMyPetArrow bukkitEntity = null;
 
     public MyPetArrow(World world, EntityMyPet entityMyPet) {
         super(world, entityMyPet);
@@ -40,7 +41,7 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
     }
 
     @Override
-    public CraftEntity getBukkitEntity() {
+    public CraftMyPetArrow getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPetArrow(this.world.getServer(), this);
         }

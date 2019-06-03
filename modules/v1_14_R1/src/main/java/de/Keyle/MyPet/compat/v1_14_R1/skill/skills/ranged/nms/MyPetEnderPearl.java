@@ -25,12 +25,12 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.skill.skills.ranged.bukkit.CraftMyPetEnderPearl;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 
 @Compat("v1_14_R1")
 public class MyPetEnderPearl extends EntityEnderPearl implements EntityMyPetProjectile {
 
     protected float damage = 0;
+    protected CraftMyPetEnderPearl bukkitEntity = null;
 
     public MyPetEnderPearl(World world, EntityMyPet entityLiving) {
         super(world, entityLiving);
@@ -46,7 +46,7 @@ public class MyPetEnderPearl extends EntityEnderPearl implements EntityMyPetProj
     }
 
     @Override
-    public CraftEntity getBukkitEntity() {
+    public CraftMyPetEnderPearl getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPetEnderPearl(this.world.getServer(), this);
         }

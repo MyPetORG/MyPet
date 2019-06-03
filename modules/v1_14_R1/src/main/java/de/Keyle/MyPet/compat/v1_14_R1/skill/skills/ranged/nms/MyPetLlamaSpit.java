@@ -27,12 +27,12 @@ import de.Keyle.MyPet.compat.v1_14_R1.skill.skills.ranged.bukkit.CraftMyPetLlama
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 
 @Compat("v1_14_R1")
 public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjectile {
 
     @Setter @Getter protected float damage = 0;
+    protected CraftMyPetLlamaSpit bukkitEntity = null;
 
     public MyPetLlamaSpit(World world, EntityMyPet entityMyPet) {
         super(EntityTypes.LLAMA_SPIT, world);
@@ -48,7 +48,7 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
     }
 
     @Override
-    public CraftEntity getBukkitEntity() {
+    public CraftMyPetLlamaSpit getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPetLlamaSpit(this.world.getServer(), this);
         }

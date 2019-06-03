@@ -100,6 +100,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     protected int donatorParticleCounter = 0;
     protected float limitCounter = 0;
     protected DamageSource deathReason = null;
+    protected CraftMyPet bukkitEntity = null;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "jumping");
 
@@ -387,7 +388,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPet(this.world.getServer(), this);
         }
-        return (CraftMyPet) this.bukkitEntity;
+        return this.bukkitEntity;
     }
 
     // Obfuscated Method handler ------------------------------------------------------------------------------------

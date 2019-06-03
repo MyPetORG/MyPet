@@ -25,10 +25,11 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_14_R1.skill.skills.ranged.bukkit.CraftMyPetTrident;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 
 @Compat("v1_14_R1")
 public class MyPetTrident extends EntityThrownTrident implements EntityMyPetProjectile {
+
+    protected CraftMyPetTrident bukkitEntity = null;
 
     public MyPetTrident(World world, EntityMyPet entityMyPet) {
         super(world, entityMyPet, new ItemStack(Items.TRIDENT));
@@ -40,7 +41,7 @@ public class MyPetTrident extends EntityThrownTrident implements EntityMyPetProj
     }
 
     @Override
-    public CraftEntity getBukkitEntity() {
+    public CraftMyPetTrident getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPetTrident(this.world.getServer(), this);
         }

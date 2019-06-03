@@ -22,17 +22,19 @@ package de.Keyle.MyPet.compat.v1_14_R1.entity;
 
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftPart;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 
 public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 
     public final EntityMyPet owner;
     private final EntitySize size;
     private final String part;
+    protected CraftMyPetPart bukkitEntity = null;
 
     public EntityMyPetPart(EntityMyPet owner, String part, float width, float height) {
         super(EntityTypes.ENDER_DRAGON, owner.world);
+        ReflectionUtil.setFieldValue("bukkitEntity", this, new CraftMyPetPart(this.world.getServer(), this));
         this.owner = owner;
         this.part = part;
         this.size = EntitySize.b(width, height);
@@ -71,7 +73,7 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
         return owner;
     }
 
-    public CraftEntity getBukkitEntity() {
+    public CraftMyPetPart getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPetPart(this.world.getServer(), this);
         }
