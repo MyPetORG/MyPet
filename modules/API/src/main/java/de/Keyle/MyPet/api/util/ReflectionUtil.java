@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -54,28 +54,28 @@ public class ReflectionUtil {
         }
     }
 
-    public static Object getFieldValue(Class<?> clazz, Object object, String field) {
+    public static Object getFieldValue(Class<?> clazz, Object target, String field) {
         try {
             Field f = clazz.getDeclaredField(field);
             f.setAccessible(true);
-            return f.get(object);
+            return f.get(target);
         } catch (Throwable ignored) {
             return null;
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static Object getFieldValue(Field field, Object object) {
+    public static Object getFieldValue(Field field, Object target) {
         try {
-            return field.get(object);
+            return field.get(target);
         } catch (Throwable ignored) {
         }
         return null;
     }
 
-    public static boolean setFieldValue(Field field, Object object, Object value) {
+    public static boolean setFieldValue(Field field, Object target, Object value) {
         try {
-            field.set(object, value);
+            field.set(target, value);
             return true;
         } catch (Throwable e) {
             return false;
@@ -83,11 +83,11 @@ public class ReflectionUtil {
 
     }
 
-    public static boolean setFieldValue(String fieldName, Object object, Object value) {
+    public static boolean setFieldValue(String fieldName, Object target, Object value) {
         try {
-            Field field = getField(object.getClass(), fieldName);
+            Field field = getField(target.getClass(), fieldName);
             if (field != null) {
-                field.set(object, value);
+                field.set(target, value);
                 return true;
             }
         } catch (Throwable ignored) {
