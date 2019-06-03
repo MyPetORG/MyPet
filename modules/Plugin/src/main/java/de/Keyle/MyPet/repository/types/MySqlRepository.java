@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.repository.types;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.zaxxer.hikari.HikariDataSource;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
@@ -41,9 +44,6 @@ import de.keyle.knbt.TagStream;
 import de.keyle.knbt.TagString;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -52,6 +52,8 @@ import java.sql.*;
 import java.util.*;
 
 public class MySqlRepository implements Repository {
+
+    protected Gson gson = new Gson();
     private HikariDataSource dataSource;
     private int version = 10;
 
@@ -412,11 +414,11 @@ public class MySqlRepository implements Repository {
                 statement.setFloat(7, player.getPetLivingSoundVolume());
                 statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
 
-                JSONObject multiWorldObject = new JSONObject();
+                JsonObject multiWorldObject = new JsonObject();
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                    multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
+                    multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                 }
-                statement.setString(9, multiWorldObject.toJSONString());
+                statement.setString(9, gson.toJson(multiWorldObject));
                 statement.setString(10, player.getInternalUUID().toString());
 
                 statement.executeUpdate();
@@ -827,15 +829,13 @@ public class MySqlRepository implements Repository {
                         }
                         break;
                     case "VARCHAR":
-                        JSONParser parser = new JSONParser();
                         try {
-                            JSONObject jsonObject = (JSONObject) parser.parse(resultSet.getString(column));
-
-                            for (Object o : jsonObject.keySet()) {
-                                String petUUID = jsonObject.get(o.toString()).toString();
-                                petPlayer.setMyPetForWorldGroup(o.toString(), UUID.fromString(petUUID));
+                            JsonObject jsonObject = gson.fromJson(resultSet.getString(column), JsonObject.class);
+                            for (String uuid : jsonObject.keySet()) {
+                                String petUUID = jsonObject.get(uuid).getAsString();
+                                petPlayer.setMyPetForWorldGroup(uuid, UUID.fromString(petUUID));
                             }
-                        } catch (ParseException e) {
+                        } catch (JsonParseException e) {
                             e.printStackTrace();
                         }
                 }
@@ -977,11 +977,11 @@ public class MySqlRepository implements Repository {
             statement.setFloat(7, player.getPetLivingSoundVolume());
             statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
 
-            JSONObject multiWorldObject = new JSONObject();
+            JsonObject multiWorldObject = new JsonObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
+                multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
             }
-            statement.setString(9, multiWorldObject.toJSONString());
+            statement.setString(9, gson.toJson(multiWorldObject));
             statement.setString(10, player.getInternalUUID().toString());
 
             int result = statement.executeUpdate();
@@ -1027,12 +1027,12 @@ public class MySqlRepository implements Repository {
                         e.printStackTrace();
                     }
 
-                    JSONObject multiWorldObject = new JSONObject();
+                    JsonObject multiWorldObject = new JsonObject();
                     for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                         //noinspection unchecked
-                        multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
+                        multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                     }
-                    statement.setString(10, multiWorldObject.toJSONString());
+                    statement.setString(10, gson.toJson(multiWorldObject));
 
 
                     boolean result = statement.executeUpdate() > 0;
@@ -1085,11 +1085,11 @@ public class MySqlRepository implements Repository {
                 statement.setFloat(8, player.getPetLivingSoundVolume());
                 statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
 
-                JSONObject multiWorldObject = new JSONObject();
+                JsonObject multiWorldObject = new JsonObject();
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                    multiWorldObject.put(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
+                    multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                 }
-                statement.setString(10, multiWorldObject.toJSONString());
+                statement.setString(10, gson.toJson(multiWorldObject));
 
                 statement.addBatch();
                 if (++i % 500 == 0 && i != players.size()) {

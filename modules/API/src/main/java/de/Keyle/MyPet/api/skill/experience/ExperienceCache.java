@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.skill.experience;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.intervaltree.DoubleInterval;
@@ -29,8 +31,6 @@ import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import lombok.Getter;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -45,18 +45,18 @@ public class ExperienceCache implements ServiceContainer {
 
     String calculator = null;
     long version = 0;
-    JSONObject expMap = new JSONObject();
+    JsonObject expMap = new JsonObject();
     Map<String, Map<MyPetType, IntervalTree<Double, Integer>>> intervalMap = new HashMap<>();
 
     File cacheFile = new File(MyPetApi.getPlugin().getDataFolder(), "exp.cache");
 
     public double getExp(String worldGroup, MyPetType type, int level) throws LevelNotCalculatedException {
-        if (this.expMap.containsKey(worldGroup)) {
-            JSONObject typeMap = (JSONObject) this.expMap.get(worldGroup);
-            if (typeMap.containsKey(type.name())) {
-                JSONObject expMap = (JSONObject) typeMap.get(type.name());
-                if (expMap.containsKey(level)) {
-                    return (double) expMap.get(level);
+        if (this.expMap.has(worldGroup)) {
+            JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
+            if (typeMap.has(type.name())) {
+                JsonObject expMap = typeMap.getAsJsonObject(type.name());
+                if (expMap.has("" + level)) {
+                    return expMap.get("" + level).getAsDouble();
                 }
             }
         }
@@ -86,30 +86,30 @@ public class ExperienceCache implements ServiceContainer {
         if (worldGroup.isEmpty()) {
             return;
         }
-        if (!expMap.containsKey(worldGroup)) {
-            expMap.put(worldGroup, new JSONObject());
+        if (!expMap.has(worldGroup)) {
+            expMap.add(worldGroup, new JsonObject());
             intervalMap.put(worldGroup, new HashMap<>());
         }
-        JSONObject typeMap = (JSONObject) this.expMap.get(worldGroup);
+        JsonObject typeMap = this.expMap.get(worldGroup).getAsJsonObject();
         Map<MyPetType, IntervalTree<Double, Integer>> typeIntervalMap = intervalMap.get(worldGroup);
-        if (!typeMap.containsKey(type.name())) {
-            typeMap.put(type.name(), new JSONObject());
+        if (!typeMap.has(type.name())) {
+            typeMap.add(type.name(), new JsonObject());
             typeIntervalMap.put(type, new IntervalTree<>());
         }
-        JSONObject expMap = (JSONObject) typeMap.get(type.name());
+        JsonObject expMap = typeMap.get(type.name()).getAsJsonObject();
         IntervalTree<Double, Integer> tree = typeIntervalMap.get(type);
 
-        expMap.put(level, exp);
-        if (expMap.containsKey(level - 1)) {
+        expMap.addProperty("" + level, exp);
+        if (expMap.has("" + (level - 1))) {
             DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level - 1).builder()
-                    .greaterEqual((Double) expMap.get(level - 1))
+                    .greaterEqual(expMap.get("" + (level - 1)).getAsDouble())
                     .less(exp).build();
             tree.add(interval);
         }
-        if (expMap.containsKey(level + 1)) {
+        if (expMap.has("" + (level + 1))) {
             DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level).builder()
                     .greaterEqual(exp)
-                    .less((Double) expMap.get(level + 1)).build();
+                    .less(expMap.get("" + (level + 1)).getAsDouble()).build();
             tree.add(interval);
         }
     }
@@ -127,7 +127,7 @@ public class ExperienceCache implements ServiceContainer {
         save();
         version = 0;
         calculator = null;
-        expMap.clear();
+        expMap.entrySet().clear();
         intervalMap.clear();
     }
 
@@ -135,7 +135,7 @@ public class ExperienceCache implements ServiceContainer {
         long version = calculator.getVersion();
         String identifier = calculator.getIdentifier();
         if (version != this.version || !identifier.equals(this.calculator)) {
-            expMap.clear();
+            expMap.entrySet().clear();
             this.version = version;
             this.calculator = identifier;
             MyPetApi.getLogger().info("Current Exp-Cache is invalid, it will be recalculated.");
@@ -146,11 +146,12 @@ public class ExperienceCache implements ServiceContainer {
     @SuppressWarnings("unchecked")
     protected void save() {
         try (OutputStreamWriter oos = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(cacheFile)))) {
-            JSONObject cacheObject = new JSONObject();
-            cacheObject.put("expMap", expMap);
-            cacheObject.put("version", version);
-            cacheObject.put("calculator", calculator);
-            cacheObject.writeJSONString(oos);
+            JsonObject cacheObject = new JsonObject();
+            cacheObject.add("expMap", expMap);
+            cacheObject.addProperty("version", version);
+            cacheObject.addProperty("calculator", calculator);
+            Gson gson = new Gson();
+            oos.write(gson.toJson(cacheObject));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -158,46 +159,51 @@ public class ExperienceCache implements ServiceContainer {
 
     protected void load() {
         try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(new FileInputStream(cacheFile)), StandardCharsets.UTF_8)) {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(reader);
-            if (obj instanceof JSONObject) {
-                JSONObject cacheObject = (JSONObject) obj;
-                this.expMap = (JSONObject) cacheObject.get("expMap");
-                this.version = (long) cacheObject.get("version");
-                this.calculator = cacheObject.get("calculator").toString();
-                loadIntervals();
-            }
+            Gson gson = new Gson();
+            JsonObject cacheObject = gson.fromJson(reader, JsonObject.class);
+            this.expMap = cacheObject.get("expMap").getAsJsonObject();
+            this.version = cacheObject.get("version").getAsLong();
+            this.calculator = cacheObject.get("calculator").getAsString();
+            loadIntervals();
         } catch (Throwable e) {
             cacheFile.delete();
             version = 0;
             calculator = null;
-            expMap.clear();
+            expMap.entrySet().clear();
             intervalMap.clear();
         }
     }
 
     @SuppressWarnings("unchecked")
     protected void loadIntervals() {
-        for (Object worldGroup : this.expMap.keySet()) {
+        for (String worldGroup : this.expMap.keySet()) {
             Map<MyPetType, IntervalTree<Double, Integer>> typeIntervalMap = new HashMap<>();
-            intervalMap.put(worldGroup.toString(), typeIntervalMap);
-            JSONObject typeMap = (JSONObject) this.expMap.get(worldGroup);
-            for (Object typeObject : typeMap.keySet()) {
-                MyPetType type = MyPetType.byName(typeObject.toString());
+            intervalMap.put(worldGroup, typeIntervalMap);
+            JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
+            for (String typeObject : typeMap.keySet()) {
+                MyPetType type = MyPetType.byName(typeObject);
                 IntervalTree<Double, Integer> tree = new IntervalTree<>();
                 typeIntervalMap.put(type, tree);
-                JSONObject expMap = (JSONObject) typeMap.get(type.name());
-                for (Object levelObject : expMap.keySet()) {
-                    int level = Integer.parseInt(levelObject.toString());
-                    double exp = (double) expMap.get("" + level);
-                    if (expMap.containsKey("" + (level - 1))) {
-                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level - 1).builder().greaterEqual((Double) expMap.get("" + (level - 1))).less(exp).build();
+                JsonObject expMap = typeMap.get(type.name()).getAsJsonObject();
+                for (String levelObject : expMap.keySet()) {
+                    int level = Integer.parseInt(levelObject);
+                    double exp = expMap.get("" + level).getAsDouble();
+                    if (expMap.has("" + (level - 1))) {
+                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level - 1)
+                                .builder()
+                                .greaterEqual(expMap.get("" + (level - 1)).getAsDouble())
+                                .less(exp)
+                                .build();
                         if (tree.query(interval).size() == 0) {
                             tree.add(interval);
                         }
                     }
-                    if (expMap.containsKey("" + (level + 1))) {
-                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level).builder().greaterEqual(exp).less((Double) expMap.get("" + (level + 1))).build();
+                    if (expMap.has("" + (level + 1))) {
+                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level)
+                                .builder()
+                                .greaterEqual(exp)
+                                .less(expMap.get("" + (level + 1)).getAsDouble())
+                                .build();
                         if (tree.query(interval).size() == 0) {
                             tree.add(interval);
                         }

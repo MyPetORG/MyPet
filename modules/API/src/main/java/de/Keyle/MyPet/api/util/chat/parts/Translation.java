@@ -40,9 +40,9 @@
 
 package de.Keyle.MyPet.api.util.chat.parts;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import de.Keyle.MyPet.api.util.chat.FancyMessage;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 public class Translation extends MessagePart {
 
@@ -58,12 +58,11 @@ public class Translation extends MessagePart {
         this.using = using;
     }
 
-    @SuppressWarnings("unchecked")
-    public JSONObject toJson() {
-        JSONObject json = super.toJson();
-        json.put("translate", identifier);
+    public JsonObject toJson() {
+        JsonObject json = super.toJson();
+        json.addProperty("translate", identifier);
         if (using != null) {
-            JSONArray using = new JSONArray();
+            JsonArray using = new JsonArray();
             for (Object o : this.using) {
                 if (o instanceof MessagePart) {
                     using.add(((MessagePart) o).toJson());
@@ -73,7 +72,7 @@ public class Translation extends MessagePart {
                     using.add(o.toString());
                 }
             }
-            json.put("with", using);
+            json.add("with", using);
         }
         return json;
     }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -68,8 +68,7 @@ public class BehaviorAggressiveTarget implements AIGoal {
             return false;
         }
 
-        for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
-            EntityLiving entityLiving = (EntityLiving) entityObj;
+        for (EntityLiving entityLiving : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
 
             if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand) && entityLiving.isAlive() && petEntity.h(entityLiving) <= 91) {
                 if (entityLiving instanceof EntityPlayer) {

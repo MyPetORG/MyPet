@@ -22,6 +22,8 @@ package de.Keyle.MyPet.util;
 
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
@@ -29,8 +31,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.Util.UrlFactoryReset;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -114,12 +114,11 @@ public class Updater {
             r.unsetFactory();
             String content = Util.readUrlContent(url);
             r.resetFactory();
-            JSONParser parser = new JSONParser();
-            JSONObject result = (JSONObject) parser.parse(content);
+            JsonObject result = new Gson().fromJson(content, JsonObject.class);
 
-            if (result.containsKey("latest")) {
-                String version = result.get("latest").toString();
-                int build = ((Long) result.get("build")).intValue();
+            if (result.has("latest")) {
+                String version = result.get("latest").getAsString();
+                int build = result.get("build").getAsInt();
                 return Optional.of(new Update(version, build));
             }
         } catch (Exception ignored) {

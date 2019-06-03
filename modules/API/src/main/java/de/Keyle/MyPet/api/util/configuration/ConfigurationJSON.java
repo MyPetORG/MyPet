@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,18 +22,15 @@ package de.Keyle.MyPet.api.util.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
 
 public class ConfigurationJSON {
     public File jsonFile;
-    private JSONObject config;
+    private JsonObject config;
 
     public ConfigurationJSON(String path) {
         this(new File(path));
@@ -43,20 +40,19 @@ public class ConfigurationJSON {
         jsonFile = file;
     }
 
-    public JSONObject getJSONObject() {
+    public JsonObject getJsonObject() {
         if (config == null) {
-            config = new JSONObject();
+            config = new JsonObject();
         }
         return config;
     }
 
     public boolean load() {
-        config = new JSONObject();
+        config = new JsonObject();
         try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile))) {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(reader);
-            config = (JSONObject) obj;
-        } catch (ParseException e) {
+            Gson gson = new Gson();
+            config = gson.fromJson(reader, JsonObject.class);
+        } catch (JsonParseException e) {
             MyPetApi.getLogger().warning("Could not parse/load " + jsonFile.getName());
             return false;
         } catch (Exception e) {
@@ -68,11 +64,8 @@ public class ConfigurationJSON {
 
     public boolean save() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonParser jp = new JsonParser();
-        JsonElement je = jp.parse(config.toJSONString());
-        String prettyJsonString = gson.toJson(je);
+        String prettyJsonString = gson.toJson(config);
         try {
-            // http://jsonformatter.curiousconcept.com/
             BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
             writer.write(prettyJsonString);
             writer.close();
@@ -84,6 +77,6 @@ public class ConfigurationJSON {
     }
 
     public void clearConfig() {
-        config = new JSONObject();
+        config = new JsonObject();
     }
 }

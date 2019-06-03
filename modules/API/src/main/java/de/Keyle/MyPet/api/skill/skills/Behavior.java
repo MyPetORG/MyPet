@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,11 +24,10 @@ import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.JsonStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 
 @SkillName(value = "Behavior", translationNode = "Name.Skill.Behavior")
-public interface Behavior extends Skill, Scheduler, JsonStorage, ActiveSkill {
+public interface Behavior extends Skill, Scheduler, ActiveSkill {
     enum BehaviorMode {
         Normal, Friendly, Aggressive, Raid, Farm, Duel
     }

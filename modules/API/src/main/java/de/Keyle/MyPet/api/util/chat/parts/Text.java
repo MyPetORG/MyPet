@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -40,7 +40,8 @@
 
 package de.Keyle.MyPet.api.util.chat.parts;
 
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 public class Text extends MessagePart {
     final String text;
@@ -50,9 +51,9 @@ public class Text extends MessagePart {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject toJson() {
-        JSONObject json = super.toJson();
-        json.put("text", text);
+    public JsonObject toJson() {
+        JsonObject json = super.toJson();
+        json.addProperty("text", text);
         return json;
     }
 }

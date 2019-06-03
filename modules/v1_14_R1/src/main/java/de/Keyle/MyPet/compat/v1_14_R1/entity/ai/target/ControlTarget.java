@@ -73,9 +73,7 @@ public class ControlTarget implements AIGoal {
                     return false;
                 }
             }
-            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.getBoundingBox().grow((double) this.range, 4.0D, (double) this.range))) {
-                EntityLiving entityLiving = (EntityLiving) entityObj;
-
+            for (EntityLiving entityLiving : this.petEntity.world.a(EntityLiving.class, this.petEntity.getBoundingBox().grow((double) this.range, 4.0D, (double) this.range))) {
                 if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand)) {
                     if (entityLiving instanceof EntityPlayer) {
                         Player targetPlayer = (Player) entityLiving.getBukkitEntity();

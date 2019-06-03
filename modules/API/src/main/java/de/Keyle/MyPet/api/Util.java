@@ -496,4 +496,51 @@ public class Util {
         }
         return null;
     }
+
+    public static String escapeJsonString(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); ++i) {
+            char ch = s.charAt(i);
+            switch (ch) {
+                case '\b':
+                    sb.append("\\b");
+                    continue;
+                case '\t':
+                    sb.append("\\t");
+                    continue;
+                case '\n':
+                    sb.append("\\n");
+                    continue;
+                case '\f':
+                    sb.append("\\f");
+                    continue;
+                case '\r':
+                    sb.append("\\r");
+                    continue;
+                case '"':
+                    sb.append("\\\"");
+                    continue;
+                case '/':
+                    sb.append("\\/");
+                    continue;
+                case '\\':
+                    sb.append("\\\\");
+                    continue;
+            }
+
+            if (ch <= 31 || ch >= 127 && ch <= 159 || ch >= 8192 && ch <= 8447) {
+                String ss = Integer.toHexString(ch);
+                sb.append("\\u");
+
+                for (int k = 0; k < 4 - ss.length(); ++k) {
+                    sb.append('0');
+                }
+
+                sb.append(ss.toUpperCase());
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
 }

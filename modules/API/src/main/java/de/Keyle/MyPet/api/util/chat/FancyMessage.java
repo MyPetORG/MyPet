@@ -20,12 +20,13 @@
 
 package de.Keyle.MyPet.api.util.chat;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.chat.parts.MessagePart;
 import de.Keyle.MyPet.api.util.chat.parts.Text;
 import de.Keyle.MyPet.api.util.chat.parts.Translation;
 import org.bukkit.ChatColor;
-import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
 public class FancyMessage {
 
     final static Pattern colorStylePattern = Pattern.compile("(?i)" + '§' + "([0-9a-fk-or])");
+    final static Gson gson = new Gson();
 
     private final List<MessagePart> messageParts;
 
@@ -116,18 +118,18 @@ public class FancyMessage {
 
     @SuppressWarnings("unchecked")
     public String toJSONString() {
-        JSONArray parts = new JSONArray();
+        JsonArray parts = new JsonArray();
 
         for (final MessagePart part : messageParts) {
             parts.add(part.toJson());
         }
 
-        return parts.toJSONString();
+        return gson.toJson(parts);
     }
 
     @SuppressWarnings("unchecked")
-    public JSONArray toJSON() {
-        JSONArray parts = new JSONArray();
+    public JsonArray toJSON() {
+        JsonArray parts = new JsonArray();
 
         for (final MessagePart part : messageParts) {
             parts.add(part.toJson());

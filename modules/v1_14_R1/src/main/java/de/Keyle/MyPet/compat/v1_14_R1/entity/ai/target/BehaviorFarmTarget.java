@@ -67,8 +67,7 @@ public class BehaviorFarmTarget implements AIGoal {
             return false;
         }
 
-        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
-            EntityMonster entityMonster = (EntityMonster) entityObj;
+        for (EntityMonster entityMonster : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
             if (!entityMonster.isAlive() || petEntity.h(entityMonster) > 91) {
                 continue;
             }

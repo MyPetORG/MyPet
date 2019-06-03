@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,11 +23,8 @@ package de.Keyle.MyPet.skilltreecreator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
@@ -40,6 +37,7 @@ import java.util.Map;
 public class ApiHandler {
 
     private File skilltreeDir;
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public ApiHandler(File skilltreeDir) {
         this.skilltreeDir = skilltreeDir;
@@ -52,17 +50,17 @@ public class ApiHandler {
         switch (session.getMethod()) {
             case GET: {
                 if (uri.equals("/api/skilltrees")) {
-                    JSONArray jsonSkilltrees = new JSONArray();
+                    JsonArray jsonSkilltrees = new JsonArray();
                     File[] jsonFiles = skilltreeDir.listFiles(pathname -> pathname.getAbsolutePath().endsWith(".st.json"));
                     if (jsonFiles != null) {
                         for (File jsonFile : jsonFiles) {
-                            JSONObject jsonSkilltree = loadJsonObject(jsonFile);
+                            JsonObject jsonSkilltree = loadJsonObject(jsonFile);
                             if (jsonSkilltree != null) {
                                 jsonSkilltrees.add(jsonSkilltree);
                             }
                         }
                     }
-                    return WebServer.newFixedJsonResponse(jsonSkilltrees.toJSONString());
+                    return WebServer.newFixedJsonResponse(gson.toJson(jsonSkilltrees));
                 }
                 break;
             }
@@ -72,7 +70,7 @@ public class ApiHandler {
                         Map<String, String> bodyMap = new HashMap<>();
                         session.parseBody(bodyMap);
 
-                        JSONArray jsonArray = loadJsonArray(bodyMap.get("postData"));
+                        JsonArray jsonArray = loadJsonArray(bodyMap.get("postData"));
                         if (jsonArray != null) {
                             File[] jsonFiles = skilltreeDir.listFiles(pathname -> pathname.getAbsolutePath().endsWith(".st.json"));
                             if (jsonFiles != null) {
@@ -80,11 +78,10 @@ public class ApiHandler {
                                     jsonFile.delete();
                                 }
                             }
-                            for (Object o : jsonArray) {
-                                JSONObject jsonSkilltree = (JSONObject) o;
-                                String filename = jsonSkilltree.get("ID").toString() + ".st.json";
-                                saveJsonObject(new File(skilltreeDir, filename), jsonSkilltree);
-                            }
+                            jsonArray.forEach(jsonSkilltree -> {
+                                String filename = jsonSkilltree.getAsJsonObject().get("ID").getAsString() + ".st.json";
+                                saveJsonObject(new File(skilltreeDir, filename), jsonSkilltree.getAsJsonObject());
+                            });
                         }
                         return WebServer.newFixedJsonResponse("{\"message\":\"DONE\"}");
                     } catch (IOException | NanoHTTPD.ResponseException e) {
@@ -98,50 +95,35 @@ public class ApiHandler {
         return WebServer.NOT_FOUND;
     }
 
-    public JSONArray loadJsonArray(File jsonFile) {
+    public JsonArray loadJsonArray(File jsonFile) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(reader);
-            if (obj instanceof JSONArray) {
-                return (JSONArray) obj;
-            }
+            return gson.fromJson(reader, JsonArray.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public JSONArray loadJsonArray(String jsonString) {
+    public JsonArray loadJsonArray(String jsonString) {
         try {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(jsonString);
-            if (obj instanceof JSONArray) {
-                return (JSONArray) obj;
-            }
+            return gson.fromJson(jsonString, JsonArray.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public JSONObject loadJsonObject(File jsonFile) {
+    public JsonObject loadJsonObject(File jsonFile) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(reader);
-            if (obj instanceof JSONObject) {
-                return (JSONObject) obj;
-            }
+            return gson.fromJson(reader, JsonObject.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void saveJsonObject(File jsonFile, JSONObject jsonObject) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonParser jp = new JsonParser();
-        JsonElement je = jp.parse(jsonObject.toJSONString());
-        String prettyJsonString = gson.toJson(je).replace("\\u003c", "<").replace("\\u003e", ">");
+    public void saveJsonObject(File jsonFile, JsonObject jsonObject) {
+        String prettyJsonString = gson.toJson(jsonObject).replace("\\u003c", "<").replace("\\u003e", ">");
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8));
             writer.write(prettyJsonString);

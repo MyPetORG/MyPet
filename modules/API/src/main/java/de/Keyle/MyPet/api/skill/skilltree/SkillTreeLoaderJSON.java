@@ -20,6 +20,10 @@
 
 package de.Keyle.MyPet.api.skill.skilltree;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -34,10 +38,6 @@ import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.StaticLevelRule;
 import de.Keyle.MyPet.api.skill.upgrades.*;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -70,13 +70,13 @@ public class SkillTreeLoaderJSON {
         }
     }
 
-    public static void loadSkilltree(JSONObject skilltreeObject) {
+    public static void loadSkilltree(JsonObject skilltreeObject) {
         if (!containsKey(skilltreeObject, "ID")) {
             return;
         }
 
         Skilltree skilltree;
-        String skilltreeID = get(skilltreeObject, "ID").toString();
+        String skilltreeID = get(skilltreeObject, "ID").getAsString();
 
         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeID)) {
             return;
@@ -85,39 +85,39 @@ public class SkillTreeLoaderJSON {
         skilltree = new Skilltree(skilltreeID);
 
         if (containsKey(skilltreeObject, "Name")) {
-            skilltree.setDisplayName(get(skilltreeObject, "Name").toString());
+            skilltree.setDisplayName(get(skilltreeObject, "Name").getAsString());
         }
         if (containsKey(skilltreeObject, "Permission")) {
-            String permission = get(skilltreeObject, "Permission").toString();
+            String permission = get(skilltreeObject, "Permission").getAsString();
             Settings settings = new Settings("Permission");
             settings.load(permission);
             skilltree.addRequirementSettings(settings);
             //TODO warnung zum aktualisieren
         }
         if (containsKey(skilltreeObject, "Display")) {
-            skilltree.setDisplayName(get(skilltreeObject, "Display").toString());
+            skilltree.setDisplayName(get(skilltreeObject, "Display").getAsString());
         }
         if (containsKey(skilltreeObject, "MaxLevel")) {
-            skilltree.setMaxLevel(((Number) get(skilltreeObject, "MaxLevel")).intValue());
+            skilltree.setMaxLevel((get(skilltreeObject, "MaxLevel").getAsInt()));
         }
         if (containsKey(skilltreeObject, "RequiredLevel")) {
-            skilltree.setRequiredLevel(((Number) get(skilltreeObject, "RequiredLevel")).intValue());
+            skilltree.setRequiredLevel((get(skilltreeObject, "RequiredLevel").getAsInt()));
         }
         if (containsKey(skilltreeObject, "Order")) {
-            skilltree.setOrder(((Number) get(skilltreeObject, "Order")).intValue());
+            skilltree.setOrder((get(skilltreeObject, "Order").getAsInt()));
         }
         if (containsKey(skilltreeObject, "Weight")) {
-            skilltree.setWeight(((Number) get(skilltreeObject, "Weight")).doubleValue());
+            skilltree.setWeight((get(skilltreeObject, "Weight").getAsDouble()));
         }
         if (containsKey(skilltreeObject, "MobTypes")) {
-            JSONArray mobTypeArray = (JSONArray) get(skilltreeObject, "MobTypes");
+            JsonArray mobTypeArray = get(skilltreeObject, "MobTypes").getAsJsonArray();
             Set<MyPetType> mobTypes = new HashSet<>();
             if (mobTypeArray.size() == 0) {
                 Collections.addAll(mobTypes, MyPetType.values());
             } else {
                 boolean allNegative = true;
-                for (Object o : mobTypeArray) {
-                    String type = o.toString();
+                for (JsonElement o : mobTypeArray) {
+                    String type = o.getAsString();
                     if (!type.startsWith("-")) {
                         allNegative = false;
                         break;
@@ -126,8 +126,8 @@ public class SkillTreeLoaderJSON {
                 if (allNegative) {
                     Collections.addAll(mobTypes, MyPetType.values());
                 }
-                for (Object o : mobTypeArray) {
-                    String type = o.toString();
+                mobTypeArray.forEach(jsonElement -> {
+                    String type = jsonElement.getAsString();
                     if (type.equals("*")) {
                         Collections.addAll(mobTypes, MyPetType.values());
                     } else {
@@ -145,68 +145,63 @@ public class SkillTreeLoaderJSON {
                             }
                         }
                     }
-                }
+                });
             }
             skilltree.setMobTypes(mobTypes);
         }
         if (containsKey(skilltreeObject, "Icon")) {
-            JSONObject iconObject = (JSONObject) get(skilltreeObject, "Icon");
+            JsonObject iconObject = get(skilltreeObject, "Icon").getAsJsonObject();
             SkilltreeIcon icon = new SkilltreeIcon();
             if (containsKey(iconObject, "Material")) {
-                icon.setMaterial(get(iconObject, "Material").toString());
+                icon.setMaterial(get(iconObject, "Material").getAsString());
             }
             if (containsKey(iconObject, "Glowing")) {
-                icon.setGlowing((Boolean) get(iconObject, "Glowing"));
+                icon.setGlowing(get(iconObject, "Glowing").getAsBoolean());
             }
             skilltree.setIcon(icon);
         }
         if (containsKey(skilltreeObject, "Inheritance")) {
-            JSONObject inheritanceObject = (JSONObject) get(skilltreeObject, "Inheritance");
+            JsonObject inheritanceObject = get(skilltreeObject, "Inheritance").getAsJsonObject();
             if (containsKey(inheritanceObject, "Skilltree")) {
-                skilltree.setInheritedSkilltreeName(get(inheritanceObject, "Skilltree").toString());
+                skilltree.setInheritedSkilltreeName(get(inheritanceObject, "Skilltree").getAsString());
             }
         }
         if (containsKey(skilltreeObject, "Description")) {
-            JSONArray descriptionArray = (JSONArray) get(skilltreeObject, "Description");
-            for (Object lvl_object : descriptionArray) {
-                skilltree.addDescriptionLine(String.valueOf(lvl_object));
-            }
+            JsonArray descriptionArray = get(skilltreeObject, "Description").getAsJsonArray();
+            descriptionArray.forEach(jsonElement -> skilltree.addDescriptionLine(jsonElement.getAsString()));
         }
         if (containsKey(skilltreeObject, "Notifications")) {
-            JSONObject notificationsObject = (JSONObject) get(skilltreeObject, "Notifications");
-            for (Object ooo : notificationsObject.keySet()) {
-                String levelRuleString = ooo.toString();
+            JsonObject notificationsObject = get(skilltreeObject, "Notifications").getAsJsonObject();
+            for (String levelRuleString : notificationsObject.keySet()) {
                 LevelRule levelRule = loadLevelRule(levelRuleString);
-                String message = notificationsObject.get(ooo).toString();
+                String message = notificationsObject.get(levelRuleString).getAsString();
                 skilltree.addNotification(levelRule, message);
             }
         }
         if (containsKey(skilltreeObject, "Requirements")) {
-            JSONArray requirementsArray = (JSONArray) get(skilltreeObject, "Requirements");
-            for (Object ooo : requirementsArray) {
-                boolean hasParameter = ooo.toString().contains(":");
-                String[] data = ooo.toString().split(":", 2);
+            JsonArray requirementsArray = get(skilltreeObject, "Requirements").getAsJsonArray();
+            requirementsArray.forEach(jsonElement -> {
+                boolean hasParameter = jsonElement.getAsString().contains(":");
+                String[] data = jsonElement.getAsString().split(":", 2);
                 Settings settings = new Settings(data[0]);
                 if (hasParameter) {
                     settings.load(data[1]);
                 }
                 skilltree.addRequirementSettings(settings);
-            }
+            });
         }
         if (containsKey(skilltreeObject, "Skills")) {
-            JSONObject skillsObject = (JSONObject) get(skilltreeObject, "Skills");
-            for (Object oo : skillsObject.keySet()) {
-                JSONObject skillObject = (JSONObject) skillsObject.get(oo);
-                String skillName = oo.toString();
+            JsonObject skillsObject = get(skilltreeObject, "Skills").getAsJsonObject();
+            for (String skillName : skillsObject.keySet()) {
+                JsonObject skillObject = skillsObject.getAsJsonObject(skillName);
 
                 if (containsKey(skillObject, "Upgrades")) {
-                    JSONObject upgradesObject = (JSONObject) get(skillObject, "Upgrades");
+                    JsonObject upgradesObject = get(skillObject, "Upgrades").getAsJsonObject();
 
-                    for (Object ooo : upgradesObject.keySet()) {
-                        String levelRuleString = ooo.toString();
+                    for (String levelRuleString : upgradesObject.keySet()) {
                         LevelRule levelRule = loadLevelRule(levelRuleString);
 
-                        JSONObject upgradeObject = (JSONObject) upgradesObject.get(ooo);
+                        JsonObject upgradeObject = upgradesObject.getAsJsonObject(levelRuleString);
                         Upgrade upgrade = loadUpgrade(skillName, upgradeObject);
 
                         skilltree.addUpgrade(levelRule, upgrade);
@@ -248,7 +243,7 @@ public class SkillTreeLoaderJSON {
         return levelRule;
     }
 
-    private static Upgrade loadUpgrade(String skillName, JSONObject upgradeObject) {
+    private static Upgrade loadUpgrade(String skillName, JsonObject upgradeObject) {
         Upgrade upgrade = null;
         switch (skillName.toLowerCase()) {
             case "backpack": {
@@ -259,7 +254,7 @@ public class SkillTreeLoaderJSON {
                 break;
             }
             case "beacon": {
-                JSONObject buffsObject = (JSONObject) get(upgradeObject, "buffs");
+                JsonObject buffsObject = get(upgradeObject, "buffs").getAsJsonObject();
                 upgrade = new BeaconUpgrade()
                         .setRangeModifier(parseNumberModifier(get(upgradeObject, "range")))
                         .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")))
@@ -393,21 +388,17 @@ public class SkillTreeLoaderJSON {
         return upgrade;
     }
 
-    private static JSONObject loadJsonObject(File jsonFile) throws IOException, ParseException {
+    private static JsonObject loadJsonObject(File jsonFile) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(reader);
-            if (obj instanceof JSONObject) {
-                return (JSONObject) obj;
-            }
+            Gson gson = new Gson();
+            return gson.fromJson(reader, JsonObject.class);
         }
-        return null;
     }
 
-    private static Object get(JSONObject o, String key) {
+    private static JsonElement get(JsonObject o, String key) {
         if (o != null) {
-            for (Object keyObject : o.keySet()) {
-                if (keyObject.toString().equalsIgnoreCase(key)) {
+            for (String keyObject : o.keySet()) {
+                if (keyObject.equalsIgnoreCase(key)) {
                     return o.get(keyObject);
                 }
             }
@@ -415,9 +406,9 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
-    private static boolean containsKey(JSONObject o, String key) {
-        for (Object keyObject : o.keySet()) {
-            if (keyObject.toString().equalsIgnoreCase(key)) {
+    private static boolean containsKey(JsonObject o, String key) {
+        for (String keyObject : o.keySet()) {
+            if (keyObject.equalsIgnoreCase(key)) {
                 return true;
             }
         }

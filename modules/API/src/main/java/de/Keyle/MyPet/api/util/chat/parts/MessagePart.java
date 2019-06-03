@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.api.util.chat.parts;
 
+import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.ChatColor;
-import org.json.simple.JSONObject;
 
 public class MessagePart {
     @Getter @Setter @Accessors(chain = true)
@@ -41,27 +41,27 @@ public class MessagePart {
     String hoverActionData = null;
 
     @SuppressWarnings("unchecked")
-    public JSONObject toJson() {
-        JSONObject json = new JSONObject();
+    public JsonObject toJson() {
+        JsonObject json = new JsonObject();
         if (color != null) {
-            json.put("color", color.name().toLowerCase());
+            json.addProperty("color", color.name().toLowerCase());
         }
         if (styles != null) {
             for (final Style style : Style.values()) {
-                json.put(style.getName(), "true");
+                json.addProperty(style.getName(), "true");
             }
         }
         if (clickActionName != null && clickActionData != null) {
-            JSONObject actionJson = new JSONObject();
-            json.put("clickEvent", actionJson);
-            actionJson.put("action", clickActionName);
-            actionJson.put("value", clickActionData);
+            JsonObject actionJson = new JsonObject();
+            json.add("clickEvent", actionJson);
+            actionJson.addProperty("action", clickActionName);
+            actionJson.addProperty("value", clickActionData);
         }
         if (hoverActionName != null && hoverActionData != null) {
-            JSONObject hoverJson = new JSONObject();
-            json.put("hoverEvent", hoverJson);
-            hoverJson.put("action", hoverActionName);
-            hoverJson.put("value", hoverActionData);
+            JsonObject hoverJson = new JsonObject();
+            json.add("hoverEvent", hoverJson);
+            hoverJson.addProperty("action", hoverActionName);
+            hoverJson.addProperty("value", hoverActionData);
         }
         return json;
     }

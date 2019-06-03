@@ -69,9 +69,7 @@ public class BehaviorAggressiveTarget implements AIGoal {
             return false;
         }
 
-        for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
-            EntityLiving entityLiving = (EntityLiving) entityObj;
-
+        for (EntityLiving entityLiving : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
             if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand) && entityLiving.isAlive() && petEntity.h(entityLiving) <= 91) {
                 if (entityLiving instanceof EntityPlayer) {
                     Player targetPlayer = (Player) entityLiving.getBukkitEntity();

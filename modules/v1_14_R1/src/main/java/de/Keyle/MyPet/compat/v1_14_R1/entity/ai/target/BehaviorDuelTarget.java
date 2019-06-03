@@ -71,8 +71,7 @@ public class BehaviorDuelTarget implements AIGoal {
             return true;
         }
 
-        for (Object entityObj : this.petEntity.world.a(EntityMyPet.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
-            EntityMyPet entityMyPet = (EntityMyPet) entityObj;
+        for (EntityMyPet entityMyPet : this.petEntity.world.a(EntityMyPet.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
             MyPet targetMyPet = entityMyPet.getMyPet();
 
             if (entityMyPet != petEntity && entityMyPet.isAlive()) {

@@ -331,10 +331,6 @@
                                     <shadedPattern>de.Keyle.MyPet.util.metrics</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.json.simple</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.json.simple</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>com.google.gson</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.gson</shadedPattern>
                                 </relocation>

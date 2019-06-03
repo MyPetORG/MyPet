@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v1_14_R1;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
@@ -41,7 +42,6 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_14_R1.util.UnsafeList;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
-import org.json.simple.JSONObject;
 
 import java.util.List;
 
@@ -230,7 +230,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public void sendMessageActionBar(Player player, String message) {
         if (player instanceof CraftPlayer) {
-            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + JSONObject.escape(message) + "\"}");
+            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + Util.escapeJsonString(message) + "\"}");
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.GAME_INFO));
         }
     }

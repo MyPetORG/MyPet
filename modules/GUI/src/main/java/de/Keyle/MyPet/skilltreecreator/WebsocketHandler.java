@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.skilltreecreator;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.websockets.CloseCode;
 import org.nanohttpd.protocols.websockets.WebSocket;
@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.util.prefs.Preferences;
 
 public class WebsocketHandler extends WebSocket {
+
+    Gson gson = new Gson();
 
     public WebsocketHandler(IHTTPSession handshakeRequest) {
         super(handshakeRequest);
@@ -58,9 +60,9 @@ public class WebsocketHandler extends WebSocket {
     @Override
     protected void onMessage(WebSocketFrame m) {
         m.setUnmasked();
-        JSONObject message = parseJsonObject(m.getTextPayload());
-        if (message != null && message.containsKey("action")) {
-            switch ("" + message.get("action")) {
+        JsonObject message = parseJsonObject(m.getTextPayload());
+        if (message != null && message.has("action")) {
+            switch (message.get("action").getAsString()) {
                 case "PING":
                     break;
                 case "CHANGE_LANGUAGE":
@@ -85,13 +87,9 @@ public class WebsocketHandler extends WebSocket {
         exception.printStackTrace();
     }
 
-    public JSONObject parseJsonObject(String jsonString) {
+    public JsonObject parseJsonObject(String jsonString) {
         try {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(jsonString);
-            if (obj instanceof JSONObject) {
-                return (JSONObject) obj;
-            }
+            return gson.fromJson(jsonString, JsonObject.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

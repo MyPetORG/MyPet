@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.api.util.inventory.material;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import org.bukkit.Material;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -62,37 +62,32 @@ public class ItemDatabase implements ServiceContainer {
         // source: https://minecraftitemids.com/
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(MyPetApi.getPlugin().getResource("items.json"), StandardCharsets.UTF_8))) {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(reader);
-            if (obj instanceof JSONArray) {
-                for (Object o : (JSONArray) obj) {
-                    JSONObject entryObject = (JSONObject) o;
-                    loadEntry(entryObject);
-                }
-            }
+            Gson gson = new Gson();
+            JsonArray obj = gson.fromJson(reader, JsonArray.class);
+            obj.forEach(jsonElement -> loadEntry(jsonElement.getAsJsonObject()));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void loadEntry(JSONObject entryObject) {
-        String introduced = entryObject.get("introduced").toString();
+    protected void loadEntry(JsonObject entryObject) {
+        String introduced = entryObject.get("introduced").getAsString();
         if (MyPetApi.getCompatUtil().isCompatible(introduced)) {
-            String id = entryObject.get("id").toString();
+            String id = entryObject.get("id").getAsString();
 
             MaterialHolder materialHolder;
 
             short legacyData = 0;
             String legacyName = null;
             int legacyId = -1;
-            if (entryObject.containsKey("legacy-data")) {
-                legacyData = Short.parseShort(entryObject.get("legacy-data").toString());
+            if (entryObject.has("legacy-data")) {
+                legacyData = Short.parseShort(entryObject.get("legacy-data").getAsString());
             }
-            if (entryObject.containsKey("legacy-name")) {
-                legacyName = entryObject.get("legacy-name").toString();
+            if (entryObject.has("legacy-name")) {
+                legacyName = entryObject.get("legacy-name").getAsString();
             }
-            if (entryObject.containsKey("legacy-id")) {
-                legacyId = Integer.parseInt(entryObject.get("legacy-id").toString());
+            if (entryObject.has("legacy-id")) {
+                legacyId = Integer.parseInt(entryObject.get("legacy-id").getAsString());
             }
             if (legacyId >= 0) {
                 if (legacyName != null) {

@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
-import org.json.simple.JSONObject;
 
 import java.util.*;
 
@@ -192,14 +191,6 @@ public class BehaviorImpl implements Behavior {
             myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.Skill", myPet.getOwner()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
             return false;
         }
-    }
-
-    public JSONObject save() {
-        return new JSONObject();
-    }
-
-    @Override
-    public void load(JSONObject o) {
     }
 
     public void schedule() {

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -72,9 +72,7 @@ public class ControlTarget implements AIGoal {
                     return false;
                 }
             }
-            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.getBoundingBox().grow((double) this.range, 4.0D, (double) this.range))) {
-                EntityLiving entityLiving = (EntityLiving) entityObj;
-
+            for (EntityLiving entityLiving : this.petEntity.world.a(EntityLiving.class, this.petEntity.getBoundingBox().grow((double) this.range, 4.0D, (double) this.range))) {
                 if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand)) {
                     if (entityLiving instanceof EntityPlayer) {
                         Player targetPlayer = (Player) entityLiving.getBukkitEntity();
