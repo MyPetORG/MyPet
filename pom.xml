@@ -384,7 +384,7 @@
             <!-- https://www.spigotmc.org/resources/combatlogx.31689/ -->
             <groupId>com.SirBlobman.combatlogx</groupId>
             <artifactId>CombatLogX-Plugin</artifactId>
-            <version>9.5.0.1</version>
+            <version>9.7.1.2</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -430,7 +430,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -472,7 +472,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.4</version>
+            <version>1.18.8</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -486,7 +486,7 @@
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry</artifactId>
-            <version>1.7.16</version>
+            <version>1.7.22</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
