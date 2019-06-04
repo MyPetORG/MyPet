@@ -49,6 +49,7 @@ public class CombatLogXHook implements PluginHook {
     public boolean onEnable() {
         try {
             TagType.PLAYER.ordinal();
+            Class.forName("com.SirBlobman.combatlogx.config.ConfigOptions");
         } catch (Throwable e) {
             return false;
         }
