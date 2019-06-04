@@ -314,7 +314,6 @@
                                     <include>org.nanohttpd:nanohttpd:*</include>
                                     <include>org.nanohttpd:nanohttpd-websocket:*</include>
                                     <include>io.sentry:sentry:*</include>
-                                    <include>com.fasterxml.jackson.core:jackson-core:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
