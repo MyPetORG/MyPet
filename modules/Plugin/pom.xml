@@ -350,6 +350,10 @@
                                     <pattern>io.sentry</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.sentry</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.fasterxml.jackson</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.jackson</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
