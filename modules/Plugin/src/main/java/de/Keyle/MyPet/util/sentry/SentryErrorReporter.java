@@ -38,6 +38,7 @@ import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -124,7 +125,8 @@ public class SentryErrorReporter implements ErrorReporter {
 
     protected boolean filter(Throwable t) {
         if (t instanceof ConcurrentModificationException ||
-                t instanceof VirtualMachineError
+                t instanceof VirtualMachineError ||
+                t instanceof InvalidConfigurationException
         ) {
             return false;
         }
