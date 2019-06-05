@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CommandOptionSwitch implements CommandOptionTabCompleter {
+
     @Override
     public boolean onCommandOption(final CommandSender sender, String[] parameter) {
         boolean show = true;
@@ -87,22 +88,28 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                 @Override
                 public void callback(List<StoredMyPet> value) {
                     sender.sendMessage("Select the MyPet you want the player to switch to:");
-                    boolean doComma = false;
-                    FancyMessage message = new FancyMessage("");
-                    for (StoredMyPet mypet : value) {
+                    if (sender instanceof Player) {
+                        boolean doComma = false;
+                        FancyMessage message = new FancyMessage("");
+                        for (StoredMyPet mypet : value) {
 
-                        if (doComma) {
-                            message.then(", ");
+                            if (doComma) {
+                                message.then(", ");
+                            }
+                            message.then(mypet.getPetName())
+                                    .color(ChatColor.AQUA)
+                                    .command("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID())
+                                    .itemTooltip(Util.myPetToItemTooltip(mypet, lang));
+                            if (!doComma) {
+                                doComma = true;
+                            }
                         }
-                        message.then(mypet.getPetName())
-                                .color(ChatColor.AQUA)
-                                .command("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID())
-                                .itemTooltip(Util.myPetToItemTooltip(mypet, lang));
-                        if (!doComma) {
-                            doComma = true;
+                        MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
+                    } else {
+                        for (StoredMyPet mypet : value) {
+                            sender.sendMessage(mypet.getPetName() + "(" + mypet.getPetType().name() + ") -> /petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID());
                         }
                     }
-                    MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
                 }
             });
 
