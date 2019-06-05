@@ -18,11 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util;
+package de.Keyle.MyPet.util.sentry;
 
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorReporter;
+import de.Keyle.MyPet.util.sentry.marshaller.gson.GsonSentryClientFactory;
 import io.sentry.SentryClient;
 import io.sentry.SentryClientFactory;
 import io.sentry.context.Context;
@@ -51,11 +52,11 @@ public class SentryErrorReporter implements ErrorReporter {
     protected boolean enabled = false;
 
     public void onEnable() {
+        SentryClientFactory factory = new GsonSentryClientFactory();
         sentry = SentryClientFactory.sentryClient("https://14aec086f95d4fbe8a378638c80b68fa@sentry.io/1368849?" +
-                "stacktrace.app.packages=");
+                "stacktrace.app.packages=", factory);
         context = sentry.getContext();
 
-        context.addTag("plugin_version", "" + MyPetVersion.getVersion());
         context.addTag("plugin_build", "" + MyPetVersion.getBuild());
         context.setUser(new UserBuilder().setId(serverUUID.toString()).build());
         sentry.setServerName(Bukkit.getServer().getVersion());
