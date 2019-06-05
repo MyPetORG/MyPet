@@ -112,8 +112,12 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             ((MyPetLogger) getLogger()).disableDebugLogger();
         }
 
-        pluginHookManager.disableHooks();
-        serviceManager.disableServices();
+        if (pluginHookManager != null) {
+            pluginHookManager.disableHooks();
+        }
+        if (serviceManager != null) {
+            serviceManager.disableServices();
+        }
         if (errorReporter != null) {
             errorReporter.onDisable();
         }
