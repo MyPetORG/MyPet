@@ -46,7 +46,7 @@ public class BelowHpFlag implements LeashFlag {
                 }
             } else {
                 if (Util.isDouble(valueString)) {
-                    int below = Integer.parseInt(valueString);
+                    double below = Double.parseDouble(valueString);
                     return entity.getHealth() - damage <= below;
                 }
             }
