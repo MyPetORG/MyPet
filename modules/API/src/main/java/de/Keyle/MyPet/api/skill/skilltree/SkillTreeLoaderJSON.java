@@ -20,10 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.skilltree;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -415,9 +412,9 @@ public class SkillTreeLoaderJSON {
         return false;
     }
 
-    private static UpgradeNumberModifier parseNumberModifier(Object modifierObject) {
-        if (modifierObject instanceof String) {
-            String modifierString = modifierObject.toString();
+    private static UpgradeNumberModifier parseNumberModifier(JsonElement modifierObject) {
+        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
+            String modifierString = modifierObject.getAsString();
             UpgradeNumberModifier.Type type;
             if (modifierString.startsWith("+")) {
                 type = UpgradeNumberModifier.Type.Add;
@@ -432,9 +429,9 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
-    private static UpgradeIntegerModifier parseIntegerModifier(Object modifierObject) {
-        if (modifierObject instanceof String) {
-            String modifierString = modifierObject.toString();
+    private static UpgradeIntegerModifier parseIntegerModifier(JsonElement modifierObject) {
+        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
+            String modifierString = modifierObject.getAsString();
             UpgradeNumberModifier.Type type;
             if (modifierString.startsWith("+")) {
                 type = UpgradeNumberModifier.Type.Add;
@@ -449,9 +446,9 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
-    private static UpgradeBooleanModifier parseBooleanModifier(Object modifierObject) {
-        if (modifierObject instanceof Boolean) {
-            if ((Boolean) modifierObject) {
+    private static UpgradeBooleanModifier parseBooleanModifier(JsonElement modifierObject) {
+        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isBoolean()) {
+            if (modifierObject.getAsBoolean()) {
                 return UpgradeBooleanModifier.True;
             } else {
                 return UpgradeBooleanModifier.False;
@@ -460,9 +457,9 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
-    private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(Object modifierObject, Class<T> e, T def) {
-        if (modifierObject instanceof String) {
-            String modifierString = modifierObject.toString();
+    private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(JsonElement modifierObject, Class<T> e, T def) {
+        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
+            String modifierString = modifierObject.getAsString();
             for (T c : e.getEnumConstants()) {
                 if (c.name().equalsIgnoreCase(modifierString)) {
                     return new UpgradeEnumModifier<>(c);
