@@ -41,7 +41,7 @@ public class WebsocketHandler extends WebSocket {
     @Override
     protected void onOpen() {
         System.out.println("WS: Open connection");
-        String lang = Preferences.userNodeForPackage(Main.MyPetPlugin.class).get("Language", "NO-Language");
+        String lang = Preferences.userNodeForPackage(Main.MyPetPlugin.class).get("Language", "NO-Language").replace("\"", "");
         if (!lang.equals("NO-Language")) {
             try {
                 this.send("{\"action\": \"CHANGE_LANGUAGE\", \"data\": \"" + lang + "\"}");
@@ -66,7 +66,7 @@ public class WebsocketHandler extends WebSocket {
                 case "PING":
                     break;
                 case "CHANGE_LANGUAGE":
-                    Preferences.userNodeForPackage(Main.MyPetPlugin.class).put("Language", message.get("data").toString());
+                    Preferences.userNodeForPackage(Main.MyPetPlugin.class).put("Language", message.get("data").getAsString());
                     break;
                 case "CLOSE":
                     Main.close();
