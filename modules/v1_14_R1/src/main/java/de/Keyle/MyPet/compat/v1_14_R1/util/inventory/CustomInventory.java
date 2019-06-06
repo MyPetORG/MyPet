@@ -32,6 +32,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftContainer;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
@@ -272,7 +275,32 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 
     @Override
     public void open(Player player) {
-        player.openInventory(getBukkitInventory());
+        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        Container container = new CraftContainer(getBukkitInventory(), entityPlayer, entityPlayer.nextContainerCounter());
+        container = CraftEventFactory.callInventoryOpenEvent(entityPlayer, container);
+        if (container != null) {
+            Containers customSize = Containers.GENERIC_9X1;
+            switch (this.getSize()) {
+                case 18:
+                    customSize = Containers.GENERIC_9X2;
+                    break;
+                case 27:
+                    customSize = Containers.GENERIC_9X3;
+                    break;
+                case 36:
+                    customSize = Containers.GENERIC_9X4;
+                    break;
+                case 45:
+                    customSize = Containers.GENERIC_9X5;
+                    break;
+                case 54:
+                    customSize = Containers.GENERIC_9X6;
+                    break;
+            }
+            entityPlayer.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, customSize, new ChatComponentText(this.getName())));
+            entityPlayer.activeContainer = container;
+            entityPlayer.activeContainer.addSlotListener(entityPlayer);
+        }
     }
 
     public List<HumanEntity> getViewers() {

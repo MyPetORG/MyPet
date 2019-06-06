@@ -35,6 +35,7 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_14_R1.util.CraftChatMessage;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.InvocationTargetException;
@@ -76,7 +77,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
                 minecraftInventory.setItem(slot, item);
             }
         }
-        player.openInventory(minecraftInventory.getBukkitInventory());
+        minecraftInventory.open((Player) player);
     }
 
     @Override
