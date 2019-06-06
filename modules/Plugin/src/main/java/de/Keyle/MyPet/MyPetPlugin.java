@@ -79,6 +79,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 
+
+@SuppressWarnings("unused")
 public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin.MyPetPlugin {
 
     private boolean isReady = false;
@@ -210,10 +212,11 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         if (!new File(getDataFolder(), "exp.js").exists()) {
             platformHelper.copyResource(this, "exp.js", new File(getDataFolder(), "exp.js"));
         }
-        ExperienceCalculatorManager calculatorManager = serviceManager.getService(ExperienceCalculatorManager.class).get();
-        calculatorManager.registerCalculator("JS", JavaScriptExperienceCalculator.class);
-        calculatorManager.registerCalculator("JavaScript", JavaScriptExperienceCalculator.class);
-        calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE.toLowerCase());
+        serviceManager.getService(ExperienceCalculatorManager.class).ifPresent(calculatorManager -> {
+            calculatorManager.registerCalculator("JS", JavaScriptExperienceCalculator.class);
+            calculatorManager.registerCalculator("JavaScript", JavaScriptExperienceCalculator.class);
+            calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE.toLowerCase());
+        });
 
         // register event listener
         PlayerListener playerListener = new PlayerListener();
