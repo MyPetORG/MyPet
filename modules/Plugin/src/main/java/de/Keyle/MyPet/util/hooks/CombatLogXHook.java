@@ -25,6 +25,7 @@ import com.SirBlobman.combatlogx.utility.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
@@ -50,6 +51,12 @@ public class CombatLogXHook implements PluginHook {
         try {
             TagType.PLAYER.ordinal();
             Class.forName("com.SirBlobman.combatlogx.config.ConfigOptions");
+            if (ReflectionUtil.getField(ConfigOptions.class, "OPTION_LINK_PROJECTILES") == null) {
+                throw new Throwable();
+            }
+            if (ReflectionUtil.getField(ConfigOptions.class, "OPTION_LINK_PETS") == null) {
+                throw new Throwable();
+            }
         } catch (Throwable e) {
             return false;
         }
