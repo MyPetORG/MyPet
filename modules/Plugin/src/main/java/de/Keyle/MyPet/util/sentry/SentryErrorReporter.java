@@ -20,9 +20,11 @@
 
 package de.Keyle.MyPet.util.sentry;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorReporter;
+import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.util.sentry.marshaller.gson.GsonSentryClientFactory;
 import io.sentry.SentryClient;
 import io.sentry.SentryClientFactory;
@@ -64,6 +66,18 @@ public class SentryErrorReporter implements ErrorReporter {
         sentry.setRelease(MyPetVersion.getVersion());
         sentry.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
 
+        addPlugins();
+        addPluginHooks();
+
+        loggerAppender = new MyPetExceptionAppender();
+        loggerAppender.start();
+        Logger logger = (Logger) LogManager.getRootLogger();
+        logger.addAppender(loggerAppender);
+
+        enabled = true;
+    }
+
+    protected void addPlugins() {
         List<String> plugins = Arrays
                 .stream(Bukkit.getPluginManager().getPlugins())
                 .map(plugin -> plugin.getName() + " (" + plugin.getDescription().getVersion() + ")")
@@ -81,13 +95,25 @@ public class SentryErrorReporter implements ErrorReporter {
         if (part.length() > 0) {
             context.addExtra("plugins_" + pluginCounter, part.toString());
         }
+    }
 
-        loggerAppender = new MyPetExceptionAppender();
-        loggerAppender.start();
-        Logger logger = (Logger) LogManager.getRootLogger();
-        logger.addAppender(loggerAppender);
-
-        enabled = true;
+    protected void addPluginHooks() {
+        List<String> hooks = MyPetApi.getPluginHookManager().getHooks().stream()
+                .map(PluginHook::getActivationMessage)
+                .collect(Collectors.toList());
+        int hookCounter = 1;
+        StringBuilder part = new StringBuilder();
+        for (String hook : hooks) {
+            if (part.length() + hook.length() + "\n".length() > 400) {
+                context.addExtra("hooks_" + hookCounter, part.toString());
+                hookCounter++;
+                part = new StringBuilder();
+            }
+            part.append(hook).append("\n");
+        }
+        if (part.length() > 0) {
+            context.addExtra("hooks_" + hookCounter, part.toString());
+        }
     }
 
     public void onDisable() {
