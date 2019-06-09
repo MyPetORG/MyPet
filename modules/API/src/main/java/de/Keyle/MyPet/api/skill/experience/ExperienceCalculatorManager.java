@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.skill.experience;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.exceptions.MyPetExperienceCalculatorInitException;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -56,11 +55,10 @@ public class ExperienceCalculatorManager implements ServiceContainer {
                     if (newCalculator.isUsable()) {
                         this.calculator = newCalculator;
                     }
-                } catch (MyPetExperienceCalculatorInitException e) {
+                } catch (Throwable e) {
                     MyPetApi.getLogger().warning("There was an error loading the experience calculator. Please check your setup.");
                     MyPetApi.getLogger().warning("  " + e.getMessage());
-                } catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
+                    this.calculator = defaultCalculator;
                 }
             } else {
                 this.calculator = defaultCalculator;
