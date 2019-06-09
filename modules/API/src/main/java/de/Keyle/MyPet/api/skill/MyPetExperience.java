@@ -249,8 +249,8 @@ public class MyPetExperience {
     @SuppressWarnings("unchecked")
     public static void addDamageToEntity(LivingEntity damager, LivingEntity victim, double damage) {
         Map<UUID, Double> damageMap;
-        if (victim.hasMetadata("DamageCount")) {
-            for (MetadataValue value : victim.getMetadata("DamageCount")) {
+        if (victim.hasMetadata("MyPetDamageCount")) {
+            for (MetadataValue value : victim.getMetadata("MyPetDamageCount")) {
                 if (value.getOwningPlugin().getName().equals("MyPet")) {
                     damageMap = (Map<UUID, Double>) value.value();
                     if (damageMap.containsKey(damager)) {
@@ -265,13 +265,13 @@ public class MyPetExperience {
         } else {
             damageMap = new WeakHashMap<>();
             damageMap.put(damager.getUniqueId(), victim.getHealth() < damage ? victim.getHealth() : damage);
-            victim.setMetadata("DamageCount", new FixedMetadataValue(MyPetApi.getPlugin(), damageMap));
+            victim.setMetadata("MyPetDamageCount", new FixedMetadataValue(MyPetApi.getPlugin(), damageMap));
         }
     }
 
     @SuppressWarnings("unchecked")
     public static double getDamageToEntity(LivingEntity damager, LivingEntity victim) {
-        for (MetadataValue value : victim.getMetadata("DamageCount")) {
+        for (MetadataValue value : victim.getMetadata("MyPetDamageCount")) {
             if (value.getOwningPlugin().getName().equals("MyPet")) {
                 Map<UUID, Double> damageMap = (Map<UUID, Double>) value.value();
                 if (damageMap.containsKey(damager.getUniqueId())) {
@@ -285,9 +285,9 @@ public class MyPetExperience {
 
     @SuppressWarnings("unchecked")
     public static double getDamageToEntityPercent(LivingEntity damager, LivingEntity victim) {
-        if (victim.hasMetadata("DamageCount")) {
+        if (victim.hasMetadata("MyPetDamageCount")) {
             UUID damagerUUID = damager.getUniqueId();
-            for (MetadataValue value : victim.getMetadata("DamageCount")) {
+            for (MetadataValue value : victim.getMetadata("MyPetDamageCount")) {
                 if (value.getOwningPlugin().getName().equals("MyPet")) {
                     Map<UUID, Double> damageMap = (Map<UUID, Double>) value.value();
                     double allDamage = 0;
@@ -305,8 +305,8 @@ public class MyPetExperience {
     @SuppressWarnings("unchecked")
     public static Map<UUID, Double> getDamageToEntityPercent(LivingEntity victim) {
         Map<UUID, Double> damagePercentMap = new HashMap<>();
-        if (victim.hasMetadata("DamageCount")) {
-            for (MetadataValue value : victim.getMetadata("DamageCount")) {
+        if (victim.hasMetadata("MyPetDamageCount")) {
+            for (MetadataValue value : victim.getMetadata("MyPetDamageCount")) {
                 if (value.getOwningPlugin().getName().equals("MyPet")) {
                     Map<UUID, Double> damageMap = (Map<UUID, Double>) value.value();
                     double allDamage = 0;
