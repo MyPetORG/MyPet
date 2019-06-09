@@ -543,4 +543,11 @@ public class Util {
         }
         return sb.toString();
     }
+
+    public static String getClassName(Class clazz) {
+        if (clazz != null) {
+            return clazz.getName();
+        }
+        return null;
+    }
 }

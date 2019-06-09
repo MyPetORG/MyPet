@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_13_R2.entity;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -114,7 +115,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
                 petEntity = (EntityMyPet) obj;
             }
         } catch (Exception e) {
-            MyPetApi.getLogger().info(ChatColor.RED + entityClass.getName() + " is no valid MyPet(Entity)!");
+            MyPetApi.getLogger().info(ChatColor.RED + Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
             e.printStackTrace();
         }
 

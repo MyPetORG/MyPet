@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_8_R3.entity;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -94,7 +95,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
                 petEntity = (EntityMyPet) obj;
             }
         } catch (Exception e) {
-            MyPetApi.getLogger().info(ChatColor.RED + entityClass.getName() + " is no valid MyPet(Entity)!");
+            MyPetApi.getLogger().info(ChatColor.RED + Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
             e.printStackTrace();
         }
 
