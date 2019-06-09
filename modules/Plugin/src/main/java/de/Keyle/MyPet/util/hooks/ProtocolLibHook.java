@@ -137,12 +137,18 @@ public class ProtocolLibHook implements PluginHook {
 
                         PacketContainer packet = event.getPacket();
 
-                        final Entity entity = packet.getEntityModifier(event).readSafely(0);
+                        try {
+                            final Entity entity = packet.getEntityModifier(event).readSafely(0);
 
-                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
-                            byte angle = packet.getBytes().read(0);
-                            angle += Byte.MAX_VALUE;
-                            packet.getBytes().write(0, angle);
+                            if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
+                                byte angle = packet.getBytes().read(0);
+                                angle += Byte.MAX_VALUE;
+                                packet.getBytes().write(0, angle);
+                            }
+                        } catch (RuntimeException ignored) {
+                            // ignore:
+                            // - entityID cannot be negative
+                            // - Cannot retrieve entity from ID.
                         }
                     }
                 });
