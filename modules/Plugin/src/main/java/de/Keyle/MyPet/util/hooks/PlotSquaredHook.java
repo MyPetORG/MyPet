@@ -41,14 +41,23 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
             Class.forName("com.github.intellectualsites.plotsquared.plot.object.Plot");
             isV4 = true;
         } catch (ClassNotFoundException e) {
-            isV4 = false;
+            try {
+                Class.forName("com.intellectualcrafters.plot.flag.BooleanFlag");
+                isV4 = false;
+            } catch (ClassNotFoundException e2) {
+                return false;
+            }
         }
         return true;
     }
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
-        return isV4 ? V4.canHurt(attacker, defender) : V3.canHurt(attacker, defender);
+        if (isV4) {
+            return V4.canHurt(attacker, defender);
+        } else {
+            return V3.canHurt(attacker, defender);
+        }
     }
 
     private static class V3 {
