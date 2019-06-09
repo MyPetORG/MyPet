@@ -85,6 +85,10 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public WorldGuardHook() {
         if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
+            if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
+                return;
+            }
+
             wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
 
             if (wgp.getDescription().getVersion().startsWith("7.")) {
@@ -133,6 +137,9 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     @Override
     public boolean onEnable() {
+        if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
+            return false;
+        }
         if (customFlags) {
             Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
             MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
