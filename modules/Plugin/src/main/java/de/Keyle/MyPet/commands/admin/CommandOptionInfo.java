@@ -58,7 +58,7 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                         itemStack = ((Player) sender).getInventory().getItemInHand();
                     }
                     sender.sendMessage("See server logs for the result.");
-                    if (itemStack.getType() != Material.AIR) {
+                    if (itemStack != null && itemStack.getType() != Material.AIR) {
                         String itemString = MyPetApi.getPlatformHelper().itemstackToString(itemStack);
                         System.out.println("MyPet Info Item: " + itemString);
                     } else {
