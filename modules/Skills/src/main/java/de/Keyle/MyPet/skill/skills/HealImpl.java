@@ -58,7 +58,7 @@ public class HealImpl implements Heal {
     public String toPrettyString(String locale) {
         return "+" + ChatColor.GOLD + heal.getValue().doubleValue() + ChatColor.RESET
                 + Translation.getString("Name.HP", locale)
-                + " ->" + ChatColor.GOLD + timer.getValue() + ChatColor.RESET + Translation.getString("Name.Seconds", locale);
+                + " -> " + ChatColor.GOLD + timer.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Seconds", locale);
     }
 
     @Override

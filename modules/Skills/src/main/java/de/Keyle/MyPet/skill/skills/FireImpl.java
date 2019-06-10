@@ -59,7 +59,7 @@ public class FireImpl implements Fire {
     }
 
     public String toPrettyString(String locale) {
-        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "% -> " + ChatColor.GOLD + duration.getValue().doubleValue() + ChatColor.RESET + Translation.getString("Name.Seconds", locale);
+        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "% -> " + ChatColor.GOLD + duration.getValue().doubleValue() + ChatColor.RESET + " " + Translation.getString("Name.Seconds", locale);
     }
 
     @Override

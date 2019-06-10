@@ -60,7 +60,7 @@ public class WitherImpl implements Wither {
 
     public String toPrettyString(String locale) {
         return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET
-                + "% -> " + ChatColor.GOLD + duration.getValue() + ChatColor.RESET + Translation.getString("Name.Seconds", locale);
+                + "% -> " + ChatColor.GOLD + duration.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Seconds", locale);
     }
 
     @Override
