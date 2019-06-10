@@ -550,4 +550,14 @@ public class Util {
         }
         return null;
     }
+
+    public static boolean stringsEqual(String a, String b, boolean ignoreCase) {
+        if (a == null) {
+            return b == null;
+        }
+        if (b == null) {
+            return a == null;
+        }
+        return ignoreCase ? a.equalsIgnoreCase(b) : a.equals(b);
+    }
 }

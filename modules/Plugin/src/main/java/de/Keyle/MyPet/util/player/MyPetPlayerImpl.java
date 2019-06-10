@@ -49,6 +49,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -526,13 +527,13 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             return false;
         } else if (obj instanceof Player) {
             Player player = (Player) obj;
-            return getPlayerUUID().equals(player.getUniqueId()) || getName().equals(player.getName());
+            return getPlayerUUID().equals(player.getUniqueId()) || Util.stringsEqual(getName(), player.getName(), false);
         } else if (obj instanceof OfflinePlayer) {
             OfflinePlayer offlinePlayer = (OfflinePlayer) obj;
-            return getPlayer().getUniqueId().equals(offlinePlayer.getUniqueId()) || offlinePlayer.getName().equals(getName());
+            return Objects.equals(getPlayer().getUniqueId(), offlinePlayer.getUniqueId()) || Util.stringsEqual(offlinePlayer.getName(), getName(), false);
         } else if (obj instanceof AnimalTamer) {
             AnimalTamer animalTamer = (AnimalTamer) obj;
-            return animalTamer.getName().equals(getName());
+            return Util.stringsEqual(animalTamer.getName(), getName(), false);
         } else if (obj instanceof MyPetPlayerImpl) {
             return this == obj;
         }
