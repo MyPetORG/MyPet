@@ -53,6 +53,7 @@ public class SentryErrorReporter implements ErrorReporter {
     protected Context context;
     protected Appender loggerAppender = null;
     protected boolean enabled = false;
+    protected boolean hooksLoaded = false;
 
     public void onEnable() {
         SentryClientFactory factory = new GsonSentryClientFactory();
@@ -67,7 +68,6 @@ public class SentryErrorReporter implements ErrorReporter {
         sentry.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
 
         addPlugins();
-        addPluginHooks();
 
         loggerAppender = new MyPetExceptionAppender();
         loggerAppender.start();
@@ -98,6 +98,9 @@ public class SentryErrorReporter implements ErrorReporter {
     }
 
     protected void addPluginHooks() {
+        if (MyPetApi.getPluginHookManager() == null || MyPetApi.getPluginHookManager().getHooks() == null) {
+            return;
+        }
         List<String> hooks = MyPetApi.getPluginHookManager().getHooks().stream()
                 .map(PluginHook::getActivationMessage)
                 .collect(Collectors.toList());
@@ -114,6 +117,7 @@ public class SentryErrorReporter implements ErrorReporter {
         if (part.length() > 0) {
             context.addExtra("hooks_" + hookCounter, part.toString());
         }
+        hooksLoaded = true;
     }
 
     public void onDisable() {
@@ -143,6 +147,9 @@ public class SentryErrorReporter implements ErrorReporter {
             this.context.recordBreadcrumb(
                     new BreadcrumbBuilder().setMessage(c).build()
             );
+        }
+        if (!hooksLoaded) {
+            addPluginHooks();
         }
 
         sentry.sendException(t);
