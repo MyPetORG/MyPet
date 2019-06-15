@@ -497,9 +497,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
                         if (checkTamable((LivingEntity) entity, p)) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.LIME_GREEN_WOOL_DATA);
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 100, ParticleCompat.LIME_GREEN_WOOL_DATA);
                         } else {
-                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 16, ParticleCompat.RED_WOOL_DATA);
+                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 100, ParticleCompat.RED_WOOL_DATA);
                         }
                         if (count++ > 20) {
                             break;
