@@ -163,6 +163,10 @@ public class SentryErrorReporter implements ErrorReporter {
         ) {
             return false;
         }
+        switch (t.getClass().getSimpleName()) {
+            case "AuthenticationException":
+                return false;
+        }
         Optional<StackTraceElement> element;
         if (t instanceof NullPointerException) {
             element = Arrays.stream(t.getStackTrace())
