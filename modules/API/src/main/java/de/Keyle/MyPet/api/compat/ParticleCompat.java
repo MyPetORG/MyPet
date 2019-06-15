@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -103,6 +103,7 @@ public class ParticleCompat {
             .d(4447) // (351+(1*4096))
             .v("1.8", new int[]{351, 1})
             .v("1.13", "rose_red")
+            .v("1.14", "red_dye")
             .search();
 
     public static Compat<Object> LIME_GREEN_WOOL_DATA = new Compat<>()
