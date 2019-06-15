@@ -53,7 +53,7 @@ public class MyRabbit extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         if (info.containsKeyAs("Variant", TagByte.class)) {
             setVariant(RabbitType.getTypeByID(info.getAs("Variant", TagByte.class).getByteData()));
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }

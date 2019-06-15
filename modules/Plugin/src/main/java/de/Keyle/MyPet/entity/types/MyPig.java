@@ -65,7 +65,7 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
                 MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
             }
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }

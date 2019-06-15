@@ -78,13 +78,13 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         } else if (info.containsKeyAs("Color", TagByte.class)) {
             setColor(DyeColor.getByDyeData(info.getAs("Color", TagByte.class).getByteData()));
         }
-        if (info.getCompoundData().containsKey("Sheared")) {
+        if (info.containsKey("Sheared")) {
             setSheared(info.getAs("Sheared", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Rainbow")) {
+        if (info.containsKey("Rainbow")) {
             setRainbow(info.getAs("Rainbow", TagByte.class).getBooleanData());
         }
     }

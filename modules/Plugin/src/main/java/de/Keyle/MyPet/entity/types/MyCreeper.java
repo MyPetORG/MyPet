@@ -43,7 +43,7 @@ public class MyCreeper extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Powered")) {
+        if (info.containsKey("Powered")) {
             setPowered(info.getAs("Powered", TagByte.class).getBooleanData());
         }
     }

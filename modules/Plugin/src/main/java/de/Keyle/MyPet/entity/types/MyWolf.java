@@ -61,16 +61,16 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("CollarColor")) {
+        if (info.containsKey("CollarColor")) {
             setCollarColor(DyeColor.getByDyeData(info.getAs("CollarColor", TagByte.class).getByteData()));
         }
-        if (info.getCompoundData().containsKey("Tamed")) {
+        if (info.containsKey("Tamed")) {
             setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Angry")) {
+        if (info.containsKey("Angry")) {
             setAngry(info.getAs("Angry", TagByte.class).getBooleanData());
         }
     }

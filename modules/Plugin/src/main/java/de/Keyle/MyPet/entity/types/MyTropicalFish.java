@@ -61,7 +61,7 @@ public class MyTropicalFish extends MyPet implements de.Keyle.MyPet.api.entity.t
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Variant")) {
+        if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
     }

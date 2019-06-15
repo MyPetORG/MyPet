@@ -47,10 +47,10 @@ public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.type
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("CowType")) {
+        if (info.containsKey("CowType")) {
             setType(Type.values()[info.getAs("CowType", TagInt.class).getIntData()]);
         }
     }

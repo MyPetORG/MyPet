@@ -62,7 +62,7 @@ public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Weapon")) {
+        if (info.containsKey("Weapon")) {
             TagCompound item = info.getAs("Weapon", TagCompound.class);
             try {
                 ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
@@ -71,7 +71,7 @@ public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types
                 MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
             }
         }
-        if (info.getCompoundData().containsKey("Banner")) {
+        if (info.containsKey("Banner")) {
             TagCompound item = info.getAs("Banner", TagCompound.class);
             try {
                 ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);

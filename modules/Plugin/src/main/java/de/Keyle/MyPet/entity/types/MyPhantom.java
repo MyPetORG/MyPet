@@ -49,7 +49,7 @@ public class MyPhantom extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Size")) {
+        if (info.containsKey("Size")) {
             setSize(info.getAs("Size", TagInt.class).getIntData());
         }
     }

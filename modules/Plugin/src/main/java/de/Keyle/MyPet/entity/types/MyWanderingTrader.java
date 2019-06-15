@@ -45,7 +45,7 @@ public class MyWanderingTrader extends MyPet implements de.Keyle.MyPet.api.entit
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("OriginalData")) {
+        if (info.containsKey("OriginalData")) {
             originalData = info.getAs("OriginalData", TagCompound.class);
         }
     }

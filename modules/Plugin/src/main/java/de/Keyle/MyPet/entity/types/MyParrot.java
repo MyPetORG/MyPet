@@ -64,7 +64,7 @@ public class MyParrot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Variant")) {
+        if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
     }

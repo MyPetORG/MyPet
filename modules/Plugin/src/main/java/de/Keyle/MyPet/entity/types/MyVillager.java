@@ -55,19 +55,19 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Profession")) {
+        if (info.containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("VillagerType")) {
+        if (info.containsKey("VillagerType")) {
             setType(Type.values()[info.getAs("VillagerType", TagInt.class).getIntData()]);
         }
-        if (info.getCompoundData().containsKey("VillagerLevel")) {
+        if (info.containsKey("VillagerLevel")) {
             setVillagerLevel(info.getAs("VillagerLevel", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("OriginalData")) {
+        if (info.containsKey("OriginalData")) {
             originalData = info.getAs("OriginalData", TagCompound.class);
         }
     }

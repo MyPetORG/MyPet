@@ -110,7 +110,7 @@ public class MyGiant extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Equipment")) {
+        if (info.containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
             for (TagBase tag : equipmentList) {

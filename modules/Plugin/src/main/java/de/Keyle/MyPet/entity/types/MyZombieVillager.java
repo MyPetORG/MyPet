@@ -71,19 +71,19 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
     @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Profession")) {
+        if (info.containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("VillagerType")) {
+        if (info.containsKey("VillagerType")) {
             setType(MyVillager.Type.values()[info.getAs("VillagerType", TagInt.class).getIntData()]);
         }
-        if (info.getCompoundData().containsKey("TradingLevel")) {
+        if (info.containsKey("TradingLevel")) {
             setTradingLevel(info.getAs("TradingLevel", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("Equipment")) {
+        if (info.containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
             for (TagBase tag : equipmentList) {

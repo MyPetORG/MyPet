@@ -48,7 +48,7 @@ public class MyGuardian extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Elder")) {
+        if (info.containsKey("Elder")) {
             setElder(info.getAs("Elder", TagByte.class).getBooleanData());
         }
     }

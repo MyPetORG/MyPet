@@ -96,7 +96,7 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
         if (info.containsKeyAs("Chest", TagByte.class)) {

@@ -59,7 +59,7 @@ public class MyVindicator extends MyPet implements de.Keyle.MyPet.api.entity.typ
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Weapon")) {
+        if (info.containsKey("Weapon")) {
             TagCompound item = info.getAs("Weapon", TagCompound.class);
             try {
                 ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);

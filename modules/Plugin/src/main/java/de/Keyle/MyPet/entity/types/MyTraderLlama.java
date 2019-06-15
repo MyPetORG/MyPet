@@ -123,10 +123,10 @@ public class MyTraderLlama extends MyPet implements de.Keyle.MyPet.api.entity.ty
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Variant")) {
+        if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
         if (info.containsKeyAs("Chest", TagCompound.class)) {

@@ -77,12 +77,12 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Wither")) {
+        if (info.containsKey("Wither")) {
             setWither(info.getAs("Wither", TagByte.class).getBooleanData());
-        } else if (info.getCompoundData().containsKey("Type")) {
+        } else if (info.containsKey("Type")) {
             setType(info.getAs("Type", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("Equipment")) {
+        if (info.containsKey("Equipment")) {
             TagList equipment = info.getAs("Equipment", TagList.class);
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
             for (TagBase tag : equipmentList) {

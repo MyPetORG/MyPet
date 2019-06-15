@@ -70,21 +70,21 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Villager")) {
+        if (info.containsKey("Villager")) {
             setVillager(info.getAs("Villager", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Husk")) {
+        if (info.containsKey("Husk")) {
             setHusk(info.getAs("Husk", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Profession")) {
+        if (info.containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
         if (info.containsKeyAs("Type", TagInt.class)) {
             int type = info.getAs("Type", TagInt.class).getIntData();
-            if (!info.getCompoundData().containsKey("Version")) {
+            if (!info.containsKey("Version")) {
                 if (type == 6) {
                     setHusk(true);
                 } else if (type > 0 && type < 6) {
@@ -95,7 +95,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
                 setType(type);
             }
         }
-        if (info.getCompoundData().containsKey("Equipment")) {
+        if (info.containsKey("Equipment")) {
             TagList equipment = info.get("Equipment");
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
             for (TagBase tag : equipmentList) {

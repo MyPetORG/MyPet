@@ -43,7 +43,7 @@ public class MyChicken extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }

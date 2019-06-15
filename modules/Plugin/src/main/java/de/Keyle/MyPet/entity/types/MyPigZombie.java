@@ -76,10 +76,10 @@ public class MyPigZombie extends MyPet implements de.Keyle.MyPet.api.entity.type
     @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Equipment")) {
+        if (info.containsKey("Equipment")) {
             TagList equipment = info.getAs("Equipment", TagList.class);
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
             for (TagBase tag : equipmentList) {

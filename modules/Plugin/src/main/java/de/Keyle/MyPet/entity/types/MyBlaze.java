@@ -43,7 +43,7 @@ public class MyBlaze extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Fire")) {
+        if (info.containsKey("Fire")) {
             setOnFire(info.getAs("Fire", TagByte.class).getBooleanData());
         }
     }

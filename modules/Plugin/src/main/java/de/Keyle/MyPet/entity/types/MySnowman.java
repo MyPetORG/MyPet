@@ -61,7 +61,7 @@ public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Sheared")) {
+        if (info.containsKey("Sheared")) {
             setSheared(info.getAs("Sheared", TagByte.class).getBooleanData());
         }
     }

@@ -65,7 +65,7 @@ public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVe
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Weapon")) {
+        if (info.containsKey("Weapon")) {
             TagCompound item = info.getAs("Weapon", TagCompound.class);
             try {
                 ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
@@ -74,7 +74,7 @@ public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVe
                 MyPetApi.getLogger().warning("Could not load Weapon item from pet data!");
             }
         }
-        if (info.getCompoundData().containsKey("Glowing")) {
+        if (info.containsKey("Glowing")) {
             setGlowing(info.getAs("Glowing", TagByte.class).getBooleanData());
         }
     }

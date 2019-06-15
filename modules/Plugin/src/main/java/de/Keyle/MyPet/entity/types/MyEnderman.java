@@ -60,7 +60,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("BlockName")) {
+        if (info.containsKey("BlockName")) {
             ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
             String id = info.getAs("BlockName", TagString.class).getStringData();
             MaterialHolder materialHolder = itemDatabase.getByID(id);
@@ -75,7 +75,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
                 }
                 setBlock(new ItemStack(material, 1));
             }
-        } else if (info.getCompoundData().containsKey("BlockID")) {
+        } else if (info.containsKey("BlockID")) {
             int id;
             byte data = 0;
             if (info.containsKeyAs("BlockID", TagShort.class)) {
@@ -99,7 +99,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
                     setBlock(new ItemStack(material, 1, data));
                 }
             }
-        } else if (info.getCompoundData().containsKey("Block")) {
+        } else if (info.containsKey("Block")) {
             TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
             try {
                 ItemStack block = MyPetApi.getPlatformHelper().compundToItemStack(itemStackCompund);

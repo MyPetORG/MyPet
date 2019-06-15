@@ -145,13 +145,13 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Type")) {
+        if (info.containsKey("Type")) {
             setHorseType(info.getAs("Type", TagByte.class).getByteData());
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Variant")) {
+        if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
         if (info.containsKeyAs("Armor", TagInt.class)) {
@@ -169,7 +169,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
                 MyPetApi.getLogger().warning("Could not load Armor item from pet data!");
             }
         }
-        if (info.getCompoundData().containsKey("Age")) {
+        if (info.containsKey("Age")) {
             setAge(info.getAs("Age", TagInt.class).getIntData());
         }
         if (info.containsKeyAs("Chest", TagByte.class)) {

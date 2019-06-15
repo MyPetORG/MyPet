@@ -87,13 +87,13 @@ public class MyPanda extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("MainGene")) {
+        if (info.containsKey("MainGene")) {
             setMainGene(Panda.Gene.values()[info.getAs("MainGene", TagInt.class).getIntData()]);
         }
-        if (info.getCompoundData().containsKey("HiddenGene")) {
+        if (info.containsKey("HiddenGene")) {
             setHiddenGene(Panda.Gene.values()[info.getAs("HiddenGene", TagInt.class).getIntData()]);
         }
     }

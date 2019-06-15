@@ -120,13 +120,13 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("FoxType")) {
+        if (info.containsKey("FoxType")) {
             setType(Type.values()[info.getAs("FoxType", TagInt.class).getIntData()]);
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("MouthItem")) {
+        if (info.containsKey("MouthItem")) {
             TagCompound item = info.getAs("MouthItem", TagCompound.class);
             try {
                 ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);

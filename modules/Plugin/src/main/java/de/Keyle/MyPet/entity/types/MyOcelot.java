@@ -58,10 +58,10 @@ public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("CatType")) {
+        if (info.containsKey("CatType")) {
             setCatType(Type.getType(info.getAs("CatType", TagInt.class).getIntData()));
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }
