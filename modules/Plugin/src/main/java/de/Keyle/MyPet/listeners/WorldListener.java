@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,13 +34,12 @@ import java.io.File;
 public class WorldListener implements Listener {
     @EventHandler
     public void on(WorldInitEvent event) {
-        if (WorldGroup.getGroupByWorld(event.getWorld().getName()) == null) {
-            WorldGroup defaultGroup = WorldGroup.getGroupByName("default");
-            if (defaultGroup.addWorld(event.getWorld().getName())) {
+        if (WorldGroup.getGroupByWorld(event.getWorld().getName()) == WorldGroup.DISABLED_GROUP) {
+            if (WorldGroup.DEFAULT_GROUP.addWorld(event.getWorld().getName())) {
                 File groupsFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
                 ConfigurationYAML yamlConfiguration = new ConfigurationYAML(groupsFile);
                 FileConfiguration config = yamlConfiguration.getConfig();
-                config.set("Groups.default", defaultGroup.getWorlds());
+                config.set("Groups.default", WorldGroup.DEFAULT_GROUP.getWorlds());
                 yamlConfiguration.saveConfig();
                 MyPetApi.getLogger().info("added " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group.");
             } else {

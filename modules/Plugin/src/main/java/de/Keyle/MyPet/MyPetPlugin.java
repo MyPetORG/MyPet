@@ -33,9 +33,7 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
-import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.api.util.*;
-import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -67,8 +65,6 @@ import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -77,7 +73,9 @@ import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 @SuppressWarnings("unused")
@@ -254,6 +252,9 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         getCommand("pettrade").setExecutor(new CommandTrade());
         getCommand("petshop").setExecutor(new CommandShop());
 
+        // load worldgroups
+        WorldGroup.loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
+
         // register skills
         registerSkills();
 
@@ -373,9 +374,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         if (repo instanceof Scheduler) {
             Timer.addTask((Scheduler) repo);
         }
-
-        // load worldgroups
-        loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
 
         File shopConfig = new File(getDataFolder(), "pet-shops.yml");
         if (!shopConfig.exists()) {
@@ -607,76 +605,6 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetApi.getSkilltreeManager().registerRequirement(new PermissionRequirement());
         MyPetApi.getSkilltreeManager().registerRequirement(new PetLevelRequirement());
         MyPetApi.getSkilltreeManager().registerRequirement(new SkilltreeRequirement());
-    }
-
-    private void loadGroups(File f) {
-        getLogger().info("--- Loading WorldGroups ---------------------------");
-
-        ConfigurationYAML yamlConfiguration = new ConfigurationYAML(f);
-        FileConfiguration config = yamlConfiguration.getConfig();
-
-        WorldGroup.clearGroups();
-
-        if (config == null) {
-            return;
-        }
-
-        config.options().header("" +
-                "######################################################################\n" +
-                "          This is the world group configuration of MyPet             #\n" +
-                "                You can find more info on the wiki:                  #\n" +
-                "  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #\n" +
-                "######################################################################\n");
-        config.options().copyHeader(true);
-
-        Set<String> groups;
-        Set<String> disabledWorlds = new HashSet<>();
-        try {
-            groups = config.getConfigurationSection("Groups").getKeys(false);
-        } catch (NullPointerException e) {
-            groups = new HashSet<>();
-        }
-        if (config.contains("Disabled")) {
-            disabledWorlds.addAll(config.getStringList("Disabled"));
-        } else {
-            config.set("Disabled", new String[]{"example_world"});
-            yamlConfiguration.saveConfig();
-        }
-
-        for (String world : disabledWorlds) {
-            if (Bukkit.getServer().getWorld(world) != null) {
-                if (WorldGroup.DISABLED_GROUP.addWorld(world)) {
-                    getLogger().info("   disabled MyPet in '" + world + "'");
-                }
-            }
-        }
-        for (String node : groups) {
-            List<String> worlds = config.getStringList("Groups." + node);
-            if (worlds.size() > 0) {
-                WorldGroup newGroup = new WorldGroup(node, false);
-                for (String world : worlds) {
-                    if (Bukkit.getServer().getWorld(world) != null) {
-                        if (newGroup.addWorld(world)) {
-                            getLogger().info("   added '" + world + "' to '" + newGroup.getName() + "'");
-                        }
-                    }
-                }
-            }
-        }
-
-        List<String> worldNames = new ArrayList<>();
-        for (World world : getServer().getWorlds()) {
-            if (WorldGroup.DEFAULT_GROUP.addWorld(world.getName())) {
-                getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
-                worldNames.add(world.getName());
-            }
-        }
-        if (worldNames.size() > 0) {
-            config.set("Groups.default", worldNames);
-            yamlConfiguration.saveConfig();
-        }
-
-        getLogger().info("-------------------------------------------------");
     }
 
     @Override

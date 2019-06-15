@@ -20,9 +20,15 @@
 
 package de.Keyle.MyPet.api;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.*;
 
 public class WorldGroup {
@@ -141,5 +147,73 @@ public class WorldGroup {
         groupWorlds.clear();
         allGroups.put(DEFAULT_GROUP.getName(), DEFAULT_GROUP);
         allGroups.put(DISABLED_GROUP.getName(), DISABLED_GROUP);
+    }
+
+    public static void loadGroups(File f) {
+        MyPetApi.getLogger().info("Loading WorldGroups...");
+
+        ConfigurationYAML yamlConfiguration = new ConfigurationYAML(f);
+        FileConfiguration config = yamlConfiguration.getConfig();
+
+        WorldGroup.clearGroups();
+
+        if (config == null) {
+            return;
+        }
+
+        config.options().header("" +
+                "######################################################################\n" +
+                "          This is the world group configuration of MyPet             #\n" +
+                "                You can find more info on the wiki:                  #\n" +
+                "  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #\n" +
+                "######################################################################\n");
+        config.options().copyHeader(true);
+
+        Set<String> groups;
+        Set<String> disabledWorlds = new HashSet<>();
+        try {
+            groups = config.getConfigurationSection("Groups").getKeys(false);
+        } catch (NullPointerException e) {
+            groups = new HashSet<>();
+        }
+        if (config.contains("Disabled")) {
+            disabledWorlds.addAll(config.getStringList("Disabled"));
+        } else {
+            config.set("Disabled", new String[]{"example_world"});
+            yamlConfiguration.saveConfig();
+        }
+
+        for (String world : disabledWorlds) {
+            if (Bukkit.getServer().getWorld(world) != null) {
+                if (WorldGroup.DISABLED_GROUP.addWorld(world)) {
+                    MyPetApi.getLogger().info("   disabled MyPet in '" + world + "'");
+                }
+            }
+        }
+        for (String node : groups) {
+            List<String> worlds = config.getStringList("Groups." + node);
+            if (worlds.size() > 0) {
+                WorldGroup newGroup = new WorldGroup(node, false);
+                for (String world : worlds) {
+                    if (Bukkit.getServer().getWorld(world) != null) {
+                        if (newGroup.addWorld(world)) {
+                            MyPetApi.getLogger().info("   added '" + world + "' to '" + newGroup.getName() + "'");
+                        }
+                    }
+                }
+            }
+        }
+
+        List<String> worldNames = new ArrayList<>();
+        for (World world : Bukkit.getServer().getWorlds()) {
+            if (WorldGroup.DEFAULT_GROUP.addWorld(world.getName())) {
+                MyPetApi.getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
+                worldNames.add(world.getName());
+            }
+        }
+        if (worldNames.size() > 0) {
+            config.set("Groups.default", worldNames);
+            yamlConfiguration.saveConfig();
+        }
     }
 }
