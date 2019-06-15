@@ -153,8 +153,20 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("panda", new CommandOptionCreator()
                 .add("baby")
-                //.add("main-gene:")
-                //.add("hidden-gene:")
+                .add("main-gene:lazy")
+                .add("main-gene:worried")
+                .add("main-gene:playful")
+                .add("main-gene:aggressive")
+                .add("main-gene:weak")
+                .add("main-gene:brown")
+                .add("main-gene:normal")
+                .add("hidden-gene:lazy")
+                .add("hidden-gene:worried")
+                .add("hidden-gene:playful")
+                .add("hidden-gene:aggressive")
+                .add("hidden-gene:weak")
+                .add("hidden-gene:brown")
+                .add("hidden-gene:normal")
                 .get());
 
         petTypeOptionMap.put("parrot", new CommandOptionCreator()
@@ -546,6 +558,40 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         break;
                     case "puff:fully":
                         compound.getCompoundData().put("PuffState", new TagInt(2));
+                        break;
+                }
+            } else if (arg.startsWith("main-gene:") || arg.startsWith("hidden-gene:")) {
+                String gene;
+                String key;
+                if (arg.startsWith("main-gene:")) {
+                    key = "MainGene";
+                    gene = arg.substring(10);
+                } else {
+                    key = "HiddenGene";
+                    gene = arg.substring(12);
+                }
+                MyPetApi.getLogger().info(key + " -> " + gene);
+                switch (gene.toLowerCase()) {
+                    case "normal":
+                        compound.getCompoundData().put(key, new TagInt(0));
+                        break;
+                    case "lazy":
+                        compound.getCompoundData().put(key, new TagInt(1));
+                        break;
+                    case "worried":
+                        compound.getCompoundData().put(key, new TagInt(2));
+                        break;
+                    case "playful":
+                        compound.getCompoundData().put(key, new TagInt(3));
+                        break;
+                    case "brown":
+                        compound.getCompoundData().put(key, new TagInt(4));
+                        break;
+                    case "weak":
+                        compound.getCompoundData().put(key, new TagInt(5));
+                        break;
+                    case "aggressive":
+                        compound.getCompoundData().put(key, new TagInt(6));
                         break;
                 }
             } else if (arg.startsWith("type:")) {
