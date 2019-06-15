@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -31,6 +31,10 @@ public interface CommandOptionTabCompleter extends CommandOption {
     List<String> onTabComplete(CommandSender commandSender, String[] strings);
 
     default List<String> filterTabCompletionResults(Collection<String> collection, String startsWith) {
-        return collection.stream().filter(s -> s.toLowerCase().startsWith(startsWith.toLowerCase())).sorted().collect(Collectors.toList());
+        return collection
+                .stream()
+                .filter(s -> s.toLowerCase().startsWith(startsWith.toLowerCase()))
+                .sorted()
+                .collect(Collectors.toList());
     }
 }

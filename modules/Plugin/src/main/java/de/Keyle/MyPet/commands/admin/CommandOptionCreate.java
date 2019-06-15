@@ -393,7 +393,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 if (!options.contains(commonTypeOptionList.get(0))) {
                     options.addAll(commonTypeOptionList);
                 }
-                return filterTabCompletionResults(options, strings[3 + forceOffset]);
+                return filterTabCompletionResults(options, strings[strings.length - 1]);
             } else {
                 return filterTabCompletionResults(commonTypeOptionList, strings[3 + forceOffset]);
             }
