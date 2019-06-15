@@ -73,6 +73,11 @@ public class ItemDatabase implements ServiceContainer {
     protected void loadEntry(JsonObject entryObject) {
         String introduced = entryObject.get("introduced").getAsString();
         if (MyPetApi.getCompatUtil().isCompatible(introduced)) {
+            if (entryObject.has("last-used")) {
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion(entryObject.get("last-used").getAsString()) > 0) {
+                    return;
+                }
+            }
             String id = entryObject.get("id").getAsString();
 
             MaterialHolder materialHolder;

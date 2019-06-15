@@ -4290,18 +4290,32 @@
     "introduced": "1.7.10"
   },
   {
+    "id": "black_dye",
+    "introduced": "1.14"
+  },
+  {
     "legacy-name": "dye",
     "legacy-data": 1,
     "legacy-id": 351,
     "id": "rose_red",
-    "introduced": "1.7.10"
+    "introduced": "1.7.10",
+    "last-used": "1.13.2"
+  },
+  {
+    "id": "red_dye",
+    "introduced": "1.14"
   },
   {
     "legacy-name": "dye",
     "legacy-data": 2,
     "legacy-id": 351,
     "id": "cactus_green",
-    "introduced": "1.7.10"
+    "introduced": "1.7.10",
+    "last-used": "1.13.2"
+  },
+  {
+    "id": "green_dye",
+    "introduced": "1.14"
   },
   {
     "legacy-name": "dye",
@@ -4311,11 +4325,19 @@
     "introduced": "1.7.10"
   },
   {
+    "id": "brown_dye",
+    "introduced": "1.14"
+  },
+  {
     "legacy-name": "dye",
     "legacy-data": 4,
     "legacy-id": 351,
     "id": "lapis_lazuli",
     "introduced": "1.7.10"
+  },
+  {
+    "id": "blue_dye",
+    "introduced": "1.14"
   },
   {
     "legacy-name": "dye",
@@ -4364,7 +4386,12 @@
     "legacy-data": 11,
     "legacy-id": 351,
     "id": "dandelion_yellow",
-    "introduced": "1.7.10"
+    "introduced": "1.7.10",
+    "last-used": "1.13.2"
+  },
+  {
+    "id": "yellow_dye",
+    "introduced": "1.14"
   },
   {
     "legacy-name": "dye",
@@ -4393,6 +4420,10 @@
     "legacy-id": 351,
     "id": "bone_meal",
     "introduced": "1.7.10"
+  },
+  {
+    "id": "white_dye",
+    "introduced": "1.14"
   },
   {
     "legacy-name": "bone",
