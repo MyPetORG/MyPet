@@ -82,7 +82,7 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         if (info.getCompoundData().containsKey("Profession")) {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
-        if (info.getCompoundData().containsKey("Type")) {
+        if (info.containsKeyAs("Type", TagInt.class)) {
             int type = info.getAs("Type", TagInt.class).getIntData();
             if (!info.getCompoundData().containsKey("Version")) {
                 if (type == 6) {
