@@ -91,7 +91,7 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("CatType", new TagInt(getCatType().ordinal()));
-        info.getCompoundData().put("CollarColor", new TagInt(getCollarColor().ordinal()));
+        info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
         info.getCompoundData().put("Tamed", new TagByte(isTamed()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
@@ -99,16 +99,18 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.getCompoundData().containsKey("CatType")) {
+        if (info.containsKey("CatType")) {
             setCatType(Type.values()[info.getAs("CatType", TagInt.class).getIntData()]);
         }
-        if (info.getCompoundData().containsKey("CollarColor")) {
+        if (info.containsKeyAs("CollarColor", TagInt.class)) {
             setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagInt.class).getIntData()]);
+        } else if (info.containsKeyAs("CollarColor", TagByte.class)) {
+            setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagByte.class).getByteData()]);
         }
-        if (info.getCompoundData().containsKey("Tamed")) {
+        if (info.containsKey("Tamed")) {
             setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
         }
-        if (info.getCompoundData().containsKey("Baby")) {
+        if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }
