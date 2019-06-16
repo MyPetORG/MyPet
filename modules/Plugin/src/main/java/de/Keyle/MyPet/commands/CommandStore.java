@@ -36,9 +36,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CommandStore implements CommandTabCompleter {
+
+    protected Set<Integer> foundPermissions = new HashSet<>();
 
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -95,18 +99,22 @@ public class CommandStore implements CommandTabCompleter {
     }
 
     private int getMaxPetCount(Player p) {
-        int maxPetCount = 0;
         if (Permissions.has(p, "MyPet.admin")) {
-            maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
+            return Configuration.Misc.MAX_STORED_PET_COUNT;
         } else {
-            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
+            for (int i : foundPermissions) {
                 if (Permissions.has(p, "MyPet.petstorage.limit." + i)) {
-                    maxPetCount = i;
-                    break;
+                    return i;
+                }
+            }
+            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
+                if (!foundPermissions.contains(i) && Permissions.has(p, "MyPet.petstorage.limit." + i)) {
+                    foundPermissions.add(i);
+                    return i;
                 }
             }
         }
-        return maxPetCount;
+        return 0;
     }
 
     private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
