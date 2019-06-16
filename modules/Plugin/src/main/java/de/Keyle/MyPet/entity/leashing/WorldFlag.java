@@ -20,15 +20,22 @@
 
 package de.Keyle.MyPet.entity.leashing;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import de.Keyle.MyPet.api.util.locale.Translation;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @LeashFlagName("World")
 public class WorldFlag implements LeashFlag {
+
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
         for (Setting setting : settings.all()) {
@@ -37,5 +44,20 @@ public class WorldFlag implements LeashFlag {
             }
         }
         return false;
+    }
+
+    @Override
+    public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        for (Setting setting : settings.all()) {
+            if (setting.getValue().equals(entity.getWorld().getName())) {
+                return Translation.getString("Message.Command.CaptureHelper.World.Right", player);
+            }
+        }
+        String worlds = settings.all()
+                .stream()
+                .map(setting -> Bukkit.getWorld(setting.getValue()).getName())
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(", "));
+        return Util.formatText(Translation.getString("Message.Command.CaptureHelper.World.Wrong", player), worlds);
     }
 }

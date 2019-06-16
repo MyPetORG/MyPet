@@ -33,11 +33,13 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 @PluginHookName("mcMMO")
@@ -128,6 +130,26 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
                 e.printStackTrace();
             }
             return true;
+        }
+
+        @Override
+        public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+            try {
+                List<String> skills = new ArrayList<>();
+                for (Object skillType : (Object[]) METHOD_SkillType_values.invoke(null)) {
+                    String skillName = METHOD_SkillType_getName.invoke(skillType).toString();
+                    if (settings.map().containsKey(skillName.toLowerCase())) {
+                        Setting setting = settings.map().get(skillName.toLowerCase());
+                        if (Util.isInt(setting.getValue())) {
+                            int requiredLevel = Integer.parseInt(setting.getValue());
+                            skills.add(skillName + ": " + Translation.getString("Name.Level", player) + " " + requiredLevel);
+                        }
+                    }
+                }
+                return "mcMMO: " + String.join(", ", skills);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                return null;
+            }
         }
     }
 }

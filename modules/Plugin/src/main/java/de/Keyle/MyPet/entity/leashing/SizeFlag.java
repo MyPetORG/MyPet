@@ -25,12 +25,14 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 
 @LeashFlagName("Size")
 public class SizeFlag implements LeashFlag {
+
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
         if (entity instanceof Slime) {
@@ -49,5 +51,31 @@ public class SizeFlag implements LeashFlag {
             return correctSize;
         }
         return true;
+    }
+
+    @Override
+    public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        if (entity instanceof Slime) {
+            for (Setting setting : settings.all()) {
+                if (Util.isInt(setting.getKey())) {
+                    return Util.formatText(Translation.getString("Message.Command.CaptureHelper.Requirement.Size.Equal", player), setting.getKey());
+                }
+            }
+            String message = null;
+            if (settings.map().containsKey("min") && Util.isInt(settings.map().get("min").getValue())) {
+                message = Util.formatText(Translation.getString("Message.Command.CaptureHelper.Requirement.Size.Min", player), settings.map().get("min").getValue());
+
+            }
+            if (settings.map().containsKey("max") && Util.isInt(settings.map().get("max").getValue())) {
+                if (message != null) {
+                    message += ", ";
+                } else {
+                    message = "";
+                }
+                message += Util.formatText(Translation.getString("Message.Command.CaptureHelper.Requirement.Size.Min", player), settings.map().get("max").getValue());
+            }
+            return message;
+        }
+        return null;
     }
 }

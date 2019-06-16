@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.leashing;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -35,5 +36,10 @@ public class UserCreatedFlag implements LeashFlag {
             return ((IronGolem) entity).isPlayerCreated();
         }
         return true;
+    }
+
+    @Override
+    public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        return Translation.getString("Message.Command.CaptureHelper.UserCreated", player);
     }
 }

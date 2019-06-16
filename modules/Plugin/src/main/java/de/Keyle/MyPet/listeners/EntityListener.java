@@ -550,11 +550,29 @@ public class EntityListener implements Listener {
                             MyPetApi.getLogger().warning("\"" + flagName + "\" is not a valid leash requirement!");
                             continue;
                         }
+                        MyPetPlayer myPetPlayer = null;
+                        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                            myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+                        }
                         if (!flag.check(player, leashTarget, event.getDamage(), flagSettings)) {
                             willBeLeashed = false;
-                        }
-                        if (!willBeLeashed) {
-                            break;
+                            if (myPetPlayer != null) {
+                                if (myPetPlayer.isCaptureHelperActive()) {
+                                    String message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
+                                    if (message != null) {
+                                        myPetPlayer.sendMessage(LeashFlag.getMessagePrefix(false) + message, 10000);
+                                    }
+                                }
+                            }
+                        } else {
+                            if (myPetPlayer != null) {
+                                if (myPetPlayer.isCaptureHelperActive()) {
+                                    String message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
+                                    if (message != null) {
+                                        myPetPlayer.sendMessage(LeashFlag.getMessagePrefix(true) + message, 10000);
+                                    }
+                                }
+                            }
                         }
                     }
 

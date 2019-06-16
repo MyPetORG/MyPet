@@ -48,10 +48,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class MyPetPlayerImpl implements MyPetPlayer {
 
@@ -71,6 +68,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
     protected TagCompound extendedInfo = new TagCompound();
+    Map<String, Long> sentMessages = new HashMap<>();
 
     private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
     private boolean donationChecked = false;
@@ -302,6 +300,22 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         }
     }
 
+    public boolean sendMessage(String message, int cooldown) {
+        long currentTime = System.currentTimeMillis();
+        if (sentMessages.containsKey(message)) {
+            if (currentTime >= sentMessages.get(message)) {
+                this.sentMessages.put(message, currentTime + cooldown);
+                this.sendMessage(message);
+                return true;
+            }
+        } else {
+            this.sentMessages.put(message, currentTime + cooldown);
+            this.sendMessage(message);
+            return true;
+        }
+        return false;
+    }
+
     public DonateCheck.DonationRank getDonationRank() {
         return rank;
     }
@@ -414,6 +428,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         if (!isOnline()) {
             return;
         }
+        long currentTime = System.currentTimeMillis();
+        sentMessages.keySet().removeIf(message -> currentTime >= sentMessages.get(message));
         if (hasMyPet()) {
             MyPet myPet = getMyPet();
             Player p = this.getPlayer();
@@ -514,7 +530,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(MyPetType.byEntityTypeName(leashTarget.getType().name()))) {
             String flagName = flagSettings.getName();
             LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
-            if (flag != null && !flag.check(p, leashTarget, 0, flagSettings)) {
+            if (flag != null && (flag.ignoredByHelper() || !flag.check(p, leashTarget, 0, flagSettings))) {
                 return false;
             }
         }

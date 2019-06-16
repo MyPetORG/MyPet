@@ -46,6 +46,7 @@ import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -304,6 +305,15 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             StateFlag.State s = getState(location, null, LEASH_FLAG);
 
             return s == null || s == StateFlag.State.ALLOW;
+        }
+
+        @Override
+        public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+            if (this.check(player, entity, damage, settings)) {
+                return Translation.getString("Message.Command.CaptureHelper.WorldGuard.Allowed", player);
+            } else {
+                return Translation.getString("Message.Command.CaptureHelper.WorldGuard.Denied", player);
+            }
         }
     }
 }

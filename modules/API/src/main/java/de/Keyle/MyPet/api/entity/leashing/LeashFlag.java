@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.entity.leashing;
 
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -28,7 +29,19 @@ public interface LeashFlag {
 
     boolean check(Player player, LivingEntity entity, double damage, Settings settings);
 
+    default String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        return null;
+    }
+
     default boolean ignoredByHelper() {
         return false;
+    }
+
+    static String getMessagePrefix(boolean right) {
+        if (right) {
+            return "" + ChatColor.GREEN + ChatColor.BOLD + "✔ " + ChatColor.RESET;
+        } else {
+            return "" + ChatColor.RED + ChatColor.BOLD + "✘ " + ChatColor.RESET;
+        }
     }
 }
