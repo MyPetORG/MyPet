@@ -425,7 +425,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                         ((CraftPlayer) owner).getHandle().startRiding(this);
                         return true;
                     } else {
-                        getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()));
+                        getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()), 2000);
                     }
                 }
             }

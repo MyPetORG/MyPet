@@ -436,7 +436,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         ((CraftPlayer) owner).getHandle().startRiding(this);
                         return true;
                     } else {
-                        getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()));
+                        getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()), 2000);
                     }
                 }
             }

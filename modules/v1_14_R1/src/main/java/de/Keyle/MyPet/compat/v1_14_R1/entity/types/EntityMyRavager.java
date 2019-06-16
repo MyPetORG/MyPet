@@ -64,7 +64,7 @@ public class EntityMyRavager extends EntityMyPet {
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
         if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
             if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
-                getOwner().sendMessage("Unfortunately, Ravagers can not be ridden at the moment (Minecraft 1.14 problem)");
+                getOwner().sendMessage("Unfortunately, Ravagers can not be ridden at the moment (Minecraft 1.14 problem)", 5000);
                 return true;
             }
         }

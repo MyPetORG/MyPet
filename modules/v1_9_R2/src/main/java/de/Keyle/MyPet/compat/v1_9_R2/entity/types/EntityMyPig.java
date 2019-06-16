@@ -96,7 +96,7 @@ public class EntityMyPig extends EntityMyPet {
                             }
                         }.runTaskLater(MyPetApi.getPlugin(), 5);
                     }
-                    getOwner().sendMessage("Ironically pigs can not be ridden right now (Minecraft 1.9 problem)");
+                    getOwner().sendMessage("Ironically pigs can not be ridden right now (Minecraft 1.9 problem)", 5000);
                     return true;
                 }
             }

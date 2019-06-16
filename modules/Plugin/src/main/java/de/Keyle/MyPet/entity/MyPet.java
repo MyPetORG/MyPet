@@ -314,7 +314,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 return false;
             }
-            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
+            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()), 120000);
         }
         return true;
     }

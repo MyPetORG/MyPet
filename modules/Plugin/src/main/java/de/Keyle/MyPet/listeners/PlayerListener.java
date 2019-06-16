@@ -87,7 +87,7 @@ public class PlayerListener implements Listener {
                         }
                     }
                     if (!Permissions.hasExtended(event.getPlayer(), "MyPet.extended.control")) {
-                        myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()));
+                        myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()), 10000);
                         return;
                     }
                     Block block = event.getPlayer().getTargetBlock(null, 100);

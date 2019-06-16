@@ -269,7 +269,7 @@ public class StorageTrait extends Trait {
                                 }
                             });
                         } else {
-                            myPetPlayer.sendMessage(Translation.getString("Message.No.HasPet", myPetPlayer));
+                            myPetPlayer.sendMessage(Translation.getString("Message.No.HasPet", myPetPlayer), 5000);
                         }
                     }
                 });
