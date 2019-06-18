@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorReporter;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.util.sentry.marshaller.gson.GsonSentryClientFactory;
 import io.sentry.SentryClient;
 import io.sentry.SentryClientFactory;
@@ -102,7 +102,16 @@ public class SentryErrorReporter implements ErrorReporter {
             return;
         }
         List<String> hooks = MyPetApi.getPluginHookManager().getHooks().stream()
-                .map(PluginHook::getActivationMessage)
+                .map(hook -> {
+                    PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
+                    String message = hook.getPluginName();
+                    message += " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ")";
+                    if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
+                        message += " (" + hookNameAnnotation.classPath() + ")";
+                    }
+                    message += hook.getActivationMessage();
+                    return message;
+                })
                 .collect(Collectors.toList());
         int hookCounter = 1;
         StringBuilder part = new StringBuilder();
