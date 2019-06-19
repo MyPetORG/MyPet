@@ -251,7 +251,7 @@ public class SkillTreeLoaderJSON {
                 break;
             }
             case "beacon": {
-                JsonObject buffsObject = get(upgradeObject, "buffs").getAsJsonObject();
+                JsonObject buffsObject = (JsonObject) get(upgradeObject, "buffs");
                 upgrade = new BeaconUpgrade()
                         .setRangeModifier(parseNumberModifier(get(upgradeObject, "range")))
                         .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")))
