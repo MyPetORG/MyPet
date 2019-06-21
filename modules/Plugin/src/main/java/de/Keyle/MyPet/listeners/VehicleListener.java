@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2017 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,13 +23,16 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import org.bukkit.Location;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 public class VehicleListener implements Listener {
+
     @EventHandler
     public void on(VehicleEnterEvent event) {
         if (event.getEntered() instanceof Player && !(event.getVehicle() instanceof Horse)) {
@@ -43,6 +46,18 @@ public class VehicleListener implements Listener {
         }
         if (event.getEntered() instanceof MyPetBukkitEntity) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onSuffocate(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && event.getEntity() instanceof Player) {
+            if (event.getEntity().getVehicle() instanceof MyPetBukkitEntity) {
+                Location loc = event.getEntity().getLocation();
+                if (!loc.getWorld().getWorldBorder().isInside(loc)) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 }

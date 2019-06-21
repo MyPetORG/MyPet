@@ -527,13 +527,4 @@ public class PlayerListener implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onSuffocate(EntityDamageEvent event) {
-        if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && event.getEntity() instanceof Player) {
-            if (event.getEntity().getVehicle() instanceof MyPetBukkitEntity) {
-                event.setCancelled(true);
-            }
-        }
-    }
 }
