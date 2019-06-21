@@ -22,6 +22,8 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,6 +41,7 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
 
     static {
         COMMAND_OPTIONS.add("item");
+        COMMAND_OPTIONS.add("leashitem");
     }
 
     @Override
@@ -68,8 +71,24 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                     sender.sendMessage("You can't use this command from server console!");
                 }
                 break;
+            case "leashitem": {
+                if (args.length >= 2) {
+                    MyPetType type = MyPetType.byName(args[1], true);
+                    ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
+                    ItemStack configItemStack = configItem.getItem();
+                    String itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
+                    System.out.println("MyPet Leash Item (" + type + "): " + itemString);
+                    if (sender instanceof Player) {
+                        ((Player) sender).getInventory().addItem(configItemStack);
+                    }
+                } else {
+                    sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+                    sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin info leashitem " + ChatColor.RED + "<pet type>");
+                }
+                break;
+            }
             default:
-                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin reload " + ChatColor.RED + "<what info you want to see>");
+                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin info " + ChatColor.RED + "<what info you want to see>");
         }
         return true;
     }
