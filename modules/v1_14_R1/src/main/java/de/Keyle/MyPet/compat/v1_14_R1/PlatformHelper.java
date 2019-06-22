@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_14_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
@@ -43,10 +44,14 @@ import org.bukkit.craftbukkit.v1_14_R1.util.UnsafeList;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 @Compat("v1_14_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
+
+    private static Method ENTITY_LIVING_cD = ReflectionUtil.getMethod(EntityLiving.class, "cD");
 
     /**
      * @param location   the {@link Location} around which players must be to see the effect
@@ -343,10 +348,19 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public String getLastDamageSource(LivingEntity e) {
         EntityLiving el = ((CraftLivingEntity) e).getHandle();
-        if (el.cD() == null) {
-            return null;
+        DamageSource damageSource;
+        if (MyPetApi.getCompatUtil().isCompatible("1.14.3")) {
+            if (el.cE() == null) {
+                return null;
+            }
+        } else {
+            try {
+                damageSource = (DamageSource) ENTITY_LIVING_cD.invoke(el);
+                return ((ChatMessage) damageSource.getLocalizedDeathMessage(el)).k();
+            } catch (IllegalAccessException | InvocationTargetException ignored) {
+            }
         }
-        return ((ChatMessage) el.cD().getLocalizedDeathMessage(el)).k();
+        return null;
     }
 
     @Override

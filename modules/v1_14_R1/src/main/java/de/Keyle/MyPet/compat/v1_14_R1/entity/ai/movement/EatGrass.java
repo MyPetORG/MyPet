@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.types.EntityMySheep;
 import net.minecraft.server.v1_14_R1.*;
+import org.bukkit.GameRule;
 import org.bukkit.craftbukkit.v1_14_R1.event.CraftEventFactory;
 
 import java.util.function.Predicate;
@@ -93,7 +94,7 @@ public class EatGrass implements AIGoal {
                         this.entityMySheep,
                         blockAt,
                         Blocks.AIR.getBlockData(),
-                        !this.world.getGameRules().getBoolean("mobGriefing")
+                        !this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING)
                 ).isCancelled()) {
                     this.world.b(blockAt, false);
                 }
@@ -105,7 +106,7 @@ public class EatGrass implements AIGoal {
                             this.entityMySheep,
                             blockAt,
                             Blocks.AIR.getBlockData(),
-                            !this.world.getGameRules().getBoolean("mobGriefing")
+                            !this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING)
                     ).isCancelled()) {
                         this.world.triggerEffect(2001, blockUnder, Block.getCombinedId(Blocks.GRASS_BLOCK.getBlockData()));
                         this.world.setTypeAndData(blockUnder, Blocks.DIRT.getBlockData(), 2);

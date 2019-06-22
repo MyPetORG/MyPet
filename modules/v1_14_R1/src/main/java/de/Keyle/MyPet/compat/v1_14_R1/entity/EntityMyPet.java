@@ -58,6 +58,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_14_R1.util.CraftChatMessage;
 import org.bukkit.entity.ArmorStand;
@@ -708,7 +709,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         float speed;
         float swimmSpeed;
 
-        if (this.isInWater()) {
+        if (this.b(TagsFluid.WATER)) {
             locY = this.locY;
             speed = 0.8F;
             swimmSpeed = 0.02F;
@@ -723,7 +724,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                 motY = 0.30000001192092896D;
             }
             this.setMot(motX, motY, motZ);
-        } else if (this.ax()) { // in lava
+        } else if (this.b(TagsFluid.LAVA)) {
             locY = this.locY;
             this.a(0.02F, new Vec3D(motionSideways, motionUpwards, motionForward));
             this.move(EnumMoveType.SELF, this.getMot());
@@ -900,12 +901,16 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
      * Returns the speed of played sounds
      */
     protected float cU() {
+        return cV();
+    }
+
+    protected float cV() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.cU();
+        return 1F;
     }
 
     public void movementTick() {
@@ -923,7 +928,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             --this.bf;
             this.setPosition(d0, d1, d2);
             this.setYawPitch(this.yaw, this.pitch);
-        } else if (!this.de()) {
+        } else {
             this.setMot(this.getMot().d(0.98D, 0.98D, 0.98D));
         }
 
@@ -951,7 +956,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         if (this.jumping) {
             if (this.Q > 0.0D && (!this.onGround || this.Q > 0.4D)) {
                 this.c(TagsFluid.WATER);
-            } else if (this.ax()) {
+            } else if (this.b(TagsFluid.LAVA)) {
                 this.c(TagsFluid.LAVA);
             } else if (this.onGround && this.jumpDelay == 0) {
                 this.jump();
@@ -1271,8 +1276,16 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         return null;
     }
 
+    protected void d(DamageSource damagesource) {
+        CraftEventFactory.callEntityDeathEvent(this);
+    }
+
     public DamageSource cD() {
-        DamageSource source = super.cD();
+        return cE();
+    }
+
+    public DamageSource cE() {
+        DamageSource source = super.cE();
         if (deathReason != null) {
             return deathReason;
         }

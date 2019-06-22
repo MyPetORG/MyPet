@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_14_R1.EntityPlayer;
 import net.minecraft.server.v1_14_R1.Navigation;
+import net.minecraft.server.v1_14_R1.TagsFluid;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 
 @Compat("v1_14_R1")
@@ -62,7 +63,7 @@ public class Float implements AIGoal {
                 lavaCounter = 10;
             }
         }
-        if (!inLava && entityMyPet.ax()) {
+        if (!inLava && entityMyPet.b(TagsFluid.LAVA)) {
             inLava = true;
         }
     }
