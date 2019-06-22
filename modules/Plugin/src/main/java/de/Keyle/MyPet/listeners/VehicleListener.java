@@ -54,7 +54,7 @@ public class VehicleListener implements Listener {
         if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && event.getEntity() instanceof Player) {
             if (event.getEntity().getVehicle() instanceof MyPetBukkitEntity) {
                 Location loc = event.getEntity().getLocation();
-                if (!loc.getWorld().getWorldBorder().isInside(loc)) {
+                if (loc.getWorld().getWorldBorder().isInside(loc)) {
                     event.setCancelled(true);
                 }
             }
