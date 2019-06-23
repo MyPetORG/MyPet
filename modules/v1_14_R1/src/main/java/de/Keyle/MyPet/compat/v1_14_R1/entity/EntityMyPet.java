@@ -73,6 +73,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
@@ -104,6 +107,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     protected CraftMyPet bukkitEntity = null;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "jumping");
+    private static MethodHandle METHOD_cD = null;
 
     public EntityMyPet(World world, MyPet myPet) {
         super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
@@ -1280,15 +1284,29 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         CraftEventFactory.callEntityDeathEvent(this);
     }
 
+    @SuppressWarnings("JavaLangInvokeHandleSignature")
     public DamageSource cD() {
-        return cE();
-    }
-
-    public DamageSource cE() {
-        DamageSource source = super.cE();
         if (deathReason != null) {
             return deathReason;
         }
-        return source;
+        try {
+            if (METHOD_cD == null) {
+                Field IMPL_LOOKUP = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
+                IMPL_LOOKUP.setAccessible(true);
+                MethodHandles.Lookup lkp = (MethodHandles.Lookup) IMPL_LOOKUP.get(null);
+                METHOD_cD = lkp.findSpecial(EntityLiving.class, "cD", MethodType.methodType(DamageSource.class), EntityMyPet.class);
+            }
+            return (DamageSource) METHOD_cD.invoke(this);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return null;
+    }
+
+    public DamageSource cE() {
+        if (deathReason != null) {
+            return deathReason;
+        }
+        return super.cE();
     }
 }
