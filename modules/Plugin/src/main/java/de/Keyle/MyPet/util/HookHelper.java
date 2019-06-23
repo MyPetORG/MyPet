@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.types.*;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -37,9 +38,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
         if (attacker == null || defender == null) {
             return false;
         }
-        if (!attacker.getWorld().getPVP()) {
-            return false;
-        } else if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
+        if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
             return false;
         }
         return true;
@@ -52,6 +51,12 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
         }
         if (attacker != null && defender != null && attacker != defender) {
             if (!attacker.getWorld().getPVP()) {
+                return false;
+            }
+            if (defender.isInvulnerable()) {
+                return false;
+            }
+            if (defender.getGameMode() == GameMode.CREATIVE) {
                 return false;
             }
             List<PlayerVersusPlayerHook> pvpHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusPlayerHook.class);
@@ -69,6 +74,9 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     public boolean canHurt(Player attacker, Entity defender) {
         if (defender instanceof Player) {
             return canHurt(attacker, (Player) defender);
+        }
+        if (defender.isInvulnerable()) {
+            return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
             List<PlayerVersusEntityHook> pveHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusEntityHook.class);
