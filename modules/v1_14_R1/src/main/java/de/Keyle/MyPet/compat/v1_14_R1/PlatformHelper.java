@@ -353,6 +353,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             if (el.cE() == null) {
                 return null;
             }
+            return ((ChatMessage) el.cE().getLocalizedDeathMessage(el)).k();
         } else {
             try {
                 damageSource = (DamageSource) ENTITY_LIVING_cD.invoke(el);
