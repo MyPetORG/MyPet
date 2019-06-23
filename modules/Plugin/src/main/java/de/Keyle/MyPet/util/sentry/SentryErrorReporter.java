@@ -168,6 +168,7 @@ public class SentryErrorReporter implements ErrorReporter {
     protected boolean filter(Throwable t) {
         if (t instanceof ConcurrentModificationException ||
                 t instanceof VirtualMachineError ||
+                t instanceof LinkageError ||
                 t instanceof InvalidConfigurationException
         ) {
             return false;
