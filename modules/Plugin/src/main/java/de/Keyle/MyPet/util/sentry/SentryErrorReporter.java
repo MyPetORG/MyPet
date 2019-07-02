@@ -42,6 +42,7 @@ import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -169,6 +170,7 @@ public class SentryErrorReporter implements ErrorReporter {
         if (t instanceof ConcurrentModificationException ||
                 t instanceof VirtualMachineError ||
                 t instanceof LinkageError ||
+                t instanceof FileNotFoundException ||
                 t instanceof InvalidConfigurationException
         ) {
             return false;
