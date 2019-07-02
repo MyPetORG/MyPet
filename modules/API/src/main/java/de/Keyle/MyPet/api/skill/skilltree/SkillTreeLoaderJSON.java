@@ -24,6 +24,7 @@ import com.google.gson.*;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.exceptions.InvalidSkilltreeException;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeEnumModifier;
@@ -60,9 +61,10 @@ public class SkillTreeLoaderJSON {
         if (skilltreeFile.exists()) {
             try {
                 loadSkilltree(loadJsonObject(skilltreeFile));
-            } catch (Exception e) {
+            } catch (InvalidSkilltreeException e) {
                 MyPetApi.getLogger().warning("Error in " + skilltreeFile.getName() + " -> Skilltree not loaded.");
                 MyPetApi.getLogger().warning(e.getMessage());
+            } catch (IOException ignored) {
             }
         }
     }
@@ -81,131 +83,171 @@ public class SkillTreeLoaderJSON {
 
         skilltree = new Skilltree(skilltreeID);
 
-        if (containsKey(skilltreeObject, "Name")) {
-            skilltree.setDisplayName(get(skilltreeObject, "Name").getAsString());
-        }
-        if (containsKey(skilltreeObject, "Permission")) {
-            String permission = get(skilltreeObject, "Permission").getAsString();
-            Settings settings = new Settings("Permission");
-            settings.load(permission);
-            skilltree.addRequirementSettings(settings);
-            //TODO warnung zum aktualisieren
-        }
-        if (containsKey(skilltreeObject, "Display")) {
-            skilltree.setDisplayName(get(skilltreeObject, "Display").getAsString());
-        }
-        if (containsKey(skilltreeObject, "MaxLevel")) {
-            skilltree.setMaxLevel((get(skilltreeObject, "MaxLevel").getAsInt()));
-        }
-        if (containsKey(skilltreeObject, "RequiredLevel")) {
-            skilltree.setRequiredLevel((get(skilltreeObject, "RequiredLevel").getAsInt()));
-        }
-        if (containsKey(skilltreeObject, "Order")) {
-            skilltree.setOrder((get(skilltreeObject, "Order").getAsInt()));
-        }
-        if (containsKey(skilltreeObject, "Weight")) {
-            skilltree.setWeight((get(skilltreeObject, "Weight").getAsDouble()));
-        }
-        if (containsKey(skilltreeObject, "MobTypes")) {
-            JsonArray mobTypeArray = get(skilltreeObject, "MobTypes").getAsJsonArray();
-            Set<MyPetType> mobTypes = new HashSet<>();
-            if (mobTypeArray.size() == 0) {
-                Collections.addAll(mobTypes, MyPetType.values());
-            } else {
-                boolean allNegative = true;
-                for (JsonElement o : mobTypeArray) {
-                    String type = o.getAsString();
-                    if (!type.startsWith("-")) {
-                        allNegative = false;
-                        break;
-                    }
-                }
-                if (allNegative) {
+        tryToLoad("Name", () -> {
+            if (containsKey(skilltreeObject, "Name")) {
+                skilltree.setDisplayName(get(skilltreeObject, "Name").getAsString());
+            }
+        });
+        tryToLoad("Permission", () -> {
+            if (containsKey(skilltreeObject, "Permission")) {
+                String permission = get(skilltreeObject, "Permission").getAsString();
+                Settings settings = new Settings("Permission");
+                settings.load(permission);
+                skilltree.addRequirementSettings(settings);
+                //TODO warnung zum aktualisieren
+            }
+        });
+        tryToLoad("Display", () -> {
+            if (containsKey(skilltreeObject, "Display")) {
+                skilltree.setDisplayName(get(skilltreeObject, "Display").getAsString());
+            }
+        });
+        tryToLoad("MaxLevel", () -> {
+            if (containsKey(skilltreeObject, "MaxLevel")) {
+                skilltree.setMaxLevel((get(skilltreeObject, "MaxLevel").getAsInt()));
+            }
+        });
+        tryToLoad("RequiredLevel", () -> {
+            if (containsKey(skilltreeObject, "RequiredLevel")) {
+                skilltree.setRequiredLevel((get(skilltreeObject, "RequiredLevel").getAsInt()));
+            }
+        });
+        tryToLoad("Order", () -> {
+            if (containsKey(skilltreeObject, "Order")) {
+                skilltree.setOrder((get(skilltreeObject, "Order").getAsInt()));
+            }
+        });
+        tryToLoad("Weight", () -> {
+            if (containsKey(skilltreeObject, "Weight")) {
+                skilltree.setWeight((get(skilltreeObject, "Weight").getAsDouble()));
+            }
+        });
+
+        tryToLoad("MobTypes", () -> {
+            if (containsKey(skilltreeObject, "MobTypes")) {
+                JsonArray mobTypeArray = get(skilltreeObject, "MobTypes").getAsJsonArray();
+                Set<MyPetType> mobTypes = new HashSet<>();
+                if (mobTypeArray.size() == 0) {
                     Collections.addAll(mobTypes, MyPetType.values());
-                }
-                mobTypeArray.forEach(jsonElement -> {
-                    String type = jsonElement.getAsString();
-                    if (type.equals("*")) {
-                        Collections.addAll(mobTypes, MyPetType.values());
-                    } else {
-                        boolean negative = false;
-                        if (type.startsWith("-")) {
-                            type = type.substring(1);
-                            negative = true;
+                } else {
+                    boolean allNegative = true;
+                    for (JsonElement o : mobTypeArray) {
+                        String type = o.getAsString();
+                        if (!type.startsWith("-")) {
+                            allNegative = false;
+                            break;
                         }
-                        MyPetType mobType = MyPetType.byName(type);
-                        if (mobType != null) {
-                            if (negative) {
-                                mobTypes.remove(mobType);
-                            } else {
-                                mobTypes.add(mobType);
+                    }
+                    if (allNegative) {
+                        Collections.addAll(mobTypes, MyPetType.values());
+                    }
+                    mobTypeArray.forEach(jsonElement -> {
+                        String type = jsonElement.getAsString();
+                        if (type.equals("*")) {
+                            Collections.addAll(mobTypes, MyPetType.values());
+                        } else {
+                            boolean negative = false;
+                            if (type.startsWith("-")) {
+                                type = type.substring(1);
+                                negative = true;
+                            }
+                            MyPetType mobType = MyPetType.byName(type);
+                            if (mobType != null) {
+                                if (negative) {
+                                    mobTypes.remove(mobType);
+                                } else {
+                                    mobTypes.add(mobType);
+                                }
                             }
                         }
+                    });
+                }
+                skilltree.setMobTypes(mobTypes);
+            }
+        });
+        tryToLoad("Icon", () -> {
+            if (containsKey(skilltreeObject, "Icon")) {
+                JsonObject iconObject = get(skilltreeObject, "Icon").getAsJsonObject();
+                SkilltreeIcon icon = new SkilltreeIcon();
+                tryToLoad("Icon Material", () -> {
+                    if (containsKey(iconObject, "Material")) {
+                        icon.setMaterial(get(iconObject, "Material").getAsString());
                     }
                 });
-            }
-            skilltree.setMobTypes(mobTypes);
-        }
-        if (containsKey(skilltreeObject, "Icon")) {
-            JsonObject iconObject = get(skilltreeObject, "Icon").getAsJsonObject();
-            SkilltreeIcon icon = new SkilltreeIcon();
-            if (containsKey(iconObject, "Material")) {
-                icon.setMaterial(get(iconObject, "Material").getAsString());
-            }
-            if (containsKey(iconObject, "Glowing")) {
-                icon.setGlowing(get(iconObject, "Glowing").getAsBoolean());
-            }
-            skilltree.setIcon(icon);
-        }
-        if (containsKey(skilltreeObject, "Inheritance")) {
-            JsonObject inheritanceObject = get(skilltreeObject, "Inheritance").getAsJsonObject();
-            if (containsKey(inheritanceObject, "Skilltree")) {
-                skilltree.setInheritedSkilltreeName(get(inheritanceObject, "Skilltree").getAsString());
-            }
-        }
-        if (containsKey(skilltreeObject, "Description")) {
-            JsonArray descriptionArray = get(skilltreeObject, "Description").getAsJsonArray();
-            descriptionArray.forEach(jsonElement -> skilltree.addDescriptionLine(jsonElement.getAsString()));
-        }
-        if (containsKey(skilltreeObject, "Notifications")) {
-            JsonObject notificationsObject = get(skilltreeObject, "Notifications").getAsJsonObject();
-            for (String levelRuleString : notificationsObject.keySet()) {
-                LevelRule levelRule = loadLevelRule(levelRuleString);
-                String message = notificationsObject.get(levelRuleString).getAsString();
-                skilltree.addNotification(levelRule, message);
-            }
-        }
-        if (containsKey(skilltreeObject, "Requirements")) {
-            JsonArray requirementsArray = get(skilltreeObject, "Requirements").getAsJsonArray();
-            requirementsArray.forEach(jsonElement -> {
-                boolean hasParameter = jsonElement.getAsString().contains(":");
-                String[] data = jsonElement.getAsString().split(":", 2);
-                Settings settings = new Settings(data[0]);
-                if (hasParameter) {
-                    settings.load(data[1]);
-                }
-                skilltree.addRequirementSettings(settings);
-            });
-        }
-        if (containsKey(skilltreeObject, "Skills")) {
-            JsonObject skillsObject = get(skilltreeObject, "Skills").getAsJsonObject();
-            for (String skillName : skillsObject.keySet()) {
-                JsonObject skillObject = skillsObject.getAsJsonObject(skillName);
-
-                if (containsKey(skillObject, "Upgrades")) {
-                    JsonObject upgradesObject = get(skillObject, "Upgrades").getAsJsonObject();
-
-                    for (String levelRuleString : upgradesObject.keySet()) {
-                        LevelRule levelRule = loadLevelRule(levelRuleString);
-
-                        JsonObject upgradeObject = upgradesObject.getAsJsonObject(levelRuleString);
-                        Upgrade upgrade = loadUpgrade(skillName, upgradeObject);
-
-                        skilltree.addUpgrade(levelRule, upgrade);
+                tryToLoad("Icon Glowing", () -> {
+                    if (containsKey(iconObject, "Glowing")) {
+                        icon.setGlowing(get(iconObject, "Glowing").getAsBoolean());
                     }
+                });
+                skilltree.setIcon(icon);
+            }
+        });
+        tryToLoad("Inheritance", () -> {
+            if (containsKey(skilltreeObject, "Inheritance")) {
+                JsonObject inheritanceObject = get(skilltreeObject, "Inheritance").getAsJsonObject();
+                if (containsKey(inheritanceObject, "Skilltree")) {
+                    skilltree.setInheritedSkilltreeName(get(inheritanceObject, "Skilltree").getAsString());
                 }
             }
-        }
+        });
+        tryToLoad("Description", () -> {
+            if (containsKey(skilltreeObject, "Description")) {
+                JsonArray descriptionArray = get(skilltreeObject, "Description").getAsJsonArray();
+                descriptionArray.forEach(jsonElement -> skilltree.addDescriptionLine(jsonElement.getAsString()));
+            }
+        });
+        tryToLoad("Notifications", () -> {
+            if (containsKey(skilltreeObject, "Notifications")) {
+                JsonObject notificationsObject = get(skilltreeObject, "Notifications").getAsJsonObject();
+                for (String levelRuleString : notificationsObject.keySet()) {
+                    tryToLoad("Notification LevelRule -> " + levelRuleString, () -> {
+                        LevelRule levelRule = loadLevelRule(levelRuleString);
+                        String message = notificationsObject.get(levelRuleString).getAsString();
+                        skilltree.addNotification(levelRule, message);
+                    });
+                }
+            }
+        });
+        tryToLoad("Requirements", () -> {
+            if (containsKey(skilltreeObject, "Requirements")) {
+                JsonArray requirementsArray = get(skilltreeObject, "Requirements").getAsJsonArray();
+                requirementsArray.forEach(jsonElement -> {
+                    boolean hasParameter = jsonElement.getAsString().contains(":");
+                    String[] data = jsonElement.getAsString().split(":", 2);
+                    Settings settings = new Settings(data[0]);
+                    if (hasParameter) {
+                        tryToLoad("Requirement " + jsonElement.getAsString(), () -> settings.load(data[1]));
+                    }
+                    skilltree.addRequirementSettings(settings);
+                });
+            }
+        });
+        tryToLoad("Skills", () -> {
+            if (containsKey(skilltreeObject, "Skills")) {
+                JsonObject skillsObject = get(skilltreeObject, "Skills").getAsJsonObject();
+                for (String skillName : skillsObject.keySet()) {
+                    JsonObject skillObject = skillsObject.getAsJsonObject(skillName);
+
+                    tryToLoad("Skill \"" + skillName + "\" Upgrades", () -> {
+                        if (containsKey(skillObject, "Upgrades")) {
+                            JsonObject upgradesObject = get(skillObject, "Upgrades").getAsJsonObject();
+
+                            for (String levelRuleString : upgradesObject.keySet()) {
+                                tryToLoad("Skill \"" + skillName + "\" Upgrades " + levelRuleString, () -> {
+                                    LevelRule levelRule = loadLevelRule(levelRuleString);
+
+                                    JsonObject upgradeObject = upgradesObject.getAsJsonObject(levelRuleString);
+                                    tryToLoad("Skill \"" + skillName + "\" Upgrades " + levelRuleString + " Upgrade", () -> {
+                                        Upgrade upgrade = loadUpgrade(skillName, upgradeObject);
+                                        skilltree.addUpgrade(levelRule, upgrade);
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
 
         MyPetApi.getSkilltreeManager().registerSkilltree(skilltree);
     }
@@ -467,5 +509,18 @@ public class SkillTreeLoaderJSON {
             }
         }
         return new UpgradeEnumModifier<>(def);
+    }
+
+    private static void tryToLoad(String part, Try loader) {
+        try {
+            loader.tryLoad();
+        } catch (Exception e) {
+            throw new InvalidSkilltreeException(part, e);
+        }
+    }
+
+    private interface Try {
+
+        void tryLoad();
     }
 }
