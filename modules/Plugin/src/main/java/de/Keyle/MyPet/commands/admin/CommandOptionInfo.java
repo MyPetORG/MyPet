@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
@@ -73,13 +74,17 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                 break;
             case "leashitem": {
                 if (args.length >= 2) {
-                    MyPetType type = MyPetType.byName(args[1], true);
-                    ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
-                    ItemStack configItemStack = configItem.getItem();
-                    String itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
-                    System.out.println("MyPet Leash Item (" + type + "): " + itemString);
-                    if (sender instanceof Player) {
-                        ((Player) sender).getInventory().addItem(configItemStack);
+                    try {
+                        MyPetType type = MyPetType.byName(args[1], true);
+                        ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
+                        ItemStack configItemStack = configItem.getItem();
+                        String itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
+                        System.out.println("MyPet Leash Item (" + type + "): " + itemString);
+                        if (sender instanceof Player) {
+                            ((Player) sender).getInventory().addItem(configItemStack);
+                        }
+                    } catch (MyPetTypeNotFoundException e) {
+                        sender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", sender));
                     }
                 } else {
                     sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
