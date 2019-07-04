@@ -211,14 +211,16 @@ public class EntityListener implements Listener {
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, damager, myPet)) {
                         String msg;
-                        if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
+                        double health = myPet.getHealth();
+                        double maxHealth = myPet.getMaxHealth();
+                        if (health > maxHealth / 3 * 2) {
                             msg = "" + ChatColor.GREEN;
-                        } else if (myPet.getHealth() > myPet.getMaxHealth() / 3) {
+                        } else if (health > maxHealth / 3) {
                             msg = "" + ChatColor.YELLOW;
                         } else {
                             msg = "" + ChatColor.RED;
                         }
-                        msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
+                        msg += String.format("%1.2f", health) + ChatColor.WHITE + "/" + String.format("%1.2f", maxHealth);
                         damager.sendMessage("   " + Translation.getString("Name.HP", damager) + ": " + msg);
                         infoShown = true;
                     }
@@ -885,7 +887,7 @@ public class EntityListener implements Listener {
 
                             if (e.getDamager().equals(myPetEntity.getTarget())) {
                                 myPet.setRespawnTime(10);
-                                killerMyPet.setHealth(killerMyPet.getMaxHealth());
+                                killerMyPet.setHealth(Double.MAX_VALUE);
                             }
                         }
                     }

@@ -102,7 +102,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.getAttributeInstance(GenericAttributes.b).setValue(32.0f);
             this.petNavigation = new VanillaNavigation(this);
             this.sitPathfinder = new Sit(this);
-            this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
             this.setHealth((float) myPet.getHealth());
             this.updateNameTag();
             this.setPathfinder();
@@ -479,12 +478,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         }
                     }
                     if (saturation > 0) {
-                        if (getHealth() < getMaxHealth()) {
+                        if (getHealth() < myPet.getMaxHealth()) {
                             MyPetFeedEvent feedEvent = new MyPetFeedEvent(getMyPet(), CraftItemStack.asCraftMirror(itemStack), saturation, MyPetFeedEvent.Result.Heal);
                             Bukkit.getPluginManager().callEvent(feedEvent);
                             if (!feedEvent.isCancelled()) {
                                 saturation = feedEvent.getSaturation();
-                                float missingHealth = getMaxHealth() - getHealth();
+                                float missingHealth = (float) (myPet.getMaxHealth() - getHealth());
                                 this.heal(Math.min((float) saturation, missingHealth), RegainReason.EATING);
                                 used = true;
                             }
@@ -583,6 +582,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                 MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), ParticleCompat.VILLAGER_HAPPY.get(), 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
             }
         }
+    }
+
+    public void setHealth(float f) {
+        double maxHealth = myPet.getMaxHealth();
+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
+        this.datawatcher.watch(6, MathHelper.a(f, 0.0F, (float) maxHealth));
     }
 
     protected void initDatawatcher() {

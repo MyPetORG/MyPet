@@ -202,19 +202,22 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getHealth() {
+        double health;
         if (status == PetState.Here) {
-            return bukkitEntity.getHealth();
+            health = bukkitEntity.getHealth();
         } else {
-            return health;
+            health = this.health;
         }
+        if (health > getMaxHealth()) {
+            this.setHealth(Double.MAX_VALUE);
+            health = getMaxHealth();
+        }
+        return health;
     }
 
-    public void setHealth(double d) {
-        if (d > getMaxHealth()) {
-            health = getMaxHealth();
-        } else {
-            health = d;
-        }
+    public void setHealth(double health) {
+        double maxHealth = getMaxHealth();
+        health = Math.min(health, maxHealth);
         if (status == PetState.Here) {
             bukkitEntity.setHealth(health);
         }

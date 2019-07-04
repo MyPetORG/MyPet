@@ -109,7 +109,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
             this.petNavigation = new VanillaNavigation(this);
             this.sitPathfinder = new Sit(this);
-            this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
             this.setHealth((float) myPet.getHealth());
             this.updateNameTag();
             this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(walkSpeed);
@@ -489,12 +488,12 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         }
                     }
                     if (saturation > 0) {
-                        if (getHealth() < getMaxHealth()) {
+                        if (getHealth() < myPet.getMaxHealth()) {
                             MyPetFeedEvent feedEvent = new MyPetFeedEvent(getMyPet(), CraftItemStack.asCraftMirror(itemStack), saturation, MyPetFeedEvent.Result.Heal);
                             Bukkit.getPluginManager().callEvent(feedEvent);
                             if (!feedEvent.isCancelled()) {
                                 saturation = feedEvent.getSaturation();
-                                float missingHealth = getMaxHealth() - getHealth();
+                                float missingHealth = (float) (myPet.getMaxHealth() - getHealth());
                                 this.heal(Math.min((float) saturation, missingHealth), RegainReason.EATING);
                                 used = true;
                             }
@@ -594,29 +593,30 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public void setHealth(float f) {
-        float deltaHealth = getHealth();
-        super.setHealth(f);
+        double deltaHealth = getHealth();
+        double maxHealth = myPet.getMaxHealth();
 
-        if (!this.valid) {
-            return;
-        }
+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
 
-        if (deltaHealth > getMaxHealth()) {
+        this.datawatcher.set(HEALTH, MathHelper.a(f, 0.0F, (float) maxHealth));
+
+        double health = getHealth();
+        if (deltaHealth > maxHealth) {
             deltaHealth = 0;
         } else {
-            deltaHealth = getHealth() - deltaHealth;
+            deltaHealth = health - deltaHealth;
         }
 
         String msg = myPet.getPetName() + ChatColor.RESET + ": ";
-        if (getHealth() > myPet.getMaxHealth() / 3 * 2) {
+        if (health > maxHealth / 3 * 2) {
             msg += ChatColor.GREEN;
-        } else if (getHealth() > myPet.getMaxHealth() / 3) {
+        } else if (health > maxHealth / 3) {
             msg += ChatColor.YELLOW;
         } else {
             msg += ChatColor.RED;
         }
-        if (getHealth() > 0) {
-            msg += String.format("%1.2f", getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
+        if (health > 0) {
+            msg += String.format("%1.2f", health) + ChatColor.WHITE + "/" + String.format("%1.2f", maxHealth);
 
             if (!myPet.getOwner().isHealthBarActive()) {
                 if (deltaHealth > 0) {

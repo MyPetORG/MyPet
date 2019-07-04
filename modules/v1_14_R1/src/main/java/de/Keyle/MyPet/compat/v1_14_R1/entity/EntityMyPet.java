@@ -121,8 +121,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
             this.petNavigation = new VanillaNavigation(this);
             this.sitPathfinder = new Sit(this);
-            this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(myPet.getMaxHealth());
-            this.setHealth((float) Math.min(myPet.getHealth(), myPet.getMaxHealth()));
+            this.setHealth((float) myPet.getHealth());
             this.updateNameTag();
             this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(walkSpeed);
             this.setPathfinder();
@@ -486,13 +485,13 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                         }
                     }
                     if (saturation > 0) {
-                        if (getHealth() < getMaxHealth()) {
+                        if (getHealth() < myPet.getMaxHealth()) {
                             MyPetFeedEvent feedEvent = new MyPetFeedEvent(getMyPet(), CraftItemStack.asCraftMirror(itemStack), saturation, MyPetFeedEvent.Result.Heal);
                             Bukkit.getPluginManager().callEvent(feedEvent);
                             if (!feedEvent.isCancelled()) {
                                 saturation = feedEvent.getSaturation();
-                                float missingHealth = getMaxHealth() - getHealth();
-                                this.heal(Math.min((float) saturation, missingHealth), RegainReason.EATING);
+                                double missingHealth = myPet.getMaxHealth() - getHealth();
+                                this.heal((float) Math.min(saturation, missingHealth), RegainReason.EATING);
                                 used = true;
                             }
                         }
@@ -591,36 +590,47 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         }
     }
 
-    public void setHealth(float f) {
-        float deltaGealth = getHealth();
-        super.setHealth(f);
-
-        if (!this.valid) {
-            return;
+    public float getHealth() {
+        double health = this.datawatcher.get(HEALTH);
+        double maxHealth = myPet.getMaxHealth();
+        if (health > maxHealth) {
+            setHealth((float) maxHealth);
+            health = this.datawatcher.get(HEALTH);
         }
+        return (float) health;
+    }
 
-        if (deltaGealth > getMaxHealth()) {
-            deltaGealth = 0;
+    public void setHealth(float f) {
+        double deltaHealth = this.datawatcher.get(HEALTH);
+        double maxHealth = myPet.getMaxHealth();
+
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(maxHealth);
+
+        this.datawatcher.set(HEALTH, MathHelper.a(f, 0.0F, (float) maxHealth));
+
+        double health = this.datawatcher.get(HEALTH);
+        if (deltaHealth > maxHealth) {
+            deltaHealth = 0;
         } else {
-            deltaGealth = getHealth() - deltaGealth;
+            deltaHealth = health - deltaHealth;
         }
 
         String msg = myPet.getPetName() + ChatColor.RESET + ": ";
-        if (getHealth() > myPet.getMaxHealth() / 3 * 2) {
+        if (health > maxHealth / 3 * 2) {
             msg += ChatColor.GREEN;
-        } else if (getHealth() > myPet.getMaxHealth() / 3) {
+        } else if (health > maxHealth / 3) {
             msg += ChatColor.YELLOW;
         } else {
             msg += ChatColor.RED;
         }
-        if (getHealth() > 0) {
-            msg += String.format("%1.2f", getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
+        if (health > 0) {
+            msg += String.format("%1.2f", health) + ChatColor.WHITE + "/" + String.format("%1.2f", maxHealth);
 
             if (!myPet.getOwner().isHealthBarActive()) {
-                if (deltaGealth > 0) {
-                    msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaGealth) + ChatColor.RESET + ")";
-                } else if (deltaGealth < 0) {
-                    msg += " (" + ChatColor.RED + String.format("%1.2f", deltaGealth) + ChatColor.RESET + ")";
+                if (deltaHealth > 0) {
+                    msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
+                } else if (deltaHealth < 0) {
+                    msg += " (" + ChatColor.RED + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
                 }
             }
         } else {
