@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_14_R1.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -48,7 +47,6 @@ public class EntityMyCat extends EntityMyPet {
     }
 
     public void applySitting(boolean sitting) {
-        MyPetApi.getLogger().info("SITTING:" + sitting);
         byte i = getDataWatcher().get(SIT_WATCHER);
         if (sitting) {
             getDataWatcher().set(SIT_WATCHER, (byte) (i | 1));
