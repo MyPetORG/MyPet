@@ -53,7 +53,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             if (!attacker.getWorld().getPVP()) {
                 return false;
             }
-            if (defender.isInvulnerable()) {
+            if (MyPetApi.getCompatUtil().isCompatible("1.10") && defender.isInvulnerable()) {
                 return false;
             }
             if (defender.getGameMode() == GameMode.CREATIVE) {
@@ -75,7 +75,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
         if (defender instanceof Player) {
             return canHurt(attacker, (Player) defender);
         }
-        if (defender.isInvulnerable()) {
+        if (MyPetApi.getCompatUtil().isCompatible("1.10") && defender.isInvulnerable()) {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
