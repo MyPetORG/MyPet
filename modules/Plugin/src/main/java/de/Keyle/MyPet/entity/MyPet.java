@@ -57,7 +57,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
@@ -541,7 +540,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         wgHook.fixMissingEntityType(loc.getWorld(), false);
                     }
 
-                    bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), this));
                     updateStatus(PetState.Here);
 
                     if (worldGroup == null || worldGroup.equals("")) {
