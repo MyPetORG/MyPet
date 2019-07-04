@@ -354,7 +354,7 @@ public class ConfigurationLoader {
 
         NameFilter.NAME_FILTER = new ArrayList<>();
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {
-            NameFilter.NAME_FILTER.add(o.toString());
+            NameFilter.NAME_FILTER.add(String.valueOf(o));
         }
         Name.MAX_LENGTH = config.getInt("MyPet.Name.MaxLength", Name.MAX_LENGTH);
         Name.Tag.SHOW = config.getBoolean("MyPet.Name.Tag.Show", Name.Tag.SHOW);
