@@ -476,7 +476,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 bukkitEntity = minecraftEntity.getBukkitEntity();
 
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
                     Random r = new Random(petOwner.getInternalUUID().toString().hashCode());
                     String random = RandomStringUtils.random(10, 0, 0, true, true, null, r);
 
