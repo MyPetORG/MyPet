@@ -43,6 +43,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SkillTreeLoaderJSON {
 
@@ -125,10 +126,13 @@ public class SkillTreeLoaderJSON {
 
         tryToLoad("MobTypes", () -> {
             if (containsKey(skilltreeObject, "MobTypes")) {
+                List<MyPetType> availableTypes = Arrays.stream(MyPetType.values())
+                        .filter(MyPetType::checkMinecraftVersion)
+                        .collect(Collectors.toList());
                 JsonArray mobTypeArray = get(skilltreeObject, "MobTypes").getAsJsonArray();
                 Set<MyPetType> mobTypes = new HashSet<>();
                 if (mobTypeArray.size() == 0) {
-                    Collections.addAll(mobTypes, MyPetType.values());
+                    mobTypes.addAll(availableTypes);
                 } else {
                     boolean allNegative = true;
                     for (JsonElement o : mobTypeArray) {
@@ -139,20 +143,20 @@ public class SkillTreeLoaderJSON {
                         }
                     }
                     if (allNegative) {
-                        Collections.addAll(mobTypes, MyPetType.values());
+                        mobTypes.addAll(availableTypes);
                     }
                     mobTypeArray.forEach(jsonElement -> {
                         String type = jsonElement.getAsString();
                         if (type.equals("*")) {
-                            Collections.addAll(mobTypes, MyPetType.values());
+                            mobTypes.addAll(availableTypes);
                         } else {
                             boolean negative = false;
                             if (type.startsWith("-")) {
                                 type = type.substring(1);
                                 negative = true;
                             }
-                            MyPetType mobType = MyPetType.byName(type);
-                            if (mobType != null) {
+                            MyPetType mobType = MyPetType.byName(type, false);
+                            if (mobType != null && mobType.checkMinecraftVersion()) {
                                 if (negative) {
                                     mobTypes.remove(mobType);
                                 } else {
