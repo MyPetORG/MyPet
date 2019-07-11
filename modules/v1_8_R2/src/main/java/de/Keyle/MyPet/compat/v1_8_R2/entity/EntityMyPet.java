@@ -103,6 +103,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
             this.getAttributeInstance(GenericAttributes.b).setValue(32.0f);
             this.petNavigation = new VanillaNavigation(this);
+            this.getAttributeInstance(GenericAttributes.maxHealth).setValue(Integer.MAX_VALUE);
             this.setHealth((float) myPet.getHealth());
             this.updateNameTag();
             this.setPathfinder();
@@ -603,6 +604,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         double deltaHealth = getHealth();
         double maxHealth = myPet.getMaxHealth();
 
+        boolean silent = this.getAttributeInstance(GenericAttributes.maxHealth).getValue() != maxHealth;
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
 
         this.datawatcher.watch(6, MathHelper.a(f, 0.0F, (float) maxHealth));
@@ -614,29 +616,29 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             deltaHealth = health - deltaHealth;
         }
 
-        String msg = myPet.getPetName() + ChatColor.RESET + ": ";
-        if (health > maxHealth / 3 * 2) {
-            msg += ChatColor.GREEN;
-        } else if (health > maxHealth / 3) {
-            msg += ChatColor.YELLOW;
-        } else {
-            msg += ChatColor.RED;
-        }
-        if (health > 0) {
-            msg += String.format("%1.2f", health) + ChatColor.WHITE + "/" + String.format("%1.2f", maxHealth);
-
-            if (!myPet.getOwner().isHealthBarActive()) {
-                if (deltaHealth > 0) {
-                    msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
-                } else {
-                    msg += " (" + ChatColor.RED + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
-                }
+        if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
+            String msg = myPet.getPetName() + ChatColor.RESET + ": ";
+            if (health > maxHealth / 3 * 2) {
+                msg += ChatColor.GREEN;
+            } else if (health > maxHealth / 3) {
+                msg += ChatColor.YELLOW;
+            } else {
+                msg += ChatColor.RED;
             }
-        } else {
-            msg += Translation.getString("Name.Dead", getOwner());
-        }
+            if (health > 0) {
+                msg += String.format("%1.2f", health) + ChatColor.WHITE + "/" + String.format("%1.2f", maxHealth);
 
-        if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
+                if (!myPet.getOwner().isHealthBarActive()) {
+                    if (deltaHealth > 0) {
+                        msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
+                    } else {
+                        msg += " (" + ChatColor.RED + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
+                    }
+                }
+            } else {
+                msg += Translation.getString("Name.Dead", getOwner());
+            }
+
             MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
         }
     }
