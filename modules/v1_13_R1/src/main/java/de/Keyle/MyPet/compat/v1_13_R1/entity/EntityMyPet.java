@@ -1018,12 +1018,21 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected boolean p(Entity entity) {
         boolean result = super.p(entity);
         PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
-        if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), entity.getBoundingBox())) {
+        AxisAlignedBB bb = entity.getBoundingBox();
+        bb = getBBAtPosition(bb, this.locX, this.locY, this.locZ);
+        if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), bb)) {
             entity.a(this, true);
         } else {
             entity.setPosition(locX, locY, locZ);
         }
         return result;
+    }
+
+    protected AxisAlignedBB getBBAtPosition(AxisAlignedBB bb, double x, double y, double z) {
+        double width = (bb.d - bb.a) / 2;
+        double height = bb.e - bb.b;
+        double depth = (bb.f - bb.c) / 2;
+        return new AxisAlignedBB(x - width, y, z - depth, x + width, y + height, z + width);
     }
 
     /**

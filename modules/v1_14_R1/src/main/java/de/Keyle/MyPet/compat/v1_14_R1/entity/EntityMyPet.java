@@ -1039,12 +1039,21 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     protected boolean removePassenger(Entity entity) {
         boolean result = super.removePassenger(entity);
         PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
-        if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), entity.getBoundingBox())) {
+        AxisAlignedBB bb = entity.getBoundingBox();
+        bb = getBBAtPosition(bb, this.locX, this.locY, this.locZ);
+        if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), bb)) {
             entity.a(this, true);
         } else {
             entity.setPosition(locX, locY, locZ);
         }
         return result;
+    }
+
+    protected AxisAlignedBB getBBAtPosition(AxisAlignedBB bb, double x, double y, double z) {
+        double width = bb.b() / 2;
+        double height = bb.c();
+        double depth = bb.d() / 2;
+        return new AxisAlignedBB(x - width, y, z - depth, x + width, y + height, z + width);
     }
 
     /**
