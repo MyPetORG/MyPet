@@ -223,6 +223,18 @@ public enum MyPetType {
     Turtle("TURTLE", "1.13", MyTurtle.class, new Compat<>()
             .v("1.13", "turtle")
             .search()),
+    Vex("VEX", "1.11", MyVex.class, new Compat<>()
+            .v("1.7.10", 35)
+            .v("1.13", "vex")
+            .search()),
+    Villager("VILLAGER", "1.7.10", MyVillager.class, new Compat<>()
+            .v("1.7.10", 120)
+            .v("1.13", "villager")
+            .search()),
+    Vindicator("VINDICATOR", "1.11", MyVindicator.class, new Compat<>()
+            .v("1.7.10", 36)
+            .v("1.13", "vindicator")
+            .search()),
     WanderingTrader("WANDERING_TRADER", "1.14", MyWanderingTrader.class, new Compat<>()
             .v("1.14", "wandering_trader")
             .search()),
@@ -241,18 +253,6 @@ public enum MyPetType {
     Wolf("WOLF", "1.7.10", MyWolf.class, new Compat<>()
             .v("1.7.10", 95)
             .v("1.13", "wolf")
-            .search()),
-    Vex("VEX", "1.11", MyVex.class, new Compat<>()
-            .v("1.7.10", 35)
-            .v("1.13", "vex")
-            .search()),
-    Villager("VILLAGER", "1.7.10", MyVillager.class, new Compat<>()
-            .v("1.7.10", 120)
-            .v("1.13", "villager")
-            .search()),
-    Vindicator("VINDICATOR", "1.11", MyVindicator.class, new Compat<>()
-            .v("1.7.10", 36)
-            .v("1.13", "vindicator")
             .search()),
     Zombie("ZOMBIE", "1.7.10", MyZombie.class, new Compat<>()
             .v("1.7.10", 54)
