@@ -219,6 +219,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         health = Math.min(health, maxHealth);
         if (status == PetState.Here) {
             bukkitEntity.setHealth(health);
+        } else {
+            this.health = health;
         }
     }
 
@@ -673,7 +675,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
         petNBT.getCompoundData().put("UUID", new TagString(getUUID().toString()));
         petNBT.getCompoundData().put("Type", new TagString(this.getPetType().name()));
-        petNBT.getCompoundData().put("Health", new TagDouble(this.health));
+        petNBT.getCompoundData().put("Health", new TagDouble(this.getHealth()));
         petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
         petNBT.getCompoundData().put("Hunger", new TagDouble(this.saturation));
         petNBT.getCompoundData().put("Name", new TagString(this.petName));
