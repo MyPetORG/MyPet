@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2018 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.logger;
+package de.Keyle.MyPet.api.util.logger;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
@@ -32,14 +32,17 @@ import org.fusesource.jansi.Ansi;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.Collectors;
 
 public class MyPetLogger extends PluginLogger {
+
     protected boolean debugSetup = false;
     private final Map<ChatColor, String> replacements = new HashMap<>();
     private static FileHandler debugLogFileHandler = null;
@@ -196,5 +199,9 @@ public class MyPetLogger extends PluginLogger {
         this.replacements.put(ChatColor.UNDERLINE, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString());
         this.replacements.put(ChatColor.ITALIC, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString());
         this.replacements.put(ChatColor.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());
+    }
+
+    public void info(Object... params) {
+        this.info(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
     }
 }
