@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.exceptions.InvalidSkilltreeException;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -41,6 +42,7 @@ import java.util.Set;
 @ServiceName("ShopManager")
 @Load(Load.State.OnReady)
 public class ShopManager implements ShopService {
+
     YamlConfiguration config;
     protected Map<String, PetShop> shops = new HashMap<>();
     protected String defaultShop = null;
@@ -64,11 +66,18 @@ public class ShopManager implements ShopService {
             this.shops.clear();
             for (String name : shops.getKeys(false)) {
                 PetShop shop = new PetShop(name);
-                shop.load(shops.getConfigurationSection(name));
-                if (defaultShop == null && shop.isDefault()) {
-                    defaultShop = name;
+                try {
+                    shop.load(shops.getConfigurationSection(name));
+                    if (defaultShop == null && shop.isDefault()) {
+                        defaultShop = name;
+                    }
+                    this.shops.put(name, shop);
+                } catch (InvalidSkilltreeException e) {
+                    MyPetApi.getMyPetLogger().warning("Your config file is invalid for shop:", name);
+                    MyPetApi.getMyPetLogger().warning(e.getMessage());
+                } catch (Exception e) {
+                    MyPetApi.getMyPetLogger().warning("Your config file is invalid for shop:", name);
                 }
-                this.shops.put(name, shop);
             }
         }
         return true;

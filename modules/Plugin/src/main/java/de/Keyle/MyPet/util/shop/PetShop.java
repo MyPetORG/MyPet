@@ -50,7 +50,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
+import static de.Keyle.MyPet.api.util.configuration.Try.tryToLoad;
+
 public class PetShop {
+
     protected String name;
     protected String displayName = "Pet - Shop";
     protected Map<Integer, ShopMyPet> pets = new HashMap<>();
@@ -244,65 +247,80 @@ public class PetShop {
     }
 
     public void load(ConfigurationSection section) {
-        displayName = section.getString("Name", name);
-        defaultShop = section.getBoolean("Default", false);
-        position = section.getInt("Position", -1);
+        tryToLoad("Name", () -> displayName = section.getString("Name", name));
+        tryToLoad("Default", () -> defaultShop = section.getBoolean("Default", false));
+        tryToLoad("Position", () -> position = section.getInt("Position", -1));
 
-        if (section.contains("Icon")) {
-            ConfigurationSection iconSection = section.getConfigurationSection("Icon");
-            SkilltreeIcon icon = new SkilltreeIcon();
-            if (iconSection.contains("Material")) {
-                icon.setMaterial(iconSection.getString("Material", "chest"));
+        tryToLoad("Icon", () -> {
+            if (section.contains("Icon")) {
+                ConfigurationSection iconSection = section.getConfigurationSection("Icon");
+                SkilltreeIcon icon = new SkilltreeIcon();
+                tryToLoad("Icon.Material", () -> {
+                    if (iconSection.contains("Material")) {
+                        icon.setMaterial(iconSection.getString("Material", "chest"));
+                    }
+                });
+                tryToLoad("Icon.Glowing", () -> {
+                    if (iconSection.contains("Glowing")) {
+                        icon.setGlowing(iconSection.getBoolean("Glowing", false));
+                    }
+                });
+                this.icon = icon;
             }
-            if (iconSection.contains("Glowing")) {
-                icon.setGlowing(iconSection.getBoolean("Glowing", false));
+        });
+
+
+        tryToLoad("Balance.Type", () -> {
+            wallet = WalletType.getByName(section.getString("Balance.Type", ""));
+            if (wallet == null) {
+                wallet = WalletType.None;
             }
-            this.icon = icon;
-        }
+            switch (wallet) {
+                case Bank:
+                case Player:
+                    tryToLoad("Display Name", () -> {
+                        walletOwner = section.getString("Balance.Owner", null);
+                    });
+            }
+        });
 
-        wallet = WalletType.getByName(section.getString("Balance.Type", ""));
-        if (wallet == null) {
-            wallet = WalletType.None;
-        }
-        switch (wallet) {
-            case Bank:
-            case Player:
-                walletOwner = section.getString("Balance.Owner", null);
-        }
+        tryToLoad("Pets", () -> {
+            ConfigurationSection pets = section.getConfigurationSection("Pets");
+            if (pets == null) {
+                MyPetApi.getLogger().warning(displayName + " shop failed to load! Please check your shop config.");
+                return;
+            }
 
-        ConfigurationSection pets = section.getConfigurationSection("Pets");
-        if (pets == null) {
-            MyPetApi.getLogger().warning(displayName + " shop failed to load! Please check your shop config.");
-            return;
-        }
+            Queue<ShopMyPet> filler = new ArrayDeque<>();
+            for (String name : pets.getKeys(false)) {
+                tryToLoad("Pets." + name, () -> {
+                    ShopMyPet pet = new ShopMyPet(name);
+                    try {
+                        pet.load(pets.getConfigurationSection(name));
 
-        Queue<ShopMyPet> filler = new ArrayDeque<>();
-        for (String name : pets.getKeys(false)) {
-            ShopMyPet pet = new ShopMyPet(name);
-            try {
-                pet.load(pets.getConfigurationSection(name));
+                        List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                        for (RepositoryMyPetConverterService converter : converters) {
+                            converter.convert(pet);
+                        }
 
-                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                for (RepositoryMyPetConverterService converter : converters) {
-                    converter.convert(pet);
+                        if (Util.isBetween(0, 53, pet.getPosition())) {
+                            this.pets.put(pet.getPosition(), pet);
+                        } else {
+                            filler.add(pet);
+                        }
+                    } catch (MyPetTypeNotFoundException ignored) {
+                    }
+                });
+            }
+            int slot = 0;
+            while (!filler.isEmpty() && slot < 54) {
+                if (this.pets.containsKey(slot)) {
+                    slot++;
+                    continue;
                 }
-
-                if (Util.isBetween(0, 53, pet.getPosition())) {
-                    this.pets.put(pet.getPosition(), pet);
-                } else {
-                    filler.add(pet);
-                }
-            } catch (MyPetTypeNotFoundException ignored) {
+                ShopMyPet pet = filler.poll();
+                this.pets.put(slot, pet);
             }
-        }
-        int slot = 0;
-        while (!filler.isEmpty() && slot < 54) {
-            if (this.pets.containsKey(slot)) {
-                slot++;
-                continue;
-            }
-            ShopMyPet pet = filler.poll();
-            this.pets.put(slot, pet);
-        }
+        });
     }
 }

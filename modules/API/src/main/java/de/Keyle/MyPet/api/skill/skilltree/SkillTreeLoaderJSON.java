@@ -45,6 +45,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static de.Keyle.MyPet.api.util.configuration.Try.tryToLoad;
+
 public class SkillTreeLoaderJSON {
 
     final static Pattern LEVEL_RULE_REGEX = Pattern.compile("(?:%(\\d+))|(?:<(\\d+))|(?:>(\\d+))");
@@ -173,12 +175,12 @@ public class SkillTreeLoaderJSON {
             if (containsKey(skilltreeObject, "Icon")) {
                 JsonObject iconObject = get(skilltreeObject, "Icon").getAsJsonObject();
                 SkilltreeIcon icon = new SkilltreeIcon();
-                tryToLoad("Icon Material", () -> {
+                tryToLoad("Icon.Material", () -> {
                     if (containsKey(iconObject, "Material")) {
                         icon.setMaterial(get(iconObject, "Material").getAsString());
                     }
                 });
-                tryToLoad("Icon Glowing", () -> {
+                tryToLoad("Icon.Glowing", () -> {
                     if (containsKey(iconObject, "Glowing")) {
                         icon.setGlowing(get(iconObject, "Glowing").getAsBoolean());
                     }
@@ -204,7 +206,7 @@ public class SkillTreeLoaderJSON {
             if (containsKey(skilltreeObject, "Notifications")) {
                 JsonObject notificationsObject = get(skilltreeObject, "Notifications").getAsJsonObject();
                 for (String levelRuleString : notificationsObject.keySet()) {
-                    tryToLoad("Notification LevelRule -> " + levelRuleString, () -> {
+                    tryToLoad("Notification." + levelRuleString, () -> {
                         LevelRule levelRule = loadLevelRule(levelRuleString);
                         String message = notificationsObject.get(levelRuleString).getAsString();
                         skilltree.addNotification(levelRule, message);
@@ -220,7 +222,7 @@ public class SkillTreeLoaderJSON {
                     String[] data = jsonElement.getAsString().split(":", 2);
                     Settings settings = new Settings(data[0]);
                     if (hasParameter) {
-                        tryToLoad("Requirement " + jsonElement.getAsString(), () -> settings.load(data[1]));
+                        tryToLoad("Requirement." + jsonElement.getAsString(), () -> settings.load(data[1]));
                     }
                     skilltree.addRequirementSettings(settings);
                 });
@@ -232,16 +234,16 @@ public class SkillTreeLoaderJSON {
                 for (String skillName : skillsObject.keySet()) {
                     JsonObject skillObject = skillsObject.getAsJsonObject(skillName);
 
-                    tryToLoad("Skill \"" + skillName + "\" Upgrades", () -> {
+                    tryToLoad("Skills." + skillName + ".Upgrades", () -> {
                         if (containsKey(skillObject, "Upgrades")) {
                             JsonObject upgradesObject = get(skillObject, "Upgrades").getAsJsonObject();
 
                             for (String levelRuleString : upgradesObject.keySet()) {
-                                tryToLoad("Skill \"" + skillName + "\" Upgrades " + levelRuleString, () -> {
+                                tryToLoad("Skills." + skillName + ".Upgrades." + levelRuleString, () -> {
                                     LevelRule levelRule = loadLevelRule(levelRuleString);
 
                                     JsonObject upgradeObject = upgradesObject.getAsJsonObject(levelRuleString);
-                                    tryToLoad("Skill \"" + skillName + "\" Upgrades " + levelRuleString + " Upgrade", () -> {
+                                    tryToLoad("Skills." + skillName + ".Upgrades." + levelRuleString + ".Upgrade", () -> {
                                         Upgrade upgrade = loadUpgrade(skillName, upgradeObject);
                                         skilltree.addUpgrade(levelRule, upgrade);
                                     });
@@ -513,18 +515,5 @@ public class SkillTreeLoaderJSON {
             }
         }
         return new UpgradeEnumModifier<>(def);
-    }
-
-    private static void tryToLoad(String part, Try loader) {
-        try {
-            loader.tryLoad();
-        } catch (Exception e) {
-            throw new InvalidSkilltreeException(part, e);
-        }
-    }
-
-    private interface Try {
-
-        void tryLoad();
     }
 }
