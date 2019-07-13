@@ -205,7 +205,7 @@ public class SentryErrorReporter implements ErrorReporter {
             return false;
         }
         long myPetTraces = Arrays.stream(t.getStackTrace())
-                .limit(10)
+                .limit(5)
                 .filter(stackTraceElement -> stackTraceElement.getClassName().contains("MyPet"))
                 .count();
         return myPetTraces >= 1;
