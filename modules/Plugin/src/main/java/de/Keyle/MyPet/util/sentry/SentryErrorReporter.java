@@ -43,6 +43,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -168,6 +169,7 @@ public class SentryErrorReporter implements ErrorReporter {
 
     protected boolean filter(Throwable t) {
         if (t instanceof ConcurrentModificationException ||
+                t instanceof IOException ||
                 t instanceof VirtualMachineError ||
                 t instanceof LinkageError ||
                 t instanceof FileNotFoundException ||
