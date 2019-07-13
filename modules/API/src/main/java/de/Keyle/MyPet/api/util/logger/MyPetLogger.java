@@ -204,4 +204,28 @@ public class MyPetLogger extends PluginLogger {
     public void info(Object... params) {
         this.info(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
     }
+
+    public void warning(Object... params) {
+        this.warning(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
+    }
+
+    public void severe(Object... params) {
+        this.severe(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
+    }
+
+    public void config(Object... params) {
+        this.config(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
+    }
+
+    public void fine(Object... params) {
+        this.fine(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
+    }
+
+    public void finer(Object... params) {
+        this.finer(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
+    }
+
+    public void finest(Object... params) {
+        this.finest(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
+    }
 }
