@@ -381,7 +381,7 @@ public class SkillTreeLoaderJSON {
                 upgrade = new RangedUpgrade()
                         .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")))
                         .setRateOfFireModifier(parseIntegerModifier(get(upgradeObject, "rate")))
-                        .setProjectileModifier(parseEnumModifier(get(upgradeObject, "projectile"), Ranged.Projectile.class, Ranged.Projectile.Arrow));
+                        .setProjectileModifier(parseEnumModifier(get(upgradeObject, "projectile"), Ranged.Projectile.class));
                 break;
             }
             case "ride": {
@@ -505,7 +505,7 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
-    private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(JsonElement modifierObject, Class<T> e, T def) {
+    private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(JsonElement modifierObject, Class<T> e) {
         if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
             String modifierString = modifierObject.getAsString();
             for (T c : e.getEnumConstants()) {
@@ -514,6 +514,6 @@ public class SkillTreeLoaderJSON {
                 }
             }
         }
-        return new UpgradeEnumModifier<>(def);
+        return null;
     }
 }
