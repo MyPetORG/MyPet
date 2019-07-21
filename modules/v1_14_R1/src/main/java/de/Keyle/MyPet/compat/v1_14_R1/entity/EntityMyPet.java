@@ -914,12 +914,15 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     }
 
     /**
-     * Returns the speed of played sounds
+     * old version of cV() for compat
      */
     protected float cU() {
         return cV();
     }
 
+    /**
+     * Returns the speed of played sounds
+     */
     protected float cV() {
         try {
             return getSoundSpeed();
@@ -934,18 +937,18 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             --this.jumpDelay;
         }
 
-        if (this.bl > 0 && !this.bT()) {
-            double d0 = this.locX + (this.bj - this.locX) / (double) this.bf;
-            double d1 = this.locY + (this.bk - this.locY) / (double) this.bf;
-            double d2 = this.locZ + (this.bl - this.locZ) / (double) this.bf;
-            double d3 = MathHelper.g(this.bg - (double) this.yaw);
+        if (this.bf > 0 && !this.ca()) {
+            double newX = this.locX + (this.bg - this.locX) / (double) this.bf;
+            double newY = this.locY + (this.bh - this.locY) / (double) this.bf;
+            double newZ = this.locZ + (this.bi - this.locZ) / (double) this.bf;
+            double d3 = MathHelper.g(this.bj - (double) this.yaw);
             this.yaw = (float) ((double) this.yaw + d3 / (double) this.bf);
-            this.pitch = (float) ((double) this.pitch + (this.bh - (double) this.pitch) / (double) this.bf);
+            this.pitch = (float) ((double) this.pitch + (this.bk - (double) this.pitch) / (double) this.bf);
             --this.bf;
-            this.setPosition(d0, d1, d2);
+            this.setPosition(newX, newY, newZ);
             this.setYawPitch(this.yaw, this.pitch);
         } else {
-            this.setMot(this.getMot().d(0.98D, 0.98D, 0.98D));
+            this.setMot(this.getMot().a(0.98D));
         }
 
         Vec3D vec3d = this.getMot();
@@ -1071,15 +1074,6 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
                 Player p = getOwner().getPlayer();
                 if (p == null || !p.isOnline()) {
-
-                    MyPetApi.getLogger().warning("==========================================");
-                    MyPetApi.getLogger().warning("Please report this to the MyPet developer!");
-
-                    MyPetApi.getLogger().warning("MyPet: " + getMyPet());
-                    MyPetApi.getLogger().warning("MyPetOwner: " + getOwner());
-                    MyPetApi.getLogger().warning("Owner online: " + (getOwner() != null ? getOwner().isOnline() : "null"));
-
-                    MyPetApi.getLogger().warning("==========================================");
                     this.die();
                     return;
                 }

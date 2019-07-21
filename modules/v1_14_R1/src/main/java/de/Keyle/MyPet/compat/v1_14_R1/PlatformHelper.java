@@ -52,6 +52,7 @@ import java.util.List;
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     private static Method ENTITY_LIVING_cD = ReflectionUtil.getMethod(EntityLiving.class, "cD");
+    private static Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(ChatMessage.class, "k");
 
     /**
      * @param location   the {@link Location} around which players must be to see the effect
@@ -349,15 +350,23 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public String getLastDamageSource(LivingEntity e) {
         EntityLiving el = ((CraftLivingEntity) e).getHandle();
         DamageSource damageSource;
-        if (MyPetApi.getCompatUtil().isCompatible("1.14.3")) {
+        if (MyPetApi.getCompatUtil().isCompatible("1.14.4")) {
             if (el.cE() == null) {
                 return null;
             }
-            return ((ChatMessage) el.cE().getLocalizedDeathMessage(el)).k();
+            return ((ChatMessage) el.cE().getLocalizedDeathMessage(el)).getKey();
+        } else if (MyPetApi.getCompatUtil().isCompatible("1.14.3")) {
+            if (el.cE() == null) {
+                return null;
+            }
+            try {
+                return (String) CHAT_MESSAGE_k.invoke(el.cE().getLocalizedDeathMessage(el));
+            } catch (IllegalAccessException | InvocationTargetException ignored) {
+            }
         } else {
             try {
                 damageSource = (DamageSource) ENTITY_LIVING_cD.invoke(el);
-                return ((ChatMessage) damageSource.getLocalizedDeathMessage(el)).k();
+                return (String) CHAT_MESSAGE_k.invoke(damageSource.getLocalizedDeathMessage(el));
             } catch (IllegalAccessException | InvocationTargetException ignored) {
             }
         }

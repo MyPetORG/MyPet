@@ -49,7 +49,17 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     }
 
     protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-        EntitySize size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).j();
+        EntitySize size = null;
+        if (MyPetApi.getCompatUtil().isCompatible("1.14.4")) {
+            size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).k();
+        } else {
+            Method j = ReflectionUtil.getMethod(EntityTypes.class, "j");
+            try {
+                size = (EntitySize) j.invoke(entityRegistry.get(new MinecraftKey(key.toLowerCase())));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
         entityTypes.put(petType, IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.a.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
         overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
     }
