@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import org.bukkit.entity.Fox.Type;
 
-@DefaultInfo(food = {"mutton"})
+@DefaultInfo(food = {"sweet_berries"})
 public interface MyFox extends MyPet, MyPetBaby, MyPetEquipment {
 
     Type getType();

@@ -23,8 +23,9 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 
-@DefaultInfo(food = {"cookie"}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {"cookie", "sweet_berries"}, leashFlags = {"Tamed"})
 public interface MyParrot extends MyPet {
+
     int getVariant();
 
     void setVariant(int variant);

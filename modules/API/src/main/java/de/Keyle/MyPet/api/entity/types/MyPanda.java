@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.entity.Panda;
 
-@DefaultInfo(food = {"mutton"})
+@DefaultInfo(food = {"bamboo"})
 public interface MyPanda extends MyPet, MyPetBaby {
 
     Panda.Gene getMainGene();
