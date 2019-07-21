@@ -191,11 +191,12 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
     }
 
     @Override
-    public void playStepSound(BlockPosition pos, Block block) {
-        if (!block.getBlockData().getMaterial().isLiquid()) {
-            SoundEffectType soundeffecttype = block.getStepSound(block.getBlockData());
-            if (this.world.getType(pos) == Blocks.SNOW.getBlockData()) {
-                soundeffecttype = Blocks.SNOW_BLOCK.getStepSound(block.getBlockData());
+    public void playStepSound(BlockPosition blockposition, IBlockData blockdata) {
+        if (!blockdata.getMaterial().isLiquid()) {
+            IBlockData blockdataUp = this.world.getType(blockposition.up());
+            SoundEffectType soundeffecttype = blockdata.r();
+            if (blockdataUp.getBlock() == Blocks.SNOW) {
+                soundeffecttype = blockdata.r();
             }
             if (this.isVehicle()) {
                 ++this.soundCounter;
@@ -204,7 +205,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
                 } else if (this.soundCounter <= 5) {
                     this.a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                 }
-            } else if (!block.getBlockData().getMaterial().isLiquid()) {
+            } else if (!blockdata.getMaterial().isLiquid()) {
                 this.soundCounter += 1;
                 a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             } else {

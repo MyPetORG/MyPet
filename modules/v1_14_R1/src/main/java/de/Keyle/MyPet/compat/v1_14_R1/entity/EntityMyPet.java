@@ -681,7 +681,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     public void playPetStepSound() {
     }
 
-    public void playStepSound(BlockPosition blockposition, Block block) {
+    public void playStepSound(BlockPosition blockposition, IBlockData blockdata) {
         playPetStepSound();
     }
 
@@ -879,9 +879,9 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     /**
      * -> playStepSound()
      */
-    protected void a(BlockPosition blockposition, Block block) {
+    protected void a(BlockPosition blockposition, IBlockData iblockdata) {
         try {
-            playStepSound(blockposition, block);
+            playStepSound(blockposition, iblockdata);
         } catch (Exception e) {
             e.printStackTrace();
         }
