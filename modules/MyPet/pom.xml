@@ -24,7 +24,7 @@
 
     <groupId>de.keyle</groupId>
     <artifactId>mypet</artifactId>
-    <version>3.5</version>
+    <version>3.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MyPet</name>
     <url>https://www.spigotmc.org/resources/mypet.12725/</url>
