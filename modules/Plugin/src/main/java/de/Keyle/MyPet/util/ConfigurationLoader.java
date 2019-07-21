@@ -352,7 +352,7 @@ public class ConfigurationLoader {
 
         Log.LEVEL = config.getString("MyPet.Log.Level", Log.LEVEL);
 
-        NameFilter.NAME_FILTER = new ArrayList<>();
+        NameFilter.NAME_FILTER.clear();
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {
             NameFilter.NAME_FILTER.add(String.valueOf(o));
         }
