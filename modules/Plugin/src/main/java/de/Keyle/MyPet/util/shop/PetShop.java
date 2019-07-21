@@ -198,7 +198,7 @@ public class PetShop {
             }
         }, MyPetApi.getPlugin());
 
-        double balance = economyHook.getEconomy().getBalance(player);
+        double balance = economyHook.getBalance(player);
         for (int pos : pets.keySet()) {
             ShopMyPet pet = pets.get(pos);
             IconMenuItem icon = pet.getIcon();

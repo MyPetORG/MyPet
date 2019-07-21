@@ -169,6 +169,15 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
     }
 
     @Override
+    public double getBalance(OfflinePlayer player) {
+        try {
+            return economy.getBalance(player);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
     public String currencyNameSingular() {
         if (checkEconomy()) {
             try {

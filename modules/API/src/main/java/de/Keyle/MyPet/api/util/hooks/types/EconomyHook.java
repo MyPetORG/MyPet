@@ -48,6 +48,8 @@ public interface EconomyHook extends PluginHook {
 
     boolean pay(OfflinePlayer player, double costs);
 
+    double getBalance(OfflinePlayer player);
+
     String currencyNameSingular();
 
     String format(double amount);
