@@ -258,7 +258,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     private void convertLlama(Llama llama, TagCompound properties) {
         properties.getCompoundData().put("Variant", new TagInt(llama.getColor().ordinal()));
-        properties.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(llama.getInventory().getDecor()));
+        if (llama.getInventory().getDecor() != null && llama.getInventory().getDecor().getType() != Material.AIR) {
+            properties.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(llama.getInventory().getDecor()));
+        }
         if (llama.isCarryingChest()) {
             properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
         }

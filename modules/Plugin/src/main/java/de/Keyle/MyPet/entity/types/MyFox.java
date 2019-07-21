@@ -113,8 +113,10 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("FoxType", new TagInt(getType().ordinal()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
-        TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
-        info.getCompoundData().put("MouthItem", item);
+        if (getEquipment(EquipmentSlot.MainHand) != null && getEquipment(EquipmentSlot.MainHand).getType() != Material.AIR) {
+            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
+            info.getCompoundData().put("MouthItem", item);
+        }
         return info;
     }
 

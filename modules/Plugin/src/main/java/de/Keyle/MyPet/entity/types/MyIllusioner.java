@@ -47,8 +47,10 @@ public class MyIllusioner extends MyPet implements de.Keyle.MyPet.api.entity.typ
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
-        info.getCompoundData().put("Weapon", item);
+        if (getEquipment(EquipmentSlot.MainHand) != null && getEquipment(EquipmentSlot.MainHand).getType() != Material.AIR) {
+            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
+            info.getCompoundData().put("Weapon", item);
+        }
         return info;
     }
 

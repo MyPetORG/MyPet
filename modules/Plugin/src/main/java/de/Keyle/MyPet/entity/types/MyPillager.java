@@ -53,10 +53,14 @@ public class MyPillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
-        info.getCompoundData().put("Weapon", item);
-        item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.Helmet));
-        info.getCompoundData().put("Banner", item);
+        if (getEquipment(EquipmentSlot.MainHand) != null && getEquipment(EquipmentSlot.MainHand).getType() != Material.AIR) {
+            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
+            info.getCompoundData().put("Weapon", item);
+        }
+        if (getEquipment(EquipmentSlot.Helmet) != null && getEquipment(EquipmentSlot.Helmet).getType() != Material.AIR) {
+            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.Helmet));
+            info.getCompoundData().put("Banner", item);
+        }
         return info;
     }
 
