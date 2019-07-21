@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_13_R1.util.inventory.ItemStackComparator;
 import net.minecraft.server.v1_13_R1.*;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -43,24 +42,12 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     @Override
     public boolean compare(ItemStack compareItem) {
-        boolean result = super.compare(compareItem);
-        if (result && item != null && item.hasItemMeta()) {
-            if (!ItemStackComparator.compareTagData(item, compareItem)) {
-                return false;
-            }
-        }
-        return result;
+        return super.compare(compareItem) && ItemStackComparator.compareTagData(item, compareItem);
     }
 
     public boolean compare(Object o) {
         net.minecraft.server.v1_13_R1.ItemStack compareItem = (net.minecraft.server.v1_13_R1.ItemStack) o;
-        if (item == null || item.getType() == Material.AIR) {
-            return compareItem == null || Item.getId(compareItem.getItem()) == 0;
-        }
-        if (compareItem == null) {
-            return false;
-        }
-        return item.isSimilar(CraftItemStack.asCraftMirror(compareItem));
+        return this.compare(CraftItemStack.asCraftMirror(compareItem));
     }
 
     public void load(MaterialHolder material, String data) {

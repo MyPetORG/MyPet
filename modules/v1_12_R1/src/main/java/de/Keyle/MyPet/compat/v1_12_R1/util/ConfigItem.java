@@ -29,8 +29,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Objects;
-
 @Compat("v1_12_R1")
 public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
@@ -44,47 +42,12 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     @Override
     public boolean compare(ItemStack compareItem) {
-        boolean result = super.compare(compareItem);
-        if (result && item != null && item.hasItemMeta()) {
-            if (!ItemStackComparator.compareTagData(item, compareItem)) {
-                return false;
-            }
-        }
-        return result;
+        return super.compare(compareItem) && ItemStackComparator.compareTagData(item, compareItem);
     }
 
     public boolean compare(Object o) {
         net.minecraft.server.v1_12_R1.ItemStack compareItem = (net.minecraft.server.v1_12_R1.ItemStack) o;
-        if (item == null || item.getTypeId() == 0) {
-            return compareItem == null || Item.getId(compareItem.getItem()) == 0;
-        }
-        if (compareItem == null) {
-            return false;
-        }
-        if (item.getTypeId() != Item.getId(compareItem.getItem())) {
-            return false;
-        }
-        switch (durabilityMode) {
-            case Bigger:
-                if (compareItem.getData() <= item.getDurability()) {
-                    return false;
-                }
-                break;
-            case Smaller:
-                if (compareItem.getData() >= item.getDurability()) {
-                    return false;
-                }
-                break;
-            case Equal:
-                if (compareItem.getData() != item.getDurability()) {
-                    return false;
-                }
-                break;
-        }
-        if (item.hasItemMeta()) {
-            return Objects.equals(CraftItemStack.asNMSCopy(item).getTag(), compareItem.getTag());
-        }
-        return true;
+        return this.compare(CraftItemStack.asCraftMirror(compareItem));
     }
 
     public void load(MaterialHolder material, String data) {
