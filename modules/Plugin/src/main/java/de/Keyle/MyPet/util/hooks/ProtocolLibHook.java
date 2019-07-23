@@ -78,7 +78,12 @@ public class ProtocolLibHook implements PluginHook {
 
     @Override
     public void onDisable() {
-        ProtocolLibrary.getProtocolManager().removePacketListeners(MyPetApi.getPlugin());
+        try {
+            if (ProtocolLibrary.getProtocolManager() != null) {
+                ProtocolLibrary.getProtocolManager().removePacketListeners(MyPetApi.getPlugin());
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     private void registerEnderDragonInteractionFix() {
