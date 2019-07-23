@@ -78,7 +78,10 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                         MyPetType type = MyPetType.byName(args[1], true);
                         ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
                         ItemStack configItemStack = configItem.getItem();
-                        String itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
+                        String itemString = "air";
+                        if (configItemStack != null) {
+                            itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
+                        }
                         System.out.println("MyPet Leash Item (" + type + "): " + itemString);
                         if (sender instanceof Player) {
                             ((Player) sender).getInventory().addItem(configItemStack);
