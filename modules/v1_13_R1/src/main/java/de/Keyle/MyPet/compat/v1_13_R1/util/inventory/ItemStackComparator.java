@@ -43,6 +43,9 @@ public class ItemStackComparator {
     }
 
     public static boolean compareTagData(ItemStack i1, ItemStack i2) {
+        if (i1 == null || i2 == null) {
+            return false;
+        }
         if (i1.hasItemMeta() && i2.hasItemMeta()) {
             NBTTagCompound tag1 = CraftItemStack.asNMSCopy(i1).getTag();
             NBTTagCompound tag2 = CraftItemStack.asNMSCopy(i2).getTag();
