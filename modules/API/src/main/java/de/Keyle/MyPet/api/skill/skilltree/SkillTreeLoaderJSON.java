@@ -64,7 +64,7 @@ public class SkillTreeLoaderJSON {
         if (skilltreeFile.exists()) {
             try {
                 loadSkilltree(loadJsonObject(skilltreeFile));
-            } catch (InvalidSkilltreeException e) {
+            } catch (InvalidSkilltreeException | JsonSyntaxException e) {
                 MyPetApi.getLogger().warning("Error in " + skilltreeFile.getName() + " -> Skilltree not loaded.");
                 MyPetApi.getLogger().warning(e.getMessage());
             } catch (IOException ignored) {
