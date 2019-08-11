@@ -54,8 +54,23 @@ public class VehicleListener implements Listener {
         if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && event.getEntity() instanceof Player) {
             if (event.getEntity().getVehicle() instanceof MyPetBukkitEntity) {
                 Location loc = event.getEntity().getLocation();
-                if (loc.getWorld().getWorldBorder().isInside(loc)) {
-                    event.setCancelled(true);
+                if (MyPetApi.getCompatUtil().isCompatible("1.12")) {
+                    if (loc.getWorld().getWorldBorder().isInside(loc)) {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    double locX = loc.getX();
+                    double centerX = loc.getWorld().getWorldBorder().getCenter().getX();
+                    double locZ = loc.getZ();
+                    double centerZ = loc.getWorld().getWorldBorder().getCenter().getZ();
+                    double borderSize = loc.getWorld().getWorldBorder().getSize();
+                    if (locX < centerX + borderSize &&
+                            locX > centerX - borderSize &&
+                            locZ < centerZ + borderSize &&
+                            locZ > centerZ - borderSize
+                    ) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
