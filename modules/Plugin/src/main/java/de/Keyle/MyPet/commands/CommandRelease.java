@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
@@ -53,6 +52,7 @@ import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RESET;
 
 public class CommandRelease implements CommandTabCompleter {
+
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
@@ -96,7 +96,7 @@ public class CommandRelease implements CommandTabCompleter {
                     }
 
 
-                    if (!Configuration.Misc.REMOVE_PETS_AFTER_RELEASE) {
+                    if (MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
 
                         Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);

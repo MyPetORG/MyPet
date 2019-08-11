@@ -67,9 +67,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Leash.AllowRanged", Misc.ALLOW_RANGED_LEASHING);
         config.addDefault("MyPet.OwnerCanAttackPet", Misc.OWNER_CAN_ATTACK_PET);
         config.addDefault("MyPet.DisablePetVersusPlayer", Misc.DISABLE_PET_VS_PLAYER);
-        config.addDefault("MyPet.RemovePetsAfterRelease", Misc.REMOVE_PETS_AFTER_RELEASE);
         config.addDefault("MyPet.FollowStartDistance", Misc.MYPET_FOLLOW_START_DISTANCE);
-        config.addDefault("MyPet.ReleasePetsOnDeath", Misc.RELEASE_PETS_ON_DEATH);
         config.addDefault("MyPet.RetainEquipmentOnTame", Misc.RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
@@ -233,6 +231,8 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
+            config.addDefault("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false);
+            config.addDefault("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false);
         }
 
         config.addDefault("MyPet.Pets.Bat.CanGlide", MyPet.Bat.CAN_GLIDE);
@@ -340,8 +340,6 @@ public class ConfigurationLoader {
         HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED = config.getDouble("MyPet.HungerSystem.SaturationPerFeed", 6.0);
         HungerSystem.AFFECT_RIDE_SPEED = config.getBoolean("MyPet.HungerSystem.Affect-Ride-Speed", true);
         HungerSystem.AFFECT_BEACON_RANGE = config.getBoolean("MyPet.HungerSystem.Affect-Beacon-Range", true);
-        Misc.RELEASE_PETS_ON_DEATH = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
-        Misc.REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         Misc.RETAIN_EQUIPMENT_ON_TAME = config.getBoolean("MyPet.RetainEquipmentOnTame", true);
         Misc.INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
         Misc.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
@@ -601,31 +599,52 @@ public class ConfigurationLoader {
         MyPetApi.getPlugin().saveConfig();
 
         File petConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pet-config.yml");
-        config = new YamlConfiguration();
+        FileConfiguration petConfig = new YamlConfiguration();
         if (petConfigFile.exists()) {
             try {
-                config.load(petConfigFile);
+                petConfig.load(petConfigFile);
             } catch (IOException | InvalidConfigurationException e) {
                 e.printStackTrace();
             }
         }
 
-        for (MyPetType petType : MyPetType.values()) {
-            if (config.contains("MyPet.Pets." + petType.name() + ".LeashFlags")) {
-                String[] flagString = config.getString("MyPet.Pets." + petType.name() + ".LeashFlags").split(",");
-                Set<String> flags = new HashSet<>(Arrays.asList(flagString));
-                flags.remove("None");
-                config.set("MyPet.Pets." + petType.name() + ".LeashRequirements", flags.toArray(new String[0]));
-                config.getConfigurationSection("MyPet.Pets." + petType).set("LeashFlags", null);
+        if (petConfig != null && config.contains("MyPet.RemovePetsAfterRelease")) {
+            boolean removePetsAfterRelease = config.getBoolean("MyPet.RemovePetsAfterRelease");
+            boolean releasePetsOnDeath = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
+            config.getConfigurationSection("MyPet").set("RemovePetsAfterRelease", null);
+            config.getConfigurationSection("MyPet").set("ReleasePetsOnDeath", null);
+            MyPetApi.getPlugin().saveConfig();
+
+            for (MyPetType petType : MyPetType.values()) {
+                if (!petType.checkMinecraftVersion()) {
+                    continue;
+                }
+                DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
+                if (pi == null) {
+                    continue;
+                }
+
+                petConfig.set("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", releasePetsOnDeath);
+                petConfig.set("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", removePetsAfterRelease);
             }
         }
-        if (config.contains("MyPet.Pets.IronGolem.CanThrowUp")) {
-            MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp");
-            config.getConfigurationSection("MyPet.Pets.IronGolem").set("CanThrowUp", null);
+
+        for (MyPetType petType : MyPetType.values()) {
+            if (petConfig.contains("MyPet.Pets." + petType.name() + ".LeashFlags")) {
+                String[] flagString = petConfig.getString("MyPet.Pets." + petType.name() + ".LeashFlags").split(",");
+                Set<String> flags = new HashSet<>(Arrays.asList(flagString));
+                flags.remove("None");
+                petConfig.set("MyPet.Pets." + petType.name() + ".LeashRequirements", flags.toArray(new String[0]));
+                petConfig.getConfigurationSection("MyPet.Pets." + petType).set("LeashFlags", null);
+            }
+        }
+        if (petConfig.contains("MyPet.Pets.IronGolem.CanThrowUp")) {
+            MyPet.IronGolem.CAN_TOSS_UP = petConfig.getBoolean("MyPet.Pets.IronGolem.CanThrowUp");
+            petConfig.getConfigurationSection("MyPet.Pets.IronGolem").set("CanThrowUp", null);
         }
 
         try {
-            config.save(petConfigFile);
+            petConfig.save(petConfigFile);
         } catch (IOException e) {
             e.printStackTrace();
         }

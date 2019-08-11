@@ -845,7 +845,7 @@ public class EntityListener implements Listener {
 
             final MyPetPlayer owner = myPet.getOwner();
 
-            if (Configuration.Misc.RELEASE_PETS_ON_DEATH && !owner.isMyPetAdmin()) {
+            if (MyPetApi.getMyPetInfo().getReleaseOnDeath(myPet.getPetType()) && !owner.isMyPetAdmin()) {
                 MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Death);
                 Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 

@@ -33,9 +33,7 @@ public class Configuration {
         public static boolean ALLOW_RANGED_LEASHING = true;
         public static boolean OWNER_CAN_ATTACK_PET = false;
         public static boolean DISABLE_PET_VS_PLAYER = false;
-        public static boolean REMOVE_PETS_AFTER_RELEASE = false;
         public static double MYPET_FOLLOW_START_DISTANCE = 7.0F;
-        public static boolean RELEASE_PETS_ON_DEATH = false;
         public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
         public static boolean INVISIBLE_LIKE_OWNER = true;
         public static boolean THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = true;

@@ -30,12 +30,15 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class MyPetInfo {
+
     private Map<MyPetType, Double> startHP = new HashMap<>();
     private Map<MyPetType, Double> startSpeed = new HashMap<>();
     private ArrayListMultimap<MyPetType, ConfigItem> food = ArrayListMultimap.create();
     private ArrayListMultimap<MyPetType, Settings> leashFlagSettings = ArrayListMultimap.create();
     private Map<MyPetType, Integer> customRespawnTimeFactor = new HashMap<>();
     private Map<MyPetType, Integer> customRespawnTimeFixed = new HashMap<>();
+    private Map<MyPetType, Boolean> releaseOnDeath = new HashMap<>();
+    private Map<MyPetType, Boolean> removeAfterRelease = new HashMap<>();
     private Map<MyPetType, ConfigItem> leashItem = new HashMap<>();
 
     public int getCustomRespawnTimeFactor(MyPetType type) {
@@ -120,4 +123,26 @@ public abstract class MyPetInfo {
     }
 
     public abstract boolean isLeashableEntityType(EntityType type);
+
+    public void setReleaseOnDeath(MyPetType myPetType, boolean releaseOnDeath) {
+        this.releaseOnDeath.put(myPetType, releaseOnDeath);
+    }
+
+    public void setRemoveAfterRelease(MyPetType myPetType, boolean removeAfterRelease) {
+        this.removeAfterRelease.put(myPetType, removeAfterRelease);
+    }
+
+    public boolean getReleaseOnDeath(MyPetType myPetType) {
+        if (myPetType != null) {
+            return releaseOnDeath.get(myPetType);
+        }
+        return false;
+    }
+
+    public boolean getRemoveAfterRelease(MyPetType myPetType) {
+        if (myPetType != null) {
+            return removeAfterRelease.get(myPetType);
+        }
+        return false;
+    }
 }
