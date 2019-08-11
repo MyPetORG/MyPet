@@ -123,25 +123,28 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
-        if (!hasFriendly || !SkillAPI.getSettings().isWorldEnabled(defender.getWorld())) {
-            return true;
-        }
+        try {
+            if (!hasFriendly || !SkillAPI.getSettings().isWorldEnabled(defender.getWorld())) {
+                return true;
+            }
 
-        final PlayerData attackerData = SkillAPI.getPlayerData(attacker);
-        final PlayerData defenderData = SkillAPI.getPlayerData(defender);
+            final PlayerData attackerData = SkillAPI.getPlayerData(attacker);
+            final PlayerData defenderData = SkillAPI.getPlayerData(defender);
 
-        for (final String group : SkillAPI.getGroups()) {
-            final boolean friendly = SkillAPI.getSettings().getGroupSettings(group).isFriendly();
-            if (friendly) {
-                final PlayerClass attackerClass = attackerData.getClass(group);
-                final PlayerClass defenderClass = defenderData.getClass(group);
+            for (final String group : SkillAPI.getGroups()) {
+                final boolean friendly = SkillAPI.getSettings().getGroupSettings(group).isFriendly();
+                if (friendly) {
+                    final PlayerClass attackerClass = attackerData.getClass(group);
+                    final PlayerClass defenderClass = defenderData.getClass(group);
 
-                if (defenderClass != null && attackerClass != null) {
-                    if (attackerClass.getData().getRoot() == defenderClass.getData().getRoot()) {
-                        return false;
+                    if (defenderClass != null && attackerClass != null) {
+                        if (attackerClass.getData().getRoot() == defenderClass.getData().getRoot()) {
+                            return false;
+                        }
                     }
                 }
             }
+        } catch (Exception ignored) {
         }
         return true;
     }
