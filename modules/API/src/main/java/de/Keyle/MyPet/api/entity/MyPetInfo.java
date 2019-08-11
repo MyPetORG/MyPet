@@ -133,14 +133,14 @@ public abstract class MyPetInfo {
     }
 
     public boolean getReleaseOnDeath(MyPetType myPetType) {
-        if (myPetType != null) {
+        if (myPetType != null && releaseOnDeath.containsKey(myPetType)) {
             return releaseOnDeath.get(myPetType);
         }
         return false;
     }
 
     public boolean getRemoveAfterRelease(MyPetType myPetType) {
-        if (myPetType != null) {
+        if (myPetType != null && removeAfterRelease.containsKey(myPetType)) {
             return removeAfterRelease.get(myPetType);
         }
         return false;
