@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -55,8 +56,9 @@ public class WorldFlag implements LeashFlag {
         }
         String worlds = settings.all()
                 .stream()
-                .map(setting -> Bukkit.getWorld(setting.getValue()).getName())
+                .map(setting -> Bukkit.getWorld(setting.getValue()))
                 .filter(Objects::nonNull)
+                .map(World::getName)
                 .collect(Collectors.joining(", "));
         return Util.formatText(Translation.getString("Message.Command.CaptureHelper.World.Wrong", player), worlds);
     }
