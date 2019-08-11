@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import org.bukkit.entity.LivingEntity;
 import uk.antiperson.stackmob.StackMob;
 import uk.antiperson.stackmob.api.EntityManager;
+import uk.antiperson.stackmob.api.IStackMob;
 import uk.antiperson.stackmob.api.StackedEntity;
 
 @PluginHookName("StackMob")
@@ -36,7 +37,17 @@ public class StackMobHook implements LeashEntityHook {
     @Override
     public boolean onEnable() {
         StackMob sm = (StackMob) MyPetApi.getPluginHookManager().getPluginInstance("StackMob").get();
-        entityManager = new EntityManager(sm);
+        try {
+            entityManager = EntityManager.class.getConstructor(IStackMob.class).newInstance(sm);
+        } catch (Throwable t) {
+            try {
+                //noinspection JavaReflectionMemberAccess
+                entityManager = EntityManager.class.getConstructor(StackMob.class).newInstance(sm);
+            } catch (Throwable t2) {
+                t2.printStackTrace();
+                return false;
+            }
+        }
 
         return true;
     }
