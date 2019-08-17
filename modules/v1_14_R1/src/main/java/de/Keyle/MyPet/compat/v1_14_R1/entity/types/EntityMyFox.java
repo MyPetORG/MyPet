@@ -67,7 +67,7 @@ public class EntityMyFox extends EntityMyPet {
         }
 
         if (getOwner().equals(entityhuman)) {
-            if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
+            if (itemStack != null && itemStack.getItem() != Items.AIR && canUseItem() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack.getItem() != Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand));
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
