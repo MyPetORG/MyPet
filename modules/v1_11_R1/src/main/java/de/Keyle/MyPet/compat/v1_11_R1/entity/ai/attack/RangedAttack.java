@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_11_R1.entity.ai.attack;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
 import de.Keyle.MyPet.api.util.Compat;
@@ -73,6 +74,24 @@ public class RangedAttack implements AIGoal {
                 return false;
             }
         }
+
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill != null && behaviorSkill.isActive()) {
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
+                return false;
+            }
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
+                if (target instanceof EntityTameableAnimal && ((EntityTameableAnimal) target).isTamed()) {
+                    return false;
+                }
+                if (target instanceof EntityMyPet) {
+                    return false;
+                }
+                if (target instanceof EntityPlayer) {
+                    return false;
+                }
+            }
+        }
         this.target = target;
         return true;
     }
@@ -90,6 +109,24 @@ public class RangedAttack implements AIGoal {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
             if (meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return true;
+            }
+        }
+
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill != null && behaviorSkill.isActive()) {
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
+                return true;
+            }
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
+                if (this.target instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.target).isTamed()) {
+                    return true;
+                }
+                if (this.target instanceof EntityMyPet) {
+                    return true;
+                }
+                if (this.target instanceof EntityPlayer) {
+                    return true;
+                }
             }
         }
         return false;

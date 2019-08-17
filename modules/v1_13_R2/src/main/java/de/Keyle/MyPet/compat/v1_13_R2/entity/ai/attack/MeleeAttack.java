@@ -24,13 +24,12 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_13_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_13_R2.util.FieldCompat;
-import net.minecraft.server.v1_13_R2.EntityArmorStand;
-import net.minecraft.server.v1_13_R2.EntityLiving;
-import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
@@ -76,6 +75,24 @@ public class MeleeAttack implements AIGoal {
         if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, minY, targetEntity.locZ) >= 20) {
             return false;
         }
+
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill != null && behaviorSkill.isActive()) {
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
+                return false;
+            }
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
+                if (targetEntity instanceof EntityTameableAnimal && ((EntityTameableAnimal) targetEntity).isTamed()) {
+                    return false;
+                }
+                if (targetEntity instanceof EntityMyPet) {
+                    return false;
+                }
+                if (targetEntity instanceof EntityPlayer) {
+                    return false;
+                }
+            }
+        }
         this.targetEntity = targetEntity;
         return true;
     }
@@ -95,6 +112,24 @@ public class MeleeAttack implements AIGoal {
         }
         if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, minY, targetEntity.locZ) >= 20) {
             return true;
+        }
+
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill != null && behaviorSkill.isActive()) {
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
+                return true;
+            }
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
+                if (this.targetEntity instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.targetEntity).isTamed()) {
+                    return true;
+                }
+                if (this.targetEntity instanceof EntityMyPet) {
+                    return true;
+                }
+                if (this.targetEntity instanceof EntityPlayer) {
+                    return true;
+                }
+            }
         }
         return false;
     }
