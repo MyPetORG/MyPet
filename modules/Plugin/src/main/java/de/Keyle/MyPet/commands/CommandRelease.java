@@ -96,7 +96,7 @@ public class CommandRelease implements CommandTabCompleter {
                     }
 
 
-                    if (MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
+                    if (!MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
 
                         Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
