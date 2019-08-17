@@ -349,6 +349,8 @@ permissions:
     description: Allows to use the MyPet options command
   MyPet.command.switch:
     description: Allows to switch between MyPets
+  MyPet.command.store:
+    description: Allows to store MyPets
   MyPet.command.info.other:
     description: Allows to view info about pets from other players with "/petinfo <playername>"
   MyPet.extended.feed:
