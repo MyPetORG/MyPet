@@ -363,6 +363,8 @@ permissions:
     description: Extended permission. Allows to open the inventory of the pet.
   MyPet.extended.ride:
     description: Extended permission. Allows to mount pets.
+  MyPet.extended.ride.fly:
+    description: Extended permission. Allows to fly the pet while riding.
   MyPet.extended.control:
     description: Extended permission. Allows to control pets.
   MyPet.extended.pickup:
