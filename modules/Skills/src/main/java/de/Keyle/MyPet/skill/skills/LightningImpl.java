@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -79,11 +78,10 @@ public class LightningImpl implements Lightning {
     }
 
     public void apply(LivingEntity target) {
-        Player owner = myPet.getOwner().getPlayer();
         isStriking = true;
-        Location loc = target.getLocation();
-        MyPetApi.getPlatformHelper().strikeLightning(loc, 32);
         myPet.getEntity().ifPresent(petEntity -> {
+            Player owner = myPet.getOwner().getPlayer();
+            MyPetApi.getPlatformHelper().strikeLightning(target.getLocation(), 32);
             for (Entity entity : target.getNearbyEntities(1.5, 1.5, 1.5)) {
                 if (entity instanceof LivingEntity && entity != owner) {
                     ((LivingEntity) entity).damage(damage.getValue().doubleValue(), petEntity);

@@ -712,7 +712,6 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMonitor(final EntityDamageByEntityEvent event) {
-        //noinspection ConstantConditions
         if (event.getEntity() == null) {
             // catch invalid events (i.e. EnchantmentAPI)
             return;
