@@ -82,6 +82,7 @@ public class LightningImpl implements Lightning {
         myPet.getEntity().ifPresent(petEntity -> {
             Player owner = myPet.getOwner().getPlayer();
             MyPetApi.getPlatformHelper().strikeLightning(target.getLocation(), 32);
+            target.damage(damage.getValue().doubleValue(), petEntity);
             for (Entity entity : target.getNearbyEntities(1.5, 1.5, 1.5)) {
                 if (entity instanceof LivingEntity && entity != owner) {
                     ((LivingEntity) entity).damage(damage.getValue().doubleValue(), petEntity);
