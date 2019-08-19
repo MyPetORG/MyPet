@@ -106,7 +106,6 @@ public class CommandOptionTicket implements CommandOption {
         int count;
 
         while ((count = in.read(b)) > 0) {
-            System.out.println();
             zip.write(b, 0, count);
         }
         in.close();
