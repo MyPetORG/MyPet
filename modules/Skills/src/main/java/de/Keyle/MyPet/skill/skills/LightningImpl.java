@@ -84,7 +84,7 @@ public class LightningImpl implements Lightning {
             MyPetApi.getPlatformHelper().strikeLightning(target.getLocation(), 32);
             target.damage(damage.getValue().doubleValue(), petEntity);
             for (Entity entity : target.getNearbyEntities(1.5, 1.5, 1.5)) {
-                if (entity instanceof LivingEntity && entity != owner) {
+                if (entity instanceof LivingEntity && entity != owner && entity != petEntity) {
                     ((LivingEntity) entity).damage(damage.getValue().doubleValue(), petEntity);
                 }
             }
