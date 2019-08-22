@@ -33,7 +33,6 @@ public class Configuration {
         public static boolean ALLOW_RANGED_LEASHING = true;
         public static boolean OWNER_CAN_ATTACK_PET = false;
         public static boolean DISABLE_PET_VS_PLAYER = false;
-        public static double MYPET_FOLLOW_START_DISTANCE = 7.0F;
         public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
         public static boolean INVISIBLE_LIKE_OWNER = true;
         public static boolean THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = true;
@@ -42,6 +41,13 @@ public class Configuration {
         public static String WIKI_URL = "https://wiki.mypet-plugin.de";
         public static String RIGHT_CLICK_COMMAND = "";
         public static int MAX_STORED_PET_COUNT = 45;
+    }
+
+    public static class Entity {
+
+        public static int SKIP_TARGET_AI_TICKS = 1;
+        public static int SKIP_MOVEMENT_AI_TICKS = 1;
+        public static double MYPET_FOLLOW_START_DISTANCE = 7.0F;
     }
 
     public static class Log {

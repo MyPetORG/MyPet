@@ -67,7 +67,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Leash.AllowRanged", Misc.ALLOW_RANGED_LEASHING);
         config.addDefault("MyPet.OwnerCanAttackPet", Misc.OWNER_CAN_ATTACK_PET);
         config.addDefault("MyPet.DisablePetVersusPlayer", Misc.DISABLE_PET_VS_PLAYER);
-        config.addDefault("MyPet.FollowStartDistance", Misc.MYPET_FOLLOW_START_DISTANCE);
         config.addDefault("MyPet.RetainEquipmentOnTame", Misc.RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
@@ -78,6 +77,10 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Disable-All-Actionbar-Messages", Misc.DISABLE_ALL_ACTIONBAR_MESSAGES);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
         config.addDefault("MyPet.Right-Click-Command", Misc.RIGHT_CLICK_COMMAND);
+
+        config.addDefault("MyPet.Entity.Skip-Movement-AI-Ticks", Entity.SKIP_MOVEMENT_AI_TICKS);
+        config.addDefault("MyPet.Entity.Skip-Target-AI-Ticks", Entity.SKIP_TARGET_AI_TICKS);
+        config.addDefault("MyPet.Entity.FollowStartDistance", Entity.MYPET_FOLLOW_START_DISTANCE);
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         config.addDefault("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);
@@ -342,11 +345,13 @@ public class ConfigurationLoader {
         HungerSystem.AFFECT_BEACON_RANGE = config.getBoolean("MyPet.HungerSystem.Affect-Beacon-Range", true);
         Misc.RETAIN_EQUIPMENT_ON_TAME = config.getBoolean("MyPet.RetainEquipmentOnTame", true);
         Misc.INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
-        Misc.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
         Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = config.getBoolean("MyPet.Throw-PlayerMoveEvent-While-Riding", true);
         Misc.DISABLE_ALL_ACTIONBAR_MESSAGES = config.getBoolean("MyPet.Disable-All-Actionbar-Messages", false);
         Misc.OVERWRITE_LANGUAGE = config.getString("MyPet.OverwriteLanguages", "");
         LevelSystem.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
+        Entity.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.Entity.FollowStartDistance", 7.0D);
+        Entity.SKIP_MOVEMENT_AI_TICKS = config.getInt("MyPet.Entity.Skip-Movement-AI-Ticks", 0);
+        Entity.SKIP_TARGET_AI_TICKS = config.getInt("MyPet.Entity.Skip-Target-AI-Ticks", 0);
 
         Log.LEVEL = config.getString("MyPet.Log.Level", Log.LEVEL);
 
@@ -594,6 +599,10 @@ public class ConfigurationLoader {
         }
         if (config.contains("MyPet.Update.Token")) {
             config.getConfigurationSection("MyPet.Update").set("Token", null);
+        }
+        if (config.contains("MyPet.FollowStartDistance")) {
+            Entity.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
+            config.getConfigurationSection("MyPet").set("FollowStartDistance", null);
         }
 
         MyPetApi.getPlugin().saveConfig();

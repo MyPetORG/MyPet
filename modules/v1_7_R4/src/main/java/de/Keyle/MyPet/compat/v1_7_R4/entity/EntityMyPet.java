@@ -95,8 +95,8 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             setSize();
 
             this.myPet = myPet;
-            this.petPathfinderSelector = new AIGoalSelector();
-            this.petTargetSelector = new AIGoalSelector();
+            this.petPathfinderSelector = new AIGoalSelector(Configuration.Entity.SKIP_MOVEMENT_AI_TICKS);
+            this.petTargetSelector = new AIGoalSelector(Configuration.Entity.SKIP_TARGET_AI_TICKS);
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
             this.getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
             this.getAttributeInstance(GenericAttributes.b).setValue(32.0f);
@@ -123,7 +123,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
         petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 1.5, 20));
         petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Misc.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
+        petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
         petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new RandomLookaround(this));
         petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
