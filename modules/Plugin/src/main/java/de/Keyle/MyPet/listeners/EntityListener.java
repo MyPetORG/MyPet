@@ -488,7 +488,7 @@ public class EntityListener implements Listener {
                     if (projectile.hasMetadata("MyPetLeashItem")) {
                         metaList = projectile.getMetadata("MyPetLeashItem");
                         for (MetadataValue meta : metaList) {
-                            if (meta.getOwningPlugin() == MyPetApi.getPlugin()) {
+                            if (meta.getOwningPlugin().getName().equals("MyPet")) {
                                 leashItem = (ItemStack) meta.value();
                                 break;
                             }
@@ -496,11 +496,12 @@ public class EntityListener implements Listener {
                         if (leashItem == null) {
                             return;
                         }
+                        projectile.removeMetadata("MyPetLeashItem", MyPetApi.getPlugin());
                     }
-                    if (projectile.hasMetadata("")) {
+                    if (projectile.hasMetadata("MyPetLeashItemArrow")) {
                         metaList = projectile.getMetadata("MyPetLeashItemArrow");
                         for (MetadataValue meta : metaList) {
-                            if (meta.getOwningPlugin() == MyPetApi.getPlugin()) {
+                            if (meta.getOwningPlugin().getName().equals("MyPet")) {
                                 leashItemArrow = (ItemStack) meta.value();
                                 break;
                             }
@@ -508,6 +509,7 @@ public class EntityListener implements Listener {
                         if (leashItemArrow == null) {
                             return;
                         }
+                        projectile.removeMetadata("MyPetLeashItemArrow", MyPetApi.getPlugin());
                     }
                 } else if (event.getDamager() instanceof Player) {
                     player = (Player) event.getDamager();
@@ -959,13 +961,14 @@ public class EntityListener implements Listener {
         }
         if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0 && event.getEntity().hasMetadata("SpawnReason")) {
             for (MetadataValue value : event.getEntity().getMetadata("SpawnReason")) {
-                if (value.getOwningPlugin().getName().equals(MyPetApi.getPlugin().getName())) {
+                if (value.getOwningPlugin().getName().equals("MyPet")) {
                     if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.contains(value.asString())) {
                         return;
                     }
                     break;
                 }
             }
+            event.getEntity().removeMetadata("SpawnReason", MyPetApi.getPlugin());
         }
         if (Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
             Map<UUID, Double> damagePercentMap = MyPetExperience.getDamageToEntityPercent(deadEntity);
@@ -1021,6 +1024,7 @@ public class EntityListener implements Listener {
                     }
                 }
             }
+            deadEntity.removeMetadata("MyPetDamageCount", MyPetApi.getPlugin());
         } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
 
