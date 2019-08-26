@@ -84,6 +84,7 @@ import java.util.*;
 public class EntityListener implements Listener {
 
     Map<UUID, ItemStack> usedItems = new HashMap<>();
+    Set<UUID> justLeashed = new HashSet<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMyPet(CreatureSpawnEvent event) {
@@ -522,7 +523,7 @@ public class EntityListener implements Listener {
                     return;
                 }
 
-                if (!MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                if (!MyPetApi.getMyPetManager().hasActiveMyPet(player) && !justLeashed.contains(player.getUniqueId())) {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
                     MyPetType petType = MyPetType.byEntityTypeName(leashTarget.getType().name());
@@ -638,6 +639,7 @@ public class EntityListener implements Listener {
                         MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
+                        justLeashed.add(player.getUniqueId());
                         MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
                             @Override
                             public void callback(Boolean value) {
@@ -649,6 +651,7 @@ public class EntityListener implements Listener {
                                     owner.setCaptureHelperActive(false);
                                     owner.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", owner), Translation.getString("Name.Disabled", owner)));
                                 }
+                                justLeashed.remove(player.getUniqueId());
                             }
                         });
                     }
