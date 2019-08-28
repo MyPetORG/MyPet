@@ -78,7 +78,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
         config.addDefault("MyPet.Right-Click-Command", Misc.RIGHT_CLICK_COMMAND);
 
-        config.addDefault("MyPet.Entity.Skip-Movement-AI-Ticks", Entity.SKIP_MOVEMENT_AI_TICKS);
         config.addDefault("MyPet.Entity.Skip-Target-AI-Ticks", Entity.SKIP_TARGET_AI_TICKS);
         config.addDefault("MyPet.Entity.FollowStartDistance", Entity.MYPET_FOLLOW_START_DISTANCE);
 
@@ -350,7 +349,6 @@ public class ConfigurationLoader {
         Misc.OVERWRITE_LANGUAGE = config.getString("MyPet.OverwriteLanguages", "");
         LevelSystem.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         Entity.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.Entity.FollowStartDistance", 7.0D);
-        Entity.SKIP_MOVEMENT_AI_TICKS = config.getInt("MyPet.Entity.Skip-Movement-AI-Ticks", 0);
         Entity.SKIP_TARGET_AI_TICKS = config.getInt("MyPet.Entity.Skip-Target-AI-Ticks", 0);
 
         Log.LEVEL = config.getString("MyPet.Log.Level", Log.LEVEL);
@@ -603,6 +601,9 @@ public class ConfigurationLoader {
         if (config.contains("MyPet.FollowStartDistance")) {
             Entity.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
             config.getConfigurationSection("MyPet").set("FollowStartDistance", null);
+        }
+        if (config.contains("MyPet.Entity.Skip-Movement-AI-Ticks")) {
+            config.getConfigurationSection("MyPet.Entity").set("Skip-Movement-AI-Ticks", null);
         }
 
         MyPetApi.getPlugin().saveConfig();

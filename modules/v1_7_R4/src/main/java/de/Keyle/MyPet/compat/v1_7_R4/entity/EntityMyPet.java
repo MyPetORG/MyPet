@@ -95,7 +95,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             setSize();
 
             this.myPet = myPet;
-            this.petPathfinderSelector = new AIGoalSelector(Configuration.Entity.SKIP_MOVEMENT_AI_TICKS);
+            this.petPathfinderSelector = new AIGoalSelector(0);
             this.petTargetSelector = new AIGoalSelector(Configuration.Entity.SKIP_TARGET_AI_TICKS);
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
             this.getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
