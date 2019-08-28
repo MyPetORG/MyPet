@@ -30,6 +30,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class WorldGroup {
 
@@ -190,6 +191,7 @@ public class WorldGroup {
                 }
             }
         }
+        groups = groups.stream().filter(s -> !s.equals("default")).collect(Collectors.toSet());
         for (String node : groups) {
             List<String> worlds = config.getStringList("Groups." + node);
             if (worlds.size() > 0) {
@@ -197,7 +199,7 @@ public class WorldGroup {
                 for (String world : worlds) {
                     if (Bukkit.getServer().getWorld(world) != null) {
                         if (newGroup.addWorld(world)) {
-                            MyPetApi.getLogger().info("   added '" + world + "' to '" + newGroup.getName() + "'");
+                            MyPetApi.getLogger().info("   added '" + ChatColor.GOLD + world + ChatColor.RESET + "' to '" + newGroup.getName() + "'");
                         }
                     }
                 }
@@ -205,13 +207,26 @@ public class WorldGroup {
         }
 
         List<String> worldNames = new ArrayList<>();
-        for (World world : Bukkit.getServer().getWorlds()) {
-            if (WorldGroup.DEFAULT_GROUP.addWorld(world.getName())) {
-                MyPetApi.getLogger().info("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
-                worldNames.add(world.getName());
+        boolean newWorldFound = false;
+        List<String> worlds = config.getStringList("Groups." + DEFAULT_GROUP.name);
+        if (worlds.size() > 0) {
+            for (String world : worlds) {
+                if (Bukkit.getServer().getWorld(world) != null) {
+                    if (DEFAULT_GROUP.addWorld(world)) {
+                        MyPetApi.getLogger().info("   added '" + ChatColor.GOLD + world + ChatColor.RESET + "' to '" + DEFAULT_GROUP.getName() + "'");
+                        worldNames.add(world);
+                    }
+                }
             }
         }
-        if (worldNames.size() > 0) {
+        for (World world : Bukkit.getServer().getWorlds()) {
+            if (WorldGroup.DEFAULT_GROUP.addWorld(world.getName())) {
+                MyPetApi.getLogger().info("   added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
+                worldNames.add(world.getName());
+                newWorldFound = true;
+            }
+        }
+        if (newWorldFound && worldNames.size() > 0) {
             config.set("Groups.default", worldNames);
             yamlConfiguration.saveConfig();
         }
