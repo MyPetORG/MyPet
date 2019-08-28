@@ -161,7 +161,7 @@ public class PetShop {
                                 event1.setWillDestroy(true);
                             }, MyPetApi.getPlugin());
                             IconMenuItem icon = new IconMenuItem()
-                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "GREEN_WOOL"))
+                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "LIME_WOOL"))
                                     .setData(5)
                                     .setTitle(ChatColor.GREEN + Translation.getString("Name.Yes", player))
                                     .setLore(ChatColor.RESET + Util.formatText(Translation.getString("Message.Shop.Confirm.Yes", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
