@@ -45,8 +45,8 @@ public class Configuration {
 
     public static class Entity {
 
-        public static int SKIP_TARGET_AI_TICKS = 1;
-        public static int SKIP_MOVEMENT_AI_TICKS = 1;
+        public static int SKIP_TARGET_AI_TICKS = 0;
+        public static int SKIP_MOVEMENT_AI_TICKS = 0;
         public static double MYPET_FOLLOW_START_DISTANCE = 7.0F;
     }
 
