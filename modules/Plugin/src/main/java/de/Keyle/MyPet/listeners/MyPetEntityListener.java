@@ -460,8 +460,8 @@ public class MyPetEntityListener implements Listener {
         }
         if (deadEntity instanceof MyPetBukkitEntity) {
             MyPet myPet = ((MyPetBukkitEntity) deadEntity).getMyPet();
-            if (myPet == null || myPet.getHealth() > 0) // check health for death events where the pet isn't really dead (/killall)
-            {
+            // check health for death events where the pet isn't really dead (/killall)
+            if (myPet == null || myPet.getHealth() > 0) {
                 return;
             }
 

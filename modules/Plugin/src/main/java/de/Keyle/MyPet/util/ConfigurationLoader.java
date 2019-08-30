@@ -532,6 +532,8 @@ public class ConfigurationLoader {
             loadLeashFlags(petType, config.getStringList("MyPet.Pets." + petType + ".LeashRequirements"));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
             MyPetApi.getMyPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
+            MyPetApi.getMyPetInfo().setReleaseOnDeath(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false));
+            MyPetApi.getMyPetInfo().setRemoveAfterRelease(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false));
             MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
         }
     }
@@ -619,7 +621,7 @@ public class ConfigurationLoader {
         }
 
         if (petConfig != null && config.contains("MyPet.RemovePetsAfterRelease")) {
-            boolean removePetsAfterRelease = config.getBoolean("MyPet.RemovePetsAfterRelease");
+            boolean removePetsAfterRelease = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
             boolean releasePetsOnDeath = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
             config.getConfigurationSection("MyPet").set("RemovePetsAfterRelease", null);
             config.getConfigurationSection("MyPet").set("ReleasePetsOnDeath", null);
