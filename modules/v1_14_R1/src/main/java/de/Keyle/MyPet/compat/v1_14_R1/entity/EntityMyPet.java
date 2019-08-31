@@ -141,7 +141,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         petPathfinderSelector.addGoal("Sit", sitPathfinder);
         petPathfinderSelector.addGoal("Sprint", new Sprint(this, 0.25F));
         petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
-        petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 1.5, 20));
+        petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, this.getWidth() + 1.3, 20));
         petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
         petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
