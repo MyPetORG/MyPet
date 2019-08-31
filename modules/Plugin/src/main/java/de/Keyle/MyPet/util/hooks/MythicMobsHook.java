@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -44,7 +45,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @PluginHookName("MythicMobs")
@@ -54,8 +58,15 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
     public static Set<String> PREVENT_DAMAGE_TO_FACTIONS = new HashSet<>();
     public static Set<String> PREVENT_DAMAGE_TO_MOBS = new HashSet<>();
 
+    private Method METHOD_getDamageModifiers_list;
+
     @Override
     public boolean onEnable() {
+        METHOD_getDamageModifiers_list = ReflectionUtil.getMethod(MythicMob.class, "getDamageModifiers");
+        if (METHOD_getDamageModifiers_list.getReturnType() != List.class) {
+            METHOD_getDamageModifiers_list = null;
+        }
+
         MyPetApi.getLeashFlagManager().registerLeashFlag(new MythicMobFlag());
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
         return true;
@@ -97,12 +108,8 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                 if (baseDamage >= 1D && damage < 1D) {
                     damage = 1D;
                 }
-                for (String m : defenderType.getDamageModifiers()) {
-                    if (m.startsWith("ENTITY_ATTACK")) {
-                        damage *= Util.parseDouble(m.substring(14), 1D);
-                        break;
-                    }
-                }
+                double modifier = getEntityAttackModifier(defenderType);
+                damage *= modifier;
                 event.setDamage(damage);
                 if (damage == 0) {
                     event.setCancelled(true);
@@ -148,14 +155,10 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                 if (PREVENT_DAMAGE_TO_MOBS.contains(defenderType.getInternalName())) {
                     return false;
                 }
-                for (String m : defenderType.getDamageModifiers()) {
-                    if (m.startsWith("ENTITY_ATTACK")) {
-                        double modifier = Util.parseDouble(m.substring(14), 1D);
-                        if (modifier == 0) {
-                            return false;
-                        }
-                        break;
-                    }
+
+                double modifier = getEntityAttackModifier(defenderType);
+                if (modifier == 0) {
+                    return false;
                 }
             }
         } catch (NumberFormatException ignored) {
@@ -163,6 +166,26 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
             t.printStackTrace();
         }
         return true;
+    }
+
+    protected double getEntityAttackModifier(MythicMob mob) {
+        if (METHOD_getDamageModifiers_list != null) {
+            try {
+                @SuppressWarnings("unchecked")
+                List<String> modifiers = (List<String>) METHOD_getDamageModifiers_list.invoke(mob);
+                for (String m : modifiers) {
+                    if (m.startsWith("ENTITY_ATTACK")) {
+                        return Util.parseDouble(m.substring(14), 1D);
+                    }
+                }
+            } catch (IllegalAccessException | InvocationTargetException ignored) {
+            }
+        } else {
+            if (mob.getDamageModifiers().containsKey("ENTITY_ATTACK")) {
+                return mob.getDamageModifiers().get("ENTITY_ATTACK");
+            }
+        }
+        return 1;
     }
 
     @Override
