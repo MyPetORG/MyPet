@@ -452,9 +452,11 @@ public class SkillTreeLoaderJSON {
     }
 
     private static boolean containsKey(JsonObject o, String key) {
-        for (String keyObject : o.keySet()) {
-            if (keyObject.equalsIgnoreCase(key)) {
-                return true;
+        if (o != null) {
+            for (String keyObject : o.keySet()) {
+                if (keyObject.equalsIgnoreCase(key)) {
+                    return true;
+                }
             }
         }
         return false;
