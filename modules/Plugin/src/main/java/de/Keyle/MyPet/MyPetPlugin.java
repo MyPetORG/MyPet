@@ -393,27 +393,29 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         // init Metrics
         try {
             Metrics metrics = new Metrics(this);
-            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
-            metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
-            metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
-                String mode = "Disabled";
-                if (Configuration.Update.CHECK) {
-                    mode = "Check";
-                    if (Configuration.Update.DOWNLOAD) {
-                        mode += " & Download";
+            if (metrics.isEnabled()) {
+                metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
+                metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
+                metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
+                    String mode = "Disabled";
+                    if (Configuration.Update.CHECK) {
+                        mode = "Check";
+                        if (Configuration.Update.DOWNLOAD) {
+                            mode += " & Download";
+                        }
                     }
+                    return mode;
                 }
-                return mode;
-            }
-            ));
-            metrics.addCustomChart(new Metrics.AdvancedPie("hooks", () -> {
-                Map<String, Integer> activatedHooks = new HashMap<>();
-                for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
-                    activatedHooks.put(hook.getPluginName(), 1);
+                ));
+                metrics.addCustomChart(new Metrics.AdvancedPie("hooks", () -> {
+                    Map<String, Integer> activatedHooks = new HashMap<>();
+                    for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
+                        activatedHooks.put(hook.getPluginName(), 1);
+                    }
+                    return activatedHooks;
                 }
-                return activatedHooks;
+                ));
             }
-            ));
         } catch (Throwable e) {
             errorReporter.sendError(e, "Init Metrics failed");
         }
