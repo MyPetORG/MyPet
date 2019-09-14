@@ -490,7 +490,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
 
                     for (String entry : t.getEntries()) {
-                        t.removeEntry(entry);
+                        try {
+                            t.removeEntry(entry);
+                        } catch (IllegalStateException ignored) {
+                        }
                     }
                     t.addEntry(minecraftEntity.getUniqueID().toString());
                 }
