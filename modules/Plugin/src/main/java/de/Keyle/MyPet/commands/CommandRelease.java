@@ -87,6 +87,18 @@ public class CommandRelease implements CommandTabCompleter {
                     MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Release);
                     Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
+                    if (!MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
+                        LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
+
+                        Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
+                        try {
+                            converter.ifPresent(entityConverterService -> entityConverterService.convertEntity(myPet, normalEntity));
+                        } catch (Exception e) {
+                            normalEntity.remove();
+                            return true;
+                        }
+                    }
+
                     if (myPet.getSkills().isActive(Backpack.class)) {
                         myPet.getSkills().get(Backpack.class).getInventory().dropContentAt(myPet.getLocation().get());
                     }
@@ -95,13 +107,6 @@ public class CommandRelease implements CommandTabCompleter {
                         ((MyPetEquipment) myPet).dropEquipment();
                     }
 
-
-                    if (!MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
-                        LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
-
-                        Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
-                        converter.ifPresent(entityConverterService -> entityConverterService.convertEntity(myPet, normalEntity));
-                    }
                     myPet.removePet();
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);
 
