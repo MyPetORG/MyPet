@@ -198,7 +198,16 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         net.minecraft.server.v1_14_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = new NBTTagCompound();
 
-        //entity.save(vanillaNBT); // TODO find fix
+        if (entity instanceof EntityLiving) {
+            ((EntityLiving) entity).b(vanillaNBT);
+        } else {
+            Method b = ReflectionUtil.getMethod(entity.getClass(), "b", NBTTagCompound.class);
+            try {
+                b.invoke(entity, vanillaNBT);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
 
         return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
     }

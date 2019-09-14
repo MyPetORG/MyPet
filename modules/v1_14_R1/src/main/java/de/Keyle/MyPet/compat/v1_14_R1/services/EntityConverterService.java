@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_14_R1.services;
 
 import com.google.common.collect.Sets;
+import com.mojang.datafixers.Dynamic;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -29,13 +30,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
-import de.keyle.knbt.TagList;
-import net.minecraft.server.v1_14_R1.EntityZombieVillager;
-import net.minecraft.server.v1_14_R1.IRegistry;
-import net.minecraft.server.v1_14_R1.MinecraftKey;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.compat.v1_14_R1.util.inventory.ItemStackNBTConverter;
+import de.keyle.knbt.*;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftVillager;
@@ -166,14 +164,60 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
         } else if (myPet instanceof MyVillager) {
             MyVillager villagerPet = (MyVillager) myPet;
+            Villager villagerEntity = ((Villager) normalEntity);
+
             Villager.Profession profession = Villager.Profession.values()[villagerPet.getProfession()];
-            ((Villager) normalEntity).setProfession(profession);
+            Villager.Type type = Villager.Type.values()[villagerPet.getType().ordinal()];
+
             if (villagerPet.hasOriginalData()) {
-                TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
-                for (String key : villagerPet.getOriginalData().getCompoundData().keySet()) {
-                    villagerTag.put(key, villagerPet.getOriginalData().get(key));
+                villagerEntity.setVillagerType(type);
+                villagerEntity.setProfession(profession);
+                villagerEntity.setVillagerLevel(villagerPet.getVillagerLevel());
+
+                TagCompound villagerTag = villagerPet.getOriginalData();
+
+                EntityVillager entityVillager = ((CraftVillager) villagerEntity).getHandle();
+
+                if (villagerTag.containsKey("Offers")) {
+                    TagCompound offersTag = villagerTag.get("Offers");
+                    NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
+                    entityVillager.b(new MerchantRecipeList(vanillaNBT));
                 }
-                MyPetApi.getPlatformHelper().applyTagToEntity(villagerTag, normalEntity);
+                if (villagerTag.containsKey("Inventory")) {
+                    TagList inventoryTag = villagerTag.get("Inventory");
+                    NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                    for (int i = 0; i < vanillaNBT.size(); ++i) {
+                        net.minecraft.server.v1_14_R1.ItemStack itemstack = net.minecraft.server.v1_14_R1.ItemStack.a(vanillaNBT.getCompound(i));
+                        if (!itemstack.isEmpty()) {
+                            entityVillager.getInventory().a(itemstack);
+                        }
+                    }
+                }
+                if (villagerTag.containsKey("FoodLevel")) {
+                    byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
+                    ReflectionUtil.setFieldValue("bI", entityVillager, foodLevel);
+                }
+                if (villagerTag.containsKey("Gossips")) {
+                    TagList inventoryTag = villagerTag.get("Gossips");
+                    NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                    ReflectionUtil.setFieldValue("bJ", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
+                }
+                if (villagerTag.containsKey("LastRestock")) {
+                    long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
+                    ReflectionUtil.setFieldValue("bN", entityVillager, lastRestock);
+                }
+                if (villagerTag.containsKey("LastGossipDecay")) {
+                    long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
+                    ReflectionUtil.setFieldValue("bL", entityVillager, lastGossipDecay);
+                }
+                if (villagerTag.containsKey("RestocksToday")) {
+                    int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
+                    ReflectionUtil.setFieldValue("bO", entityVillager, restocksToday);
+                }
+                if (villagerTag.containsKey("Xp")) {
+                    int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
+                    entityVillager.setExperience(xp);
+                }
             }
         } else if (myPet instanceof MyWolf) {
             ((Wolf) normalEntity).setTamed(false);
@@ -407,11 +451,19 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         properties.getCompoundData().put("Profession", new TagInt(profession));
         int type = villager.getVillagerType().ordinal();
         properties.getCompoundData().put("Type", new TagInt(type));
-        int level = ((CraftVillager) villager).getHandle().getVillagerData().getLevel();
-        properties.getCompoundData().put("Level", new TagInt(level));
+        int level = villager.getVillagerLevel();
+        properties.getCompoundData().put("VillagerLevel", new TagInt(level));
 
         TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
-        Set<String> allowedTags = Sets.newHashSet("FoodLevel", "Gossips", "Offers", "LastRestock", "BuddyGolem", "Inventory", "Xp");
+        Set<String> allowedTags = Sets.newHashSet(
+                "RestocksToday",
+                "FoodLevel",
+                "Gossips",
+                "Offers",
+                "LastRestock",
+                "Inventory",
+                "Xp"
+        );
         Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
         for (String key : keys) {
             if (allowedTags.contains(key)) {

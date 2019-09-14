@@ -444,7 +444,7 @@
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>knbt</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.5</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
