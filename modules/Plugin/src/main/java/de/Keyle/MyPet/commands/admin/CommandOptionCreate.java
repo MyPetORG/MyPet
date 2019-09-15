@@ -632,7 +632,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         if (Util.isInt(villagerTypeString)) {
                             int villagerType = Integer.parseInt(villagerTypeString);
                             villagerType = Util.clamp(villagerType, 0, 6);
-                            compound.getCompoundData().put("Type", new TagInt(villagerType));
+                            compound.getCompoundData().put("VillagerType", new TagInt(villagerType));
                         }
                         break;
                 }

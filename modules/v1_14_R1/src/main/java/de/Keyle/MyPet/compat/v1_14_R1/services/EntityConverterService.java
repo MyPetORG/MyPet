@@ -450,7 +450,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         int profession = villager.getProfession().ordinal();
         properties.getCompoundData().put("Profession", new TagInt(profession));
         int type = villager.getVillagerType().ordinal();
-        properties.getCompoundData().put("Type", new TagInt(type));
+        properties.getCompoundData().put("VillagerType", new TagInt(type));
         int level = villager.getVillagerLevel();
         properties.getCompoundData().put("VillagerLevel", new TagInt(level));
 
