@@ -219,8 +219,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     entityVillager.setExperience(xp);
                 }
             }
-        } else if (myPet instanceof MyWolf) {
-            ((Wolf) normalEntity).setTamed(false);
         } else if (myPet instanceof MySlime) {
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
         } else if (myPet instanceof MyZombieVillager) {
@@ -493,9 +491,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertWolf(Wolf wolf, TagCompound properties) {
-        properties.getCompoundData().put("Sitting", new TagByte(wolf.isSitting()));
         properties.getCompoundData().put("Tamed", new TagByte(wolf.isTamed()));
-        properties.getCompoundData().put("CollarColor", new TagByte(wolf.getCollarColor().getWoolData()));
+        properties.getCompoundData().put("CollarColor", new TagByte(wolf.getCollarColor().ordinal()));
     }
 
     public void convertTropicalFish(TropicalFish tropicalFish, TagCompound properties) {

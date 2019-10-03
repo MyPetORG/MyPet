@@ -29,6 +29,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 
 public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWolf {
+
     protected boolean isBaby = false;
     protected boolean isTamed = false;
     protected boolean isAngry = false;
@@ -43,10 +44,10 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     }
 
     public void setCollarColor(DyeColor value) {
+        this.collarColor = value;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-        this.collarColor = value;
     }
 
     @Override
@@ -55,14 +56,14 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Tamed", new TagByte(isTamed()));
         info.getCompoundData().put("Angry", new TagByte(isAngry()));
-        info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().getDyeData()));
+        info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKey("CollarColor")) {
-            setCollarColor(DyeColor.getByDyeData(info.getAs("CollarColor", TagByte.class).getByteData()));
+            setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagByte.class).getByteData()]);
         }
         if (info.containsKey("Tamed")) {
             setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
