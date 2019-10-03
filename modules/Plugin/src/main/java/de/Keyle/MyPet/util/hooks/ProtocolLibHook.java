@@ -61,7 +61,7 @@ public class ProtocolLibHook implements PluginHook {
             if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
                 registerEnderDragonRotationFix19();
             } else {
-                registerEnderDragonRotationFix();
+                registerEnderDragonRotationFixLegacy();
             }
 
             if (MyPetApi.getCompatUtil().getInternalVersion().equals("v1_7_R4")) {
@@ -99,17 +99,17 @@ public class ProtocolLibHook implements PluginHook {
 
                     int id = packet.getIntegers().read(0);
 
+                    Entity entity = null;
                     try {
-                        Entity entity = packet.getEntityModifier(event).readSafely(0);
-
-                        if (entity == null) {
-                            entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
-                            if (entity instanceof MyPetBukkitPart) {
-                                entity = ((MyPetBukkitPart) entity).getPetOwner();
-                                packet.getIntegers().write(0, entity.getEntityId());
-                            }
-                        }
+                        entity = packet.getEntityModifier(event).readSafely(0);
                     } catch (RuntimeException ignored) {
+                    }
+                    if (entity == null) {
+                        entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                    }
+                    if (entity instanceof MyPetBukkitPart) {
+                        entity = ((MyPetBukkitPart) entity).getPetOwner();
+                        packet.getIntegers().write(0, entity.getEntityId());
                     }
                 }
             }
@@ -144,25 +144,27 @@ public class ProtocolLibHook implements PluginHook {
                         }
 
                         PacketContainer packet = event.getPacket();
+                        int id = packet.getIntegers().read(0);
 
+                        Entity entity = null;
                         try {
-                            final Entity entity = packet.getEntityModifier(event).readSafely(0);
-
-                            if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
-                                byte angle = packet.getBytes().read(0);
-                                angle += Byte.MAX_VALUE;
-                                packet.getBytes().write(0, angle);
-                            }
+                            entity = packet.getEntityModifier(event).readSafely(0);
                         } catch (RuntimeException ignored) {
-                            // ignore:
-                            // - entityID cannot be negative
-                            // - Cannot retrieve entity from ID.
+                        }
+                        if (entity == null) {
+                            entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                        }
+
+                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
+                            byte angle = packet.getBytes().read(0);
+                            angle += Byte.MAX_VALUE;
+                            packet.getBytes().write(0, angle);
                         }
                     }
                 });
     }
 
-    private void registerEnderDragonRotationFix() {
+    private void registerEnderDragonRotationFixLegacy() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
