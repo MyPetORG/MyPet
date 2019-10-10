@@ -66,14 +66,15 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
             MaterialHolder materialHolder = itemDatabase.getByID(id);
             if (materialHolder != null) {
                 Material material = materialHolder.getMaterial();
-                MyPetApi.getLogger().info("isCompatible:" + MyPetApi.getCompatUtil().isCompatible("1.13"));
-                if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                if (material != null) {
+                    if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                        setBlock(new ItemStack(material, 1));
+                    } else {
+                        short data = materialHolder.getLegacyId().getData();
+                        setBlock(new ItemStack(material, 1, data));
+                    }
                     setBlock(new ItemStack(material, 1));
-                } else {
-                    short data = materialHolder.getLegacyId().getData();
-                    setBlock(new ItemStack(material, 1, data));
                 }
-                setBlock(new ItemStack(material, 1));
             }
         } else if (info.containsKey("BlockID")) {
             int id;
