@@ -123,7 +123,6 @@ public class ProtocolLibHook implements PluginHook {
                 case "ENTITY_LOOK":
                 case "ENTITY_MOVE_LOOK":
                 case "REL_ENTITY_MOVE_LOOK":
-                case "VEHICLE_MOVE":
                 case "ENTITY_HEAD_ROTATION":
                 case "ENTITY_TELEPORT":
                     if (pt.isSupported()) {
