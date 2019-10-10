@@ -84,7 +84,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
         }
 
         if (itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -93,7 +93,7 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
                     }
                 }
                 return true;
-            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
+            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && canEquip()) {
                 getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);

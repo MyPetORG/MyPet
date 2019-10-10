@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyZombieHorse;
 import de.Keyle.MyPet.compat.v1_14_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_14_R1.*;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 
 import java.util.Optional;
@@ -134,15 +133,6 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
             }
         }
         return false;
-    }
-
-    private int getHorseArmorId(org.bukkit.inventory.ItemStack itemstack) {
-        if (itemstack == null) {
-            return 0;
-        }
-        Material item = itemstack.getType();
-
-        return item == Material.DIAMOND_HORSE_ARMOR ? 3 : item == Material.GOLDEN_HORSE_ARMOR ? 2 : item == Material.IRON_HORSE_ARMOR ? 1 : 0;
     }
 
     protected void initDatawatcher() {

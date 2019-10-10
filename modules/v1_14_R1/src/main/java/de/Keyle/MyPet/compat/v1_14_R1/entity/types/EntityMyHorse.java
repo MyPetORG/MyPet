@@ -103,7 +103,7 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
 
         if (itemStack != null && canUseItem()) {
             org.bukkit.inventory.ItemStack is = CraftItemStack.asBukkitCopy(itemStack);
-            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setSaddle(is);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -112,7 +112,7 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
                     }
                 }
                 return true;
-            } else if (!getMyPet().hasArmor() && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (!getMyPet().hasArmor() && getOwner().getPlayer().isSneaking() && canEquip() && isArmor(is)) {
                 getMyPet().setArmor(is);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
@@ -159,6 +159,19 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
                 }
                 getMyPet().setBaby(false);
                 return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isArmor(org.bukkit.inventory.ItemStack item) {
+        if (item != null) {
+            switch (item.getType()) {
+                case LEATHER_HORSE_ARMOR:
+                case IRON_HORSE_ARMOR:
+                case GOLDEN_HORSE_ARMOR:
+                case DIAMOND_HORSE_ARMOR:
+                    return true;
             }
         }
         return false;

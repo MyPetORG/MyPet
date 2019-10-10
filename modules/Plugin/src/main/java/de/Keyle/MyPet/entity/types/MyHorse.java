@@ -67,6 +67,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     public void setArmor(ItemStack item) {
         if (item != null &&
+                !item.getType().name().equals("LEATHER_HORSE_ARMOR") &&
                 item.getType() != EnumSelector.find(Material.class, "IRON_BARDING", "IRON_HORSE_ARMOR") &&
                 item.getType() != EnumSelector.find(Material.class, "GOLD_BARDING", "GOLDEN_HORSE_ARMOR") &&
                 item.getType() != EnumSelector.find(Material.class, "DIAMOND_BARDING", "DIAMOND_HORSE_ARMOR")) {
