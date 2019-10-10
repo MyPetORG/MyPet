@@ -62,6 +62,10 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
     // All ----------------------------------------------------------------------
 
     public Optional<MyPet> activateMyPet(StoredMyPet storedMyPet) {
+        if (storedMyPet == null) {
+            return Optional.empty();
+        }
+        
         if (!storedMyPet.getOwner().isOnline()) {
             return Optional.empty();
         }
