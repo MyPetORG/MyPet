@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class MongoDbRepository implements Repository {
+
     private MongoClient mongo;
     private MongoDatabase db;
     private int version = 4;
@@ -496,7 +497,8 @@ public class MongoDbRepository implements Repository {
             UUID internalUUID = UUID.fromString(document.getString("internal_uuid"));
             String playerName = document.getString("name");
 
-            UUID mojangUUID = document.getString("mojang_uuid") != null ? UUID.fromString(document.getString("mojang_uuid")) : null;
+            // raw "get" fixes wrong data type
+            UUID mojangUUID = document.get("mojang_uuid") != null ? UUID.fromString("" + document.get("mojang_uuid")) : null;
             if (mojangUUID != null) {
                 petPlayer = new MyPetPlayerImpl(internalUUID, mojangUUID);
                 petPlayer.setLastKnownName(playerName);
