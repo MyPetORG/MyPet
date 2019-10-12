@@ -49,7 +49,17 @@ public class ItemStackComparator {
         if (i1.hasItemMeta() && i2.hasItemMeta()) {
             NBTTagCompound tag1 = CraftItemStack.asNMSCopy(i1).getTag();
             NBTTagCompound tag2 = CraftItemStack.asNMSCopy(i2).getTag();
-            return tag1 != null && tag1.equals(tag2);
+
+            if (tag1 != null) {
+                if (tag1.equals(tag2)) {
+                    return true;
+                } else {
+                    i1 = CraftItemStack.asBukkitCopy(CraftItemStack.asNMSCopy(i1));
+                    tag1 = CraftItemStack.asNMSCopy(i1).getTag();
+                    return tag1.equals(tag2);
+                }
+            }
+            return false;
         }
         return i1.hasItemMeta() == i2.hasItemMeta();
     }
