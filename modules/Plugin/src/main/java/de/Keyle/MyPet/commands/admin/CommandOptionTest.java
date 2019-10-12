@@ -28,6 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandOptionTest implements CommandOption {
+
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
