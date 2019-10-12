@@ -62,10 +62,10 @@ public class EntityMyBlaze extends EntityMyPet {
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.GLASS_BOTTLE));
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.BUCKET));
                     } else {
-                        if (!entityhuman.inventory.pickup(new ItemStack(Items.GLASS_BOTTLE))) {
-                            entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
+                        if (!entityhuman.inventory.pickup(new ItemStack(Items.BUCKET))) {
+                            entityhuman.drop(new ItemStack(Items.BUCKET), true);
                         }
                     }
                 }
