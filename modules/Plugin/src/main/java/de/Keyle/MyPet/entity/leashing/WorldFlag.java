@@ -51,7 +51,7 @@ public class WorldFlag implements LeashFlag {
     public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
         for (Setting setting : settings.all()) {
             if (setting.getValue().equals(entity.getWorld().getName())) {
-                return Translation.getString("Message.Command.CaptureHelper.World.Right", player);
+                return Translation.getString("Message.Command.CaptureHelper.Requirement.World.Right", player);
             }
         }
         String worlds = settings.all()
@@ -60,6 +60,6 @@ public class WorldFlag implements LeashFlag {
                 .filter(Objects::nonNull)
                 .map(World::getName)
                 .collect(Collectors.joining(", "));
-        return Util.formatText(Translation.getString("Message.Command.CaptureHelper.World.Wrong", player), worlds);
+        return Util.formatText(Translation.getString("Message.Command.CaptureHelper.Requirement.World.Wrong", player), worlds);
     }
 }
