@@ -168,12 +168,11 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
             Villager.Profession profession = Villager.Profession.values()[villagerPet.getProfession()];
             Villager.Type type = Villager.Type.values()[villagerPet.getType().ordinal()];
+            villagerEntity.setVillagerType(type);
+            villagerEntity.setProfession(profession);
+            villagerEntity.setVillagerLevel(villagerPet.getVillagerLevel());
 
             if (villagerPet.hasOriginalData()) {
-                villagerEntity.setVillagerType(type);
-                villagerEntity.setProfession(profession);
-                villagerEntity.setVillagerLevel(villagerPet.getVillagerLevel());
-
                 TagCompound villagerTag = villagerPet.getOriginalData();
 
                 EntityVillager entityVillager = ((CraftVillager) villagerEntity).getHandle();
@@ -200,6 +199,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 if (villagerTag.containsKey("Gossips")) {
                     TagList inventoryTag = villagerTag.get("Gossips");
                     NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                    //noinspection unchecked
                     ReflectionUtil.setFieldValue("bJ", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
                 }
                 if (villagerTag.containsKey("LastRestock")) {
