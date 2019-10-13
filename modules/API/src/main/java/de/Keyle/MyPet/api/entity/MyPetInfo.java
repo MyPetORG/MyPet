@@ -67,7 +67,11 @@ public abstract class MyPetInfo {
         return food.get(type);
     }
 
-    public void setFood(MyPetType type, ConfigItem foodToAdd) {
+    public void clearFood(MyPetType type) {
+        food.removeAll(type);
+    }
+
+    public void addFood(MyPetType type, ConfigItem foodToAdd) {
         for (ConfigItem configItem : food.get(type)) {
             if (configItem.compare(foodToAdd.getItem())) {
                 return;

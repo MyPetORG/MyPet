@@ -520,12 +520,13 @@ public class ConfigurationLoader {
 
             MyPetApi.getMyPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi.hp()));
             MyPetApi.getMyPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed()));
+            MyPetApi.getMyPetInfo().clearFood(petType);
             if (config.get("MyPet.Pets." + petType.name() + ".Food") instanceof ArrayList) {
                 List<String> foodList = config.getStringList("MyPet.Pets." + petType.name() + ".Food");
                 for (String foodString : foodList) {
                     ConfigItem ci = ConfigItem.createConfigItem(foodString);
                     if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
-                        MyPetApi.getMyPetInfo().setFood(petType, ci);
+                        MyPetApi.getMyPetInfo().addFood(petType, ci);
                     }
                 }
             }
