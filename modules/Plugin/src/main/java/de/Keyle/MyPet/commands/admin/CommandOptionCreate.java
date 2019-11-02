@@ -249,7 +249,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("villager", new CommandOptionCreator()
                 .add("baby")
                 .add("profession:")
-                .add("1.14", "level:")
+                //                .add("1.14", "level:")
                 .add("1.14", "type:")
                 .get());
 
@@ -522,9 +522,15 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     profession = Math.min(Math.max(0, profession), MyPetApi.getCompatUtil().isCompatible("1.14") ? 15 : 5);
                     if (petType == MyPetType.Villager) {
                         compound.getCompoundData().put("Profession", new TagInt(profession));
+                        if (!compound.getCompoundData().containsKey("VillagerLevel")) {
+                            compound.getCompoundData().put("VillagerLevel", new TagInt(1));
+                        }
                     } else if (petType == MyPetType.Zombie || petType == MyPetType.ZombieVillager) {
                         compound.getCompoundData().put("Villager", new TagByte(true));
                         compound.getCompoundData().put("Profession", new TagInt(profession));
+                        if (!compound.getCompoundData().containsKey("TradingLevel")) {
+                            compound.getCompoundData().put("TradingLevel", new TagInt(1));
+                        }
                     }
                 }
             } else if (arg.startsWith("color:")) {

@@ -36,7 +36,13 @@ public class RepositoryMyPetConverterService extends de.Keyle.MyPet.api.util.ser
 
         switch (pet.getPetType()) {
             case Villager:
+                if (info.containsKey("VillagerLevel")) {
+                    return;
+                }
             case ZombieVillager:
+                if (info.containsKey("TradingLevel")) {
+                    return;
+                }
                 if (info.containsKeyAs("Profession", TagInt.class)) {
                     int professionId = info.getAs("Profession", TagInt.class).getIntData();
                     int career = 1;
