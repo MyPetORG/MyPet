@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_8_R1.skill.skills.ranged.bukkit;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
@@ -53,6 +54,7 @@ public class CraftMyPetLargeFireball extends CraftLargeFireball implements Craft
 
     @Override
     public MyPetBukkitEntity getShootingMyPet() {
-        return getMyPetProjectile().getShooter().getBukkitEntity();
+        MyPetMinecraftEntity shooter = getMyPetProjectile().getShooter();
+        return shooter != null ? shooter.getBukkitEntity() : null;
     }
 }

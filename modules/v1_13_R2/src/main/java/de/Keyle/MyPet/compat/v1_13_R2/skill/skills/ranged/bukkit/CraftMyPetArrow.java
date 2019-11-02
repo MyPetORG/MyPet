@@ -21,13 +21,13 @@
 package de.Keyle.MyPet.compat.v1_13_R2.skill.skills.ranged.bukkit;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.server.v1_13_R2.EntityArrow;
 import org.bukkit.craftbukkit.v1_13_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftArrow;
-
 @Compat("v1_13_R2")
 public class CraftMyPetArrow extends CraftArrow implements CraftMyPetProjectile {
 
@@ -41,7 +41,8 @@ public class CraftMyPetArrow extends CraftArrow implements CraftMyPetProjectile 
 
     @Override
     public MyPetBukkitEntity getShootingMyPet() {
-        return getMyPetProjectile().getShooter().getBukkitEntity();
+        MyPetMinecraftEntity shooter = getMyPetProjectile().getShooter();
+        return shooter != null ? shooter.getBukkitEntity() : null;
     }
 
     @Override
