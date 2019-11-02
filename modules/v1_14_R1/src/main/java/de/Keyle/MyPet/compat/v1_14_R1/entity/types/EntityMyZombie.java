@@ -37,7 +37,7 @@ public class EntityMyZombie extends EntityMyPet {
 
     private static final DataWatcherObject<Boolean> BABY_WATCHER = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> TYPE_WATCHER = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.b);
-    private static final DataWatcherObject<Boolean> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> DROWN_CONVERTING = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Boolean> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyZombie.class, DataWatcherRegistry.i);
 
     public EntityMyZombie(World world, MyPet myPet) {
@@ -133,8 +133,7 @@ public class EntityMyZombie extends EntityMyPet {
         super.initDatawatcher();
         getDataWatcher().register(BABY_WATCHER, false);
         getDataWatcher().register(TYPE_WATCHER, 0);
-        getDataWatcher().register(UNUSED_WATCHER_1, false);
-        getDataWatcher().register(UNUSED_WATCHER_2, false);
+        getDataWatcher().register(DROWN_CONVERTING, false);
     }
 
     @Override
