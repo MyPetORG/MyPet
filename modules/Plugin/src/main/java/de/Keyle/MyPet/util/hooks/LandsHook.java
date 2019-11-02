@@ -55,11 +55,11 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
             return true;
         }
         try {
-            LandChunk landChunk = landsAddon.getLandChunk(defender.getLocation().getChunk());
+            LandChunk landChunk = landsAddon.getLandChunk(defender.getLocation());
             if (landChunk == null) {
                 return true;
             }
-            return landChunk.canAction(attacker.getUniqueId().toString(), LandsAction.ATTACK_ANIMAL);
+            return landChunk.canAction(attacker.getUniqueId(), LandsAction.ATTACK_ANIMAL);
         } catch (Throwable ignored) {
         }
         return true;
@@ -68,11 +68,11 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            LandChunk landChunk = landsAddon.getLandChunk(defender.getLocation().getChunk());
+            LandChunk landChunk = landsAddon.getLandChunk(defender.getLocation());
             if (landChunk == null) {
                 return true;
             }
-            return landChunk.canAction(attacker.getUniqueId().toString(), LandsAction.ATTACK_PLAYER);
+            return landChunk.canAction(attacker.getUniqueId(), LandsAction.ATTACK_PLAYER);
         } catch (Throwable ignored) {
         }
         return true;
