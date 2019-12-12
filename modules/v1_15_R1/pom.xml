@@ -22,10 +22,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mypet-skills</artifactId>
+    <artifactId>mypet-compat-v1_15_R1</artifactId>
     <version>1</version>
     <packaging>jar</packaging>
-    <name>MyPet-Skills</name>
+    <name>MyPet-v1_15_R1</name>
 
     <parent>
         <groupId>de.keyle</groupId>
@@ -47,8 +47,20 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.15-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-api</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-skills</artifactId>
             <version>1</version>
             <exclusions>
                 <exclusion>
