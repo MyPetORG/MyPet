@@ -639,7 +639,7 @@ public class MongoDbRepository implements Repository {
     @SuppressWarnings("unchecked")
     private void setPlayerData(MyPetPlayer player, Document playerDocument) {
         playerDocument.append("internal_uuid", player.getInternalUUID().toString());
-        playerDocument.append("mojang_uuid", player.getMojangUUID().toString());
+        playerDocument.append("mojang_uuid", player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
         playerDocument.append("name", player.getName());
         playerDocument.append("last_update", System.currentTimeMillis());
 
