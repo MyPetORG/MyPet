@@ -135,6 +135,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case WANDERING_TRADER:
                 convertWanderingTrader((WanderingTrader) entity, properties);
                 break;
+            case BEE:
+                convertBee((Bee) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -287,6 +290,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 }
                 MyPetApi.getPlatformHelper().applyTagToEntity(villagerTag, normalEntity);
             }
+        } else if (myPet instanceof MyBee) {
+            ((Bee) normalEntity).setHasNectar(((MyBee) myPet).hasNectar());
+            ((Bee) normalEntity).setHasStung(((MyBee) myPet).hasStung());
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -524,5 +530,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public void convertPanda(Panda panda, TagCompound properties) {
         properties.getCompoundData().put("MainGene", new TagInt(panda.getMainGene().ordinal()));
         properties.getCompoundData().put("HiddenGene", new TagInt(panda.getHiddenGene().ordinal()));
+    }
+
+    public void convertBee(Bee bee, TagCompound properties) {
+        properties.getCompoundData().put("HasStung", new TagByte(bee.hasStung()));
+        properties.getCompoundData().put("HasNectar", new TagByte(bee.hasNectar()));
     }
 }

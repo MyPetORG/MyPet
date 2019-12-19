@@ -199,6 +199,11 @@ public class Configuration {
             public static boolean CAN_GLIDE = true;
         }
 
+        public static class Bee {
+
+            public static boolean CAN_GLIDE = true;
+        }
+
         public static class Blaze {
 
             public static boolean CAN_GLIDE = true;

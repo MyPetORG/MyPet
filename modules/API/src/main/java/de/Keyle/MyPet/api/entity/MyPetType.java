@@ -33,6 +33,9 @@ public enum MyPetType {
             .v("1.7.10", 65)
             .v("1.13", "bat")
             .search()),
+    Bee("BEE", "1.15", MyBee.class, new Compat<>()
+            .v("1.13", "bee")
+            .search()),
     Blaze("BLAZE", "1.7.10", MyBlaze.class, new Compat<>()
             .v("1.7.10", 61)
             .v("1.13", "blaze")

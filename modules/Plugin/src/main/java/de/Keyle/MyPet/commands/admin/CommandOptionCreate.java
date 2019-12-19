@@ -61,6 +61,13 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         commonTypeOptionList.add("skilltree:");
         commonTypeOptionList.add("name:");
 
+        petTypeOptionMap.put("bee", new CommandOptionCreator()
+                .add("baby")
+                .add("angry")
+                .add("has-stung")
+                .add("has-nectar")
+                .get());
+
         petTypeOptionMap.put("blaze", new CommandOptionCreator()
                 .add("fire")
                 .get());
@@ -473,6 +480,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Glowing", new TagByte(true));
             } else if (arg.equalsIgnoreCase("rainbow")) {
                 compound.getCompoundData().put("Rainbow", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("has-stung")) {
+                compound.getCompoundData().put("HasStung", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("has-nectar")) {
+                compound.getCompoundData().put("HasNectar", new TagByte(true));
             } else if (arg.startsWith("size:")) {
                 String size = arg.replace("size:", "");
                 if (Util.isInt(size)) {

@@ -29,6 +29,7 @@ import java.lang.reflect.Constructor;
 
 public enum MyPetClass {
     Bat(MyBat.class),
+    Bee(MyBee.class),
     Blaze(MyBlaze.class),
     Cat(MyCat.class),
     CaveSpider(MyCaveSpider.class),

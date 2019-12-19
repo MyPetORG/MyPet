@@ -129,6 +129,7 @@ permissions:
     description: Player can leash all MyPet-Types.
     children:
       MyPet.leash.Bat: true
+      MyPet.leash.Bee: true
       MyPet.leash.Blaze: true
       MyPet.leash.Cat: true
       MyPet.leash.CaveSpider: true
@@ -195,6 +196,7 @@ permissions:
     description: Player offer all MyPet-Types.
     children:
       MyPet.command.trade.offer.Bat: true
+      MyPet.command.trade.offer.Bee: true
       MyPet.command.trade.offer.Blaze: true
       MyPet.command.trade.offer.Cat: true
       MyPet.command.trade.offer.CaveSpider: true
@@ -260,6 +262,7 @@ permissions:
     description: Player receive all MyPet-Types.
     children:
       MyPet.command.trade.receive.Bat: true
+      MyPet.command.trade.receive.Bee: true
       MyPet.command.trade.receive.Blaze: true
       MyPet.command.trade.receive.Cat: true
       MyPet.command.trade.receive.CaveSpider: true
