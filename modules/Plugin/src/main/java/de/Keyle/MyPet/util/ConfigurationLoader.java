@@ -240,18 +240,18 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Bat.CanGlide", MyPet.Bat.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Bee.CanGlide", MyPet.Bee.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Blaze.CanGlide", MyPet.Blaze.CAN_GLIDE);
-        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
+        config.addDefault("MyPet.Pets.Ghast.CanGlide", MyPet.Ghast.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Chicken.CanGlide", MyPet.Chicken.CAN_GLIDE);
+        config.addDefault("MyPet.Pets.EnderDragon.CanGlide", MyPet.EnderDragon.CAN_GLIDE);
+        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
         if (MyPetType.Donkey.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
         }
-        config.addDefault("MyPet.Pets.EnderDragon.CanGlide", MyPet.EnderDragon.CAN_GLIDE);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MyPet.Snowman.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Ghast.CanGlide", MyPet.Ghast.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", "bread");
         if (MyPetType.Llama.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Llama.GrowUpItem", "experience_bottle");
@@ -474,6 +474,15 @@ public class ConfigurationLoader {
         MyPet.Snowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
         MyPet.Bee.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bee.CanGlide", true);
+        MyPet.Bat.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bat.CanGlide", true);
+        MyPet.Blaze.CAN_GLIDE = config.getBoolean("MyPet.Pets.Blaze.CanGlide", true);
+        MyPet.Ghast.CAN_GLIDE = config.getBoolean("MyPet.Pets.Ghast.CanGlide", true);
+        MyPet.Chicken.CAN_GLIDE = config.getBoolean("MyPet.Pets.Chicken.CanGlide", true);
+        MyPet.EnderDragon.CAN_GLIDE = config.getBoolean("MyPet.Pets.EnderDragon.CanGlide", true);
+        MyPet.Wither.CAN_GLIDE = config.getBoolean("MyPet.Pets.Wither.CanGlide", true);
+        MyPet.Vex.CAN_GLIDE = config.getBoolean("MyPet.Pets.Vex.CanGlide", true);
+        MyPet.Parrot.CAN_GLIDE = config.getBoolean("MyPet.Pets.Parrot.CanGlide", true);
+        MyPet.Phantom.CAN_GLIDE = config.getBoolean("MyPet.Pets.Phantom.CanGlide", true);
     }
 
     public static void loadCompatConfiguration() {
