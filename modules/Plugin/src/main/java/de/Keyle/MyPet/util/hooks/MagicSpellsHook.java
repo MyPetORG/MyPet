@@ -20,20 +20,29 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import com.nisovin.magicspells.events.SpellEvent;
 import com.nisovin.magicspells.events.SpellTargetEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @PluginHookName("MagicSpells")
 public class MagicSpellsHook implements PluginHook {
 
+    Method getCasterMethod;
+
     @Override
     public boolean onEnable() {
+        this.getCasterMethod = ReflectionUtil.getMethod(SpellEvent.class, "getCaster");
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
         return true;
     }
@@ -46,10 +55,15 @@ public class MagicSpellsHook implements PluginHook {
     @EventHandler
     public void onPlayerExpGain(SpellTargetEvent event) {
         if (event.getTarget() instanceof MyPetBukkitEntity) {
-            if (((MyPetBukkitEntity) event.getTarget()).getOwner().equals(event.getCaster())) {
-                event.setCancelled(true);
-            } else if (!MyPetApi.getHookHelper().canHurt(event.getCaster(), ((MyPetBukkitEntity) event.getTarget()).getOwner().getPlayer())) {
-                event.setCancelled(true);
+            try {
+                LivingEntity caster = (LivingEntity) this.getCasterMethod.invoke(event);
+                if (((MyPetBukkitEntity) event.getTarget()).getOwner().equals(caster)) {
+                    event.setCancelled(true);
+                } else if (!MyPetApi.getHookHelper().canHurt(event.getCaster(), ((MyPetBukkitEntity) event.getTarget()).getOwner().getPlayer())) {
+                    event.setCancelled(true);
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
         }
     }
