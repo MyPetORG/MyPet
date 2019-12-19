@@ -180,42 +180,46 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
                 EntityVillager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 
-                if (villagerTag.containsKey("Offers")) {
-                    TagCompound offersTag = villagerTag.get("Offers");
-                    NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
-                    entityVillager.b(new MerchantRecipeList(vanillaNBT));
-                }
-                if (villagerTag.containsKey("Inventory")) {
-                    TagList inventoryTag = villagerTag.get("Inventory");
-                    NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                    for (int i = 0; i < vanillaNBT.size(); ++i) {
-                        net.minecraft.server.v1_15_R1.ItemStack itemstack = net.minecraft.server.v1_15_R1.ItemStack.a(vanillaNBT.getCompound(i));
-                        if (!itemstack.isEmpty()) {
-                            entityVillager.getInventory().a(itemstack);
+                try {
+                    if (villagerTag.containsKey("Offers")) {
+                        TagCompound offersTag = villagerTag.get("Offers");
+                        NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
+                        entityVillager.b(new MerchantRecipeList(vanillaNBT));
+                    }
+                    if (villagerTag.containsKey("Inventory")) {
+                        TagList inventoryTag = villagerTag.get("Inventory");
+                        NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                        for (int i = 0; i < vanillaNBT.size(); ++i) {
+                            net.minecraft.server.v1_15_R1.ItemStack itemstack = net.minecraft.server.v1_15_R1.ItemStack.a(vanillaNBT.getCompound(i));
+                            if (!itemstack.isEmpty()) {
+                                entityVillager.getInventory().a(itemstack);
+                            }
                         }
                     }
-                }
-                if (villagerTag.containsKey("FoodLevel")) {
-                    byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
-                    ReflectionUtil.setFieldValue("bF", entityVillager, foodLevel);
-                }
-                if (villagerTag.containsKey("Gossips")) {
-                    TagList inventoryTag = villagerTag.get("Gossips");
-                    NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                    //noinspection unchecked
-                    ReflectionUtil.setFieldValue("bG", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
-                }
-                if (villagerTag.containsKey("LastRestock")) {
-                    long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
-                    ReflectionUtil.setFieldValue("bK", entityVillager, lastRestock);
-                }
-                if (villagerTag.containsKey("LastGossipDecay")) {
-                    long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
-                    ReflectionUtil.setFieldValue("bI", entityVillager, lastGossipDecay);
-                }
-                if (villagerTag.containsKey("RestocksToday")) {
-                    int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
-                    ReflectionUtil.setFieldValue("bL", entityVillager, restocksToday);
+                    if (villagerTag.containsKey("FoodLevel")) {
+                        byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
+                        ReflectionUtil.setFieldValue("bF", entityVillager, foodLevel);
+                    }
+                    if (villagerTag.containsKey("Gossips")) {
+                        TagList inventoryTag = villagerTag.get("Gossips");
+                        NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                        //noinspection unchecked
+                        ReflectionUtil.setFieldValue("bG", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
+                    }
+                    if (villagerTag.containsKey("LastRestock")) {
+                        long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
+                        ReflectionUtil.setFieldValue("bK", entityVillager, lastRestock);
+                    }
+                    if (villagerTag.containsKey("LastGossipDecay")) {
+                        long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
+                        ReflectionUtil.setFieldValue("bI", entityVillager, lastGossipDecay);
+                    }
+                    if (villagerTag.containsKey("RestocksToday")) {
+                        int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
+                        ReflectionUtil.setFieldValue("bL", entityVillager, restocksToday);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 if (villagerTag.containsKey("Xp")) {
                     int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
