@@ -197,25 +197,25 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 }
                 if (villagerTag.containsKey("FoodLevel")) {
                     byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
-                    ReflectionUtil.setFieldValue("bI", entityVillager, foodLevel);
+                    ReflectionUtil.setFieldValue("bF", entityVillager, foodLevel);
                 }
                 if (villagerTag.containsKey("Gossips")) {
                     TagList inventoryTag = villagerTag.get("Gossips");
                     NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                     //noinspection unchecked
-                    ReflectionUtil.setFieldValue("bJ", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
+                    ReflectionUtil.setFieldValue("bG", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
                 }
                 if (villagerTag.containsKey("LastRestock")) {
                     long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
-                    ReflectionUtil.setFieldValue("bN", entityVillager, lastRestock);
+                    ReflectionUtil.setFieldValue("bK", entityVillager, lastRestock);
                 }
                 if (villagerTag.containsKey("LastGossipDecay")) {
                     long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
-                    ReflectionUtil.setFieldValue("bL", entityVillager, lastGossipDecay);
+                    ReflectionUtil.setFieldValue("bI", entityVillager, lastGossipDecay);
                 }
                 if (villagerTag.containsKey("RestocksToday")) {
                     int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
-                    ReflectionUtil.setFieldValue("bO", entityVillager, restocksToday);
+                    ReflectionUtil.setFieldValue("bL", entityVillager, restocksToday);
                 }
                 if (villagerTag.containsKey("Xp")) {
                     int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
