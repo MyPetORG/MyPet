@@ -6611,5 +6611,33 @@
   {
     "id": "campfire",
     "introduced": "1.14"
+  },
+  {
+    "id": "bee_spawn_egg",
+    "introduced": "1.15"
+  },
+  {
+    "id": "beehive",
+    "introduced": "1.15"
+  },
+  {
+    "id": "honeycomb",
+    "introduced": "1.15"
+  },
+  {
+    "id": "honey_bottle",
+    "introduced": "1.15"
+  },
+  {
+    "id": "honey_block",
+    "introduced": "1.15"
+  },
+  {
+    "id": "honeycomb_block",
+    "introduced": "1.15"
+  },
+  {
+    "id": "bee_nest",
+    "introduced": "1.15"
   }
 ]
