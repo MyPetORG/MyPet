@@ -78,6 +78,10 @@
             <id>md5-repo</id>
             <url>http://repo.md-5.net/content/repositories/public</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -418,6 +422,14 @@
             <groupId>me.glaremasters</groupId>
             <artifactId>Guilds</artifactId>
             <version>3.3</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- https://www.spigotmc.org/resources/53313/ -->
+            <groupId>com.github.Angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>4.3.3.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

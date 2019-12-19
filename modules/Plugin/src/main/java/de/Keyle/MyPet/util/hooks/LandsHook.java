@@ -24,9 +24,9 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import me.angeschossen.lands.api.enums.LandsAction;
-import me.angeschossen.lands.api.landsaddons.LandsAddon;
-import me.angeschossen.lands.api.objects.LandChunk;
+import me.angeschossen.lands.api.integration.LandsIntegration;
+import me.angeschossen.lands.api.land.LandChunk;
+import me.angeschossen.lands.api.role.enums.RoleSetting;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -34,12 +34,12 @@ import org.bukkit.entity.Player;
 @PluginHookName("Lands")
 public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
-    private LandsAddon landsAddon;
+    private LandsIntegration landsAddon;
     private String key;
 
     @Override
     public boolean onEnable() {
-        landsAddon = new LandsAddon(MyPetApi.getPlugin(), false);
+        landsAddon = new LandsIntegration(MyPetApi.getPlugin(), false);
         key = landsAddon.initialize();
         return key != null;
     }
@@ -59,7 +59,7 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
             if (landChunk == null) {
                 return true;
             }
-            return landChunk.canAction(attacker.getUniqueId(), LandsAction.ATTACK_ANIMAL);
+            return landChunk.canAction(attacker.getUniqueId(), RoleSetting.ATTACK_ANIMAL);
         } catch (Throwable ignored) {
         }
         return true;
@@ -72,7 +72,7 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
             if (landChunk == null) {
                 return true;
             }
-            return landChunk.canAction(attacker.getUniqueId(), LandsAction.ATTACK_PLAYER);
+            return landChunk.canAction(attacker.getUniqueId(), RoleSetting.ATTACK_PLAYER);
         } catch (Throwable ignored) {
         }
         return true;
