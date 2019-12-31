@@ -42,6 +42,7 @@ import java.util.Map;
 
 @PluginHookName("PlaceholderAPI")
 public class PlaceholderApiHook implements PluginHook {
+
     Map<String, PlaceHolder> placeHolders = new HashMap<>();
     PlaceholderExpansion myPetExpansion;
 
@@ -139,6 +140,13 @@ public class PlaceholderApiHook implements PluginHook {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getMaxHealth();
+            }
+        });
+
+        placeHolders.put("respawn_time", new PlaceHolder<MyPet>(MyPet.class) {
+            @Override
+            public String getValue(MyPet pet) {
+                return "" + pet.getRespawnTime();
             }
         });
 
@@ -332,6 +340,7 @@ public class PlaceholderApiHook implements PluginHook {
     }
 
     abstract class PlaceHolder<T> {
+
         Class<T> clazz;
 
         public PlaceHolder(Class<T> clazz) {
