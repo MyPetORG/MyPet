@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -263,6 +263,12 @@ public class PlayerListener implements Listener {
                 return;
             }
             if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
+                if (event.getCause() == EntityDamageEvent.DamageCause.FALL &&
+                        victim.isInsideVehicle() &&
+                        victim.getVehicle() instanceof MyPetBukkitEntity) {
+                    event.setCancelled(true);
+                    return;
+                }
                 MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
                 if (myPetPlayerDamagee.hasMyPet()) {
                     MyPet myPet = myPetPlayerDamagee.getMyPet();
