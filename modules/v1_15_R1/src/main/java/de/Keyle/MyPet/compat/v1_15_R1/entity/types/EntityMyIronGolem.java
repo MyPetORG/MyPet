@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,12 +20,14 @@
 
 package de.Keyle.MyPet.compat.v1_15_R1.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
 import de.Keyle.MyPet.compat.v1_15_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_15_R1.*;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 1.4F, height = 2.7F)
@@ -79,6 +81,18 @@ public class EntityMyIronGolem extends EntityMyPet {
             return true;
         }
 
+        if (itemStack.getItem() == Items.IRON_INGOT) {
+            Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+                if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                    this.datawatcher.set(HEALTH, this.getHealth() + 0.0001F);
+                }
+            }, 5L);
+            Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+                if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                    this.datawatcher.set(HEALTH, this.getHealth());
+                }
+            }, 10L);
+        }
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Blocks.POPPY.getItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
