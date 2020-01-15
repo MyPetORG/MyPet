@@ -1,7 +1,7 @@
 <!--
   ~ This file is part of MyPet
   ~
-  ~ Copyright © 2011-2019 Keyle
+  ~ Copyright © 2011-2020 Keyle
   ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
   ~ MyPet is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 
     <groupId>de.keyle</groupId>
     <artifactId>mypet</artifactId>
-    <version>3.9-SNAPSHOT</version>
+    <version>3.9</version>
     <packaging>jar</packaging>
     <name>MyPet</name>
     <url>https://www.spigotmc.org/resources/mypet.12725/</url>
