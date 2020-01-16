@@ -1,7 +1,7 @@
 <!--
   ~ This file is part of MyPet
   ~
-  ~ Copyright © 2011-2019 Keyle
+  ~ Copyright © 2011-2020 Keyle
   ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
   ~ MyPet is free software: you can redistribute it and/or modify
@@ -413,7 +413,7 @@
             <!-- https://www.spigotmc.org/resources/stackmob-enhance-your-servers-performance.29999/ -->
             <groupId>uk.antiperson</groupId>
             <artifactId>StackMob</artifactId>
-            <version>4.0.0</version>
+            <version>5.0.2</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

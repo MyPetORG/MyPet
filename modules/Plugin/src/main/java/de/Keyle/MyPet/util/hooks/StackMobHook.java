@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,9 +25,8 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import org.bukkit.entity.LivingEntity;
 import uk.antiperson.stackmob.StackMob;
-import uk.antiperson.stackmob.api.EntityManager;
-import uk.antiperson.stackmob.api.IStackMob;
-import uk.antiperson.stackmob.api.StackedEntity;
+import uk.antiperson.stackmob.entity.EntityManager;
+import uk.antiperson.stackmob.entity.StackEntity;
 
 @PluginHookName("StackMob")
 public class StackMobHook implements LeashEntityHook {
@@ -37,18 +36,7 @@ public class StackMobHook implements LeashEntityHook {
     @Override
     public boolean onEnable() {
         StackMob sm = (StackMob) MyPetApi.getPluginHookManager().getPluginInstance("StackMob").get();
-        try {
-            entityManager = EntityManager.class.getConstructor(IStackMob.class).newInstance(sm);
-        } catch (Throwable t) {
-            try {
-                //noinspection JavaReflectionMemberAccess
-                entityManager = EntityManager.class.getConstructor(StackMob.class).newInstance(sm);
-            } catch (Throwable t2) {
-                t2.printStackTrace();
-                return false;
-            }
-        }
-
+        this.entityManager = new EntityManager(sm);
         return true;
     }
 
@@ -57,7 +45,7 @@ public class StackMobHook implements LeashEntityHook {
         boolean unstacked = false;
 
         if (entityManager.isStackedEntity(leashedEntity)) {
-            StackedEntity stackedEntity = entityManager.getStackedEntity(leashedEntity);
+            StackEntity stackedEntity = entityManager.getStackEntity(leashedEntity);
             int currentSize = stackedEntity.getSize();
             if (currentSize > 1) {
                 stackedEntity.setSize(currentSize - 1);
