@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -121,6 +121,7 @@ public class FollowOwner implements AIGoal {
                             if (controlPathfinderGoal.moveTo == null) {
                                 if (!petEntity.hasTarget()) {
                                     if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
+                                        this.petEntity.fallDistance = 0;
                                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                                         this.setPathTimer = 0;
                                         return;
