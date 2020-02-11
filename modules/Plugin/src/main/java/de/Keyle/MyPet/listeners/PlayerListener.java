@@ -310,9 +310,6 @@ public class PlayerListener implements Listener {
         }
 
         final WorldGroup toGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
-        if (toGroup.isDisabled()) {
-            return;
-        }
 
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
@@ -358,6 +355,11 @@ public class PlayerListener implements Listener {
 
             if (fromGroup != toGroup) {
                 final boolean hadMyPetInFromWorld = MyPetApi.getMyPetManager().deactivateMyPet(myPetPlayer, true);
+
+                if (toGroup.isDisabled()) {
+                    return;
+                }
+
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup)) {
                     final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
                     MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<List<StoredMyPet>>() {
