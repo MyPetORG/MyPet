@@ -429,7 +429,7 @@
             <!-- https://www.spigotmc.org/resources/53313/ -->
             <groupId>com.github.Angeschossen</groupId>
             <artifactId>LandsAPI</artifactId>
-            <version>4.3.3.0</version>
+            <version>4.5.0.7</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

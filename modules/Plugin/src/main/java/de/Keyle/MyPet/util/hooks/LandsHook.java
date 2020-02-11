@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import me.angeschossen.lands.api.integration.LandsIntegration;
-import me.angeschossen.lands.api.land.LandChunk;
+import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.role.enums.RoleSetting;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
@@ -55,11 +55,11 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
             return true;
         }
         try {
-            LandChunk landChunk = landsAddon.getLandChunk(defender.getLocation());
-            if (landChunk == null) {
+            Land land = landsAddon.getLand(defender.getLocation());
+            if (land == null) {
                 return true;
             }
-            return landChunk.canAction(attacker.getUniqueId(), RoleSetting.ATTACK_ANIMAL);
+            return land.canSetting(attacker.getUniqueId(), RoleSetting.ATTACK_ANIMAL);
         } catch (Throwable ignored) {
         }
         return true;
@@ -68,11 +68,11 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            LandChunk landChunk = landsAddon.getLandChunk(defender.getLocation());
-            if (landChunk == null) {
+            Land land = landsAddon.getLand(defender.getLocation());
+            if (land == null) {
                 return true;
             }
-            return landChunk.canAction(attacker.getUniqueId(), RoleSetting.ATTACK_PLAYER);
+            return land.canSetting(attacker.getUniqueId(), RoleSetting.ATTACK_PLAYER);
         } catch (Throwable ignored) {
         }
         return true;
