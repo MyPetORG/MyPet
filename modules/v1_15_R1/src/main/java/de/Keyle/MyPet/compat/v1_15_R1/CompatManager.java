@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,17 +23,24 @@ package de.Keyle.MyPet.compat.v1_15_R1;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_15_R1.services.EggIconService;
 import de.Keyle.MyPet.compat.v1_15_R1.services.EntityConverterService;
 import de.Keyle.MyPet.compat.v1_15_R1.services.RepositoryMyPetConverterService;
+import net.minecraft.server.v1_15_R1.EntityLiving;
+import net.minecraft.server.v1_15_R1.EnumHand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 
+import java.lang.reflect.Method;
+
 @Compat("v1_15_R1")
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
+
+    public static Method ENTITY_LIVING_broadcastItemBreak = ReflectionUtil.getMethod(EntityLiving.class, "d", EnumHand.class);
 
     public void init() {
         MyPetApi.getServiceManager().registerService(EggIconService.class);

@@ -30,6 +30,10 @@ import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 
+import java.lang.reflect.InvocationTargetException;
+
+import static de.Keyle.MyPet.compat.v1_15_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
+
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
 
@@ -112,7 +116,18 @@ public class EntityMyIronGolem extends EntityMyPet {
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setFlower(null);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
+                    try {
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> {
+                            try {
+                                ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+                            } catch (IllegalAccessException | InvocationTargetException ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                    }
                 }
 
                 return true;

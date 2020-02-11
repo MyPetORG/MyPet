@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -341,9 +341,11 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     public void clear() {
     }
 
-    @Override
     public boolean isNotEmpty() {
-        return items.size() == 0;
+        return !this.isEmpty();
     }
 
+    public boolean isEmpty() {
+        return items.size() == 0;
+    }
 }

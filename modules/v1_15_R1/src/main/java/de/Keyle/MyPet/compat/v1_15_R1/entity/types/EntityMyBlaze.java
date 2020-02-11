@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -26,6 +26,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
 import de.Keyle.MyPet.compat.v1_15_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_15_R1.*;
+
+import java.lang.reflect.InvocationTargetException;
+
+import static de.Keyle.MyPet.compat.v1_15_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
@@ -74,7 +78,18 @@ public class EntityMyBlaze extends EntityMyPet {
                 getMyPet().setOnFire(true);
                 makeSound("item.flintandsteel.use", 1.0F, 1.0F);
                 if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
-                    itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.d(enumhand));
+                    try {
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                        itemStack.damage(1, entityhuman, (entityhuman1) -> {
+                            try {
+                                ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+                            } catch (IllegalAccessException | InvocationTargetException ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                    }
                 }
                 return true;
             }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -203,7 +203,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     if (villagerTag.containsKey("Gossips")) {
                         TagList inventoryTag = villagerTag.get("Gossips");
                         NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                        //noinspection unchecked
+                        //noinspection unchecked,rawtypes
                         ReflectionUtil.setFieldValue("bG", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
                     }
                     if (villagerTag.containsKey("LastRestock")) {
