@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -530,6 +530,10 @@ public class BeaconImpl implements Beacon {
             for (Player player : myPetLocation.getWorld().getPlayers()) {
                 if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), myPetLocation) > range) {
                     continue;
+                } else if (player.getGameMode().name().equals("SPECTATOR")) {
+                    continue;
+                } else if (MyPetApi.getHookHelper().isVanished(player)) {
+                    continue;
                 }
 
                 switch (receiver) {
@@ -540,14 +544,18 @@ public class BeaconImpl implements Beacon {
                             for (PotionEffect effect : potionEffects) {
                                 player.addPotionEffect(effect, true);
                             }
-                            MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                            if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                                MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                            }
                             break targetLoop;
                         }
                     case Everyone:
                         for (PotionEffect effect : potionEffects) {
                             player.addPotionEffect(effect, true);
                         }
-                        MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                        if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                            MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                        }
                         break;
                     case Party:
                         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && members != null) {
@@ -555,7 +563,9 @@ public class BeaconImpl implements Beacon {
                                 for (PotionEffect effect : potionEffects) {
                                     player.addPotionEffect(effect, true);
                                 }
-                                MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                                if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                                    MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                                }
                             }
                             break;
                         } else {

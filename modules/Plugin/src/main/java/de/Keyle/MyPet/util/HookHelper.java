@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;
 
@@ -132,6 +133,24 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean isVanished(Player player) {
+        // commonly shared method of vanish plugins to mark a player as vanished
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            if (meta.asBoolean()) {
+                return true;
+            }
+        }
+        // allow hooks to vanish players too
+        List<VanishedHook> vanishedHooks = MyPetApi.getPluginHookManager().getHooks(VanishedHook.class);
+        for (VanishedHook hook : vanishedHooks) {
+            if (hook.isVanished(player)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public EconomyHook getEconomy() {
