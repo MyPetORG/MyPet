@@ -1,0 +1,59 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java#apache-maven-with-a-settings-path
+
+name: MyPet - Plugin
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
+        
+    - name: set build number
+      run: echo "::set-env BUILD_NUMBER=expr $GITHUB_RUN_ID + 1534"
+        
+    - name: set commit hash
+      run: echo "::set-env GIT_COMMIT=$GITHUB_SHA"
+
+    - name: Build with Maven
+      run: mvn package
+      
+    - name: Generate settings.xml
+      uses: whelk-io/maven-settings-xml-action@v4
+      with:
+        servers: ${{ secrets.MAVEN_DEPLOY_SERVERS }}
+
+    - name: Publish to Nexus
+      run: mvn deploy
+    
+    - name: Operations
+      uses: alinz/ssh-scp-action@master
+      with:
+        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        host: ${{ secrets.DEPLOY_SSH_HOST }}
+        port: 22
+        user: ${{ secrets.DEPLOY_SSH_USER }}
+        # runs this on remove server
+        ssh_before: |
+          rm ~/GITHUB_BUILDS/*
+
+        # then uploads these 2 files
+        scp: |
+          target/MyPet-*.jar ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}:~/GITHUB_BUILDS/
+
+        # then run these commands
+        #ssh_after: |
+        #  /var/www/mypet/panel/artisan build:publish MyPet $BUILD_NUMBER ~/GITHUB_BUILDS
