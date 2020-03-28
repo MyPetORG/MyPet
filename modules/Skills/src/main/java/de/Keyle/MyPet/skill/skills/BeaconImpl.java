@@ -68,17 +68,20 @@ public class BeaconImpl implements Beacon {
         this.myPet = myPet;
         hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
 
-        disabledMeta.setOwner("NeverUsed0000001");
-        disabledMeta.setTexture("http://textures.minecraft.net/texture/de9b8aae7f9cc76d625ccb8abc686f30d38f9e6c42533098b9ad577f91c333c");
-        // globe
-        everyoneMeta.setOwner("NeverUsed0000002");
-        everyoneMeta.setTexture("http://textures.minecraft.net/texture/b1dd4fe4a429abd665dfdb3e21321d6efa6a6b5e7b956db9c5d59c9efab25");
-        // beachball
-        partyMeta.setOwner("NeverUsed0000003");
-        partyMeta.setTexture("http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
-        // owner skin
-        ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD")).getItemMeta();
-        ownerMeta.setOwner(myPet.getOwner().getName());
+        if (!Configuration.Skilltree.Skill.Beacon.DISABLE_HEAD_TEXTURE) {
+            // stone
+            disabledMeta.setOwner("NeverUsed0000001");
+            disabledMeta.setTexture("http://textures.minecraft.net/texture/de9b8aae7f9cc76d625ccb8abc686f30d38f9e6c42533098b9ad577f91c333c");
+            // globe
+            everyoneMeta.setOwner("NeverUsed0000002");
+            everyoneMeta.setTexture("http://textures.minecraft.net/texture/b1dd4fe4a429abd665dfdb3e21321d6efa6a6b5e7b956db9c5d59c9efab25");
+            // beachball
+            partyMeta.setOwner("NeverUsed0000003");
+            partyMeta.setTexture("http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
+            // owner skin
+            ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD")).getItemMeta();
+            ownerMeta.setOwner(myPet.getOwner().getName());
+        }
 
         for (Buff buff : Buff.values()) {
             UpgradeComputer upgradeComputer;

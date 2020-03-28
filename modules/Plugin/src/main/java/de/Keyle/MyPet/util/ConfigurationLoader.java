@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -152,6 +152,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Skill.Backpack.Creative", Skilltree.Skill.Backpack.OPEN_IN_CREATIVE);
         config.addDefault("MyPet.Skill.Backpack.DropWhenOwnerDies", Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES);
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME);
+        config.addDefault("MyPet.Skill.Beacon.Disable-Head-Textures", Skilltree.Skill.Beacon.DISABLE_HEAD_TEXTURE);
         config.addDefault("MyPet.Skill.Beacon.Party-Support", Skilltree.Skill.Beacon.PARTY_SUPPORT);
         config.addDefault("MyPet.Skill.Ride.Item", "lead");
         config.addDefault("MyPet.Skill.Ride.HungerPerMeter", Skilltree.Skill.Ride.HUNGER_PER_METER);
@@ -318,6 +319,7 @@ public class ConfigurationLoader {
 
         Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Skilltree.Skill.Beacon.PARTY_SUPPORT = config.getBoolean("MyPet.Skill.Beacon.Party-Support", true);
+        Skilltree.Skill.Beacon.DISABLE_HEAD_TEXTURE = config.getBoolean("MyPet.Skill.Beacon.Disable-Head-Textures", false);
         Skilltree.Skill.Backpack.OPEN_IN_CREATIVE = config.getBoolean("MyPet.Skill.Backpack.Creative", true);
         Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Backpack.DropWhenOwnerDies", false);
         Skilltree.Skill.Ride.HUNGER_PER_METER = config.getDouble("MyPet.Skill.Ride.HungerPerMeter", 0.01);

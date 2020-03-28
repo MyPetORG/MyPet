@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -182,6 +182,7 @@ public class Configuration {
 
                 public static int HUNGER_DECREASE_TIME = 100;
                 public static boolean PARTY_SUPPORT = true;
+                public static boolean DISABLE_HEAD_TEXTURE = false;
             }
 
             public static class Backpack {
