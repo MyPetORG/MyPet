@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
+import java.util.zip.ZipException;
 
 public class MySqlRepository implements Repository {
 
@@ -454,8 +455,16 @@ public class MySqlRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
+                try {
+                    pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
+                } catch (ZipException exception) {
+                    MyPetApi.getMyPetLogger().warning("Pet skills of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                }
+                try {
+                    pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
+                } catch (ZipException exception) {
+                    MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                }
 
                 List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
                 for (RepositoryMyPetConverterService converter : converters) {
@@ -815,17 +824,25 @@ public class MySqlRepository implements Repository {
                 petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
                 petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
-                petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBlob("extended_info").getBinaryStream(), true));
+                try {
+                    petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBlob("extended_info").getBinaryStream(), true));
+                } catch (ZipException exception) {
+                    MyPetApi.getMyPetLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
+                }
 
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 int column = resultSet.findColumn("multi_world");
 
                 switch (metaData.getColumnTypeName(column)) {
                     case "BLOB":
-                        TagCompound worldGroups = TagStream.readTag(resultSet.getBlob(column).getBinaryStream(), true);
-                        for (String worldGroupName : worldGroups.getCompoundData().keySet()) {
-                            String petUUID = worldGroups.getAs(worldGroupName, TagString.class).getStringData();
-                            petPlayer.setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
+                        try {
+                            TagCompound worldGroups = TagStream.readTag(resultSet.getBlob(column).getBinaryStream(), true);
+                            for (String worldGroupName : worldGroups.getCompoundData().keySet()) {
+                                String petUUID = worldGroups.getAs(worldGroupName, TagString.class).getStringData();
+                                petPlayer.setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
+                            }
+                        } catch (ZipException exception) {
+                            MyPetApi.getMyPetLogger().warning("Multiworld info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
                         }
                         break;
                     case "VARCHAR":

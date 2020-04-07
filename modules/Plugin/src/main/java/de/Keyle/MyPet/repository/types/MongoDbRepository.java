@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.zip.ZipException;
 
 public class MongoDbRepository implements Repository {
 
@@ -275,8 +276,16 @@ public class MongoDbRepository implements Repository {
                 }
             }
 
-            pet.setSkills(TagStream.readTag(((Binary) document.get("skills")).getData(), true));
-            pet.setInfo(TagStream.readTag(((Binary) document.get("info")).getData(), true));
+            try {
+                pet.setSkills(TagStream.readTag(((Binary) document.get("skills")).getData(), true));
+            } catch (ZipException exception) {
+                MyPetApi.getMyPetLogger().warning("Pet skills of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+            }
+            try {
+                pet.setInfo(TagStream.readTag(((Binary) document.get("info")).getData(), true));
+            } catch (ZipException exception) {
+                MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+            }
 
             List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
             for (RepositoryMyPetConverterService converter : converters) {
@@ -509,8 +518,11 @@ public class MongoDbRepository implements Repository {
                 return null;
             }
 
-
-            petPlayer.setExtendedInfo(TagStream.readTag(((Binary) document.get("extended_info")).getData(), true));
+            try {
+                petPlayer.setExtendedInfo(TagStream.readTag(((Binary) document.get("extended_info")).getData(), true));
+            } catch (ZipException exception) {
+                MyPetApi.getMyPetLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
+            }
 
             Document jsonObject = (Document) document.get("multi_world");
             for (Object o : jsonObject.keySet()) {
