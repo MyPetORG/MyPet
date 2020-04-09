@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -57,6 +57,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
@@ -476,6 +477,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.Canceled;
                 }
                 bukkitEntity = minecraftEntity.getBukkitEntity();
+
+                bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
                     Random r = new Random(petOwner.getInternalUUID().toString().hashCode());
