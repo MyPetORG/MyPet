@@ -1,7 +1,7 @@
 <!--
   ~ This file is part of MyPet
   ~
-  ~ Copyright © 2011-2019 Keyle
+  ~ Copyright © 2011-2020 Keyle
   ~ MyPet is licensed under the GNU Lesser General Public License.
   ~
   ~ MyPet is free software: you can redistribute it and/or modify
@@ -70,7 +70,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
