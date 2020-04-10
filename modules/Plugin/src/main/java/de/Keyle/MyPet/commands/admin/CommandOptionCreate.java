@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -587,7 +587,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     key = "HiddenGene";
                     gene = arg.substring(12);
                 }
-                MyPetApi.getLogger().info(key + " -> " + gene);
                 switch (gene.toLowerCase()) {
                     case "normal":
                         compound.getCompoundData().put(key, new TagInt(0));
