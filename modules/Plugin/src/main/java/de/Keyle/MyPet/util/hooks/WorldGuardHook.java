@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
@@ -50,11 +51,14 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityInteractEvent;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -267,9 +271,38 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
         return true;
     }
 
+    @EventHandler
     public void on(MyPetActivatedEvent event) {
         if (customFlags) {
             event.getMyPet().getExperience().addModifier("WorldGuard-Region", new RegionModifier(event.getMyPet()));
+        }
+    }
+
+    @EventHandler
+    public void on(EntityInteractEvent event) {
+        Entity ent = event.getEntity();
+        if (ent instanceof MyPetBukkitEntity) {
+            Block block = event.getBlock();
+            switch (block.getType().name()) {
+                case "WOOD_PLATE":
+                case "STONE_PLATE":
+                case "IRON_PLATE":
+                case "GOLD_PLATE":
+                case "ACACIA_PRESSURE_PLATE":
+                case "STONE_PRESSURE_PLATE":
+                case "BIRCH_PRESSURE_PLATE":
+                case "DARK_OAK_PRESSURE_PLATE":
+                case "HEAVY_WEIGHTED_PRESSURE_PLATE":
+                case "JUNGLE_PRESSURE_PLATE":
+                case "LIGHT_WEIGHTED_PRESSURE_PLATE":
+                case "OAK_PRESSURE_PLATE":
+                case "SPRUCE_PRESSURE_PLATE":
+                    Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
+                    StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
+                    if (s == null || s == StateFlag.State.DENY) {
+                        event.setCancelled(true);
+                    }
+            }
         }
     }
 
