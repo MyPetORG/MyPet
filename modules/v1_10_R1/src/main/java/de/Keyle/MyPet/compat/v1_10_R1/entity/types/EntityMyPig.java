@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -96,7 +96,7 @@ public class EntityMyPig extends EntityMyPet {
                             }
                         }.runTaskLater(MyPetApi.getPlugin(), 5);
                     }
-                    getOwner().sendMessage("Ironically pigs can not be ridden right now (Minecraft 1.10 problem)", 5000);
+                    getOwner().sendMessage("Unfortunately, pigs can not be ridden (Minecraft limitation)", 5000);
                     return true;
                 }
             }

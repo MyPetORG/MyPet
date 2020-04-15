@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ public class EntityMyRavager extends EntityMyPet {
     public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
         if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
             if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
-                getOwner().sendMessage("Unfortunately, Ravagers can not be ridden at the moment (Minecraft 1.14 problem)", 5000);
+                getOwner().sendMessage("Unfortunately, Ravagers can not be ridden (Minecraft limitation)", 5000);
                 return true;
             }
         }
