@@ -280,28 +280,30 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     @EventHandler
     public void on(EntityInteractEvent event) {
-        Entity ent = event.getEntity();
-        if (ent instanceof MyPetBukkitEntity) {
-            Block block = event.getBlock();
-            switch (block.getType().name()) {
-                case "WOOD_PLATE":
-                case "STONE_PLATE":
-                case "IRON_PLATE":
-                case "GOLD_PLATE":
-                case "ACACIA_PRESSURE_PLATE":
-                case "STONE_PRESSURE_PLATE":
-                case "BIRCH_PRESSURE_PLATE":
-                case "DARK_OAK_PRESSURE_PLATE":
-                case "HEAVY_WEIGHTED_PRESSURE_PLATE":
-                case "JUNGLE_PRESSURE_PLATE":
-                case "LIGHT_WEIGHTED_PRESSURE_PLATE":
-                case "OAK_PRESSURE_PLATE":
-                case "SPRUCE_PRESSURE_PLATE":
-                    Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
-                    StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
-                    if (s == null || s == StateFlag.State.DENY) {
-                        event.setCancelled(true);
-                    }
+        if (is7) {
+            Entity ent = event.getEntity();
+            if (ent instanceof MyPetBukkitEntity) {
+                Block block = event.getBlock();
+                switch (block.getType().name()) {
+                    case "WOOD_PLATE":
+                    case "STONE_PLATE":
+                    case "IRON_PLATE":
+                    case "GOLD_PLATE":
+                    case "ACACIA_PRESSURE_PLATE":
+                    case "STONE_PRESSURE_PLATE":
+                    case "BIRCH_PRESSURE_PLATE":
+                    case "DARK_OAK_PRESSURE_PLATE":
+                    case "HEAVY_WEIGHTED_PRESSURE_PLATE":
+                    case "JUNGLE_PRESSURE_PLATE":
+                    case "LIGHT_WEIGHTED_PRESSURE_PLATE":
+                    case "OAK_PRESSURE_PLATE":
+                    case "SPRUCE_PRESSURE_PLATE":
+                        Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
+                        StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
+                        if (s == null || s == StateFlag.State.DENY) {
+                            event.setCancelled(true);
+                        }
+                }
             }
         }
     }
