@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -27,10 +27,12 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.craftbukkit.v1_15_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftMob;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftEntityEquipment;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
@@ -125,8 +127,25 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         return fakeEquipment;
     }
 
+    public void attack(@NotNull Entity entity) {
+        this.petEntity.attack(((CraftEntity) entity).getHandle());
+    }
+
+    public void swingMainHand() {
+    }
+
+    public void swingOffHand() {
+    }
+
     public void setTarget(LivingEntity target) {
         setTarget(target, TargetPriority.Bukkit);
+    }
+
+    public void setAware(boolean b) {
+    }
+
+    public boolean isAware() {
+        return true;
     }
 
     @Override
