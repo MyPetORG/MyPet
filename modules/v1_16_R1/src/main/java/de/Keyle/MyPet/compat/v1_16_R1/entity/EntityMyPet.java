@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_15_R1.entity;
+package de.Keyle.MyPet.compat.v1_16_R1.entity;
 
 import com.google.common.base.Preconditions;
 import de.Keyle.MyPet.MyPetApi;
@@ -40,27 +40,27 @@ import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.compat.v1_15_R1.PlatformHelper;
-import de.Keyle.MyPet.compat.v1_15_R1.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_15_R1.entity.ai.attack.RangedAttack;
-import de.Keyle.MyPet.compat.v1_15_R1.entity.ai.movement.Float;
-import de.Keyle.MyPet.compat.v1_15_R1.entity.ai.movement.*;
-import de.Keyle.MyPet.compat.v1_15_R1.entity.ai.navigation.VanillaNavigation;
-import de.Keyle.MyPet.compat.v1_15_R1.entity.ai.target.*;
-import de.Keyle.MyPet.compat.v1_15_R1.entity.types.EntityMyHorse;
+import de.Keyle.MyPet.compat.v1_16_R1.PlatformHelper;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.attack.RangedAttack;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.movement.Float;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.movement.*;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.navigation.VanillaNavigation;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.target.*;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
-import net.minecraft.server.v1_15_R1.*;
+import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_15_R1.event.CraftEventFactory;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_15_R1.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R1.util.CraftChatMessage;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -770,8 +770,8 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
             if (this.isClimbing()) {
                 swimmSpeed = 0.15F;
-                motX = MathHelper.a(motX, (double) (-swimmSpeed), (double) swimmSpeed);
-                motZ = MathHelper.a(motZ, (double) (-swimmSpeed), (double) swimmSpeed);
+                motX = MathHelper.a(motX, -swimmSpeed, swimmSpeed);
+                motZ = MathHelper.a(motZ, -swimmSpeed, swimmSpeed);
                 this.fallDistance = 0.0F;
                 if (motY < -0.15D) {
                     motY = -0.15D;
@@ -832,12 +832,12 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public net.minecraft.server.v1_15_R1.EntitySize a(EntityPose entitypose) {
+    public net.minecraft.server.v1_16_R1.EntitySize a(EntityPose entitypose) {
         EntitySize es = this.getClass().getAnnotation(EntitySize.class);
         if (es != null) {
             float width = es.width();
             float height = java.lang.Float.isNaN(es.height()) ? width : es.height();
-            return new net.minecraft.server.v1_15_R1.EntitySize(width, height, false);
+            return new net.minecraft.server.v1_16_R1.EntitySize(width, height, false);
         }
         return super.a(entitypose);
     }
