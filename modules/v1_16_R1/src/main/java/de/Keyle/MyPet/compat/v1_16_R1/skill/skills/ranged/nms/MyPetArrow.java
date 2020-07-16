@@ -37,7 +37,7 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) ((WorldServer) this.world).getEntity(this.shooter);
+        return (EntityMyPet) super.getShooter();
     }
 
     @Override
@@ -49,7 +49,8 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound) {
+    public void saveData(NBTTagCompound nbttagcompound) {
+
     }
 
     @Override
@@ -58,7 +59,7 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound) {
+    public void loadData(NBTTagCompound nbttagcompound) {
     }
 
     public void tick() {

@@ -47,7 +47,7 @@ public class Sit implements AIGoal {
             return false;
         } else if (this.entityMyPet.isInWater()) {
             return false;
-        } else if (!this.entityMyPet.onGround) {
+        } else if (!this.entityMyPet.isOnGround()) {
             return false;
         }
         return this.sitting;

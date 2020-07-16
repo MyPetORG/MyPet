@@ -96,6 +96,7 @@ public class Sprint implements AIGoal {
     public void finish() {
         nav.getParameters().removeSpeedModifier("Sprint");
         new BukkitRunnable() {
+            @Override
             public void run() {
                 petEntity.setSprinting(false);
             }

@@ -36,7 +36,7 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
 
     public MyPetLlamaSpit(World world, EntityMyPet entityMyPet) {
         super(EntityTypes.LLAMA_SPIT, world);
-        this.shooter = entityMyPet;
+        this.setShooter(entityMyPet);
         this.setPosition(entityMyPet.locX() - (double) (entityMyPet.getWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entityMyPet.aL * 0.017453292F),
                 entityMyPet.locY() + (double) entityMyPet.getHeadHeight() - 0.10000000149011612D,
                 entityMyPet.locZ() + (double) (entityMyPet.getWidth() + 1.0F) * 0.5D * (double) MathHelper.cos(entityMyPet.aL * 0.017453292F));
@@ -44,7 +44,7 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) this.shooter;
+        return (EntityMyPet) ((IProjectile) this).getShooter();
     }
 
     @Override
@@ -56,17 +56,19 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound) {
+    public void saveData(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound) {
+    public void loadData(NBTTagCompound nbtTagCompound) {
     }
 
+    @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
         return false;
     }
 
+    @Override
     public void a(MovingObjectPosition movingObjectPosition) {
         if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
             Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();

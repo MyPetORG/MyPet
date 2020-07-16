@@ -132,8 +132,18 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Pig:
                 icon.setMaterial(Material.PIG_SPAWN_EGG);
                 break;
+            //            case Zoglin:
+            //                icon.setMaterial(Material.ZOGLIN_SPAWN_EGG);
+            //                break;
+            //            case Hoglin:
+            //                icon.setMaterial(Material.HOGLIN_SPAWN_EGG);
+            //                break;
+            //            case Piglin:
+            //                icon.setMaterial(Material.PIGLIN_SPAWN_EGG);
+            //                break;
+            //            case Zombified_Piglin:
             case PigZombie:
-                icon.setMaterial(Material.ZOMBIE_PIGMAN_SPAWN_EGG);
+                icon.setMaterial(Material.ZOMBIFIED_PIGLIN_SPAWN_EGG);
                 break;
             case PolarBear:
                 icon.setMaterial(Material.POLAR_BEAR_SPAWN_EGG);

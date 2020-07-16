@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.compat.v1_16_R1.services;
 
 import com.google.common.collect.Sets;
-import com.mojang.datafixers.Dynamic;
+import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -84,7 +84,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 convertZombieVillager((ZombieVillager) entity, properties);
             case HUSK:
             case ZOMBIE:
-            case PIG_ZOMBIE:
+            case ZOMBIFIED_PIGLIN:
             case DROWNED:
                 convertZombie((Zombie) entity, properties);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
@@ -147,6 +147,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         return properties;
     }
 
+    @Override
     public void convertEntity(MyPet myPet, LivingEntity normalEntity) {
         if (myPet instanceof MyCreeper) {
             if (((MyCreeper) myPet).isPowered()) {
@@ -198,26 +199,27 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     }
                     if (villagerTag.containsKey("FoodLevel")) {
                         byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
-                        ReflectionUtil.setFieldValue("bF", entityVillager, foodLevel);
+                        ReflectionUtil.setFieldValue("bE", entityVillager, foodLevel);
                     }
                     if (villagerTag.containsKey("Gossips")) {
                         TagList inventoryTag = villagerTag.get("Gossips");
                         NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                        //noinspection unchecked,rawtypes
-                        ReflectionUtil.setFieldValue("bG", entityVillager, new Dynamic(DynamicOpsNBT.a, vanillaNBT));
+                        ((Reputation) ReflectionUtil.getFieldValue(EntityVillager.class, entityVillager, "bF"))
+                                .a(new Dynamic<>(DynamicOpsNBT.a, vanillaNBT));
                     }
                     if (villagerTag.containsKey("LastRestock")) {
                         long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("bK", entityVillager, lastRestock);
+                        ReflectionUtil.setFieldValue("bJ", entityVillager, lastRestock);
                     }
                     if (villagerTag.containsKey("LastGossipDecay")) {
                         long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("bI", entityVillager, lastGossipDecay);
+                        ReflectionUtil.setFieldValue("bH", entityVillager, lastGossipDecay);
                     }
                     if (villagerTag.containsKey("RestocksToday")) {
                         int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
-                        ReflectionUtil.setFieldValue("bL", entityVillager, restocksToday);
+                        ReflectionUtil.setFieldValue("bK", entityVillager, restocksToday);
                     }
+                    ReflectionUtil.setFieldValue("bM", entityVillager, true); // AssignProfessionWhenSpawned
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

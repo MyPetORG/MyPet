@@ -42,6 +42,7 @@ public class EntityMyWitch extends EntityMyPet {
         return "entity.witch.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.witch.ambient";
     }

@@ -39,7 +39,7 @@ public class MyPetLargeFireball extends EntityLargeFireball implements EntityMyP
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) this.shooter;
+        return (EntityMyPet) super.getShooter();
     }
 
     public void setDamage(float damage) {
@@ -66,11 +66,11 @@ public class MyPetLargeFireball extends EntityLargeFireball implements EntityMyP
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound) {
+    public void saveData(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound) {
+    public void loadData(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
@@ -84,6 +84,7 @@ public class MyPetLargeFireball extends EntityLargeFireball implements EntityMyP
         die();
     }
 
+    @Override
     public void tick() {
         try {
             super.tick();
@@ -95,6 +96,7 @@ public class MyPetLargeFireball extends EntityLargeFireball implements EntityMyP
         }
     }
 
+    @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
         return false;
     }

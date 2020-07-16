@@ -51,6 +51,7 @@ public class EntityMyTropicalFish extends EntityMyPet {
         return "entity.tropical_fish.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.tropical_fish.ambient";
     }
@@ -63,6 +64,7 @@ public class EntityMyTropicalFish extends EntityMyPet {
         }
     }
 
+    @Override
     public MyTropicalFish getMyPet() {
         return (MyTropicalFish) myPet;
     }
@@ -72,6 +74,7 @@ public class EntityMyTropicalFish extends EntityMyPet {
         getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(FROM_BUCKET_WATCHER, false);

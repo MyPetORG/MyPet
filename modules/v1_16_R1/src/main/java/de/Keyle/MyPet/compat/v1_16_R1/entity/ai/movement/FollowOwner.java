@@ -25,10 +25,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R1.EntityLiving;
-import net.minecraft.server.v1_16_R1.EntityPlayer;
-import net.minecraft.server.v1_16_R1.GenericAttributes;
-import net.minecraft.server.v1_16_R1.MobEffects;
+import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 
@@ -111,7 +108,7 @@ public class FollowOwner implements AIGoal {
             return;
         }
 
-        this.petEntity.getControllerLook().a(owner, this.petEntity.dW(), (float) this.petEntity.dU());
+        this.petEntity.getControllerLook().a(owner, this.petEntity.eq(), (float) this.petEntity.eo());
 
         if (this.petEntity.canMove()) {
             if (!owner.abilities.isFlying) {
@@ -130,7 +127,7 @@ public class FollowOwner implements AIGoal {
                             }
                         }
                     }
-                } else if (owner.onGround) {
+                } else if (owner.isOnGround()) {
                     waitForGround = false;
                 }
             } else {
@@ -158,7 +155,7 @@ public class FollowOwner implements AIGoal {
             }
         } else if (owner.isPassenger() && owner.getVehicle() instanceof EntityLiving) {
             // adjust the speed to the pet can catch up with the vehicle the player is in
-            AttributeInstance vehicleSpeedAttribute = ((EntityLiving) owner.getVehicle()).getAttributeMap().a(GenericAttributes.MOVEMENT_SPEED);
+            AttributeModifiable vehicleSpeedAttribute = ((EntityLiving) owner.getVehicle()).getAttributeMap().a(GenericAttributes.MOVEMENT_SPEED);
             if (vehicleSpeedAttribute != null) {
                 walkSpeed = (float) vehicleSpeedAttribute.getValue();
             }

@@ -67,15 +67,18 @@ public class EntityMyEnderDragon extends EntityMyPet {
         return "entity.ender_dragon.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.ender_dragon.ambient";
     }
 
+    @Override
     public void setPathfinder() {
         super.setPathfinder();
         petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 8.5, 20));
     }
 
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.EnderDragon.CAN_GLIDE) {
@@ -96,6 +99,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
     /**
      * -> disable falldamage
      */
+    @Override
     public int e(float f, float f1) {
         if (!Configuration.MyPet.EnderDragon.CAN_GLIDE) {
             super.e(f, f1);
@@ -106,7 +110,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
     @Override
     public void die() {
         super.die();
-        Arrays.stream(this.children).forEach(Entity::die);
+        Arrays.stream(this.children).forEach((en) -> (en.getBukkitEntity().getHandle()).die());
     }
 
     @Override
@@ -115,6 +119,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
         Arrays.stream(this.children).forEach(Entity::die);
     }
 
+    @Override
     public void movementTick() {
         super.movementTick();
 

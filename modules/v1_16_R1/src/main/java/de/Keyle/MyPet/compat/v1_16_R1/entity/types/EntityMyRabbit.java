@@ -50,6 +50,7 @@ public class EntityMyRabbit extends EntityMyPet {
         return "entity.rabbit.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.rabbit.ambient";
     }
@@ -59,24 +60,25 @@ public class EntityMyRabbit extends EntityMyPet {
         makeSound("entity.rabbit.jump", 1.0F, 1.0F);
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (Configuration.MyPet.Rabbit.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
                 this.getMyPet().setBaby(false);
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
     @Override
@@ -92,6 +94,7 @@ public class EntityMyRabbit extends EntityMyPet {
         getDataWatcher().set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
     }
 
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
@@ -105,6 +108,7 @@ public class EntityMyRabbit extends EntityMyPet {
         }
     }
 
+    @Override
     public MyRabbit getMyPet() {
         return (MyRabbit) myPet;
     }

@@ -40,18 +40,22 @@ public class EntityMyWanderingTrader extends EntityMyPet {
         super(world, myPet);
     }
 
+    @Override
     protected String getDeathSound() {
         return "entity.villager.death";
     }
 
+    @Override
     protected String getHurtSound() {
         return "entity.villager.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.villager.ambient";
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
@@ -60,6 +64,7 @@ public class EntityMyWanderingTrader extends EntityMyPet {
         }
     }
 
+    @Override
     public MyWanderingTrader getMyPet() {
         return (MyWanderingTrader) myPet;
     }

@@ -39,25 +39,26 @@ public class EntityMySnowman extends EntityMyPet {
         super(world, myPet);
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Item.getItemOf(Blocks.PUMPKIN) && getMyPet().isSheared() && entityhuman.isSneaking()) {
                 getMyPet().setSheared(false);
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             } else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isSneaking()) {
                 getMyPet().setSheared(true);
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     try {
                         itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
                     } catch (Error e) {
@@ -71,10 +72,10 @@ public class EntityMySnowman extends EntityMyPet {
                         });
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
     @Override
@@ -99,6 +100,7 @@ public class EntityMySnowman extends EntityMyPet {
         return "entity.snow_golem.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.snow_golem.ambient";
     }
@@ -108,6 +110,7 @@ public class EntityMySnowman extends EntityMyPet {
         makeSound("block.snow.step", 0.15F, 1.0F);
     }
 
+    @Override
     public MySnowman getMyPet() {
         return (MySnowman) myPet;
     }

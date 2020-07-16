@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_16_R1.entity.types;
 
+import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
@@ -32,6 +33,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 import static de.Keyle.MyPet.compat.v1_16_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
@@ -64,6 +66,7 @@ public class EntityMyIllusioner extends EntityMyPet {
     /**
      * Returns the default sound of the MyPet
      */
+    @Override
     protected String getLivingSound() {
         return "entity.illusioner.ambient";
     }
@@ -74,9 +77,10 @@ public class EntityMyIllusioner extends EntityMyPet {
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null) {
@@ -94,7 +98,7 @@ public class EntityMyIllusioner extends EntityMyPet {
                     }
                 }
                 if (hadEquipment) {
-                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         try {
                             itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
                         } catch (Error e) {
@@ -109,31 +113,32 @@ public class EntityMyIllusioner extends EntityMyPet {
                         }
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(h(itemStack).c());
+                EquipmentSlot slot = EquipmentSlot.getSlotById(j(itemStack).c());
                 if (slot == EquipmentSlot.MainHand) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
                         entityitem.pickupDelay = 10;
                         entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                     }
                     getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
-                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                         }
                     }
-                    return true;
+                    return EnumInteractionResult.CONSUME;
                 }
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(RAID_WATCHER, false);
@@ -151,14 +156,16 @@ public class EntityMyIllusioner extends EntityMyPet {
         }, 5L);
     }
 
+    @Override
     public MyIllusioner getMyPet() {
         return (MyIllusioner) myPet;
     }
 
     public void setPetEquipment(ItemStack itemStack) {
-        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(EnumItemSlot.MAINHAND, itemStack))));
     }
 
+    @Override
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
         if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
             EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.c());

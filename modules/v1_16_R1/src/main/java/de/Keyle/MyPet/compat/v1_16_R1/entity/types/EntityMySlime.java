@@ -50,10 +50,12 @@ public class EntityMySlime extends EntityMyPet {
         return "entity.slime.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return null;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(SIZE_WATCHER, 1); //size
@@ -69,6 +71,7 @@ public class EntityMySlime extends EntityMyPet {
         }
     }
 
+    @Override
     public net.minecraft.server.v1_16_R1.EntitySize a(EntityPose entitypose) {
         EntitySize es = this.getClass().getAnnotation(EntitySize.class);
         if (es != null) {
@@ -80,6 +83,7 @@ public class EntityMySlime extends EntityMyPet {
         return super.a(entitypose);
     }
 
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
@@ -90,10 +94,12 @@ public class EntityMySlime extends EntityMyPet {
         }
     }
 
+    @Override
     public MySlime getMyPet() {
         return (MySlime) myPet;
     }
 
+    @Override
     public void setPathfinder() {
         super.setPathfinder();
         petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));

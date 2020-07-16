@@ -63,7 +63,7 @@ public class Float implements AIGoal {
                 lavaCounter = 10;
             }
         }
-        if (!inLava && entityMyPet.b(TagsFluid.LAVA)) {
+        if (!inLava && entityMyPet.a(TagsFluid.LAVA)) {
             inLava = true;
         }
     }

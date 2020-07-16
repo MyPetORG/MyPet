@@ -52,6 +52,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         fakeEquipment = new FakeEquipment(this);
     }
 
+    @Override
     public boolean canMove() {
         return petEntity.canMove();
     }
@@ -71,10 +72,12 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         return petEntity;
     }
 
+    @Override
     public MyPet getMyPet() {
         return petEntity.getMyPet();
     }
 
+    @Override
     public MyPetPlayer getOwner() {
         if (petOwner == null) {
             petOwner = getMyPet().getOwner();
@@ -87,6 +90,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         getHandle().die();
     }
 
+    @Override
     public MyPetType getPetType() {
         return getMyPet().getPetType();
     }
@@ -127,23 +131,29 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         return fakeEquipment;
     }
 
+    @Override
     public void attack(@NotNull Entity entity) {
         this.petEntity.attack(((CraftEntity) entity).getHandle());
     }
 
+    @Override
     public void swingMainHand() {
     }
 
+    @Override
     public void swingOffHand() {
     }
 
+    @Override
     public void setTarget(LivingEntity target) {
         setTarget(target, TargetPriority.Bukkit);
     }
 
+    @Override
     public void setAware(boolean b) {
     }
 
+    @Override
     public boolean isAware() {
         return true;
     }
@@ -153,6 +163,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         getHandle().forgetTarget();
     }
 
+    @Override
     public void setTarget(LivingEntity target, TargetPriority priority) {
         getHandle().setTarget(target, priority);
     }
@@ -171,45 +182,45 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         @NotNull
         @Override
         public ItemStack getItemInMainHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
         }
 
         @NotNull
         @Override
         public ItemStack getItemInOffHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
         }
 
         @NotNull
         @Override
         public ItemStack getItemInHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
         }
 
         @Override
         public ItemStack getHelmet() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
         }
 
         @Override
         public ItemStack getChestplate() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
         }
 
         @Override
         public ItemStack getLeggings() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
         }
 
         @Override
         public ItemStack getBoots() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            return CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
         }
 
         @NotNull
         @Override
         public ItemStack[] getArmorContents() {
-            ItemStack empty = CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.a);
+            ItemStack empty = CraftItemStack.asBukkitCopy(net.minecraft.server.v1_16_R1.ItemStack.b);
             return new ItemStack[]{empty, empty, empty, empty};
         }
     }

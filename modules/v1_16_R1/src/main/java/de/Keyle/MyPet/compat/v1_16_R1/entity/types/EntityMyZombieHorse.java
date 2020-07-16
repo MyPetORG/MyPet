@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyZombieHorse;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_16_R1.*;
-import net.minecraft.server.v1_16_R1.Entity.a;
 import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
@@ -66,6 +65,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
         }
     }
 
+    @Override
     public boolean attack(Entity entity) {
         boolean flag = false;
         try {
@@ -90,26 +90,28 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
         return "entity.zombie_horse.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.zombie_horse.ambient";
     }
 
 
-    public boolean handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, final ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                 if (getMyPet().hasSaddle()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
@@ -120,7 +122,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setSaddle(null);
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     try {
                         itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
                     } catch (Error e) {
@@ -135,19 +137,19 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
                     }
                 }
 
-                return true;
+                return EnumInteractionResult.CONSUME;
             } else if (Configuration.MyPet.ZombieHorse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
                 getMyPet().setBaby(false);
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
     protected void initDatawatcher() {
@@ -157,9 +159,10 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
         getDataWatcher().register(OWNER_WATCHER, Optional.empty());
     }
 
+    @Override
     protected void initAttributes() {
-        super.initAttributes();
-        this.getAttributeMap().b(EntityHorseAbstract.attributeJumpStrength);
+        EntityMyPet.setupAttributes(this, EntityTypes.ZOMBIE_HORSE);
+        this.getAttributeMap().b(GenericAttributes.JUMP_STRENGTH);
     }
 
     @Override
@@ -168,6 +171,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
         applyVisual(4, getMyPet().hasSaddle());
     }
 
+    @Override
     public void onLivingUpdate() {
         boolean oldRiding = hasRider;
         super.onLivingUpdate();
@@ -190,33 +194,34 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
     public void playStepSound(BlockPosition blockposition, IBlockData blockdata) {
         if (!blockdata.getMaterial().isLiquid()) {
             IBlockData blockdataUp = this.world.getType(blockposition.up());
-            SoundEffectType soundeffecttype = blockdata.r();
+            SoundEffectType soundeffecttype = (SoundEffectType) blockdata.getStepSound();
             if (blockdataUp.getBlock() == Blocks.SNOW) {
-                soundeffecttype = blockdata.r();
+                soundeffecttype = blockdata.getStepSound();
             }
             if (this.isVehicle()) {
                 ++this.soundCounter;
                 if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
-                    this.a(SoundEffects.ENTITY_HORSE_GALLOP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                    this.playSound(SoundEffects.ENTITY_HORSE_GALLOP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                 } else if (this.soundCounter <= 5) {
-                    this.a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                    this.playSound(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
                 }
             } else if (!blockdata.getMaterial().isLiquid()) {
                 this.soundCounter += 1;
-                a(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                playSound(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             } else {
-                a(SoundEffects.ENTITY_HORSE_STEP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                playSound(SoundEffects.ENTITY_HORSE_STEP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
             }
         }
     }
 
+    @Override
     public MyZombieHorse getMyPet() {
         return (MyZombieHorse) myPet;
     }
 
     /* Jump power methods */
     @Override
-    public boolean G_() {
+    public boolean Q_() {
         return true;
     }
 

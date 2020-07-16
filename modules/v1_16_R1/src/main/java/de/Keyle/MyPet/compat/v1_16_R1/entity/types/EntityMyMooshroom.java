@@ -49,13 +49,15 @@ public class EntityMyMooshroom extends EntityMyPet {
         return "entity.cow.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.cow.ambient";
     }
 
-    public boolean handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (itemStack != null) {
@@ -76,25 +78,26 @@ public class EntityMyMooshroom extends EntityMyPet {
                             entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
                         }
                     }
-                    return true;
+                    return EnumInteractionResult.CONSUME;
                 }
             }
             if (getOwner().equals(entityhuman) && canUseItem()) {
                 if (Configuration.MyPet.Mooshroom.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                         }
                     }
                     getMyPet().setBaby(false);
-                    return true;
+                    return EnumInteractionResult.CONSUME;
                 }
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
@@ -107,10 +110,12 @@ public class EntityMyMooshroom extends EntityMyPet {
         getDataWatcher().set(COLOR_WATCHER, getMyPet().getType().getType());
     }
 
+    @Override
     public void playPetStepSound() {
         makeSound("entity.cow.step", 0.15F, 1.0F);
     }
 
+    @Override
     public MyMooshroom getMyPet() {
         return (MyMooshroom) myPet;
     }

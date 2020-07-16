@@ -52,10 +52,12 @@ public class EntityMyWither extends EntityMyPet {
         return "entity.wither.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.wither.ambient";
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(TARGET_WATCHER, 0);
@@ -64,6 +66,7 @@ public class EntityMyWither extends EntityMyPet {
         getDataWatcher().register(INVULNERABILITY_WATCHER, 0);
     }
 
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Wither.CAN_GLIDE) {
@@ -81,6 +84,7 @@ public class EntityMyWither extends EntityMyPet {
     /**
      * -> disable falldamage
      */
+    @Override
     public int e(float f, float f1) {
         if (!Configuration.MyPet.Wither.CAN_GLIDE) {
             super.e(f, f1);
@@ -88,6 +92,7 @@ public class EntityMyWither extends EntityMyPet {
         return 0;
     }
 
+    @Override
     public MyWither getMyPet() {
         return (MyWither) myPet;
     }

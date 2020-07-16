@@ -52,30 +52,33 @@ public class EntityMyTurtle extends EntityMyPet {
         return "entity.turtle.hurt" + (isBaby() ? "_baby" : "");
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.turtle.ambient_land";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
                 getMyPet().setBaby(false);
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
@@ -92,6 +95,7 @@ public class EntityMyTurtle extends EntityMyPet {
         getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
     }
 
+    @Override
     public MyTurtle getMyPet() {
         return (MyTurtle) myPet;
     }

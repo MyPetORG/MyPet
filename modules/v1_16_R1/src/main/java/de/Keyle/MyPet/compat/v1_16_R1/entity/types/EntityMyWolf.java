@@ -68,13 +68,15 @@ public class EntityMyWolf extends EntityMyPet {
         return "entity.wolf.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "entity.wolf.whine" : "entity.wolf.pant") : "entity.wolf.ambient";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman)) {
@@ -83,34 +85,34 @@ public class EntityMyWolf extends EntityMyPet {
                     if (itemStack.getItem() instanceof ItemDye && ((ItemDye) itemStack.getItem()).d().ordinal() != getMyPet().getCollarColor().ordinal()) {
                         if (getOwner().getPlayer().isSneaking()) {
                             getMyPet().setCollarColor(DyeColor.values()[((ItemDye) itemStack.getItem()).d().ordinal()]);
-                            if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                            if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                                 itemStack.subtract(1);
                                 if (itemStack.getCount() <= 0) {
-                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                                 }
                             }
-                            return true;
+                            return EnumInteractionResult.CONSUME;
                         } else {
                             getDataWatcher().set(COLLAR_COLOR_WATCHER, 0);
                             updateVisuals();
-                            return false;
                         }
                     } else if (Configuration.MyPet.Wolf.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                        if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                        if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                             itemStack.subtract(1);
                             if (itemStack.getCount() <= 0) {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                             }
                         }
                         getMyPet().setBaby(false);
-                        return true;
+                        return EnumInteractionResult.CONSUME;
                     }
                 }
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
 
@@ -122,8 +124,9 @@ public class EntityMyWolf extends EntityMyPet {
         getDataWatcher().register(COLLAR_COLOR_WATCHER, 14);
     }
 
+    @Override
     protected void initAttributes() {
-        super.initAttributes();
+        EntityMyPet.setupAttributes(this, EntityTypes.WOLF);
         getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(20.0D);
     }
 
@@ -196,6 +199,7 @@ public class EntityMyWolf extends EntityMyPet {
         makeSound("entity.wolf.step", 0.15F, 1.0F);
     }
 
+    @Override
     public void setHealth(float i) {
         super.setHealth(i);
 
@@ -203,6 +207,7 @@ public class EntityMyWolf extends EntityMyPet {
         getDataWatcher().set(TAIL_WATCHER, tailHeight);
     }
 
+    @Override
     public MyWolf getMyPet() {
         return (MyWolf) myPet;
     }

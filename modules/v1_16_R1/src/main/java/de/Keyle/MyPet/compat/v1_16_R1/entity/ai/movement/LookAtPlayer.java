@@ -87,7 +87,7 @@ public class LookAtPlayer implements AIGoal {
 
     @Override
     public void tick() {
-        this.petEntity.getControllerLook().a(this.targetPlayer.locX(), this.targetPlayer.locY() + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ(), petEntity.dW(), this.petEntity.dU());
+        this.petEntity.getControllerLook().a(this.targetPlayer.locX(), this.targetPlayer.locY() + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ(), petEntity.eq(), this.petEntity.eo());
         this.ticksUntilStopLooking -= 1;
     }
 }

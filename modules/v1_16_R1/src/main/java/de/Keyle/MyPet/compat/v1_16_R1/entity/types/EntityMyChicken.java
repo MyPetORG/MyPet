@@ -49,30 +49,33 @@ public class EntityMyChicken extends EntityMyPet {
         return "entity.chicken.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.chicken.ambient";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null) {
             if (Configuration.MyPet.Chicken.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
                 getMyPet().setBaby(false);
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
@@ -83,6 +86,7 @@ public class EntityMyChicken extends EntityMyPet {
         getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
     }
 
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
@@ -99,10 +103,12 @@ public class EntityMyChicken extends EntityMyPet {
         }
     }
 
+    @Override
     public void playPetStepSound() {
         makeSound("entity.chicken.step", 0.15F, 1.0F);
     }
 
+    @Override
     public MyChicken getMyPet() {
         return (MyChicken) myPet;
     }
@@ -110,6 +116,7 @@ public class EntityMyChicken extends EntityMyPet {
     /**
      * -> disable falldamage
      */
+    @Override
     public int e(float f, float f1) {
         if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
             super.e(f, f1);

@@ -46,6 +46,7 @@ public class EntityMyIronGolem extends EntityMyPet {
         super(world, myPet);
     }
 
+    @Override
     public boolean attack(Entity entity) {
         boolean flag = false;
         try {
@@ -71,18 +72,21 @@ public class EntityMyIronGolem extends EntityMyPet {
         return "entity.iron_golem.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return null;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(UNUSED_WATCHER, (byte) 0); // N/A
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (itemStack.getItem() == Items.IRON_INGOT) {
@@ -100,13 +104,13 @@ public class EntityMyIronGolem extends EntityMyPet {
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Blocks.POPPY.getItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
                 EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
                 entityitem.pickupDelay = 10;
@@ -115,7 +119,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setFlower(null);
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     try {
                         itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
                     } catch (Error e) {
@@ -130,10 +134,10 @@ public class EntityMyIronGolem extends EntityMyPet {
                     }
                 }
 
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
     @Override
@@ -142,6 +146,7 @@ public class EntityMyIronGolem extends EntityMyPet {
         flowerCounter = 0;
     }
 
+    @Override
     public MyIronGolem getMyPet() {
         return (MyIronGolem) myPet;
     }
@@ -151,6 +156,7 @@ public class EntityMyIronGolem extends EntityMyPet {
         makeSound("entity.iron_golem.step", 1.0F, 1.0F);
     }
 
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (this.flower && this.flowerCounter-- <= 0) {

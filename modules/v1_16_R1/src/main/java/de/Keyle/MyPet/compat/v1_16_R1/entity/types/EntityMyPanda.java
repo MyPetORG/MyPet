@@ -42,40 +42,45 @@ public class EntityMyPanda extends EntityMyPet {
         super(world, myPet);
     }
 
+    @Override
     protected String getDeathSound() {
         return "entity.panda.death";
     }
 
+    @Override
     protected String getHurtSound() {
         return "entity.panda.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.panda.ambient";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
                 if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                         }
                     }
                     getMyPet().setBaby(false);
-                    return true;
+                    return EnumInteractionResult.CONSUME;
                 }
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
@@ -108,6 +113,7 @@ public class EntityMyPanda extends EntityMyPet {
         }
     }
 
+    @Override
     public MyPanda getMyPet() {
         return (MyPanda) myPet;
     }

@@ -40,39 +40,52 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
         this.size = EntitySize.b(width, height);
     }
 
+    @Override
     protected void initDatawatcher() {
     }
 
-    protected void a(NBTTagCompound var1) {
-    }
 
-    protected void b(NBTTagCompound var1) {
-    }
-
+    @Override
     public boolean isInteractable() {
         return true;
     }
 
+    @Override
+    protected void loadData(NBTTagCompound nbtTagCompound) {
+
+    }
+
+    @Override
+    protected void saveData(NBTTagCompound nbtTagCompound) {
+
+    }
+
+    @Override
     public boolean damageEntity(DamageSource var1, float var2) {
         return false;
     }
 
+    @Override
     public boolean s(Entity var1) {
         return this == var1 || this.owner == var1;
     }
 
-    public Packet<?> L() {
+    @Override
+    public Packet<?> O() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public EntitySize a(EntityPose entitypose) {
         return this.size;
     }
 
+    @Override
     public MyPetMinecraftEntity getPetOwner() {
         return owner;
     }
 
+    @Override
     public CraftMyPetPart getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPetPart(this.world.getServer(), this);

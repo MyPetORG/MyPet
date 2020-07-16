@@ -38,7 +38,7 @@ public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) this.shooter;
+        return (EntityMyPet) super.getShooter();
     }
 
     public void setDamage(float damage) {
@@ -54,11 +54,11 @@ public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound) {
+    public void saveData(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound) {
+    public void loadData(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
@@ -75,6 +75,7 @@ public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
         die();
     }
 
+    @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
         return false;
     }

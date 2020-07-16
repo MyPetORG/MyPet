@@ -61,9 +61,10 @@ public class EntityMyEnderman extends EntityMyPet {
         return getMyPet().isScreaming() ? "entity.enderman.scream" : "entity.enderman.ambient";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
@@ -74,7 +75,7 @@ public class EntityMyEnderman extends EntityMyPet {
 
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setBlock(null);
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     try {
                         itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
                     } catch (Error e) {
@@ -89,21 +90,22 @@ public class EntityMyEnderman extends EntityMyPet {
                     }
                 }
 
-                return true;
+                return EnumInteractionResult.CONSUME;
             } else if (getMyPet().getBlock() == null && Util.isBetween(1, 255, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(BLOCK_WATCHER, Optional.empty());
@@ -123,6 +125,7 @@ public class EntityMyEnderman extends EntityMyPet {
         getDataWatcher().set(SCREAMING_WATCHER, getMyPet().isScreaming());
     }
 
+    @Override
     protected void doMyPetTick() {
         super.doMyPetTick();
         BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
@@ -138,6 +141,7 @@ public class EntityMyEnderman extends EntityMyPet {
         }
     }
 
+    @Override
     public MyEnderman getMyPet() {
         return (MyEnderman) myPet;
     }

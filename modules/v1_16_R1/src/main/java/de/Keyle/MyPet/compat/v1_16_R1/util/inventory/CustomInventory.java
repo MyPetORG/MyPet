@@ -53,7 +53,7 @@ import java.util.List;
 public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
 
     private String inventroyName = "";
-    private NonNullList<ItemStack> items = NonNullList.a(64, ItemStack.a);
+    private NonNullList<ItemStack> items = NonNullList.a(64, ItemStack.b);
     private int size = 0;
     private int stackSize = 64;
     private List<HumanEntity> transaction = new ArrayList<>();
@@ -78,7 +78,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         size *= 9;
         this.size = Util.clamp(size, 9, 54);
         for (int i = items.size(); i < this.size; i++) {
-            items.set(i, ItemStack.a);
+            items.set(i, ItemStack.b);
         }
     }
 
@@ -97,7 +97,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         if (i < size) {
             return items.get(i);
         }
-        return ItemStack.a;
+        return ItemStack.b;
     }
 
     public void setItem(int i, ItemStack itemStack) {
@@ -133,7 +133,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         }
         if (itemAdd.getAmount() > 0) {
             for (int i = 0; i < this.getSize(); i++) {
-                if (getItem(i) == ItemStack.a) {
+                if (getItem(i) == ItemStack.b) {
                     if (itemAdd.getAmount() <= itemAdd.getMaxStackSize()) {
                         setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
                         itemAdd.setAmount(0);
@@ -184,21 +184,21 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public ItemStack splitStack(int slot, int subtract) {
-        if (slot < size && items.get(slot) != ItemStack.a) {
+        if (slot < size && items.get(slot) != ItemStack.b) {
             if (items.get(slot).getCount() <= subtract) {
                 ItemStack itemStack = items.get(slot);
-                items.set(slot, ItemStack.a);
+                items.set(slot, ItemStack.b);
                 return itemStack;
             } else {
                 ItemStack splittedStack = items.get(slot).cloneAndSubtract(subtract);
 
                 if (items.get(slot).getCount() == 0) {
-                    items.set(slot, ItemStack.a);
+                    items.set(slot, ItemStack.b);
                 }
                 return splittedStack;
             }
         }
-        return ItemStack.a;
+        return ItemStack.b;
     }
 
     public List<ItemStack> getContents() {
@@ -213,7 +213,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         List<TagCompound> itemList = new ArrayList<>();
         for (int i = 0; i < this.items.size(); i++) {
             ItemStack itemStack = this.items.get(i);
-            if (itemStack != ItemStack.a) {
+            if (itemStack != ItemStack.b) {
                 TagCompound item = ItemStackNBTConverter.itemStackToCompound(itemStack);
                 item.getCompoundData().put("Slot", new TagByte((byte) i));
                 itemList.add(item);
@@ -246,11 +246,11 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         this.transaction.remove(who);
         if (items.size() > this.size) {
             for (int counterOutside = items.size() - 1; counterOutside >= this.size; counterOutside--) {
-                if (items.get(counterOutside) != ItemStack.a) {
+                if (items.get(counterOutside) != ItemStack.b) {
                     for (int counterInside = 0; counterInside < size; counterInside++) {
-                        if (items.get(counterInside) == ItemStack.a) {
+                        if (items.get(counterInside) == ItemStack.b) {
                             items.set(counterInside, items.get(counterOutside));
-                            items.set(counterOutside, ItemStack.a);
+                            items.set(counterOutside, ItemStack.b);
                         }
                     }
                 }
@@ -325,13 +325,13 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public ItemStack splitWithoutUpdate(int i) {
-        if (items.get(i) != ItemStack.a) {
+        if (items.get(i) != ItemStack.b) {
             ItemStack itemstack = items.get(i);
 
-            items.set(i, ItemStack.a);
+            items.set(i, ItemStack.b);
             return itemstack;
         }
-        return ItemStack.a;
+        return ItemStack.b;
     }
 
     public void update() {

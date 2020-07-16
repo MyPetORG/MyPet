@@ -146,7 +146,7 @@ public class MeleeAttack implements AIGoal {
                 this.ticksUntilNextHitLeft = ticksUntilNextHit;
                 if (this.petEntity instanceof MyPetEquipment) {
                     if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.MainHand) != null) {
-                        this.petEntity.a(EnumHand.MAIN_HAND); // -> swingItem()
+                        this.petEntity.swingHand(EnumHand.MAIN_HAND); // -> swingItem()
                     }
                 }
                 this.petEntity.attack(targetEntity);

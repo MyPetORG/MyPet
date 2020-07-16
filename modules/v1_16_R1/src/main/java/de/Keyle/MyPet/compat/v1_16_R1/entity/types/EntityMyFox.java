@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_16_R1.entity.types;
 
+import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -33,6 +34,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,50 +54,54 @@ public class EntityMyFox extends EntityMyPet {
         this.getControllerLook().a(this, 60.0F, 30.0F);
     }
 
+    @Override
     protected String getDeathSound() {
         return "entity.fox.death";
     }
 
+    @Override
     protected String getHurtSound() {
         return "entity.fox.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.fox.ambient";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && itemStack.getItem() != Items.AIR && canUseItem() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack.getItem() != Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand));
-                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
                         entityitem.pickupDelay = 10;
                         entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
                         this.world.addEntity(entityitem);
                     }
                     getMyPet().setEquipment(EquipmentSlot.MainHand, CraftItemStack.asBukkitCopy(itemStack));
-                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                         }
                     }
-                    return true;
+                    return EnumInteractionResult.CONSUME;
                 } else if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                    if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.a);
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
                         }
                     }
                     getMyPet().setBaby(false);
-                    return true;
+                    return EnumInteractionResult.CONSUME;
                 } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                     boolean hadEquipment = false;
                     for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -110,7 +116,7 @@ public class EntityMyFox extends EntityMyPet {
                         }
                     }
                     if (hadEquipment) {
-                        if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                        if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                             try {
                                 itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
                             } catch (Error e) {
@@ -125,13 +131,14 @@ public class EntityMyFox extends EntityMyPet {
                             }
                         }
                     }
-                    return true;
+                    return EnumInteractionResult.CONSUME;
                 }
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
@@ -171,6 +178,7 @@ public class EntityMyFox extends EntityMyPet {
         }
     }
 
+    @Override
     public void movementTick() {
         super.movementTick();
         // foxes can't look up
@@ -178,9 +186,10 @@ public class EntityMyFox extends EntityMyPet {
     }
 
     public void setPetEquipment(ItemStack itemStack) {
-        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), EnumItemSlot.MAINHAND, itemStack));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(EnumItemSlot.MAINHAND, itemStack))));
     }
 
+    @Override
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
         if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
             EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.c());
@@ -191,6 +200,7 @@ public class EntityMyFox extends EntityMyPet {
         return super.getEquipment(vanillaSlot);
     }
 
+    @Override
     public MyFox getMyPet() {
         return (MyFox) myPet;
     }

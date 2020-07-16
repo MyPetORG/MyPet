@@ -50,20 +50,22 @@ public class EntityMyBlaze extends EntityMyPet {
         return "entity.blaze.hurt";
     }
 
+    @Override
     protected String getLivingSound() {
         return "entity.blaze.ambient";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack)) {
-            return true;
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == EnumInteractionResult.CONSUME) {
+            return EnumInteractionResult.CONSUME;
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (getMyPet().isOnFire() && itemStack.getItem() == Items.WATER_BUCKET && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setOnFire(false);
                 makeSound("block.fire.extinguish", 1.0F, 1.0F);
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.BUCKET));
@@ -73,11 +75,11 @@ public class EntityMyBlaze extends EntityMyPet {
                         }
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             } else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setOnFire(true);
                 makeSound("item.flintandsteel.use", 1.0F, 1.0F);
-                if (itemStack != ItemStack.a && !entityhuman.abilities.canInstantlyBuild) {
+                if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     try {
                         itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
                     } catch (Error e) {
@@ -91,12 +93,13 @@ public class EntityMyBlaze extends EntityMyPet {
                         });
                     }
                 }
-                return true;
+                return EnumInteractionResult.CONSUME;
             }
         }
-        return false;
+        return EnumInteractionResult.PASS;
     }
 
+    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(BURNING_WATCHER, (byte) 0);
@@ -107,6 +110,7 @@ public class EntityMyBlaze extends EntityMyPet {
         getDataWatcher().set(BURNING_WATCHER, (byte) (getMyPet().isOnFire() ? 1 : 0));
     }
 
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Blaze.CAN_GLIDE) {
@@ -116,6 +120,7 @@ public class EntityMyBlaze extends EntityMyPet {
         }
     }
 
+    @Override
     public MyBlaze getMyPet() {
         return (MyBlaze) myPet;
     }
@@ -123,6 +128,7 @@ public class EntityMyBlaze extends EntityMyPet {
     /**
      * -> disable falldamage
      */
+    @Override
     public int e(float f, float f1) {
         if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
             super.e(f, f1);

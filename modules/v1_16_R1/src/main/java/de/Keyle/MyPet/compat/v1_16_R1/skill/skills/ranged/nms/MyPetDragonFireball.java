@@ -39,7 +39,7 @@ public class MyPetDragonFireball extends EntityDragonFireball implements EntityM
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) this.shooter;
+        return (EntityMyPet) super.getShooter();
     }
 
     public void setDamage(float damage) {
@@ -66,11 +66,11 @@ public class MyPetDragonFireball extends EntityDragonFireball implements EntityM
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound) {
+    public void saveData(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound) {
+    public void loadData(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MyPetDragonFireball extends EntityDragonFireball implements EntityM
         if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
             Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
             if (entity instanceof EntityLiving) {
-                entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
+                entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
             }
         }
 

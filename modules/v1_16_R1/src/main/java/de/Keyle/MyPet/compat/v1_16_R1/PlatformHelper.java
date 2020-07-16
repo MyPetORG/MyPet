@@ -51,7 +51,7 @@ import java.util.List;
 @Compat("v1_16_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
-    private static Method ENTITY_LIVING_cD = ReflectionUtil.getMethod(EntityLiving.class, "cD");
+    private static Method ENTITY_LIVING_cD = ReflectionUtil.getMethod(EntityLiving.class, "cT");
     private static Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(ChatMessage.class, "k");
 
     /**
@@ -64,6 +64,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      * @param count      the number of particles
      * @param radius     the radius around the location
      */
+    @Override
     public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         Particle effect = IRegistry.PARTICLE_TYPE.get(new MinecraftKey(effectName));
 
@@ -108,6 +109,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      * @param count      the number of particles
      * @param radius     the radius around the location
      */
+    @Override
     public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         Particle effect = IRegistry.PARTICLE_TYPE.get(new MinecraftKey(effectName));
 
@@ -138,6 +140,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         }
     }
 
+    @Override
     public boolean canSpawn(Location loc, MyPetMinecraftEntity entity) {
         return canSpawn(loc, ((EntityLiving) entity).getBoundingBox());
     }
@@ -185,6 +188,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return unsafeList;
     }
 
+    @Override
     public String getPlayerLanguage(Player player) {
         String locale = player.getLocale();
         if (locale == null || locale.equals("")) {
@@ -199,7 +203,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         NBTTagCompound vanillaNBT = new NBTTagCompound();
 
         if (entity instanceof EntityLiving) {
-            ((EntityLiving) entity).b(vanillaNBT);
+            ((EntityLiving) entity).saveData(vanillaNBT);
         } else {
             Method b = ReflectionUtil.getMethod(entity.getClass(), "b", NBTTagCompound.class);
             try {
@@ -222,7 +226,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 villager.a(vanillaNBT);
             } else if (bukkitEntity instanceof WanderingTrader) {
                 EntityVillagerTrader villager = (EntityVillagerTrader) entity;
-                villager.a(vanillaNBT);
+                villager.saveData(vanillaNBT);
             }
         }
     }
@@ -237,19 +241,22 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 
+    @Override
     public void sendMessageRaw(Player player, String message) {
         if (player instanceof CraftPlayer) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(message)));
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(message), ChatMessageType.CHAT, player.getUniqueId()));
         }
     }
 
+    @Override
     public void sendMessageActionBar(Player player, String message) {
         if (player instanceof CraftPlayer) {
             IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + Util.escapeJsonString(message) + "\"}");
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.GAME_INFO));
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.GAME_INFO, player.getUniqueId()));
         }
     }
 
+    @Override
     public void addZombieTargetGoal(Zombie zombie) {
     }
 
@@ -266,7 +273,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
         {
             ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            int slot = EntityInsentient.h(itemstack).c();
+            int slot = EntityInsentient.j(itemstack).c();
             if (slot == 0) {
                 if (itemstack.getItem() instanceof ItemSword) {
                     return true;
@@ -287,8 +294,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 } else if (itemstack.getItem() instanceof ItemFishingRod) {
                     return true;
                 } else if (itemstack.getItem() instanceof ItemCompass) {
-                    return true;
-                } else if (itemstack.getItem() instanceof ItemClock) {
                     return true;
                 } else if (itemstack.getItem() instanceof ItemCarrotStick) {
                     return true;
@@ -343,25 +348,28 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public void strikeLightning(Location loc, float distance) {
         WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
-        EntityLightning lightning = new EntityLightning(world, loc.getX(), loc.getY(), loc.getZ(), true);
+        EntityLightning lightning = new EntityLightning(EntityTypes.LIGHTNING_BOLT, world);
+        lightning.setEffect(true);
+        lightning.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), 0.0F, 0.0F);
         world.getServer()
                 .getServer()
                 .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.worldProvider.getDimensionManager(),
-                        new PacketPlayOutSpawnEntityWeather(lightning));
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.getDimensionKey(),
+                        new PacketPlayOutSpawnEntity(lightning));
         world.getServer()
                 .getServer()
                 .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.worldProvider.getDimensionManager(),
+                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.getDimensionKey(),
                         new PacketPlayOutNamedSoundEffect(SoundEffects.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
     }
 
+    @Override
     public String getLastDamageSource(LivingEntity e) {
         EntityLiving el = ((CraftLivingEntity) e).getHandle();
-        if (el.cT() == null) {
+        if (el.dl() == null) {
             return null;
         }
-        return ((ChatMessage) el.cT().getLocalizedDeathMessage(el)).getKey();
+        return ((ChatMessage) el.dl().getLocalizedDeathMessage(el)).getKey();
     }
 
     @Override
