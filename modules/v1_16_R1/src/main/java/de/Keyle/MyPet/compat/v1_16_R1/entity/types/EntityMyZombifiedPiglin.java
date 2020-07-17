@@ -40,26 +40,26 @@ import java.util.Arrays;
 import static de.Keyle.MyPet.compat.v1_16_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 0.6F, height = 1.9F)
-public class EntityMyPigZombie extends EntityMyPet {
+public class EntityMyZombifiedPiglin extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPigZombie.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyZombifiedPiglin.class, DataWatcherRegistry.i);
 
-    public EntityMyPigZombie(World world, MyPet myPet) {
+    public EntityMyZombifiedPiglin(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
     protected String getDeathSound() {
-        return "entity.zombie_pigman.death";
+        return "entity.zombified_piglin.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.zombie_pigman.hurt";
+        return "entity.zombified_piglin.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.zombie_pigman.ambient";
+        return "entity.zombified_piglin.ambient";
     }
 
     public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {

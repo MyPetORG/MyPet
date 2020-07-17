@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -104,7 +104,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @Override
     public void registerEntityTypes() {
         RegistryBlocks entityRegistry = (RegistryBlocks) getRegistry(IRegistry.ENTITY_TYPE);
-        for (MyPetType type : MyPetType.values()) {
+        for (MyPetType type : MyPetType.all()) {
             registerEntity(type, entityRegistry);
         }
     }

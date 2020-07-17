@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -160,6 +160,7 @@ public enum MyPetType {
     PigZombie("PIG_ZOMBIE", "1.7.10", MyPigZombie.class, new Compat<>()
             .v("1.7.10", 57)
             .v("1.13", "zombie_pigman")
+            .removedAt("1.16")
             .search()),
     Pillager("PILLAGER", "1.14", MyPillager.class, new Compat<>()
             .v("1.14", "pillager")
@@ -265,21 +266,26 @@ public enum MyPetType {
             .v("1.7.10", 29)
             .v("1.13", "zombie_horse")
             .search()),
+    ZombifiedPiglin("ZOMBIFIED_PIGLIN", "1.16", MyZombifiedPiglin.class, new Compat<>()
+            .v("1.16", "zombified_piglin")
+            .search()),
     ZombieVillager("ZOMBIE_VILLAGER", "1.11", MyZombieVillager.class, new Compat<>()
             .v("1.7.10", 27)
             .v("1.13", "zombie_villager")
             .search());
 
-    private String bukkitName;
-    private String minecraftVersion;
-    private Object typeID;
-    private Class<? extends MyPet> mypetClass;
+    private final String bukkitName;
+    private final String minVersion;
+    private final boolean removed;
+    private final Object typeID;
+    private final Class<? extends MyPet> mypetClass;
 
-    MyPetType(String bukkitName, String minecraftVersion, Class<? extends MyPet> mypetClass, Compat id) {
+    MyPetType(String bukkitName, String minecraftVersion, Class<? extends MyPet> mypetClass, Compat<?> id) {
         this.bukkitName = bukkitName;
         this.typeID = id.get();
         this.mypetClass = mypetClass;
-        this.minecraftVersion = minecraftVersion;
+        this.minVersion = minecraftVersion;
+        this.removed = id.isRemoved();
     }
 
     public String getBukkitName() {
@@ -295,7 +301,7 @@ public enum MyPetType {
     }
 
     public boolean checkMinecraftVersion() {
-        return minecraftVersion == null || MyPetApi.getCompatUtil().compareWithMinecraftVersion(this.minecraftVersion) >= 0;
+        return !removed && MyPetApi.getCompatUtil().compareWithMinecraftVersion(this.minVersion) >= 0;
     }
 
     public static List<MyPetType> all() {

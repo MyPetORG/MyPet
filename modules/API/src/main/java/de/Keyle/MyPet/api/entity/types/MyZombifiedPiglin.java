@@ -18,24 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_16_R1.services;
+package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.util.service.Load;
-import de.keyle.knbt.TagCompound;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
-@Load(Load.State.AfterHooks)
-public class RepositoryMyPetConverterService extends de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService {
 
-    public void v1_16_R1(StoredMyPet pet) {
-        TagCompound info = pet.getInfo();
+@DefaultInfo(food = {"rotten_flesh"})
+public interface MyZombifiedPiglin extends MyPet, MyPetEquipment, MyPetBaby {
 
-        switch (pet.getPetType()) {
-            case PigZombie:
-                pet.setPetType(MyPetType.ZombifiedPiglin);
-        }
-
-        pet.setInfo(info);
-    }
 }

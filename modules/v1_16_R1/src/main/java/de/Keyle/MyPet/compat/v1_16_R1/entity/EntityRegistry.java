@@ -104,7 +104,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @Override
     public void registerEntityTypes() {
         RegistryBlocks<EntityTypes<?>> entityRegistry = getRegistry(IRegistry.ENTITY_TYPE);
-        for (MyPetType type : MyPetType.values()) {
+        for (MyPetType type : MyPetType.all()) {
             registerEntity(type, entityRegistry);
         }
     }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ public class Compat<T> {
     List<KeyValue<String, CompatValueProvider<T>>> valueProviders = new LinkedList<>();
     CompatValueProvider<T> defaultValueProvider = null;
 
+    String removedAt = null;
     KeyValue<String, T> foundValue = null;
     T defaultValue = null;
 
@@ -61,6 +62,11 @@ public class Compat<T> {
         return this;
     }
 
+    public Compat<T> removedAt(String version) {
+        this.removedAt = version;
+        return this;
+    }
+
     public Compat<T> d(CompatValueProvider<T> func) {
         defaultValueProvider = func;
         return this;
@@ -71,6 +77,13 @@ public class Compat<T> {
             return defaultValue;
         }
         return foundValue.getValue();
+    }
+
+    public boolean isRemoved() {
+        if (this.removedAt != null) {
+            return MyPetApi.getCompatUtil().isCompatible(this.removedAt);
+        }
+        return false;
     }
 
     public Compat<T> search() {

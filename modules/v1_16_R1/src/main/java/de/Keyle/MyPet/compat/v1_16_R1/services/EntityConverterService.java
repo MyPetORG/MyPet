@@ -241,8 +241,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD));
         } else if (myPet instanceof MySkeleton) {
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
-        } else if (myPet instanceof MyPigZombie) {
-            normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_SWORD));
         } else if (myPet instanceof MyHorse) {
             Horse.Style style = Horse.Style.values()[(((MyHorse) myPet).getVariant() >>> 8)];
             Horse.Color color = Horse.Color.values()[(((MyHorse) myPet).getVariant() & 0xFF)];

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -90,10 +90,11 @@ public enum MyPetClass {
     Villager(MyVillager.class),
     Vindicator(MyVindicator.class),
     Zombie(MyZombie.class),
+    ZombifiedPiglin(MyZombifiedPiglin.class),
     ZombieHorse(MyZombieHorse.class),
     ZombieVillager(MyZombieVillager.class);
 
-    private Class<? extends MyPet> clazz;
+    private final Class<? extends MyPet> clazz;
 
     MyPetClass(Class<? extends MyPet> clazz) {
         this.clazz = clazz;

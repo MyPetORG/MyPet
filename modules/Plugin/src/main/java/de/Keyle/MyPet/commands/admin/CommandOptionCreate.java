@@ -320,7 +320,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         try {
             MyPetType myPetType = MyPetType.byName(args[1 + forceOffset]);
-            if (MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
+            if (myPetType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
                 Player owner = Bukkit.getPlayer(args[forceOffset]);
                 if (owner == null || !owner.isOnline()) {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
