@@ -249,6 +249,9 @@ public class ConfigurationLoader {
         if (MyPetType.Donkey.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
         }
+        if (MyPetType.Hoglin.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle");
+        }
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MyPet.Snowman.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle");
@@ -270,6 +273,9 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.Phantom.CanGlide", MyPet.Phantom.CAN_GLIDE);
         }
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
+        if (MyPetType.Piglin.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle");
+        }
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
         if (MyPetType.Rabbit.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle");
@@ -280,15 +286,24 @@ public class ConfigurationLoader {
         if (MyPetType.SkeletonHorse.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle");
         }
+        if (MyPetType.Strider.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Strider.GrowUpItem", "experience_bottle");
+        }
         if (MyPetType.Vex.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Vex.CanGlide", MyPet.Vex.CAN_GLIDE);
         }
         config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Wither.CanGlide", MyPet.Wither.CAN_GLIDE);
+        if (MyPetType.Zoglin.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Zoglin.GrowUpItem", "experience_bottle");
+        }
         config.addDefault("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle");
         if (MyPetType.ZombieHorse.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle");
+        }
+        if (MyPetType.ZombifiedPiglin.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.ZombifiedPiglin.GrowUpItem", "experience_bottle");
         }
 
         config.options().copyDefaults(true);
@@ -521,6 +536,11 @@ public class ConfigurationLoader {
         MyPet.SkeletonHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle"));
         MyPet.Mule.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mule.GrowUpItem", "experience_bottle"));
         MyPet.Donkey.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle"));
+        MyPet.Zoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zoglin.GrowUpItem", "experience_bottle"));
+        MyPet.Hoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle"));
+        MyPet.Strider.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Strider.GrowUpItem", "experience_bottle"));
+        MyPet.Piglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle"));
+        MyPet.ZombifiedPiglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombifiedPiglin.GrowUpItem", "experience_bottle"));
 
         for (MyPetType petType : MyPetType.values()) {
             if (!petType.checkMinecraftVersion()) {

@@ -238,6 +238,11 @@ public class Configuration {
             public static boolean CAN_GLIDE = true;
         }
 
+        public static class Hoglin {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Horse {
 
             public static ConfigItem GROW_UP_ITEM;
@@ -284,6 +289,11 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class Piglin {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class PigZombie {
 
             public static ConfigItem GROW_UP_ITEM;
@@ -311,6 +321,11 @@ public class Configuration {
             public static boolean FIX_SNOW_TRACK = true;
         }
 
+        public static class Strider {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Vex {
 
             public static boolean CAN_GLIDE = true;
@@ -331,12 +346,22 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class Zoglin {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Zombie {
 
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class ZombieHorse {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class ZombifiedPiglin {
 
             public static ConfigItem GROW_UP_ITEM;
         }

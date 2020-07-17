@@ -114,6 +114,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("1.7.10", "1.11", "elder")
                 .get());
 
+        petTypeOptionMap.put("hoglin", new CommandOptionCreator()
+                .add("baby")
+                .get());
+
         petTypeOptionMap.put("horse", new CommandOptionCreator()
                 .add("baby")
                 .add("saddle")
@@ -189,6 +193,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("saddle")
                 .get());
 
+        petTypeOptionMap.put("piglin", new CommandOptionCreator()
+                .add("baby")
+                .get());
+
         petTypeOptionMap.put("pigzombie", new CommandOptionCreator()
                 .add("baby")
                 .get());
@@ -232,6 +240,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("snowman", new CommandOptionCreator()
                 .add("sheared")
+                .get());
+
+        petTypeOptionMap.put("strider", new CommandOptionCreator()
+                .add("saddle")
                 .get());
 
         petTypeOptionMap.put("traderllama", new CommandOptionCreator()
@@ -288,6 +300,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("profession:")
                 .add("1.14", "level:")
                 .add("1.14", "type:")
+                .get());
+
+        petTypeOptionMap.put("zoglin", new CommandOptionCreator()
+                .add("baby")
                 .get());
 
         for (MyPetType petType : MyPetType.values()) {

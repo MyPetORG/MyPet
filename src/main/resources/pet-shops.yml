@@ -112,6 +112,13 @@ Shops:
         PetType: Guardian
         EXP: 0
         Price: 100
+      hoglin:
+        Name: Hoglin
+        Description:
+          - <green>It's a Hoglin!
+        PetType: Hoglin
+        EXP: 0
+        Price: 100
       horse:
         Name: Horse
         Description:
@@ -182,6 +189,13 @@ Shops:
         Description:
           - <green>It's a Pig!
         PetType: Pig
+        EXP: 0
+        Price: 100
+      piglin:
+        Name: Piglin
+        Description:
+          - <green>It's a Piglin!
+        PetType: Piglin
         EXP: 0
         Price: 100
       pigzombie:
@@ -270,6 +284,13 @@ Shops:
         PetType: Stray
         EXP: 0
         Price: 100
+      strider:
+        Name: Strider
+        Description:
+          - <green>It's a Strider!
+        PetType: Strider
+        EXP: 0
+        Price: 100
       witch:
         Name: Witch
         Description:
@@ -321,6 +342,13 @@ Shops:
         PetType: Vindicator
         EXP: 0
         Price: 100
+      zoglin:
+        Name: Zoglin
+        Description:
+          - <green>It's a Zoglin!
+        PetType: Zoglin
+        EXP: 0
+        Price: 100
       zombie:
         Name: Zombie
         Description:
@@ -340,6 +368,13 @@ Shops:
         Description:
           - <green>It's a Zombie Villager!
         PetType: ZombieVillager
+        EXP: 0
+        Price: 100
+      zombified_piglin:
+        Name: Zombified Piglin
+        Description:
+          - <green>It's a Zombified Piglin!
+        PetType: ZombifiedPiglin
         EXP: 0
         Price: 100
 #      enderdragon:
@@ -375,7 +410,7 @@ Shops:
           - <green>It's a baby Chicken!
         PetType: Chicken
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_cow:
@@ -384,7 +419,7 @@ Shops:
           - <green>It's a baby Cow!
         PetType: Cow
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_donkey:
@@ -393,7 +428,7 @@ Shops:
           - <green>It's a bab Donkey!
         PetType: Donkey
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_horse:
@@ -402,7 +437,16 @@ Shops:
           - <green>It's a baby Horse!
         PetType: Horse
         EXP: 0
-        Price: 50
+        Price: 200
+        Options:
+          - baby
+      baby_hoglin:
+        Name: "Hoglin"
+        Description:
+          - <green>It's a baby Hoglin!
+        PetType: Hoglin
+        EXP: 0
+        Price: 200
         Options:
           - baby
       baby_llama:
@@ -411,7 +455,7 @@ Shops:
           - <green>It's a baby Llama!
         PetType: Llama
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_mooshroom:
@@ -420,7 +464,7 @@ Shops:
           - <green>It's a baby Mooshroom!
         PetType: Mooshroom
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_mule:
@@ -429,7 +473,7 @@ Shops:
           - <green>It's a baby Mule!
         PetType: Mule
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_ocelot:
@@ -438,7 +482,7 @@ Shops:
           - <green>It's a baby Ocelot!
         PetType: Ocelot
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_pig:
@@ -447,7 +491,16 @@ Shops:
           - <green>It's a baby Pig!
         PetType: Pig
         EXP: 0
-        Price: 50
+        Price: 200
+        Options:
+          - baby
+      baby_piglin:
+        Name: "Piglin"
+        Description:
+          - <green>It's a baby Piglin!
+        PetType: Piglin
+        EXP: 0
+        Price: 200
         Options:
           - baby
       baby_pig_zombie:
@@ -456,7 +509,7 @@ Shops:
           - <green>It's a baby PigZombie!
         PetType: PigZombie
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_polar_bear:
@@ -465,7 +518,7 @@ Shops:
           - <green>It's a baby Polar Bear!
         PetType: PolarBear
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_rabbit:
@@ -474,7 +527,7 @@ Shops:
           - <green>It's a baby Rabbit!
         PetType: Rabbit
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_sheep:
@@ -483,7 +536,7 @@ Shops:
           - <green>It's a baby Sheep!
         PetType: Sheep
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_skeleton_horse:
@@ -492,7 +545,16 @@ Shops:
           - <green>It's a baby Skeleton Horse!
         PetType: SkeletonHorse
         EXP: 0
-        Price: 50
+        Price: 200
+        Options:
+          - baby
+      baby_strider:
+        Name: Strider
+        Description:
+          - <green>It's a baby Strider!
+        PetType: Strider
+        EXP: 0
+        Price: 200
         Options:
           - baby
       baby_villager:
@@ -501,7 +563,7 @@ Shops:
           - <green>It's a baby Villager!
         PetType: Villager
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_wither:
@@ -510,7 +572,7 @@ Shops:
           - <green>It's a baby Wither!
         PetType: Wither
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_wolf:
@@ -519,7 +581,7 @@ Shops:
           - <green>It's a baby Wolf!
         PetType: Wolf
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - tamed
           - baby
@@ -529,7 +591,16 @@ Shops:
           - <green>It's a baby Zombie!
         PetType: Zombie
         EXP: 0
-        Price: 50
+        Price: 200
+        Options:
+          - baby
+      baby_zoglin:
+        Name: "Zoglin"
+        Description:
+          - <green>It's a baby Zoglin!
+        PetType: Zoglin
+        EXP: 0
+        Price: 200
         Options:
           - baby
       baby_zombie_horse:
@@ -538,7 +609,7 @@ Shops:
           - <green>It's a baby Zombie Horse!
         PetType: ZombieHorse
         EXP: 0
-        Price: 50
+        Price: 200
         Options:
           - baby
       baby_zombie_villager:
@@ -547,6 +618,15 @@ Shops:
           - <green>It's a baby Zombie Villager!
         PetType: ZombieVillager
         EXP: 0
-        Price: 50
+        Price: 200
+        Options:
+          - baby
+      baby_zombified_piglin:
+        Name: Zombified Piglin
+        Description:
+          - <green>It's a baby Zombified Piglin!
+        PetType: ZombifiedPiglin
+        EXP: 0
+        Price: 200
         Options:
           - baby

@@ -49,6 +49,7 @@ public enum MyPetClass {
     Ghast(MyGhast.class),
     Giant(MyGiant.class),
     Guardian(MyGuardian.class),
+    Hoglin(MyHoglin.class),
     Horse(MyHorse.class),
     Husk(MyHusk.class),
     Illusioner(MyIllusioner.class),
@@ -62,6 +63,7 @@ public enum MyPetClass {
     Parrot(MyParrot.class),
     Phantom(MyPhantom.class),
     Pig(MyPig.class),
+    Piglin(MyPiglin.class),
     PigZombie(MyPigZombie.class),
     Pillager(MyPillager.class),
     PolarBear(MyPolarBear.class),
@@ -78,6 +80,7 @@ public enum MyPetClass {
     Spider(MySpider.class),
     Squid(MySquid.class),
     Stray(MyStray.class),
+    Strider(MyStrider.class),
     TraderLlama(MyTraderLlama.class),
     TropicalFish(MyTropicalFish.class),
     Turtle(MyTurtle.class),
@@ -89,10 +92,11 @@ public enum MyPetClass {
     Vex(MyVex.class),
     Villager(MyVillager.class),
     Vindicator(MyVindicator.class),
+    Zoglin(MyZoglin.class),
     Zombie(MyZombie.class),
-    ZombifiedPiglin(MyZombifiedPiglin.class),
     ZombieHorse(MyZombieHorse.class),
-    ZombieVillager(MyZombieVillager.class);
+    ZombieVillager(MyZombieVillager.class),
+    ZombifiedPiglin(MyZombifiedPiglin.class);
 
     private final Class<? extends MyPet> clazz;
 

@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.types.MyZombifiedPiglin;
+import de.Keyle.MyPet.api.entity.types.MyPiglin;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.EntityMyPet;
 import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.Bukkit;
@@ -40,26 +40,26 @@ import java.util.Arrays;
 import static de.Keyle.MyPet.compat.v1_16_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 0.6F, height = 1.9F)
-public class EntityMyZombifiedPiglin extends EntityMyPet {
+public class EntityMyPiglin extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyZombifiedPiglin.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
 
-    public EntityMyZombifiedPiglin(World world, MyPet myPet) {
+    public EntityMyPiglin(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
     protected String getDeathSound() {
-        return "entity.zombified_piglin.death";
+        return "entity.piglin.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.zombified_piglin.hurt";
+        return "entity.piglin.hurt";
     }
 
     protected String getLivingSound() {
-        return "entity.zombified_piglin.ambient";
+        return "entity.piglin.ambient";
     }
 
     public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
@@ -115,7 +115,7 @@ public class EntityMyZombifiedPiglin extends EntityMyPet {
                     }
                 }
                 return EnumInteractionResult.CONSUME;
-            } else if (Configuration.MyPet.ZombifiedPiglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (Configuration.MyPet.Piglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
@@ -155,8 +155,8 @@ public class EntityMyZombifiedPiglin extends EntityMyPet {
         }, 5L);
     }
 
-    public MyZombifiedPiglin getMyPet() {
-        return (MyZombifiedPiglin) myPet;
+    public MyPiglin getMyPet() {
+        return (MyPiglin) myPet;
     }
 
     public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {

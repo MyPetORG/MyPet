@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -103,6 +103,11 @@ public class MonsterExperience {
         mobExp.put("TRADER_LLAMA", new MonsterExperience(1, 3, "TRADER_LLAMA"));
         mobExp.put("WANDERING_TRADER", new MonsterExperience(1, 2, "WANDERING_TRADER"));
         mobExp.put("BEE", new MonsterExperience(1, 3, "BEE"));
+        mobExp.put("ZOMBIFIED_PIGLIN", new MonsterExperience(5, "ZOMBIFIED_PIGLIN"));
+        mobExp.put("HOGLIN", new MonsterExperience(5, "HOGLIN"));
+        mobExp.put("ZOGLIN", new MonsterExperience(5, "ZOGLIN"));
+        mobExp.put("STRIDER", new MonsterExperience(1, 2, "STRIDER"));
+        mobExp.put("PIGLIN", new MonsterExperience(1, 3, "PIGLIN"));
     }
 
     private double min;

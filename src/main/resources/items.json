@@ -7072,5 +7072,9 @@
   {
     "id": "kelp_plant",
     "introduced": "1.16"
+  },
+  {
+    "id": "warped_fungus",
+    "introduced": "1.16"
   }
 ]

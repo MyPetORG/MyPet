@@ -897,7 +897,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         try {
             ItemStack itemstack = entityhuman.b(enumhand);
             EnumInteractionResult result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
-            if (!result.b() && getMyPet().getOwner().equals(entityhuman) && entityhuman.isSneaking()) {
+            if (!result.a() && getMyPet().getOwner().equals(entityhuman) && entityhuman.isSneaking()) {
                 result = EnumInteractionResult.a(toggleSitting());
             }
             return result;

@@ -149,6 +149,7 @@ permissions:
       MyPet.leash.Giant: true
       MyPet.leash.Ghast: true
       MyPet.leash.Guardian: true
+      MyPet.leash.Hoglin: true
       MyPet.leash.Horse: true
       MyPet.leash.Husk: true
       MyPet.leash.Illusioner: true
@@ -162,6 +163,7 @@ permissions:
       MyPet.leash.Parrot: true
       MyPet.leash.Phantom: true
       MyPet.leash.Pig: true
+      MyPet.leash.Piglin: true
       MyPet.leash.PigZombie: true
       MyPet.leash.Pillager: true
       MyPet.leash.PolarBear: true
@@ -178,6 +180,7 @@ permissions:
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
       MyPet.leash.Stray: true
+      MyPet.leash.Strider: true
       MyPet.leash.TraderLlama: true
       MyPet.leash.TropicalFish: true
       MyPet.leash.Turtle: true
@@ -189,9 +192,11 @@ permissions:
       MyPet.leash.Wither: true
       MyPet.leash.WitherSkeleton: true
       MyPet.leash.Wolf: true
+      MyPet.leash.Zoglin: true
       MyPet.leash.Zombie: true
       MyPet.leash.ZombieHorse: true
       MyPet.leash.ZombieVillager: true
+      MyPet.leash.ZombifiedPiglin: true
   MyPet.command.trade.offer.*:
     description: Player offer all MyPet-Types.
     children:
@@ -216,6 +221,7 @@ permissions:
       MyPet.command.trade.offer.Giant: true
       MyPet.command.trade.offer.Ghast: true
       MyPet.command.trade.offer.Guardian: true
+      MyPet.command.trade.offer.Hoglin: true
       MyPet.command.trade.offer.Horse: true
       MyPet.command.trade.offer.Husk: true
       MyPet.command.trade.offer.IronGolem: true
@@ -228,6 +234,7 @@ permissions:
       MyPet.command.trade.offer.Parrot: true
       MyPet.command.trade.offer.Phantom: true
       MyPet.command.trade.offer.Pig: true
+      MyPet.command.trade.offer.Piglin: true
       MyPet.command.trade.offer.PigZombie: true
       MyPet.command.trade.offer.Pillager: true
       MyPet.command.trade.offer.PolarBear: true
@@ -244,6 +251,7 @@ permissions:
       MyPet.command.trade.offer.Spider: true
       MyPet.command.trade.offer.Squid: true
       MyPet.command.trade.offer.Stray: true
+      MyPet.command.trade.offer.Strider: true
       MyPet.command.trade.offer.TraderLlama: true
       MyPet.command.trade.offer.TropicalFish: true
       MyPet.command.trade.offer.Turtle: true
@@ -255,9 +263,11 @@ permissions:
       MyPet.command.trade.offer.Wither: true
       MyPet.command.trade.offer.WitherSkeleton: true
       MyPet.command.trade.offer.Wolf: true
+      MyPet.command.trade.offer.Zoglin: true
       MyPet.command.trade.offer.Zombie: true
       MyPet.command.trade.offer.ZombieHorse: true
       MyPet.command.trade.offer.ZombieVillager: true
+      MyPet.command.trade.offer.ZombifiedPiglin: true
   MyPet.command.trade.receive.*:
     description: Player receive all MyPet-Types.
     children:
@@ -282,6 +292,7 @@ permissions:
       MyPet.command.trade.receive.Giant: true
       MyPet.command.trade.receive.Ghast: true
       MyPet.command.trade.receive.Guardian: true
+      MyPet.command.trade.receive.Hoglin: true
       MyPet.command.trade.receive.Horse: true
       MyPet.command.trade.receive.Husk: true
       MyPet.command.trade.receive.IronGolem: true
@@ -294,6 +305,7 @@ permissions:
       MyPet.command.trade.receive.Parrot: true
       MyPet.command.trade.receive.Phantom: true
       MyPet.command.trade.receive.Pig: true
+      MyPet.command.trade.receive.Piglin: true
       MyPet.command.trade.receive.PigZombie: true
       MyPet.command.trade.receive.Pillager: true
       MyPet.command.trade.receive.PolarBear: true
@@ -310,6 +322,7 @@ permissions:
       MyPet.command.trade.receive.Spider: true
       MyPet.command.trade.receive.Squid: true
       MyPet.command.trade.receive.Stray: true
+      MyPet.command.trade.receive.Strider: true
       MyPet.command.trade.receive.TraderLlama: true
       MyPet.command.trade.receive.TropicalFish: true
       MyPet.command.trade.receive.Turtle: true
@@ -321,9 +334,11 @@ permissions:
       MyPet.command.trade.receive.Wither: true
       MyPet.command.trade.receive.WitherSkeleton: true
       MyPet.command.trade.receive.Wolf: true
+      MyPet.command.trade.receive.Zoglin: true
       MyPet.command.trade.receive.Zombie: true
       MyPet.command.trade.receive.ZombieHorse: true
       MyPet.command.trade.receive.ZombieVillager: true
+      MyPet.command.trade.receive.ZombifiedPiglin: true
   MyPet.admin:
     description: Gives access to the MyPet admin features.
   MyPet.*:

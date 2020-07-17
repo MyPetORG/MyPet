@@ -36,12 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyZombifiedPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombifiedPiglin {
+public class MyPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglin {
 
     protected boolean isBaby = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
-    public MyZombifiedPiglin(MyPetPlayer petOwner) {
+    public MyPiglin(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
@@ -99,7 +99,7 @@ public class MyZombifiedPiglin extends MyPet implements de.Keyle.MyPet.api.entit
 
     @Override
     public MyPetType getPetType() {
-        return MyPetType.ZombifiedPiglin;
+        return MyPetType.Piglin;
     }
 
     public boolean isBaby() {
@@ -141,6 +141,6 @@ public class MyZombifiedPiglin extends MyPet implements de.Keyle.MyPet.api.entit
 
     @Override
     public String toString() {
-        return "MyZombifiedPiglin{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+        return "MyPiglin{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

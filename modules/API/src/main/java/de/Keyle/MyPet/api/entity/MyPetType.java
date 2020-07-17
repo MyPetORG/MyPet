@@ -111,6 +111,9 @@ public enum MyPetType {
             .v("1.7.10", 100)
             .v("1.13", "horse")
             .search()),
+    Hoglin("HOGLIN", "1.16", MyHoglin.class, new Compat<>()
+            .v("1.16", "hoglin")
+            .search()),
     Husk("HUSK", "1.11", MyHusk.class, new Compat<>()
             .v("1.7.10", 23)
             .v("1.13", "husk")
@@ -156,6 +159,9 @@ public enum MyPetType {
     Pig("PIG", "1.7.10", MyPig.class, new Compat<>()
             .v("1.7.10", 90)
             .v("1.13", "pig")
+            .search()),
+    Piglin("PIGLIN", "1.16", MyPiglin.class, new Compat<>()
+            .v("1.16", "piglin")
             .search()),
     PigZombie("PIG_ZOMBIE", "1.7.10", MyPigZombie.class, new Compat<>()
             .v("1.7.10", 57)
@@ -218,6 +224,9 @@ public enum MyPetType {
             .v("1.7.10", 6)
             .v("1.13", "stray")
             .search()),
+    Strider("STRIDER", "1.16", MyStray.class, new Compat<>()
+            .v("1.16", "strider")
+            .search()),
     TraderLlama("TRADER_LLAMA", "1.14", MyTraderLlama.class, new Compat<>()
             .v("1.14", "trader_llama")
             .search()),
@@ -257,6 +266,9 @@ public enum MyPetType {
     Wolf("WOLF", "1.7.10", MyWolf.class, new Compat<>()
             .v("1.7.10", 95)
             .v("1.13", "wolf")
+            .search()),
+    Zoglin("ZOGLIN", "1.16", MyZoglin.class, new Compat<>()
+            .v("1.16", "zoglin")
             .search()),
     Zombie("ZOMBIE", "1.7.10", MyZombie.class, new Compat<>()
             .v("1.7.10", 54)
