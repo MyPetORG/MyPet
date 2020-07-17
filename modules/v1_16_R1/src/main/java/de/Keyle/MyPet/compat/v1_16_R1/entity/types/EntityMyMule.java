@@ -162,11 +162,6 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
         getDataWatcher().register(CHEST_WATCHER, false);
     }
 
-    protected void initAttributes() {
-        EntityMyPet.setupAttributes(this, EntityTypes.MULE);
-        this.getAttributeMap().b(GenericAttributes.JUMP_STRENGTH);
-    }
-
     @Override
     public void updateVisuals() {
         getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());

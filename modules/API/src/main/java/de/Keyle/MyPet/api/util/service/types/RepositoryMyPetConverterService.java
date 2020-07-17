@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -50,6 +50,7 @@ public class RepositoryMyPetConverterService implements ServiceContainer {
         v1_13_R2,
         v1_14_R1,
         v1_15_R1,
+        v1_16_R1,
     }
 
     Version toVersion;

@@ -130,8 +130,6 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     }
 
     protected void initAttributes() {
-        //setupAttributes(this,);
-        this.attributeMap = new AttributeMapBase(MyAttributeDefaults.defaultAttribute.get(((EntityRegistry) MyPetApi.getEntityRegistry()).entityTypes.get(getMyPet().getPetType())));
     }
 
     @Override
@@ -160,11 +158,13 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
     @Override
     public AttributeMapBase getAttributeMap() {
-
         if (attributeMap == null) {
-            initAttributes();
+            EntityRegistry entityRegistry = (EntityRegistry) MyPetApi.getEntityRegistry();
+            MyPetType type = entityRegistry.getMyPetType(this.getClass());
+            EntityTypes<?> types = entityRegistry.entityTypes.get(type);
+            AttributeProvider attributeProvider = MyAttributeDefaults.defaultAttribute.get(types);
+            this.attributeMap = new AttributeMapBase(attributeProvider);
         }
-
         return attributeMap;
     }
 

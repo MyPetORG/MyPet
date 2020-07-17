@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_16_R1.entity;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -35,49 +37,39 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 @Compat("v1_16_R1")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
-    Map<MyPetType, Class<? extends EntityMyPet>> entityClasses = new HashMap<>();
+    BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
     @SuppressWarnings("rawtypes")
     Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
 
-    public EntityRegistry() {
-    }
-
+    @SuppressWarnings("unchecked")
     protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-        EntitySize size = null;
-        if (MyPetApi.getCompatUtil().isCompatible("1.14.4")) {
-            size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).l();
-        } else {
-            Method j = ReflectionUtil.getMethod(EntityTypes.class, "l");
-            try {
-                size = (EntitySize) j.invoke(entityRegistry.get(new MinecraftKey(key.toLowerCase())));
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
+        EntitySize size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).l();
         entityTypes.put(petType, IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.Builder.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
         registerDefaultAttributes(entityTypes.get(petType), (EntityTypes<? extends EntityLiving>) ReflectionUtil.getFieldValue(EntityTypes.class, null, petType.getBukkitName()));
         overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
     }
-
 
     @SneakyThrows
     public static void registerDefaultAttributes(EntityTypes<? extends EntityLiving> customType, EntityTypes<? extends EntityLiving> rootType) {
         MyAttributeDefaults.defaultAttribute.put(customType, MyAttributeDefaults.defaultAttribute.get(rootType));
     }
 
-    protected void registerEntity(MyPetType type, RegistryBlocks entityRegistry) {
+    @SuppressWarnings("unchecked")
+    protected void registerEntity(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
         Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_16_R1.entity.types.EntityMy" + type.name());
         entityClasses.put(type, entityClass);
         String key = type.getTypeID().toString();
         registerEntityType(type, key, entityRegistry);
+    }
+
+    public MyPetType getMyPetType(Class<? extends EntityMyPet> clazz) {
+        return entityClasses.inverse().get(clazz);
     }
 
     @Override
@@ -111,7 +103,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     @Override
     public void registerEntityTypes() {
-        RegistryBlocks entityRegistry = (RegistryBlocks) getRegistry(IRegistry.ENTITY_TYPE);
+        RegistryBlocks<EntityTypes<?>> entityRegistry = getRegistry(IRegistry.ENTITY_TYPE);
         for (MyPetType type : MyPetType.values()) {
             registerEntity(type, entityRegistry);
         }
@@ -126,14 +118,15 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public void unregisterEntityTypes() {
     }
 
-    public RegistryMaterials getRegistry(RegistryMaterials registryMaterials) {
-        if (!registryMaterials.getClass().getName().equals(RegistryMaterials.class.getName())) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public RegistryBlocks<EntityTypes<?>> getRegistry(RegistryBlocks registryMaterials) {
+        if (!registryMaterials.getClass().getName().equals(RegistryBlocks.class.getName())) {
             MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
             for (Field field : registryMaterials.getClass().getDeclaredFields()) {
                 if (field.getType() == RegistryMaterials.class) {
                     field.setAccessible(true);
                     try {
-                        RegistryMaterials reg = (RegistryMaterials) field.get(registryMaterials);
+                        RegistryBlocks<EntityTypes<?>> reg = (RegistryBlocks<EntityTypes<?>>) field.get(registryMaterials);
 
                         if (!reg.getClass().getName().equals(RegistryBlocks.class.getName())) {
                             reg = getRegistry(reg);
@@ -149,23 +142,38 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         return registryMaterials;
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void overwriteEntityID(EntityTypes types, int id, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-        RegistryID registryID = (RegistryID) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "b");
-        int[] c = (int[]) ReflectionUtil.getFieldValue(RegistryID.class, registryID, "c");
-        Method b = ReflectionUtil.getMethod(RegistryID.class, "b", Object.class, int.class);
-        Method d = ReflectionUtil.getMethod(RegistryID.class, "c", Object.class);
-        try {
-            int dVal = (int) d.invoke(registryID, types);
-            int bVal = (int) b.invoke(registryID, types, dVal);
-            c[bVal] = id;
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        RegistryID<EntityTypes> registryID = (RegistryID<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "b");
+        int[] RegistryID_c = (int[]) ReflectionUtil.getFieldValue(RegistryID.class, registryID, "c");
+        Object[] RegistryID_b = (Object[]) ReflectionUtil.getFieldValue(RegistryID.class, registryID, "b");
+        int RegistryID_d = (MathHelper.g(System.identityHashCode(types)) & 2147483647) % RegistryID_b.length;
+        int bVal = this.RegistryID_b(RegistryID_b, types, RegistryID_d);
+        RegistryID_c[bVal] = id;
+    }
+
+    private int RegistryID_b(Object[] b, Object k0, int i) {
+        int j;
+
+        for (j = i; j < b.length; ++j) {
+            if (b[j] == k0) {
+                return j;
+            } else if (b[j] == null) {
+                return -1;
+            }
         }
+        for (j = 0; j < i; ++j) {
+            if (b[j] == k0) {
+                return j;
+            } else if (b[j] == null) {
+                return -1;
+            }
+        }
+        return -1;
     }
 
     protected int getEntityTypeId(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-        EntityTypes types = entityRegistry.get(new MinecraftKey(type.getTypeID().toString()));
+        EntityTypes<?> types = entityRegistry.get(new MinecraftKey(type.getTypeID().toString()));
         return entityRegistry.a(types);
     }
 }

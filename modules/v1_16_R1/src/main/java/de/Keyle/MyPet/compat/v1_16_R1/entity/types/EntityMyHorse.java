@@ -205,12 +205,6 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     }
 
     @Override
-    protected void initAttributes() {
-        EntityMyPet.setupAttributes(this, EntityTypes.HORSE);
-        this.getAttributeMap().b(GenericAttributes.JUMP_STRENGTH);
-    }
-
-    @Override
     public void updateVisuals() {
         getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
         getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());

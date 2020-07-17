@@ -126,7 +126,6 @@ public class EntityMyWolf extends EntityMyPet {
 
     @Override
     protected void initAttributes() {
-        EntityMyPet.setupAttributes(this, EntityTypes.WOLF);
         getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(20.0D);
     }
 

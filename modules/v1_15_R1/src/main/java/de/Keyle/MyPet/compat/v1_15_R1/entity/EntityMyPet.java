@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -770,8 +770,8 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
             if (this.isClimbing()) {
                 swimmSpeed = 0.15F;
-                motX = MathHelper.a(motX, (double) (-swimmSpeed), (double) swimmSpeed);
-                motZ = MathHelper.a(motZ, (double) (-swimmSpeed), (double) swimmSpeed);
+                motX = MathHelper.a(motX, -swimmSpeed, swimmSpeed);
+                motZ = MathHelper.a(motZ, -swimmSpeed, swimmSpeed);
                 this.fallDistance = 0.0F;
                 if (motY < -0.15D) {
                     motY = -0.15D;
