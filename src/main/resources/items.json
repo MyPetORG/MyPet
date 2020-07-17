@@ -5393,7 +5393,8 @@
     "legacy-data": 57,
     "legacy-id": 383,
     "id": "zombie_pigman_spawn_egg",
-    "introduced": "1.7.10"
+    "introduced": "1.7.10",
+    "last-used": "1.15.2"
   },
   {
     "legacy-name": "spawn_egg",
@@ -6639,5 +6640,437 @@
   {
     "id": "bee_nest",
     "introduced": "1.15"
+  },
+  {
+    "id": "crimson_planks",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_planks",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_pressure_plate",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_pressure_plate",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_trapdoor",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_trapdoor",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_button",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_button",
+    "introduced": "1.16"
+  },
+  {
+    "id": "hoglin_spawn_egg",
+    "introduced": "1.16"
+  },
+  {
+    "id": "piglin_spawn_egg",
+    "introduced": "1.16"
+  },
+  {
+    "id": "strider_spawn_egg",
+    "introduced": "1.16"
+  },
+  {
+    "id": "zoglin_spawn_egg",
+    "introduced": "1.16"
+  },
+  {
+    "id": "zombified_piglin_spawn_egg",
+    "introduced": "1.16"
+  },
+  {
+    "id": "stripped_crimson_stem",
+    "introduced": "1.16"
+  },
+  {
+    "id": "stripped_warped_stem",
+    "introduced": "1.16"
+  },
+  {
+    "id": "stripped_crimson_hyphae",
+    "introduced": "1.16"
+  },
+  {
+    "id": "stripped_warped_hyphae",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_bamboo",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_cornflower",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_lily_of_the_valley",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_wither_rose",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_crimson_fungus",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_crimson_roots",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_warped_fungus",
+    "introduced": "1.16"
+  },
+  {
+    "id": "potted_warped_roots",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_sign",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_wall_sign",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_wall_sign",
+    "introduced": "1.16"
+  },
+  {
+    "id": "stone_slab",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_slab",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_slab",
+    "introduced": "1.16"
+  },
+  {
+    "id": "blackstone_slab",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_slab",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_brick_slab",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_stairs",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_stairs",
+    "introduced": "1.16"
+  },
+  {
+    "id": "blackstone_stairs",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_stairs",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_brick_stairs",
+    "introduced": "1.16"
+  },
+  {
+    "id": "blackstone_wall",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_wall",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_brick_wall",
+    "introduced": "1.16"
+  },
+  {
+    "id": "piglin_banner_pattern",
+    "introduced": "1.16"
+  },
+  {
+    "id": "music_disc_pigstep",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_ingot",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_scrap",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_sword",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_shovel",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_pickaxe",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_axe",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_hoe",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_helmet",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_chestplate",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_leggings",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_boots",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_fungus_on_a_stick",
+    "introduced": "1.16"
+  },
+  {
+    "id": "target",
+    "introduced": "1.16"
+  },
+  {
+    "id": "ancient_debris",
+    "introduced": "1.16"
+  },
+  {
+    "id": "basalt",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_basalt",
+    "introduced": "1.16"
+  },
+  {
+    "id": "netherite_block",
+    "introduced": "1.16"
+  },
+  {
+    "id": "blackstone",
+    "introduced": "1.16"
+  },
+  {
+    "id": "gilded_blackstone",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_bricks",
+    "introduced": "1.16"
+  },
+  {
+    "id": "chiseled_polished_blackstone",
+    "introduced": "1.16"
+  },
+  {
+    "id": "cracked_polished_blackstone_bricks",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_button",
+    "introduced": "1.16"
+  },
+  {
+    "id": "polished_blackstone_pressure_plate",
+    "introduced": "1.16"
+  },
+  {
+    "id": "chain",
+    "introduced": "1.16"
+  },
+  {
+    "id": "shroomlight",
+    "introduced": "1.16"
+  },
+  {
+    "id": "lodestone",
+    "introduced": "1.16"
+  },
+  {
+    "id": "respawn_anchor",
+    "introduced": "1.16"
+  },
+  {
+    "id": "soul_campfire",
+    "introduced": "1.16"
+  },
+  {
+    "id": "soul_fire",
+    "introduced": "1.16"
+  },
+  {
+    "id": "soul_lantern",
+    "introduced": "1.16"
+  },
+  {
+    "id": "soul_soil",
+    "introduced": "1.16"
+  },
+  {
+    "id": "soul_torch",
+    "introduced": "1.16"
+  },
+  {
+    "id": "soul_wall_torch",
+    "introduced": "1.16"
+  },
+  {
+    "id": "chiseled_nether_bricks",
+    "introduced": "1.16"
+  },
+  {
+    "id": "cracked_nether_bricks",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_door",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_fence",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_fence_gate",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_roots",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_fungus",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_hyphae",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_nylium",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crimson_stem",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_door",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_fence",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_fence_gate",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_roots",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_roots",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_hyphae",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_nylium",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_stem",
+    "introduced": "1.16"
+  },
+  {
+    "id": "warped_wart_block",
+    "introduced": "1.16"
+  },
+  {
+    "id": "crying_obsidian",
+    "introduced": "1.16"
+  },
+  {
+    "id": "weeping_vines",
+    "introduced": "1.16"
+  },
+  {
+    "id": "weeping_vines_plant",
+    "introduced": "1.16"
+  },
+  {
+    "id": "twisting_vines",
+    "introduced": "1.16"
+  },
+  {
+    "id": "twisting_vines_plant",
+    "introduced": "1.16"
+  },
+  {
+    "id": "nether_gold_ore",
+    "introduced": "1.16"
+  },
+  {
+    "id": "nether_sprouts",
+    "introduced": "1.16"
+  },
+  {
+    "id": "quartz_bricks",
+    "introduced": "1.16"
+  },
+  {
+    "id": "purple_shulker_box",
+    "introduced": "1.16"
+  },
+  {
+    "id": "kelp_plant",
+    "introduced": "1.16"
   }
 ]
