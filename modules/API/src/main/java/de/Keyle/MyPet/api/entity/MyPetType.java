@@ -304,8 +304,9 @@ public enum MyPetType {
         return bukkitName;
     }
 
-    public Object getTypeID() {
-        return typeID;
+    @SuppressWarnings("unchecked")
+    public <T> T getTypeID() {
+        return (T) typeID;
     }
 
     public Class<? extends MyPet> getMyPetClass() {

@@ -162,7 +162,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             EntityRegistry entityRegistry = (EntityRegistry) MyPetApi.getEntityRegistry();
             MyPetType type = entityRegistry.getMyPetType(this.getClass());
             EntityTypes<?> types = entityRegistry.entityTypes.get(type);
-            AttributeProvider attributeProvider = MyAttributeDefaults.defaultAttribute.get(types);
+            AttributeProvider attributeProvider = MyAttributeDefaults.getAttribute(types);
             this.attributeMap = new AttributeMapBase(attributeProvider);
         }
         return attributeMap;

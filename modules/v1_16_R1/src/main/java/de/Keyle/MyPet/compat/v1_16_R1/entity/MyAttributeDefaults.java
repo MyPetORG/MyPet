@@ -24,95 +24,100 @@ import net.minecraft.server.v1_16_R1.*;
 
 import java.util.HashMap;
 
+import static net.minecraft.server.v1_16_R1.EntityTypes.*;
+
 public class MyAttributeDefaults {
 
-    public static MyMap<EntityTypes<? extends EntityLiving>, AttributeProvider> defaultAttribute = new MyMap<>();
+    private static final FastMap<EntityTypes<? extends EntityLiving>, AttributeProvider> defaultAttribute = new FastMap<>();
 
     static {
-
-        defaultAttribute = defaultAttribute
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ARMOR_STAND, EntityLiving.cK().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.BAT, EntityBat.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.BEE, EntityBee.fa().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.BLAZE, EntityBlaze.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.CAT, EntityCat.fb().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.CAVE_SPIDER, EntityCaveSpider.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.CHICKEN, EntityChicken.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.COD, EntityFish.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.COW, EntityCow.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.CREEPER, EntityCreeper.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.DOLPHIN, EntityDolphin.eN().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.DONKEY, EntityHorseChestedAbstract.eM().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.DROWNED, EntityZombie.eT().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ELDER_GUARDIAN, EntityGuardianElder.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ENDERMAN, EntityEnderman.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ENDERMITE, EntityEndermite.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ENDER_DRAGON, EntityEnderDragon.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.EVOKER, EntityEvoker.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.FOX, EntityFox.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.GHAST, EntityGhast.eK().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.GIANT, EntityGiantZombie.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.GUARDIAN, EntityGuardian.eN().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.HOGLIN, EntityHoglin.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.HORSE, EntityHorseAbstract.fj().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.HUSK, EntityZombie.eT().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ILLUSIONER, EntityIllagerIllusioner.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.IRON_GOLEM, EntityIronGolem.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.LLAMA, EntityLlama.fx().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.MAGMA_CUBE, EntityMagmaCube.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.MOOSHROOM, EntityCow.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.MULE, EntityHorseChestedAbstract.eM().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.OCELOT, EntityOcelot.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PANDA, EntityPanda.eZ().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PARROT, EntityParrot.eV().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PHANTOM, EntityMonster.eS().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PIG, EntityPig.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PIGLIN, EntityPiglin.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PILLAGER, EntityPillager.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PLAYER, EntityHuman.eo().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.POLAR_BEAR, EntityPolarBear.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.PUFFERFISH, EntityFish.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.RABBIT, EntityRabbit.eM().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.RAVAGER, EntityRavager.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SALMON, EntityFish.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SHEEP, EntitySheep.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SHULKER, EntityShulker.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SILVERFISH, EntitySilverfish.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SKELETON, EntitySkeletonAbstract.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SKELETON_HORSE, EntityHorseSkeleton.eM().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SLIME, EntityMonster.eS().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SNOW_GOLEM, EntitySnowman.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SPIDER, EntitySpider.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.SQUID, EntitySquid.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.STRAY, EntitySkeletonAbstract.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.STRIDER, EntityStrider.eN().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.TRADER_LLAMA, EntityLlama.fx().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.TROPICAL_FISH, EntityFish.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.TURTLE, EntityTurtle.eN().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.VEX, EntityVex.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.VILLAGER, EntityVillager.eX().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.VINDICATOR, EntityVindicator.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.WANDERING_TRADER, EntityInsentient.p().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.WITCH, EntityWitch.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.WITHER, EntityWither.eL().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.WITHER_SKELETON, EntitySkeletonAbstract.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.WOLF, EntityWolf.eV().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ZOGLIN, EntityZoglin.m().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ZOMBIE, EntityZombie.eT().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ZOMBIE_HORSE, EntityHorseZombie.eM().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ZOMBIE_VILLAGER, EntityZombie.eT().a())
-                .putFast(net.minecraft.server.v1_16_R1.EntityTypes.ZOMBIFIED_PIGLIN, EntityPigZombie.eX().a());
+        defaultAttribute
+                .putFast(ARMOR_STAND, EntityLiving.cK().a())
+                .putFast(BAT, EntityBat.m().a())
+                .putFast(BEE, EntityBee.fa().a())
+                .putFast(BLAZE, EntityBlaze.m().a())
+                .putFast(CAT, EntityCat.fb().a())
+                .putFast(CAVE_SPIDER, EntityCaveSpider.m().a())
+                .putFast(CHICKEN, EntityChicken.eL().a())
+                .putFast(COD, EntityFish.m().a())
+                .putFast(COW, EntityCow.eL().a())
+                .putFast(CREEPER, EntityCreeper.m().a())
+                .putFast(DOLPHIN, EntityDolphin.eN().a())
+                .putFast(DONKEY, EntityHorseChestedAbstract.eM().a())
+                .putFast(DROWNED, EntityZombie.eT().a())
+                .putFast(ELDER_GUARDIAN, EntityGuardianElder.m().a())
+                .putFast(ENDERMAN, EntityEnderman.m().a())
+                .putFast(ENDERMITE, EntityEndermite.m().a())
+                .putFast(ENDER_DRAGON, EntityEnderDragon.m().a())
+                .putFast(EVOKER, EntityEvoker.eL().a())
+                .putFast(FOX, EntityFox.eL().a())
+                .putFast(GHAST, EntityGhast.eK().a())
+                .putFast(GIANT, EntityGiantZombie.m().a())
+                .putFast(GUARDIAN, EntityGuardian.eN().a())
+                .putFast(HOGLIN, EntityHoglin.eL().a())
+                .putFast(HORSE, EntityHorseAbstract.fj().a())
+                .putFast(HUSK, EntityZombie.eT().a())
+                .putFast(ILLUSIONER, EntityIllagerIllusioner.eL().a())
+                .putFast(IRON_GOLEM, EntityIronGolem.m().a())
+                .putFast(LLAMA, EntityLlama.fx().a())
+                .putFast(MAGMA_CUBE, EntityMagmaCube.m().a())
+                .putFast(MOOSHROOM, EntityCow.eL().a())
+                .putFast(MULE, EntityHorseChestedAbstract.eM().a())
+                .putFast(OCELOT, EntityOcelot.eL().a())
+                .putFast(PANDA, EntityPanda.eZ().a())
+                .putFast(PARROT, EntityParrot.eV().a())
+                .putFast(PHANTOM, EntityMonster.eS().a())
+                .putFast(PIG, EntityPig.eL().a())
+                .putFast(PIGLIN, EntityPiglin.eL().a())
+                .putFast(PILLAGER, EntityPillager.eL().a())
+                .putFast(PLAYER, EntityHuman.eo().a())
+                .putFast(POLAR_BEAR, EntityPolarBear.eL().a())
+                .putFast(PUFFERFISH, EntityFish.m().a())
+                .putFast(RABBIT, EntityRabbit.eM().a())
+                .putFast(RAVAGER, EntityRavager.m().a())
+                .putFast(SALMON, EntityFish.m().a())
+                .putFast(SHEEP, EntitySheep.eL().a())
+                .putFast(SHULKER, EntityShulker.m().a())
+                .putFast(SILVERFISH, EntitySilverfish.m().a())
+                .putFast(SKELETON, EntitySkeletonAbstract.m().a())
+                .putFast(SKELETON_HORSE, EntityHorseSkeleton.eM().a())
+                .putFast(SLIME, EntityMonster.eS().a())
+                .putFast(SNOW_GOLEM, EntitySnowman.m().a())
+                .putFast(SPIDER, EntitySpider.eL().a())
+                .putFast(SQUID, EntitySquid.m().a())
+                .putFast(STRAY, EntitySkeletonAbstract.m().a())
+                .putFast(STRIDER, EntityStrider.eN().a())
+                .putFast(TRADER_LLAMA, EntityLlama.fx().a())
+                .putFast(TROPICAL_FISH, EntityFish.m().a())
+                .putFast(TURTLE, EntityTurtle.eN().a())
+                .putFast(VEX, EntityVex.m().a())
+                .putFast(VILLAGER, EntityVillager.eX().a())
+                .putFast(VINDICATOR, EntityVindicator.eL().a())
+                .putFast(WANDERING_TRADER, EntityInsentient.p().a())
+                .putFast(WITCH, EntityWitch.eL().a())
+                .putFast(WITHER, EntityWither.eL().a())
+                .putFast(WITHER_SKELETON, EntitySkeletonAbstract.m().a())
+                .putFast(WOLF, EntityWolf.eV().a())
+                .putFast(ZOGLIN, EntityZoglin.m().a())
+                .putFast(ZOMBIE, EntityZombie.eT().a())
+                .putFast(ZOMBIE_HORSE, EntityHorseZombie.eM().a())
+                .putFast(ZOMBIE_VILLAGER, EntityZombie.eT().a())
+                .putFast(ZOMBIFIED_PIGLIN, EntityPigZombie.eX().a());
     }
 
-    public static class MyMap<K, V> extends HashMap<K, V> {
+    public static AttributeProvider getAttribute(EntityTypes<?> types) {
+        return defaultAttribute.get(types);
+    }
 
+    public static void registerCustomEntityTypes(EntityTypes<? extends EntityLiving> customType, EntityTypes<? extends EntityLiving> rootType) {
+        defaultAttribute.put(customType, getAttribute(rootType));
+    }
 
-        public MyMap<K, V> putFast(K key, V value) {
+    static class FastMap<K, V> extends HashMap<K, V> {
+
+        public FastMap<K, V> putFast(K key, V value) {
             put(key, value);
             return this;
         }
-
-
     }
-
 }
