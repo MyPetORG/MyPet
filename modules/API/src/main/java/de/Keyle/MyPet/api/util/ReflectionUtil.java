@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -20,12 +20,15 @@
 
 package de.Keyle.MyPet.api.util;
 
+import lombok.NonNull;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public class ReflectionUtil {
 
+    @SuppressWarnings("rawtypes")
     public static Class getClass(String name) {
         try {
             return Class.forName(name);
@@ -64,8 +67,7 @@ public class ReflectionUtil {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static Object getFieldValue(Field field, Object target) {
+    public static Object getFieldValue(@NonNull Field field, Object target) {
         try {
             return field.get(target);
         } catch (Throwable ignored) {
@@ -73,7 +75,7 @@ public class ReflectionUtil {
         return null;
     }
 
-    public static boolean setFieldValue(Field field, Object target, Object value) {
+    public static boolean setFieldValue(@NonNull Field field, Object target, Object value) {
         try {
             field.set(target, value);
             return true;
@@ -87,6 +89,7 @@ public class ReflectionUtil {
         try {
             Field field = getField(target.getClass(), fieldName);
             if (field != null) {
+                field.setAccessible(true);
                 field.set(target, value);
                 return true;
             }
@@ -95,7 +98,40 @@ public class ReflectionUtil {
         return false;
     }
 
-    public static void setFinalStaticValue(Field field, Object newValue) throws NoSuchFieldException, IllegalAccessException {
+    public static boolean setFinalFieldValue(String fieldName, Object target, Object value) {
+        try {
+            Field field = getField(target.getClass(), fieldName);
+            if (field != null) {
+                field.setAccessible(true);
+
+                Field modifiersField = Field.class.getDeclaredField("modifiers");
+                modifiersField.setAccessible(true);
+                modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+                field.set(target, value);
+                return true;
+            }
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
+    public static boolean setFinalFieldValue(@NonNull Field field, Object target, Object value) {
+        try {
+            field.setAccessible(true);
+
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+            field.set(target, value);
+            return true;
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
+    public static void setFinalStaticValue(@NonNull Field field, Object newValue) throws NoSuchFieldException, IllegalAccessException {
         field.setAccessible(true);
 
         Field modifiersField = Field.class.getDeclaredField("modifiers");

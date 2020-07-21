@@ -55,6 +55,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_16_R1.attribute.CraftAttributeMap;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
@@ -110,6 +111,8 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
 
         try {
+            this.replaceCraftAttributes();
+
             this.myPet = myPet;
             this.isMyPet = true;
             this.updateSize();
@@ -127,6 +130,12 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected void replaceCraftAttributes() {
+        Field craftAttributesField = ReflectionUtil.getField(EntityLiving.class, "craftAttributes");
+        CraftAttributeMap craftAttributes = new CraftAttributeMap(this.getAttributeMap());
+        ReflectionUtil.setFinalFieldValue(craftAttributesField, this, craftAttributes);
     }
 
     protected void initAttributes() {
