@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.types.MyPiglin;
+import de.Keyle.MyPet.api.entity.types.MyPiglinBrute;
 import de.Keyle.MyPet.api.util.NMSUtil;
 import de.Keyle.MyPet.compat.v1_16_R2.entity.EntityMyPet;
 import net.minecraft.server.v1_16_R2.*;
@@ -66,7 +66,6 @@ public class EntityMyPiglinBrute extends EntityMyPet {
         return  NMSUtil.getSoundEffectId(SoundEffects.ENTITY_PIGLIN_BRUTE_AMBIENT);
     }
 
-    @Override
     public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
         if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == EnumInteractionResult.CONSUME) {
             return EnumInteractionResult.CONSUME;
@@ -120,7 +119,7 @@ public class EntityMyPiglinBrute extends EntityMyPet {
                     }
                 }
                 return EnumInteractionResult.CONSUME;
-            } else if (Configuration.MyPet.Piglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (Configuration.MyPet.PiglinBrute.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
@@ -163,8 +162,8 @@ public class EntityMyPiglinBrute extends EntityMyPet {
     }
 
     @Override
-    public MyPiglin getMyPet() {
-        return (MyPiglin) myPet;
+    public MyPiglinBrute getMyPet() {
+        return (MyPiglinBrute) myPet;
     }
 
     public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {

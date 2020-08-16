@@ -294,6 +294,11 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class PiglinBrute {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class PigZombie {
 
             public static ConfigItem GROW_UP_ITEM;

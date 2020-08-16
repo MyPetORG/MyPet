@@ -22,8 +22,6 @@ package de.Keyle.MyPet.compat.v1_16_R2.entity;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.mojang.datafixers.DataFixUtils;
-import com.mojang.datafixers.types.Type;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -34,7 +32,7 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
 import net.minecraft.server.v1_16_R2.*;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2IntMap;
 import org.bukkit.craftbukkit.v1_16_R2.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
@@ -47,22 +45,15 @@ import java.util.Map;
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
+    @SuppressWarnings("rawtypes")
     Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
         EntitySize size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).l();
-        EntityTypes entityType = IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.Builder.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key));
-//        Map<Object, Type<?>> dataTypes = (Map<Object, Type<?>>)DataConverterRegistry.a()
-//                .getSchema(DataFixUtils.makeKey(SharedConstants.getGameVersion().getWorldVersion()))
-//                .findChoiceType(DataConverterTypes.ENTITY_TREE).types();
-//        //EntityTypes.
-//        //entityType.b();
-//        dataTypes.put( "mypet_" + key.toLowerCase(), dataTypes.get(entityType.f()));
-        entityTypes.put(petType,entityType);
-        EntityTypes<? extends EntityLiving> root = (EntityTypes<? extends EntityLiving>) ReflectionUtil.getFieldValue(EntityTypes.class, null, ("" + petType.getTypeID()).toUpperCase());
-        registerDefaultAttributes(entityTypes.get(petType), root);
-        overwriteEntityID(root,  entityTypes.get(petType), entityRegistry);
-
+        entityTypes.put(petType, IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.Builder.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
+        registerDefaultAttributes(entityTypes.get(petType), (EntityTypes<? extends EntityLiving>) ReflectionUtil.getFieldValue(EntityTypes.class, null, ("" + petType.getTypeID()).toUpperCase()));
+        overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
     }
 
     @SneakyThrows
@@ -70,6 +61,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         MyAttributeDefaults.registerCustomEntityTypes(customType, rootType);
     }
 
+    @SuppressWarnings("unchecked")
     protected void registerEntity(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
         Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_16_R2.entity.types.EntityMy" + type.name());
         entityClasses.put(type, entityClass);
@@ -86,10 +78,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         EntityMyPet petEntity = null;
         Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
         World world = ((CraftWorld) bukkitWorld).getHandle();
-        Map<Object, Type<?>> dataTypes = (Map<Object, Type<?>>)DataConverterRegistry.a()
-                .getSchema(DataFixUtils.makeKey(SharedConstants.getGameVersion().getWorldVersion()))
-                .findChoiceType(DataConverterTypes.ENTITY_TREE).types();
-      System.out.println(dataTypes);
+
         try {
             Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
             Object obj = ctor.newInstance(world, pet);
@@ -106,9 +95,6 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     @Override
     public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
-
-
-        //MobSpawnerAbstract
         if (entity != null) {
             World world = ((CraftWorld) bukkitWorld).getHandle();
             return world.addEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -124,6 +110,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getEntityType(MyPetType petType) {
         return (T) this.entityTypes.get(petType);
     }
@@ -132,6 +119,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public void unregisterEntityTypes() {
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public RegistryBlocks<EntityTypes<?>> getRegistry(RegistryBlocks registryMaterials) {
         if (!registryMaterials.getClass().getName().equals(RegistryBlocks.class.getName())) {
             MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
@@ -155,40 +143,14 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         return registryMaterials;
     }
 
-    protected void overwriteEntityID(EntityTypes types, EntityTypes entityTypes, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-
-    	ObjectArrayList<EntityTypes> objectArrayList = (ObjectArrayList<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "bf");
-
-    	//[] RegistryID_c = (int[]) ReflectionUtil.getFieldValue(RegistryID.class, objectArrayList, "c");
-        int RegistryID_d = (MathHelper.g(System.identityHashCode(types)) & 2147483647) % objectArrayList.size();
-        int bVal = this.RegistryID_b(objectArrayList, types, RegistryID_d);
-       // RegistryID_c[bVal] = id;
-
-		objectArrayList.set(bVal,entityTypes);
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void overwriteEntityID(EntityTypes types, int id, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+        Object2IntMap<EntityTypes> bg = (Object2IntMap<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "bg");
+        bg.put(types, id);
     }
 
-    private int RegistryID_b(ObjectArrayList<EntityTypes> obj, Object types, int RegistryID_d) {
-        int j;
-
-        for (j = RegistryID_d; j < obj.size(); ++j) {
-            if (obj.get(j) == types) {
-                return j;
-            } else if (obj.get(j) == null) {
-                return -1;
-            }
-        }
-        for (j = 0; j < RegistryID_d; ++j) {
-            if (obj.get(j) == types) {
-                return j;
-            } else if (obj.get(j) == null) {
-                return -1;
-            }
-        }
-        return -1;
-    }
-
-    protected EntityTypes getEntityType(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+    protected int getEntityTypeId(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
         EntityTypes<?> types = entityRegistry.get(new MinecraftKey(type.getTypeID().toString()));
-       return types;
+        return entityRegistry.a(types);
     }
 }

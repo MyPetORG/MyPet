@@ -276,6 +276,9 @@ public class ConfigurationLoader {
         if (MyPetType.Piglin.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle");
         }
+        if (MyPetType.PiglinBrute.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle");
+        }
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
         if (MyPetType.Rabbit.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle");
@@ -540,6 +543,7 @@ public class ConfigurationLoader {
         MyPet.Hoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle"));
         MyPet.Strider.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Strider.GrowUpItem", "experience_bottle"));
         MyPet.Piglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle"));
+        MyPet.PiglinBrute.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle"));
         MyPet.ZombifiedPiglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombifiedPiglin.GrowUpItem", "experience_bottle"));
 
         for (MyPetType petType : MyPetType.values()) {

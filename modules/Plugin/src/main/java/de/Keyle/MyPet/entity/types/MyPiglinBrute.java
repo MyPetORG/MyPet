@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglin {
+public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglinBrute {
 
     protected boolean isBaby = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
