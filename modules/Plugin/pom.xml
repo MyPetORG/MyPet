@@ -70,28 +70,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_8_R2</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_8_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
+
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_7_R4</artifactId>
@@ -114,17 +94,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_9_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_9_R2</artifactId>
@@ -169,17 +139,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_13_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_13_R2</artifactId>
@@ -216,6 +176,17 @@
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_16_R1</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-compat-v1_16_R2</artifactId>
             <version>1</version>
             <exclusions>
                 <exclusion>

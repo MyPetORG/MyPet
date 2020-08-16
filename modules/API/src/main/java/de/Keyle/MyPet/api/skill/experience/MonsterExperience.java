@@ -108,6 +108,7 @@ public class MonsterExperience {
         mobExp.put("ZOGLIN", new MonsterExperience(5, "ZOGLIN"));
         mobExp.put("STRIDER", new MonsterExperience(1, 2, "STRIDER"));
         mobExp.put("PIGLIN", new MonsterExperience(1, 3, "PIGLIN"));
+        mobExp.put("PIGLIN_BRUTE", new MonsterExperience(20, 23, "PIGLIN_BRUTE")); // 1.16.2
     }
 
     private double min;

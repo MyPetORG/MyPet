@@ -32,15 +32,11 @@
         <module>modules/API</module>
         <module>modules/Skills</module>
         <module>modules/v1_7_R4</module>
-        <module>modules/v1_8_R1</module>
-        <module>modules/v1_8_R2</module>
         <module>modules/v1_8_R3</module>
-        <module>modules/v1_9_R1</module>
         <module>modules/v1_9_R2</module>
         <module>modules/v1_10_R1</module>
         <module>modules/v1_11_R1</module>
         <module>modules/v1_12_R1</module>
-        <module>modules/v1_13_R1</module>
         <module>modules/v1_13_R2</module>
         <module>modules/v1_14_R1</module>
         <module>modules/v1_15_R1</module>
@@ -48,6 +44,7 @@
         <module>modules/GUI</module>
         <module>modules/Plugin</module>
         <module>modules/MyPet</module>
+        <module>modules/1_16_R2</module>
     </modules>
 
     <properties>
@@ -66,6 +63,10 @@
             <snapshots>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository>
             <id>sk89q-repo</id>
@@ -347,7 +348,7 @@
             <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.4.0</version>
+            <version>4.5.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

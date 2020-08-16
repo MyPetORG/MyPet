@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,32 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_13_R1.entity.types;
+package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.EntitySize;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_13_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_13_R1.EntityTypes;
-import net.minecraft.server.v1_13_R1.World;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
-@EntitySize(width = 0.6F, height = 1.62F)
-public class EntityMyWitch extends EntityMyPet {
 
-    public EntityMyWitch(World world, MyPet myPet) {
-        super(EntityTypes.WITCH, world, myPet);
-    }
+@DefaultInfo(food = {"gold_nugget"})
+public interface MyPiglinBrute extends MyPet, MyPetEquipment, MyPetBaby {
 
-    @Override
-    protected String getDeathSound() {
-        return "entity.witch.death";
-    }
-
-    @Override
-    protected String getHurtSound() {
-        return "entity.witch.hurt";
-    }
-
-    protected String getLivingSound() {
-        return "entity.witch.ambient";
-    }
 }

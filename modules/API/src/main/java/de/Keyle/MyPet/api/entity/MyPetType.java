@@ -163,6 +163,9 @@ public enum MyPetType {
     Piglin("PIGLIN", "1.16", MyPiglin.class, new Compat<>()
             .v("1.16", "piglin")
             .search()),
+    PiglinBrute("PIGLIN_BRUTE", "1.16.2", MyPiglin.class, new Compat<>()
+            .v("1.16.2", "piglin_brute")
+            .search()),
     PigZombie("PIG_ZOMBIE", "1.7.10", MyPigZombie.class, new Compat<>()
             .v("1.7.10", 57)
             .v("1.13", "zombie_pigman")

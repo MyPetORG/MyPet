@@ -63,6 +63,7 @@ public enum MyPetClass {
     Parrot(MyParrot.class),
     Phantom(MyPhantom.class),
     Pig(MyPig.class),
+    PiglinBrute(MyPiglinBrute.class),
     Piglin(MyPiglin.class),
     PigZombie(MyPigZombie.class),
     Pillager(MyPillager.class),
