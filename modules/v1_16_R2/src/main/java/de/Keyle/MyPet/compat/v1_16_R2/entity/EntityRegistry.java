@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_16_R2.entity.types.EntityMyPig;
 import lombok.SneakyThrows;
 import net.minecraft.server.v1_16_R2.*;
 import org.bukkit.ChatColor;
