@@ -7076,5 +7076,9 @@
   {
     "id": "warped_fungus",
     "introduced": "1.16"
+  },
+  {
+    "id": "piglin_brute_spawn_egg",
+    "introduced": "1.16.2"
   }
 ]
