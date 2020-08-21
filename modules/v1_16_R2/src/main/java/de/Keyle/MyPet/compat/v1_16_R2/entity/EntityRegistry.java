@@ -29,6 +29,8 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import lombok.SneakyThrows;
 import net.minecraft.server.v1_16_R2.*;
 import org.bukkit.ChatColor;
@@ -145,8 +147,17 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected void overwriteEntityID(EntityTypes types, int id, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-        Object2IntMap<EntityTypes> bg = (Object2IntMap<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "bg");
-        bg.put(types, id);
+
+
+        try {
+
+            Reference2IntOpenHashMap bg = (Reference2IntOpenHashMap<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "bg");
+            bg.put(types, id);
+        }catch(ClassCastException ex){
+           Object2IntMap bg = (Object2IntMap<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "bg");
+            bg.put(types, id);
+        }
+
     }
 
     protected int getEntityTypeId(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
