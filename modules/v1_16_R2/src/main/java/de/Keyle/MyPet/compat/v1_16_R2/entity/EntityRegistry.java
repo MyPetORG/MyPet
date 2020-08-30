@@ -40,6 +40,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +68,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     protected void registerEntity(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
         Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_16_R2.entity.types.EntityMy" + type.name());
         entityClasses.put(type, entityClass);
+
         String key = type.getTypeID().toString();
         registerEntityType(type, key, entityRegistry);
     }
@@ -151,11 +153,16 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
         try {
 
-            Reference2IntOpenHashMap bg = (Reference2IntOpenHashMap<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "bg");
-            bg.put(types, id);
-        }catch(ClassCastException ex){
-           Object2IntMap bg = (Object2IntMap<EntityTypes>) ReflectionUtil.getFieldValue(RegistryMaterials.class, entityRegistry, "bg");
-            bg.put(types, id);
+            Field bgF = RegistryMaterials.class.getDeclaredField("bg");
+            bgF.setAccessible(true);
+            Object map = bgF.get(entityRegistry);
+            Class<?> clazz = map.getClass();
+            Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
+            mapPut.setAccessible(true);
+            mapPut.invoke(map,types,id);
+        }catch(ReflectiveOperationException ex){
+
+            ex.printStackTrace();
         }
 
     }

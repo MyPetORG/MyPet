@@ -205,7 +205,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     if (villagerTag.containsKey("Gossips")) {
                         TagList inventoryTag = villagerTag.get("Gossips");
                         NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                        ((Reputation) ReflectionUtil.getFieldValue(EntityVillager.class, entityVillager, "by"))
+                                        ((Reputation) ReflectionUtil.getFieldValue(EntityVillager.class, entityVillager, "by"))
                                 .a(new Dynamic<>(DynamicOpsNBT.a, vanillaNBT));
                     }
                     if (villagerTag.containsKey("LastRestock")) {
