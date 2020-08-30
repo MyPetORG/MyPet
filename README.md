@@ -9,7 +9,7 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Spigot][SpigotImage]][Spigot]
 
 ## The License
-Copyright (c) 2011-2018, Keyle<br />
+Copyright (c) 2011-2020, Keyle<br />
 MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
 
 ## Builds
