@@ -57,6 +57,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         return petEntity.canMove();
     }
 
+
     @Override
     public void setSitting(boolean sitting) {
         getHandle().setSitting(sitting);
@@ -124,6 +125,26 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
             health = getMaxHealth();
         }
         super.setHealth(health);
+    }
+
+    @Override
+    public int getArrowCooldown() {
+        return 0;
+    }
+
+    @Override
+    public void setArrowCooldown(int i) {
+
+    }
+
+    @Override
+    public int getArrowsInBody() {
+        return 0;
+    }
+
+    @Override
+    public void setArrowsInBody(int i) {
+
     }
 
     @Override
