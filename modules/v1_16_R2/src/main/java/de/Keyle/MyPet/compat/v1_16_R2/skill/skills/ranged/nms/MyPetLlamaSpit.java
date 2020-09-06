@@ -27,6 +27,7 @@ import de.Keyle.MyPet.compat.v1_16_R2.skill.skills.ranged.bukkit.CraftMyPetLlama
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_16_R2.*;
+import org.bukkit.entity.LivingEntity;
 
 @Compat("v1_16_R2")
 public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjectile {
@@ -44,7 +45,7 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) ((IProjectile) this).getShooter();
+                return (EntityMyPet) super.getShooter();
     }
 
     @Override
