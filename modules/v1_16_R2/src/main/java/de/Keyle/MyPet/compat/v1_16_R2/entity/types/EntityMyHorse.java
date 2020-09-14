@@ -266,7 +266,7 @@ public class EntityMyHorse extends EntityMyPet implements IJumpable {
     @Override
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
         if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
-            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.c());
+            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getSlotFlag());
             if (slot == EquipmentSlot.Chestplate && getMyPet().getArmor() != null) {
                 return CraftItemStack.asNMSCopy(getMyPet().getArmor());
             }

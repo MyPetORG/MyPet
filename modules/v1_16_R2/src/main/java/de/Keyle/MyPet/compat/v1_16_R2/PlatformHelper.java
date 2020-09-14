@@ -270,7 +270,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
         {
             ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            int slot = EntityInsentient.j(itemstack).c();
+            int slot = EntityInsentient.j(itemstack).getSlotFlag();
             if (slot == 0) {
                 if (itemstack.getItem() instanceof ItemSword) {
                     return true;

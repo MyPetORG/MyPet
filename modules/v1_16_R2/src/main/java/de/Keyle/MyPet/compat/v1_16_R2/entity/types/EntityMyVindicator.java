@@ -113,7 +113,7 @@ public class EntityMyVindicator extends EntityMyPet {
                 }
                 return EnumInteractionResult.CONSUME;
             } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(j(itemStack).c());
+                EquipmentSlot slot = EquipmentSlot.getSlotById(j(itemStack).getSlotFlag());
                 if (slot == EquipmentSlot.MainHand) {
                     ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
                     if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
@@ -163,7 +163,7 @@ public class EntityMyVindicator extends EntityMyPet {
     @Override
     public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
         if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
-            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.c());
+			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getSlotFlag());
             if (getMyPet().getEquipment(slot) != null) {
                 return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
             }
