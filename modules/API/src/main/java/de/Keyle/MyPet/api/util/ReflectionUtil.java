@@ -33,7 +33,7 @@ public class ReflectionUtil {
         try {
             return Class.forName(name);
         } catch (Throwable ignored) {
-            return Class.class;
+            throw new RuntimeException("failed to load a class", ignored);
         }
     }
 
