@@ -69,6 +69,15 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
     }
 
     @Override
+    public boolean isInvisible() {
+        return getHandle().isInvisible();
+    }
+
+    @Override
+    public void setInvisible(boolean invisible) {
+    }
+
+    @Override
     public EntityMyPet getHandle() {
         return petEntity;
     }
