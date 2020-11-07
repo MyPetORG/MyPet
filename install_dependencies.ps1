@@ -8,7 +8,7 @@ $1_13_R2_S = "https://cdn.getbukkit.org/spigot/spigot-1.13.2.jar"
 $1_14_R1_S = "https://cdn.getbukkit.org/spigot/spigot-1.14.4.jar"
 $1_15_R1_S = "https://cdn.getbukkit.org/spigot/spigot-1.15.2.jar"
 $1_16_R1_S = "https://cdn.getbukkit.org/spigot/spigot-1.16.1.jar"
-$1_16_R2_S = "https://cdn.getbukkit.org/spigot/spigot-1.16.2.jar"
+$1_16_R2_S = "https://cdn.getbukkit.org/spigot/spigot-1.16.3.jar"
 
 New-Item -Path .\dl -ItemType directory
 
@@ -35,6 +35,6 @@ Invoke-WebRequest -Uri $1_16_R2_S -OutFile ".\dl\1_16_R2_S.jar"
 & mvn install:install-file -D"file=.\dl\1_14_R1_S.jar" -D"version=1.14.4-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
 & mvn install:install-file -D"file=.\dl\1_15_R1_S.jar" -D"version=1.15.2-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
 & mvn install:install-file -D"file=.\dl\1_16_R1_S.jar" -D"version=1.16.1-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
-& mvn install:install-file -D"file=.\dl\1_16_R2_S.jar" -D"version=1.16.2-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
+& mvn install:install-file -D"file=.\dl\1_16_R2_S.jar" -D"version=1.16.3-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
 
 #Remove-Item '.\dl' -Recurse

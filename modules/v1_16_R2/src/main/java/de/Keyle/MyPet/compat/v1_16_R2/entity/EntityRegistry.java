@@ -67,7 +67,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @SuppressWarnings("unchecked")
     protected void registerEntity(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
         Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_16_R2.entity.types.EntityMy" + type.name());
-        entityClasses.put(type, entityClass);
+        entityClasses.forcePut(type, entityClass);
 
         String key = type.getTypeID().toString();
         registerEntityType(type, key, entityRegistry);
