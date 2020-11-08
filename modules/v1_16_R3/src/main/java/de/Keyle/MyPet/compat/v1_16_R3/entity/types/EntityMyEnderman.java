@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
-import de.Keyle.MyPet.compat.v1_16_R3.CompatManager;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.server.v1_16_R3.*;
@@ -34,6 +33,8 @@ import org.bukkit.craftbukkit.v1_16_R3.util.CraftMagicNumbers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+
+import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
@@ -81,7 +82,7 @@ public class EntityMyEnderman extends EntityMyPet {
 						// TODO REMOVE
 						itemStack.damage(1, entityhuman, (entityhuman1) -> {
 							try {
-								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}

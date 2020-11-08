@@ -34,94 +34,94 @@ import org.bukkit.Location;
 @Compat("v1_16_R3")
 public class Control implements AIGoal, Scheduler {
 
-	private final MyPet myPet;
-	private final float speedModifier;
-	public Location moveTo = null;
-	private int timeToMove = 0;
-	private final AbstractNavigation nav;
-	private boolean stopControl = false;
-	private boolean isRunning = false;
+    private final MyPet myPet;
+    private final float speedModifier;
+    public Location moveTo = null;
+    private int timeToMove = 0;
+    private final AbstractNavigation nav;
+    private boolean stopControl = false;
+    private boolean isRunning = false;
 
-	public Control(MyPetMinecraftEntity entity, float speedModifier) {
-		this.myPet = entity.getMyPet();
-		this.speedModifier = speedModifier;
-		nav = entity.getPetNavigation();
-	}
+    public Control(MyPetMinecraftEntity entity, float speedModifier) {
+        this.myPet = entity.getMyPet();
+        this.speedModifier = speedModifier;
+        nav = entity.getPetNavigation();
+    }
 
-	@Override
-	public boolean shouldStart() {
-		if (!this.myPet.getEntity().get().canMove()) {
-			return false;
-		}
-		ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
-		if (controlSkill == null || !controlSkill.getActive().getValue()) {
-			return false;
-		}
-		return controlSkill.getLocation(false) != null;
-	}
+    @Override
+    public boolean shouldStart() {
+        if (!this.myPet.getEntity().get().canMove()) {
+            return false;
+        }
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        if (controlSkill == null || !controlSkill.getActive().getValue()) {
+            return false;
+        }
+        return controlSkill.getLocation(false) != null;
+    }
 
-	@Override
-	public boolean shouldFinish() {
-		if (!this.myPet.getEntity().get().canMove()) {
-			return true;
-		}
-		ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
-		if (!controlSkill.getActive().getValue()) {
-			return true;
-		}
-		if (moveTo == null) {
-			return true;
-		}
-		if (MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), moveTo) < 1) {
-			return true;
-		}
-		if (timeToMove <= 0) {
-			return true;
-		}
-		return this.stopControl;
-	}
+    @Override
+    public boolean shouldFinish() {
+        if (!this.myPet.getEntity().get().canMove()) {
+            return true;
+        }
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        if (!controlSkill.getActive().getValue()) {
+            return true;
+        }
+        if (moveTo == null) {
+            return true;
+        }
+        if (MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), moveTo) < 1) {
+            return true;
+        }
+        if (timeToMove <= 0) {
+            return true;
+        }
+        return this.stopControl;
+    }
 
-	@Override
-	public void start() {
-		nav.getParameters().addSpeedModifier("Control", speedModifier);
-		ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
-		moveTo = controlSkill.getLocation();
-		if (moveTo.getWorld() != myPet.getLocation().get().getWorld()) {
-			stopControl = true;
-			moveTo = null;
-			return;
-		}
-		timeToMove = (int) MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), moveTo) / 3;
-		timeToMove = timeToMove < 3 ? 3 : timeToMove;
-		if (!isRunning) {
-			Timer.addTask(this);
-			isRunning = true;
-		}
-		if (!nav.navigateTo(moveTo)) {
-			moveTo = null;
-		}
-	}
+    @Override
+    public void start() {
+        nav.getParameters().addSpeedModifier("Control", speedModifier);
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        moveTo = controlSkill.getLocation();
+        if (moveTo.getWorld() != myPet.getLocation().get().getWorld()) {
+            stopControl = true;
+            moveTo = null;
+            return;
+        }
+        timeToMove = (int) MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), moveTo) / 3;
+        timeToMove = timeToMove < 3 ? 3 : timeToMove;
+        if (!isRunning) {
+            Timer.addTask(this);
+            isRunning = true;
+        }
+        if (!nav.navigateTo(moveTo)) {
+            moveTo = null;
+        }
+    }
 
-	@Override
-	public void finish() {
-		nav.getParameters().removeSpeedModifier("Control");
-		nav.stop();
-		moveTo = null;
-		stopControl = false;
-		Timer.removeTask(this);
-		isRunning = false;
-	}
+    @Override
+    public void finish() {
+        nav.getParameters().removeSpeedModifier("Control");
+        nav.stop();
+        moveTo = null;
+        stopControl = false;
+        Timer.removeTask(this);
+        isRunning = false;
+    }
 
-	public void stopControl() {
-		this.stopControl = true;
-	}
+    public void stopControl() {
+        this.stopControl = true;
+    }
 
-	@Override
-	public void schedule() {
-		ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
-		if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false)) {
-			start();
-		}
-		timeToMove--;
-	}
+    @Override
+    public void schedule() {
+        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false)) {
+            start();
+        }
+        timeToMove--;
+    }
 }

@@ -38,81 +38,81 @@ import org.bukkit.entity.LivingEntity;
 @Compat("v1_16_R3")
 public class BehaviorFarmTarget implements AIGoal {
 
-	private final MyPet myPet;
-	private final EntityMyPet petEntity;
-	private final EntityPlayer petOwnerEntity;
-	private EntityLiving target;
-	private final float range;
+    private final MyPet myPet;
+    private final EntityMyPet petEntity;
+    private final EntityPlayer petOwnerEntity;
+    private EntityLiving target;
+    private final float range;
 
-	public BehaviorFarmTarget(EntityMyPet petEntity, float range) {
-		this.petEntity = petEntity;
-		this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
-		this.myPet = petEntity.getMyPet();
-		this.range = range;
-	}
+    public BehaviorFarmTarget(EntityMyPet petEntity, float range) {
+        this.petEntity = petEntity;
+        this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
+        this.myPet = petEntity.getMyPet();
+        this.range = range;
+    }
 
-	@Override
-	public boolean shouldStart() {
-		Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
-		if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Farm) {
-			return false;
-		}
-		if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
-			return false;
-		}
-		if (!petEntity.canMove()) {
-			return false;
-		}
-		if (petEntity.hasTarget()) {
-			return false;
-		}
+    @Override
+    public boolean shouldStart() {
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Farm) {
+            return false;
+        }
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+            return false;
+        }
+        if (!petEntity.canMove()) {
+            return false;
+        }
+        if (petEntity.hasTarget()) {
+            return false;
+        }
 
-		for (EntityMonster entityMonster : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.getBoundingBox().grow(range, range, range))) {
-			if (!entityMonster.isAlive() || petEntity.h(entityMonster) > 91) {
-				continue;
-			}
-			if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityMonster.getBukkitEntity())) {
-				continue;
-			}
-			this.target = entityMonster;
-			return true;
-		}
-		return false;
-	}
+        for (EntityMonster entityMonster : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.getBoundingBox().grow(range, range, range))) {
+            if (!entityMonster.isAlive() || petEntity.h(entityMonster) > 91) {
+                continue;
+            }
+            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityMonster.getBukkitEntity())) {
+                continue;
+            }
+            this.target = entityMonster;
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public boolean shouldFinish() {
-		if (!petEntity.canMove()) {
-			return true;
-		}
-		if (!this.petEntity.hasTarget()) {
-			return true;
-		}
-		EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+    @Override
+    public boolean shouldFinish() {
+        if (!petEntity.canMove()) {
+            return true;
+        }
+        if (!this.petEntity.hasTarget()) {
+            return true;
+        }
+        EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
 
-		if (!target.isAlive()) {
-			return true;
-		}
-		Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
-		if (behaviorSkill.getBehavior() != BehaviorMode.Farm) {
-			return true;
-		} else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
-			return true;
-		} else if (target.world != petEntity.world) {
-			return true;
-		} else if (petEntity.h(target) > 400) {
-			return true;
-		} else return petEntity.h(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
-	}
+        if (!target.isAlive()) {
+            return true;
+        }
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill.getBehavior() != BehaviorMode.Farm) {
+            return true;
+        } else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+            return true;
+        } else if (target.world != petEntity.world) {
+            return true;
+        } else if (petEntity.h(target) > 400) {
+            return true;
+        } else return petEntity.h(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
+    }
 
-	@Override
-	public void start() {
-		petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Farm);
-	}
+    @Override
+    public void start() {
+        petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Farm);
+    }
 
-	@Override
-	public void finish() {
-		petEntity.forgetTarget();
-		target = null;
-	}
+    @Override
+    public void finish() {
+        petEntity.forgetTarget();
+        target = null;
+    }
 }

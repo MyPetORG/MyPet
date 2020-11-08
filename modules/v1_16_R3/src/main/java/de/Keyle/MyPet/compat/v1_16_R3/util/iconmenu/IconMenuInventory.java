@@ -47,155 +47,155 @@ import java.util.List;
 @Compat("v1_16_R3")
 public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInventory {
 
-	private static Method applyToItemMethhod = null;
+    private static Method applyToItemMethhod = null;
 
-	static {
-		try {
-			Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_16_R3.inventory.CraftMetaItem");
-			applyToItemMethhod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", NBTTagCompound.class);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+    static {
+        try {
+            Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_16_R3.inventory.CraftMetaItem");
+            applyToItemMethhod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", NBTTagCompound.class);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
-	CustomInventory minecraftInventory;
-	int size = 0;
+    CustomInventory minecraftInventory;
+    int size = 0;
 
-	public CustomInventory getMinecraftInventory() {
-		return minecraftInventory;
-	}
+    public CustomInventory getMinecraftInventory() {
+        return minecraftInventory;
+    }
 
-	@Override
-	public void open(IconMenu menu, HumanEntity player) {
-		size = menu.getSize();
-		minecraftInventory = new CustomInventory(size, menu.getTitle());
+    @Override
+    public void open(IconMenu menu, HumanEntity player) {
+        size = menu.getSize();
+        minecraftInventory = new CustomInventory(size, menu.getTitle());
 
-		for (int slot = 0; slot < size; slot++) {
-			IconMenuItem menuItem = menu.getOption(slot);
-			if (menuItem != null) {
-				ItemStack item = createItemStack(menuItem);
-				minecraftInventory.setItem(slot, item);
-			}
-		}
-		minecraftInventory.open((Player) player);
-	}
+        for (int slot = 0; slot < size; slot++) {
+            IconMenuItem menuItem = menu.getOption(slot);
+            if (menuItem != null) {
+                ItemStack item = createItemStack(menuItem);
+                minecraftInventory.setItem(slot, item);
+            }
+        }
+        minecraftInventory.open((Player) player);
+    }
 
-	@Override
-	public void update(IconMenu menu) {
-		if (minecraftInventory != null) {
-			for (int slot = 0; slot < size; slot++) {
-				IconMenuItem menuItem = menu.getOption(slot);
-				if (menuItem != null) {
-					ItemStack item = createItemStack(menuItem);
-					minecraftInventory.setItem(slot, item);
-				} else {
-					minecraftInventory.setItem(slot, ItemStack.b);
-				}
-			}
-		}
-	}
+    @Override
+    public void update(IconMenu menu) {
+        if (minecraftInventory != null) {
+            for (int slot = 0; slot < size; slot++) {
+                IconMenuItem menuItem = menu.getOption(slot);
+                if (menuItem != null) {
+                    ItemStack item = createItemStack(menuItem);
+                    minecraftInventory.setItem(slot, item);
+                } else {
+                    minecraftInventory.setItem(slot, ItemStack.b);
+                }
+            }
+        }
+    }
 
-	@Override
-	public void close() {
-		List<HumanEntity> viewers = new ArrayList<>(getViewers());
-		for (HumanEntity viewer : viewers) {
-			viewer.closeInventory();
-		}
-		minecraftInventory = null;
-	}
+    @Override
+    public void close() {
+        List<HumanEntity> viewers = new ArrayList<>(getViewers());
+        for (HumanEntity viewer : viewers) {
+            viewer.closeInventory();
+        }
+        minecraftInventory = null;
+    }
 
-	@Override
-	public boolean isMenuInventory(Inventory inv) {
-		return minecraftInventory != null && minecraftInventory.getBukkitInventory().equals(inv);
-	}
+    @Override
+    public boolean isMenuInventory(Inventory inv) {
+        return minecraftInventory != null && minecraftInventory.getBukkitInventory().equals(inv);
+    }
 
-	@Override
-	public List<HumanEntity> getViewers() {
-		if (minecraftInventory == null) {
-			return Collections.emptyList();
-		}
-		return minecraftInventory.getBukkitInventory().getViewers();
-	}
+    @Override
+    public List<HumanEntity> getViewers() {
+        if (minecraftInventory == null) {
+            return Collections.emptyList();
+        }
+        return minecraftInventory.getBukkitInventory().getViewers();
+    }
 
-	@Override
-	public int getSize() {
-		return size;
-	}
+    @Override
+    public int getSize() {
+        return size;
+    }
 
-	protected ItemStack createItemStack(IconMenuItem icon) {
-		ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData()));
-		if (is == null) {
-			is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.STONE));
-		}
+    protected ItemStack createItemStack(IconMenuItem icon) {
+        ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData()));
+        if (is == null) {
+            is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.STONE));
+        }
 
-		if (is.getTag() == null) {
-			is.setTag(new NBTTagCompound());
-		}
+        if (is.getTag() == null) {
+            is.setTag(new NBTTagCompound());
+        }
 
-		if (icon.getBukkitMeta() != null) {
-			try {
-				applyToItemMethhod.invoke(icon.getBukkitMeta(), is.getTag());
-			} catch (InvocationTargetException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
+        if (icon.getBukkitMeta() != null) {
+            try {
+                applyToItemMethhod.invoke(icon.getBukkitMeta(), is.getTag());
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
 
-		//add enchantment glowing
-		if (icon.isGlowing()) {
-			TagCompound enchTag = new TagCompound();
-			enchTag.put("id", new TagString("minecraft:feather_falling"));
-			enchTag.put("lvl", new TagShort(1));
-			TagList enchList = new TagList();
-			enchList.addTag(enchTag);
+        //add enchantment glowing
+        if (icon.isGlowing()) {
+            TagCompound enchTag = new TagCompound();
+            enchTag.put("id", new TagString("minecraft:feather_falling"));
+            enchTag.put("lvl", new TagShort(1));
+            TagList enchList = new TagList();
+            enchList.addTag(enchTag);
 
-			is.getTag().set("Enchantments", ItemStackNBTConverter.compoundToVanillaCompound(enchList));
-		} else {
-			is.getTag().remove("Enchantments");
-		}
+            is.getTag().set("Enchantments", ItemStackNBTConverter.compoundToVanillaCompound(enchList));
+        } else {
+            is.getTag().remove("Enchantments");
+        }
 
-		// hide item attributes like attack damage
-		is.getTag().setInt("HideFlags", 63);
+        // hide item attributes like attack damage
+        is.getTag().setInt("HideFlags", 63);
 
-		// Prepare display tag
-		NBTTagCompound display;
-		if (is.getTag().hasKey("display")) {
-			display = is.getTag().getCompound("display");
-		} else {
-			display = new NBTTagCompound();
-			is.getTag().set("display", display);
-		}
+        // Prepare display tag
+        NBTTagCompound display;
+        if (is.getTag().hasKey("display")) {
+            display = is.getTag().getCompound("display");
+        } else {
+            display = new NBTTagCompound();
+            is.getTag().set("display", display);
+        }
 
-		// set Title
-		if (!icon.getTitle().equals("")) {
-			display.setString("Name", "{\"text\":\"" + icon.getTitle() + "\"}");
-		}
+        // set Title
+        if (!icon.getTitle().equals("")) {
+            display.setString("Name", "{\"text\":\"" + icon.getTitle() + "\"}");
+        }
 
-		if (icon.getLore().size() > 0) {
-			// set Lore
-			NBTTagList loreTag = new NBTTagList();
-			display.set("Lore", loreTag);
-			for (String loreLine : icon.getLore()) {
-				IChatBaseComponent cm = CraftChatMessage.fromStringOrNull(loreLine);
-				loreTag.add(NBTTagString.a(IChatBaseComponent.ChatSerializer.a(cm)));
-			}
-		}
+        if (icon.getLore().size() > 0) {
+            // set Lore
+            NBTTagList loreTag = new NBTTagList();
+            display.set("Lore", loreTag);
+            for (String loreLine : icon.getLore()) {
+                IChatBaseComponent cm = CraftChatMessage.fromStringOrNull(loreLine);
+                loreTag.add(NBTTagString.a(IChatBaseComponent.ChatSerializer.a(cm)));
+            }
+        }
 
-		if (icon.hasMeta()) {
-			TagCompound tag = new TagCompound();
-			icon.getMeta().applyTo(tag);
-			NBTTagCompound vanillaTag = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
-			for (String key : vanillaTag.getKeys()) {
-				is.getTag().set(key, vanillaTag.get(key));
-			}
-		}
+        if (icon.hasMeta()) {
+            TagCompound tag = new TagCompound();
+            icon.getMeta().applyTo(tag);
+            NBTTagCompound vanillaTag = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(tag);
+            for (String key : vanillaTag.getKeys()) {
+                is.getTag().set(key, vanillaTag.get(key));
+            }
+        }
 
-		if (icon.getTags() != null) {
-			NBTTagCompound vanillaTag = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(icon.getTags());
-			for (String key : vanillaTag.getKeys()) {
-				is.getTag().set(key, vanillaTag.get(key));
-			}
-		}
+        if (icon.getTags() != null) {
+            NBTTagCompound vanillaTag = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(icon.getTags());
+            for (String key : vanillaTag.getKeys()) {
+                is.getTag().set(key, vanillaTag.get(key));
+            }
+        }
 
-		return is;
-	}
+        return is;
+    }
 }

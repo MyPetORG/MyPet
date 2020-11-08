@@ -44,128 +44,128 @@ import java.util.Map;
 @Compat("v1_16_R3")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
-	BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
-	@SuppressWarnings("rawtypes")
-	Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
+    BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
+    @SuppressWarnings("rawtypes")
+    Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
 
-	@SuppressWarnings("unchecked")
-	protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-		EntitySize size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).l();
-		entityTypes.put(petType, IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.Builder.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
-		registerDefaultAttributes(entityTypes.get(petType), (EntityTypes<? extends EntityLiving>) ReflectionUtil.getFieldValue(EntityTypes.class, null, ("" + petType.getTypeID()).toUpperCase()));
-		overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
-	}
+    @SuppressWarnings("unchecked")
+    protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+        EntitySize size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).l();
+        entityTypes.put(petType, IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.Builder.a(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)));
+        registerDefaultAttributes(entityTypes.get(petType), (EntityTypes<? extends EntityLiving>) ReflectionUtil.getFieldValue(EntityTypes.class, null, ("" + petType.getTypeID()).toUpperCase()));
+        overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
+    }
 
-	@SneakyThrows
-	public static void registerDefaultAttributes(EntityTypes<? extends EntityLiving> customType, EntityTypes<? extends EntityLiving> rootType) {
-		MyAttributeDefaults.registerCustomEntityTypes(customType, rootType);
-	}
+    @SneakyThrows
+    public static void registerDefaultAttributes(EntityTypes<? extends EntityLiving> customType, EntityTypes<? extends EntityLiving> rootType) {
+        MyAttributeDefaults.registerCustomEntityTypes(customType, rootType);
+    }
 
-	@SuppressWarnings("unchecked")
-	protected void registerEntity(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-		Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_16_R4.entity.types.EntityMy" + type.name());
-		entityClasses.put(type, entityClass);
+    @SuppressWarnings("unchecked")
+    protected void registerEntity(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+        Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_16_R3.entity.types.EntityMy" + type.name());
+        entityClasses.forcePut(type, entityClass);
 
-		String key = type.getTypeID().toString();
-		registerEntityType(type, key, entityRegistry);
-	}
+        String key = type.getTypeID().toString();
+        registerEntityType(type, key, entityRegistry);
+    }
 
-	public MyPetType getMyPetType(Class<? extends EntityMyPet> clazz) {
-		return entityClasses.inverse().get(clazz);
-	}
+    public MyPetType getMyPetType(Class<? extends EntityMyPet> clazz) {
+        return entityClasses.inverse().get(clazz);
+    }
 
-	@Override
-	public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
-		EntityMyPet petEntity = null;
-		Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
-		World world = ((CraftWorld) bukkitWorld).getHandle();
+    @Override
+    public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
+        EntityMyPet petEntity = null;
+        Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
+        World world = ((CraftWorld) bukkitWorld).getHandle();
 
-		try {
-			Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
-			Object obj = ctor.newInstance(world, pet);
-			if (obj instanceof EntityMyPet) {
-				petEntity = (EntityMyPet) obj;
-			}
-		} catch (Exception e) {
-			MyPetApi.getLogger().info(ChatColor.RED + Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
-			e.printStackTrace();
-		}
+        try {
+            Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
+            Object obj = ctor.newInstance(world, pet);
+            if (obj instanceof EntityMyPet) {
+                petEntity = (EntityMyPet) obj;
+            }
+        } catch (Exception e) {
+            MyPetApi.getLogger().info(ChatColor.RED + Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
+            e.printStackTrace();
+        }
 
-		return petEntity;
-	}
+        return petEntity;
+    }
 
-	@Override
-	public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
-		if (entity != null) {
-			World world = ((CraftWorld) bukkitWorld).getHandle();
-			return world.addEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
-		}
-		return false;
-	}
+    @Override
+    public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
+        if (entity != null) {
+            World world = ((CraftWorld) bukkitWorld).getHandle();
+            return world.addEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
+        }
+        return false;
+    }
 
-	@Override
-	public void registerEntityTypes() {
-		RegistryBlocks<EntityTypes<?>> entityRegistry = getRegistry(IRegistry.ENTITY_TYPE);
-		for (MyPetType type : MyPetType.all()) {
-			registerEntity(type, entityRegistry);
-		}
-	}
+    @Override
+    public void registerEntityTypes() {
+        RegistryBlocks<EntityTypes<?>> entityRegistry = getRegistry(IRegistry.ENTITY_TYPE);
+        for (MyPetType type : MyPetType.all()) {
+            registerEntity(type, entityRegistry);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> T getEntityType(MyPetType petType) {
-		return (T) this.entityTypes.get(petType);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T getEntityType(MyPetType petType) {
+        return (T) this.entityTypes.get(petType);
+    }
 
-	@Override
-	public void unregisterEntityTypes() {
-	}
+    @Override
+    public void unregisterEntityTypes() {
+    }
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public RegistryBlocks<EntityTypes<?>> getRegistry(RegistryBlocks registryMaterials) {
-		if (!registryMaterials.getClass().getName().equals(RegistryBlocks.class.getName())) {
-			MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
-			for (Field field : registryMaterials.getClass().getDeclaredFields()) {
-				if (field.getType() == RegistryMaterials.class) {
-					field.setAccessible(true);
-					try {
-						RegistryBlocks<EntityTypes<?>> reg = (RegistryBlocks<EntityTypes<?>>) field.get(registryMaterials);
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public RegistryBlocks<EntityTypes<?>> getRegistry(RegistryBlocks registryMaterials) {
+        if (!registryMaterials.getClass().getName().equals(RegistryBlocks.class.getName())) {
+            MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
+            for (Field field : registryMaterials.getClass().getDeclaredFields()) {
+                if (field.getType() == RegistryMaterials.class) {
+                    field.setAccessible(true);
+                    try {
+                        RegistryBlocks<EntityTypes<?>> reg = (RegistryBlocks<EntityTypes<?>>) field.get(registryMaterials);
 
-						if (!reg.getClass().getName().equals(RegistryBlocks.class.getName())) {
-							reg = getRegistry(reg);
-						}
+                        if (!reg.getClass().getName().equals(RegistryBlocks.class.getName())) {
+                            reg = getRegistry(reg);
+                        }
 
-						return reg;
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		return registryMaterials;
-	}
+                        return reg;
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return registryMaterials;
+    }
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	protected void overwriteEntityID(EntityTypes types, int id, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void overwriteEntityID(EntityTypes types, int id, RegistryBlocks<EntityTypes<?>> entityRegistry) {
 
 
-		try {
+        try {
 
-			Field bgF = RegistryMaterials.class.getDeclaredField("bg");
-			bgF.setAccessible(true);
-			Object map = bgF.get(entityRegistry);
-			Class<?> clazz = map.getClass();
-			Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
-			mapPut.setAccessible(true);
-			mapPut.invoke(map, types, id);
-		} catch (ReflectiveOperationException ex) {
+            Field bgF = RegistryMaterials.class.getDeclaredField("bg");
+            bgF.setAccessible(true);
+            Object map = bgF.get(entityRegistry);
+            Class<?> clazz = map.getClass();
+            Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
+            mapPut.setAccessible(true);
+            mapPut.invoke(map, types, id);
+        } catch (ReflectiveOperationException ex) {
 
-			ex.printStackTrace();
-		}
+            ex.printStackTrace();
+        }
 
-	}
+    }
 
-	protected int getEntityTypeId(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-		EntityTypes<?> types = entityRegistry.get(new MinecraftKey(type.getTypeID().toString()));
-		return entityRegistry.a(types);
-	}
+    protected int getEntityTypeId(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+        EntityTypes<?> types = entityRegistry.get(new MinecraftKey(type.getTypeID().toString()));
+        return entityRegistry.a(types);
+    }
 }

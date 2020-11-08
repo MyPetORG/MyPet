@@ -43,178 +43,178 @@ import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.4F, height = 0.8F)
 public class EntityMyVex extends EntityMyPet {
 
-	protected static final DataWatcherObject<Byte> CHARGING_WATCHER = DataWatcher.a(EntityMyVex.class, DataWatcherRegistry.a);
+    protected static final DataWatcherObject<Byte> CHARGING_WATCHER = DataWatcher.a(EntityMyVex.class, DataWatcherRegistry.a);
 
-	protected boolean isAggressive = false;
+    protected boolean isAggressive = false;
 
-	public EntityMyVex(World world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyVex(World world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	/**
-	 * Returns the sound that is played when the MyPet dies
-	 */
-	@Override
-	protected String getDeathSound() {
-		return "entity.vex.death";
-	}
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound() {
+        return "entity.vex.death";
+    }
 
-	/**
-	 * Returns the sound that is played when the MyPet get hurt
-	 */
-	@Override
-	protected String getHurtSound() {
-		return "entity.vex.hurt";
-	}
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound() {
+        return "entity.vex.hurt";
+    }
 
-	/**
-	 * Returns the default sound of the MyPet
-	 */
-	@Override
-	protected String getLivingSound() {
-		return "entity.vex.ambient";
-	}
+    /**
+     * Returns the default sound of the MyPet
+     */
+    @Override
+    protected String getLivingSound() {
+        return "entity.vex.ambient";
+    }
 
-	/**
-	 * Is called when player rightclicks this MyPet
-	 * return:
-	 * true: there was a reaction on rightclick
-	 * false: no reaction on rightclick
-	 */
-	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
-		}
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
+    @Override
+    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+            return EnumInteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null) {
-			if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
-				boolean hadEquipment = false;
-				for (EquipmentSlot slot : EquipmentSlot.values()) {
-					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-					if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
-						EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
-						entityitem.pickupDelay = 10;
-						entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
-						this.world.addEntity(entityitem);
-						getMyPet().setEquipment(slot, null);
-						hadEquipment = true;
-					}
-				}
-				if (hadEquipment) {
-					if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
-						try {
-							itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
-						} catch (Error e) {
-							// TODO REMOVE
-							itemStack.damage(1, entityhuman, (entityhuman1) -> {
-								try {
-									ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-								} catch (IllegalAccessException | InvocationTargetException ex) {
-									ex.printStackTrace();
-								}
-							});
-						}
-					}
-				}
-				return EnumInteractionResult.CONSUME;
-			} else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-				EquipmentSlot slot = EquipmentSlot.getSlotById(EntityInsentient.j(itemStack).getSlotFlag());
-				if (slot == EquipmentSlot.MainHand) {
-					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-					if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
-						EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
-						entityitem.pickupDelay = 10;
-						entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
-						this.world.addEntity(entityitem);
-					}
-					getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
-					if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
-						itemStack.subtract(1);
-						if (itemStack.getCount() <= 0) {
-							entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
-						}
-					}
-					return EnumInteractionResult.CONSUME;
-				}
-			}
-		}
-		return EnumInteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null) {
+            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                boolean hadEquipment = false;
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
+                        EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
+                        entityitem.pickupDelay = 10;
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
+                        this.world.addEntity(entityitem);
+                        getMyPet().setEquipment(slot, null);
+                        hadEquipment = true;
+                    }
+                }
+                if (hadEquipment) {
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+                        try {
+                            itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+                        } catch (Error e) {
+                            // TODO REMOVE
+                            itemStack.damage(1, entityhuman, (entityhuman1) -> {
+                                try {
+                                    ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+                                } catch (IllegalAccessException | InvocationTargetException ex) {
+                                    ex.printStackTrace();
+                                }
+                            });
+                        }
+                    }
+                }
+                return EnumInteractionResult.CONSUME;
+            } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
+                EquipmentSlot slot = EquipmentSlot.getSlotById(EntityInsentient.j(itemStack).getSlotFlag());
+                if (slot == EquipmentSlot.MainHand) {
+                    ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+                        EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
+                        entityitem.pickupDelay = 10;
+                        entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
+                        this.world.addEntity(entityitem);
+                    }
+                    getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
+                    if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+                        itemStack.subtract(1);
+                        if (itemStack.getCount() <= 0) {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+                        }
+                    }
+                    return EnumInteractionResult.CONSUME;
+                }
+            }
+        }
+        return EnumInteractionResult.PASS;
+    }
 
-	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(CHARGING_WATCHER, (byte) 0);
-	}
+    @Override
+    protected void initDatawatcher() {
+        super.initDatawatcher();
+        getDataWatcher().register(CHARGING_WATCHER, (byte) 0);
+    }
 
-	@Override
-	public void updateVisuals() {
-		getDataWatcher().set(CHARGING_WATCHER, (byte) (getMyPet().isGlowing() || isAggressive ? 1 : 0));
+    @Override
+    public void updateVisuals() {
+        getDataWatcher().set(CHARGING_WATCHER, (byte) (getMyPet().isGlowing() || isAggressive ? 1 : 0));
 
-		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
-			if (getMyPet().getStatus() == MyPet.PetState.Here) {
-				setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)));
-			}
-		}, 5L);
-	}
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)));
+            }
+        }, 5L);
+    }
 
-	@Override
-	public MyVex getMyPet() {
-		return (MyVex) myPet;
-	}
+    @Override
+    public MyVex getMyPet() {
+        return (MyVex) myPet;
+    }
 
-	public void setPetEquipment(ItemStack itemStack) {
-		((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(EnumItemSlot.MAINHAND, itemStack))));
-	}
+    public void setPetEquipment(ItemStack itemStack) {
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(EnumItemSlot.MAINHAND, itemStack))));
+    }
 
-	@Override
-	public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
-		if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
-			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getSlotFlag());
-			if (getMyPet().getEquipment(slot) != null) {
-				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-			}
-		}
-		return super.getEquipment(vanillaSlot);
-	}
+    @Override
+    public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
+        if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + ".EntityTrackerEntry", 2)) {
+            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getSlotFlag());
+            if (getMyPet().getEquipment(slot) != null) {
+                return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+            }
+        }
+        return super.getEquipment(vanillaSlot);
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (Configuration.MyPet.Vex.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
-				this.setMot(getMot().d(1, 0.6D, 1));
-			}
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (Configuration.MyPet.Vex.CAN_GLIDE) {
+            if (!this.onGround && this.getMot().y < 0.0D) {
+                this.setMot(getMot().d(1, 0.6D, 1));
+            }
+        }
+    }
 
-	@Override
-	protected void doMyPetTick() {
-		super.doMyPetTick();
-		BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
-		Behavior.BehaviorMode behavior = skill.getBehavior();
-		if (behavior == Behavior.BehaviorMode.Aggressive) {
-			if (!isAggressive) {
-				isAggressive = true;
-				this.updateVisuals();
-			}
-		} else {
-			if (isAggressive) {
-				isAggressive = false;
-				this.updateVisuals();
-			}
-		}
-	}
+    @Override
+    protected void doMyPetTick() {
+        super.doMyPetTick();
+        BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
+        Behavior.BehaviorMode behavior = skill.getBehavior();
+        if (behavior == Behavior.BehaviorMode.Aggressive) {
+            if (!isAggressive) {
+                isAggressive = true;
+                this.updateVisuals();
+            }
+        } else {
+            if (isAggressive) {
+                isAggressive = false;
+                this.updateVisuals();
+            }
+        }
+    }
 
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int e(float f, float f1) {
-		if (!Configuration.MyPet.Vex.CAN_GLIDE) {
-			super.e(f, f1);
-		}
-		return 0;
-	}
+    /**
+     * -> disable falldamage
+     */
+    @Override
+    public int e(float f, float f1) {
+        if (!Configuration.MyPet.Vex.CAN_GLIDE) {
+            super.e(f, f1);
+        }
+        return 0;
+    }
 }

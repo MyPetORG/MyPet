@@ -28,66 +28,66 @@ import net.minecraft.server.v1_16_R3.Entity;
 @Compat("v1_16_R3")
 public class LookAtPlayer implements AIGoal {
 
-	private final EntityMyPet petEntity;
-	protected Entity targetPlayer;
-	private final float range;
-	private int ticksUntilStopLooking;
-	private final float lookAtPlayerChance;
+    private final EntityMyPet petEntity;
+    protected Entity targetPlayer;
+    private final float range;
+    private int ticksUntilStopLooking;
+    private final float lookAtPlayerChance;
 
-	public LookAtPlayer(EntityMyPet petEntity, float range) {
-		this.petEntity = petEntity;
-		this.range = range;
-		this.lookAtPlayerChance = 0.02F;
-	}
+    public LookAtPlayer(EntityMyPet petEntity, float range) {
+        this.petEntity = petEntity;
+        this.range = range;
+        this.lookAtPlayerChance = 0.02F;
+    }
 
-	public LookAtPlayer(EntityMyPet petEntity, float range, float lookAtPlayerChance) {
-		this.petEntity = petEntity;
-		this.range = range;
-		this.lookAtPlayerChance = lookAtPlayerChance;
-	}
+    public LookAtPlayer(EntityMyPet petEntity, float range, float lookAtPlayerChance) {
+        this.petEntity = petEntity;
+        this.range = range;
+        this.lookAtPlayerChance = lookAtPlayerChance;
+    }
 
-	@Override
-	public boolean shouldStart() {
-		if (this.petEntity.getRandom().nextFloat() >= this.lookAtPlayerChance) {
-			return false;
-		}
-		if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
-			return false;
-		}
-		if (this.petEntity.isVehicle()) {
-			return false;
-		}
-		this.targetPlayer = this.petEntity.world.findNearbyPlayer(this.petEntity, this.range);
-		return this.targetPlayer != null;
-	}
+    @Override
+    public boolean shouldStart() {
+        if (this.petEntity.getRandom().nextFloat() >= this.lookAtPlayerChance) {
+            return false;
+        }
+        if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
+            return false;
+        }
+        if (this.petEntity.isVehicle()) {
+            return false;
+        }
+        this.targetPlayer = this.petEntity.world.findNearbyPlayer(this.petEntity, this.range);
+        return this.targetPlayer != null;
+    }
 
-	@Override
-	public boolean shouldFinish() {
-		if (!this.targetPlayer.isAlive()) {
-			return true;
-		}
-		if (this.petEntity.h(this.targetPlayer) > this.range) {
-			return true;
-		}
-		if (this.petEntity.isVehicle()) {
-			return true;
-		}
-		return this.ticksUntilStopLooking <= 0;
-	}
+    @Override
+    public boolean shouldFinish() {
+        if (!this.targetPlayer.isAlive()) {
+            return true;
+        }
+        if (this.petEntity.h(this.targetPlayer) > this.range) {
+            return true;
+        }
+        if (this.petEntity.isVehicle()) {
+            return true;
+        }
+        return this.ticksUntilStopLooking <= 0;
+    }
 
-	@Override
-	public void start() {
-		this.ticksUntilStopLooking = (40 + this.petEntity.getRandom().nextInt(40));
-	}
+    @Override
+    public void start() {
+        this.ticksUntilStopLooking = (40 + this.petEntity.getRandom().nextInt(40));
+    }
 
-	@Override
-	public void finish() {
-		this.targetPlayer = null;
-	}
+    @Override
+    public void finish() {
+        this.targetPlayer = null;
+    }
 
-	@Override
-	public void tick() {
-		this.petEntity.getControllerLook().a(this.targetPlayer.locX(), this.targetPlayer.locY() + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ(), petEntity.Q(), this.petEntity.Q());
-		this.ticksUntilStopLooking -= 1;
-	}
+    @Override
+    public void tick() {
+        this.petEntity.getControllerLook().a(this.targetPlayer.locX(), this.targetPlayer.locY() + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ(), petEntity.O(), this.petEntity.O());
+        this.ticksUntilStopLooking -= 1;
+    }
 }
