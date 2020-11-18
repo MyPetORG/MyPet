@@ -13,6 +13,7 @@ V1_14_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.14.4.jar"
 V1_15_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.15.2.jar"
 V1_16_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.16.1.jar"
 V1_16_R2_S="https://cdn.getbukkit.org/spigot/spigot-1.16.3.jar"
+V1_16_R3_S="https://cdn.getbukkit.org/spigot/spigot-1.16.4.jar"
 
 mkdir -p ./dl
 
@@ -27,6 +28,7 @@ wget $V1_14_R1_S -O "./dl/1_14_R1_S.jar"
 wget $V1_15_R1_S -O "./dl/1_15_R1_S.jar"
 wget $V1_16_R1_S -O "./dl/1_16_R1_S.jar"
 wget $V1_16_R2_S -O "./dl/1_16_R2_S.jar"
+wget $V1_16_R3_S -O "./dl/1_16_R3_S.jar"
 
 mvn install:install-file -D"file=./dl/1_7_R4_CB.jar" -D"version=1.7.10-R0.1-SNAPSHOT" -D"groupId=org.bukkit" -D"artifactId=craftbukkit" -D"packaging=jar"
 
@@ -40,5 +42,6 @@ mvn install:install-file -D"file=./dl/1_14_R1_S.jar" -D"version=1.14.4-R0.1-SNAP
 mvn install:install-file -D"file=./dl/1_15_R1_S.jar" -D"version=1.15.2-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
 mvn install:install-file -D"file=./dl/1_16_R1_S.jar" -D"version=1.16.1-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
 mvn install:install-file -D"file=./dl/1_16_R2_S.jar" -D"version=1.16.3-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
+mvn install:install-file -D"file=./dl/1_16_R3_S.jar" -D"version=1.16.4-R0.1-SNAPSHOT" -D"groupId=org.spigotmc" -D"artifactId=spigot" -D"packaging=jar"
 
 #rm -r './dl'
