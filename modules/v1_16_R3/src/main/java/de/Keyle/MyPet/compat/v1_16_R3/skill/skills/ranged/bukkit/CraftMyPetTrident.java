@@ -28,6 +28,9 @@ import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.server.v1_16_R3.EntityThrownTrident;
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftTrident;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 @Compat("v1_16_R3")
 public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProjectile {
@@ -47,11 +50,27 @@ public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProject
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public boolean isPersistent() {
 		return false;
 	}
 
 	@Override
 	public void setPersistent(boolean b) {
+	}
+
+	@NotNull
+	@Override
+	public ItemStack getItem() {
+		return CraftItemStack.asBukkitCopy(getHandle().trident);
+	}
+
+	@Override
+	public void setItem(@NotNull ItemStack itemStack) {
+		getHandle().trident = CraftItemStack.asNMSCopy(itemStack);
 	}
 }

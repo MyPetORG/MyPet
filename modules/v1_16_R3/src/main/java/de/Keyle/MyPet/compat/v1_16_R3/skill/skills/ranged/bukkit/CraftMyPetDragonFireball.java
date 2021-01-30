@@ -47,6 +47,11 @@ public class CraftMyPetDragonFireball extends CraftDragonFireball implements Cra
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public boolean isPersistent() {
 		return false;
 	}
