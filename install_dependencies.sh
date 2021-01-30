@@ -12,7 +12,7 @@ V1_13_R2_S="https://cdn.getbukkit.org/spigot/spigot-1.13.2.jar"
 V1_14_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.14.4.jar"
 V1_15_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.15.2.jar"
 V1_16_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.16.1.jar"
-V1_16_R2_S="https://cdn.getbukkit.org/spigot/spigot-1.16.3.jar"
+V1_16_R2_S="https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar"
 
 mkdir -p ./dl
 

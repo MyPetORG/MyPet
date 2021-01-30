@@ -47,6 +47,11 @@ public class CraftMyPetLargeFireball extends CraftLargeFireball implements Craft
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public boolean isPersistent() {
 		return false;
 	}

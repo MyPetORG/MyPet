@@ -47,6 +47,11 @@ public class CraftMyPetEnderPearl extends CraftEnderPearl implements CraftMyPetP
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public boolean isPersistent() {
 		return false;
 	}

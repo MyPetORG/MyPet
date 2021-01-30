@@ -45,4 +45,9 @@ public class CraftMyPetLlamaSpit extends CraftLlamaSpit implements CraftMyPetPro
 		MyPetMinecraftEntity shooter = getMyPetProjectile().getShooter();
 		return shooter != null ? shooter.getBukkitEntity() : null;
 	}
+
+	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
 }

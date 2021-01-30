@@ -54,6 +54,11 @@ public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public boolean isPersistent() {
 		return false;
 	}

@@ -47,6 +47,11 @@ public class CraftMyPetWitherSkull extends CraftWitherSkull implements CraftMyPe
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public boolean isPersistent() {
 		return false;
 	}

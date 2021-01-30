@@ -47,6 +47,11 @@ public class CraftMyPetEgg extends CraftEgg implements CraftMyPetProjectile {
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public boolean isPersistent() {
 		return false;
 	}

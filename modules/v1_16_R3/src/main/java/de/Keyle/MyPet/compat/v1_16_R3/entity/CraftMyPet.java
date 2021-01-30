@@ -111,6 +111,11 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 	}
 
 	@Override
+	public boolean isInWater() {
+		return getHandle().isInWater();
+	}
+
+	@Override
 	public void remove() {
 		// do nothing to prevent other plugins from removing the MyPet
 		// user removeEntity() to remove the MyPet
