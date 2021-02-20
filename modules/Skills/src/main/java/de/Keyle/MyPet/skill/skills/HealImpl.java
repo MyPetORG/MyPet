@@ -73,8 +73,7 @@ public class HealImpl implements Heal {
             myPet.getEntity().ifPresent(entity -> {
                 if (heal.getValue().doubleValue() > 0) {
                     if (timeCounter-- <= 0) {
-
-                        if (myPet.getHealth() < myPet.getMaxHealth()) {
+                        if (myPet.getHealth() < myPet.getMaxHealth() - 0.01f) {
                             if (!particles) {
                                 particles = true;
                                 entity.getHandle().showPotionParticles(Color.LIME);
