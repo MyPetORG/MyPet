@@ -196,15 +196,15 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
 			if (this.isVehicle()) {
 				++this.soundCounter;
 				if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
-					this.playSound(SoundEffects.ENTITY_HORSE_GALLOP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+					this.playSound(SoundEffects.ENTITY_HORSE_GALLOP, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
 				} else if (this.soundCounter <= 5) {
-					this.playSound(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+					this.playSound(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
 				}
 			} else if (!blockdata.getMaterial().isLiquid()) {
 				this.soundCounter += 1;
-				playSound(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+				playSound(SoundEffects.ENTITY_HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
 			} else {
-				playSound(SoundEffects.ENTITY_HORSE_STEP, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+				playSound(SoundEffects.ENTITY_HORSE_STEP, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
 			}
 		}
 	}
