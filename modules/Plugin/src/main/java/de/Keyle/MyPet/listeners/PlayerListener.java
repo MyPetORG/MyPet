@@ -467,7 +467,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void on(final PlayerDeathEvent event) {
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
