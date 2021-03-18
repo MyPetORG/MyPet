@@ -16,17 +16,17 @@ V1_16_R2_S="https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar"
 
 mkdir -p ./dl
 
-wget $V1_7_R4_CB -O "./dl/1_7_R4_CB.jar"
-wget $V1_8_R3_S -O "./dl/1_8_R3_S.jar"
-wget $V1_9_R2_S -O "./dl/1_9_R2_S.jar"
-wget $V1_10_R1_S -O "./dl/1_10_R1_S.jar"
-wget $V1_11_R1_S -O "./dl/1_11_R1_S.jar"
-wget $V1_12_R1_S -O "./dl/1_12_R1_S.jar"
-wget $V1_13_R2_S -O "./dl/1_13_R2_S.jar"
-wget $V1_14_R1_S -O "./dl/1_14_R1_S.jar"
-wget $V1_15_R1_S -O "./dl/1_15_R1_S.jar"
-wget $V1_16_R1_S -O "./dl/1_16_R1_S.jar"
-wget $V1_16_R2_S -O "./dl/1_16_R2_S.jar"
+wget $V1_7_R4_CB -O "./dl/1_7_R4_CB.jar" --no-verbose
+wget $V1_8_R3_S -O "./dl/1_8_R3_S.jar" --no-verbose
+wget $V1_9_R2_S -O "./dl/1_9_R2_S.jar" --no-verbose
+wget $V1_10_R1_S -O "./dl/1_10_R1_S.jar" --no-verbose
+wget $V1_11_R1_S -O "./dl/1_11_R1_S.jar" --no-verbose
+wget $V1_12_R1_S -O "./dl/1_12_R1_S.jar" --no-verbose
+wget $V1_13_R2_S -O "./dl/1_13_R2_S.jar" --no-verbose
+wget $V1_14_R1_S -O "./dl/1_14_R1_S.jar" --no-verbose
+wget $V1_15_R1_S -O "./dl/1_15_R1_S.jar" --no-verbose
+wget $V1_16_R1_S -O "./dl/1_16_R1_S.jar" --no-verbose
+wget $V1_16_R2_S -O "./dl/1_16_R2_S.jar" --no-verbose
 
 mvn install:install-file -D"file=./dl/1_7_R4_CB.jar" -D"version=1.7.10-R0.1-SNAPSHOT" -D"groupId=org.bukkit" -D"artifactId=craftbukkit" -D"packaging=jar"
 

@@ -1,32 +1,60 @@
-name: Java CI with Maven
+name: Build MyPet
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      BUILD_NUMBER: 0
+      JAR_FILE_NAME: ""
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Cache local Maven repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-    - name: Install Dependencies
-      run: ./install_dependencies.sh
-    - name: Build with Maven
-      run: mvn clean package
-    - name: Upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: MyPet
-        path: target/MyPet-*.jar
-        if-no-files-found: error
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ hashFiles('**/install_dependencies.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install Dependencies
+        run: ./install_dependencies.sh
+
+      - name: Set build number
+        env:
+          NUM: ${{ github.run_number }}
+        run: |
+          echo "BUILD_NUMBER=$(($NUM+1592))" >> $GITHUB_ENV
+
+      - name: Deploy to GitHub
+        run: mvn --batch-mode deploy -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get jar file name
+        run: |
+          echo "JAR_FILE_NAME=$(find ./target -maxdepth 1 -regex '.*/MyPet-3\.[0-9]+-?S?N?A?P?S?H?O?T?\.jar' | sed -e 's/"//g')" >> $GITHUB_ENV
+
+      - name: Publish jar to website
+        run: |
+          curl -X POST \
+          --url https://mypet-plugin.de/publish-version \
+          --header 'Content-Type: multipart/form-data' \
+          -F build=${{ env.BUILD_NUMBER }} \
+          -F 'file=@${{ env.JAR_FILE_NAME }}' \
+          -F project=MyPet \
+          -F token=${{ secrets.PUBLISH_TOKEN }}
