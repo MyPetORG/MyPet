@@ -68,7 +68,7 @@
         </repository>
         <repository>
             <id>mypet-repo</id>
-            <url>http://repo.keyle.de/</url>
+            <url>https://repo.mypet-plugin.de/</url>
             <snapshots>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
