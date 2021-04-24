@@ -581,7 +581,9 @@ public class MySqlRepository implements Repository {
                 @Override
                 public void run() {
                     try (Connection connection = dataSource.getConnection();
-                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;")) {
+                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;",
+                                 ResultSet.TYPE_SCROLL_SENSITIVE,
+                                 ResultSet.CONCUR_UPDATABLE)) {
                         statement.setString(1, uuid.toString());
 
                         ResultSet resultSet = statement.executeQuery();
