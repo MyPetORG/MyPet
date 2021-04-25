@@ -55,6 +55,13 @@
 
     <repositories>
         <repository>
+            <id>mypet-repo</id>
+            <url>https://repo.mypet-plugin.de/</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
             <id>oss-sonartype-repo</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
@@ -63,13 +70,6 @@
             <url>https://maven.pkg.github.com/xXKeyleXx/*</url>
             <snapshots>
                 <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>mypet-repo</id>
-            <url>https://repo.mypet-plugin.de/</url>
-            <snapshots>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
@@ -98,7 +98,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>keyle-plugins</id>
-            <url>http://repo.keyle.de</url>
+            <url>https://repo.mypet-plugin.de/</url>
         </pluginRepository>
     </pluginRepositories>
 
