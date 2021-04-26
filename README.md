@@ -9,22 +9,31 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Spigot][SpigotImage]][Spigot]
 
 ## The License
-Copyright (c) 2011-2020, Keyle<br />
+Copyright (c) 2011-2021, Keyle<br />
 MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
 
 ## Builds
 Download the latest builds from the official [MyPet-Site][Builds].
 
 
-[Logo]: http://dl.keyle.de/images/logo.png
+[Logo]: .github/readme-images/logo.png
+
 [License]: http://www.gnu.org/licenses/lgpl.html
-[Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
+
 [Stats]: https://bstats.org/plugin/bukkit/MyPet
-[StatsImage]: http://dl.keyle.de/images/metrics.png
+
+[StatsImage]: .github/readme-images/metrics.png
+
 [Builds]: https://mypet-plugin.de/download
-[BuildsImage]: http://dl.keyle.de/images/devbuilds.png
+
+[BuildsImage]: .github/readme-images/devbuilds.png
+
 [Homepage]: https://mypet-plugin.de/
+
 [Wiki]: https://wiki.mypet-plugin.de/
-[WikiImage]: http://dl.keyle.de/images/wiki.png
+
+[WikiImage]: .github/readme-images/wiki.png
+
 [Spigot]: https://www.spigotmc.org/resources/mypet.12725/
-[SpigotImage]: http://dl.keyle.de/images/spigot.png
+
+[SpigotImage]: .github/readme-images/spigot.png
