@@ -47,6 +47,12 @@ jobs:
         run: |
           echo "JAR_FILE_NAME=$(find ./target -maxdepth 1 -regex '.*/MyPet-3\.[0-9]+-?S?N?A?P?S?H?O?T?\.jar' | sed -e 's/"//g')" >> $GITHUB_ENV
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: latest-plugin-jar
+          path: ${{ env.JAR_FILE_NAME }}
+
       - name: Publish jar to website
         run: |
           curl -X POST \
