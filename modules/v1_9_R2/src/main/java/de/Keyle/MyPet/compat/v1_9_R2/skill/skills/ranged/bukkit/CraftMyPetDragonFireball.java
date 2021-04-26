@@ -45,4 +45,11 @@ public class CraftMyPetDragonFireball extends CraftDragonFireball implements Cra
         MyPetMinecraftEntity shooter = getMyPetProjectile().getShooter();
         return shooter != null ? shooter.getBukkitEntity() : null;
     }
+
+    public boolean isSilent() {
+        return false;
+    }
+
+    public void setSilent(boolean b) {
+    }
 }

@@ -45,4 +45,11 @@ public class CraftMyPetEnderPearl extends CraftEnderPearl implements CraftMyPetP
         MyPetMinecraftEntity shooter = getMyPetProjectile().getShooter();
         return shooter != null ? shooter.getBukkitEntity() : null;
     }
+
+    public boolean isSilent() {
+        return false;
+    }
+
+    public void setSilent(boolean b) {
+    }
 }

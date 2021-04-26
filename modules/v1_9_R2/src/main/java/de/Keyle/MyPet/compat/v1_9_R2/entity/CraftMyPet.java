@@ -91,6 +91,13 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
         return EntityType.UNKNOWN;
     }
 
+    public boolean isSilent() {
+        return false;
+    }
+
+    public void setSilent(boolean b) {
+    }
+
     @Override
     public void remove() {
         // do nothing to prevent other plugins from removing the MyPet

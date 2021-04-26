@@ -30,6 +30,7 @@ import org.bukkit.entity.EntityType;
 
 @Compat("v1_9_R2")
 public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
+
     protected MyPetPlayer petOwner;
     protected EntityMyPetPart petEntity;
 
@@ -56,5 +57,12 @@ public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
     @Override
     public EntityType getType() {
         return EntityType.UNKNOWN;
+    }
+
+    public boolean isSilent() {
+        return false;
+    }
+
+    public void setSilent(boolean b) {
     }
 }
