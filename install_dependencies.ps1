@@ -10,7 +10,7 @@ $1_15_R1_S = "https://cdn.getbukkit.org/spigot/spigot-1.15.2.jar"
 $1_16_R1_S = "https://cdn.getbukkit.org/spigot/spigot-1.16.1.jar"
 $1_16_R4_S = "https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar"
 
-New-Item -Path .\dl -ItemType directory
+New-Item -ItemType Directory -Force -Path .\dl
 
 Invoke-WebRequest -Uri $1_7_R4_CB -OutFile ".\dl\1_7_R4_CB.jar"
 Invoke-WebRequest -Uri $1_8_R3_S -OutFile ".\dl\1_8_R3_S.jar"
