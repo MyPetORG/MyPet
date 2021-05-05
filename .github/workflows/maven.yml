@@ -20,6 +20,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+          server-id: github-mypet
+          server-username: ${{ secrets.USER_GITHUB }}
+          server-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
@@ -38,7 +41,7 @@ jobs:
         run: |
           echo "BUILD_NUMBER=$(($NUM+1592))" >> $GITHUB_ENV
 
-      - name: Deploy to GitHub
+      - name: Build and Deploy to GitHub
         run: mvn --batch-mode deploy -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
