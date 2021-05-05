@@ -20,9 +20,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-          server-id: github-mypet
-          server-username: ${{ secrets.USER_GITHUB }}
-          server-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
