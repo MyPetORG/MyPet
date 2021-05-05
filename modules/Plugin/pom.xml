@@ -257,7 +257,7 @@
                     <execution>
                         <phase>${download.translations}</phase>
                         <configuration>
-                            <connectionUrl>scm:git:https://github.com/xXKeyleXx/MyPet-Translations.git</connectionUrl>
+                            <connectionUrl>scm:git:https://github.com/MyPetORG/MyPet-Translations.git</connectionUrl>
                             <checkoutDirectory>target/classes/locale</checkoutDirectory>
                             <excludes>exclude,.git,.gitignore,README.md</excludes>
                         </configuration>
