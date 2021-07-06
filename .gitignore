@@ -25,3 +25,4 @@ build.number
 /target
 /modules/*/target
 dependency-reduced-pom.xml
+dl/

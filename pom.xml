@@ -36,6 +36,7 @@
         <module>modules/v1_9_R2</module>
         <module>modules/v1_12_R1</module>
         <module>modules/v1_16_R1</module>
+        <module>modules/v1_17_R1</module>
         <module>modules/GUI</module>
         <module>modules/Plugin</module>
         <module>modules/MyPet</module>
@@ -48,6 +49,10 @@
     </properties>
 
     <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
         <repository>
             <id>mypet-repo</id>
             <url>https://repo.mypet-plugin.de/</url>
