@@ -72,8 +72,8 @@
             <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository>
-            <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
+            <id>enginehub-repo</id>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -81,7 +81,7 @@
         </repository>
         <repository>
             <id>md5-repo</id>
-            <url>http://repo.md-5.net/content/repositories/public</url>
+            <url>https://repo.md-5.net/content/repositories/public</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
