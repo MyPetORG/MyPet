@@ -74,17 +74,6 @@
 
         <dependency>
             <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_7_R4</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_8_R3</artifactId>
             <version>1</version>
             <exclusions>
@@ -108,28 +97,6 @@
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_10_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_11_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_12_R1</artifactId>
             <version>1</version>
             <exclusions>
@@ -140,39 +107,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_13_R2</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_14_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_15_R1</artifactId>
-            <version>1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_16_R1</artifactId>
