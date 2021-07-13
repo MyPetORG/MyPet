@@ -33,6 +33,8 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.World;
 import org.bukkit.Bukkit;
 
 @EntitySize(width = 0.7F, height = 1.3F)
@@ -63,44 +65,44 @@ public class EntityMyMooshroom extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (itemStack != null) {
-			if (itemStack.getItem().equals(Items.BOWL)) {
+			if (itemStack.getItem().equals(Items.nc)) {
 				if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
-					final int itemInHandIndex = entityhuman.inventory.itemInHandIndex;
-					ItemStack is = new ItemStack(Items.MUSHROOM_STEW);
-					final ItemStack oldIs = entityhuman.inventory.getItem(itemInHandIndex);
-					entityhuman.inventory.setItem(itemInHandIndex, is);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.inventory.setItem(itemInHandIndex, oldIs), 2L);
+					final int itemInHandIndex = entityhuman.getInventory().k;
+					ItemStack is = new ItemStack(Items.nd);
+					final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
+					entityhuman.getInventory().setItem(itemInHandIndex, is);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.getInventory().setItem(itemInHandIndex, oldIs), 2L);
 
 				} else {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.MUSHROOM_STEW));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, new ItemStack(Items.nd));
 					} else {
-						if (!entityhuman.inventory.pickup(new ItemStack(Items.MUSHROOM_STEW))) {
-							entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
+						if (!entityhuman.getInventory().pickup(new ItemStack(Items.nd))) {
+							entityhuman.drop(new ItemStack(Items.pG), true);
 						}
 					}
-					return EnumInteractionResult.CONSUME;
+					return EnumInteractionResult.b;
 				}
 			}
 			if (getOwner().equals(entityhuman) && canUseItem()) {
 				if (Configuration.MyPet.Mooshroom.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 						itemStack.subtract(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 						}
 					}
 					getMyPet().setBaby(false);
-					return EnumInteractionResult.CONSUME;
+					return EnumInteractionResult.b;
 				}
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override

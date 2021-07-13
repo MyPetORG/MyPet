@@ -25,10 +25,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyParrot;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.DataWatcherObject;
-import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.network.syncher.DataWatcher;
+import net.minecraft.network.syncher.DataWatcherObject;
+import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.world.level.World;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -45,6 +45,7 @@ public class EntityMyParrot extends EntityMyPet {
 		super(world, myPet);
 	}
 
+	@Override
 	public MyParrot getMyPet() {
 		return (MyParrot) myPet;
 	}
@@ -70,6 +71,7 @@ public class EntityMyParrot extends EntityMyPet {
 		return "entity.parrot.ambient";
 	}
 
+	@Override
 	protected void initDatawatcher() {
 		super.initDatawatcher();
 		getDataWatcher().register(AGE_WATCHER, false);
@@ -83,11 +85,12 @@ public class EntityMyParrot extends EntityMyPet {
 		getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
 	}
 
+	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 
 		if (Configuration.MyPet.Parrot.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
@@ -96,7 +99,8 @@ public class EntityMyParrot extends EntityMyPet {
 	/**
 	 * -> disable falldamage
 	 */
-	public int e(float f, float f1) {
+	@Override
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
 			super.e(f, f1);
 		}

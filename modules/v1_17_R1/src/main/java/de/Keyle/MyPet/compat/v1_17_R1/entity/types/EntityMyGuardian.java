@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyGuardian;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.7F, height = 0.85F)
 public class EntityMyGuardian extends EntityMyPet {
@@ -43,10 +43,12 @@ public class EntityMyGuardian extends EntityMyPet {
 		return "entity.guardian.hurt";
 	}
 
+	@Override
 	protected String getLivingSound() {
 		return "entity.guardian.ambient";
 	}
 
+	@Override
 	public MyGuardian getMyPet() {
 		return (MyGuardian) myPet;
 	}

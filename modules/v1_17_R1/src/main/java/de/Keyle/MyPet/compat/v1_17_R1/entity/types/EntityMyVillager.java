@@ -30,6 +30,7 @@ import net.minecraft.core.IRegistry;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.npc.VillagerData;
@@ -37,6 +38,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
@@ -67,22 +69,22 @@ public class EntityMyVillager extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (Configuration.MyPet.Villager.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override
@@ -92,15 +94,15 @@ public class EntityMyVillager extends EntityMyPet {
 		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
 			getDataWatcher().register(UNUSED_WATCHER, 0);
 		}
-		getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.PLAINS, VillagerProfession.NONE, 1));
+		getDataWatcher().register(PROFESSION_WATCHER, new VillagerData(VillagerType.c, VillagerProfession.a, 1));
 	}
 
 	@Override
 	public void updateVisuals() {
 		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 		String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
-		VillagerProfession profession = IRegistry.VILLAGER_PROFESSION.get(new MinecraftKey(professionKey));
-		VillagerType type = IRegistry.VILLAGER_TYPE.get(new MinecraftKey(getMyPet().getType().getKey()));
+		VillagerProfession profession = IRegistry.ap.get(new MinecraftKey(professionKey));
+		VillagerType type = IRegistry.ao.get(new MinecraftKey(getMyPet().getType().getKey()));
 		getDataWatcher().set(PROFESSION_WATCHER, new VillagerData(type, profession, getMyPet().getVillagerLevel()));
 	}
 

@@ -33,6 +33,8 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.World;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -62,29 +64,29 @@ public class EntityMyBlaze extends EntityMyPet {
 
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == EnumInteractionResult.CONSUME) {
-			return EnumInteractionResult.CONSUME;
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == EnumInteractionResult.b) {
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (getMyPet().isOnFire() && itemStack.getItem() == Items.WATER_BUCKET && getOwner().getPlayer().isSneaking()) {
+			if (getMyPet().isOnFire() && itemStack.getItem() == Items.nX && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setOnFire(false);
 				makeSound("block.fire.extinguish", 1.0F, 1.0F);
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.BUCKET));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, new ItemStack(Items.nW));
 					} else {
-						if (!entityhuman.inventory.pickup(new ItemStack(Items.BUCKET))) {
-							entityhuman.drop(new ItemStack(Items.BUCKET), true);
+						if (!entityhuman.getInventory().pickup(new ItemStack(Items.nW))) {
+							entityhuman.drop(new ItemStack(Items.nW), true);
 						}
 					}
 				}
-				return EnumInteractionResult.CONSUME;
-			} else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
+				return EnumInteractionResult.b;
+			} else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.me && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setOnFire(true);
 				makeSound("item.flintandsteel.use", 1.0F, 1.0F);
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					try {
 						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
 					} catch (Error e) {
@@ -98,10 +100,10 @@ public class EntityMyBlaze extends EntityMyPet {
 						});
 					}
 				}
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override
@@ -119,7 +121,7 @@ public class EntityMyBlaze extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.Blaze.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
@@ -134,7 +136,7 @@ public class EntityMyBlaze extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int e(float f, float f1) {
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
 			super.e(f, f1);
 		}

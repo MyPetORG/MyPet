@@ -37,7 +37,9 @@ import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.World;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -72,16 +74,16 @@ public class EntityMyPig extends EntityMyPet {
 
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, final ItemStack itemStack) {
-		if (enumhand == EnumHand.OFF_HAND) {
+		if (enumhand == EnumHand.b) {
 			if (itemStack != null) {
-				if (itemStack.getItem() == Items.LEAD) {
-					((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutAttachEntity(this, null));
-					entityhuman.a(EnumHand.OFF_HAND, ItemStack.b);
+				if (itemStack.getItem() == Items.rP) {
+					((WorldServer) this.t).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutAttachEntity(this, null));
+					entityhuman.a(EnumHand.b, ItemStack.b);
 					new BukkitRunnable() {
 						@Override
 						public void run() {
 							if (entityhuman instanceof EntityPlayer) {
-								entityhuman.a(EnumHand.OFF_HAND, itemStack);
+								entityhuman.a(EnumHand.b, itemStack);
 								Player p = (Player) entityhuman.getBukkitEntity();
 								if (!p.isOnline()) {
 									p.saveData();
@@ -91,32 +93,32 @@ public class EntityMyPig extends EntityMyPet {
 					}.runTaskLater(MyPetApi.getPlugin(), 5);
 				}
 			}
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+			if (itemStack.getItem() == Items.lL && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
-				return EnumInteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
-				entityitem.pickupDelay = 10;
-				entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
-				this.world.addEntity(entityitem);
+				return EnumInteractionResult.b;
+			} else if (itemStack.getItem() == Items.pq && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+				EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+				entityitem.ap = 10;
+				entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
+				this.t.addEntity(entityitem);
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setSaddle(null);
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					try {
 						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
 					} catch (Error e) {
@@ -131,19 +133,19 @@ public class EntityMyPig extends EntityMyPet {
 					}
 				}
 
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			} else if (Configuration.MyPet.Pig.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override

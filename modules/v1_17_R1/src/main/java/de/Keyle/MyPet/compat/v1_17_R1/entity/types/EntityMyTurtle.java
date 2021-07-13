@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTurtle;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import net.minecraft.core.BlockPosition;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
@@ -32,6 +33,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 1.2F, height = 0.4F)
 public class EntityMyTurtle extends EntityMyPet {
@@ -66,31 +68,31 @@ public class EntityMyTurtle extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override
 	protected void initDatawatcher() {
 		super.initDatawatcher();
 		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(HOME_WATCHER, BlockPosition.ZERO);
+		getDataWatcher().register(HOME_WATCHER, BlockPosition.b);
 		getDataWatcher().register(HAS_EGG_WATCHER, false);
-		getDataWatcher().register(TRAVEL_POS_WATCHER, BlockPosition.ZERO);
+		getDataWatcher().register(TRAVEL_POS_WATCHER, BlockPosition.b);
 		getDataWatcher().register(UNUSED_WATCHER_2, false);
 		getDataWatcher().register(UNUSED_WATCHER_3, false);
 		getDataWatcher().register(UNUSED_WATCHER_1, false);

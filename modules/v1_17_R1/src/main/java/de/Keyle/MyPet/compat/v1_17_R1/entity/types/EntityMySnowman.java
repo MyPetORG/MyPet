@@ -32,6 +32,9 @@ import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.block.Blocks;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -49,23 +52,23 @@ public class EntityMySnowman extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Item.getItemOf(Blocks.PUMPKIN) && getMyPet().isSheared() && entityhuman.isSneaking()) {
+			if (itemStack.getItem() == Item.getItemOf(Blocks.cS) && getMyPet().isSheared() && entityhuman.isSneaking()) {
 				getMyPet().setSheared(false);
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
-				return EnumInteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isSneaking()) {
+				return EnumInteractionResult.b;
+			} else if (itemStack.getItem() == Items.pq && !getMyPet().isSheared() && entityhuman.isSneaking()) {
 				getMyPet().setSheared(true);
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					try {
 						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
 					} catch (Error e) {
@@ -79,10 +82,10 @@ public class EntityMySnowman extends EntityMyPet {
 						});
 					}
 				}
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override
