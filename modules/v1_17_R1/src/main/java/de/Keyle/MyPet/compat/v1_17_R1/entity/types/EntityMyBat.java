@@ -24,10 +24,10 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.DataWatcherObject;
-import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.network.syncher.DataWatcher;
+import net.minecraft.network.syncher.DataWatcherObject;
+import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.5F, height = 0.45f)
 public class EntityMyBat extends EntityMyPet {
@@ -66,6 +66,7 @@ public class EntityMyBat extends EntityMyPet {
 		return super.getSoundSpeed() * 0.95F;
 	}
 
+	@Override
 	protected void initDatawatcher() {
 		super.initDatawatcher();
 		getDataWatcher().register(HANGING_WATCHER, (byte) 0xFFFFFFFE); // hanging
@@ -75,7 +76,7 @@ public class EntityMyBat extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.Bat.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
@@ -85,7 +86,7 @@ public class EntityMyBat extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int e(float f, float f1) {
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.Bat.CAN_GLIDE) {
 			super.e(f, f1);
 		}

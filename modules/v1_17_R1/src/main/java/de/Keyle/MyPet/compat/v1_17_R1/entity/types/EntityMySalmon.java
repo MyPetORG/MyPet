@@ -25,10 +25,10 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.DataWatcherObject;
-import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.network.syncher.DataWatcher;
+import net.minecraft.network.syncher.DataWatcherObject;
+import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.7F, height = 0.4f)
 public class EntityMySalmon extends EntityMyPet {
@@ -49,6 +49,7 @@ public class EntityMySalmon extends EntityMyPet {
 		return "entity.salmon.flop";
 	}
 
+	@Override
 	protected String getLivingSound() {
 		return "entity.salmon.ambient";
 	}
@@ -56,11 +57,12 @@ public class EntityMySalmon extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (!isInWater() && this.random.nextBoolean()) {
+		if (!isInWater() && this.Q.nextBoolean()) {
 			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
 		}
 	}
 
+	@Override
 	protected void initDatawatcher() {
 		super.initDatawatcher();
 		getDataWatcher().register(FROM_BUCKET_WATCHER, false);

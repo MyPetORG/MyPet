@@ -30,6 +30,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.world.entity.EntityPose;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMyPhantom extends EntityMyPet {
@@ -79,7 +80,7 @@ public class EntityMyPhantom extends EntityMyPet {
 			int size = Math.max(1, getMyPet().getSize());
 			float width = es.width();
 			float height = Float.isNaN(es.height()) ? width : es.height();
-			return new net.minecraft.server.v1_16_R3.EntitySize(width * size, height * size, false);
+			return new net.minecraft.world.entity.EntitySize(width * size, height * size, false);
 		}
 		return super.a(entitypose);
 	}
@@ -94,7 +95,7 @@ public class EntityMyPhantom extends EntityMyPet {
 		super.onLivingUpdate();
 
 		if (Configuration.MyPet.Phantom.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
@@ -104,7 +105,7 @@ public class EntityMyPhantom extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int e(float f, float f1) {
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.Phantom.CAN_GLIDE) {
 			super.e(f, f1);
 		}

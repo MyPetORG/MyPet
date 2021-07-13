@@ -26,10 +26,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.server.v1_16_R3.DamageSource;
-import net.minecraft.server.v1_16_R3.Entity;
-import net.minecraft.server.v1_16_R3.World;
-import net.minecraft.server.v1_16_R3.WorldServer;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.World;
 
 import java.util.Arrays;
 
@@ -82,7 +82,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.EnderDragon.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
@@ -90,7 +90,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 			if (this.getWorld() instanceof WorldServer) {
 				WorldServer world = (WorldServer) this.getWorld();
 				Arrays.stream(this.children)
-						.forEach(entityMyPetPart -> world.entitiesById.put(entityMyPetPart.getId(), entityMyPetPart));
+						.forEach(entityMyPetPart -> world.addEntity(entityMyPetPart)); // TODO: 2021/07/14 I don't know if this is the right replacement.
 			}
 			this.registered = true;
 		}
@@ -100,18 +100,20 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int e(float f, float f1) {
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.EnderDragon.CAN_GLIDE) {
 			super.e(f, f1);
 		}
 		return 0;
 	}
 
+	/* fmm...
 	@Override
 	public void die() {
 		super.die();
 		Arrays.stream(this.children).forEach((en) -> (en.getBukkitEntity().getHandle()).die());
 	}
+ 	*/
 
 	@Override
 	public void die(DamageSource damagesource) {

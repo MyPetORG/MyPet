@@ -23,7 +23,7 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.4F, height = 0.1F)
 public class EntityMyEndermite extends EntityMyPet {
@@ -42,6 +42,7 @@ public class EntityMyEndermite extends EntityMyPet {
 		return "entity.endermite.hurt";
 	}
 
+	@Override
 	protected String getLivingSound() {
 		return "entity.endermite.ambient";
 	}
@@ -51,6 +52,7 @@ public class EntityMyEndermite extends EntityMyPet {
 		makeSound("entity.endermite.step", 1.0F, 1.0F);
 	}
 
+	@Override
 	public void setPathfinder() {
 		super.setPathfinder();
 		petPathfinderSelector.removeGoal("LookAtPlayer");

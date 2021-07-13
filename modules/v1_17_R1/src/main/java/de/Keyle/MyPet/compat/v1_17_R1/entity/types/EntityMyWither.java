@@ -25,10 +25,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWither;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.DataWatcherObject;
-import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.network.syncher.DataWatcher;
+import net.minecraft.network.syncher.DataWatcherObject;
+import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 1.9F, height = 3.5F)
 public class EntityMyWither extends EntityMyPet {
@@ -70,7 +70,7 @@ public class EntityMyWither extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.Wither.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
@@ -85,7 +85,7 @@ public class EntityMyWither extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int e(float f, float f1) {
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.Wither.CAN_GLIDE) {
 			super.e(f, f1);
 		}

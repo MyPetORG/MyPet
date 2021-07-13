@@ -32,6 +32,8 @@ import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 1.95F, height = 2.2F)
 public class EntityMyRavager extends EntityMyPet {
@@ -74,7 +76,7 @@ public class EntityMyRavager extends EntityMyPet {
 		if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
 			if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
 				getOwner().sendMessage("Unfortunately, Ravagers can not be ridden (Minecraft limitation)", 5000);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
 		return super.handlePlayerInteraction(entityhuman, enumhand, itemStack);

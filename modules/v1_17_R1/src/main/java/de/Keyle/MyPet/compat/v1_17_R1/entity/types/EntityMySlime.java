@@ -29,6 +29,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.world.entity.EntityPose;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMySlime extends EntityMyPet {
@@ -39,7 +40,7 @@ public class EntityMySlime extends EntityMyPet {
 
 	public EntityMySlime(World world, MyPet myPet) {
 		super(world, myPet);
-		this.jumpDelay = (this.random.nextInt(20) + 10);
+		this.jumpDelay = (this.Q.nextInt(20) + 10);
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class EntityMySlime extends EntityMyPet {
 			int size = Math.max(1, getMyPet().getSize());
 			float width = es.width();
 			float height = Float.isNaN(es.height()) ? width : es.height();
-			return new net.minecraft.server.v1_16_R3.EntitySize(width * size, height * size, false);
+			return new net.minecraft.world.entity.EntitySize(width * size, height * size, false);
 		}
 		return super.a(entitypose);
 	}
@@ -90,10 +91,10 @@ public class EntityMySlime extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 
-		if (this.onGround && jumpDelay-- <= 0) {
+		if (this.z && jumpDelay-- <= 0) {
 			getControllerJump().jump();
-			jumpDelay = (this.random.nextInt(20) + 50);
-			makeSound("entity.slime.jump", 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+			jumpDelay = (this.Q.nextInt(20) + 50);
+			makeSound("entity.slime.jump", 1.0F, ((this.Q.nextFloat() - this.Q.nextFloat()) * 0.2F + 1.0F) / 0.8F);
 		}
 	}
 

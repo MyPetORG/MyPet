@@ -32,6 +32,8 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
@@ -42,7 +44,7 @@ public class EntityMyChicken extends EntityMyPet {
 
 	public EntityMyChicken(World world, MyPet myPet) {
 		super(world, myPet);
-		nextEggTimer = (random.nextInt(6000) + 6000);
+		nextEggTimer = (this.Q.nextInt(6000) + 6000);
 	}
 
 	@Override
@@ -63,22 +65,22 @@ public class EntityMyChicken extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null) {
 			if (Configuration.MyPet.Chicken.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override
@@ -97,15 +99,15 @@ public class EntityMyChicken extends EntityMyPet {
 		super.onLivingUpdate();
 
 		if (Configuration.MyPet.Chicken.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
 
 		if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
-			this.makeSound("entity.chicken.egg", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
-			a(Items.EGG, 1);
-			nextEggTimer = random.nextInt(6000) + 6000;
+			this.makeSound("entity.chicken.egg", 1.0F, (this.Q.nextFloat() - this.Q.nextFloat()) * 0.2F + 1.0F);
+			a(Items.oo, 1);
+			nextEggTimer = this.Q.nextInt(6000) + 6000;
 		}
 	}
 
@@ -123,7 +125,7 @@ public class EntityMyChicken extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int e(float f, float f1) {
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
 			super.e(f, f1);
 		}

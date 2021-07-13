@@ -36,6 +36,10 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.ItemDye;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.bukkit.DyeColor;
 
 import java.lang.reflect.InvocationTargetException;
@@ -53,22 +57,22 @@ public class EntityMySheep extends EntityMyPet {
 	private static final Map<EnumColor, Block> colorMap = new HashMap<>();
 
 	static {
-		colorMap.put(EnumColor.WHITE, Blocks.WHITE_WOOL);
-		colorMap.put(EnumColor.ORANGE, Blocks.ORANGE_WOOL);
-		colorMap.put(EnumColor.MAGENTA, Blocks.MAGENTA_WOOL);
-		colorMap.put(EnumColor.LIGHT_BLUE, Blocks.LIGHT_BLUE_WOOL);
-		colorMap.put(EnumColor.YELLOW, Blocks.YELLOW_WOOL);
-		colorMap.put(EnumColor.LIME, Blocks.LIME_WOOL);
-		colorMap.put(EnumColor.PINK, Blocks.PINK_WOOL);
-		colorMap.put(EnumColor.GRAY, Blocks.GRAY_WOOL);
-		colorMap.put(EnumColor.LIGHT_GRAY, Blocks.LIGHT_GRAY_WOOL);
-		colorMap.put(EnumColor.CYAN, Blocks.CYAN_WOOL);
-		colorMap.put(EnumColor.PURPLE, Blocks.PURPLE_WOOL);
-		colorMap.put(EnumColor.BLUE, Blocks.BLUE_WOOL);
-		colorMap.put(EnumColor.BROWN, Blocks.BROWN_WOOL);
-		colorMap.put(EnumColor.GREEN, Blocks.GREEN_WOOL);
-		colorMap.put(EnumColor.RED, Blocks.RED_WOOL);
-		colorMap.put(EnumColor.BLACK, Blocks.BLACK_WOOL);
+		colorMap.put(EnumColor.a, Blocks.be);
+		colorMap.put(EnumColor.b, Blocks.bf);
+		colorMap.put(EnumColor.c, Blocks.bg);
+		colorMap.put(EnumColor.d, Blocks.bh);
+		colorMap.put(EnumColor.e, Blocks.bi);
+		colorMap.put(EnumColor.f, Blocks.bj);
+		colorMap.put(EnumColor.g, Blocks.bk);
+		colorMap.put(EnumColor.h, Blocks.bl);
+		colorMap.put(EnumColor.i, Blocks.bm);
+		colorMap.put(EnumColor.j, Blocks.bn);
+		colorMap.put(EnumColor.k, Blocks.bo);
+		colorMap.put(EnumColor.l, Blocks.bp);
+		colorMap.put(EnumColor.m, Blocks.bq);
+		colorMap.put(EnumColor.n, Blocks.br);
+		colorMap.put(EnumColor.o, Blocks.bs);
+		colorMap.put(EnumColor.p, Blocks.bt);
 	}
 
 	public EntityMySheep(World world, MyPet myPet) {
@@ -93,31 +97,31 @@ public class EntityMySheep extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() instanceof ItemDye && ((ItemDye) itemStack.getItem()).d().ordinal() != getMyPet().getColor().ordinal() && !getMyPet().isSheared()) {
 				getMyPet().setColor(DyeColor.values()[((ItemDye) itemStack.getItem()).d().ordinal()]);
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
-				return EnumInteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && Configuration.MyPet.Sheep.CAN_BE_SHEARED && !getMyPet().isSheared()) {
+				return EnumInteractionResult.b;
+			} else if (itemStack.getItem() == Items.pq && Configuration.MyPet.Sheep.CAN_BE_SHEARED && !getMyPet().isSheared()) {
 				getMyPet().setSheared(true);
-				int woolDropCount = 1 + this.random.nextInt(3);
+				int woolDropCount = 1 + this.Q.nextInt(3);
 
 				for (int j = 0; j < woolDropCount; ++j) {
-					EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), new ItemStack(colorMap.get(EnumColor.values()[getMyPet().getColor().ordinal()])));
-					entityitem.pickupDelay = 10;
-					entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
-					this.world.addEntity(entityitem);
+					EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), new ItemStack(colorMap.get(EnumColor.values()[getMyPet().getColor().ordinal()])));
+					entityitem.ap = 10;
+					entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
+					this.t.addEntity(entityitem);
 				}
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					try {
 						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
 					} catch (Error e) {
@@ -131,19 +135,19 @@ public class EntityMySheep extends EntityMyPet {
 						});
 					}
 				}
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			} else if (Configuration.MyPet.Sheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override

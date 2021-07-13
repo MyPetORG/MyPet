@@ -32,6 +32,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
@@ -61,24 +62,24 @@ public class EntityMyOcelot extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman)) {
 			if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
 				if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 						itemStack.subtract(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 						}
 					}
 					getMyPet().setBaby(false);
-					return EnumInteractionResult.CONSUME;
+					return EnumInteractionResult.b;
 				}
 			}
 		}
-		return EnumInteractionResult.CONSUME;
+		return EnumInteractionResult.b;
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 1.3965F, height = 1.4F)
 public class EntityMyZoglin extends EntityMyPet {
@@ -60,22 +61,22 @@ public class EntityMyZoglin extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(final EntityHuman entityhuman, EnumHand enumhand, final ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (Configuration.MyPet.Zoglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override

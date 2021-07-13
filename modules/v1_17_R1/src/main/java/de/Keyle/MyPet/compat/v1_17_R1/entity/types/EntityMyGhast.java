@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 4.F, height = 4.F)
 public class EntityMyGhast extends EntityMyPet {
@@ -59,7 +59,7 @@ public class EntityMyGhast extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.Ghast.CAN_GLIDE) {
-			if (!this.onGround && this.getMot().y < 0.0D) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
 				this.setMot(getMot().d(1, 0.6D, 1));
 			}
 		}
@@ -69,7 +69,7 @@ public class EntityMyGhast extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int e(float f, float f1) {
+	public int d(float f, float f1) {
 		if (!Configuration.MyPet.Ghast.CAN_GLIDE) {
 			super.e(f, f1);
 		}

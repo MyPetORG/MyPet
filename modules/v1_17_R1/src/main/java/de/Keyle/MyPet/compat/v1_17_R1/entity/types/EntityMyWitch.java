@@ -23,7 +23,7 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.6F, height = 1.62F)
 public class EntityMyWitch extends EntityMyPet {

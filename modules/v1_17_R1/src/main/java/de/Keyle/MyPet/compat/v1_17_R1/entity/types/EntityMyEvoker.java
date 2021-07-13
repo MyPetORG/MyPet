@@ -24,10 +24,10 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEvoker;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.DataWatcherObject;
-import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.network.syncher.DataWatcher;
+import net.minecraft.network.syncher.DataWatcherObject;
+import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyEvoker extends EntityMyPet {
@@ -58,16 +58,19 @@ public class EntityMyEvoker extends EntityMyPet {
 	/**
 	 * Returns the default sound of the MyPet
 	 */
+	@Override
 	protected String getLivingSound() {
 		return "entity.evoker.ambient";
 	}
 
+	@Override
 	protected void initDatawatcher() {
 		super.initDatawatcher();
 		getDataWatcher().register(RAID_WATCHER, false);
 		getDataWatcher().register(SPELL_WATCHER, (byte) 0);
 	}
 
+	@Override
 	public MyEvoker getMyPet() {
 		return (MyEvoker) myPet;
 	}

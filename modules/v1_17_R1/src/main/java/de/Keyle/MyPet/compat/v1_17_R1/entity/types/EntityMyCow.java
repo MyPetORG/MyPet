@@ -32,6 +32,8 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
@@ -60,27 +62,27 @@ public class EntityMyCow extends EntityMyPet {
 	@Override
 	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.CONSUME;
+			return EnumInteractionResult.b;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.BUCKET && Configuration.MyPet.Cow.CAN_GIVE_MILK) {
-				ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
+			if (itemStack.getItem() == Items.nW && Configuration.MyPet.Cow.CAN_GIVE_MILK) {
+				ItemStack milkBucket = new ItemStack(Items.oc);
 
-				entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
-				return EnumInteractionResult.CONSUME;
+				entityhuman.getInventory().setItem(entityhuman.getInventory().k, milkBucket);
+				return EnumInteractionResult.b;
 			} else if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
 					itemStack.subtract(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
+				return EnumInteractionResult.b;
 			}
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.d;
 	}
 
 	@Override

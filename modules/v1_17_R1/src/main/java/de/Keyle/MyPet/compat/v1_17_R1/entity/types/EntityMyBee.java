@@ -27,116 +27,122 @@ import de.Keyle.MyPet.api.entity.types.MyBee;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.DataWatcherObject;
-import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.network.syncher.DataWatcher;
+import net.minecraft.network.syncher.DataWatcherObject;
+import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.6F, height = 0.6f)
 public class EntityMyBee extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Byte> BEE_STATUS_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.a);
-    private static final DataWatcherObject<Integer> ANGER_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.b);
+	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.i);
+	private static final DataWatcherObject<Byte> BEE_STATUS_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.a);
+	private static final DataWatcherObject<Integer> ANGER_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.b);
 
-    protected boolean isAngry = false;
+	protected boolean isAngry = false;
 
-    public EntityMyBee(World world, MyPet myPet) {
-        super(world, myPet);
-    }
+	public EntityMyBee(World world, MyPet myPet) {
+		super(world, myPet);
+	}
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound() {
-        return "entity.bee.death";
-    }
+	/**
+	 * Returns the sound that is played when the MyPet dies
+	 */
+	@Override
+	protected String getDeathSound() {
+		return "entity.bee.death";
+	}
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound() {
-        return "entity.bee.hurt";
-    }
+	/**
+	 * Returns the sound that is played when the MyPet get hurt
+	 */
+	@Override
+	protected String getHurtSound() {
+		return "entity.bee.hurt";
+	}
 
-    @Override
-    protected String getLivingSound() {
-        return "entity.bee.pollinate";
-    }
+	@Override
+	protected String getLivingSound() {
+		return "entity.bee.pollinate";
+	}
 
-    public float getSoundSpeed() {
-        return super.getSoundSpeed() * 0.95F;
-    }
+	@Override
+	public float getSoundSpeed() {
+		return super.getSoundSpeed() * 0.95F;
+	}
 
-    protected void initDatawatcher() {
-        super.initDatawatcher();
-        getDataWatcher().register(AGE_WATCHER, false);
-        getDataWatcher().register(BEE_STATUS_WATCHER, (byte) 0);
-        getDataWatcher().register(ANGER_WATCHER, 0);
-    }
+	@Override
+	protected void initDatawatcher() {
+		super.initDatawatcher();
+		getDataWatcher().register(AGE_WATCHER, false);
+		getDataWatcher().register(BEE_STATUS_WATCHER, (byte) 0);
+		getDataWatcher().register(ANGER_WATCHER, 0);
+	}
 
-    @Override
-    public void updateVisuals() {
-        getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-        getDataWatcher().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
-        this.setBeeStatus(8, getMyPet().hasNectar());
-        this.setBeeStatus(4, getMyPet().hasStung());
-    }
+	@Override
+	public void updateVisuals() {
+		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		getDataWatcher().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
+		this.setBeeStatus(8, getMyPet().hasNectar());
+		this.setBeeStatus(4, getMyPet().hasStung());
+	}
 
-    /**
-     * Possible status flags:
-     * 8: Nectar
-     * 4: Stung
-     * 2: ?
-     */
-    private void setBeeStatus(int status, boolean flag) {
-        if (flag) {
-            this.datawatcher.set(BEE_STATUS_WATCHER, (byte) (this.datawatcher.get(BEE_STATUS_WATCHER) | status));
-        } else {
-            this.datawatcher.set(BEE_STATUS_WATCHER, (byte) (this.datawatcher.get(BEE_STATUS_WATCHER) & ~status));
-        }
+	/**
+	 * Possible status flags:
+	 * 8: Nectar
+	 * 4: Stung
+	 * 2: ?
+	 */
+	private void setBeeStatus(int status, boolean flag) {
+		if (flag) {
+			this.Y.set(BEE_STATUS_WATCHER, (byte) (this.Y.get(BEE_STATUS_WATCHER) | status));
+		} else {
+			this.Y.set(BEE_STATUS_WATCHER, (byte) (this.Y.get(BEE_STATUS_WATCHER) & ~status));
+		}
 
-    }
+	}
 
-    public MyBee getMyPet() {
-        return (MyBee) myPet;
-    }
+	@Override
+	public MyBee getMyPet() {
+		return (MyBee) myPet;
+	}
 
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-        if (Configuration.MyPet.Bee.CAN_GLIDE) {
-            if (!this.onGround && this.getMot().y < 0.0D) {
-                this.setMot(getMot().d(1, 0.6D, 1));
-            }
-        }
-    }
+	@Override
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		if (Configuration.MyPet.Bee.CAN_GLIDE) {
+			if (!this.z && this.getMot().getY() < 0.0D) {
+				this.setMot(getMot().d(1, 0.6D, 1));
+			}
+		}
+	}
 
-    protected void doMyPetTick() {
-        super.doMyPetTick();
-        BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
-        Behavior.BehaviorMode behavior = skill.getBehavior();
-        if (behavior == Behavior.BehaviorMode.Aggressive) {
-            if (!isAngry) {
-                isAngry = true;
-                this.updateVisuals();
-            }
-        } else {
-            if (isAngry) {
-                isAngry = false;
-                this.updateVisuals();
-            }
-        }
-    }
+	@Override
+	protected void doMyPetTick() {
+		super.doMyPetTick();
+		BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
+		Behavior.BehaviorMode behavior = skill.getBehavior();
+		if (behavior == Behavior.BehaviorMode.Aggressive) {
+			if (!isAngry) {
+				isAngry = true;
+				this.updateVisuals();
+			}
+		} else {
+			if (isAngry) {
+				isAngry = false;
+				this.updateVisuals();
+			}
+		}
+	}
 
-    /**
-     * -> disable falldamage
-     */
-    public int e(float f, float f1) {
-        if (!Configuration.MyPet.Bee.CAN_GLIDE) {
-            super.e(f, f1);
-        }
-        return 0;
-    }
+	/**
+	 * -> disable falldamage
+	 */
+	@Override
+	public int d(float f, float f1) {
+		if (!Configuration.MyPet.Bee.CAN_GLIDE) {
+			super.e(f, f1);
+		}
+		return 0;
+	}
 }
