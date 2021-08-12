@@ -87,6 +87,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>lumine.io</id>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -149,9 +153,9 @@
         </dependency>
         <dependency>
             <!-- https://dev.bukkit.org/projects/mythicmobs -->
-            <groupId>io.lumine.xikage.mythicmobs</groupId>
+            <groupId>io.lumine.xikage</groupId>
             <artifactId>MythicMobs</artifactId>
-            <version>4.8.0</version>
+            <version>4.9.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -494,7 +498,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>1.18.20</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
