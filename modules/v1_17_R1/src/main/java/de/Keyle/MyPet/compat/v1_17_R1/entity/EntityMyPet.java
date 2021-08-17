@@ -487,13 +487,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 			public void run() {
 				EntityPlayer player = ((EntityPlayer) entityhuman);
 				if (player.getBukkitEntity().isOnline()) {
-					Container container = entityhuman.bU; // TODO: 2021/06/28 Temp Update Method
-					player.b.sendPacket(new PacketPlayOutWindowItems(container.j, container.c()));
-					player.b.sendPacket(new PacketPlayOutSetSlot(-1, -1, entityhuman.bV.getCarried()));
-					if (EnumSet.of(InventoryType.CRAFTING, InventoryType.WORKBENCH).contains(container.getBukkitView().getType())) {
-						player.b.sendPacket(new PacketPlayOutSetSlot(container.j, 0, container.getSlot(0).getItem()));
-					}
-					//player.updateInventory(entityhuman.defaultContainer);
+					player.initMenu(entityhuman.bU);
 				}
 			}
 		}.runTaskLater(MyPetApi.getPlugin(), 5);

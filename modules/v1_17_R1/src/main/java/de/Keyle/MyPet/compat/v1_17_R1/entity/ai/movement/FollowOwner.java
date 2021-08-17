@@ -106,7 +106,8 @@ public class FollowOwner implements AIGoal {
 			return;
 		}
 
-		this.petEntity.getControllerLook().a(owner, this.petEntity.eY(), (float) this.petEntity.eY());
+		//I'm guessing "eY" was yaw (that is now aY) - might not be - MARK: Look
+		this.petEntity.getControllerLook().a(owner, this.petEntity.aY(), (float) this.petEntity.aY());
 
 		if (this.petEntity.canMove()) {
 			if (!owner.getAbilities().b) {

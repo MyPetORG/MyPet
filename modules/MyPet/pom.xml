@@ -24,7 +24,7 @@
 
     <groupId>de.keyle</groupId>
     <artifactId>mypet</artifactId>
-    <version>3.11-SNAPSHOT</version>
+    <version>3.12-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MyPet</name>
     <url>https://www.spigotmc.org/resources/mypet.12725/</url>
@@ -32,7 +32,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.16</minecraft.version>
+        <minecraft.version>1.17</minecraft.version>
         <bukkit.packets>
             v1_7_R4;v1_8_R1;v1_8_R2;v1_8_R3;v1_9_R1;v1_9_R2;v1_10_R1;v1_11_R1;v1_12_R1;v1_13_R1;v1_13_R2;v1_14_R1;v1_15_R1;v1_16_R1;v1_16_R2;v1_16_R3;v1_17_R1;
         </bukkit.packets>

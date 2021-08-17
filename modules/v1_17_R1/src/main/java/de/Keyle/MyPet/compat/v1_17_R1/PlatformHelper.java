@@ -197,7 +197,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                             vec3d = blockData.getCollisionShape(world, bp);
                             isEmpty = vec3d.isEmpty();
                             if (!isEmpty) {
-                                for (AxisAlignedBB bb : vec3d.d()) {
+                                for (AxisAlignedBB bb : vec3d.toList()) {
                                     if (bb.a(bp).c(axisalignedbb)) {
                                         unsafeList.add(bb);
                                     }

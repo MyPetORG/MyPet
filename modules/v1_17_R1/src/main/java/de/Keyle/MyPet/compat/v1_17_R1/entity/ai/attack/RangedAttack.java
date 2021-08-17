@@ -193,7 +193,7 @@ public class RangedAttack implements AIGoal {
 				double distanceX = target.locX() - entityMyPet.locX();
 				double distanceY = target.locY() + target.getHeadHeight() - 1.100000023841858D - snowball.locY();
 				double distanceZ = target.locZ() - entityMyPet.locZ();
-				float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
+				double distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
 				snowball.setDamage(damage);
 				snowball.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
 				entityMyPet.makeSound("entity.arrow.shoot", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -205,7 +205,7 @@ public class RangedAttack implements AIGoal {
 				double distanceX = target.locX() - entityMyPet.locX();
 				double distanceY = target.locY() + target.getHeadHeight() - 1.100000023841858D - egg.locY();
 				double distanceZ = target.locZ() - entityMyPet.locZ();
-				float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
+				double distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
 				egg.setDamage(damage);
 				egg.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
 				entityMyPet.makeSound("entity.arrow.shoot", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -264,7 +264,7 @@ public class RangedAttack implements AIGoal {
 				double distanceX = target.locX() - entityMyPet.locX();
 				double distanceY = target.locY() + target.getHeadHeight() - 1.100000023841858D - trident.locY();
 				double distanceZ = target.locZ() - entityMyPet.locZ();
-				float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
+				double distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
 				trident.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
 				world.addEntity(trident);
 				break;
@@ -276,7 +276,7 @@ public class RangedAttack implements AIGoal {
 				double distanceX = target.locX() - entityMyPet.locX();
 				double distanceY = target.locY() + target.getHeadHeight() - 1.100000023841858D - enderPearl.locY();
 				double distanceZ = target.locZ() - entityMyPet.locZ();
-				float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
+				double distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
 				enderPearl.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
 				world.addEntity(enderPearl);
 				break;
@@ -302,7 +302,7 @@ public class RangedAttack implements AIGoal {
 				double distanceX = target.locX() - entityMyPet.locX();
 				double distanceY = target.locY() + target.getHeadHeight() - 1.100000023841858D - arrow.locY();
 				double distanceZ = target.locZ() - entityMyPet.locZ();
-				float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
+				double distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
 				arrow.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
 				world.addEntity(arrow);
 				break;

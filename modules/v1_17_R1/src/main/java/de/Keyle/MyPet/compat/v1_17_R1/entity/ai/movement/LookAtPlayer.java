@@ -87,7 +87,8 @@ public class LookAtPlayer implements AIGoal {
 
 	@Override
 	public void tick() {
-		this.petEntity.getControllerLook().a(this.targetPlayer.locX(), this.targetPlayer.locY() + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ(), petEntity.eY(), this.petEntity.eY());
+		//I'm guessing "eY" was yaw (that is now aY) - might not be - MARK: Look
+		this.petEntity.getControllerLook().a(this.targetPlayer.locX(), this.targetPlayer.locY() + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ(), petEntity.aY(), this.petEntity.aY());
 		this.ticksUntilStopLooking -= 1;
 	}
 }

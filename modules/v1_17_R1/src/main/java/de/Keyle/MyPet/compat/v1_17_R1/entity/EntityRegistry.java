@@ -39,6 +39,8 @@ import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumCreatureType;
 import net.minecraft.world.level.World;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -151,8 +153,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 
 		try {
-
-			Field bgF = RegistryMaterials.class.getDeclaredField("bg");
+			Field bgF = RegistryMaterials.class.getDeclaredField("bw");
 			bgF.setAccessible(true);
 			Object map = bgF.get(entityRegistry);
 			Class<?> clazz = map.getClass();
