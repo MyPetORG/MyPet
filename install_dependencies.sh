@@ -7,7 +7,7 @@ V1_9_R2_S="https://cdn.getbukkit.org/spigot/spigot-1.9.4-R0.1-SNAPSHOT-latest.ja
 V1_12_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.12.jar"
 V1_16_R1_S="https://cdn.getbukkit.org/spigot/spigot-1.16.1.jar"
 V1_16_R2_S="https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar"
-V1_17_R1_S = "https://download.getbukkit.org/spigot/spigot-1.17.1.jar"
+V1_17_R1_S="https://download.getbukkit.org/spigot/spigot-1.17.1.jar"
 
 mkdir -p ./dl
 
