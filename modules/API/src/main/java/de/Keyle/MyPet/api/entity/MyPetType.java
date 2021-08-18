@@ -57,6 +57,7 @@ public enum MyPetType {
     Cow("COW", "1.7.10", MyCow.class, new Compat<>()
             .v("1.7.10", 92)
             .v("1.13", "cow")
+            .v("1.17", "n") //This creates a... pig
             .search()),
     Creeper("CREEPER", "1.7.10", MyCreeper.class, new Compat<>()
             .v("1.7.10", 50)

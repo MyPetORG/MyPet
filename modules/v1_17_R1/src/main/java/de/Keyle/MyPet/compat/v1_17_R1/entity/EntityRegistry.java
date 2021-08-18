@@ -89,7 +89,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 		try {
 			Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
-			Object obj = ctor.newInstance(world, pet);
+			Object obj = ctor.newInstance(world, pet);		//TODO 2021/08/18 This fails - pet not having the right class?
 			if (obj instanceof EntityMyPet) {
 				petEntity = (EntityMyPet) obj;
 			}

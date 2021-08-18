@@ -55,7 +55,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
 
     static {
         try {
-            Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_16_R3.inventory.CraftMetaItem");
+            Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_17_R1.inventory.CraftMetaItem");
             applyToItemMethhod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", NBTTagCompound.class);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

@@ -306,7 +306,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 		Container container = new CraftContainer(getBukkitInventory(), entityPlayer, entityPlayer.nextContainerCounter());
 		container = CraftEventFactory.callInventoryOpenEvent(entityPlayer, container);
 		if (container != null) {
-			Containers customSize = Containers.a;
+			Containers<?> customSize = Containers.a;
 			switch (this.getSize()) {
 				case 18:
 					customSize = Containers.b;
@@ -326,7 +326,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 			}
 			entityPlayer.b.sendPacket(new PacketPlayOutOpenWindow(container.j, customSize, new ChatComponentText(this.getName())));
 			entityPlayer.bV = container;
-			entityPlayer.bV.addSlotListener((ICrafting) entityPlayer); // TODO: 2021/06/28 Cast Error?
+			entityPlayer.bV.b(entityPlayer); //This seems to work even though the method-definition doesn't really match the old one
 		}
 	}
 
