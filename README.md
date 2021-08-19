@@ -6,14 +6,16 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Stats][StatsImage]][Stats]
 [![Builds][BuildsImage]][Builds]
 [![Wiki][WikiImage]][Wiki]
-[![Spigot][SpigotImage]][Spigot]
+[![Spigot][SpigotImage]][Spigot] <br/>
+Or take a look at the [Build-Guide](https://github.com/Jakllp/MyPet/wiki/How-to-build)
 
 ## The License
 Copyright (c) 2011-2021, Keyle<br />
 MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
 
 ## Builds
-Download the latest builds from the official [MyPet-Site][Builds].
+Download the latest builds from the official [MyPet-Site][Builds].  
+Wanna build it yourself? Take a look at the [Build-Guide](https://github.com/Jakllp/MyPet/wiki/How-to-build)
 
 
 [Logo]: .github/readme-images/logo.png
