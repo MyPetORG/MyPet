@@ -38,6 +38,7 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumCreatureType;
+import net.minecraft.world.entity.animal.EntityFox;
 import net.minecraft.world.level.World;
 
 import org.bukkit.Bukkit;
@@ -57,10 +58,10 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
 	Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
 
-	protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-		EntitySize size = entityRegistry.get(new MinecraftKey(key.toLowerCase())).m();
-		entityTypes.put(petType, IRegistry.a(entityRegistry, "mypet_" + key.toLowerCase(), EntityTypes.Builder.a(EnumCreatureType.b).b().a().a(size.a, size.b).a(key)));
-		registerDefaultAttributes(entityTypes.get(petType), (EntityTypes<? extends EntityLiving>) ReflectionUtil.getFieldValue(EntityTypes.class, null, ("" + petType.getTypeID()).toUpperCase()));
+	protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) { //TODO 2021/08/19 The only thing left: They need to follow the player
+		EntityTypes<? extends EntityLiving> types = (EntityTypes<? extends EntityLiving>) entityRegistry.get(new MinecraftKey(key));	
+		entityTypes.put(petType, types);
+		registerDefaultAttributes(entityTypes.get(petType), types);
 		overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
 	}
 
@@ -89,7 +90,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 		try {
 			Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
-			Object obj = ctor.newInstance(world, pet);		//TODO 2021/08/18 This fails - pet not having the right class?
+			Object obj = ctor.newInstance(world, pet);
 			if (obj instanceof EntityMyPet) {
 				petEntity = (EntityMyPet) obj;
 			}

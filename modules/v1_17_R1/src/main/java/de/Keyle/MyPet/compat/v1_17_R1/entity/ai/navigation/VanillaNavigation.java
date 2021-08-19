@@ -67,7 +67,7 @@ public class VanillaNavigation extends AbstractNavigation {
 
 	public boolean navigateTo(EntityLiving entity) {
 		if (this.nav.a(entity, 1.D)) {
-			applyNavigationParameters();
+			applyNavigationParameters(); //TODO 2021/08/19 Potentially doing this wrong...
 			return true;
 		}
 		return false;

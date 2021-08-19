@@ -30,6 +30,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 
@@ -105,10 +107,11 @@ public class FollowOwner implements AIGoal {
 		if (ownerLocation.getWorld() != petLocation.getWorld()) {
 			return;
 		}
+		
+		//Look at Owner
+		this.petEntity.getControllerLook().a(owner, this.petEntity.eZ(), this.petEntity.eZ());
 
-		//I'm guessing "eY" was yaw (that is now aY) - might not be - MARK: Look
-		this.petEntity.getControllerLook().a(owner, this.petEntity.aY(), (float) this.petEntity.aY());
-
+		//Teleportation
 		if (this.petEntity.canMove()) {
 			if (!owner.getAbilities().b) {
 				if (!waitForGround) {
@@ -132,10 +135,10 @@ public class FollowOwner implements AIGoal {
 			} else {
 				waitForGround = true;
 			}
-
+			
 			if (--this.setPathTimer <= 0) {
 				this.setPathTimer = 10;
-				if (this.nav.navigateTo(owner.getBukkitEntity())) {
+				if (this.nav.navigateTo(owner.getBukkitEntity())) { //TODO 2021/08/19 Seemingly not doing that properly?
 					applyWalkSpeed();
 				}
 			}

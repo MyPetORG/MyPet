@@ -62,8 +62,7 @@ public class RandomLookaround implements AIGoal {
 
 	@Override
 	public void tick() {
-		//I'm guessing "eY" was yaw (that is now aY) - might not be - MARK: Look
 		this.ticksUntilStopLookingAround--;
-		this.petEntity.getControllerLook().a(this.petEntity.locX() + this.directionX, this.petEntity.locY() + this.petEntity.getHeadHeight(), this.petEntity.locZ() + this.directionZ, this.petEntity.aY(), this.petEntity.aY());
+		this.petEntity.getControllerLook().a(this.petEntity.locX() + this.directionX, this.petEntity.locY() + this.petEntity.getHeadHeight(), this.petEntity.locZ() + this.directionZ, this.petEntity.eZ(), this.petEntity.eZ());
 	}
 }

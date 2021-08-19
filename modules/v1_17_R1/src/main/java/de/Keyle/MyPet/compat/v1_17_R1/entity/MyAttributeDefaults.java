@@ -119,7 +119,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityTypes.G, EntityGiantZombie.n().a())				//Giant
                 .putFast(EntityTypes.K, EntityGuardian.fw().a())				//Guardian
                 .putFast(EntityTypes.J, Goat.p().a())							//Goat
-                .putFast(EntityTypes.I, GlowSquid.fw().a())						//Goat
+                .putFast(EntityTypes.I, GlowSquid.fw().a())						//GlowSquid
                 .putFast(EntityTypes.L, EntityHoglin.p().a())					//Hoglin
                 .putFast(EntityTypes.M, EntityHorseAbstract.fS().a())			//Horse
                 .putFast(EntityTypes.N, EntityZombie.fB().a())					//Husk
