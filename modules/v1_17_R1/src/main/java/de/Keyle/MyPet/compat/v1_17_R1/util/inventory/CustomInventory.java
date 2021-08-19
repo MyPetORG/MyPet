@@ -56,6 +56,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +64,7 @@ import java.util.List;
 @Compat("v1_17_R1")
 public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
 
-	private String inventroyName = "";
+	private String inventoryName = "";
 	private final NonNullList<ItemStack> items = NonNullList.a(64, ItemStack.b);
 	private int size = 0;
 	private int stackSize = 64;
@@ -97,14 +98,14 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 
 	@Override
 	public String getName() {
-		return inventroyName;
+		return inventoryName;
 	}
 
 	@Override
 	public void setName(String name) {
 		if (name != null) {
 			name = StringUtils.left(name, 64);
-			this.inventroyName = name;
+			this.inventoryName = name;
 		}
 	}
 
@@ -177,11 +178,11 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 			bukkitInventory = new CraftInventory(this) {
 
 				public String getTitle() {
-					return inventroyName;
+					return inventoryName;
 				}
 
 				public String getName() {
-					return inventroyName;
+					return inventoryName;
 				}
 			};
 		}
@@ -326,7 +327,16 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 			}
 			entityPlayer.b.sendPacket(new PacketPlayOutOpenWindow(container.j, customSize, new ChatComponentText(this.getName())));
 			entityPlayer.bV = container;
-			entityPlayer.bV.b(entityPlayer); //This seems to work even though the method-definition doesn't really match the old one
+			
+			try {	//This should be the proper way to do this.
+				Field f = entityPlayer.getClass().getDeclaredField("cX");
+				f.setAccessible(true);
+				ICrafting iCraft = (ICrafting) f.get(entityPlayer);
+				entityPlayer.bV.addSlotListener(iCraft);
+				f.setAccessible(false);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

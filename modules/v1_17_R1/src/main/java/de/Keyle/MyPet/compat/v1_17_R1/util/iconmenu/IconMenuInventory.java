@@ -51,12 +51,12 @@ import java.util.List;
 @Compat("v1_17_R1")
 public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInventory {
 
-    private static Method applyToItemMethhod = null;
+    private static Method applyToItemMethod = null;
 
     static {
         try {
-            Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_17_R1.inventory.CraftMetaItem");
-            applyToItemMethhod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", NBTTagCompound.class);
+            Class<?> craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_17_R1.inventory.CraftMetaItem");
+            applyToItemMethod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", NBTTagCompound.class);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -126,19 +126,18 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         return size;
     }
 
-    protected ItemStack createItemStack(IconMenuItem icon) {
-        ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount(), (short) icon.getData()));
+    protected ItemStack createItemStack(IconMenuItem icon) { //TODO Check if this works properly
+        ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount()));
         if (is == null) {
             is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.STONE));
         }
-
         if (is.getTag() == null) {
             is.setTag(new NBTTagCompound());
         }
 
         if (icon.getBukkitMeta() != null) {
             try {
-                applyToItemMethhod.invoke(icon.getBukkitMeta(), is.getTag());
+                applyToItemMethod.invoke(icon.getBukkitMeta(), is.getTag());
             } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }

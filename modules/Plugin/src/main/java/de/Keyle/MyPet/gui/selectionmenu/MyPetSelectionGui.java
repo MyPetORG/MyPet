@@ -145,13 +145,13 @@ public class MyPetSelectionGui {
                 lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + Translation.getString("Name." + mypet.getPetType().name(), player));
                 lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + Colorizer.setColors(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
-                IconMenuItem icon = new IconMenuItem();
+                IconMenuItem icon = new IconMenuItem();	//TODO Here is where Items are done
                 icon.setTitle(RESET + mypet.getPetName());
                 icon.addLore(lore);
                 Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
                 egg.ifPresent(service -> service.updateIcon(mypet.getPetType(), icon));
 
-                int pos = menu.addOption(icon);
+                int pos = menu.addOption(icon);//Seemingly this
                 petSlotList.put(pos, mypet);
             }
 
@@ -169,7 +169,7 @@ public class MyPetSelectionGui {
                 );
             }
 
-            menu.open(player.getPlayer());
+            menu.open(player.getPlayer()); //Potentially also in this
         }
     }
 }

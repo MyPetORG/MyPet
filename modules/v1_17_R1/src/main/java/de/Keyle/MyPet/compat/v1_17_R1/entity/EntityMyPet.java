@@ -701,7 +701,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
 	@Override
 	public void setHealth(float f) {
-		double deltaHealth = getHealth();
+		double deltaHealth = super.getHealth();
 		double maxHealth = myPet.getMaxHealth();
 
 		boolean silent = this.getAttributeInstance(GenericAttributes.a).getValue() != maxHealth;

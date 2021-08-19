@@ -59,7 +59,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
 
 	protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) { //TODO 2021/08/19 The only thing left: They need to follow the player
-		EntityTypes<? extends EntityLiving> types = (EntityTypes<? extends EntityLiving>) entityRegistry.get(new MinecraftKey(key));	
+		EntityTypes<? extends EntityLiving> types = (EntityTypes<? extends EntityLiving>) entityRegistry.get(new MinecraftKey(key));
 		entityTypes.put(petType, types);
 		registerDefaultAttributes(entityTypes.get(petType), types);
 		overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);

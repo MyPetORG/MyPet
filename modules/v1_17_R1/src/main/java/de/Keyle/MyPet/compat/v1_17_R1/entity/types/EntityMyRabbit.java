@@ -20,6 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.Method;
+
+import org.bukkit.Bukkit;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -104,8 +108,15 @@ public class EntityMyRabbit extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
+		/*for(Method m : getNavigation().getClass().getDeclaredMethods()) {
+			Bukkit.getConsoleSender().sendMessage("Declared: "+m.getName()+" "+m.getReturnType());
+		}
+		for(Method m : getNavigation().getClass().getMethods()) {
+			Bukkit.getConsoleSender().sendMessage("Normal: "+m.getName()+" "+m.getReturnType());
+		}*/
 
-		if (this.z && getNavigation().k() != null && jumpDelay-- <= 0) {
+		//if (this.z && getNavigation().k() != null && jumpDelay-- <= 0) {	//TODO Figure out k() and getPath() (Spigot and Paper)
+		if (this.z && jumpDelay-- <= 0) {
 			getControllerJump().jump();
 			jumpDelay = (this.Q.nextInt(10) + 10);
 			if (getTarget() != null) {

@@ -139,7 +139,7 @@ public class FollowOwner implements AIGoal {
 			if (--this.setPathTimer <= 0) {
 				this.setPathTimer = 10;
 				if (this.nav.navigateTo(owner.getBukkitEntity())) { //TODO 2021/08/19 Seemingly not doing that properly?
-					applyWalkSpeed();
+					applyWalkSpeed(); //It get's called so it returned true
 				}
 			}
 		}

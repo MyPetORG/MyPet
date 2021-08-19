@@ -49,8 +49,9 @@ import net.minecraft.world.entity.animal.EntityTurtle;
 import net.minecraft.world.entity.animal.EntityWolf;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.goat.Goat;
-import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
-import net.minecraft.world.entity.animal.horse.EntityHorseChestedAbstract;
+import net.minecraft.world.entity.animal.horse.EntityHorse;
+import net.minecraft.world.entity.animal.horse.EntityHorseDonkey;
+import net.minecraft.world.entity.animal.horse.EntityHorseMule;
 import net.minecraft.world.entity.animal.horse.EntityHorseSkeleton;
 import net.minecraft.world.entity.animal.horse.EntityHorseZombie;
 import net.minecraft.world.entity.animal.horse.EntityLlama;
@@ -107,7 +108,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityTypes.n, EntityCow.p().a())						//Cow
                 .putFast(EntityTypes.o, EntityCreeper.n().a())					//Creeper
                 .putFast(EntityTypes.p, EntityDolphin.fw().a())					//Dolphin
-                .putFast(EntityTypes.q, EntityHorseChestedAbstract.t().a())		//Donkey
+                .putFast(EntityTypes.q, EntityHorseDonkey.t().a())				//Donkey
                 .putFast(EntityTypes.s, EntityZombie.fB().a())					//Drowned
                 .putFast(EntityTypes.t, EntityGuardianElder.n().a())			//Elder Guardian
                 .putFast(EntityTypes.w, EntityEnderman.n().a())					//Enderman
@@ -121,14 +122,14 @@ public class MyAttributeDefaults {
                 .putFast(EntityTypes.J, Goat.p().a())							//Goat
                 .putFast(EntityTypes.I, GlowSquid.fw().a())						//GlowSquid
                 .putFast(EntityTypes.L, EntityHoglin.p().a())					//Hoglin
-                .putFast(EntityTypes.M, EntityHorseAbstract.fS().a())			//Horse
+                .putFast(EntityTypes.M, EntityHorse.fS().a())					//Horse
                 .putFast(EntityTypes.N, EntityZombie.fB().a())					//Husk
                 .putFast(EntityTypes.O, EntityIllagerIllusioner.p().a())		//Illusioner
                 .putFast(EntityTypes.P, EntityIronGolem.n().a())				//Iron Golem
                 .putFast(EntityTypes.V, EntityLlama.gg().a())					//Llama
                 .putFast(EntityTypes.X, EntityMagmaCube.n().a())				//Magma Cube
                 .putFast(EntityTypes.ah, EntityCow.p().a())						//Mooshroom
-                .putFast(EntityTypes.ag, EntityHorseChestedAbstract.t().a())	//Mule
+                .putFast(EntityTypes.ag, EntityHorseMule.t().a())				//Mule
                 .putFast(EntityTypes.ai, EntityOcelot.p().a())					//Ocelot
                 .putFast(EntityTypes.ak, EntityPanda.fI().a())					//Panda
                 .putFast(EntityTypes.al, EntityParrot.fE().a())					//Parrot
