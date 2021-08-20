@@ -35,7 +35,6 @@ import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.Containers;
-import net.minecraft.world.inventory.ICrafting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import org.apache.commons.lang.StringUtils;
