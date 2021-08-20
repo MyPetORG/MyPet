@@ -35,7 +35,6 @@ import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.Containers;
-import net.minecraft.world.inventory.ICrafting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import org.apache.commons.lang.StringUtils;
@@ -327,16 +326,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 			}
 			entityPlayer.b.sendPacket(new PacketPlayOutOpenWindow(container.j, customSize, new ChatComponentText(this.getName())));
 			entityPlayer.bV = container;
-			
-			try {	//This should be the proper way to do this.
-				Field f = entityPlayer.getClass().getDeclaredField("cX");
-				f.setAccessible(true);
-				ICrafting iCraft = (ICrafting) f.get(entityPlayer);
-				entityPlayer.bV.addSlotListener(iCraft);
-				f.setAccessible(false);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
+			entityPlayer.initMenu(container);			
 		}
 	}
 
