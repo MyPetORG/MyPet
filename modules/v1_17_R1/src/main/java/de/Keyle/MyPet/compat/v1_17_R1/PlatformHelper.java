@@ -20,8 +20,31 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.util.UnsafeList;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.WanderingTrader;
+import org.bukkit.entity.Zombie;
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
@@ -40,7 +63,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.ChatMessageType;
 import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.PacketPlayOutChat;
+import net.minecraft.network.protocol.game.PacketPlayOutCollect;
+import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
+import net.minecraft.network.protocol.game.PacketPlayOutWorldParticles;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.WorldServer;
@@ -55,24 +82,23 @@ import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.npc.EntityVillagerTrader;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemAxe;
+import net.minecraft.world.item.ItemBow;
+import net.minecraft.world.item.ItemCarrotStick;
+import net.minecraft.world.item.ItemCompass;
+import net.minecraft.world.item.ItemCrossbow;
+import net.minecraft.world.item.ItemFishingRod;
+import net.minecraft.world.item.ItemHoe;
+import net.minecraft.world.item.ItemPickaxe;
+import net.minecraft.world.item.ItemShield;
+import net.minecraft.world.item.ItemSign;
+import net.minecraft.world.item.ItemSpade;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemSword;
+import net.minecraft.world.item.ItemTrident;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_17_R1.util.UnsafeList;
-import org.bukkit.entity.*;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
 
 @Compat("v1_17_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
@@ -349,7 +375,17 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public Entity getEntity(int id, World world) {
-        net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntity(id);
+        net.minecraft.world.entity.Entity e = null;
+		try {
+			e = Bukkit.getScheduler().callSyncMethod(MyPetApi.getPlugin(), () -> 
+				((CraftWorld) world).getHandle().getEntity(id)).get();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+			e1.printStackTrace();
+		}
+		
+		
         return e != null ? e.getBukkitEntity() : null;
     }
 
