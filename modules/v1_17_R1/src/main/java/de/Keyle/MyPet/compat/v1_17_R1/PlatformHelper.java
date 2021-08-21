@@ -385,7 +385,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 			e1.printStackTrace();
 		}
 		
-		
         return e != null ? e.getBukkitEntity() : null;
     }
 

@@ -163,17 +163,17 @@ public class EntityMyLlama extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(CHEST_WATCHER, getMyPet().hasChest());
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(CHEST_WATCHER, getMyPet().hasChest());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 		if (getMyPet().hasDecor()) {
 			ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
 			Block block = Block.asBlock(is.getItem());
 			int color = block instanceof BlockCarpet ? ((BlockCarpet) block).c().getColorIndex() : 0;
-			getDataWatcher().set(COLOR_WATCHER, color);
+			this.getDataWatcher().set(COLOR_WATCHER, color);
 		} else {
-			getDataWatcher().set(COLOR_WATCHER, -1);
+			this.getDataWatcher().set(COLOR_WATCHER, -1);
 		}
-		getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
+		this.getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
 	}
 
 	@Override

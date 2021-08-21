@@ -97,7 +97,7 @@ public class EntityMyPolarBear extends EntityMyPet {
 		try {
 			flag = super.attack(entity);
 			if (flag) {
-				getDataWatcher().set(REAR_WATCHER, true);
+				this.getDataWatcher().set(REAR_WATCHER, true);
 				rearCounter = 10;
 			}
 		} catch (Exception e) {
@@ -110,14 +110,14 @@ public class EntityMyPolarBear extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (rearCounter > -1 && rearCounter-- == 0) {
-			getDataWatcher().set(REAR_WATCHER, false);
+			this.getDataWatcher().set(REAR_WATCHER, false);
 			rearCounter = -1;
 		}
 	}
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 	}
 
 	@Override

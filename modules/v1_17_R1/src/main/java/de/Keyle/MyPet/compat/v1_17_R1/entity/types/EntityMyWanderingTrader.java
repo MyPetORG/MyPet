@@ -33,7 +33,6 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyWanderingTrader extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyWanderingTrader.class, DataWatcherRegistry.i);
 	private static final DataWatcherObject<Integer> UNUSED_WATCHER = DataWatcher.a(EntityMyWanderingTrader.class, DataWatcherRegistry.b);
 
 	public EntityMyWanderingTrader(World world, MyPet myPet) {
@@ -58,7 +57,6 @@ public class EntityMyWanderingTrader extends EntityMyPet {
 	@Override
 	protected void initDatawatcher() {
 		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
 		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
 			getDataWatcher().register(UNUSED_WATCHER, 0);
 		}

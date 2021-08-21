@@ -101,9 +101,9 @@ public class EntityMyPanda extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		getDataWatcher().set(MAIN_GENE_WATCHER, (byte) getMyPet().getMainGene().ordinal());
-		getDataWatcher().set(HIDDEN_GENE_WATCHER, (byte) getMyPet().getHiddenGene().ordinal());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(MAIN_GENE_WATCHER, (byte) getMyPet().getMainGene().ordinal());
+		this.getDataWatcher().set(HIDDEN_GENE_WATCHER, (byte) getMyPet().getHiddenGene().ordinal());
 	}
 
 	/*

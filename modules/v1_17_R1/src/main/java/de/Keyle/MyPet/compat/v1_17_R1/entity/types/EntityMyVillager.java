@@ -99,11 +99,11 @@ public class EntityMyVillager extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 		String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
 		VillagerProfession profession = IRegistry.ap.get(new MinecraftKey(professionKey));
 		VillagerType type = IRegistry.ao.get(new MinecraftKey(getMyPet().getType().getKey()));
-		getDataWatcher().set(PROFESSION_WATCHER, new VillagerData(type, profession, getMyPet().getVillagerLevel()));
+		this.getDataWatcher().set(PROFESSION_WATCHER, new VillagerData(type, profession, getMyPet().getVillagerLevel()));
 	}
 
 	@Override

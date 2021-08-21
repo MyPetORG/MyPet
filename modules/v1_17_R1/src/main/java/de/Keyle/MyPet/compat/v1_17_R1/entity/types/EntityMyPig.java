@@ -157,8 +157,8 @@ public class EntityMyPig extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		getDataWatcher().set(SADDLE_WATCHER, getMyPet().hasSaddle());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(SADDLE_WATCHER, getMyPet().hasSaddle());
 	}
 
 	@Override

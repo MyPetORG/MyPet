@@ -81,8 +81,8 @@ public class EntityMyBee extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		getDataWatcher().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
 		this.setBeeStatus(8, getMyPet().hasNectar());
 		this.setBeeStatus(4, getMyPet().hasStung());
 	}

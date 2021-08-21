@@ -159,10 +159,10 @@ public class EntityMySheep extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 
 		byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
-		getDataWatcher().set(COLOR_WATCHER, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
+		this.getDataWatcher().set(COLOR_WATCHER, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
 	}
 
 	@Override

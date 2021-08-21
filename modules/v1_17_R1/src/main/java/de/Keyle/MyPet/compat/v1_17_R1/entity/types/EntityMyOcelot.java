@@ -91,7 +91,7 @@ public class EntityMyOcelot extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 	}
 
 	@Override

@@ -75,11 +75,11 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
 	 * 128 mouth open
 	 */
 	protected void applyVisual(int value, boolean flag) {
-		int i = getDataWatcher().get(SADDLE_WATCHER);
+		int i = this.getDataWatcher().get(SADDLE_WATCHER);
 		if (flag) {
-			getDataWatcher().set(SADDLE_WATCHER, (byte) (i | value));
+			this.getDataWatcher().set(SADDLE_WATCHER, (byte) (i | value));
 		} else {
-			getDataWatcher().set(SADDLE_WATCHER, (byte) (i & (~value)));
+			this.getDataWatcher().set(SADDLE_WATCHER, (byte) (i & (~value)));
 		}
 	}
 
@@ -182,8 +182,8 @@ public class EntityMyDonkey extends EntityMyPet implements IJumpable {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		getDataWatcher().set(CHEST_WATCHER, getMyPet().hasChest());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(CHEST_WATCHER, getMyPet().hasChest());
 		applyVisual(4, getMyPet().hasSaddle());
 	}
 

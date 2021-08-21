@@ -73,11 +73,11 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
 	 * 128 mouth open
 	 */
 	protected void applyVisual(int value, boolean flag) {
-		int i = getDataWatcher().get(SADDLE_CHEST_WATCHER);
+		int i = this.getDataWatcher().get(SADDLE_CHEST_WATCHER);
 		if (flag) {
-			getDataWatcher().set(SADDLE_CHEST_WATCHER, (byte) (i | value));
+			this.getDataWatcher().set(SADDLE_CHEST_WATCHER, (byte) (i | value));
 		} else {
-			getDataWatcher().set(SADDLE_CHEST_WATCHER, (byte) (i & (~value)));
+			this.getDataWatcher().set(SADDLE_CHEST_WATCHER, (byte) (i & (~value)));
 		}
 	}
 
@@ -178,7 +178,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements IJumpable {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 		applyVisual(4, getMyPet().hasSaddle());
 	}
 

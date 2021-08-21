@@ -130,12 +130,9 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 
 public abstract class EntityMyPet extends EntityInsentient implements MyPetMinecraftEntity {
+	
+	protected static final DataWatcherObject<Byte> POTION_PARTICLE_WATCHER = EntityInsentient.aB;
 
-	protected static final DataWatcherObject<Byte> POTION_PARTICLE_WATCHER;
-
-	static { // There must be some other better way to solve the problem.
-		POTION_PARTICLE_WATCHER = DataWatcher.a(EntityInsentient.class, DataWatcherRegistry.a);
-	}
 
 	protected AIGoalSelector petPathfinderSelector, petTargetSelector;
 	protected EntityLiving target = null;
@@ -1189,6 +1186,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 				}
 
 				if (!hasRider()) {
+					//TODO Check this
 					petTargetSelector.tick(); // target selector
 					petPathfinderSelector.tick(); // pathfinder selector
 					petNavigation.tick(); // navigation

@@ -82,7 +82,7 @@ public class EntityMyParrot extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
+		this.getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
 	}
 
 	@Override

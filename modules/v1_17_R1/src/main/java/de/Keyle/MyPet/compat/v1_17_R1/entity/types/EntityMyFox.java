@@ -162,8 +162,8 @@ public class EntityMyFox extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		getDataWatcher().set(FOX_TYPE_WATCHER, getMyPet().getType().ordinal());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(FOX_TYPE_WATCHER, getMyPet().getType().ordinal());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {

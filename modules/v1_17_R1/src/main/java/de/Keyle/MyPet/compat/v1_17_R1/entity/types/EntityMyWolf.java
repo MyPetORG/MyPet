@@ -62,11 +62,11 @@ public class EntityMyWolf extends EntityMyPet {
 	}
 
 	public void applySitting(boolean sitting) {
-		int i = getDataWatcher().get(SIT_WATCHER);
+		int i = this.getDataWatcher().get(SIT_WATCHER);
 		if (sitting) {
-			getDataWatcher().set(SIT_WATCHER, (byte) (i | 0x1));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (i | 0x1));
 		} else {
-			getDataWatcher().set(SIT_WATCHER, (byte) (i & 0xFFFFFFFE));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (i & 0xFFFFFFFE));
 		}
 	}
 
@@ -105,7 +105,7 @@ public class EntityMyWolf extends EntityMyPet {
 							}
 							return EnumInteractionResult.b;
 						} else {
-							getDataWatcher().set(COLLAR_COLOR_WATCHER, 0);
+							this.getDataWatcher().set(COLLAR_COLOR_WATCHER, 0);
 							updateVisuals();
 						}
 					} else if (Configuration.MyPet.Wolf.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
@@ -143,23 +143,23 @@ public class EntityMyWolf extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
 
-		byte b0 = getDataWatcher().get(SIT_WATCHER);
+		byte b0 = this.getDataWatcher().get(SIT_WATCHER);
 		if (getMyPet().isTamed()) {
-			getDataWatcher().set(SIT_WATCHER, (byte) (b0 | 0x4));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (b0 | 0x4));
 		} else {
-			getDataWatcher().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
 		}
 
-		b0 = getDataWatcher().get(SIT_WATCHER);
+		b0 = this.getDataWatcher().get(SIT_WATCHER);
 		if (getMyPet().isAngry()) {
-			getDataWatcher().set(SIT_WATCHER, (byte) (b0 | 0x2));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (b0 | 0x2));
 		} else {
-			getDataWatcher().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFD));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFD));
 		}
 
-		getDataWatcher().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
+		this.getDataWatcher().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 	}
 
 	@Override
@@ -200,8 +200,8 @@ public class EntityMyWolf extends EntityMyPet {
 		}
 
 		float tailHeight = 30F * (getHealth() / getMaxHealth());
-		if (getDataWatcher().get(TAIL_WATCHER) != tailHeight) {
-			getDataWatcher().set(TAIL_WATCHER, tailHeight); // update tail height
+		if (this.getDataWatcher().get(TAIL_WATCHER) != tailHeight) {
+			this.getDataWatcher().set(TAIL_WATCHER, tailHeight); // update tail height
 		}
 	}
 
@@ -215,7 +215,7 @@ public class EntityMyWolf extends EntityMyPet {
 		super.setHealth(i);
 
 		float tailHeight = 30F * (i / getMaxHealth());
-		getDataWatcher().set(TAIL_WATCHER, tailHeight);
+		this.getDataWatcher().set(TAIL_WATCHER, tailHeight);
 	}
 
 	@Override

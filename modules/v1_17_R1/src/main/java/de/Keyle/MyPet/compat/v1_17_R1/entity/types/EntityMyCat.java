@@ -55,11 +55,11 @@ public class EntityMyCat extends EntityMyPet {
 	}
 
 	public void applySitting(boolean sitting) {
-		byte i = getDataWatcher().get(SIT_WATCHER);
+		byte i = this.getDataWatcher().get(SIT_WATCHER);
 		if (sitting) {
-			getDataWatcher().set(SIT_WATCHER, (byte) (i | 1));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (i | 1));
 		} else {
-			getDataWatcher().set(SIT_WATCHER, (byte) (i & -2));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (i & -2));
 		}
 	}
 
@@ -126,15 +126,15 @@ public class EntityMyCat extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		getDataWatcher().set(TYPE_WATCHER, getMyPet().getCatType().ordinal());
-		getDataWatcher().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
+		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getDataWatcher().set(TYPE_WATCHER, getMyPet().getCatType().ordinal());
+		this.getDataWatcher().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
-		byte b0 = getDataWatcher().get(SIT_WATCHER);
+		byte b0 = this.getDataWatcher().get(SIT_WATCHER);
 		if (getMyPet().isTamed()) {
-			getDataWatcher().set(SIT_WATCHER, (byte) (b0 | 0x4));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (b0 | 0x4));
 		} else {
-			getDataWatcher().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
+			this.getDataWatcher().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
 		}
 	}
 
