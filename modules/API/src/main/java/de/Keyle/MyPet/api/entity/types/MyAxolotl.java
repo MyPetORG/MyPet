@@ -23,9 +23,27 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import lombok.Getter;
 
 
 @DefaultInfo(food = {"wheat"})
-public interface MyGoat extends MyPet, MyPetBaby {
+public interface MyAxolotl extends MyPet, MyPetBaby {
 
+    enum Type {
+        Leucistic("leucistic"),
+        Wild("wild"),
+        Gold("gold"),
+        Cyan("cyan"),
+        Blue("blue");
+
+        @Getter private String type;
+
+        Type(String type) {
+            this.type = type;
+        }
+    }
+
+    Type getType();
+
+    void setType(Type type);
 }

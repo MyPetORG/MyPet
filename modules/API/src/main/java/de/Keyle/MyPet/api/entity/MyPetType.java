@@ -29,6 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public enum MyPetType {
+    Axolotl("AXOLOTL", "1.17.1", MyAxolotl.class, new Compat<>()
+            .v("1.17.1", "axolotl")
+            .search()),
     Bat("BAT", "1.7.10", MyBat.class, new Compat<>()
             .v("1.7.10", 65)
             .v("1.13", "bat")

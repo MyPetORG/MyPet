@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.types.*;
 import java.lang.reflect.Constructor;
 
 public enum MyPetClass {
+    Axolotl(MyAxolotl.class),
     Bat(MyBat.class),
     Bee(MyBee.class),
     Blaze(MyBlaze.class),

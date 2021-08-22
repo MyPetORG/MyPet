@@ -31,6 +31,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
     @Override
     public void updateIcon(MyPetType type, IconMenuItem icon) {
         switch (type) {
+            case Axolotl:
+                icon.setMaterial(Material.AXOLOTL_SPAWN_EGG);
+                break;
             case Bat:
                 icon.setMaterial(Material.BAT_SPAWN_EGG);
                 break;
