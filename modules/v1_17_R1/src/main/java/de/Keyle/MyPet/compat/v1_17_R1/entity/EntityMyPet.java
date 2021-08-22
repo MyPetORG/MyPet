@@ -648,7 +648,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 			}
 		} else {
 			if (isVehicle()) {
-				for (Entity e : getPassengers()) {
+				for (Entity e : this.getPassengers()) {
 					if (e instanceof EntityPlayer && getOwner().equals(e)) {
 						hasRider = true;
 						this.G = 1.0F; // climb height -> 1 block
@@ -815,10 +815,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 	public Entity getFirstPassenger() {
 		return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 	}
-
+	
+	//TODO Check for Speed
 	private void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
 		double locY;
-		float f2;
 		float speed;
 		float swimmSpeed;
 
@@ -1023,7 +1023,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 	}
 
 	@Override
-	public void movementTick() {
+	public void movementTick() {	//Speed-Probleme?
 		if (this.jumpDelay > 0) {
 			--this.jumpDelay;
 		}
@@ -1115,12 +1115,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 				if (cancelled) {
 					returnVal = false;
 				} else {
-					if (!(this.getRidingPassenger() instanceof EntityHuman)) {
-						this.getPassengers().add(0, entity);
-					} else {
-						this.getPassengers().add(entity);
-					}
-					returnVal = true;
+					returnVal = super.addPassenger(entity);
 				}
 			}
 
@@ -1186,7 +1181,6 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 				}
 
 				if (!hasRider()) {
-					//TODO Check this
 					petTargetSelector.tick(); // target selector
 					petPathfinderSelector.tick(); // pathfinder selector
 					petNavigation.tick(); // navigation
@@ -1237,7 +1231,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 	 */
 	public void f(Vec3D vec3d) {
 		if (!hasRider || !this.isVehicle()) {
-			super.g(vec3d);
+			g(vec3d);
 			return;
 		}
 
@@ -1257,7 +1251,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 			passenger.stopRiding();
 			return;
 		}
-
+		
 		//apply pitch & yaw
 		this.x = passenger.getYRot();
 		this.setYRot(passenger.getYRot());
@@ -1265,16 +1259,15 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 		setYawPitch(this.getYRot(), this.getXRot());
 		this.bg = (this.aX = this.getYRot());
 
+		//TODO Got the right fields, now speed is something
 		// get motion from passenger (player)
-		double motionSideways = passenger.aR * 0.5F;
-		double motionForward = passenger.aT;
+		double motionSideways = passenger.bo;
+		double motionForward = passenger.bq * 2;
 
 		// backwards is slower
 		if (motionForward <= 0.0F) {
-			motionForward *= 0.25F;
+			motionForward *= 0.5F;
 		}
-		// sideways is slower too but not as slow as backwards
-		motionSideways *= 0.85F;
 
 		float speed = 0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F));
 		double jumpHeight = Util.clamp(1 + rideSkill.getJumpHeight().getValue().doubleValue(), 0, 10);
