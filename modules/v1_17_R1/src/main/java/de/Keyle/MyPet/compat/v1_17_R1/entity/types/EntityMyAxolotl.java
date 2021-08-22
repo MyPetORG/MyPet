@@ -64,49 +64,6 @@ public class EntityMyAxolotl extends EntityMyPet {
     }
 
     @Override
-    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-            return EnumInteractionResult.b;
-        }
-
-        if (itemStack != null) {
-            if (itemStack.getItem().equals(Items.nc)) {
-                if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
-                    final int itemInHandIndex = entityhuman.getInventory().k;
-                    ItemStack is = new ItemStack(Items.nd);
-                    final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
-                    entityhuman.getInventory().setItem(itemInHandIndex, is);
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.getInventory().setItem(itemInHandIndex, oldIs), 2L);
-
-                } else {
-                    itemStack.subtract(1);
-                    if (itemStack.getCount() <= 0) {
-                        entityhuman.getInventory().setItem(entityhuman.getInventory().k, new ItemStack(Items.nd));
-                    } else {
-                        if (!entityhuman.getInventory().pickup(new ItemStack(Items.nd))) {
-                            entityhuman.drop(new ItemStack(Items.pG), true);
-                        }
-                    }
-                    return EnumInteractionResult.b;
-                }
-            }
-            if (getOwner().equals(entityhuman) && canUseItem()) {
-                if (Configuration.MyPet.Mooshroom.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-                    if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-                        itemStack.subtract(1);
-                        if (itemStack.getCount() <= 0) {
-                            entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
-                        }
-                    }
-                    getMyPet().setBaby(false);
-                    return EnumInteractionResult.b;
-                }
-            }
-        }
-        return EnumInteractionResult.d;
-    }
-
-    @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
