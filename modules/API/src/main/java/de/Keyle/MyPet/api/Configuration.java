@@ -238,6 +238,12 @@ public class Configuration {
             public static boolean CAN_GLIDE = true;
         }
 
+        public static class Goat {
+            public static boolean CAN_GIVE_MILK = true;
+            public static ConfigItem GROW_UP_ITEM;
+
+        }
+
         public static class Hoglin {
 
             public static ConfigItem GROW_UP_ITEM;

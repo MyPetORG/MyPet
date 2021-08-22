@@ -99,6 +99,9 @@ public enum MyPetType {
             .v("1.7.10", 56)
             .v("1.13", "ghast")
             .search()),
+    Goat("GOAT", "1.17.1", MyGoat.class, new Compat<>()
+            .v("1.17.1", "goat")
+            .search()),
     Giant("GIANT", "1.7.10", MyGiant.class, new Compat<>()
             .v("1.7.10", 53)
             .v("1.13", "giant")
