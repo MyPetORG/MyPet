@@ -27,7 +27,7 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
-public class MyGoat extends MyPet {
+public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGoat {
     protected boolean isBaby = false;
 
     public MyGoat(MyPetPlayer petOwner) {

@@ -85,7 +85,6 @@ public class EntityMyGoat extends EntityMyPet {
         }
         return EnumInteractionResult.d;
     }
-
     @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
