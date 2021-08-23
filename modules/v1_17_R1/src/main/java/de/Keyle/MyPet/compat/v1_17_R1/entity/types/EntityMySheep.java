@@ -64,7 +64,7 @@ public class EntityMySheep extends EntityMyPet {
 		colorMap.put(EnumColor.e, Blocks.bi);
 		colorMap.put(EnumColor.f, Blocks.bj);
 		colorMap.put(EnumColor.g, Blocks.bk);
-				colorMap.put(EnumColor.h, Blocks.bl);
+		colorMap.put(EnumColor.h, Blocks.bl);
 		colorMap.put(EnumColor.i, Blocks.bm);
 		colorMap.put(EnumColor.j, Blocks.bn);
 		colorMap.put(EnumColor.k, Blocks.bo);
