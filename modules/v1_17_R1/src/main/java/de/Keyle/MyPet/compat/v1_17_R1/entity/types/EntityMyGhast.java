@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 4.F, height = 4.F)
 public class EntityMyGhast extends EntityMyPet {

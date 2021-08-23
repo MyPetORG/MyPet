@@ -45,7 +45,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -94,18 +94,18 @@ public class EntityMyHusk extends EntityMyPet {
 
 	@Override
 	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null) {
-			if (itemStack.getItem() == Items.pq && getOwner().getPlayer().isSneaking() && canEquip()) {
+			if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
 				boolean hadEquipment = false;
 				for (EquipmentSlot slot : EquipmentSlot.values()) {
 					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-					if (itemInSlot != null && itemInSlot.getItem() != Items.a) {
+					if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
 						ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
-						entityitem.ap = 10;
+						entityitem.pickupDelay = 10;
 						entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 						this.level.addFreshEntity(entityitem);
 						getMyPet().setEquipment(slot, null);
@@ -132,9 +132,9 @@ public class EntityMyHusk extends EntityMyPet {
 			} else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
 				EquipmentSlot slot = EquipmentSlot.getSlotById(Mob.getEquipmentSlotForItem(itemStack).getFilterFlag());
 				ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-				if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+				if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
-					entityitem.ap = 10;
+					entityitem.pickupDelay = 10;
 					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 					this.level.addFreshEntity(entityitem);
 				}

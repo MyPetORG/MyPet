@@ -30,7 +30,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -60,7 +60,7 @@ public class EntityMyHoglin extends EntityMyPet {
 
 	@Override
 	public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 

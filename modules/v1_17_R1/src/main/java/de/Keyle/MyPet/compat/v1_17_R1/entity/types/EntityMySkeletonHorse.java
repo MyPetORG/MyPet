@@ -41,7 +41,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -112,7 +112,7 @@ public class EntityMySkeletonHorse extends EntityMyPet implements PlayerRideable
 
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
