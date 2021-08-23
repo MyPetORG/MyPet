@@ -51,13 +51,13 @@ public class LookAtPlayer implements AIGoal {
 		if (this.petEntity.getRandom().nextFloat() >= this.lookAtPlayerChance) {
 			return false;
 		}
-		if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
+		if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
 			return false;
 		}
 		if (this.petEntity.isVehicle()) {
 			return false;
 		}
-		this.targetPlayer = this.petEntity.t.findNearbyPlayer(this.petEntity, this.range);
+		this.targetPlayer = this.petEntity.level.getNearestPlayer(this.petEntity, this.range);
 		return this.targetPlayer != null;
 	}
 
@@ -66,7 +66,7 @@ public class LookAtPlayer implements AIGoal {
 		if (!this.targetPlayer.isAlive()) {
 			return true;
 		}
-		if (this.petEntity.f(this.targetPlayer) > this.range) {
+		if (this.petEntity.distanceToSqr(this.targetPlayer) > this.range) {
 			return true;
 		}
 		if (this.petEntity.isVehicle()) {
@@ -87,7 +87,7 @@ public class LookAtPlayer implements AIGoal {
 
 	@Override
 	public void tick() {
-		this.petEntity.getLookControl().setLookAt(this.targetPlayer.locX(), this.targetPlayer.locY() + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ(), petEntity.eZ(), this.petEntity.eZ());
+		this.petEntity.getLookControl().setLookAt(this.targetPlayer.getX(), this.targetPlayer.getY() + this.targetPlayer.getEyeHeight(), this.targetPlayer.getZ(), petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot());
 		this.ticksUntilStopLooking -= 1;
 	}
 }

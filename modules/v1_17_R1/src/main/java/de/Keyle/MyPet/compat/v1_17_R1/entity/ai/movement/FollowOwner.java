@@ -20,20 +20,19 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement;
 
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
-import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 
 @Compat("v1_17_R1")
 public class FollowOwner implements AIGoal {
@@ -45,7 +44,7 @@ public class FollowOwner implements AIGoal {
 	private final double startDistance;
 	private final float teleportDistance;
 	private Control controlPathfinderGoal;
-	private final EntityPlayer owner;
+	private final Player owner;
 	private boolean waitForGround = false;
 
 	public FollowOwner(EntityMyPet entityMyPet, double startDistance, float stopDistance, float teleportDistance) {
@@ -66,11 +65,11 @@ public class FollowOwner implements AIGoal {
 		}
 		if (!this.petEntity.canMove()) {
 			return false;
-		} else if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
+		} else if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
 			return false;
 		} else if (this.petEntity.getOwner() == null) {
 			return false;
-		} else if (this.petEntity.f(owner) < this.startDistance) {
+		} else if (this.petEntity.distanceToSqr(owner) < this.startDistance) {
 			return false;
 		} else return controlPathfinderGoal == null || controlPathfinderGoal.moveTo == null;
 	}
@@ -81,11 +80,11 @@ public class FollowOwner implements AIGoal {
 			return true;
 		} else if (this.petEntity.getOwner() == null) {
 			return true;
-		} else if (this.petEntity.f(owner) < this.stopDistance) {
+		} else if (this.petEntity.distanceToSqr(owner) < this.stopDistance) {
 			return true;
 		} else if (!this.petEntity.canMove()) {
 			return true;
-		} else return this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead();
+		} else return this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead();
 	}
 
 	@Override
@@ -109,19 +108,19 @@ public class FollowOwner implements AIGoal {
 		}
 		
 		//Look at Owner
-		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.eZ(), this.petEntity.eZ());
+		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot());
 
 		//Teleportation
 		if (this.petEntity.canMove()) {
-			if (!owner.getAbilities().b) {
+			if (!owner.getAbilities().flying) {
 				if (!waitForGround) {
-					if (owner.J <= 4) {
-						if (this.petEntity.f(owner) >= this.teleportDistance) {
+					if (owner.flyDist <= 4) {
+						if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
 							if (controlPathfinderGoal.moveTo == null) {
 								if (!petEntity.hasTarget()) {
 									if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
-										this.petEntity.J = 0;
-										this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.getYRot(), this.petEntity.getXRot());
+										this.petEntity.flyDist = 0;
+										this.petEntity.moveTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.getYRot(), this.petEntity.getXRot());
 										this.setPathTimer = 0;
 										return;
 									}
@@ -146,24 +145,24 @@ public class FollowOwner implements AIGoal {
 	}
 
 	private void applyWalkSpeed() {
-		float walkSpeed = owner.getAbilities().g;
-		if (owner.getAbilities().b) {
+		float walkSpeed = owner.getAbilities().walkingSpeed;
+		if (owner.getAbilities().flying) {
 			// make the pet faster when the player is flying
-			walkSpeed += owner.getAbilities().f;
+			walkSpeed += owner.getAbilities().flyingSpeed;
 		} else if (owner.isSprinting()) {
 			// make the pet faster when the player is sprinting
-			if (owner.getAttributeMap().a(GenericAttributes.d) != null) {
-				walkSpeed += owner.getAttributeMap().a(GenericAttributes.d).getValue();
+			if (owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED) != null) {
+				walkSpeed += owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue();
 			}
-		} else if (owner.isPassenger() && owner.getVehicle() instanceof EntityLiving) {
+		} else if (owner.isPassenger() && owner.getVehicle() instanceof LivingEntity) {
 			// adjust the speed to the pet can catch up with the vehicle the player is in
-			AttributeModifiable vehicleSpeedAttribute = ((EntityLiving) owner.getVehicle()).getAttributeMap().a(GenericAttributes.d);
+			AttributeInstance vehicleSpeedAttribute = ((LivingEntity) owner.getVehicle()).getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
 			if (vehicleSpeedAttribute != null) {
 				walkSpeed = (float) vehicleSpeedAttribute.getValue();
 			}
-		} else if (owner.hasEffect(MobEffects.a)) {
+		} else if (owner.hasEffect(MobEffects.MOVEMENT_SPEED)) {
 			// make the pet faster when the player is has the SPEED effect
-			walkSpeed += owner.getEffect(MobEffects.a).getAmplifier() * 0.2 * walkSpeed;
+			walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
 		}
 		// make the pet a little bit faster than the player so it can catch up
 		walkSpeed += 0.07f;

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
@@ -62,7 +63,7 @@ public class MeleeAttack implements AIGoal {
 		if (!this.petEntity.hasTarget()) {
 			return false;
 		}
-		net.minecraft.world.entity.LivingEntity targetEntity = this.petEntity.getTarget();
+		net.minecraft.world.entity.LivingEntity targetEntity = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
 		if (targetEntity instanceof ArmorStand) {
 			return false;

@@ -20,19 +20,20 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.tags.TagsFluid;
-import net.minecraft.world.entity.ai.navigation.Navigation;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
 
 @Compat("v1_17_R1")
 public class Float implements AIGoal {
 
 	private final EntityMyPet entityMyPet;
-	private final EntityPlayer owner;
+	private final Player owner;
 
 	private int lavaCounter = 10;
 	private boolean inLava = false;
@@ -41,7 +42,7 @@ public class Float implements AIGoal {
 		this.entityMyPet = entityMyPet;
 		//entityMyPet.getNavigation().e(true);
 		this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
-		((Navigation) entityMyPet.getNavigation()).c(true);
+		((PathNavigation) entityMyPet.getNavigation()).setCanFloat(true);;
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class Float implements AIGoal {
 				lavaCounter = 10;
 			}
 		}
-		if (!inLava && entityMyPet.a(TagsFluid.c)) {
+		if (!inLava && entityMyPet.isEyeInFluid(FluidTags.LAVA)) {
 			inLava = true;
 		}
 	}

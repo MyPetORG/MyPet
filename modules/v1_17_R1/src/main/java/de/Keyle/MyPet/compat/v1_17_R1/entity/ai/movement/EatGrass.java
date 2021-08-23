@@ -20,21 +20,22 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement;
 
+import java.util.function.Predicate;
+
+import org.bukkit.GameRule;
+import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.types.EntityMySheep;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.level.World;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
-import org.bukkit.GameRule;
-import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory;
-
-import java.util.function.Predicate;
 
 @Compat("v1_17_R1")
 public class EatGrass implements AIGoal {
@@ -61,9 +62,9 @@ public class EatGrass implements AIGoal {
 		} else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getTarget().isDead()) {
 			return false;
 		}
-		int blockLocX = MathHelper.floor(this.entityMySheep.locX());
-		int blockLocY = MathHelper.floor(this.entityMySheep.locY());
-		int blockLocZ = MathHelper.floor(this.entityMySheep.locZ());
+		int blockLocX = Mth.floor(this.entityMySheep.getX());
+		int blockLocY = Mth.floor(this.entityMySheep.getY());
+		int blockLocZ = Mth.floor(this.entityMySheep.getZ());
 
 		BlockPos blockposition = new BlockPos(blockLocX, blockLocY, blockLocZ);
 
@@ -90,9 +91,9 @@ public class EatGrass implements AIGoal {
 	@Override
 	public void tick() {
 		if (--this.eatTicks == 0) {
-			int blockLocX = MathHelper.floor(this.entityMySheep.locX());
-			int blockLocY = MathHelper.floor(this.entityMySheep.locY());
-			int blockLocZ = MathHelper.floor(this.entityMySheep.locZ());
+			int blockLocX = Mth.floor(this.entityMySheep.getX());
+			int blockLocY = Mth.floor(this.entityMySheep.getY());
+			int blockLocZ = Mth.floor(this.entityMySheep.getZ());
 
 			BlockPos blockAt = new BlockPos(blockLocX, blockLocY, blockLocZ);
 			if (GRASS.test(this.world.getType(blockAt))) {

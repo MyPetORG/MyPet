@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
@@ -41,7 +43,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
 import net.royawesome.jlibnoise.MathHelper;
 
@@ -77,7 +78,7 @@ public class RangedAttack implements AIGoal {
 			return false;
 		}
 
-		LivingEntity target = this.entityMyPet.getTarget();
+		LivingEntity target = ((CraftLivingEntity) this.entityMyPet.getMyPetTarget()).getHandle();
 
 		if (target instanceof ArmorStand) {
 			return false;
@@ -96,7 +97,7 @@ public class RangedAttack implements AIGoal {
 				return false;
 			}
 			if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
-				if (target instanceof TamableAnimal && ((TamableAnimal) target).isTamed()) {
+				if (target instanceof TamableAnimal && ((TamableAnimal) target).isTame()) {
 					return false;
 				}
 				if (target instanceof EntityMyPet) {
