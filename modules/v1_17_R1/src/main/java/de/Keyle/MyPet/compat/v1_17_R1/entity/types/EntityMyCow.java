@@ -25,15 +25,15 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCow;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
@@ -60,14 +60,14 @@ public class EntityMyCow extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Items.BUCKET && Configuration.MyPet.Cow.CAN_GIVE_MILK) {
-				ItemStack milkBucket = new ItemStack(Items.oc);
+				ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
 
 				entityhuman.getInventory().setItem(entityhuman.getInventory().selected, milkBucket);
 				return InteractionResult.CONSUME;

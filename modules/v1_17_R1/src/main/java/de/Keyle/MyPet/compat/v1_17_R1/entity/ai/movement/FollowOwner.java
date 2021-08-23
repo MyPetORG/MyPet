@@ -109,7 +109,7 @@ public class FollowOwner implements AIGoal {
 		}
 		
 		//Look at Owner
-		this.petEntity.getControllerLook().a(owner, this.petEntity.eZ(), this.petEntity.eZ());
+		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.eZ(), this.petEntity.eZ());
 
 		//Teleportation
 		if (this.petEntity.canMove()) {

@@ -24,21 +24,21 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetEgg;
-import net.minecraft.core.particles.ParticleParamItem;
-import net.minecraft.core.particles.Particles;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.projectile.EntityEgg;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
-import net.minecraft.world.phys.MovingObjectPosition;
-import net.minecraft.world.phys.MovingObjectPositionEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 @Compat("v1_17_R1")
-public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
+public class MyPetEgg extends ThrownEgg implements EntityMyPetProjectile {
 
     protected float damage = 0;
     protected CraftMyPetEgg bukkitEntity = null;
@@ -59,35 +59,35 @@ public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
     @Override
     public CraftMyPetEgg getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftMyPetEgg(this.t.getCraftServer(), this);
+            this.bukkitEntity = new CraftMyPetEgg(this.level.getCraftServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void saveData(NBTTagCompound nbtTagCompound) {
+    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    public void loadData(NBTTagCompound nbtTagCompound) {
+    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.c) {
-            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
-            if (entity instanceof EntityLiving) {
-                entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+    protected void onHit(HitResult movingObjectPosition) {
+        if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
+            if (entity instanceof LivingEntity) {
+                entity.hurt(DamageSource.thrown(this, getShooter()), damage);
             }
         }
         for (int i = 0; i < 8; ++i) {
-            this.t.addParticle(new ParticleParamItem(Particles.K, new ItemStack(Items.oo)), this.locX(), this.locY(), this.locZ(), ((double) this.Q.nextFloat() - 0.5D) * 0.08D, ((double) this.Q.nextFloat() - 0.5D) * 0.08D, ((double) this.Q.nextFloat() - 0.5D) * 0.08D);
+            this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.LEATHER_BOOTS)), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
         }
-        die();
+        discard();
     }
 
     @Override
-    public boolean damageEntity(DamageSource damagesource, float f) {
+    public boolean hurt(DamageSource damagesource, float f) {
         return false;
     }
 }

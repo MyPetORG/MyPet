@@ -20,32 +20,32 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
+
+import java.lang.reflect.InvocationTargetException;
+
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPig;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.protocol.game.PacketPlayOutAttachEntity;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
@@ -73,17 +73,17 @@ public class EntityMyPig extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(final EntityHuman entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
-		if (enumhand == InteractionHand.b) {
+	public InteractionResult handlePlayerInteraction(final net.minecraft.world.entity.player.Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+		if (enumhand == InteractionHand.OFF_HAND) {
 			if (itemStack != null) {
-				if (itemStack.getItem() == Items.rP) {
-					((WorldServer) this.t).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutAttachEntity(this, null));
-					entityhuman.a(InteractionHand.b, ItemStack.EMPTY);
+				if (itemStack.getItem() == Items.LEAD) {
+					((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEntityLinkPacket(this, null));
+					entityhuman.a(InteractionHand.OFF_HAND, ItemStack.EMPTY);
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							if (entityhuman instanceof EntityPlayer) {
-								entityhuman.a(InteractionHand.b, itemStack);
+							if (entityhuman instanceof ServerPlayer) {
+								entityhuman.a(InteractionHand.OFF_HAND, itemStack);//TODO
 								Player p = (Player) entityhuman.getBukkitEntity();
 								if (!p.isOnline()) {
 									p.saveData();
@@ -96,12 +96,12 @@ public class EntityMyPig extends EntityMyPet {
 			return InteractionResult.CONSUME;
 		}
 
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.lL && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
@@ -110,11 +110,11 @@ public class EntityMyPig extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.pq && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
-				entityitem.ap = 10;
-				entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
-				this.t.addEntity(entityitem);
+			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+				ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+				entityitem.pickupDelay = 10;
+				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+				this.level.addFreshEntity(entityitem);
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setSaddle(null);

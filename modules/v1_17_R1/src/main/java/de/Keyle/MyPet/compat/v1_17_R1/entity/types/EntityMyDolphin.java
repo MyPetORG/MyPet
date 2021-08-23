@@ -25,16 +25,16 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.world.level.World;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyPet {
 
-	private static final EntityDataAccessor<BlockPosition> TREASURE_POS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.l);
+	private static final EntityDataAccessor<BlockPos> TREASURE_POS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> GOT_FISH_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> MOISTNESS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.INT);
 
@@ -60,7 +60,7 @@ public class EntityMyDolphin extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (!isInWater() && this.Q.nextBoolean()) {
+		if (!isInWater() && this.random.nextBoolean()) {
 			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
 		}
 	}
@@ -69,7 +69,7 @@ public class EntityMyDolphin extends EntityMyPet {
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 
-		getEntityData().define(TREASURE_POS_WATCHER, BlockPosition.b);
+		getEntityData().define(TREASURE_POS_WATCHER, BlockPos.ZERO);
 		getEntityData().define(GOT_FISH_WATCHER, false);
 		getEntityData().define(MOISTNESS_WATCHER, 2400);
 	}

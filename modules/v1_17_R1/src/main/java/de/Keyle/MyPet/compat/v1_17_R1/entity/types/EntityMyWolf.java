@@ -20,36 +20,37 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.bukkit.DyeColor;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWolf;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.core.particles.Particles;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.util.MathHelper;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.item.ItemDye;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
-import org.bukkit.DyeColor;
-
-import java.util.Optional;
-import java.util.UUID;
+import net.minecraft.world.level.Level;
+import net.royawesome.jlibnoise.MathHelper;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.o);
-	private static final EntityDataAccessor<Float> TAIL_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.c);
+	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_UUID);
+	private static final EntityDataAccessor<Float> TAIL_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
 
@@ -62,7 +63,7 @@ public class EntityMyWolf extends EntityMyPet {
 	}
 
 	public void applySitting(boolean sitting) {
-		int i = this.getSynchedEntityData().get(SIT_WATCHER);
+		int i = this.getEntityData().get(SIT_WATCHER);
 		if (sitting) {
 			this.getEntityData().set(SIT_WATCHER, (byte) (i | 0x1));
 		} else {
@@ -82,21 +83,21 @@ public class EntityMyWolf extends EntityMyPet {
 
 	@Override
 	protected String getLivingSound() {
-		return this.Q.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "entity.wolf.whine" : "entity.wolf.pant") : "entity.wolf.ambient";
+		return this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "entity.wolf.whine" : "entity.wolf.pant") : "entity.wolf.ambient";
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman)) {
-			if (itemStack != null && itemStack.getItem() != Items.a) {
+			if (itemStack != null && itemStack.getItem() != Items.AIR) {
 				if (canUseItem()) {
-					if (itemStack.getItem() instanceof ItemDye && ((ItemDye) itemStack.getItem()).d().ordinal() != getMyPet().getCollarColor().ordinal()) {
+					if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).d().ordinal() != getMyPet().getCollarColor().ordinal()) {
 						if (getOwner().getPlayer().isSneaking()) {
-							getMyPet().setCollarColor(DyeColor.values()[((ItemDye) itemStack.getItem()).d().ordinal()]);
+							getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).d().ordinal()]);
 							if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 								itemStack.shrink(1);
 								if (itemStack.getCount() <= 0) {
@@ -138,21 +139,21 @@ public class EntityMyWolf extends EntityMyPet {
 
 	@Override
 	protected void initAttributes() {
-		getAttributeInstance(GenericAttributes.a).setValue(20.0D);
+		getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0D);
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
-		byte b0 = this.getSynchedEntityData().get(SIT_WATCHER);
+		byte b0 = this.getEntityData().get(SIT_WATCHER);
 		if (getMyPet().isTamed()) {
 			this.getEntityData().set(SIT_WATCHER, (byte) (b0 | 0x4));
 		} else {
 			this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
 		}
 
-		b0 = this.getSynchedEntityData().get(SIT_WATCHER);
+		b0 = this.getEntityData().get(SIT_WATCHER);
 		if (getMyPet().isAngry()) {
 			this.getEntityData().set(SIT_WATCHER, (byte) (b0 | 0x2));
 		} else {
@@ -165,10 +166,10 @@ public class EntityMyWolf extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (this.isWet && !this.shaking && this.z) {
+		if (this.isWet && !this.shaking && this.onGround) {
 			this.shaking = true;
 			this.shakeCounter = 0.0F;
-			this.t.broadcastEntityEffect(this, (byte) 8);
+			this.level.broadcastEntityEvent(this, (byte) 8);
 		}
 
 		if (isInWater()) // -> is in water
@@ -178,7 +179,7 @@ public class EntityMyWolf extends EntityMyPet {
 			this.shakeCounter = 0.0F;
 		} else if ((this.isWet || this.shaking) && this.shaking) {
 			if (this.shakeCounter == 0.0F) {
-				makeSound("entity.wolf.shake", 1.0F, (this.Q.nextFloat() - this.Q.nextFloat()) * 0.2F + 1.0F);
+				makeSound("entity.wolf.shake", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
 			}
 
 			this.shakeCounter += 0.05F;
@@ -191,16 +192,16 @@ public class EntityMyWolf extends EntityMyPet {
 			if (this.shakeCounter > 0.4F) {
 				int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
 				for (; i >= 0; i--) {
-					float offsetX = (this.Q.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
-					float offsetZ = (this.Q.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
+					float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
+					float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
 
-					this.t.addParticle(Particles.ac, this.locX() + offsetX, this.locY() + 0.8F, this.locZ() + offsetZ, this.getMot().getX(), this.getMot().getY(), this.getMot().getZ());
+					this.level.addParticle(ParticleTypes.SPLASH, this.getX() + offsetX, this.getY() + 0.8F, this.getZ() + offsetZ, this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z());
 				}
 			}
 		}
 
 		float tailHeight = 30F * (getHealth() / getMaxHealth());
-		if (this.getSynchedEntityData().get(TAIL_WATCHER) != tailHeight) {
+		if (this.getEntityData().get(TAIL_WATCHER) != tailHeight) {
 			this.getEntityData().set(TAIL_WATCHER, tailHeight); // update tail height
 		}
 	}

@@ -20,30 +20,29 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
@@ -61,10 +60,10 @@ public class EntityMyIronGolem extends EntityMyPet {
 	public boolean attack(Entity entity) {
 		boolean flag = false;
 		try {
-			this.t.broadcastEntityEffect(this, (byte) 4);
+			this.level.broadcastEntityEvent(this, (byte) 4);
 			flag = super.attack(entity);
 			if (Configuration.MyPet.IronGolem.CAN_TOSS_UP && flag) {
-				entity.setMot(entity.getMot().add(0, 0.4000000059604645D, 0));
+				entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.4000000059604645D, 0));
 				this.makeSound("entity.iron_golem.attack", 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
@@ -95,8 +94,8 @@ public class EntityMyIronGolem extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
@@ -122,11 +121,11 @@ public class EntityMyIronGolem extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.pq && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
-				EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
-				entityitem.ap = 10;
-				entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
-				this.t.addEntity(entityitem);
+			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+				ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
+				entityitem.pickupDelay = 10;
+				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+				this.level.addFreshEntity(entityitem);
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setFlower(null);
@@ -171,7 +170,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (this.flower && this.flowerCounter-- <= 0) {
-			this.t.broadcastEntityEffect(this, (byte) 11);
+			this.level.broadcastEntityEvent(this, (byte) 11);
 			flowerCounter = 300;
 		}
 	}

@@ -49,13 +49,13 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
-import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -63,7 +63,7 @@ import net.minecraft.world.level.Level;
 public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
 
 	private String inventoryName = "";
-	private final NonNullList<ItemStack> items = NonNullList.a(64, ItemStack.EMPTY);
+	private final NonNullList<ItemStack> items = NonNullList.withSize(64, ItemStack.EMPTY);
 	private int size = 0;
 	private int stackSize = 64;
 	private final List<HumanEntity> transaction = new ArrayList<>();
@@ -122,7 +122,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		} else {
 			items.add(i, itemStack);
 		}
-		update();
+		setChanged();
 	}
 
 	@Override
@@ -191,25 +191,25 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 	public void dropContentAt(Location loc) {
 		Level world = ((CraftWorld) loc.getWorld()).getHandle();
 		for (int i = 0; i < this.getSize(); i++) {
-			ItemStack is = this.splitWithoutUpdate(i);
+			ItemStack is = this.removeItemNoUpdate(i);
 			if (is != null && !is.isEmpty()) {
-				is = is.cloneItemStack();
-				EntityItem itemEntity = new EntityItem(world, loc.getX(), loc.getY(), loc.getZ(), is);
-				itemEntity.ap = 20;
-				world.addEntity(itemEntity);
+				is = is.copy();
+				ItemEntity itemEntity = new ItemEntity(world, loc.getX(), loc.getY(), loc.getZ(), is);
+				itemEntity.pickupDelay = 20;
+				world.addFreshEntity(itemEntity);
 			}
 		}
 	}
 
 	@Override
-	public ItemStack splitStack(int slot, int subtract) {
+	public ItemStack removeItem(int slot, int subtract) {
 		if (slot < size && items.get(slot) != ItemStack.EMPTY) {
 			if (items.get(slot).getCount() <= subtract) {
 				ItemStack itemStack = items.get(slot);
 				items.set(slot, ItemStack.EMPTY);
 				return itemStack;
 			} else {
-				ItemStack splittedStack = items.get(slot).cloneAndSubtract(subtract);
+				ItemStack splittedStack = items.get(slot).split(subtract);
 
 				if (items.get(slot).getCount() == 0) {
 					items.set(slot, ItemStack.EMPTY);
@@ -257,7 +257,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 	}
 
 	@Override
-	public boolean a(EntityHuman entityHuman) {
+	public boolean stillValid(net.minecraft.world.entity.player.Player entityHuman) {
 		return true;
 	}
 
@@ -301,30 +301,30 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 
 	@Override
 	public void open(Player player) {
-		EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-		Container container = new CraftContainer(getBukkitInventory(), entityPlayer, entityPlayer.nextContainerCounter());
+		ServerPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+		AbstractContainerMenu container = new CraftContainer(getBukkitInventory(), entityPlayer, entityPlayer.nextContainerCounter());
 		container = CraftEventFactory.callInventoryOpenEvent(entityPlayer, container);
 		if (container != null) {
-			Containers<?> customSize = Containers.a;
+			MenuType<?> customSize = MenuType.GENERIC_9x1;
 			switch (this.getSize()) {
 				case 18:
-					customSize = Containers.b;
+					customSize = MenuType.GENERIC_9x2;
 					break;
 				case 27:
-					customSize = Containers.c;
+					customSize = MenuType.GENERIC_9x3;
 					break;
 				case 36:
-					customSize = Containers.d;
+					customSize = MenuType.GENERIC_9x4;
 					break;
 				case 45:
-					customSize = Containers.e;
+					customSize = MenuType.GENERIC_9x5;
 					break;
 				case 54:
-					customSize = Containers.f;
+					customSize = MenuType.GENERIC_9x6;
 					break;
 			}
-			entityPlayer.b.sendPacket(new PacketPlayOutOpenWindow(container.j, customSize, new ChatComponentText(this.getName())));
-			entityPlayer.bV = container;
+			entityPlayer.connection.send(new ClientboundOpenScreenPacket(container.containerId, customSize, new TextComponent(this.getName())));
+			entityPlayer.containerMenu = container;
 			entityPlayer.initMenu(container);			
 		}
 	}
@@ -355,7 +355,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 	}
 
 	@Override
-	public ItemStack splitWithoutUpdate(int i) {
+	public ItemStack removeItemNoUpdate(int i) {
 		if (items.get(i) != ItemStack.EMPTY) {
 			ItemStack itemstack = items.get(i);
 
@@ -366,11 +366,11 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 	}
 
 	@Override
-	public void update() {
+	public void setChanged() {
 	}
 
 	@Override
-	public void clear() {
+	public void clearContent() {
 	}
 
 	public boolean isNotEmpty() {

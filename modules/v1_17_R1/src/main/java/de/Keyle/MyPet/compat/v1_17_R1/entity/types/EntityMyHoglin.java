@@ -25,14 +25,14 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHoglin;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 1.3965F, height = 1.4F)
 public class EntityMyHoglin extends EntityMyPet {
@@ -59,7 +59,7 @@ public class EntityMyHoglin extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(final EntityHuman entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
 			return InteractionResult.CONSUME;
 		}

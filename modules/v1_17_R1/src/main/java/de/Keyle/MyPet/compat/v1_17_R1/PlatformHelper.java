@@ -54,7 +54,7 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_17_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import net.minecraft.core.BlockPosition;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.particles.Particle;
 import net.minecraft.core.particles.ParticleParam;
@@ -78,7 +78,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntityLightning;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.item.EntityItem;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.npc.EntityVillagerTrader;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -96,7 +96,7 @@ import net.minecraft.world.item.ItemSpade;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemSword;
 import net.minecraft.world.item.ItemTrident;
-import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -217,8 +217,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             for (int z = minZ; z <= maxZ; z++) {
                 if (((ChunkProviderServer) world.getChunkProvider()).isLoaded(x >> 4, z >> 4)) {
                     for (int y = minY - 1; y <= maxY; y++) {
-                        BlockPosition bp = new BlockPosition(x, y, z);
-                        IBlockData blockData = world.getType(bp);
+                        BlockPos bp = new BlockPos(x, y, z);
+                        BlockState blockData = world.getType(bp);
                         if (blockData != null && blockData.getMaterial().isSolid()) {
                             vec3d = blockData.getCollisionShape(world, bp);
                             isEmpty = vec3d.isEmpty();
@@ -322,7 +322,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
         {
             ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            int slot = Mob.getEquipmentSlotForItem(itemstack).getSlotFlag();
+            int slot = Mob.getEquipmentSlotForItem(itemstack).getFilterFlag();
             if (slot == 0) {
                 if (itemstack.getItem() instanceof ItemSword) {
                     return true;
@@ -363,8 +363,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public void doPickupAnimation(Entity entity, Entity target) {
         int count = 1;
-        if (target instanceof EntityItem) {
-            count = ((EntityItem) target).getItemStack().getCount();
+        if (target instanceof ItemEntity) {
+            count = ((ItemEntity) target).getItemStack().getCount();
         }
         for (Entity p : target.getNearbyEntities(10, 10, 10)) {
             if (p instanceof Player) {
@@ -415,7 +415,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 .getServer()
                 .getPlayerList()
                 .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.getDimensionKey(),
-                        new PacketPlayOutNamedSoundEffect(SoundEffects.jL, SoundCategory.d, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+                        new PacketPlayOutNamedSoundEffect(SoundEvents.jL, SoundCategory.d, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
     }
 
     @Override

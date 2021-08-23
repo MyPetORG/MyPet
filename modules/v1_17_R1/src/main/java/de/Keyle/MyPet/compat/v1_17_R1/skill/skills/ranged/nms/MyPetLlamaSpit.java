@@ -26,19 +26,19 @@ import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetLlamaSpit;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.projectile.EntityLlamaSpit;
-import net.minecraft.world.level.World;
-import net.minecraft.world.phys.MovingObjectPosition;
-import net.minecraft.world.phys.MovingObjectPositionEntity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.LlamaSpit;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.royawesome.jlibnoise.MathHelper;
 
 @Compat("v1_17_R1")
-public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjectile {
+public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
 
     @Setter
     @Getter
@@ -46,11 +46,11 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
     protected CraftMyPetLlamaSpit bukkitEntity = null;
 
     public MyPetLlamaSpit(Level world, EntityMyPet entityMyPet) {
-        super(EntityTypes.W, world);
-        this.setShooter(entityMyPet);
-        this.setPosition(entityMyPet.locX() - (double) (entityMyPet.getWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entityMyPet.aE * 0.017453292F),
-                entityMyPet.locY() + (double) entityMyPet.getHeadHeight() - 0.10000000149011612D,
-                entityMyPet.locZ() + (double) (entityMyPet.getWidth() + 1.0F) * 0.5D * (double) MathHelper.cos(entityMyPet.aE * 0.017453292F));
+        super(EntityType.LLAMA_SPIT, world);
+        this.setOwner(entityMyPet);
+        this.setPos(entityMyPet.getX() - (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entityMyPet.aE * 0.017453292F), //TODO
+                entityMyPet.getY() + (double) entityMyPet.getEyeHeight() - 0.10000000149011612D,
+                entityMyPet.getZ() + (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) MathHelper.cos(entityMyPet.aE * 0.017453292F));
     }
 
     @Override
@@ -61,32 +61,32 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
     @Override
     public CraftMyPetLlamaSpit getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftMyPetLlamaSpit(this.t.getCraftServer(), this);
+            this.bukkitEntity = new CraftMyPetLlamaSpit(this.level.getCraftServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void saveData(NBTTagCompound nbtTagCompound) {
+    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    public void loadData(NBTTagCompound nbtTagCompound) {
+    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    public boolean damageEntity(DamageSource damagesource, float f) {
+    public boolean hurt(DamageSource damagesource, float f) {
         return false;
     }
 
     @Override
-    public void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.c) {
-            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
-            if (entity instanceof EntityLiving) {
-                entity.damageEntity(DamageSource.a(this, getShooter()), damage);
+    public void onHit(HitResult movingObjectPosition) {
+        if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
+            if (entity instanceof LivingEntity) {
+                entity.hurt(DamageSource.a(this, getShooter()), damage); //TODO
             }
         }
-        this.die();
+        this.discard();
     }
 }

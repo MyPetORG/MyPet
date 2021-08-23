@@ -56,7 +56,7 @@ public class Float implements AIGoal {
 
 	@Override
 	public void tick() {
-		entityMyPet.setMot(entityMyPet.getMot().add(0, 0.05D, 0));
+		entityMyPet.setDeltaMovement(entityMyPet.getDeltaMovement().add(0, 0.05D, 0));
 
 		if (inLava && lavaCounter-- <= 0) {
 			if (entityMyPet.getPetNavigation().navigateTo(owner.getBukkitEntity())) {

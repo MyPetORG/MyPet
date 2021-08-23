@@ -20,7 +20,14 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
 import com.mojang.datafixers.util.Pair;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
@@ -29,24 +36,16 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyGiant;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-
-import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 6.0f, height = 10.440001F)
 public class EntityMyGiant extends EntityMyPet {
@@ -84,21 +83,21 @@ public class EntityMyGiant extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null) {
-			if (itemStack.getItem() == Items.pq && getOwner().getPlayer().isSneaking() && canEquip()) {
+			if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
 				boolean hadEquipment = false;
 				for (EquipmentSlot slot : EquipmentSlot.values()) {
 					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-					if (itemInSlot != null && itemInSlot.getItem() != Items.a) {
-						EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
-						entityitem.ap = 10;
-						entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
-						this.t.addEntity(entityitem);
+					if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
+						ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
+						entityitem.pickupDelay = 10;
+						entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+						this.level.addFreshEntity(entityitem);
 						getMyPet().setEquipment(slot, null);
 						hadEquipment = true;
 					}
@@ -121,13 +120,13 @@ public class EntityMyGiant extends EntityMyPet {
 				}
 				return InteractionResult.CONSUME;
 			} else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-				EquipmentSlot slot = EquipmentSlot.getSlotById(Mob.getEquipmentSlotForItem(itemStack).getSlotFlag());
+				EquipmentSlot slot = EquipmentSlot.getSlotById(Mob.getEquipmentSlotForItem(itemStack).getFilterFlag());
 				ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-				if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
-					entityitem.ap = 10;
-					entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
-					this.t.addEntity(entityitem);
+				if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
+					entityitem.pickupDelay = 10;
+					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+					this.level.addFreshEntity(entityitem);
 				}
 				getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
@@ -154,18 +153,18 @@ public class EntityMyGiant extends EntityMyPet {
 	}
 
 	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((WorldServer) this.t).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(EnumItemSlot.values()[slot.get19Slot()], itemStack))));
+		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
 	}
 
 	@Override
-	public ItemStack getEquipment(EnumItemSlot vanillaSlot) {
+	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
 		if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server.level.EntityTrackerEntry", 2)) {
-			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getSlotFlag());
+			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
 			if (getMyPet().getEquipment(slot) != null) {
 				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
 			}
 		}
-		return super.getEquipment(vanillaSlot);
+		return super.getItemBySlot(vanillaSlot);
 	}
 
 	@Override

@@ -172,7 +172,7 @@ public class RangedAttack implements AIGoal {
 			this.entityMyPet.getPetNavigation().navigateTo(this.target.getBukkitEntity().getLocation());
 		}
 
-		this.entityMyPet.getLookControl().a(this.target, 30.0F, 30.0F);
+		this.entityMyPet.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
 
 		if (--this.shootTimer <= 0) {
 			if (distanceToTarget < this.range && canSee) {

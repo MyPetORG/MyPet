@@ -24,14 +24,13 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetDragonFireball;
-import io.lumine.xikage.mythicmobs.utils.shadows.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.DragonFireball;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.MovingObjectPosition;
-import net.minecraft.world.phys.MovingObjectPositionEntity;
+import net.minecraft.world.phys.HitResult;
 import net.royawesome.jlibnoise.MathHelper;
 
 @Compat("v1_17_R1")
@@ -56,11 +55,11 @@ public class MyPetDragonFireball extends DragonFireball implements EntityMyPetPr
 
     @Override
     public void setDirection(double d0, double d1, double d2) {
-        d0 += this.Q.nextGaussian() * 0.2D;
-        d1 += this.Q.nextGaussian() * 0.2D;
-        d2 += this.Q.nextGaussian() * 0.2D;
+        d0 += this.random.nextGaussian() * 0.2D;
+        d1 += this.random.nextGaussian() * 0.2D;
+        d2 += this.random.nextGaussian() * 0.2D;
         double d3 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-        this.b = (d0 / d3 * 0.1D);
+        this.b = (d0 / d3 * 0.1D); //TODO
         this.c = (d1 / d3 * 0.1D);
         this.d = (d2 / d3 * 0.1D);
     }
@@ -68,29 +67,29 @@ public class MyPetDragonFireball extends DragonFireball implements EntityMyPetPr
     @Override
     public CraftMyPetDragonFireball getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftMyPetDragonFireball(this.t.getCraftServer(), this);
+            this.bukkitEntity = new CraftMyPetDragonFireball(this.level.getCraftServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void saveData(NBTTagCompound nbtTagCompound) {
+    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    public void loadData(NBTTagCompound nbtTagCompound) {
+    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.c) {
-            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
-            if (entity instanceof EntityLiving) {
-                entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+    protected void onHit(HitResult movingObjectPosition) {
+        if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((HitResult) movingObjectPosition).getEntity(); //TODO
+            if (entity instanceof LivingEntity) {
+                entity.hurt(DamageSource.thrown(this, getShooter()), damage);
             }
         }
 
-        die();
+        discard();
     }
 
     @Override
@@ -98,7 +97,7 @@ public class MyPetDragonFireball extends DragonFireball implements EntityMyPetPr
         try {
             super.tick();
             if (deathCounter-- <= 0) {
-                die();
+            	discard();
             }
         } catch (Exception e) {
             e.printStackTrace();

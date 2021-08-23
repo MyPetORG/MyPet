@@ -20,31 +20,32 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.bukkit.DyeColor;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.item.ItemDye;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.World;
-import org.bukkit.DyeColor;
-
-import java.util.Optional;
-import java.util.UUID;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyCat extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.o);
+	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_UUID);
 	protected static final EntityDataAccessor<Integer> TYPE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
@@ -75,27 +76,27 @@ public class EntityMyCat extends EntityMyPet {
 
 	@Override
 	protected String getLivingSound() {
-		return this.Q.nextInt(4) == 0 ? "entity.cat.purr" : "entity.cat.ambient";
+		return this.random.nextInt(4) == 0 ? "entity.cat.purr" : "entity.cat.ambient";
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman)) {
 			if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack.getItem() instanceof ItemDye) {
-					if (((ItemDye) itemStack.getItem()).d().getColorIndex() != getMyPet().getCollarColor().ordinal()) {
-						getMyPet().setCollarColor(DyeColor.values()[((ItemDye) itemStack.getItem()).d().getColorIndex()]);
+				if (itemStack.getItem() instanceof DyeItem) {
+					if (((DyeItem) itemStack.getItem()).d().getColorIndex() != getMyPet().getCollarColor().ordinal()) {
+						getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).d().getColorIndex()]);
 						if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 							itemStack.shrink(1);
 							if (itemStack.getCount() <= 0) {
 								entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 							}
 						}
-						return InteractionResult.a;
+						return InteractionResult.SUCCESS;
 					}
 				} else if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
 					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {

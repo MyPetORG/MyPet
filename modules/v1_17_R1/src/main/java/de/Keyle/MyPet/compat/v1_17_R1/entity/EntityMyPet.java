@@ -114,7 +114,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.IJumpable;
+import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
@@ -510,7 +510,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 				}
 			}
 		}.runTaskLater(MyPetApi.getPlugin(), 5);
-		if (itemStack != null && itemStack.getItem() == Items.rP) { //TODO
+		if (itemStack != null && itemStack.getItem() == Items.LEAD) { //TODO
 			((ServerPlayer) entityhuman).connection.send(new ClientboundSetEntityLinkPacket(this, null));
 		}
 

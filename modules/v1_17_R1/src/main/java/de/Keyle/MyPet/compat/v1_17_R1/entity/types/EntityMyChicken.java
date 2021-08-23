@@ -25,15 +25,15 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyChicken;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
@@ -44,7 +44,7 @@ public class EntityMyChicken extends EntityMyPet {
 
 	public EntityMyChicken(Level world, MyPet myPet) {
 		super(world, myPet);
-		nextEggTimer = (this.Q.nextInt(6000) + 6000);
+		nextEggTimer = (this.random.nextInt(6000) + 6000);
 	}
 
 	@Override
@@ -63,8 +63,8 @@ public class EntityMyChicken extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
@@ -105,9 +105,9 @@ public class EntityMyChicken extends EntityMyPet {
 		}
 
 		if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
-			this.makeSound("entity.chicken.egg", 1.0F, (this.Q.nextFloat() - this.Q.nextFloat()) * 0.2F + 1.0F);
-			a(Items.oo, 1);
-			nextEggTimer = this.Q.nextInt(6000) + 6000;
+			this.makeSound("entity.chicken.egg", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+			a(Items.EGG, 1);
+			nextEggTimer = this.random.nextInt(6000) + 6000;
 		}
 	}
 

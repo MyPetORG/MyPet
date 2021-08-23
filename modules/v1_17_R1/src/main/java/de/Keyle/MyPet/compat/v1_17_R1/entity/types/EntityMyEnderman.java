@@ -32,13 +32,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.EntityItem;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.util.CraftMagicNumbers;
 
@@ -50,7 +50,7 @@ import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
 
-	private static final EntityDataAccessor<Optional<IBlockData>> BLOCK_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.h);
+	private static final EntityDataAccessor<Optional<BlockState>> BLOCK_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.h);
 	private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyEnderman(Level world, MyPet myPet) {
@@ -74,15 +74,15 @@ public class EntityMyEnderman extends EntityMyPet {
 
 	@Override
 	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.pq && getMyPet().hasBlock() && getOwner().getPlayer().isSneaking()) {
-				EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getBlock()));
-				entityitem.ap = 10;
-				entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
+			if (itemStack.getItem() == Items.SHEARS && getMyPet().hasBlock() && getOwner().getPlayer().isSneaking()) {
+				ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getBlock()));
+				entityitem.pickupDelay = 10;
+				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setBlock(null);
@@ -125,9 +125,9 @@ public class EntityMyEnderman extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		Optional<IBlockData> block;
+		Optional<BlockState> block;
 		if (getMyPet().getBlock() != null) {
-			IBlockData data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getData());
+			BlockState data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getData());
 			block = Optional.ofNullable(data);
 		} else {
 			block = Optional.empty();

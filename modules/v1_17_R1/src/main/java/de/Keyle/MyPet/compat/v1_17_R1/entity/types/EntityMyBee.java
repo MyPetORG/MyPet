@@ -27,10 +27,10 @@ import de.Keyle.MyPet.api.entity.types.MyBee;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.world.level.World;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 0.6f)
 public class EntityMyBee extends EntityMyPet {
@@ -95,9 +95,9 @@ public class EntityMyBee extends EntityMyPet {
 	 */
 	private void setBeeStatus(int status, boolean flag) {
 		if (flag) {
-			this.Y.set(BEE_STATUS_WATCHER, (byte) (this.Y.get(BEE_STATUS_WATCHER) | status));
+			this.entityData.set(BEE_STATUS_WATCHER, (byte) (this.entityData.get(BEE_STATUS_WATCHER) | status));
 		} else {
-			this.Y.set(BEE_STATUS_WATCHER, (byte) (this.Y.get(BEE_STATUS_WATCHER) & ~status));
+			this.entityData.set(BEE_STATUS_WATCHER, (byte) (this.entityData.get(BEE_STATUS_WATCHER) & ~status));
 		}
 
 	}

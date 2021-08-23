@@ -63,6 +63,6 @@ public class RandomLookaround implements AIGoal {
 	@Override
 	public void tick() {
 		this.ticksUntilStopLookingAround--;
-		this.petEntity.getControllerLook().a(this.petEntity.locX() + this.directionX, this.petEntity.locY() + this.petEntity.getHeadHeight(), this.petEntity.locZ() + this.directionZ, this.petEntity.eZ(), this.petEntity.eZ());
+		this.petEntity.getLookControl().setLookAt(this.petEntity.locX() + this.directionX, this.petEntity.locY() + this.petEntity.getHeadHeight(), this.petEntity.locZ() + this.directionZ, this.petEntity.eZ(), this.petEntity.eZ());
 	}
 }

@@ -20,25 +20,23 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.InvocationTargetException;
+
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySnowman;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
@@ -50,13 +48,13 @@ public class EntityMySnowman extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Item.getItemOf(Blocks.cS) && getMyPet().isSheared() && entityhuman.isSneaking()) {
+			if (itemStack.getItem() == Item.byBlock(Blocks.PUMPKIN) && getMyPet().isSheared() && entityhuman.isShiftKeyDown()) {
 				getMyPet().setSheared(false);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
@@ -65,7 +63,7 @@ public class EntityMySnowman extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.pq && !getMyPet().isSheared() && entityhuman.isSneaking()) {
+			} else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isShiftKeyDown()) {
 				getMyPet().setSheared(true);
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {

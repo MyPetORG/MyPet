@@ -24,18 +24,18 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetEnderPearl;
-import net.minecraft.core.particles.Particles;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.projectile.EntityEnderPearl;
-import net.minecraft.world.level.World;
-import net.minecraft.world.phys.MovingObjectPosition;
-import net.minecraft.world.phys.MovingObjectPositionEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 @Compat("v1_17_R1")
-public class MyPetEnderPearl extends EntityEnderPearl implements EntityMyPetProjectile {
+public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProjectile {
 
     protected float damage = 0;
     protected CraftMyPetEnderPearl bukkitEntity = null;
@@ -56,35 +56,35 @@ public class MyPetEnderPearl extends EntityEnderPearl implements EntityMyPetProj
     @Override
     public CraftMyPetEnderPearl getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftMyPetEnderPearl(this.t.getCraftServer(), this);
+            this.bukkitEntity = new CraftMyPetEnderPearl(this.level.getCraftServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void saveData(NBTTagCompound nbtTagCompound) {
+    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    public void loadData(NBTTagCompound nbtTagCompound) {
+    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.c) {
-            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
-            if (entity instanceof EntityLiving) {
-                entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+    protected void onHit(HitResult movingObjectPosition) {
+        if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
+            if (entity instanceof LivingEntity) {
+                entity.hurt(DamageSource.thrown(this, getShooter()), damage);
             }
         }
         for (int i = 0; i < 32; ++i) {
-            this.t.addParticle(Particles.T, this.locX(), this.locY() + this.Q.nextDouble() * 2.0D, this.locZ(), this.Q.nextGaussian(), 0.0D, this.Q.nextGaussian());
+            this.level.addParticle(ParticleTypes.PORTAL, this.getX(), this.getY() + this.random.nextDouble() * 2.0D, this.getZ(), this.random.nextGaussian(), 0.0D, this.random.nextGaussian());
         }
-        die();
+        discard();
     }
 
     @Override
-    public boolean damageEntity(DamageSource damagesource, float f) {
+    public boolean hurt(DamageSource damagesource, float f) {
         return false;
     }
 }

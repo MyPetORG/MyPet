@@ -20,39 +20,38 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTraderLlama;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.TagsItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockCarpet;
 import net.minecraft.world.level.block.Blocks;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.util.UUID;
-
-import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
+import net.minecraft.world.level.block.WoolCarpetBlock;
 
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyTraderLlama extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.o);
+	private static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.OPTIONAL_UUID);
 	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> STRENGTH_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
@@ -79,8 +78,8 @@ public class EntityMyTraderLlama extends EntityMyPet {
 
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
@@ -94,7 +93,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Blocks.bX.getItem() && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
+			} else if (itemStack.getItem() == Blocks.CHEST.getItem() && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
 				getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
@@ -103,18 +102,18 @@ public class EntityMyTraderLlama extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.pq && getOwner().getPlayer().isSneaking() && canEquip()) {
+			} else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
 				if (getMyPet().hasChest()) {
-					EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
-					entityitem.ap = 10;
-					entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
-					this.t.addEntity(entityitem);
+					ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
+					entityitem.pickupDelay = 10;
+					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+					this.level.addFreshEntity(entityitem);
 				}
 				if (getMyPet().hasDecor()) {
-					EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getDecor()));
-					entityitem.ap = 10;
-					entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
-					this.t.addEntity(entityitem);
+					ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getDecor()));
+					entityitem.pickupDelay = 10;
+					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+					this.level.addFreshEntity(entityitem);
 				}
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
@@ -168,8 +167,8 @@ public class EntityMyTraderLlama extends EntityMyPet {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		if (getMyPet().hasDecor()) {
 			ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
-			Block block = Block.asBlock(is.getItem());
-			int color = block instanceof BlockCarpet ? ((BlockCarpet) block).c().getColorIndex() : 0;
+			Block block = Block.byItem(is.getItem());
+			int color = block instanceof WoolCarpetBlock ? ((WoolCarpetBlock) block).c().getColorIndex() : 0;
 			this.getEntityData().set(COLOR_WATCHER, color);
 		} else {
 			this.getEntityData().set(COLOR_WATCHER, -1);

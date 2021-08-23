@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 0.475f)
 public class EntityMySquid extends EntityMyPet {
@@ -52,7 +52,7 @@ public class EntityMySquid extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (!isInWater() && this.Q.nextBoolean()) {
+		if (!isInWater() && this.random.nextBoolean()) {
 			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
 		}
 	}

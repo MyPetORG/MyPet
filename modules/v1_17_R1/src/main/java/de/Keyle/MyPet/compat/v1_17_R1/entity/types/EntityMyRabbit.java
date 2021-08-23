@@ -20,23 +20,19 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import java.lang.reflect.Method;
-
-import org.bukkit.Bukkit;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
@@ -48,7 +44,7 @@ public class EntityMyRabbit extends EntityMyPet {
 
 	public EntityMyRabbit(Level world, MyPet myPet) {
 		super(world, myPet);
-		this.jumpDelay = (this.Q.nextInt(20) + 10);
+		this.jumpDelay = (this.random.nextInt(20) + 10);
 	}
 
 	@Override
@@ -72,8 +68,8 @@ public class EntityMyRabbit extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
@@ -115,14 +111,14 @@ public class EntityMyRabbit extends EntityMyPet {
 			Bukkit.getConsoleSender().sendMessage("Normal: "+m.getName()+" "+m.getReturnType());
 		}*/
 
-		//if (this.z && getNavigation().k() != null && jumpDelay-- <= 0) {	//TODO Figure out k() and getPath() (Spigot and Paper)
-		if (this.z && jumpDelay-- <= 0) {
-			getControllerJump().jump();
-			jumpDelay = (this.Q.nextInt(10) + 10);
+		//if (this.onGround && getNavigation().k() != null && jumpDelay-- <= 0) {	//TODO Figure out k() and getPath() (Spigot and Paper)
+		if (this.onGround && jumpDelay-- <= 0) {
+			getJumpControl().jump();
+			jumpDelay = (this.random.nextInt(10) + 10);
 			if (getTarget() != null) {
 				jumpDelay /= 3;
 			}
-			this.t.broadcastEntityEffect(this, (byte) 1);
+			this.level.broadcastEntityEvent(this, (byte) 1);
 		}
 	}
 

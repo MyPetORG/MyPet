@@ -25,24 +25,24 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTurtle;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 1.2F, height = 0.4F)
 public class EntityMyTurtle extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<BlockPosition> HOME_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.l);
+	private static final EntityDataAccessor<BlockPos> HOME_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> HAS_EGG_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<BlockPosition> TRAVEL_POS_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.l);
+	private static final EntityDataAccessor<BlockPos> TRAVEL_POS_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_3 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 
@@ -66,8 +66,8 @@ public class EntityMyTurtle extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
@@ -90,9 +90,9 @@ public class EntityMyTurtle extends EntityMyPet {
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
-		getEntityData().define(HOME_WATCHER, BlockPosition.b);
+		getEntityData().define(HOME_WATCHER, BlockPos.ZERO);
 		getEntityData().define(HAS_EGG_WATCHER, false);
-		getEntityData().define(TRAVEL_POS_WATCHER, BlockPosition.b);
+		getEntityData().define(TRAVEL_POS_WATCHER, BlockPos.ZERO);
 		getEntityData().define(UNUSED_WATCHER_2, false);
 		getEntityData().define(UNUSED_WATCHER_3, false);
 		getEntityData().define(UNUSED_WATCHER_1, false);

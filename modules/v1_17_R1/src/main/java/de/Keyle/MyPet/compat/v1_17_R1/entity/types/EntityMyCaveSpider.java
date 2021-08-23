@@ -23,10 +23,10 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.world.level.World;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 0.45F)
 public class EntityMyCaveSpider extends EntityMyPet {

@@ -20,32 +20,34 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import com.comphenix.protocol.wrappers.MinecraftKey;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.core.IRegistry;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.Registry;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.resources.MinecraftKey;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyVillager.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyVillager.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<VillagerData> PROFESSION_WATCHER = SynchedEntityData.defineId(EntityMyVillager.class, EntityDataSerializers.q);
+	private static final EntityDataAccessor<VillagerData> PROFESSION_WATCHER = SynchedEntityData.defineId(EntityMyVillager.class, EntityDataSerializers.VILLAGER_DATA);
 
 	public EntityMyVillager(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -67,8 +69,8 @@ public class EntityMyVillager extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
@@ -94,15 +96,15 @@ public class EntityMyVillager extends EntityMyPet {
 		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
 			getEntityData().define(UNUSED_WATCHER, 0);
 		}
-		getEntityData().define(PROFESSION_WATCHER, new VillagerData(VillagerType.c, VillagerProfession.a, 1));
+		getEntityData().define(PROFESSION_WATCHER, new VillagerData(VillagerType.PLAINS, VillagerProfession.NONE, 1));
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
-		VillagerProfession profession = IRegistry.ap.get(new MinecraftKey(professionKey));
-		VillagerType type = IRegistry.ao.get(new MinecraftKey(getMyPet().getType().getKey()));
+		VillagerProfession profession = Registry.VILLAGER_PROFESSION.get(new ResourceLocation(professionKey));
+		VillagerType type = Registry.VILLAGER_TYPE.get(new ResourceLocation(getMyPet().getType().getKey())); //TODO
 		this.getEntityData().set(PROFESSION_WATCHER, new VillagerData(type, profession, getMyPet().getVillagerLevel()));
 	}
 

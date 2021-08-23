@@ -48,13 +48,13 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
 	@Override
 	public CraftMyPetArrow getBukkitEntity() {
 		if (this.bukkitEntity == null) {
-			this.bukkitEntity = new CraftMyPetArrow(this.t.getCraftServer(), this);
+			this.bukkitEntity = new CraftMyPetArrow(this.level.getCraftServer(), this);
 		}
 		return this.bukkitEntity;
 	}
 
 	@Override
-	public void saveData(NBTTagCompound nbttagcompound) {
+	public void addAdditionalSaveData(CompoundTag nbttagcompound) {
 
 	}
 
@@ -64,7 +64,7 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
 	}
 
 	@Override
-	public void loadData(NBTTagCompound nbttagcompound) {
+	public void readAdditionalSaveData(CompoundTag nbttagcompound) {
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
 		try {
 			super.tick();
 			if (this.b) {
-				die();
+				discard();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,7 +80,7 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
 	}
 
 	@Override
-	public boolean damageEntity(DamageSource damagesource, float f) {
+	public boolean hurt(DamageSource damagesource, float f) {
 		return false;
 	}
 }

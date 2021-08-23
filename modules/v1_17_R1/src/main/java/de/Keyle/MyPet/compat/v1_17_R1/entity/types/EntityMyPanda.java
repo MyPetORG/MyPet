@@ -25,14 +25,14 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPanda;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 1.825F, height = 1.25F)
 public class EntityMyPanda extends EntityMyPet {
@@ -65,8 +65,8 @@ public class EntityMyPanda extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
@@ -114,9 +114,9 @@ public class EntityMyPanda extends EntityMyPet {
 	 */
 	public void updateActionsWatcher(int i, boolean flag) {
 		if (flag) {
-			this.Y.set(ACTIONS_WATCHER, (byte) (this.Y.get(ACTIONS_WATCHER) | i));
+			this.entityData.set(ACTIONS_WATCHER, (byte) (this.entityData.get(ACTIONS_WATCHER) | i));
 		} else {
-			this.Y.set(ACTIONS_WATCHER, (byte) (this.Y.get(ACTIONS_WATCHER) & ~i));
+			this.entityData.set(ACTIONS_WATCHER, (byte) (this.entityData.get(ACTIONS_WATCHER) & ~i));
 		}
 	}
 

@@ -20,28 +20,29 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import org.bukkit.Bukkit;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMooshroom;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
-import org.bukkit.Bukkit;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<String> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.d);
+	private static final EntityDataAccessor<String> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.STRING);
 
 	public EntityMyMooshroom(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -63,16 +64,16 @@ public class EntityMyMooshroom extends EntityMyPet {
 	}
 
 	@Override
-	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
 			return InteractionResult.CONSUME;
 		}
 
 		if (itemStack != null) {
-			if (itemStack.getItem().equals(Items.nc)) {
+			if (itemStack.getItem().equals(Items.BOWL)) {
 				if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
 					final int itemInHandIndex = entityhuman.getInventory().selected;
-					ItemStack is = new ItemStack(Items.nd);
+					ItemStack is = new ItemStack(Items.MUSHROOM_STEW);
 					final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
 					entityhuman.getInventory().setItem(itemInHandIndex, is);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.getInventory().setItem(itemInHandIndex, oldIs), 2L);
@@ -80,10 +81,10 @@ public class EntityMyMooshroom extends EntityMyPet {
 				} else {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.nd));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.MUSHROOM_STEW));
 					} else {
-						if (!entityhuman.getInventory().add(new ItemStack(Items.nd))) {
-							entityhuman.drop(new ItemStack(Items.pG), true);
+						if (!entityhuman.getInventory().add(new ItemStack(Items.MUSHROOM_STEW))) {
+							entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
 						}
 					}
 					return InteractionResult.CONSUME;
@@ -115,7 +116,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());
+		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());	//TODO
 	}
 
 	@Override

@@ -88,7 +88,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 		}
 		if (!registered && this.valid) {
 			if (this.getWorld() instanceof WorldServer) {
-				WorldServer world = (WorldServer) this.getWorld();
+				WorldServer world = (ServerLevel) this.getWorld();
 				Arrays.stream(this.children)
 						.forEach(entityMyPetPart -> world.addEntity(entityMyPetPart)); // TODO: 2021/07/14 I don't know if this is the right replacement.
 			}
@@ -109,9 +109,9 @@ public class EntityMyEnderDragon extends EntityMyPet {
 
 	/* fmm...
 	@Override
-	public void die() {
-		super.die();
-		Arrays.stream(this.children).forEach((en) -> (en.getBukkitEntity().getHandle()).die());
+	public void discard() {
+		super.discard();
+		Arrays.stream(this.children).forEach((en) -> (en.getBukkitEntity().getHandle()).discard());
 	}
  	*/
 
@@ -122,8 +122,8 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	}
 
 	@Override
-	public void movementTick() {
-		super.movementTick();
+	public void aiStep() {
+		super.aiStep();
 
 		//        if (++this.d == this.c.length) {
 		//            this.d = 0;
@@ -136,18 +136,18 @@ public class EntityMyEnderDragon extends EntityMyPet {
 		//        float f11 = MathHelper.sin(f10);
 		//        float f12 = MathHelper.cos(f10);
 		//        this.children[2].tick();
-		//        this.children[2].setPositionRotation(this.locX() + (double) (f11 * 0.5F), this.locY(), this.locZ() - (double) (f12 * 0.5F), 0.0F, 0.0F);
+		//        this.children[2].setPositionRotation(this.getX() + (double) (f11 * 0.5F), this.getY(), this.getZ() - (double) (f12 * 0.5F), 0.0F, 0.0F);
 		//        this.children[6].tick();
-		//        this.children[6].setPositionRotation(this.locX() + (double) (f12 * 4.5F), this.locY() + 2.0D, this.locZ() + (double) (f11 * 4.5F), 0.0F, 0.0F);
+		//        this.children[6].setPositionRotation(this.getX() + (double) (f12 * 4.5F), this.getY() + 2.0D, this.getZ() + (double) (f11 * 4.5F), 0.0F, 0.0F);
 		//        this.children[7].tick();
-		//        this.children[7].setPositionRotation(this.locX() - (double) (f12 * 4.5F), this.locY() + 2.0D, this.locZ() - (double) (f11 * 4.5F), 0.0F, 0.0F);
+		//        this.children[7].setPositionRotation(this.getX() - (double) (f12 * 4.5F), this.getY() + 2.0D, this.getZ() - (double) (f11 * 4.5F), 0.0F, 0.0F);
 		//
 		//        float f13 = MathHelper.sin(this.yaw * 0.017453292F - this.be * 0.01F);
 		//        float f14 = MathHelper.cos(this.yaw * 0.017453292F - this.be * 0.01F);
 		//        this.children[0].tick();
 		//        this.children[1].tick();
 		//        double f3 = this.v(1.0F);
-		//        this.children[0].setPositionRotation(this.locX() + (double) (f13 * 6.5F * f8), this.locY() + (double) f3 + (double) (f9 * 6.5F), this.locZ() - (double) (f14 * 6.5F * f8), 0.0F, 0.0F);
-		//        this.children[1].setPositionRotation(this.locX() + (double) (f13 * 5.5F * f8), this.locY() + (double) f3 + (double) (f9 * 5.5F), this.locZ() - (double) (f14 * 5.5F * f8), 0.0F, 0.0F);
+		//        this.children[0].setPositionRotation(this.getX() + (double) (f13 * 6.5F * f8), this.getY() + (double) f3 + (double) (f9 * 6.5F), this.getZ() - (double) (f14 * 6.5F * f8), 0.0F, 0.0F);
+		//        this.children[1].setPositionRotation(this.getX() + (double) (f13 * 5.5F * f8), this.getY() + (double) f3 + (double) (f9 * 5.5F), this.getZ() - (double) (f14 * 5.5F * f8), 0.0F, 0.0F);
 	}
 }
