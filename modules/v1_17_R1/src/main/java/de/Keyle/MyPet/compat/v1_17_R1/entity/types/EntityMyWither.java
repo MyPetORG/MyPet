@@ -25,20 +25,20 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWither;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 1.9F, height = 3.5F)
 public class EntityMyWither extends EntityMyPet {
 
-	private static final DataWatcherObject<Integer> TARGET_WATCHER = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Integer> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Integer> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Integer> INVULNERABILITY_WATCHER = DataWatcher.a(EntityMyWither.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<Integer> TARGET_WATCHER = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> INVULNERABILITY_WATCHER = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
 
-	public EntityMyWither(World world, MyPet myPet) {
+	public EntityMyWither(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -58,34 +58,34 @@ public class EntityMyWither extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(TARGET_WATCHER, 0);
-		getDataWatcher().register(UNUSED_WATCHER_1, 0);
-		getDataWatcher().register(UNUSED_WATCHER_2, 0);
-		getDataWatcher().register(INVULNERABILITY_WATCHER, 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(TARGET_WATCHER, 0);
+		getEntityData().define(UNUSED_WATCHER_1, 0);
+		getEntityData().define(UNUSED_WATCHER_2, 0);
+		getEntityData().define(INVULNERABILITY_WATCHER, 0);
 	}
 
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.Wither.CAN_GLIDE) {
-			if (!this.z && this.getMot().getY() < 0.0D) {
-				this.setMot(getMot().d(1, 0.6D, 1));
+			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
 	}
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(INVULNERABILITY_WATCHER, getMyPet().isBaby() ? 600 : 0);
+		getEntityData().set(INVULNERABILITY_WATCHER, getMyPet().isBaby() ? 600 : 0);
 	}
 
 	/**
 	 * -> disable falldamage
 	 */
 	@Override
-	public int d(float f, float f1) {
+	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Wither.CAN_GLIDE) {
 			super.e(f, f1);
 		}

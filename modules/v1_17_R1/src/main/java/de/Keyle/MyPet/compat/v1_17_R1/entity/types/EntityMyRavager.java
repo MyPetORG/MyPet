@@ -26,11 +26,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyRavager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.RideImpl;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
@@ -38,9 +38,9 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 1.95F, height = 2.2F)
 public class EntityMyRavager extends EntityMyPet {
 
-	protected static final DataWatcherObject<Boolean> RAID_WATCHER = DataWatcher.a(EntityMyRavager.class, DataWatcherRegistry.i);
+	protected static final EntityDataAccessor<Boolean> RAID_WATCHER = SynchedEntityData.defineId(EntityMyRavager.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyRavager(World world, MyPet myPet) {
+	public EntityMyRavager(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -60,9 +60,9 @@ public class EntityMyRavager extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(RAID_WATCHER, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(RAID_WATCHER, false);
 
 	}
 
@@ -72,11 +72,11 @@ public class EntityMyRavager extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
 			if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
 				getOwner().sendMessage("Unfortunately, Ravagers can not be ridden (Minecraft limitation)", 5000);
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
 		return super.handlePlayerInteraction(entityhuman, enumhand, itemStack);

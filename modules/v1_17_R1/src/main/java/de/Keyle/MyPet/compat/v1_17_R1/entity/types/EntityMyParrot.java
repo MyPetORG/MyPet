@@ -20,28 +20,28 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyParrot;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.World;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 0.5F, height = 0.9f)
 public class EntityMyParrot extends EntityMyPet {
+	
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
+	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.INTYTE);
+	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.OPTIONAL_UUID);
+	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEANNT);
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.i);
-	protected static final DataWatcherObject<Byte> SIT_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.a);
-	protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.o);
-	private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyParrot.class, DataWatcherRegistry.b);
-
-	public EntityMyParrot(World world, MyPet myPet) {
+	public EntityMyParrot(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -72,17 +72,16 @@ public class EntityMyParrot extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(SIT_WATCHER, (byte) 0);
-		getDataWatcher().register(OWNER_WATCHER, Optional.empty());
-		getDataWatcher().register(VARIANT_WATCHER, 0);
+	protected void defineSynchedData() {
+		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(SIT_WATCHER, (byte) 0);
+		getEntityData().define(OWNER_WATCHER, Optional.empty());
+		getEntityData().define(VARIANT_WATCHER, 0);
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
+		this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
 	}
 
 	@Override
@@ -90,8 +89,8 @@ public class EntityMyParrot extends EntityMyPet {
 		super.onLivingUpdate();
 
 		if (Configuration.MyPet.Parrot.CAN_GLIDE) {
-			if (!this.z && this.getMot().getY() < 0.0D) {
-				this.setMot(getMot().d(1, 0.6D, 1));
+			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
 	}
@@ -100,7 +99,7 @@ public class EntityMyParrot extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int d(float f, float f1) {
+	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
 			super.e(f, f1);
 		}

@@ -29,7 +29,7 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 0.7F, height = 0.85F)
 public class EntityMyElderGuardian extends EntityMyPet {
 
-	public EntityMyElderGuardian(World world, MyPet myPet) {
+	public EntityMyElderGuardian(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 

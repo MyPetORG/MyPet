@@ -42,7 +42,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 
 	public EntityMyPetPart[] children;
 
-	public EntityMyEnderDragon(World world, MyPet myPet) {
+	public EntityMyEnderDragon(Level world, MyPet myPet) {
 		super(world, myPet);
 
 		children = new EntityMyPetPart[]{
@@ -82,8 +82,8 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.EnderDragon.CAN_GLIDE) {
-			if (!this.z && this.getMot().getY() < 0.0D) {
-				this.setMot(getMot().d(1, 0.6D, 1));
+			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
 		if (!registered && this.valid) {
@@ -100,7 +100,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int d(float f, float f1) {
+	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.EnderDragon.CAN_GLIDE) {
 			super.e(f, f1);
 		}

@@ -29,11 +29,11 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyRabbit;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
@@ -41,12 +41,12 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyRabbit.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.INT);
 
 	int jumpDelay;
 
-	public EntityMyRabbit(World world, MyPet myPet) {
+	public EntityMyRabbit(Level world, MyPet myPet) {
 		super(world, myPet);
 		this.jumpDelay = (this.Q.nextInt(20) + 10);
 	}
@@ -72,37 +72,37 @@ public class EntityMyRabbit extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (Configuration.MyPet.Rabbit.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
 				this.getMyPet().setBaby(false);
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false); // is baby
-		getDataWatcher().register(VARIANT_WATCHER, 0); // variant
+	public void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false); // is baby
+		getEntityData().define(VARIANT_WATCHER, 0); // variant
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getDataWatcher().set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
 	}
 
 	@Override

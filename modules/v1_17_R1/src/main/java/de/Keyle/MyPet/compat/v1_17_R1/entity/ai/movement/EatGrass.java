@@ -40,7 +40,7 @@ import java.util.function.Predicate;
 public class EatGrass implements AIGoal {
 
 	private final EntityMySheep entityMySheep;
-	private final World world;
+	private final Level world;
 	int eatTicks = 0;
 
 	private static final Predicate<IBlockData> GRASS = BlockStatePredicate.a(Blocks.aX);

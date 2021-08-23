@@ -20,22 +20,23 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit;
 
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
-import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
-import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
-import net.minecraft.world.entity.projectile.EntityThrownTrident;
 import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftTrident;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
+import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
+import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
+import de.Keyle.MyPet.api.util.Compat;
+import net.minecraft.world.entity.projectile.ThrownTrident;
+
 @Compat("v1_17_R1")
 public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProjectile {
 
-    public CraftMyPetTrident(CraftServer server, EntityThrownTrident entity) {
+    public CraftMyPetTrident(CraftServer server, ThrownTrident entity) {
         super(server, entity);
     }
 
@@ -67,11 +68,11 @@ public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProject
     @NotNull
     @Override
     public ItemStack getItem() {
-        return CraftItemStack.asBukkitCopy(getHandle().aq);
+        return CraftItemStack.asBukkitCopy(getHandle().tridentItem);
     }
 
     @Override
     public void setItem(@NotNull ItemStack itemStack) {
-        getHandle().aq = CraftItemStack.asNMSCopy(itemStack);
+        getHandle().tridentItem = CraftItemStack.asNMSCopy(itemStack);
     }
 }

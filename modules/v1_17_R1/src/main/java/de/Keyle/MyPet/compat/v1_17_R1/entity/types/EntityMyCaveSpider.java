@@ -23,17 +23,17 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.7F, height = 0.45F)
 public class EntityMyCaveSpider extends EntityMyPet {
 
-	private static final DataWatcherObject<Byte> UNUSED_WATCHER = DataWatcher.a(EntityMyCaveSpider.class, DataWatcherRegistry.a);
+	private static final EntityDataAccessor<Byte> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyCaveSpider.class, EntityDataSerializers.BYTE);
 
-	public EntityMyCaveSpider(World world, MyPet myPet) {
+	public EntityMyCaveSpider(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -53,9 +53,8 @@ public class EntityMyCaveSpider extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(UNUSED_WATCHER, (byte) 0);
+	protected void defineSynchedData() {
+		getEntityData().define(UNUSED_WATCHER, (byte) 0);
 	}
 
 	@Override

@@ -26,12 +26,12 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMule;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPosition;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.sounds.SoundEffects;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.IJumpable;
 import net.minecraft.world.entity.item.EntityItem;
@@ -54,15 +54,15 @@ import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyMule extends EntityMyPet implements IJumpable {
 
-	protected static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.i);
-	protected static final DataWatcherObject<Byte> SADDLE_WATCHER = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.a);
-	protected static final DataWatcherObject<Optional<UUID>> OWNER_WATCHER = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.o);
-	private static final DataWatcherObject<Boolean> CHEST_WATCHER = DataWatcher.a(EntityMyMule.class, DataWatcherRegistry.i);
+	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BOOLEAN);
+	protected static final EntityDataAccessor<Byte> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BYTE);
+	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.o);
+	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BOOLEAN);
 
 	int soundCounter = 0;
 	int rearCounter = -1;
 
-	public EntityMyMule(World world, MyPet myPet) {
+	public EntityMyMule(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -75,11 +75,11 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
 	 * 128 mouth open
 	 */
 	protected void applyVisual(int value, boolean flag) {
-		int i = this.getDataWatcher().get(SADDLE_WATCHER);
+		int i = this.getSynchedEntityData().get(SADDLE_WATCHER);
 		if (flag) {
-			this.getDataWatcher().set(SADDLE_WATCHER, (byte) (i | value));
+			this.getEntityData().set(SADDLE_WATCHER, (byte) (i | value));
 		} else {
-			this.getDataWatcher().set(SADDLE_WATCHER, (byte) (i & (~value)));
+			this.getEntityData().set(SADDLE_WATCHER, (byte) (i & (~value)));
 		}
 	}
 
@@ -100,30 +100,30 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Items.lL && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking() && canEquip()) {
 				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (itemStack.getItem() == Item.getItemOf(Blocks.bX) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && canEquip()) {
 				getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (itemStack.getItem() == Items.pq && getOwner().getPlayer().isSneaking() && canEquip()) {
 				if (getMyPet().hasChest()) {
 					EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
@@ -141,12 +141,12 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setChest(null);
 				getMyPet().setSaddle(null);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
-						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 					} catch (Error e) {
 						// TODO REMOVE
-						itemStack.damage(1, entityhuman, (entityhuman1) -> {
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
 								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -156,34 +156,34 @@ public class EntityMyMule extends EntityMyPet implements IJumpable {
 					}
 				}
 
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (Configuration.MyPet.Mule.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(SADDLE_WATCHER, (byte) 0);
-		getDataWatcher().register(OWNER_WATCHER, Optional.empty());
-		getDataWatcher().register(CHEST_WATCHER, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(SADDLE_WATCHER, (byte) 0);
+		getEntityData().define(OWNER_WATCHER, Optional.empty());
+		getEntityData().define(CHEST_WATCHER, false);
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getDataWatcher().set(CHEST_WATCHER, getMyPet().hasChest());
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
 		applyVisual(4, getMyPet().hasSaddle());
 	}
 

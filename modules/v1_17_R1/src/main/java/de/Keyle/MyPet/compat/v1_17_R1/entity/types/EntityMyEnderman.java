@@ -27,11 +27,11 @@ import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
@@ -50,10 +50,10 @@ import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
 
-	private static final DataWatcherObject<Optional<IBlockData>> BLOCK_WATCHER = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.h);
-	private static final DataWatcherObject<Boolean> SCREAMING_WATCHER = DataWatcher.a(EntityMyEnderman.class, DataWatcherRegistry.i);
+	private static final EntityDataAccessor<Optional<IBlockData>> BLOCK_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.h);
+	private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyEnderman(World world, MyPet myPet) {
+	public EntityMyEnderman(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -73,9 +73,9 @@ public class EntityMyEnderman extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
@@ -86,12 +86,12 @@ public class EntityMyEnderman extends EntityMyPet {
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setBlock(null);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
-						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 					} catch (Error e) {
 						// TODO REMOVE
-						itemStack.damage(1, entityhuman, (entityhuman1) -> {
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
 								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -101,26 +101,26 @@ public class EntityMyEnderman extends EntityMyPet {
 					}
 				}
 
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (getMyPet().getBlock() == null && Util.isBetween(1, 255, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(BLOCK_WATCHER, Optional.empty());
-		getDataWatcher().register(SCREAMING_WATCHER, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(BLOCK_WATCHER, Optional.empty());
+		getEntityData().define(SCREAMING_WATCHER, false);
 	}
 
 	@Override
@@ -132,8 +132,8 @@ public class EntityMyEnderman extends EntityMyPet {
 		} else {
 			block = Optional.empty();
 		}
-		getDataWatcher().set(BLOCK_WATCHER, block);
-		getDataWatcher().set(SCREAMING_WATCHER, getMyPet().isScreaming());
+		getEntityData().set(BLOCK_WATCHER, block);
+		getEntityData().set(SCREAMING_WATCHER, getMyPet().isScreaming());
 	}
 
 	@Override

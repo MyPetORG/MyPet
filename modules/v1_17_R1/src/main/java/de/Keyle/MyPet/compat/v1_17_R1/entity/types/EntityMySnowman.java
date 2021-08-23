@@ -24,11 +24,11 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySnowman;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,37 +43,37 @@ import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
 
-	private static final DataWatcherObject<Byte> SHEARED_WATCHER = DataWatcher.a(EntityMySnowman.class, DataWatcherRegistry.a);
+	private static final EntityDataAccessor<Byte> SHEARED_WATCHER = SynchedEntityData.defineId(EntityMySnowman.class, EntityDataSerializers.BYTE);
 
-	public EntityMySnowman(World world, MyPet myPet) {
+	public EntityMySnowman(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Item.getItemOf(Blocks.cS) && getMyPet().isSheared() && entityhuman.isSneaking()) {
 				getMyPet().setSheared(false);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (itemStack.getItem() == Items.pq && !getMyPet().isSheared() && entityhuman.isSneaking()) {
 				getMyPet().setSheared(true);
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
-						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 					} catch (Error e) {
 						// TODO REMOVE
-						itemStack.damage(1, entityhuman, (entityhuman1) -> {
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
 								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -82,22 +82,22 @@ public class EntityMySnowman extends EntityMyPet {
 						});
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(SHEARED_WATCHER, (byte) (getMyPet().isSheared() ? 0 : 16));
+		getEntityData().set(SHEARED_WATCHER, (byte) (getMyPet().isSheared() ? 0 : 16));
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 
-		getDataWatcher().register(SHEARED_WATCHER, (byte) 16);
+		getEntityData().define(SHEARED_WATCHER, (byte) 16);
 	}
 
 	@Override

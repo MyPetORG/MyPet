@@ -24,30 +24,30 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetDragonFireball;
-import net.minecraft.nbt.NBTTagCompound;
+import io.lumine.xikage.mythicmobs.utils.shadows.nbt.NBTTagCompound;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.projectile.EntityDragonFireball;
-import net.minecraft.world.level.World;
+import net.minecraft.world.entity.projectile.DragonFireball;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.royawesome.jlibnoise.MathHelper;
 
 @Compat("v1_17_R1")
-public class MyPetDragonFireball extends EntityDragonFireball implements EntityMyPetProjectile {
+public class MyPetDragonFireball extends DragonFireball implements EntityMyPetProjectile {
 
     protected float damage = 0;
     protected int deathCounter = 100;
     protected CraftMyPetDragonFireball bukkitEntity = null;
 
-    public MyPetDragonFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
+    public MyPetDragonFireball(Level world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2);
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     public void setDamage(float damage) {

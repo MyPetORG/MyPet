@@ -228,7 +228,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     }
 
     @Override
-    public LivingEntity getTarget() {
+    public LivingEntity getMyPetTarget() {
         if (target != null) {
             if (target.isAlive()) {
                 return (LivingEntity) target.getBukkitEntity();
@@ -239,7 +239,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     }
 
     @Override
-    public void setTarget(LivingEntity entity, TargetPriority priority) {
+    public void setMyPetTarget(LivingEntity entity, TargetPriority priority) {
         if (entity == null || entity.isDead() || entity instanceof ArmorStand || !(entity instanceof CraftLivingEntity)) {
             forgetTarget();
             return;

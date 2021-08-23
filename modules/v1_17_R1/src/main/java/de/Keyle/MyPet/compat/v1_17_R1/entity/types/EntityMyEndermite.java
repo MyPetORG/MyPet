@@ -28,7 +28,7 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 0.4F, height = 0.1F)
 public class EntityMyEndermite extends EntityMyPet {
 
-	public EntityMyEndermite(World world, MyPet myPet) {
+	public EntityMyEndermite(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 

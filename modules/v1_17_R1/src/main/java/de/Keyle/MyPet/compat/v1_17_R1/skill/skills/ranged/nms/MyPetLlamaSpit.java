@@ -45,7 +45,7 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
     protected float damage = 0;
     protected CraftMyPetLlamaSpit bukkitEntity = null;
 
-    public MyPetLlamaSpit(World world, EntityMyPet entityMyPet) {
+    public MyPetLlamaSpit(Level world, EntityMyPet entityMyPet) {
         super(EntityTypes.W, world);
         this.setShooter(entityMyPet);
         this.setPosition(entityMyPet.locX() - (double) (entityMyPet.getWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entityMyPet.aE * 0.017453292F),
@@ -55,7 +55,7 @@ public class MyPetLlamaSpit extends EntityLlamaSpit implements EntityMyPetProjec
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     @Override

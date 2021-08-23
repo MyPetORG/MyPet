@@ -27,21 +27,21 @@ import de.Keyle.MyPet.api.entity.types.MyBee;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.6F, height = 0.6f)
 public class EntityMyBee extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Byte> BEE_STATUS_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.a);
-	private static final DataWatcherObject<Integer> ANGER_WATCHER = DataWatcher.a(EntityMyBee.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Byte> BEE_STATUS_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.INT);
 
 	protected boolean isAngry = false;
 
-	public EntityMyBee(World world, MyPet myPet) {
+	public EntityMyBee(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -72,17 +72,17 @@ public class EntityMyBee extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(BEE_STATUS_WATCHER, (byte) 0);
-		getDataWatcher().register(ANGER_WATCHER, 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(BEE_STATUS_WATCHER, (byte) 0);
+		getEntityData().define(ANGER_WATCHER, 0);
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getDataWatcher().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
 		this.setBeeStatus(8, getMyPet().hasNectar());
 		this.setBeeStatus(4, getMyPet().hasStung());
 	}
@@ -111,8 +111,8 @@ public class EntityMyBee extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.Bee.CAN_GLIDE) {
-			if (!this.z && this.getMot().getY() < 0.0D) {
-				this.setMot(getMot().d(1, 0.6D, 1));
+			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
 	}
@@ -139,7 +139,7 @@ public class EntityMyBee extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int d(float f, float f1) {
+	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Bee.CAN_GLIDE) {
 			super.e(f, f1);
 		}

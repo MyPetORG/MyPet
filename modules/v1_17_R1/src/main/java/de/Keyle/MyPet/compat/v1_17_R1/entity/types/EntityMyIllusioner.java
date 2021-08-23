@@ -30,13 +30,13 @@ import de.Keyle.MyPet.api.entity.types.MyIllusioner;
 import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -52,10 +52,10 @@ import java.util.Arrays;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyIllusioner extends EntityMyPet {
 
-	protected static final DataWatcherObject<Boolean> RAID_WATCHER = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.i);
-	protected static final DataWatcherObject<Byte> SPELL_WATCHER = DataWatcher.a(EntityMyIllusioner.class, DataWatcherRegistry.a);
+	protected static final EntityDataAccessor<Boolean> RAID_WATCHER = SynchedEntityData.defineId(EntityMyIllusioner.class, EntityDataSerializers.BOOLEAN);
+	protected static final EntityDataAccessor<Byte> SPELL_WATCHER = SynchedEntityData.defineId(EntityMyIllusioner.class, EntityDataSerializers.BYTE);
 
-	public EntityMyIllusioner(World world, MyPet myPet) {
+	public EntityMyIllusioner(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -90,9 +90,9 @@ public class EntityMyIllusioner extends EntityMyPet {
 	 * false: no reaction on rightclick
 	 */
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null) {
@@ -110,12 +110,12 @@ public class EntityMyIllusioner extends EntityMyPet {
 					}
 				}
 				if (hadEquipment) {
-					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						try {
-							itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+							itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 						} catch (Error e) {
 							// TODO REMOVE
-							itemStack.damage(1, entityhuman, (entityhuman1) -> {
+							itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 								try {
 									CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 								} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -125,41 +125,41 @@ public class EntityMyIllusioner extends EntityMyPet {
 						}
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-				EquipmentSlot slot = EquipmentSlot.getSlotById(EntityInsentient.getEquipmentSlotForItem(itemStack).getSlotFlag());
+				EquipmentSlot slot = EquipmentSlot.getSlotById(Mob.getEquipmentSlotForItem(itemStack).getSlotFlag());
 				if (slot == EquipmentSlot.MainHand) {
 					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-					if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.b && !entityhuman.getAbilities().d) {
+					if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
 						entityitem.ap = 10;
 						entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
 						this.t.addEntity(entityitem);
 					}
 					getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
-					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-						itemStack.subtract(1);
+					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 						}
 					}
-					return EnumInteractionResult.b;
+					return InteractionResult.CONSUME;
 				}
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(RAID_WATCHER, false);
-		getDataWatcher().register(SPELL_WATCHER, (byte) 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(RAID_WATCHER, false);
+		getEntityData().define(SPELL_WATCHER, (byte) 0);
 	}
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(SPELL_WATCHER, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
+		getEntityData().set(SPELL_WATCHER, (byte) (getMyPet().getEquipment(EquipmentSlot.MainHand) != null ? 1 : 0));
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {

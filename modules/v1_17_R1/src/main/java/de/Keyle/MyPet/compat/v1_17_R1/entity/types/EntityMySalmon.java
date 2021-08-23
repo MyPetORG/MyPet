@@ -25,17 +25,17 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.7F, height = 0.4f)
 public class EntityMySalmon extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMySalmon.class, DataWatcherRegistry.i);
+	private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMySalmon.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMySalmon(World world, MyPet myPet) {
+	public EntityMySalmon(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -63,8 +63,8 @@ public class EntityMySalmon extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(FROM_BUCKET_WATCHER, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(FROM_BUCKET_WATCHER, false);
 	}
 }

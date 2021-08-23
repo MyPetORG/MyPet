@@ -28,7 +28,7 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 0.6F, height = 1.62F)
 public class EntityMyWitch extends EntityMyPet {
 
-	public EntityMyWitch(World world, MyPet myPet) {
+	public EntityMyWitch(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 

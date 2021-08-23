@@ -41,13 +41,13 @@ public class MyPetLargeFireball extends EntityLargeFireball implements EntityMyP
     protected int deathCounter = 100;
     protected CraftMyPetLargeFireball bukkitEntity = null;
 
-    public MyPetLargeFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
+    public MyPetLargeFireball(Level world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2, 1); // TODO: 2021/06/28 temp value (i) - 2021/08/19 is this done? Where is i here?
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     public void setDamage(float damage) {

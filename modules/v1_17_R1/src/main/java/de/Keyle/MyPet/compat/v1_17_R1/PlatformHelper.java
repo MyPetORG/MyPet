@@ -74,7 +74,7 @@ import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntityLightning;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
@@ -200,7 +200,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return getBlockBBsInBB(mcWorld, bb).isEmpty() && !mcWorld.containsLiquid(bb);
     }
 
-    public List getBlockBBsInBB(net.minecraft.world.level.World world, AxisAlignedBB axisalignedbb) {
+    public List getBlockBBsInBB(net.minecraft.world.level.Level world, AxisAlignedBB axisalignedbb) {
         UnsafeList unsafeList = new UnsafeList();
 
         int minX = MathHelper.floor(axisalignedbb.a);
@@ -322,7 +322,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
         {
             ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            int slot = EntityInsentient.getEquipmentSlotForItem(itemstack).getSlotFlag();
+            int slot = Mob.getEquipmentSlotForItem(itemstack).getSlotFlag();
             if (slot == 0) {
                 if (itemstack.getItem() instanceof ItemSword) {
                     return true;
@@ -374,7 +374,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public Entity getEntity(int id, World world) {
+    public Entity getEntity(int id, Level world) {
         net.minecraft.world.entity.Entity e = null;
 		try {
 			e = Bukkit.getScheduler().callSyncMethod(MyPetApi.getPlugin(), () -> 
@@ -396,7 +396,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return CraftItemStack.asNMSCopy(itemStack);
     }
 
-    public net.minecraft.world.level.World getWorldNMS(World world) {
+    public net.minecraft.world.level.World getWorldNMS(Level world) {
         return ((CraftWorld) world).getHandle();
     }
 

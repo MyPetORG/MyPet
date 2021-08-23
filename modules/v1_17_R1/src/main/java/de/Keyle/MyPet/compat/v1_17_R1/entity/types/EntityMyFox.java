@@ -30,12 +30,12 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyFox;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -55,13 +55,13 @@ import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyFox extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyFox.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Integer> FOX_TYPE_WATCHER = DataWatcher.a(EntityMyFox.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Byte> ACTIONS_WATCHER = DataWatcher.a(EntityMyFox.class, DataWatcherRegistry.a);
-	private static final DataWatcherObject<Optional<UUID>> FRIEND_A_WATCHER = DataWatcher.a(EntityMyFox.class, DataWatcherRegistry.o);
-	private static final DataWatcherObject<Optional<UUID>> FRIEND_B_WATCHER = DataWatcher.a(EntityMyFox.class, DataWatcherRegistry.o);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> FOX_TYPE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Byte> ACTIONS_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Optional<UUID>> FRIEND_A_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.o);
+	private static final EntityDataAccessor<Optional<UUID>> FRIEND_B_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.o);
 
-	public EntityMyFox(World world, MyPet myPet) {
+	public EntityMyFox(Level world, MyPet myPet) {
 		super(world, myPet);
 		this.getControllerLook().a(this, 60.0F, 30.0F);
 	}
@@ -82,38 +82,38 @@ public class EntityMyFox extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman)) {
 			if (itemStack != null && itemStack.getItem() != Items.a && canUseItem() && getOwner().getPlayer().isSneaking()) {
 				if (itemStack.getItem() != Items.pq && getOwner().getPlayer().isSneaking() && canEquip()) {
 					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand));
-					if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.b && !entityhuman.getAbilities().d) {
+					if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
 						entityitem.ap = 10;
 						entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
 						this.t.addEntity(entityitem);
 					}
 					getMyPet().setEquipment(EquipmentSlot.MainHand, CraftItemStack.asBukkitCopy(itemStack));
-					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-						itemStack.subtract(1);
+					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 						}
 					}
-					return EnumInteractionResult.b;
+					return InteractionResult.CONSUME;
 				} else if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-						itemStack.subtract(1);
+					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 						}
 					}
 					getMyPet().setBaby(false);
-					return EnumInteractionResult.b;
+					return InteractionResult.CONSUME;
 				} else if (itemStack.getItem() == Items.pq && getOwner().getPlayer().isSneaking() && canEquip()) {
 					boolean hadEquipment = false;
 					for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -128,12 +128,12 @@ public class EntityMyFox extends EntityMyPet {
 						}
 					}
 					if (hadEquipment) {
-						if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+						if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 							try {
-								itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+								itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 							} catch (Error e) {
 								// TODO REMOVE
-								itemStack.damage(1, entityhuman, (entityhuman1) -> {
+								itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 									try {
 										ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 									} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -143,27 +143,27 @@ public class EntityMyFox extends EntityMyPet {
 							}
 						}
 					}
-					return EnumInteractionResult.b;
+					return InteractionResult.CONSUME;
 				}
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(FRIEND_A_WATCHER, Optional.empty());
-		getDataWatcher().register(FRIEND_B_WATCHER, Optional.empty());
-		getDataWatcher().register(FOX_TYPE_WATCHER, 0);
-		getDataWatcher().register(ACTIONS_WATCHER, (byte) 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(FRIEND_A_WATCHER, Optional.empty());
+		getEntityData().define(FRIEND_B_WATCHER, Optional.empty());
+		getEntityData().define(FOX_TYPE_WATCHER, 0);
+		getEntityData().define(ACTIONS_WATCHER, (byte) 0);
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getDataWatcher().set(FOX_TYPE_WATCHER, getMyPet().getType().ordinal());
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(FOX_TYPE_WATCHER, getMyPet().getType().ordinal());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {

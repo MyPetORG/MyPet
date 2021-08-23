@@ -20,19 +20,20 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.util;
 
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_17_R1.util.inventory.ItemStackComparator;
-import net.minecraft.core.IRegistry;
-import net.minecraft.nbt.MojangsonParser;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.resources.MinecraftKey;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
 
 @Compat("v1_17_R1")
 public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
@@ -58,12 +59,12 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     @Override
     public void load(MaterialHolder material, String data) {
-        MinecraftKey key = new MinecraftKey(material.getId());
-        Item item = IRegistry.Z.get(key);
+        ResourceLocation key = new ResourceLocation(material.getId());
+        Item item = Registry.ITEM.get(key);
         //TODO AIR now?
         if (item == null) {
-            Block block = IRegistry.W.get(key);
-            item = block.getItem();
+            Block block = Registry.BLOCK.get(key);
+            item = block.asItem();
         }
         if (item == null) {
             return;
@@ -72,14 +73,14 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         net.minecraft.world.item.ItemStack is = new net.minecraft.world.item.ItemStack(item, 1);
 
         if (data != null) {
-            NBTTagCompound tag = null;
+            CompoundTag tag = null;
             String nbtString = data.trim();
             if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 try {
-                    tag = MojangsonParser.parse(nbtString);
+                    tag = TagParser.parseTag(nbtString);
                 } catch (Exception e) {
                     MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
-                    MyPetApi.getLogger().warning(item.getName() + " " + nbtString);
+                    MyPetApi.getLogger().warning(item.getDescriptionId() + " " + nbtString);
                 }
                 if (tag != null) {
                     is.setTag(tag);

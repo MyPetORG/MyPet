@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack;
 
+import org.bukkit.entity.LivingEntity;
+
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
@@ -27,20 +29,17 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTameableAnimal;
-import net.minecraft.world.entity.decoration.EntityArmorStand;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.decoration.ArmorStand;
 
 @Compat("v1_17_R1")
 public class MeleeAttack implements AIGoal {
 
 	MyPet myPet;
 	EntityMyPet petEntity;
-	EntityLiving targetEntity;
+	net.minecraft.world.entity.LivingEntity targetEntity;
 	double range;
 	float walkSpeedModifier;
 	private int ticksUntilNextHitLeft = 0;
@@ -63,12 +62,12 @@ public class MeleeAttack implements AIGoal {
 		if (!this.petEntity.hasTarget()) {
 			return false;
 		}
-		EntityLiving targetEntity = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+		net.minecraft.world.entity.LivingEntity targetEntity = this.petEntity.getTarget();
 
-		if (targetEntity instanceof EntityArmorStand) {
+		if (targetEntity instanceof ArmorStand) {
 			return false;
 		}
-		if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.h(targetEntity.locX(), targetEntity.getBoundingBox().b, targetEntity.locZ()) >= 20) {
+		if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.distanceToSqr(targetEntity.getX(), targetEntity.getBoundingBox().minY, targetEntity.getY()) >= 20) {
 			return false;
 		}
 
@@ -78,13 +77,13 @@ public class MeleeAttack implements AIGoal {
 				return false;
 			}
 			if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
-				if (targetEntity instanceof EntityTameableAnimal && ((EntityTameableAnimal) targetEntity).isTamed()) {
+				if (targetEntity instanceof TamableAnimal && ((TamableAnimal) targetEntity).isTame()) {
 					return false;
 				}
 				if (targetEntity instanceof EntityMyPet) {
 					return false;
 				}
-				if (targetEntity instanceof EntityPlayer) {
+				if (targetEntity instanceof ServerPlayer) {
 					return false;
 				}
 			}
@@ -97,10 +96,10 @@ public class MeleeAttack implements AIGoal {
 	public boolean shouldFinish() {
 		if (!this.petEntity.hasTarget() || !this.petEntity.canMove()) {
 			return true;
-		} else if (this.targetEntity.getBukkitEntity() != this.petEntity.getTarget()) {
+		} else if (this.targetEntity.getBukkitEntity() != this.petEntity.getMyPetTarget()) {
 			return true;
 		}
-		if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.h(targetEntity.locX(), targetEntity.getBoundingBox().b, targetEntity.locZ()) >= 20) {
+		if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.distanceToSqr(targetEntity.getX(), targetEntity.getBoundingBox().minY, targetEntity.getZ()) >= 20) {
 			return true;
 		}
 
@@ -110,13 +109,13 @@ public class MeleeAttack implements AIGoal {
 				return true;
 			}
 			if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
-				if (this.targetEntity instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.targetEntity).isTamed()) {
+				if (this.targetEntity instanceof TamableAnimal && ((TamableAnimal) this.targetEntity).isTame()) {
 					return true;
 				}
 				if (this.targetEntity instanceof EntityMyPet) {
 					return true;
 				}
-				return this.targetEntity instanceof EntityPlayer;
+				return this.targetEntity instanceof ServerPlayer;
 			}
 		}
 		return false;
@@ -125,7 +124,7 @@ public class MeleeAttack implements AIGoal {
 	@Override
 	public void start() {
 		this.petEntity.getPetNavigation().getParameters().addSpeedModifier("MeleeAttack", walkSpeedModifier);
-		this.petEntity.getPetNavigation().navigateTo((LivingEntity) this.targetEntity.getBukkitEntity());
+		this.petEntity.getPetNavigation().navigateTo((LivingEntity) this.targetEntity.getBukkitEntity()); //TODO Location?
 		this.timeUntilNextNavigationUpdate = 0;
 	}
 
@@ -138,17 +137,17 @@ public class MeleeAttack implements AIGoal {
 
 	@Override
 	public void tick() {
-		this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
+		this.petEntity.getLookControl().setLookAt(targetEntity, 30.0F, 30.0F);
 		if (--this.timeUntilNextNavigationUpdate <= 0) {
 			this.timeUntilNextNavigationUpdate = (4 + this.petEntity.getRandom().nextInt(7));
 			this.petEntity.getPetNavigation().navigateTo((LivingEntity) targetEntity.getBukkitEntity());
 		}
-		if (this.petEntity.h(targetEntity.locX(), targetEntity.getBoundingBox().b, targetEntity.locZ()) - (targetEntity.getHeight() * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
-			if (this.petEntity.getEntitySenses().a(targetEntity)) {
+		if (this.petEntity.distanceToSqr(targetEntity.getX(), targetEntity.getBoundingBox().minY, targetEntity.getZ()) - (targetEntity.getBbHeight() * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
+			if (this.petEntity.getSensing().hasLineOfSight(targetEntity)) {
 				this.ticksUntilNextHitLeft = ticksUntilNextHit;
 				if (this.petEntity instanceof MyPetEquipment) {
 					if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.MainHand) != null) {
-						this.petEntity.swingHand(EnumHand.a); // -> swingItem()
+						this.petEntity.swing(InteractionHand.MAIN_HAND); // -> swingItem()
 					}
 				}
 				this.petEntity.attack(targetEntity);

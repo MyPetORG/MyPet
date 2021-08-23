@@ -25,11 +25,11 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPanda;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
@@ -37,15 +37,15 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 1.825F, height = 1.25F)
 public class EntityMyPanda extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Integer> ASK_FOR_BAMBOO_TICKS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Integer> SNEEZE_PROGRESS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Integer> EATING_TICKS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Byte> MAIN_GENE_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.a);
-	private static final DataWatcherObject<Byte> HIDDEN_GENE_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.a);
-	private static final DataWatcherObject<Byte> ACTIONS_WATCHER = DataWatcher.a(EntityMyPanda.class, DataWatcherRegistry.a);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> ASK_FOR_BAMBOO_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> SNEEZE_PROGRESS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> EATING_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Byte> MAIN_GENE_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Byte> HIDDEN_GENE_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Byte> ACTIONS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.BYTE);
 
-	public EntityMyPanda(World world, MyPet myPet) {
+	public EntityMyPanda(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -65,45 +65,45 @@ public class EntityMyPanda extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman)) {
 			if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
 				if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-						itemStack.subtract(1);
+					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 						}
 					}
 					getMyPet().setBaby(false);
-					return EnumInteractionResult.b;
+					return InteractionResult.CONSUME;
 				}
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(ASK_FOR_BAMBOO_TICKS_WATCHER, 0);
-		getDataWatcher().register(SNEEZE_PROGRESS_WATCHER, 0);
-		getDataWatcher().register(MAIN_GENE_WATCHER, (byte) 0);
-		getDataWatcher().register(HIDDEN_GENE_WATCHER, (byte) 0);
-		getDataWatcher().register(ACTIONS_WATCHER, (byte) 0);
-		getDataWatcher().register(EATING_TICKS_WATCHER, 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(ASK_FOR_BAMBOO_TICKS_WATCHER, 0);
+		getEntityData().define(SNEEZE_PROGRESS_WATCHER, 0);
+		getEntityData().define(MAIN_GENE_WATCHER, (byte) 0);
+		getEntityData().define(HIDDEN_GENE_WATCHER, (byte) 0);
+		getEntityData().define(ACTIONS_WATCHER, (byte) 0);
+		getEntityData().define(EATING_TICKS_WATCHER, 0);
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getDataWatcher().set(MAIN_GENE_WATCHER, (byte) getMyPet().getMainGene().ordinal());
-		this.getDataWatcher().set(HIDDEN_GENE_WATCHER, (byte) getMyPet().getHiddenGene().ordinal());
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(MAIN_GENE_WATCHER, (byte) getMyPet().getMainGene().ordinal());
+		this.getEntityData().set(HIDDEN_GENE_WATCHER, (byte) getMyPet().getHiddenGene().ordinal());
 	}
 
 	/*

@@ -26,19 +26,19 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPosition;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyPet {
 
-	private static final DataWatcherObject<BlockPosition> TREASURE_POS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.l);
-	private static final DataWatcherObject<Boolean> GOT_FISH_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Integer> MOISTNESS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<BlockPosition> TREASURE_POS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.l);
+	private static final EntityDataAccessor<Boolean> GOT_FISH_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> MOISTNESS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.INT);
 
-	public EntityMyDolphin(World world, MyPet myPet) {
+	public EntityMyDolphin(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -66,11 +66,11 @@ public class EntityMyDolphin extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 
-		getDataWatcher().register(TREASURE_POS_WATCHER, BlockPosition.b);
-		getDataWatcher().register(GOT_FISH_WATCHER, false);
-		getDataWatcher().register(MOISTNESS_WATCHER, 2400);
+		getEntityData().define(TREASURE_POS_WATCHER, BlockPosition.b);
+		getEntityData().define(GOT_FISH_WATCHER, false);
+		getEntityData().define(MOISTNESS_WATCHER, 2400);
 	}
 }

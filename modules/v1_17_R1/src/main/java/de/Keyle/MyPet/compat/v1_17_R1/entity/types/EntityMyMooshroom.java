@@ -26,11 +26,11 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMooshroom;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -40,10 +40,10 @@ import org.bukkit.Bukkit;
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<String> COLOR_WATCHER = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.d);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<String> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.d);
 
-	public EntityMyMooshroom(World world, MyPet myPet) {
+	public EntityMyMooshroom(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -63,59 +63,59 @@ public class EntityMyMooshroom extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (itemStack != null) {
 			if (itemStack.getItem().equals(Items.nc)) {
 				if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
-					final int itemInHandIndex = entityhuman.getInventory().k;
+					final int itemInHandIndex = entityhuman.getInventory().selected;
 					ItemStack is = new ItemStack(Items.nd);
 					final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
 					entityhuman.getInventory().setItem(itemInHandIndex, is);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.getInventory().setItem(itemInHandIndex, oldIs), 2L);
 
 				} else {
-					itemStack.subtract(1);
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, new ItemStack(Items.nd));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.nd));
 					} else {
-						if (!entityhuman.getInventory().pickup(new ItemStack(Items.nd))) {
+						if (!entityhuman.getInventory().add(new ItemStack(Items.nd))) {
 							entityhuman.drop(new ItemStack(Items.pG), true);
 						}
 					}
-					return EnumInteractionResult.b;
+					return InteractionResult.CONSUME;
 				}
 			}
 			if (getOwner().equals(entityhuman) && canUseItem()) {
 				if (Configuration.MyPet.Mooshroom.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-						itemStack.subtract(1);
+					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 						}
 					}
 					getMyPet().setBaby(false);
-					return EnumInteractionResult.b;
+					return InteractionResult.CONSUME;
 				}
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(COLOR_WATCHER, "red");
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(COLOR_WATCHER, "red");
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getDataWatcher().set(COLOR_WATCHER, getMyPet().getType().getType());
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());
 	}
 
 	@Override

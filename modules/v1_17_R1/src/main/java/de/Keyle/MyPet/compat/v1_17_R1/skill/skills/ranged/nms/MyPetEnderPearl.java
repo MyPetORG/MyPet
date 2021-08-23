@@ -40,13 +40,13 @@ public class MyPetEnderPearl extends EntityEnderPearl implements EntityMyPetProj
     protected float damage = 0;
     protected CraftMyPetEnderPearl bukkitEntity = null;
 
-    public MyPetEnderPearl(World world, EntityMyPet entityLiving) {
+    public MyPetEnderPearl(Level world, EntityMyPet entityLiving) {
         super(world, entityLiving);
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     public void setDamage(float damage) {

@@ -41,13 +41,13 @@ public class MyPetWitherSkull extends EntityWitherSkull implements EntityMyPetPr
     protected int deathCounter = 100;
     protected CraftMyPetWitherSkull bukkitEntity = null;
 
-    public MyPetWitherSkull(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
+    public MyPetWitherSkull(Level world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2);
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     public void setDamage(float damage) {

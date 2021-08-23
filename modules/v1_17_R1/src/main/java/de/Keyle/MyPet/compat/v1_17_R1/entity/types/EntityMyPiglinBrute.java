@@ -32,14 +32,14 @@ import de.Keyle.MyPet.api.entity.types.MyPiglinBrute;
 import de.Keyle.MyPet.api.util.NMSUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffects;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -57,9 +57,9 @@ import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglinBrute extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPiglinBrute.class, DataWatcherRegistry.i);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPiglinBrute.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyPiglinBrute(World world, MyPet myPet) {
+	public EntityMyPiglinBrute(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -81,9 +81,9 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == EnumInteractionResult.b) {
-			return EnumInteractionResult.b;
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == InteractionResult.CONSUME) {
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
@@ -101,12 +101,12 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 					}
 				}
 				if (hadEquipment) {
-					if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						try {
-							itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+							itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 						} catch (Error e) {
 							// TODO REMOVE
-							itemStack.damage(1, entityhuman, (entityhuman1) -> {
+							itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 								try {
 									ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 								} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -116,42 +116,42 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 						}
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-				EquipmentSlot slot = EquipmentSlot.getSlotById(EntityInsentient.getEquipmentSlotForItem(itemStack).getSlotFlag());
+				EquipmentSlot slot = EquipmentSlot.getSlotById(Mob.getEquipmentSlotForItem(itemStack).getSlotFlag());
 				ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-				if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.b && !entityhuman.getAbilities().d) {
+				if (itemInSlot != null && itemInSlot.getItem() != Items.a && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
 					entityitem.ap = 10;
 					entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
 					this.t.addEntity(entityitem);
 				}
 				getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (Configuration.MyPet.PiglinBrute.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false); // is baby
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false); // is baby
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {

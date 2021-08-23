@@ -26,11 +26,11 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -48,12 +48,12 @@ import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
 
-	protected static final DataWatcherObject<Byte> UNUSED_WATCHER = DataWatcher.a(EntityMyIronGolem.class, DataWatcherRegistry.a);
+	protected static final EntityDataAccessor<Byte> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyIronGolem.class, EntityDataSerializers.BYTE);
 
 	int flowerCounter = 0;
 	boolean flower = false;
 
-	public EntityMyIronGolem(World world, MyPet myPet) {
+	public EntityMyIronGolem(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -89,15 +89,15 @@ public class EntityMyIronGolem extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(UNUSED_WATCHER, (byte) 0); // N/A
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(UNUSED_WATCHER, (byte) 0); // N/A
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (itemStack.getItem() == Items.mq) {
@@ -115,13 +115,13 @@ public class EntityMyIronGolem extends EntityMyPet {
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Blocks.bw.getItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			} else if (itemStack.getItem() == Items.pq && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
 				EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
 				entityitem.ap = 10;
@@ -130,12 +130,12 @@ public class EntityMyIronGolem extends EntityMyPet {
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setFlower(null);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
-						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 					} catch (Error e) {
 						// TODO REMOVE
-						itemStack.damage(1, entityhuman, (entityhuman1) -> {
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
 								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -145,10 +145,10 @@ public class EntityMyIronGolem extends EntityMyPet {
 					}
 				}
 
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override

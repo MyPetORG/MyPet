@@ -40,13 +40,13 @@ public class MyPetSnowball extends EntitySnowball implements EntityMyPetProjecti
     protected float damage = 0;
     protected CraftMyPetSnowball bukkitEntity = null;
 
-    public MyPetSnowball(World world, EntityMyPet entityLiving) {
+    public MyPetSnowball(Level world, EntityMyPet entityLiving) {
         super(world, entityLiving);
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     public void setDamage(float damage) {

@@ -26,18 +26,18 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTropicalFish;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.5F, height = 0.4f)
 public class EntityMyTropicalFish extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> FROM_BUCKET_WATCHER = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyTropicalFish.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMyTropicalFish.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyTropicalFish.class, EntityDataSerializers.INT);
 
-	public EntityMyTropicalFish(World world, MyPet myPet) {
+	public EntityMyTropicalFish(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -71,13 +71,13 @@ public class EntityMyTropicalFish extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
+		getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(FROM_BUCKET_WATCHER, false);
-		getDataWatcher().register(VARIANT_WATCHER, 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(FROM_BUCKET_WATCHER, false);
+		getEntityData().define(VARIANT_WATCHER, 0);
 	}
 }

@@ -26,11 +26,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTurtle;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPosition;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
@@ -38,15 +38,15 @@ import net.minecraft.world.level.World;
 @EntitySize(width = 1.2F, height = 0.4F)
 public class EntityMyTurtle extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<BlockPosition> HOME_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.l);
-	private static final DataWatcherObject<Boolean> HAS_EGG_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Boolean> UNUSED_WATCHER_1 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<BlockPosition> TRAVEL_POS_WATCHER = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.l);
-	private static final DataWatcherObject<Boolean> UNUSED_WATCHER_2 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Boolean> UNUSED_WATCHER_3 = DataWatcher.a(EntityMyTurtle.class, DataWatcherRegistry.i);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<BlockPosition> HOME_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.l);
+	private static final EntityDataAccessor<Boolean> HAS_EGG_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<BlockPosition> TRAVEL_POS_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.l);
+	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_3 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyTurtle(World world, MyPet myPet) {
+	public EntityMyTurtle(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -66,41 +66,41 @@ public class EntityMyTurtle extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
+	public InteractionResult handlePlayerInteraction(EntityHuman entityhuman, InteractionHand enumhand, ItemStack itemStack) {
 		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
 				getMyPet().setBaby(false);
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false);
-		getDataWatcher().register(HOME_WATCHER, BlockPosition.b);
-		getDataWatcher().register(HAS_EGG_WATCHER, false);
-		getDataWatcher().register(TRAVEL_POS_WATCHER, BlockPosition.b);
-		getDataWatcher().register(UNUSED_WATCHER_2, false);
-		getDataWatcher().register(UNUSED_WATCHER_3, false);
-		getDataWatcher().register(UNUSED_WATCHER_1, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(HOME_WATCHER, BlockPosition.b);
+		getEntityData().define(HAS_EGG_WATCHER, false);
+		getEntityData().define(TRAVEL_POS_WATCHER, BlockPosition.b);
+		getEntityData().define(UNUSED_WATCHER_2, false);
+		getEntityData().define(UNUSED_WATCHER_3, false);
+		getEntityData().define(UNUSED_WATCHER_1, false);
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 	}
 
 	@Override

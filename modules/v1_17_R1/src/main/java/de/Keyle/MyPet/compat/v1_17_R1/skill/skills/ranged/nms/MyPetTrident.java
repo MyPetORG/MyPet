@@ -36,13 +36,13 @@ public class MyPetTrident extends EntityThrownTrident implements EntityMyPetProj
 
     protected CraftMyPetTrident bukkitEntity = null;
 
-    public MyPetTrident(World world, EntityMyPet entityMyPet) {
+    public MyPetTrident(Level world, EntityMyPet entityMyPet) {
         super(world, entityMyPet, new ItemStack(Items.sO));
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     @Override

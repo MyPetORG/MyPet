@@ -20,23 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.util.inventory;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.Compat;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.IInventory;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.inventory.Container;
-import net.minecraft.world.inventory.Containers;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.World;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -55,16 +42,28 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.Compat;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.item.EntityItem;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 @Compat("v1_17_R1")
-public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
+public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
 
 	private String inventoryName = "";
-	private final NonNullList<ItemStack> items = NonNullList.a(64, ItemStack.b);
+	private final NonNullList<ItemStack> items = NonNullList.a(64, ItemStack.EMPTY);
 	private int size = 0;
 	private int stackSize = 64;
 	private final List<HumanEntity> transaction = new ArrayList<>();
@@ -91,7 +90,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 		size *= 9;
 		this.size = Util.clamp(size, 9, 54);
 		for (int i = items.size(); i < this.size; i++) {
-			items.set(i, ItemStack.b);
+			items.set(i, ItemStack.EMPTY);
 		}
 	}
 
@@ -113,7 +112,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 		if (i < size) {
 			return items.get(i);
 		}
-		return ItemStack.b;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -151,7 +150,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 		}
 		if (itemAdd.getAmount() > 0) {
 			for (int i = 0; i < this.getSize(); i++) {
-				if (getItem(i) == ItemStack.b) {
+				if (getItem(i) == ItemStack.EMPTY) {
 					if (itemAdd.getAmount() <= itemAdd.getMaxStackSize()) {
 						setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
 						itemAdd.setAmount(0);
@@ -190,7 +189,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 
 	@Override
 	public void dropContentAt(Location loc) {
-		World world = ((CraftWorld) loc.getWorld()).getHandle();
+		Level world = ((CraftWorld) loc.getWorld()).getHandle();
 		for (int i = 0; i < this.getSize(); i++) {
 			ItemStack is = this.splitWithoutUpdate(i);
 			if (is != null && !is.isEmpty()) {
@@ -204,21 +203,21 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 
 	@Override
 	public ItemStack splitStack(int slot, int subtract) {
-		if (slot < size && items.get(slot) != ItemStack.b) {
+		if (slot < size && items.get(slot) != ItemStack.EMPTY) {
 			if (items.get(slot).getCount() <= subtract) {
 				ItemStack itemStack = items.get(slot);
-				items.set(slot, ItemStack.b);
+				items.set(slot, ItemStack.EMPTY);
 				return itemStack;
 			} else {
 				ItemStack splittedStack = items.get(slot).cloneAndSubtract(subtract);
 
 				if (items.get(slot).getCount() == 0) {
-					items.set(slot, ItemStack.b);
+					items.set(slot, ItemStack.EMPTY);
 				}
 				return splittedStack;
 			}
 		}
-		return ItemStack.b;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -235,7 +234,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 		List<TagCompound> itemList = new ArrayList<>();
 		for (int i = 0; i < this.items.size(); i++) {
 			ItemStack itemStack = this.items.get(i);
-			if (itemStack != ItemStack.b) {
+			if (itemStack != ItemStack.EMPTY) {
 				TagCompound item = ItemStackNBTConverter.itemStackToCompound(itemStack);
 				item.getCompoundData().put("Slot", new TagByte((byte) i));
 				itemList.add(item);
@@ -272,11 +271,11 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 		this.transaction.remove(who);
 		if (items.size() > this.size) {
 			for (int counterOutside = items.size() - 1; counterOutside >= this.size; counterOutside--) {
-				if (items.get(counterOutside) != ItemStack.b) {
+				if (items.get(counterOutside) != ItemStack.EMPTY) {
 					for (int counterInside = 0; counterInside < size; counterInside++) {
-						if (items.get(counterInside) == ItemStack.b) {
+						if (items.get(counterInside) == ItemStack.EMPTY) {
 							items.set(counterInside, items.get(counterOutside));
-							items.set(counterOutside, ItemStack.b);
+							items.set(counterOutside, ItemStack.EMPTY);
 						}
 					}
 				}
@@ -357,13 +356,13 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
 
 	@Override
 	public ItemStack splitWithoutUpdate(int i) {
-		if (items.get(i) != ItemStack.b) {
+		if (items.get(i) != ItemStack.EMPTY) {
 			ItemStack itemstack = items.get(i);
 
-			items.set(i, ItemStack.b);
+			items.set(i, ItemStack.EMPTY);
 			return itemstack;
 		}
-		return ItemStack.b;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

@@ -20,19 +20,20 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit;
 
+import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEgg;
+
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
-import net.minecraft.world.entity.projectile.EntityEgg;
-import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEgg;
+import net.minecraft.world.entity.projectile.ThrownEgg;
 
 @Compat("v1_17_R1")
 public class CraftMyPetEgg extends CraftEgg implements CraftMyPetProjectile {
 
-    public CraftMyPetEgg(CraftServer server, EntityEgg entity) {
+    public CraftMyPetEgg(CraftServer server, ThrownEgg entity) {
         super(server, entity);
     }
 

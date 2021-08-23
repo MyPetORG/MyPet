@@ -24,19 +24,19 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCreeper;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreeper extends EntityMyPet {
 
-	private static final DataWatcherObject<Integer> FUSE_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Boolean> POWERED_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Boolean> UNUSED_WATCHER = DataWatcher.a(EntityMyCreeper.class, DataWatcherRegistry.i);
+	private static final EntityDataAccessor<Integer> FUSE_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> POWERED_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyCreeper(World world, MyPet myPet) {
+	public EntityMyCreeper(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -56,16 +56,16 @@ public class EntityMyCreeper extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(FUSE_WATCHER, -1);
-		getDataWatcher().register(POWERED_WATCHER, false);
-		getDataWatcher().register(UNUSED_WATCHER, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(FUSE_WATCHER, -1);
+		getEntityData().define(POWERED_WATCHER, false);
+		getEntityData().define(UNUSED_WATCHER, false);
 	}
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(POWERED_WATCHER, getMyPet().isPowered());
+		getEntityData().set(POWERED_WATCHER, getMyPet().isPowered());
 	}
 
 	@Override

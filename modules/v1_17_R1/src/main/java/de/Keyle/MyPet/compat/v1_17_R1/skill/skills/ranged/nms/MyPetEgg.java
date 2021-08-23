@@ -43,13 +43,13 @@ public class MyPetEgg extends EntityEgg implements EntityMyPetProjectile {
     protected float damage = 0;
     protected CraftMyPetEgg bukkitEntity = null;
 
-    public MyPetEgg(World world, EntityMyPet entityLiving) {
+    public MyPetEgg(Level world, EntityMyPet entityLiving) {
         super(world, entityLiving);
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     public void setDamage(float damage) {

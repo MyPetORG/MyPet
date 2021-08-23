@@ -25,20 +25,20 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySlime;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.entity.EntityPose;
 import net.minecraft.world.level.World;
 
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMySlime extends EntityMyPet {
 
-	private static final DataWatcherObject<Integer> SIZE_WATCHER = DataWatcher.a(EntityMySlime.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<Integer> SIZE_WATCHER = SynchedEntityData.defineId(EntityMySlime.class, EntityDataSerializers.INT);
 
 	int jumpDelay;
 
-	public EntityMySlime(World world, MyPet myPet) {
+	public EntityMySlime(Level world, MyPet myPet) {
 		super(world, myPet);
 		this.jumpDelay = (this.Q.nextInt(20) + 10);
 	}
@@ -60,15 +60,15 @@ public class EntityMySlime extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(SIZE_WATCHER, 1); //size
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(SIZE_WATCHER, 1); //size
 	}
 
 	@Override
 	public void updateVisuals() {
 		int size = Math.max(1, getMyPet().getSize());
-		getDataWatcher().set(SIZE_WATCHER, size);
+		getEntityData().set(SIZE_WATCHER, size);
 		this.updateSize();
 		if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
 			petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
