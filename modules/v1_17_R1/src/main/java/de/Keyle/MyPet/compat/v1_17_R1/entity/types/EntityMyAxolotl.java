@@ -32,6 +32,7 @@ import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,8 +42,8 @@ import org.bukkit.Bukkit;
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyAxolotl extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<String> COLOR_WATCHER = DataWatcher.a(EntityMyMooshroom.class, DataWatcherRegistry.d);
+    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyAxolotl.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyAxolotl.class, DataWatcherRegistry.b);
 
     public EntityMyAxolotl(World world, MyPet myPet) {
         super(world, myPet);
@@ -67,13 +68,13 @@ public class EntityMyAxolotl extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().register(AGE_WATCHER, false);
-        getDataWatcher().register(COLOR_WATCHER, "Wild");
+        getDataWatcher().register(VARIANT_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
         this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-        this.getDataWatcher().set(COLOR_WATCHER, getMyPet().getType().getType());
+        this.getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
     @Override
