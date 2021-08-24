@@ -44,7 +44,7 @@ public class EntityMyHoglin extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.hoglin.death";
 	}
 

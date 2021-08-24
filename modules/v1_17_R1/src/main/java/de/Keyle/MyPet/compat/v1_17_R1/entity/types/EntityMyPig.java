@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
-
 import java.lang.reflect.InvocationTargetException;
 
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
@@ -33,6 +31,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPig;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -58,7 +57,7 @@ public class EntityMyPig extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.pig.death";
 	}
 
@@ -78,12 +77,12 @@ public class EntityMyPig extends EntityMyPet {
 			if (itemStack != null) {
 				if (itemStack.getItem() == Items.LEAD) {
 					((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEntityLinkPacket(this, null));
-					entityhuman.a(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+					entityhuman.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
 					new BukkitRunnable() {
 						@Override
 						public void run() {
 							if (entityhuman instanceof ServerPlayer) {
-								entityhuman.a(InteractionHand.OFF_HAND, itemStack);//TODO
+								entityhuman.setItemInHand(InteractionHand.OFF_HAND, itemStack);//TODO
 								Player p = (Player) entityhuman.getBukkitEntity();
 								if (!p.isOnline()) {
 									p.saveData();
@@ -125,7 +124,7 @@ public class EntityMyPig extends EntityMyPet {
 						// TODO REMOVE
 						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
-								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}

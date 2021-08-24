@@ -33,7 +33,7 @@ public class EntityMySpider extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.spider.death";
 	}
 

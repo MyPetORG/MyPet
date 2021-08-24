@@ -35,15 +35,15 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyDrowned;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -68,7 +68,7 @@ public class EntityMyDrowned extends EntityMyPet {
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.drowned.death" + (isInWater() ? "_water" : "");
 	}
 
@@ -122,7 +122,7 @@ public class EntityMyDrowned extends EntityMyPet {
 							// TODO REMOVE
 							itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 								try {
-									ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+									CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 								} catch (IllegalAccessException | InvocationTargetException ex) {
 									ex.printStackTrace();
 								}

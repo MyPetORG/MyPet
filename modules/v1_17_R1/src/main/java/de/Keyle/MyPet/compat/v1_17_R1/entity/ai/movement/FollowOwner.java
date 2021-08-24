@@ -108,7 +108,7 @@ public class FollowOwner implements AIGoal {
 		}
 		
 		//Look at Owner
-		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot());
+		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot()); //TODO MIGHT be wrong (also in different places) ->getMaxHeadXRot
 
 		//Teleportation
 		if (this.petEntity.canMove()) {
@@ -138,7 +138,7 @@ public class FollowOwner implements AIGoal {
 			if (--this.setPathTimer <= 0) {
 				this.setPathTimer = 10;
 				if (this.nav.navigateTo(owner.getBukkitEntity())) { //TODO 2021/08/19 Seemingly not doing that properly?
-					applyWalkSpeed(); //It get's called so it returned true
+					applyWalkSpeed(); //It get's called so it returned true}
 				}
 			}
 		}

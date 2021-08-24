@@ -507,7 +507,7 @@ public class MyPetEntityListener implements Listener {
                         if (deadBehaviorSkill.getBehavior() == BehaviorMode.Duel && killerBehaviorSkill.getBehavior() == BehaviorMode.Duel) {
                             MyPetMinecraftEntity myPetEntity = ((MyPetBukkitEntity) deadEntity).getHandle();
 
-                            if (e.getDamager().equals(myPetEntity.getTarget())) {
+                            if (e.getDamager().equals(myPetEntity.getMyPetTarget())) {
                                 myPet.setRespawnTime(10);
                                 killerMyPet.setHealth(Double.MAX_VALUE);
                             }

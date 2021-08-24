@@ -200,7 +200,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
 	@Override
 	public void setTarget(LivingEntity target, TargetPriority priority) {
-		getHandle().setTarget(target, priority);
+		getHandle().setMyPetTarget(target, priority);
 	}
 
 	@Override

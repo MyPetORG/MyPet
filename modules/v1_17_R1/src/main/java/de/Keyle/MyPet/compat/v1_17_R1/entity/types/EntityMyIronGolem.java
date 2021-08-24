@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -73,7 +74,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.iron_golem.death";
 	}
 
@@ -99,7 +100,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 			return InteractionResult.CONSUME;
 		}
 
-		if (itemStack.getItem() == Items.mq) {
+		if (itemStack.getItem() == Items.IRON_INGOT) {
 			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 				if (getMyPet().getStatus() == MyPet.PetState.Here) {
 					super.setHealth(this.getHealth() + 0.0001F);
@@ -112,7 +113,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 			}, 10L);
 		}
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Blocks.bw.getItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+			if (itemStack.getItem() == Blocks.POPPY.asItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
@@ -136,7 +137,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 						// TODO REMOVE
 						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
-								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}

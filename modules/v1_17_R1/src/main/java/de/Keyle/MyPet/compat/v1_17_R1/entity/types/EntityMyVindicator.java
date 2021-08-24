@@ -63,7 +63,7 @@ public class EntityMyVindicator extends EntityMyPet {
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.vindicator.death";
 	}
 

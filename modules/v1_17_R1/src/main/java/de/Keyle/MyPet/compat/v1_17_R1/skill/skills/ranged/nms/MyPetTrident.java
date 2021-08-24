@@ -65,7 +65,7 @@ public class MyPetTrident extends ThrownTrident implements EntityMyPetProjectile
     public void tick() {
         try {
             super.tick();
-            if (this.b) {	//TODO
+            if (this.inGround) {	//TODO
                 discard();
             }
         } catch (Exception e) {

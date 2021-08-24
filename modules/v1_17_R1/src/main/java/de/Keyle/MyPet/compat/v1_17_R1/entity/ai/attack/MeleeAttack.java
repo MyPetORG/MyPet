@@ -125,7 +125,7 @@ public class MeleeAttack implements AIGoal {
 	@Override
 	public void start() {
 		this.petEntity.getPetNavigation().getParameters().addSpeedModifier("MeleeAttack", walkSpeedModifier);
-		this.petEntity.getPetNavigation().navigateTo((LivingEntity) this.targetEntity.getBukkitEntity()); //TODO Location?
+		this.petEntity.getPetNavigation().navigateTo((LivingEntity) this.targetEntity.getBukkitEntity()); 
 		this.timeUntilNextNavigationUpdate = 0;
 	}
 

@@ -30,11 +30,12 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTraderLlama;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.tags.TagsItem;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -62,7 +63,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.llama.death";
 	}
 
@@ -84,7 +85,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 		}
 
 		if (itemStack != null && canUseItem()) {
-			if (TagsItem.g.isTagged(itemStack.getItem()) && !getMyPet().hasDecor() && getOwner().getPlayer().isSneaking() && canEquip()) {
+			if (ItemTags.CARPETS.contains(itemStack.getItem()) && !getMyPet().hasDecor() && getOwner().getPlayer().isSneaking() && canEquip()) {
 				getMyPet().setDecor(CraftItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
@@ -93,7 +94,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Blocks.CHEST.getItem() && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
+			} else if (itemStack.getItem() == Blocks.CHEST.asItem() && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
 				getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
@@ -126,7 +127,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 						// TODO REMOVE
 						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
-								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}
@@ -168,7 +169,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 		if (getMyPet().hasDecor()) {
 			ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
 			Block block = Block.byItem(is.getItem());
-			int color = block instanceof WoolCarpetBlock ? ((WoolCarpetBlock) block).c().getColorIndex() : 0;
+			int color = block instanceof WoolCarpetBlock ? ((WoolCarpetBlock) block).getColor().getId() : 0;
 			this.getEntityData().set(COLOR_WATCHER, color);
 		} else {
 			this.getEntityData().set(COLOR_WATCHER, -1);

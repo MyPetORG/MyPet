@@ -37,9 +37,9 @@ import net.minecraft.world.level.Level;
 public class EntityMyParrot extends EntityMyPet {
 	
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.INTYTE);
+	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.OPTIONAL_UUID);
-	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEANNT);
+	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.INT);
 
 	public EntityMyParrot(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -54,7 +54,7 @@ public class EntityMyParrot extends EntityMyPet {
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.parrot.death";
 	}
 
@@ -101,7 +101,7 @@ public class EntityMyParrot extends EntityMyPet {
 	@Override
 	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
-			super.e(f, f1);
+			super.calculateFallDamage(f, f1);
 		}
 		return 0;
 	}

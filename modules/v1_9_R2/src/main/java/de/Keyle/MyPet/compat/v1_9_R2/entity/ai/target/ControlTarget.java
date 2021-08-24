@@ -129,7 +129,7 @@ public class ControlTarget implements AIGoal {
             return true;
         }
 
-        EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+        EntityLiving target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
         if (target.world != petEntity.world) {
             return true;
@@ -143,7 +143,7 @@ public class ControlTarget implements AIGoal {
 
     @Override
     public void start() {
-        petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Control);
+        petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Control);
     }
 
     @Override

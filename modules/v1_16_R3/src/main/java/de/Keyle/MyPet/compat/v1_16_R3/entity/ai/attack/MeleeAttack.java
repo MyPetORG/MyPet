@@ -59,7 +59,7 @@ public class MeleeAttack implements AIGoal {
         if (!this.petEntity.hasTarget()) {
             return false;
         }
-        EntityLiving targetEntity = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+        EntityLiving targetEntity = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
         if (targetEntity instanceof EntityArmorStand) {
             return false;
@@ -93,7 +93,7 @@ public class MeleeAttack implements AIGoal {
     public boolean shouldFinish() {
         if (!this.petEntity.hasTarget() || !this.petEntity.canMove()) {
             return true;
-        } else if (this.targetEntity.getBukkitEntity() != this.petEntity.getTarget()) {
+        } else if (this.targetEntity.getBukkitEntity() != this.petEntity.getMyPetTarget()) {
             return true;
         }
         if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.h(targetEntity.locX(), targetEntity.getBoundingBox().minY, targetEntity.locZ()) >= 20) {

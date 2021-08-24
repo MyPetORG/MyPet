@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetSmallFireball;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,7 +33,6 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.royawesome.jlibnoise.MathHelper;
 
 @Compat("v1_17_R1")
 public class MyPetSmallFireball extends SmallFireball implements EntityMyPetProjectile {
@@ -59,10 +59,10 @@ public class MyPetSmallFireball extends SmallFireball implements EntityMyPetProj
         d0 += this.random.nextGaussian() * 0.2D;
         d1 += this.random.nextGaussian() * 0.2D;
         d2 += this.random.nextGaussian() * 0.2D;
-        double d3 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-        this.b = (d0 / d3 * 0.1D);	//TODO
-        this.c = (d1 / d3 * 0.1D);
-        this.d = (d2 / d3 * 0.1D);
+        double d3 = Mth.sqrt((float)(d0 * d0 + d1 * d1 + d2 * d2));
+        this.xPower = (d0 / d3 * 0.1D);	//TODO
+        this.yPower = (d1 / d3 * 0.1D);
+        this.zPower = (d2 / d3 * 0.1D);
     }
 
     @Override

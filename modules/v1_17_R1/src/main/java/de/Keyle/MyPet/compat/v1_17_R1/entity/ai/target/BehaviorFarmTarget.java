@@ -20,6 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
@@ -28,20 +32,16 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.monster.EntityMonster;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.monster.Monster;
 
 @Compat("v1_17_R1")
 public class BehaviorFarmTarget implements AIGoal {
 
 	private final MyPet myPet;
 	private final EntityMyPet petEntity;
-	private final EntityPlayer petOwnerEntity;
-	private EntityLiving target;
+	private final ServerPlayer petOwnerEntity;
+	private net.minecraft.world.entity.LivingEntity target;
 	private final float range;
 
 	public BehaviorFarmTarget(EntityMyPet petEntity, float range) {
@@ -67,8 +67,8 @@ public class BehaviorFarmTarget implements AIGoal {
 			return false;
 		}
 
-		for (EntityMonster entityMonster : this.petEntity.t.a(EntityMonster.class, this.petOwnerEntity.getBoundingBox().grow(range, range, range))) {
-			if (!entityMonster.isAlive() || petEntity.f(entityMonster) > 91) {
+		for (Monster entityMonster : this.petEntity.level.getEntitiesOfClass(Monster.class, this.petOwnerEntity.getBoundingBox().inflate(range, range, range))) {
+			if (!entityMonster.isAlive() || petEntity.distanceToSqr(entityMonster) > 91) {
 				continue;
 			}
 			if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityMonster.getBukkitEntity())) {
@@ -88,7 +88,7 @@ public class BehaviorFarmTarget implements AIGoal {
 		if (!this.petEntity.hasTarget()) {
 			return true;
 		}
-		EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+		net.minecraft.world.entity.LivingEntity target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
 		if (!target.isAlive()) {
 			return true;
@@ -98,16 +98,16 @@ public class BehaviorFarmTarget implements AIGoal {
 			return true;
 		} else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
 			return true;
-		} else if (target.t != petEntity.t) {
+		} else if (target.level != petEntity.level) {
 			return true;
-		} else if (petEntity.f(target) > 400) {
+		} else if (petEntity.distanceToSqr(target) > 400) {
 			return true;
-		} else return petEntity.f(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
+		} else return petEntity.distanceToSqr(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
 	}
 
 	@Override
 	public void start() {
-		petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Farm);
+		petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Farm);
 	}
 
 	@Override

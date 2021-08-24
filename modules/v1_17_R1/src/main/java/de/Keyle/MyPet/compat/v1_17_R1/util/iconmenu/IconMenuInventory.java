@@ -43,7 +43,6 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
 import de.keyle.knbt.TagShort;
 import de.keyle.knbt.TagString;
-import io.lumine.xikage.mythicmobs.utils.shadows.nbt.NBTTagCompound;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -58,7 +57,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
     static {
         try {
             Class<?> craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_17_R1.inventory.CraftMetaItem");
-            applyToItemMethod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", NBTTagCompound.class);
+            applyToItemMethod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", CompoundTag.class);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -27,6 +27,7 @@ import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetLlama
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -35,7 +36,6 @@ import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.royawesome.jlibnoise.MathHelper;
 
 @Compat("v1_17_R1")
 public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
@@ -48,9 +48,9 @@ public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
     public MyPetLlamaSpit(Level world, EntityMyPet entityMyPet) {
         super(EntityType.LLAMA_SPIT, world);
         this.setOwner(entityMyPet);
-        this.setPos(entityMyPet.getX() - (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entityMyPet.aE * 0.017453292F), //TODO
+        this.setPos(entityMyPet.getX() - (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.sin(entityMyPet.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F),
                 entityMyPet.getY() + (double) entityMyPet.getEyeHeight() - 0.10000000149011612D,
-                entityMyPet.getZ() + (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) MathHelper.cos(entityMyPet.aE * 0.017453292F));
+                entityMyPet.getZ() + (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.cos(entityMyPet.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
         if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
             if (entity instanceof LivingEntity) {
-                entity.hurt(DamageSource.a(this, getShooter()), damage); //TODO
+                entity.hurt(DamageSource.indirectMobAttack(this, getShooter()), damage);
             }
         }
         this.discard();

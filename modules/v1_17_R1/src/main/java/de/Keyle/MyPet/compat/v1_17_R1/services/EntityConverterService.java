@@ -20,37 +20,99 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.services;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftTropicalFish;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillagerZombie;
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Bee;
+import org.bukkit.entity.Cat;
+import org.bukkit.entity.ChestedHorse;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Fox;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.Panda;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Phantom;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PufferFish;
+import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.SkeletonHorse;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.TropicalFish;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.WanderingTrader;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
+import org.bukkit.entity.ZombieHorse;
+import org.bukkit.entity.ZombieVillager;
+import org.bukkit.inventory.HorseInventory;
+import org.bukkit.inventory.ItemStack;
+
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Dynamic;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.types.*;
+import de.Keyle.MyPet.api.entity.types.MyBee;
+import de.Keyle.MyPet.api.entity.types.MyCat;
+import de.Keyle.MyPet.api.entity.types.MyCreeper;
+import de.Keyle.MyPet.api.entity.types.MyEnderman;
+import de.Keyle.MyPet.api.entity.types.MyHorse;
+import de.Keyle.MyPet.api.entity.types.MyIronGolem;
+import de.Keyle.MyPet.api.entity.types.MyLlama;
+import de.Keyle.MyPet.api.entity.types.MyMagmaCube;
+import de.Keyle.MyPet.api.entity.types.MyMooshroom;
+import de.Keyle.MyPet.api.entity.types.MyPanda;
+import de.Keyle.MyPet.api.entity.types.MyParrot;
+import de.Keyle.MyPet.api.entity.types.MyPhantom;
+import de.Keyle.MyPet.api.entity.types.MyPig;
+import de.Keyle.MyPet.api.entity.types.MyPufferfish;
+import de.Keyle.MyPet.api.entity.types.MyRabbit;
+import de.Keyle.MyPet.api.entity.types.MySheep;
+import de.Keyle.MyPet.api.entity.types.MySkeleton;
+import de.Keyle.MyPet.api.entity.types.MySkeletonHorse;
+import de.Keyle.MyPet.api.entity.types.MySlime;
+import de.Keyle.MyPet.api.entity.types.MyTropicalFish;
+import de.Keyle.MyPet.api.entity.types.MyVillager;
+import de.Keyle.MyPet.api.entity.types.MyWanderingTrader;
+import de.Keyle.MyPet.api.entity.types.MyWitherSkeleton;
+import de.Keyle.MyPet.api.entity.types.MyZombieHorse;
+import de.Keyle.MyPet.api.entity.types.MyZombieVillager;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.util.inventory.ItemStackNBTConverter;
-import de.keyle.knbt.*;
-import net.minecraft.core.IRegistry;
-import net.minecraft.nbt.DynamicOpsNBT;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.world.entity.ai.gossip.Reputation;
-import net.minecraft.world.entity.monster.EntityZombieVillager;
-import net.minecraft.world.entity.npc.EntityVillager;
-import net.minecraft.world.item.trading.MerchantRecipeList;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftTropicalFish;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillager;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillagerZombie;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.HorseInventory;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.*;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagList;
+import de.keyle.knbt.TagLong;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.gossip.GossipContainer;
+import net.minecraft.world.item.trading.MerchantOffers;
 
 @Compat("v1_17_R1")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
@@ -188,21 +250,21 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             if (villagerPet.hasOriginalData()) {
                 TagCompound villagerTag = villagerPet.getOriginalData();
 
-                EntityVillager entityVillager = ((CraftVillager) villagerEntity).getHandle();
+                net.minecraft.world.entity.npc.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 
                 try {
                     if (villagerTag.containsKey("Offers")) {
                         TagCompound offersTag = villagerTag.get("Offers");
-                        NBTTagCompound vanillaNBT = (NBTTagCompound) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
-                        entityVillager.b(new MerchantRecipeList(vanillaNBT));
+                        CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
+                        entityVillager.setOffers(new MerchantOffers(vanillaNBT));
                     }
                     if (villagerTag.containsKey("Inventory")) {
                         TagList inventoryTag = villagerTag.get("Inventory");
-                        NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                        ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                         for (int i = 0; i < vanillaNBT.size(); ++i) {
-                            net.minecraft.world.item.ItemStack itemstack = net.minecraft.world.item.ItemStack.a(vanillaNBT.getCompound(i));
+                            net.minecraft.world.item.ItemStack itemstack = net.minecraft.world.item.ItemStack.of(vanillaNBT.getCompound(i));
                             if (!itemstack.isEmpty()) {
-                                entityVillager.getInventory().a(itemstack);
+                                entityVillager.getInventory().addItem(itemstack);
                             }
                         }
                     }
@@ -212,12 +274,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     }
                     if (villagerTag.containsKey("Gossips")) {
                         TagList inventoryTag = villagerTag.get("Gossips");
-                        NBTTagList vanillaNBT = (NBTTagList) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                        ((Reputation) ReflectionUtil.getFieldValue(EntityVillager.class, entityVillager, "by"))
-                                .a(new Dynamic<>(DynamicOpsNBT.a, vanillaNBT));
+                        ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                        ((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "by"))
+                                .update(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT));
                     }
                     if (villagerTag.containsKey("LastRestock")) {
-                        long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
+                    	long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
                         ReflectionUtil.setFieldValue("bC", entityVillager, lastRestock);
                     }
                     if (villagerTag.containsKey("LastGossipDecay")) {
@@ -234,18 +296,18 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 }
                 if (villagerTag.containsKey("Xp")) {
                     int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
-                    entityVillager.setExperience(xp);
+                    entityVillager.setVillagerXp(xp);
                 }
             }
         } else if (myPet instanceof MySlime) {
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
         } else if (myPet instanceof MyZombieVillager) {
             Villager.Profession profession = Villager.Profession.values()[((MyZombieVillager) myPet).getProfession()];
-            EntityZombieVillager nmsEntity = ((CraftVillagerZombie) normalEntity).getHandle();
+            net.minecraft.world.entity.monster.ZombieVillager nmsEntity = ((CraftVillagerZombie) normalEntity).getHandle();
             nmsEntity.setVillagerData(nmsEntity.getVillagerData()
-                    .withType(IRegistry.ao.get(new MinecraftKey(((MyZombieVillager) myPet).getType().name().toLowerCase(Locale.ROOT))))
-                    .withLevel(((MyZombieVillager) myPet).getTradingLevel())
-                    .withProfession(IRegistry.ap.get(new MinecraftKey(profession.name().toLowerCase(Locale.ROOT)))));
+                    .setType(Registry.VILLAGER_TYPE.get(new ResourceLocation(((MyZombieVillager) myPet).getType().name().toLowerCase(Locale.ROOT))))
+                    .setLevel(((MyZombieVillager) myPet).getTradingLevel())
+                    .setProfession(Registry.VILLAGER_PROFESSION.get(new ResourceLocation(profession.name().toLowerCase(Locale.ROOT)))));
         } else if (myPet instanceof MyWitherSkeleton) {
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD));
         } else if (myPet instanceof MySkeleton) {

@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.util.UUID;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -48,7 +50,7 @@ public class EntityMyChicken extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.chicken.death";
 	}
 
@@ -106,7 +108,7 @@ public class EntityMyChicken extends EntityMyPet {
 
 		if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
 			this.makeSound("entity.chicken.egg", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-			a(Items.EGG, 1);
+			spawnAtLocation(Items.EGG, 1);
 			nextEggTimer = this.random.nextInt(6000) + 6000;
 		}
 	}
@@ -127,7 +129,7 @@ public class EntityMyChicken extends EntityMyPet {
 	@Override
 	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
-			super.e(f, f1);
+			super.calculateFallDamage(f, f1);
 		}
 		return 0;
 	}

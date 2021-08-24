@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.types.MyPiglin;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -61,7 +62,7 @@ public class EntityMyPiglin extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.piglin.death";
 	}
 
@@ -103,7 +104,7 @@ public class EntityMyPiglin extends EntityMyPet {
 							// TODO REMOVE
 							itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 								try {
-									ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+									CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 								} catch (IllegalAccessException | InvocationTargetException ex) {
 									ex.printStackTrace();
 								}

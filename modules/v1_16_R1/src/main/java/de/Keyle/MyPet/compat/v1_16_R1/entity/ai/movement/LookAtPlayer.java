@@ -51,7 +51,7 @@ public class LookAtPlayer implements AIGoal {
         if (this.petEntity.getRandom().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
-        if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
+        if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
             return false;
         }
         if (this.petEntity.isVehicle()) {

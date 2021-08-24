@@ -65,7 +65,7 @@ public class EntityMyCat extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.cat.death";
 	}
 
@@ -88,8 +88,8 @@ public class EntityMyCat extends EntityMyPet {
 		if (getOwner().equals(entityhuman)) {
 			if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
 				if (itemStack.getItem() instanceof DyeItem) {
-					if (((DyeItem) itemStack.getItem()).d().getColorIndex() != getMyPet().getCollarColor().ordinal()) {
-						getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).d().getColorIndex()]);
+					if (((DyeItem) itemStack.getItem()).getDyeColor().getId() != getMyPet().getCollarColor().ordinal()) {
+						getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().getId()]);
 						if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 							itemStack.shrink(1);
 							if (itemStack.getCount() <= 0) {

@@ -34,6 +34,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -42,7 +43,6 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.royawesome.jlibnoise.MathHelper;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
@@ -72,7 +72,7 @@ public class EntityMyWolf extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.wolf.death";
 	}
 
@@ -95,9 +95,9 @@ public class EntityMyWolf extends EntityMyPet {
 		if (getOwner().equals(entityhuman)) {
 			if (itemStack != null && itemStack.getItem() != Items.AIR) {
 				if (canUseItem()) {
-					if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).d().ordinal() != getMyPet().getCollarColor().ordinal()) {
+					if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getCollarColor().ordinal()) {
 						if (getOwner().getPlayer().isSneaking()) {
-							getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).d().ordinal()]);
+							getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
 							if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 								itemStack.shrink(1);
 								if (itemStack.getCount() <= 0) {
@@ -190,7 +190,7 @@ public class EntityMyWolf extends EntityMyPet {
 			}
 
 			if (this.shakeCounter > 0.4F) {
-				int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
+				int i = (int) (Mth.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
 				for (; i >= 0; i--) {
 					float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
 					float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;

@@ -78,9 +78,9 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		setSize(size);
 		setName(name);
 	}
-
+	
 	@Override
-	public int getSize() {
+	public int getContainerSize() {
 		return this.size;
 	}
 
@@ -132,7 +132,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		}
 		itemAdd = itemAdd.clone();
 
-		for (int i = 0; i < this.getSize(); i++) {
+		for (int i = 0; i < this.getContainerSize(); i++) {
 			CraftItemStack craftItem = CraftItemStack.asCraftMirror(getItem(i));
 
 			if (ItemStackComparator.compareItem(itemAdd, craftItem)) {
@@ -149,7 +149,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 			}
 		}
 		if (itemAdd.getAmount() > 0) {
-			for (int i = 0; i < this.getSize(); i++) {
+			for (int i = 0; i < this.getContainerSize(); i++) {
 				if (getItem(i) == ItemStack.EMPTY) {
 					if (itemAdd.getAmount() <= itemAdd.getMaxStackSize()) {
 						setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
@@ -190,7 +190,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 	@Override
 	public void dropContentAt(Location loc) {
 		Level world = ((CraftWorld) loc.getWorld()).getHandle();
-		for (int i = 0; i < this.getSize(); i++) {
+		for (int i = 0; i < this.getContainerSize(); i++) {
 			ItemStack is = this.removeItemNoUpdate(i);
 			if (is != null && !is.isEmpty()) {
 				is = is.copy();
@@ -223,7 +223,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 	@Override
 	public List<ItemStack> getContents() {
 		List<ItemStack> itemStack = new LinkedList<>();
-		for (int i = 0; i < getSize(); i++) {
+		for (int i = 0; i < getContainerSize(); i++) {
 			itemStack.add(i, items.get(i));
 		}
 		return itemStack;
@@ -306,7 +306,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		container = CraftEventFactory.callInventoryOpenEvent(entityPlayer, container);
 		if (container != null) {
 			MenuType<?> customSize = MenuType.GENERIC_9x1;
-			switch (this.getSize()) {
+			switch (this.getContainerSize()) {
 				case 18:
 					customSize = MenuType.GENERIC_9x2;
 					break;

@@ -49,7 +49,7 @@ public class EntityMyBlaze extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.blaze.death";
 	}
 
@@ -139,7 +139,7 @@ public class EntityMyBlaze extends EntityMyPet {
 	@Override
 	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
-			super.e(f, f1); //TODO
+			super.calculateFallDamage(f, f1);
 		}
 		return 0;
 	}

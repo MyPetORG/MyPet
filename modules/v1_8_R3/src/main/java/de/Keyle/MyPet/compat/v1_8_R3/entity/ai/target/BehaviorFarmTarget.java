@@ -87,7 +87,7 @@ public class BehaviorFarmTarget implements AIGoal {
         if (!this.petEntity.hasTarget()) {
             return true;
         }
-        EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+        EntityLiving target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
         if (!target.isAlive()) {
             return true;
@@ -109,7 +109,7 @@ public class BehaviorFarmTarget implements AIGoal {
 
     @Override
     public void start() {
-        petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Farm);
+        petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Farm);
     }
 
     @Override

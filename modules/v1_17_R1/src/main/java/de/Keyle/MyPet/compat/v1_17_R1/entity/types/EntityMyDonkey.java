@@ -30,11 +30,13 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyDonkey;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEffects;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -44,6 +46,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -112,7 +115,7 @@ public class EntityMyDonkey extends EntityMyPet implements PlayerRideableJumping
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Item.byBlock(Blocks.pq) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && canEquip()) {
+			} else if (itemStack.getItem() == Item.byBlock(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && canEquip()) {
 				getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
@@ -145,7 +148,7 @@ public class EntityMyDonkey extends EntityMyPet implements PlayerRideableJumping
 						// TODO REMOVE
 						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
-								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}
@@ -185,7 +188,7 @@ public class EntityMyDonkey extends EntityMyPet implements PlayerRideableJumping
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.donkey.death";
 	}
 
@@ -249,22 +252,22 @@ public class EntityMyDonkey extends EntityMyPet implements PlayerRideableJumping
 	}
 
 	@Override
-	public void a(int i) {
-		// I don't know.
+	public void onPlayerJump(int i) {
+		// I don't know. <- this was here before the remap
 	}
 
 	/* Jump power methods */
 	@Override
-	public boolean a() {
+	public boolean canJump() {
 		return true;
 	}
 
 	@Override
-	public void b(int i) {
+	public void handleStartJump(int i) {
 		this.jumpPower = i;
 	}
 
 	@Override
-	public void b() {
+	public void handleStopJump() {
 	}
 }

@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySheep;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.EatGrass;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -77,7 +78,7 @@ public class EntityMySheep extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.sheep.death";
 	}
 
@@ -98,8 +99,8 @@ public class EntityMySheep extends EntityMyPet {
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).d().ordinal() != getMyPet().getColor().ordinal() && !getMyPet().isSheared()) { //TODO
-				getMyPet().setColor(org.bukkit.DyeColor.values()[((DyeItem) itemStack.getItem()).d().ordinal()]);
+			if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getColor().ordinal() && !getMyPet().isSheared()) {
+				getMyPet().setColor(org.bukkit.DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
@@ -125,7 +126,7 @@ public class EntityMySheep extends EntityMyPet {
 						// TODO REMOVE
 						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
-								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}

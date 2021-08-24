@@ -42,7 +42,7 @@ public class EntityMyPhantom extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.phantom.death";
 	}
 
@@ -107,7 +107,7 @@ public class EntityMyPhantom extends EntityMyPet {
 	@Override
 	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Phantom.CAN_GLIDE) {
-			super.e(f, f1);
+			super.calculateFallDamage(f, f1);
 		}
 		return 0;
 	}

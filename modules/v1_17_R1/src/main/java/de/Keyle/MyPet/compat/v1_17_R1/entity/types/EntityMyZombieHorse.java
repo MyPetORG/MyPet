@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyZombieHorse;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -96,7 +97,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements PlayerRideableJu
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.zombie_horse.death";
 	}
 
@@ -144,7 +145,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements PlayerRideableJu
 						// TODO REMOVE
 						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
-								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}
@@ -230,22 +231,22 @@ public class EntityMyZombieHorse extends EntityMyPet implements PlayerRideableJu
 	}
 
 	@Override
-	public void a(int i) {
-		// I don't know.
+	public void onPlayerJump(int i) {
+		// I don't know. <- this was here before the remap
 	}
 
 	/* Jump power methods */
 	@Override
-	public boolean a() {
+	public boolean canJump() {
 		return true;
 	}
 
 	@Override
-	public void b(int i) {
+	public void handleStartJump(int i) {
 		this.jumpPower = i;
 	}
 
 	@Override
-	public void b() {
+	public void handleStopJump() {
 	}
 }

@@ -34,6 +34,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPillager;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -64,7 +65,7 @@ public class EntityMyPillager extends EntityMyPet {
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.pillager.death";
 	}
 
@@ -118,7 +119,7 @@ public class EntityMyPillager extends EntityMyPet {
 							// TODO REMOVE
 							itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 								try {
-									ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+									CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 								} catch (IllegalAccessException | InvocationTargetException ex) {
 									ex.printStackTrace();
 								}

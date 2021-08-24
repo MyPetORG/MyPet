@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -91,7 +92,6 @@ import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target.OwnerHurtByTarget;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
-import io.lumine.xikage.mythicmobs.utils.shadows.nbt.NBTTagCompound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -100,21 +100,17 @@ import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.TagsFluid;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
@@ -123,16 +119,13 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.Vec3D;
 
 public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	
@@ -510,7 +503,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 				}
 			}
 		}.runTaskLater(MyPetApi.getPlugin(), 5);
-		if (itemStack != null && itemStack.getItem() == Items.LEAD) { //TODO
+		if (itemStack != null && itemStack.getItem() == Items.LEAD) {
 			((ServerPlayer) entityhuman).connection.send(new ClientboundSetEntityLinkPacket(this, null));
 		}
 
@@ -778,7 +771,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	/**
 	 * Returns the sound that is played when the MyPet dies
 	 */
-	protected abstract String getDeathSound(); //TODO
+	protected abstract String getMyPetDeathSound();
 
 	public void playPetStepSound() {
 	}
@@ -948,7 +941,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	 * Allows handlePlayerInteraction() to
 	 * be fired when a lead is used
 	 */
-	@Override //TODO
+	@Override 
 	public boolean canBeLeashed(net.minecraft.world.entity.player.Player entityhuman) {
 		return false;
 	}
@@ -1005,9 +998,9 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected SoundEvent getDeathSound() { //TODO
+	protected SoundEvent getDeathSound() {
 		try {
-			return Registry.SOUND_EVENT.get(new ResourceLocation(getDeathSound()));
+			return Registry.SOUND_EVENT.get(new ResourceLocation(getMyPetDeathSound()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1034,36 +1027,36 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 		if (this.isAlwaysTicking()) {
 			this.lerpX = 0;
-			this.d(this.getX(), this.getY(), this.getZ());
+			this.setPacketCoordinates(this.getX(), this.getY(), this.getZ());
 		}
 		if (this.lerpX > 0) {
 			double newX = this.getX() + (this.useItemRemaining - this.getX()) / this.lerpX;
 			double newY = this.getY() + (this.fallFlyTicks - this.getY()) / this.lerpX;
 			double newZ = this.getZ() + (this.autoSpinAttackTicks - this.getZ()) / this.lerpX;
-			double d3 = Mth.frac(this.az - (double) this.getYRot()); //TODO this area might be wrong in general (aR, aZ, aT)
+			double d3 = Mth.frac(this.animationSpeed - (double) this.getYRot()); //TODO animationSpeed might be wrong (was az which might have been wrong...)
 			this.setYRot((float) ((double) this.getYRot() + d3 / this.lerpX));
 			this.setXRot((float) ((double) this.getXRot() + (this.animationPosition - (double) this.getXRot()) / this.lerpX));
 			--this.lerpX;
 			this.setPos(newX, newY, newZ);
 			this.setRot(this.getYRot(), this.getXRot());
 		} else {
-			this.setDeltaMovement(this.getDeltaMovement().a(0.98D));
+			this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
 		}
 
-		Vec3D vec3d = this.getDeltaMovement();
-		double motX = vec3d.getX();
-		double motY = vec3d.getY();
-		double motZ = vec3d.getZ();
+		Vec3 vec3d = this.getDeltaMovement();
+		double motX = vec3d.x();
+		double motY = vec3d.y();
+		double motZ = vec3d.z();
 
-		if (Math.abs(vec3d.getX()) < 0.003D) {
+		if (Math.abs(vec3d.x()) < 0.003D) {
 			motX = 0.0D;
 		}
 
-		if (Math.abs(vec3d.getY()) < 0.003D) {
+		if (Math.abs(vec3d.y()) < 0.003D) {
 			motY = 0.0D;
 		}
 
-		if (Math.abs(vec3d.getZ()) < 0.003D) {
+		if (Math.abs(vec3d.z()) < 0.003D) {
 			motZ = 0.0D;
 		}
 
@@ -1075,17 +1068,17 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			double d7;
 
 			if (this.isInLava()) {
-				d7 = this.b(FluidTags.LAVA);//TODO
+				d7 = this.getFluidHeight(FluidTags.LAVA);
 			} else {
-				d7 = this.b(FluidTags.WATER);
+				d7 = this.getFluidHeight(FluidTags.WATER);
 			}
 
 			boolean flag = this.isInWater() && d7 > 0.0D;
 			double d8 = this.getFluidJumpThreshold();
 			if (flag && (!this.onGround || d7 > d8)) {
-				this.c(FluidTags.WATER);
-			} else if (this.aX() && (!this.onGround || d7 > d8)) {
-				this.c(FluidTags.LAVA);
+				this.jumpInLiquid(FluidTags.WATER);
+			} else if (this.isInLava() && (!this.onGround || d7 > d8)) {
+				this.jumpInLiquid(FluidTags.LAVA);
 			} else if ((this.onGround || flag && d7 <= d8) && this.jumpDelay == 0) {
 				this.jumpFromGround();
 				this.jumpDelay = 10;
@@ -1094,11 +1087,11 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			this.jumpDelay = 0;
 		}
 
-		this.aR *= 0.98F;
-		this.aT *= 0.98F;
+		this.animationSpeedOld *= 0.98F;
+		this.animationPosition *= 0.98F;
 
 		// this.n(); //no Elytra flight
-		this.f(new Vec3(this.aR, this.aZ, this.aT));
+		this.travel(new Vec3(this.animationSpeedOld, this.yHeadRot, this.animationPosition));
 		this.pushEntities();
 	}
 
@@ -1233,9 +1226,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	/**
 	 * -> travel
 	 */
-	public void f(Vec3 vec3d) {
+	@Override
+	public void travel(Vec3 vec3d) {
 		if (!hasRider || !this.isVehicle()) {
-			g(vec3d);
+			super.travel(vec3d);
 			return;
 		}
 
@@ -1263,7 +1257,6 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		setRot(this.getYRot(), this.getXRot());
 		this.oRun = (this.yBodyRot = this.getYRot());
 
-		//TODO Got the right fields, now speed is something
 		// get motion from passenger (player)
 		double motionSideways = passenger.xxa;
 		double motionForward = passenger.zza * 2;
@@ -1364,9 +1357,9 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		}
 
 		if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER > 0) {
-			double dX = locX() - u;
-			double dY = Math.max(0, locY() - v);
-			double dZ = locZ() - w;
+			double dX = getX() - xo;
+			double dY = Math.max(0, getY() - yo);
+			double dZ = getZ() - zo;
 			if (dX != 0 || dY != 0 || dZ != 0) {
 				double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
 				if (isFlying && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
@@ -1374,8 +1367,8 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 				}
 				myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
 				double factor = Math.log10(myPet.getSaturation()) / 2;
-				getAttributeInstance(GenericAttributes.d).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
-				this.n((float) this.getAttributeInstance(GenericAttributes.d).getValue());
+				getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
+				this.setSpeed((float) this.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
 			}
 		}
 	}
@@ -1411,7 +1404,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	}
 
 	@Override
-	protected void d(DamageSource damagesource) {	//TODO Check LivingEntity!
+	protected void playHurtSound(DamageSource damagesource) {
 		CraftEventFactory.callEntityDeathEvent(this);
 	}
 
@@ -1421,5 +1414,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			return deathReason;
 		}
 		return super.getLastDamageSource();
+	}
+	
+	@Override
+	public UUID getUniqueID() {
+		return this.uuid;
 	}
 }

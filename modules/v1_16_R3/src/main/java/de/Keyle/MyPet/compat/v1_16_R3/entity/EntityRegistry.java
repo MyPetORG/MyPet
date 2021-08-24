@@ -20,8 +20,19 @@
 
 package de.Keyle.MyPet.compat.v1_16_R3.entity;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -30,16 +41,15 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
-import net.minecraft.server.v1_16_R3.*;
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import net.minecraft.server.v1_16_R3.EntityLiving;
+import net.minecraft.server.v1_16_R3.EntitySize;
+import net.minecraft.server.v1_16_R3.EntityTypes;
+import net.minecraft.server.v1_16_R3.EnumCreatureType;
+import net.minecraft.server.v1_16_R3.IRegistry;
+import net.minecraft.server.v1_16_R3.MinecraftKey;
+import net.minecraft.server.v1_16_R3.RegistryBlocks;
+import net.minecraft.server.v1_16_R3.RegistryMaterials;
+import net.minecraft.server.v1_16_R3.World;
 
 @Compat("v1_16_R3")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {

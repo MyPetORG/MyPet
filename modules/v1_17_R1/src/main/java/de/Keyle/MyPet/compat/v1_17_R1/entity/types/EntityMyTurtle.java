@@ -51,7 +51,7 @@ public class EntityMyTurtle extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.turtle.death" + (isBaby() ? "_baby" : "");
 	}
 

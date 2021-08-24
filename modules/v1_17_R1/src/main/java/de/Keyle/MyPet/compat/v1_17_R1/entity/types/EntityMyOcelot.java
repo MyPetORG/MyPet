@@ -45,7 +45,7 @@ public class EntityMyOcelot extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.ocelot.death";
 	}
 

@@ -44,11 +44,11 @@ public class EatGrass implements AIGoal {
 	private final Level world;
 	int eatTicks = 0;
 
-	private static final Predicate<BlockState> GRASS = BlockStatePredicate.a(Blocks.aX);
+	private static final Predicate<BlockState> GRASS = BlockStatePredicate.forBlock(Blocks.GRASS);
 
 	public EatGrass(EntityMySheep entityMySheep) {
 		this.entityMySheep = entityMySheep;
-		this.world = entityMySheep.t;
+		this.world = entityMySheep.level;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class EatGrass implements AIGoal {
 			return false;
 		} else if (entityMySheep.getRandom().nextInt(1000) != 0) {
 			return false;
-		} else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getTarget().isDead()) {
+		} else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getMyPetTarget().isDead()) {
 			return false;
 		}
 		int blockLocX = Mth.floor(this.entityMySheep.getX());
@@ -68,7 +68,7 @@ public class EatGrass implements AIGoal {
 
 		BlockPos blockposition = new BlockPos(blockLocX, blockLocY, blockLocZ);
 
-		return GRASS.test(this.world.getType(blockposition)) || this.world.getType(blockposition.down()).getBlock() == Blocks.aX;
+		return GRASS.test(this.world.getBlockState(blockposition)) || this.world.getBlockState(blockposition.down()).getBlock() == Blocks.GRASS;
 	}
 
 	@Override
@@ -96,27 +96,27 @@ public class EatGrass implements AIGoal {
 			int blockLocZ = Mth.floor(this.entityMySheep.getZ());
 
 			BlockPos blockAt = new BlockPos(blockLocX, blockLocY, blockLocZ);
-			if (GRASS.test(this.world.getType(blockAt))) {
+			if (GRASS.test(this.world.getBlockState(blockAt))) {
 				if (!CraftEventFactory.callEntityChangeBlockEvent(
 						this.entityMySheep,
 						blockAt,
-						Blocks.a.getBlockData(),
+						Blocks.AIR.defaultBlockState(),
 						!this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING)
 				).isCancelled()) {
-					this.world.b(blockAt, false);
+					this.world.destroyBlock(blockAt, false);
 				}
 				entityMySheep.getMyPet().setSheared(false);
 			} else {
 				BlockPos blockUnder = blockAt.down();
-				if (this.world.getType(blockUnder).getBlock() == Blocks.aX) {
+				if (this.world.getBlockState(blockUnder).getBlock() == Blocks.GRASS) {
 					if (!CraftEventFactory.callEntityChangeBlockEvent(
 							this.entityMySheep,
 							blockAt,
-							Blocks.a.getBlockData(),
+							Blocks.AIR.defaultBlockState(),
 							!this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING)
 					).isCancelled()) {
-						this.world.triggerEffect(2001, blockUnder, Block.getCombinedId(Blocks.i.getBlockData()));
-						this.world.setTypeAndData(blockUnder, Blocks.j.getBlockData(), 2);
+						this.world.levelEvent(2001, blockUnder, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()));
+						this.world.setBlock(blockUnder, Blocks.DIRT.defaultBlockState(), 2);
 					}
 					entityMySheep.getMyPet().setSheared(false);
 				}

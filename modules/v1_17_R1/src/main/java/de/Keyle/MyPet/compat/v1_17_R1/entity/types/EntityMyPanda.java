@@ -50,7 +50,7 @@ public class EntityMyPanda extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.panda.death";
 	}
 

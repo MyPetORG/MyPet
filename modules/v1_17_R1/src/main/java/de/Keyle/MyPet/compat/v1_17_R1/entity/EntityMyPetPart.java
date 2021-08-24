@@ -56,12 +56,11 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 	}
 
 	@Override
-	public void load(CompoundTag nbtTagCompound) {
+	public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
 	}
 
 	@Override
-	public boolean save(CompoundTag nbtTagCompound) {
-		return true;
+	public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 	}
 
 	@Override
-	public boolean q(Entity var1) {
+	public boolean is(Entity var1) {
 		return this == var1 || this.owner == var1;
 	}
 

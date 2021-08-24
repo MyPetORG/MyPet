@@ -20,18 +20,18 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.util.Arrays;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.World;
-
-import java.util.Arrays;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 1.F, height = 1.F)
 public class EntityMyEnderDragon extends EntityMyPet {
@@ -58,7 +58,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.ender_dragon.death";
 	}
 
@@ -87,10 +87,10 @@ public class EntityMyEnderDragon extends EntityMyPet {
 			}
 		}
 		if (!registered && this.valid) {
-			if (this.getWorld() instanceof WorldServer) {
-				WorldServer world = (ServerLevel) this.getWorld();
+			if (this.getCommandSenderWorld() instanceof ServerLevel) {
+				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
 				Arrays.stream(this.children)
-						.forEach(entityMyPetPart -> world.addEntity(entityMyPetPart)); // TODO: 2021/07/14 I don't know if this is the right replacement.
+						.forEach(entityMyPetPart -> world.addFreshEntity(entityMyPetPart)); // TODO: 2021/07/14 I don't know if this is the right replacement.
 			}
 			this.registered = true;
 		}
@@ -102,7 +102,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	@Override
 	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.EnderDragon.CAN_GLIDE) {
-			super.e(f, f1);
+			super.calculateFallDamage(f, f1);
 		}
 		return 0;
 	}
@@ -118,7 +118,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 	@Override
 	public void die(DamageSource damagesource) {
 		super.die(damagesource);
-		Arrays.stream(this.children).forEach(Entity::die);
+		Arrays.stream(this.children).forEach(Entity::discard);
 	}
 
 	@Override

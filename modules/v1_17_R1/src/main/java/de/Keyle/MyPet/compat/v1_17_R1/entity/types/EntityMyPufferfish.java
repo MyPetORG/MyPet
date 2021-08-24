@@ -42,7 +42,7 @@ public class EntityMyPufferfish extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.puffer_fish.death";
 	}
 

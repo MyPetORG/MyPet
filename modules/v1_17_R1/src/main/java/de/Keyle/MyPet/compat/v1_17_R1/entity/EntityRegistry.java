@@ -42,6 +42,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
 import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -150,7 +151,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 
 		try {
-			Field bgF = DefaultedRegistry.class.getDeclaredField("bw"); //TODO Might fail.
+			Field bgF = MappedRegistry.class.getDeclaredField("bw"); //TODO Might fail.
 			bgF.setAccessible(true);
 			Object map = bgF.get(entityRegistry);
 			Class<?> clazz = map.getClass();

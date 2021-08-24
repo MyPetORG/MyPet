@@ -43,7 +43,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.magma_cube.death";
 	}
 

@@ -63,7 +63,7 @@ public class RangedAttack implements AIGoal {
             return false;
         }
 
-        EntityLiving target = ((CraftLivingEntity) this.entityMyPet.getTarget()).getHandle();
+        EntityLiving target = ((CraftLivingEntity) this.entityMyPet.getMyPetTarget()).getHandle();
 
         if (target instanceof EntityArmorStand) {
             return false;
@@ -102,7 +102,7 @@ public class RangedAttack implements AIGoal {
         if (!entityMyPet.hasTarget() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
             return true;
         }
-        if (this.target.getBukkitEntity() != this.entityMyPet.getTarget()) {
+        if (this.target.getBukkitEntity() != this.entityMyPet.getMyPetTarget()) {
             return true;
         }
         double meleeDamage = myPet.getDamage();
