@@ -61,6 +61,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         commonTypeOptionList.add("skilltree:");
         commonTypeOptionList.add("name:");
 
+        petTypeOptionMap.put("axolotl", new CommandOptionCreator()
+                .add("baby")
+                .add("type:")
+                .get());
+
         petTypeOptionMap.put("bee", new CommandOptionCreator()
                 .add("baby")
                 .add("angry")
@@ -108,6 +113,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("fox", new CommandOptionCreator()
                 .add("type:red")
                 .add("type:white")
+                .get());
+
+        petTypeOptionMap.put("goat", new CommandOptionCreator()
+                .add("baby")
                 .get());
 
         petTypeOptionMap.put("guardian", new CommandOptionCreator()

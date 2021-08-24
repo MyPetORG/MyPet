@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.types.*;
 import java.lang.reflect.Constructor;
 
 public enum MyPetClass {
+    Axolotl(MyAxolotl.class),
     Bat(MyBat.class),
     Bee(MyBee.class),
     Blaze(MyBlaze.class),
@@ -47,6 +48,7 @@ public enum MyPetClass {
     Evoker(MyEvoker.class),
     Fox(MyFox.class),
     Ghast(MyGhast.class),
+    Goat(MyGoat.class),
     Giant(MyGiant.class),
     Guardian(MyGuardian.class),
     Hoglin(MyHoglin.class),

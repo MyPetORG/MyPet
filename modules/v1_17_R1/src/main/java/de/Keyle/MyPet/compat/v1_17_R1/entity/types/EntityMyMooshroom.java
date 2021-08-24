@@ -116,7 +116,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());	//TODO
+		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());
 	}
 
 	@Override
