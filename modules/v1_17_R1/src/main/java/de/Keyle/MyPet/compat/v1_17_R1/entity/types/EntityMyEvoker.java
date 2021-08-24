@@ -24,18 +24,18 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEvoker;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.level.World;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyEvoker extends EntityMyPet {
 
-	protected static final DataWatcherObject<Boolean> RAID_WATCHER = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.i);
-	protected static final DataWatcherObject<Byte> SPELL_WATCHER = DataWatcher.a(EntityMyEvoker.class, DataWatcherRegistry.a);
+	protected static final EntityDataAccessor<Boolean> RAID_WATCHER = SynchedEntityData.defineId(EntityMyEvoker.class, EntityDataSerializers.BOOLEAN);
+	protected static final EntityDataAccessor<Byte> SPELL_WATCHER = SynchedEntityData.defineId(EntityMyEvoker.class, EntityDataSerializers.BYTE);
 
-	public EntityMyEvoker(World world, MyPet myPet) {
+	public EntityMyEvoker(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -43,7 +43,7 @@ public class EntityMyEvoker extends EntityMyPet {
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.evoker.death";
 	}
 
@@ -64,10 +64,10 @@ public class EntityMyEvoker extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(RAID_WATCHER, false);
-		getDataWatcher().register(SPELL_WATCHER, (byte) 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(RAID_WATCHER, false);
+		getEntityData().define(SPELL_WATCHER, (byte) 0);
 	}
 
 	@Override

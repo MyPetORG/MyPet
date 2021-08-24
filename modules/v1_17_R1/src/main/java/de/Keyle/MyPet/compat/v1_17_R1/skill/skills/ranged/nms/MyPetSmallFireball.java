@@ -24,30 +24,30 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetSmallFireball;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.projectile.EntitySmallFireball;
-import net.minecraft.world.level.World;
-import net.minecraft.world.phys.MovingObjectPosition;
-import net.minecraft.world.phys.MovingObjectPositionEntity;
-import net.royawesome.jlibnoise.MathHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 @Compat("v1_17_R1")
-public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyPetProjectile {
+public class MyPetSmallFireball extends SmallFireball implements EntityMyPetProjectile {
 
     protected float damage = 0;
     protected int deathCounter = 100;
     protected CraftMyPetSmallFireball bukkitEntity = null;
 
-    public MyPetSmallFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
+    public MyPetSmallFireball(Level world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2);
     }
 
     @Override
     public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getShooter();
+        return (EntityMyPet) super.getOwner();
     }
 
     public void setDamage(float damage) {
@@ -56,40 +56,40 @@ public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyP
 
     @Override
     public void setDirection(double d0, double d1, double d2) {
-        d0 += this.Q.nextGaussian() * 0.2D;
-        d1 += this.Q.nextGaussian() * 0.2D;
-        d2 += this.Q.nextGaussian() * 0.2D;
-        double d3 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-        this.b = (d0 / d3 * 0.1D);
-        this.c = (d1 / d3 * 0.1D);
-        this.d = (d2 / d3 * 0.1D);
+        d0 += this.random.nextGaussian() * 0.2D;
+        d1 += this.random.nextGaussian() * 0.2D;
+        d2 += this.random.nextGaussian() * 0.2D;
+        double d3 = Mth.sqrt((float)(d0 * d0 + d1 * d1 + d2 * d2));
+        this.xPower = (d0 / d3 * 0.1D);	//TODO
+        this.yPower = (d1 / d3 * 0.1D);
+        this.zPower = (d2 / d3 * 0.1D);
     }
 
     @Override
     public CraftMyPetSmallFireball getBukkitEntity() {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = new CraftMyPetSmallFireball(this.t.getCraftServer(), this);
+            this.bukkitEntity = new CraftMyPetSmallFireball(this.level.getCraftServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void saveData(NBTTagCompound nbtTagCompound) {
+    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    public void loadData(NBTTagCompound nbtTagCompound) {
+    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
     }
 
     @Override
-    protected void a(MovingObjectPosition movingObjectPosition) {
-        if (movingObjectPosition.getType() == MovingObjectPosition.EnumMovingObjectType.c) {
-            Entity entity = ((MovingObjectPositionEntity) movingObjectPosition).getEntity();
-            if (entity instanceof EntityLiving) {
-                entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
+    protected void onHit(HitResult movingObjectPosition) {
+        if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
+            if (entity instanceof LivingEntity) {
+                entity.hurt(DamageSource.fireball(this, getShooter()), damage);
             }
         }
-        die();
+        discard();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyP
         try {
             super.tick();
             if (deathCounter-- <= 0) {
-                die();
+                discard();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,7 +105,7 @@ public class MyPetSmallFireball extends EntitySmallFireball implements EntityMyP
     }
 
     @Override
-    public boolean damageEntity(DamageSource damagesource, float f) {
+    public boolean hurt(DamageSource damagesource, float f) {
         return false;
     }
 }

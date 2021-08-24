@@ -24,55 +24,55 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.skill.skills.ranged.bukkit.CraftMyPetArrow;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.projectile.EntityTippedArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @Compat("v1_17_R1")
-public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjectile {
+public class MyPetArrow extends Arrow implements EntityMyPetProjectile {
 
 	protected CraftMyPetArrow bukkitEntity = null;
 
-	public MyPetArrow(World world, EntityMyPet entityMyPet) {
+	public MyPetArrow(Level world, EntityMyPet entityMyPet) {
 		super(world, entityMyPet);
 	}
 
 	@Override
 	public EntityMyPet getShooter() {
-		return (EntityMyPet) super.getShooter();
+		return (EntityMyPet) super.getOwner();
 	}
 
 	@Override
 	public CraftMyPetArrow getBukkitEntity() {
 		if (this.bukkitEntity == null) {
-			this.bukkitEntity = new CraftMyPetArrow(this.t.getCraftServer(), this);
+			this.bukkitEntity = new CraftMyPetArrow(this.level.getCraftServer(), this);
 		}
 		return this.bukkitEntity;
 	}
 
 	@Override
-	public void saveData(NBTTagCompound nbttagcompound) {
+	public void addAdditionalSaveData(CompoundTag nbttagcompound) {
 
 	}
 
 	@Override
-	protected ItemStack getItemStack() {
-		return new ItemStack(Items.mh);
+	protected ItemStack getPickupItem() {
+		return new ItemStack(Items.ARROW);
 	}
 
 	@Override
-	public void loadData(NBTTagCompound nbttagcompound) {
+	public void readAdditionalSaveData(CompoundTag nbttagcompound) {
 	}
 
 	@Override
 	public void tick() {
 		try {
 			super.tick();
-			if (this.b) {
-				die();
+			if (this.inGround) {
+				discard();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,7 +80,7 @@ public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjecti
 	}
 
 	@Override
-	public boolean damageEntity(DamageSource damagesource, float f) {
+	public boolean hurt(DamageSource damagesource, float f) {
 		return false;
 	}
 }

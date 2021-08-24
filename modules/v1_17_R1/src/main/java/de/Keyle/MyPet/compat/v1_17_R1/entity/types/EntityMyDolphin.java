@@ -20,30 +20,32 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.util.UUID;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.level.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyPet {
 
-	private static final DataWatcherObject<BlockPosition> TREASURE_POS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.l);
-	private static final DataWatcherObject<Boolean> GOT_FISH_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Integer> MOISTNESS_WATCHER = DataWatcher.a(EntityMyDolphin.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<BlockPos> TREASURE_POS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BLOCK_POS);
+	private static final EntityDataAccessor<Boolean> GOT_FISH_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> MOISTNESS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.INT);
 
-	public EntityMyDolphin(World world, MyPet myPet) {
+	public EntityMyDolphin(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.dolphin.death";
 	}
 
@@ -60,17 +62,17 @@ public class EntityMyDolphin extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (!isInWater() && this.Q.nextBoolean()) {
+		if (!isInWater() && this.random.nextBoolean()) {
 			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
 		}
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 
-		getDataWatcher().register(TREASURE_POS_WATCHER, BlockPosition.b);
-		getDataWatcher().register(GOT_FISH_WATCHER, false);
-		getDataWatcher().register(MOISTNESS_WATCHER, 2400);
+		getEntityData().define(TREASURE_POS_WATCHER, BlockPos.ZERO);
+		getEntityData().define(GOT_FISH_WATCHER, false);
+		getEntityData().define(MOISTNESS_WATCHER, 2400);
 	}
 }

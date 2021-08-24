@@ -20,6 +20,11 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
@@ -28,22 +33,17 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTameableAnimal;
-import net.minecraft.world.entity.decoration.EntityArmorStand;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.decoration.ArmorStand;
 
 @Compat("v1_17_R1")
 public class BehaviorAggressiveTarget implements AIGoal {
 
 	private final MyPet myPet;
 	private final EntityMyPet petEntity;
-	private final EntityPlayer petOwnerEntity;
-	private EntityLiving target;
+	private final ServerPlayer petOwnerEntity;
+	private net.minecraft.world.entity.LivingEntity target;
 	private final float range;
 
 	public BehaviorAggressiveTarget(EntityMyPet petEntity, float range) {
@@ -69,9 +69,9 @@ public class BehaviorAggressiveTarget implements AIGoal {
 			return false;
 		}
 
-		for (EntityLiving entityLiving : this.petEntity.t.a(EntityLiving.class, this.petOwnerEntity.getBoundingBox().grow(range, range, range))) {
-			if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand) && entityLiving.isAlive() && petEntity.f(entityLiving) <= 91) {
-				if (entityLiving instanceof EntityPlayer) {
+		for (net.minecraft.world.entity.LivingEntity entityLiving : this.petEntity.level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, this.petOwnerEntity.getBoundingBox().inflate(range, range, range))) {
+			if (entityLiving != petEntity && !(entityLiving instanceof ArmorStand) && entityLiving.isAlive() && petEntity.distanceToSqr(entityLiving) <= 91) {
+				if (entityLiving instanceof ServerPlayer) {
 					Player targetPlayer = (Player) entityLiving.getBukkitEntity();
 					if (myPet.getOwner().equals(targetPlayer)) {
 						continue;
@@ -84,9 +84,9 @@ public class BehaviorAggressiveTarget implements AIGoal {
 					if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
 						continue;
 					}
-				} else if (entityLiving instanceof EntityTameableAnimal) {
-					EntityTameableAnimal tameable = (EntityTameableAnimal) entityLiving;
-					if (tameable.isTamed() && tameable.getOwner() != null) {
+				} else if (entityLiving instanceof TamableAnimal) {
+					TamableAnimal tameable = (TamableAnimal) entityLiving;
+					if (tameable.isTame() && tameable.getOwner() != null) {
 						Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
 						if (myPet.getOwner().equals(tameableOwner)) {
 							continue;
@@ -112,7 +112,7 @@ public class BehaviorAggressiveTarget implements AIGoal {
 			return true;
 		}
 
-		EntityLiving target = ((CraftLivingEntity) petEntity.getTarget()).getHandle();
+		net.minecraft.world.entity.LivingEntity target = ((CraftLivingEntity) petEntity.getMyPetTarget()).getHandle();
 
 		if (!target.isAlive()) {
 			return true;
@@ -122,16 +122,16 @@ public class BehaviorAggressiveTarget implements AIGoal {
 			return true;
 		} else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
 			return true;
-		} else if (target.t != petEntity.t) {
+		} else if (target.level != petEntity.level) {
 			return true;
-		} else if (petEntity.f(target) > 400) {
+		} else if (petEntity.distanceToSqr(target) > 400) {
 			return true;
-		} else return petEntity.f(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
+		} else return petEntity.distanceToSqr(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
 	}
 
 	@Override
 	public void start() {
-		petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Aggressive);
+		petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Aggressive);
 	}
 
 	@Override

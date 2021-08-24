@@ -23,17 +23,17 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 1.62F)
 public class EntityMyWitch extends EntityMyPet {
 
-	public EntityMyWitch(World world, MyPet myPet) {
+	public EntityMyWitch(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.witch.death";
 	}
 

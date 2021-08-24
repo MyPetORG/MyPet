@@ -20,42 +20,40 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.navigation;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.entity.LivingEntity;
+
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.navigation.NavigationParameters;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.navigation.Navigation;
-
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 
 @Compat("v1_17_R1")
 public class VanillaNavigation extends AbstractNavigation {
 
-	Navigation nav;
+	PathNavigation nav;
 
 	public VanillaNavigation(EntityMyPet entityMyPet) {
 		super(entityMyPet);
-		nav = (Navigation) entityMyPet.getNavigation();
+		nav = (PathNavigation) entityMyPet.getNavigation();
 	}
 
 	public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
 		super(entityMyPet, parameters);
-		nav = (Navigation) entityMyPet.getNavigation();
+		nav = (PathNavigation) entityMyPet.getNavigation();
 	}
 
 	@Override
 	public void stop() {
-		nav.q();
+		nav.stop();
 	}
 
 	@Override
 	public boolean navigateTo(double x, double y, double z) {
 		applyNavigationParameters();
-		if (this.nav.a(x, y, z, 1.D)) {
+		if (this.nav.moveTo(x, y, z, 1.D)) {
 			applyNavigationParameters();
 			return true;
 		}
@@ -67,8 +65,8 @@ public class VanillaNavigation extends AbstractNavigation {
 		return navigateTo(((CraftLivingEntity) entity).getHandle());
 	}
 
-	public boolean navigateTo(EntityLiving entity) {
-		if (this.nav.a(entity, 1.D)) {
+	public boolean navigateTo(net.minecraft.world.entity.LivingEntity entity) {
+		if (this.nav.moveTo(entity, 1.D)) {
 			applyNavigationParameters();
 			return true;
 		}
@@ -77,14 +75,14 @@ public class VanillaNavigation extends AbstractNavigation {
 
 	@Override
 	public void tick() {
-		nav.c();
+		nav.tick();
 	}
 
 	@Override
 	public void applyNavigationParameters() {
-		this.nav.a(parameters.avoidWater());
+		this.nav.setCanFloat(parameters.avoidWater());
 		((EntityMyPet) this.entityMyPet)
-				.getAttributeInstance(GenericAttributes.d)
-				.setValue(parameters.speed() + parameters.speedModifier());
+				.getAttribute(Attributes.MOVEMENT_SPEED)
+				.setBaseValue(parameters.speed() + parameters.speedModifier());
 	}
 }

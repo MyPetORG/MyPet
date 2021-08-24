@@ -20,35 +20,36 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
+
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
 import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
-
-import java.lang.reflect.InvocationTargetException;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
 
-	private static final DataWatcherObject<Byte> BURNING_WATCHER = DataWatcher.a(EntityMyBlaze.class, DataWatcherRegistry.a);
+	private static final EntityDataAccessor<Byte> BURNING_WATCHER = SynchedEntityData.defineId(EntityMyBlaze.class, EntityDataSerializers.BYTE);
 
-	public EntityMyBlaze(World world, MyPet myPet) {
+	public EntityMyBlaze(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.blaze.death";
 	}
 
@@ -63,35 +64,35 @@ public class EntityMyBlaze extends EntityMyPet {
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == EnumInteractionResult.b) {
-			return EnumInteractionResult.b;
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == InteractionResult.CONSUME) {
+			return InteractionResult.CONSUME;
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (getMyPet().isOnFire() && itemStack.getItem() == Items.nX && getOwner().getPlayer().isSneaking()) {
+			if (getMyPet().isOnFire() && itemStack.getItem() == Items.WATER_BUCKET && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setOnFire(false);
 				makeSound("block.fire.extinguish", 1.0F, 1.0F);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().flying) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, new ItemStack(Items.nW));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.BUCKET));
 					} else {
-						if (!entityhuman.getInventory().pickup(new ItemStack(Items.nW))) {
-							entityhuman.drop(new ItemStack(Items.nW), true);
+						if (!entityhuman.getInventory().add(new ItemStack(Items.BUCKET))) {
+							entityhuman.drop(new ItemStack(Items.BUCKET), true);
 						}
 					}
 				}
-				return EnumInteractionResult.b;
-			} else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.me && getOwner().getPlayer().isSneaking()) {
+				return InteractionResult.CONSUME;
+			} else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setOnFire(true);
 				makeSound("item.flintandsteel.use", 1.0F, 1.0F);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
-						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 					} catch (Error e) {
 						// TODO REMOVE
-						itemStack.damage(1, entityhuman, (entityhuman1) -> {
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
 								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
@@ -100,29 +101,29 @@ public class EntityMyBlaze extends EntityMyPet {
 						});
 					}
 				}
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(BURNING_WATCHER, (byte) 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(BURNING_WATCHER, (byte) 0);
 	}
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(BURNING_WATCHER, (byte) (getMyPet().isOnFire() ? 1 : 0));
+		getEntityData().set(BURNING_WATCHER, (byte) (getMyPet().isOnFire() ? 1 : 0));
 	}
 
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Configuration.MyPet.Blaze.CAN_GLIDE) {
-			if (!this.z && this.getMot().getY() < 0.0D) {
-				this.setMot(getMot().d(1, 0.6D, 1));
+			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
 	}
@@ -136,9 +137,9 @@ public class EntityMyBlaze extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int d(float f, float f1) {
+	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
-			super.e(f, f1);
+			super.calculateFallDamage(f, f1);
 		}
 		return 0;
 	}

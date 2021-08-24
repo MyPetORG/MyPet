@@ -25,22 +25,22 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWanderingTrader;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.level.World;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyWanderingTrader extends EntityMyPet {
 
-	private static final DataWatcherObject<Integer> UNUSED_WATCHER = DataWatcher.a(EntityMyWanderingTrader.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<Integer> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.INT);
 
-	public EntityMyWanderingTrader(World world, MyPet myPet) {
+	public EntityMyWanderingTrader(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.villager.death";
 	}
 
@@ -55,10 +55,10 @@ public class EntityMyWanderingTrader extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
-			getDataWatcher().register(UNUSED_WATCHER, 0);
+			getEntityData().define(UNUSED_WATCHER, 0);
 		}
 	}
 

@@ -65,7 +65,7 @@ public class Sit implements AIGoal {
 		} else if (this.entityMyPet instanceof EntityMyPanda) {
 			((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, true);
 		}
-		entityMyPet.setGoalTarget(null);
+		entityMyPet.setTarget(null);
 	}
 
 	@Override

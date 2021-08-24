@@ -26,23 +26,23 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPhantom;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.level.World;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMyPhantom extends EntityMyPet {
 
-	private static final DataWatcherObject<Integer> SIZE_WATCHER = DataWatcher.a(EntityMyPhantom.class, DataWatcherRegistry.b);
+	private static final EntityDataAccessor<Integer> SIZE_WATCHER = SynchedEntityData.defineId(EntityMyPhantom.class, EntityDataSerializers.INT);
 
-	public EntityMyPhantom(World world, MyPet myPet) {
+	public EntityMyPhantom(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.phantom.death";
 	}
 
@@ -57,32 +57,32 @@ public class EntityMyPhantom extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 
-		getDataWatcher().register(SIZE_WATCHER, 0);
+		getEntityData().define(SIZE_WATCHER, 0);
 	}
 
 	@Override
 	public void updateVisuals() {
 		int size = Math.max(1, getMyPet().getSize());
-		getDataWatcher().set(SIZE_WATCHER, size);
-		this.updateSize();
+		getEntityData().set(SIZE_WATCHER, size);
+		this.refreshDimensions();
 		if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
 			petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.2), 20));
 		}
 	}
 
 	@Override
-	public net.minecraft.world.entity.EntitySize a(EntityPose entitypose) {
+	public net.minecraft.world.entity.EntityDimensions getDimensions(Pose entitypose) {
 		EntitySize es = this.getClass().getAnnotation(EntitySize.class);
 		if (es != null) {
 			int size = Math.max(1, getMyPet().getSize());
 			float width = es.width();
 			float height = Float.isNaN(es.height()) ? width : es.height();
-			return new net.minecraft.world.entity.EntitySize(width * size, height * size, false);
+			return new net.minecraft.world.entity.EntityDimensions(width * size, height * size, false);
 		}
-		return super.a(entitypose);
+		return super.getDimensions(entitypose);
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class EntityMyPhantom extends EntityMyPet {
 		super.onLivingUpdate();
 
 		if (Configuration.MyPet.Phantom.CAN_GLIDE) {
-			if (!this.z && this.getMot().getY() < 0.0D) {
-				this.setMot(getMot().d(1, 0.6D, 1));
+			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
 	}
@@ -105,9 +105,9 @@ public class EntityMyPhantom extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int d(float f, float f1) {
+	public int calculateFallDamage(float f, float f1) {
 		if (!Configuration.MyPet.Phantom.CAN_GLIDE) {
-			super.e(f, f1);
+			super.calculateFallDamage(f, f1);
 		}
 		return 0;
 	}

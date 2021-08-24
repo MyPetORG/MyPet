@@ -20,6 +20,14 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1;
 
+import java.lang.reflect.Method;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.Compat;
@@ -27,20 +35,13 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.services.EggIconService;
 import de.Keyle.MyPet.compat.v1_17_R1.services.EntityConverterService;
 import de.Keyle.MyPet.compat.v1_17_R1.services.RepositoryMyPetConverterService;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.entity.EntityLiving;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityToggleGlideEvent;
-
-import java.lang.reflect.Method;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 
 @Compat("v1_17_R1")
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
 
-    public static Method ENTITY_LIVING_broadcastItemBreak = ReflectionUtil.getMethod(EntityLiving.class, "d", EnumHand.class);
+    public static Method ENTITY_LIVING_broadcastItemBreak = ReflectionUtil.getMethod(LivingEntity.class, "d", InteractionHand.class);
 
     @Override
 	public void init() {

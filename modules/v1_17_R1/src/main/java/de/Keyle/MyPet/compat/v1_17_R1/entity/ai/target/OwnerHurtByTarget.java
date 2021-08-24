@@ -20,6 +20,11 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
@@ -28,22 +33,17 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTameableAnimal;
-import net.minecraft.world.entity.decoration.EntityArmorStand;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.decoration.ArmorStand;
 
 @Compat("v1_17_R1")
 public class OwnerHurtByTarget implements AIGoal {
 
 	private final EntityMyPet petEntity;
-	private EntityLiving lastDamager;
+	private net.minecraft.world.entity.LivingEntity lastDamager;
 	private final MyPet myPet;
-	private final EntityPlayer owner;
+	private final ServerPlayer owner;
 
 	public OwnerHurtByTarget(EntityMyPet entityMyPet) {
 		this.petEntity = entityMyPet;
@@ -59,18 +59,18 @@ public class OwnerHurtByTarget implements AIGoal {
 		if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
 			return false;
 		}
-		this.lastDamager = owner.getLastDamager();
+		this.lastDamager = owner.getLastHurtByMob();
 
 		if (this.lastDamager == null || !lastDamager.isAlive()) {
 			return false;
 		}
-		if (lastDamager instanceof EntityArmorStand) {
+		if (lastDamager instanceof ArmorStand) {
 			return false;
 		}
 		if (lastDamager == petEntity) {
 			return false;
 		}
-		if (lastDamager instanceof EntityPlayer) {
+		if (lastDamager instanceof ServerPlayer) {
 			if (owner == lastDamager) {
 				return false;
 			}
@@ -85,9 +85,9 @@ public class OwnerHurtByTarget implements AIGoal {
 			if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
 				return false;
 			}
-		} else if (lastDamager instanceof EntityTameableAnimal) {
-			EntityTameableAnimal tameable = (EntityTameableAnimal) lastDamager;
-			if (tameable.isTamed() && tameable.getOwner() != null) {
+		} else if (lastDamager instanceof TamableAnimal) {
+			TamableAnimal tameable = (TamableAnimal) lastDamager;
+			if (tameable.isTame() && tameable.getOwner() != null) {
 				Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
 				if (myPet.getOwner().equals(tameableOwner)) {
 					return false;
@@ -103,13 +103,13 @@ public class OwnerHurtByTarget implements AIGoal {
 				return false;
 			}
 			if (behaviorSkill.getBehavior() == BehaviorMode.Raid) {
-				if (lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal) lastDamager).isTamed()) {
+				if (lastDamager instanceof TamableAnimal && ((TamableAnimal) lastDamager).isTame()) {
 					return false;
 				}
 				if (lastDamager instanceof EntityMyPet) {
 					return false;
 				}
-				return !(lastDamager instanceof EntityPlayer);
+				return !(lastDamager instanceof ServerPlayer);
 			}
 		}
 		return true;
@@ -124,18 +124,18 @@ public class OwnerHurtByTarget implements AIGoal {
 			return true;
 		}
 
-		EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+		net.minecraft.world.entity.LivingEntity target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
-		if (target.t != petEntity.t) {
+		if (target.level != petEntity.level) {
 			return true;
-		} else if (petEntity.f(target) > 400) {
+		} else if (petEntity.distanceToSqr(target) > 400) {
 			return true;
-		} else return petEntity.f(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
+		} else return petEntity.distanceToSqr(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
 	}
 
 	@Override
 	public void start() {
-		petEntity.setTarget((LivingEntity) this.lastDamager.getBukkitEntity(), TargetPriority.OwnerGetsHurt);
+		petEntity.setMyPetTarget((LivingEntity) this.lastDamager.getBukkitEntity(), TargetPriority.OwnerGetsHurt);
 	}
 
 	@Override

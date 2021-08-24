@@ -20,40 +20,40 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
+import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static de.Keyle.MyPet.compat.v1_17_R1.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
 
-	protected static final DataWatcherObject<Byte> UNUSED_WATCHER = DataWatcher.a(EntityMyIronGolem.class, DataWatcherRegistry.a);
+	protected static final EntityDataAccessor<Byte> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyIronGolem.class, EntityDataSerializers.BYTE);
 
 	int flowerCounter = 0;
 	boolean flower = false;
 
-	public EntityMyIronGolem(World world, MyPet myPet) {
+	public EntityMyIronGolem(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
@@ -61,10 +61,10 @@ public class EntityMyIronGolem extends EntityMyPet {
 	public boolean attack(Entity entity) {
 		boolean flag = false;
 		try {
-			this.t.broadcastEntityEffect(this, (byte) 4);
+			this.level.broadcastEntityEvent(this, (byte) 4);
 			flag = super.attack(entity);
 			if (Configuration.MyPet.IronGolem.CAN_TOSS_UP && flag) {
-				entity.setMot(entity.getMot().add(0, 0.4000000059604645D, 0));
+				entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.4000000059604645D, 0));
 				this.makeSound("entity.iron_golem.attack", 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
@@ -74,7 +74,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 	}
 
 	@Override
-	protected String getDeathSound() {
+	protected String getMyPetDeathSound() {
 		return "entity.iron_golem.death";
 	}
 
@@ -89,18 +89,18 @@ public class EntityMyIronGolem extends EntityMyPet {
 	}
 
 	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(UNUSED_WATCHER, (byte) 0); // N/A
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(UNUSED_WATCHER, (byte) 0); // N/A
 	}
 
 	@Override
-	public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).a()) {
-			return EnumInteractionResult.b;
+	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+			return InteractionResult.CONSUME;
 		}
 
-		if (itemStack.getItem() == Items.mq) {
+		if (itemStack.getItem() == Items.IRON_INGOT) {
 			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 				if (getMyPet().getStatus() == MyPet.PetState.Here) {
 					super.setHealth(this.getHealth() + 0.0001F);
@@ -113,31 +113,31 @@ public class EntityMyIronGolem extends EntityMyPet {
 			}, 10L);
 		}
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Blocks.bw.getItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+			if (itemStack.getItem() == Blocks.POPPY.asItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
-					itemStack.subtract(1);
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().k, ItemStack.b);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				return EnumInteractionResult.b;
-			} else if (itemStack.getItem() == Items.pq && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
-				EntityItem entityitem = new EntityItem(this.t, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
-				entityitem.ap = 10;
-				entityitem.setMot(entityitem.getMot().add(0, this.Q.nextFloat() * 0.05F, 0));
-				this.t.addEntity(entityitem);
+				return InteractionResult.CONSUME;
+			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+				ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
+				entityitem.pickupDelay = 10;
+				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+				this.level.addFreshEntity(entityitem);
 
 				makeSound("entity.sheep.shear", 1.0F, 1.0F);
 				getMyPet().setFlower(null);
-				if (itemStack != ItemStack.b && !entityhuman.getAbilities().d) {
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
-						itemStack.damage(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastItemBreak(enumhand));
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
 					} catch (Error e) {
 						// TODO REMOVE
-						itemStack.damage(1, entityhuman, (entityhuman1) -> {
+						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
 							try {
-								ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
 								ex.printStackTrace();
 							}
@@ -145,10 +145,10 @@ public class EntityMyIronGolem extends EntityMyPet {
 					}
 				}
 
-				return EnumInteractionResult.b;
+				return InteractionResult.CONSUME;
 			}
 		}
-		return EnumInteractionResult.d;
+		return InteractionResult.PASS;
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (this.flower && this.flowerCounter-- <= 0) {
-			this.t.broadcastEntityEffect(this, (byte) 11);
+			this.level.broadcastEntityEvent(this, (byte) 11);
 			flowerCounter = 300;
 		}
 	}

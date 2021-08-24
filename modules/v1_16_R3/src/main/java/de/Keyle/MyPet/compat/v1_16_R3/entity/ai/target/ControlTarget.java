@@ -20,6 +20,11 @@
 
 package de.Keyle.MyPet.compat.v1_16_R3.entity.ai.target;
 
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
@@ -33,10 +38,6 @@ import net.minecraft.server.v1_16_R3.EntityArmorStand;
 import net.minecraft.server.v1_16_R3.EntityLiving;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 import net.minecraft.server.v1_16_R3.EntityTameableAnimal;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 @Compat("v1_16_R3")
 public class ControlTarget implements AIGoal {
@@ -130,7 +131,7 @@ public class ControlTarget implements AIGoal {
 			return true;
 		}
 
-		EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+		EntityLiving target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
 		if (target.world != petEntity.world) {
 			return true;
@@ -141,7 +142,7 @@ public class ControlTarget implements AIGoal {
 
 	@Override
 	public void start() {
-		petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Control);
+		petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Control);
 	}
 
 	@Override

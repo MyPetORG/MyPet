@@ -75,7 +75,7 @@ public class EntityMySlime extends EntityMyPet {
         if (this.onGround && jumpDelay-- <= 0) {
             getControllerJump().a();
             jumpDelay = (this.random.nextInt(20) + 10);
-            if (getTarget() != null) {
+            if (getMyPetTarget() != null) {
                 jumpDelay /= 3;
             }
             makeSound(getDeathSound(), 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);

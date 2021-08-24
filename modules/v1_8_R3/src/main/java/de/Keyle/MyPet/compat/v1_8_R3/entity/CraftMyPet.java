@@ -153,7 +153,7 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
     }
 
     public void setTarget(LivingEntity target, TargetPriority priority) {
-        getHandle().setTarget(target, priority);
+        getHandle().setMyPetTarget(target, priority);
     }
 
     @Override

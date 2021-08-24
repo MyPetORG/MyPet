@@ -20,10 +20,11 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.util.inventory;
 
-import de.Keyle.MyPet.api.util.Compat;
-import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
+
+import de.Keyle.MyPet.api.util.Compat;
+import net.minecraft.nbt.CompoundTag;
 
 @Compat("v1_17_R1")
 public class ItemStackComparator {
@@ -47,8 +48,8 @@ public class ItemStackComparator {
             return false;
         }
         if (i1.hasItemMeta() && i2.hasItemMeta()) {
-            NBTTagCompound tag1 = CraftItemStack.asNMSCopy(i1).getTag();
-            NBTTagCompound tag2 = CraftItemStack.asNMSCopy(i2).getTag();
+            CompoundTag tag1 = CraftItemStack.asNMSCopy(i1).getTag();
+            CompoundTag tag2 = CraftItemStack.asNMSCopy(i2).getTag();
 
             if (tag1 != null) {
                 if (tag1.equals(tag2)) {

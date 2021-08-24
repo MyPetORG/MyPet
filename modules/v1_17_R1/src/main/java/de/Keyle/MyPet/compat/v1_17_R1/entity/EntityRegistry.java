@@ -20,8 +20,19 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -30,47 +41,33 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
-import net.minecraft.core.IRegistry;
-import net.minecraft.core.RegistryBlocks;
-import net.minecraft.core.RegistryMaterials;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumCreatureType;
-import net.minecraft.world.entity.animal.EntityFox;
-import net.minecraft.world.level.World;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 @Compat("v1_17_R1")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
-	Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
+	Map<MyPetType, EntityType> entityTypes = new HashMap<>();
 
-	protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) { //TODO 2021/08/19 The only thing left: They need to follow the player
-		EntityTypes<? extends EntityLiving> types = (EntityTypes<? extends EntityLiving>) entityRegistry.get(new MinecraftKey(key));
+	protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) { //TODO 2021/08/19 The only thing left: They need to follow the player
+		EntityType<? extends LivingEntity> types = (EntityType<? extends LivingEntity>) entityRegistry.get(new ResourceLocation(key));
 		entityTypes.put(petType, types);
 		registerDefaultAttributes(entityTypes.get(petType), types);
 		overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
 	}
 
 	@SneakyThrows
-	public static void registerDefaultAttributes(EntityTypes<? extends EntityLiving> customType, EntityTypes<? extends EntityLiving> rootType) {
-		MyAttributeDefaults.registerCustomEntityTypes(customType, rootType);
+	public static void registerDefaultAttributes(EntityType<? extends LivingEntity> customType, EntityType<? extends LivingEntity> rootType) {
+		MyAttributeDefaults.registerCustomEntityType(customType, rootType);
 	}
 
-	protected void registerEntity(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+	protected void registerEntity(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
 		Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_17_R1.entity.types.EntityMy" + type.name());
 		entityClasses.forcePut(type, entityClass);
 
@@ -86,10 +83,10 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
 		EntityMyPet petEntity = null;
 		Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
-		World world = ((CraftWorld) bukkitWorld).getHandle();
+		Level world = ((CraftWorld) bukkitWorld).getHandle();
 
 		try {
-			Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
+			Constructor<?> ctor = entityClass.getConstructor(Level.class, MyPet.class);
 			Object obj = ctor.newInstance(world, pet);
 			if (obj instanceof EntityMyPet) {
 				petEntity = (EntityMyPet) obj;
@@ -105,7 +102,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	@Override
 	public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
 		if (entity != null) {
-			World world = ((CraftWorld) bukkitWorld).getHandle();
+			Level world = ((CraftWorld) bukkitWorld).getHandle();
 			return world.addEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
 		}
 		return false;
@@ -113,7 +110,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	@Override
 	public void registerEntityTypes() {
-		RegistryBlocks<EntityTypes<?>> entityRegistry = getRegistry(IRegistry.Y);
+		DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(Registry.ENTITY_TYPE);
 		for (MyPetType type : MyPetType.all()) {
 			registerEntity(type, entityRegistry);
 		}
@@ -127,16 +124,16 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	public void unregisterEntityTypes() {
 	}
 
-	public RegistryBlocks<EntityTypes<?>> getRegistry(RegistryBlocks registryMaterials) {
-		if (!registryMaterials.getClass().getName().equals(RegistryBlocks.class.getName())) {
+	public DefaultedRegistry<EntityType<?>> getRegistry(DefaultedRegistry registryMaterials) {
+		if (!registryMaterials.getClass().getName().equals(DefaultedRegistry.class.getName())) {
 			MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
 			for (Field field : registryMaterials.getClass().getDeclaredFields()) {
-				if (field.getType() == RegistryMaterials.class) {
+				if (field.getType() == DefaultedRegistry.class) {
 					field.setAccessible(true);
 					try {
-						RegistryBlocks<EntityTypes<?>> reg = (RegistryBlocks<EntityTypes<?>>) field.get(registryMaterials);
+						DefaultedRegistry<EntityType<?>> reg = (DefaultedRegistry<EntityType<?>>) field.get(registryMaterials);
 
-						if (!reg.getClass().getName().equals(RegistryBlocks.class.getName())) {
+						if (!reg.getClass().getName().equals(DefaultedRegistry.class.getName())) {
 							reg = getRegistry(reg);
 						}
 
@@ -150,11 +147,11 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		return registryMaterials;
 	}
 
-	protected void overwriteEntityID(EntityTypes types, int id, RegistryBlocks<EntityTypes<?>> entityRegistry) {
+	protected void overwriteEntityID(EntityType types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
 
 
 		try {
-			Field bgF = RegistryMaterials.class.getDeclaredField("bw");
+			Field bgF = MappedRegistry.class.getDeclaredField("bw"); //TODO Might fail.
 			bgF.setAccessible(true);
 			Object map = bgF.get(entityRegistry);
 			Class<?> clazz = map.getClass();
@@ -168,8 +165,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	}
 
-	protected int getEntityTypeId(MyPetType type, RegistryBlocks<EntityTypes<?>> entityRegistry) {
-		EntityTypes<?> types = entityRegistry.get(new MinecraftKey(type.getTypeID().toString()));
+	protected int getEntityTypeId(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
+		EntityType<?> types = entityRegistry.get(new ResourceLocation(type.getTypeID().toString()));
 		return entityRegistry.getId(types);
 	}
 }

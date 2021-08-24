@@ -38,7 +38,7 @@ public class RandomLookaround implements AIGoal {
 
 	@Override
 	public boolean shouldStart() {
-		if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
+		if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
 			return false;
 		}
 		if (this.petEntity.isVehicle()) {
@@ -63,6 +63,6 @@ public class RandomLookaround implements AIGoal {
 	@Override
 	public void tick() {
 		this.ticksUntilStopLookingAround--;
-		this.petEntity.getControllerLook().a(this.petEntity.locX() + this.directionX, this.petEntity.locY() + this.petEntity.getHeadHeight(), this.petEntity.locZ() + this.directionZ, this.petEntity.eZ(), this.petEntity.eZ());
+		this.petEntity.getLookControl().setLookAt(this.petEntity.getX() + this.directionX, this.petEntity.getY() + this.petEntity.getEyeHeight(), this.petEntity.getZ() + this.directionZ, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot());
 	}
 }

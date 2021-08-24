@@ -23,66 +23,63 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftPart;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
 
 public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 
 	public final EntityMyPet owner;
-	private final EntitySize size;
+	private final EntityDimensions size;
 	private final String part;
 	protected CraftMyPetPart bukkitEntity = null;
 
 	public EntityMyPetPart(EntityMyPet owner, String part, float width, float height) {
-		super(EntityTypes.v, owner.t);
-		ReflectionUtil.setFieldValue("bukkitEntity", this, new CraftMyPetPart(this.t.getCraftServer(), this));
+		super(EntityType.ENDER_DRAGON, owner.level);
+		ReflectionUtil.setFieldValue("bukkitEntity", this, new CraftMyPetPart(this.level.getCraftServer(), this));
 		this.owner = owner;
 		this.part = part;
-		this.size = EntitySize.b(width, height);
+		this.size = EntityDimensions.scalable(width, height);
 	}
 
 	@Override
-	protected void initDatawatcher() {
+	protected void defineSynchedData() {
 	}
 
-
 	@Override
-	public boolean isInteractable() {
+	public boolean isPickable() {
 		return true;
 	}
 
 	@Override
-	protected void loadData(NBTTagCompound nbtTagCompound) {
-
+	public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
 	}
 
 	@Override
-	protected void saveData(NBTTagCompound nbtTagCompound) {
-
+	public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
 	}
 
 	@Override
-	public boolean damageEntity(DamageSource var1, float var2) {
+	public boolean hurt(DamageSource var1, float var2) {
 		return false;
 	}
 
 	@Override
-	public boolean q(Entity var1) {
+	public boolean is(Entity var1) {
 		return this == var1 || this.owner == var1;
 	}
 
 	@Override
-	public Packet<?> getPacket() {
+	public Packet<?> getAddEntityPacket() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public EntitySize a(EntityPose entitypose) {
+	public EntityDimensions getDimensions(Pose entitypose) {
 		return this.size;
 	}
 
@@ -94,7 +91,7 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 	@Override
 	public CraftMyPetPart getBukkitEntity() {
 		if (this.bukkitEntity == null) {
-			this.bukkitEntity = new CraftMyPetPart(this.t.getCraftServer(), this);
+			this.bukkitEntity = new CraftMyPetPart(this.level.getCraftServer(), this);
 		}
 		return this.bukkitEntity;
 	}

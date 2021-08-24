@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target;
 
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
@@ -29,17 +32,15 @@ import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.EntityLiving;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 
 @Compat("v1_17_R1")
 public class BehaviorDuelTarget implements AIGoal {
 
 	private final MyPet myPet;
 	private final EntityMyPet petEntity;
-	private final EntityPlayer petOwnerEntity;
+	private final ServerPlayer petOwnerEntity;
 	private MyPetMinecraftEntity target;
 	private MyPetMinecraftEntity duelOpponent = null;
 	private final float range;
@@ -71,7 +72,7 @@ public class BehaviorDuelTarget implements AIGoal {
 			return true;
 		}
 
-		for (EntityMyPet entityMyPet : this.petEntity.t.a(EntityMyPet.class, this.petOwnerEntity.getBoundingBox().grow(range, range, range))) {
+		for (EntityMyPet entityMyPet : this.petEntity.level.getEntitiesOfClass(EntityMyPet.class, this.petOwnerEntity.getBoundingBox().inflate(range, range, range))) {
 			MyPet targetMyPet = entityMyPet.getMyPet();
 
 			if (entityMyPet != petEntity && entityMyPet.isAlive()) {
@@ -100,23 +101,23 @@ public class BehaviorDuelTarget implements AIGoal {
 			return true;
 		}
 
-		EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+		LivingEntity target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
 		Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
 		if (behaviorSkill.getBehavior() != BehaviorMode.Duel) {
 			return true;
 		} else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
 			return true;
-		} else if (target.t != petEntity.t) {
+		} else if (target.level != petEntity.level) {
 			return true;
-		} else if (petEntity.f(target) > 400) {
+		} else if (petEntity.distanceToSqr(target) > 400) {
 			return true;
-		} else return petEntity.f(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
+		} else return petEntity.distanceToSqr(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
 	}
 
 	@Override
 	public void start() {
-		petEntity.setTarget(this.target.getBukkitEntity(), TargetPriority.Duel);
+		petEntity.setMyPetTarget(this.target.getBukkitEntity(), TargetPriority.Duel);
 		setDuelOpponent(this.target);
 		if (target.getTargetSelector().hasGoal("DuelTarget")) {
 			BehaviorDuelTarget duelGoal = (BehaviorDuelTarget) target.getTargetSelector().getGoal("DuelTarget");

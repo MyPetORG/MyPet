@@ -20,37 +20,27 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyAxolotl;
-import de.Keyle.MyPet.api.entity.types.MyMooshroom;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.World;
-import org.bukkit.Bukkit;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyAxolotl extends EntityMyPet {
 
-    private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyAxolotl.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Integer> VARIANT_WATCHER = DataWatcher.a(EntityMyAxolotl.class, DataWatcherRegistry.b);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.INT);
 
-    public EntityMyAxolotl(World world, MyPet myPet) {
+    public EntityMyAxolotl(Level world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound() {
+    protected String getMyPetDeathSound() {
         return "entity.axolotl.death";
     }
 
@@ -65,16 +55,16 @@ public class EntityMyAxolotl extends EntityMyPet {
     }
 
     @Override
-    protected void initDatawatcher() {
-        super.initDatawatcher();
-        getDataWatcher().register(AGE_WATCHER, false);
-        getDataWatcher().register(VARIANT_WATCHER, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(AGE_WATCHER, false);
+        getEntityData().define(VARIANT_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
-        this.getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-        this.getDataWatcher().set(VARIANT_WATCHER, getMyPet().getVariant());
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 
     @Override
