@@ -154,7 +154,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	protected CraftMyPet bukkitEntity = null;
 	protected AttributeMap attributeMap;
 
-	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "jumping");
+	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bn");	//Jumping-Field
 
 	public EntityMyPet(Level world, MyPet myPet) {
 		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
@@ -1323,7 +1323,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 				}
 			}
 
-			if (doJump) { //It doesn't call this
+			if (doJump) {
 				if (onGround) {
 					jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
 					String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
