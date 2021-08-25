@@ -55,7 +55,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
 	Map<MyPetType, EntityType> entityTypes = new HashMap<>();
 
-	protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) { //TODO 2021/08/19 The only thing left: They need to follow the player
+	protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
 		EntityType<? extends LivingEntity> types = (EntityType<? extends LivingEntity>) entityRegistry.get(new ResourceLocation(key));
 		entityTypes.put(petType, types);
 		registerDefaultAttributes(entityTypes.get(petType), types);
@@ -148,8 +148,6 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	}
 
 	protected void overwriteEntityID(EntityType types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
-
-
 		try {
 			Field bgF = MappedRegistry.class.getDeclaredField("bw"); //TODO Might fail.
 			bgF.setAccessible(true);

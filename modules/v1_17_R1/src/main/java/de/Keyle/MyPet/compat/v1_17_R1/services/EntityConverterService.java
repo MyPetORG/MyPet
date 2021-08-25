@@ -32,6 +32,7 @@ import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillagerZombie;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.Bee;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.ChestedHorse;
@@ -73,6 +74,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.types.MyAxolotl;
 import de.Keyle.MyPet.api.entity.types.MyBee;
 import de.Keyle.MyPet.api.entity.types.MyCat;
 import de.Keyle.MyPet.api.entity.types.MyCreeper;
@@ -178,6 +180,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case LLAMA:
                 convertLlama((Llama) entity, properties);
+                break;
+            case AXOLOTL:
+                convertAxolotl((Axolotl) entity, properties);
                 break;
             case PARROT:
                 convertParrot((Parrot) entity, properties);
@@ -342,6 +347,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
         } else if (myPet instanceof MyParrot) {
             ((Parrot) normalEntity).setVariant(Parrot.Variant.values()[((MyParrot) myPet).getVariant()]);
+        } else if (myPet instanceof MyAxolotl) {
+            ((Axolotl) normalEntity).setVariant(Axolotl.Variant.values()[((MyAxolotl) myPet).getVariant()]);
         } else if (myPet instanceof MyTropicalFish) {
             ((CraftTropicalFish) normalEntity).getHandle().setVariant(((MyTropicalFish) myPet).getVariant());
         } else if (myPet instanceof MyPufferfish) {
@@ -387,6 +394,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         if (llama.isCarryingChest()) {
             properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
         }
+    }
+    
+    private void convertAxolotl(Axolotl axolotl, TagCompound properties) {
+        properties.getCompoundData().put("Variant", new TagInt(axolotl.getVariant().ordinal()));
     }
 
     private void convertParrot(Parrot parrot, TagCompound properties) {

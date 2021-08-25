@@ -63,7 +63,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("axolotl", new CommandOptionCreator()
                 .add("baby")
-                .add("type:")
+                .add("variant:")
                 .get());
 
         petTypeOptionMap.put("bee", new CommandOptionCreator()
@@ -539,6 +539,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         }
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.Parrot) {
+                    	compound.getCompoundData().put("Variant", new TagInt(variant));
+                    } else if (petType == MyPetType.Axolotl) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.TropicalFish) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));

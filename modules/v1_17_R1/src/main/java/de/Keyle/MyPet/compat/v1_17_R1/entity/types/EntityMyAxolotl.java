@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import org.bukkit.block.data.Ageable;
+
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyAxolotl;
@@ -69,7 +71,7 @@ public class EntityMyAxolotl extends EntityMyPet {
 
     @Override
     public void playPetStepSound() {
-        makeSound("entity.axolotl.step", 0.15F, 1.0F);
+        makeSound("entity.axolotl.splash", 0.15F, 1.0F);
     }
 
     @Override

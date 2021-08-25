@@ -69,6 +69,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
 
@@ -1270,4 +1271,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
         return source;
     }
+    
+    @Override
+	public UUID getUniqueID() {
+		return this.uniqueID;
+	}
 }

@@ -31,7 +31,7 @@
 public class MyAxolotl extends MyPet implements de.Keyle.MyPet.api.entity.types.MyAxolotl {
 
     protected boolean isBaby = false;
-    protected int axolotlType = 1;
+    protected int axolotlType = 0;
 
     public MyAxolotl(MyPetPlayer petOwner) {
         super(petOwner);
@@ -86,6 +86,13 @@ public class MyAxolotl extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     @Override
     public String toString() {
-        return "MyAxolotl{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
+        return "MyAxolotl{owner=" + getOwner().getName() +
+        		", name=" + ChatColor.stripColor(petName) +
+        		", exp=" + experience.getExp() + "/" + experience.getRequiredExp() +
+        		", lv=" + experience.getLevel() +
+        		", status=" + status.name() +
+        		", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
+        		", worldgroup=" + worldGroup +
+        		", baby=" + isBaby() + "}";
     }
 }
