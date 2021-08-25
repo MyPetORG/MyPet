@@ -814,7 +814,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 	}
 	
-	//TODO Check for Speed
+	//TODO Check for Riding Jumps
 	private void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
 		double locY;
 		float speed;
@@ -1020,7 +1020,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	}
 
 	@Override
-	public void aiStep() {	//Speed-Probleme?
+	public void aiStep() {
 		if (this.jumpDelay > 0) {
 			--this.jumpDelay;
 		}
@@ -1033,7 +1033,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			double newX = this.getX() + (this.useItemRemaining - this.getX()) / this.lerpX;
 			double newY = this.getY() + (this.fallFlyTicks - this.getY()) / this.lerpX;
 			double newZ = this.getZ() + (this.autoSpinAttackTicks - this.getZ()) / this.lerpX;
-			double d3 = Mth.frac(this.animationSpeed - (double) this.getYRot()); //TODO animationSpeed might be wrong (was az which might have been wrong...)
+			double d3 = Mth.frac(this.rotA - (double) this.getYRot());
 			this.setYRot((float) ((double) this.getYRot() + d3 / this.lerpX));
 			this.setXRot((float) ((double) this.getXRot() + (this.animationPosition - (double) this.getXRot()) / this.lerpX));
 			--this.lerpX;
@@ -1058,8 +1058,8 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 		if (Math.abs(vec3d.z()) < 0.003D) {
 			motZ = 0.0D;
-		}
-
+		} 
+		
 		this.setDeltaMovement(motX, motY, motZ);
 
 		this.doMyPetTick();
@@ -1087,11 +1087,11 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			this.jumpDelay = 0;
 		}
 
-		this.animationSpeedOld *= 0.98F;
-		this.animationPosition *= 0.98F;
+		this.xxa *= 0.98F;
+		this.zza *= 0.98F;
 
 		// this.n(); //no Elytra flight
-		this.travel(new Vec3(this.animationSpeedOld, this.yHeadRot, this.animationPosition));
+		this.travel(new Vec3(this.xxa, this.yya, this.zza));
 		this.pushEntities();
 	}
 
@@ -1323,7 +1323,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 				}
 			}
 
-			if (doJump) {
+			if (doJump) { //It doesn't call this
 				if (onGround) {
 					jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
 					String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);

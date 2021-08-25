@@ -115,6 +115,7 @@ public class EntityMyCat extends EntityMyPet {
 
 	@Override
 	protected void defineSynchedData() {
+		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SIT_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());

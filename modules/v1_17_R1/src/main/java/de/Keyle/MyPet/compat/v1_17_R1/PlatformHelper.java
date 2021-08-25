@@ -24,6 +24,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -374,10 +376,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         net.minecraft.world.entity.Entity e = null;
 		try {
 			e = Bukkit.getScheduler().callSyncMethod(MyPetApi.getPlugin(), () -> 
-				((CraftWorld) world).getHandle().getEntity(id)).get();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		} catch (ExecutionException e1) {
+				((CraftWorld) world).getHandle().getEntity(id)).get(5, TimeUnit.SECONDS);	//TODO temporary fix. Should prevent server crashes but yeah...
+		} catch (InterruptedException | TimeoutException | ExecutionException e1) {
 			e1.printStackTrace();
 		}
 		

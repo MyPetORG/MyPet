@@ -1091,7 +1091,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 		this.aT *= 0.98F;
 
 		// this.n(); //no Elytra flight
-		this.f(new Vec3D(this.aR, this.aZ, this.aT));
+		this.f(new Vec3D(this.aR, this.aS, this.aT));
 		this.collideNearby();
 	}
 

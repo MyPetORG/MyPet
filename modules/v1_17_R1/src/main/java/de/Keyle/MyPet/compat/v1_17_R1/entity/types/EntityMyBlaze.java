@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.UUID;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;

@@ -56,6 +56,7 @@ public class EntityMyCaveSpider extends EntityMyPet {
 
 	@Override
 	protected void defineSynchedData() {
+		super.defineSynchedData();
 		getEntityData().define(UNUSED_WATCHER, (byte) 0);
 	}
 

@@ -29,6 +29,8 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 @Compat("v1_17_R1")
@@ -98,6 +100,7 @@ public class Control implements AIGoal, Scheduler {
 			isRunning = true;
 		}
 		if (!nav.navigateTo(moveTo)) {
+			Bukkit.getConsoleSender().sendMessage("Well");
 			moveTo = null;
 		}
 	}
