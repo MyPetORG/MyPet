@@ -100,7 +100,6 @@ public class Control implements AIGoal, Scheduler {
 			isRunning = true;
 		}
 		if (!nav.navigateTo(moveTo)) {
-			Bukkit.getConsoleSender().sendMessage("Well");
 			moveTo = null;
 		}
 	}
