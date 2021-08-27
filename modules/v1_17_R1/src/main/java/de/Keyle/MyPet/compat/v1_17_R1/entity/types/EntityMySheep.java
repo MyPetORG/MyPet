@@ -49,7 +49,6 @@ import net.minecraft.world.level.block.Blocks;
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> COLOR_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BYTE);
 
 	private static final Map<DyeColor, Block> colorMap = new HashMap<>();
@@ -151,13 +150,16 @@ public class EntityMySheep extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(COLOR_WATCHER, (byte) 0); // color/sheared
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 
 		byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
 		this.getEntityData().set(COLOR_WATCHER, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));

@@ -53,7 +53,6 @@ import net.minecraft.world.level.block.state.BlockState;
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyZombieHorse extends EntityMyPet implements PlayerRideableJumping {
 
-	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyZombieHorse.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyZombieHorse.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyZombieHorse.class, EntityDataSerializers.OPTIONAL_UUID);
 
@@ -171,14 +170,17 @@ public class EntityMyZombieHorse extends EntityMyPet implements PlayerRideableJu
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_CHEST_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 		applyVisual(4, getMyPet().hasSaddle());
 	}
 

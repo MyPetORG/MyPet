@@ -43,7 +43,6 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyCat extends EntityMyPet {
 
-	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_UUID);
 	protected static final EntityDataAccessor<Integer> TYPE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.INT);
@@ -116,7 +115,6 @@ public class EntityMyCat extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SIT_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());
 		getEntityData().define(TYPE_WATCHER, 1);
@@ -127,7 +125,11 @@ public class EntityMyCat extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 		this.getEntityData().set(TYPE_WATCHER, getMyPet().getCatType().ordinal());
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 

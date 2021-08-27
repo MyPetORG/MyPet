@@ -38,7 +38,6 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 1.2F, height = 0.4F)
 public class EntityMyTurtle extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<BlockPos> HOME_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> HAS_EGG_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
@@ -89,7 +88,6 @@ public class EntityMyTurtle extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(HOME_WATCHER, BlockPos.ZERO);
 		getEntityData().define(HAS_EGG_WATCHER, false);
 		getEntityData().define(TRAVEL_POS_WATCHER, BlockPos.ZERO);
@@ -100,7 +98,11 @@ public class EntityMyTurtle extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 	}
 
 	@Override

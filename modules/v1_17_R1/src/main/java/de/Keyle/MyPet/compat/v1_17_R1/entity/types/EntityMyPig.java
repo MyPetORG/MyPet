@@ -49,7 +49,6 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyPig(Level world, MyPet myPet) {
@@ -150,13 +149,16 @@ public class EntityMyPig extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_WATCHER, false); // saddle
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 		this.getEntityData().set(SADDLE_WATCHER, getMyPet().hasSaddle());
 	}
 

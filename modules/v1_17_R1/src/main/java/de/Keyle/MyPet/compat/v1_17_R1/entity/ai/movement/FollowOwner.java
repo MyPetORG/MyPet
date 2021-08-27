@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 
@@ -114,12 +115,12 @@ public class FollowOwner implements AIGoal {
 		if (this.petEntity.canMove()) {
 			if (!owner.getAbilities().flying) {
 				if (!waitForGround) {
-					if (owner.flyDist <= 4) {
+					if (owner.fallDistance <= 4) {
 						if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
 							if (controlPathfinderGoal.moveTo == null) {
 								if (!petEntity.hasTarget()) {
 									if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
-										this.petEntity.flyDist = 0;
+										this.petEntity.fallDistance = 0;
 										this.petEntity.moveTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.getYRot(), this.petEntity.getXRot());
 										this.setPathTimer = 0;
 										return;

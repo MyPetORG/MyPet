@@ -37,7 +37,6 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 0.6f)
 public class EntityMyBee extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> BEE_STATUS_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.INT);
 
@@ -76,14 +75,17 @@ public class EntityMyBee extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(BEE_STATUS_WATCHER, (byte) 0);
 		getEntityData().define(ANGER_WATCHER, 0);
 	}
 
 	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 		this.getEntityData().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
 		this.setBeeStatus(8, getMyPet().hasNectar());
 		this.setBeeStatus(4, getMyPet().hasStung());

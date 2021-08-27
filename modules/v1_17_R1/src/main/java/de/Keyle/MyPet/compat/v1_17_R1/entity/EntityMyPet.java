@@ -25,6 +25,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -100,6 +102,7 @@ import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -108,6 +111,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -127,7 +131,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
+public abstract class EntityMyPet extends AgeableMob implements MyPetMinecraftEntity {
 	
 	protected static final EntityDataAccessor<Byte> POTION_PARTICLE_WATCHER = Mob.DATA_SHARED_FLAGS_ID;
 
@@ -161,6 +165,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 		try {
 			this.replaceCraftAttributes();
+			ageLocked = true;
 
 			this.myPet = myPet;
 			this.isMyPet = true;
@@ -1419,5 +1424,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	@Override
 	public UUID getUniqueID() {
 		return this.uuid;
+	}
+
+	@Override
+	public @Nullable AgeableMob getBreedOffspring(ServerLevel arg0, AgeableMob arg1) {
+		return null;
 	}
 }

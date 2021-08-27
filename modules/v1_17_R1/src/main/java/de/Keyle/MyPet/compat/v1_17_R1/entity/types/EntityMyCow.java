@@ -40,8 +40,6 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.BOOLEAN);
-
 	public EntityMyCow(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
@@ -88,14 +86,12 @@ public class EntityMyCow extends EntityMyPet {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
-	}
-
-	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 	}
 
 	@Override

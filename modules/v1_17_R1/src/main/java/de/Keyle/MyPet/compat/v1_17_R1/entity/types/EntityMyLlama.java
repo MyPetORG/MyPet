@@ -50,7 +50,6 @@ import net.minecraft.world.level.block.WoolCarpetBlock;
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyLlama extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.OPTIONAL_UUID);
 	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.BOOLEAN);
@@ -152,7 +151,6 @@ public class EntityMyLlama extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_CHEST_WATCHER, (byte) 0);    // saddle & chest
 		getEntityData().define(OWNER_WATCHER, Optional.empty()); // owner
 		getEntityData().define(CHEST_WATCHER, true);
@@ -163,8 +161,12 @@ public class EntityMyLlama extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 		this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		if (getMyPet().hasDecor()) {
 			ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
 			Block block = Block.byItem(is.getItem());
