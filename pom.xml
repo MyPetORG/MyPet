@@ -186,6 +186,14 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/worldguard/ -->
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.6-SNAPSHOT</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <!-- https://dev.bukkit.org/projects/worldedit -->
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
@@ -356,7 +364,7 @@
             <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.5.1</version>
+            <version>4.7.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

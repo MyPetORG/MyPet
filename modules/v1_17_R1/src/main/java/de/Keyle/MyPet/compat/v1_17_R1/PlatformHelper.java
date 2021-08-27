@@ -23,12 +23,8 @@ package de.Keyle.MyPet.compat.v1_17_R1;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
@@ -373,15 +369,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public Entity getEntity(int id, World world) {
-        net.minecraft.world.entity.Entity e = null;
-		try {
-			e = Bukkit.getScheduler().callSyncMethod(MyPetApi.getPlugin(), () -> 
-				((CraftWorld) world).getHandle().getEntity(id)).get(5, TimeUnit.SECONDS);	//TODO temporary fix. Should prevent server crashes but yeah...
-		} catch (InterruptedException | TimeoutException | ExecutionException e1) {
-			e1.printStackTrace();
-		}
-		
-        return e != null ? e.getBukkitEntity() : null;
+    	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntity(id);
+    	return e != null ? e.getBukkitEntity() : null;
     }
 
     public org.bukkit.inventory.ItemStack asBukkitItemStack(ItemStack itemStack) {

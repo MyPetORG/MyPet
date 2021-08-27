@@ -104,15 +104,7 @@ public class EntityMyRabbit extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		/*for(Method m : getNavigation().getClass().getDeclaredMethods()) {
-			Bukkit.getConsoleSender().sendMessage("Declared: "+m.getName()+" "+m.getReturnType());
-		}
-		for(Method m : getNavigation().getClass().getMethods()) {
-			Bukkit.getConsoleSender().sendMessage("Normal: "+m.getName()+" "+m.getReturnType());
-		}*/
-
-		//if (this.onGround && getNavigation().k() != null && jumpDelay-- <= 0) {	//TODO Figure out k() and getPath() (Spigot and Paper)
-		if (this.onGround && jumpDelay-- <= 0) {
+		if (this.onGround && !getNavigation().isDone() && jumpDelay-- <= 0) {
 			getJumpControl().jump();
 			jumpDelay = (this.random.nextInt(10) + 10);
 			if (getTarget() != null) {
