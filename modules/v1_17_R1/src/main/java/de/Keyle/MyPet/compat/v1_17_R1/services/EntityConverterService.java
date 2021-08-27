@@ -126,7 +126,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case WOLF:
                 convertWolf((Wolf) entity, properties);
                 break;
-
             case SHEEP:
                 convertSheep((Sheep) entity, properties);
                 break;

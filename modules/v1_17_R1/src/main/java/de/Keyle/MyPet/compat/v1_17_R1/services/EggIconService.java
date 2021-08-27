@@ -85,6 +85,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Giant:
                 icon.setMaterial(Material.ZOMBIE_SPAWN_EGG);
                 break;
+            case GlowSquid:
+				icon.setMaterial(Material.GLOW_SQUID_SPAWN_EGG);
+				break;
             case Goat:
                 icon.setMaterial(Material.GOAT_SPAWN_EGG);
                 break;

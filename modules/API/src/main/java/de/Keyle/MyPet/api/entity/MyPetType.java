@@ -109,6 +109,9 @@ public enum MyPetType {
             .v("1.7.10", 53)
             .v("1.13", "giant")
             .search()),
+    GlowSquid("GLOW_SQUID", "1.17.1", MyGlowSquid.class, new Compat<>()
+            .v("1.17.1", "glow_squid")
+            .search()),
     Guardian("GUARDIAN", "1.8", MyGuardian.class, new Compat<>()
             .v("1.7.10", 68)
             .v("1.13", "guardian")
