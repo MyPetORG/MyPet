@@ -20,18 +20,41 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.util.inventory;
 
-import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.keyle.knbt.*;
-import de.keyle.knbt.TagType;
-import net.minecraft.nbt.*;
-import net.minecraft.world.item.ItemStack;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
+import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.keyle.knbt.TagBase;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagByteArray;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagFloat;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagIntArray;
+import de.keyle.knbt.TagList;
+import de.keyle.knbt.TagLong;
+import de.keyle.knbt.TagShort;
+import de.keyle.knbt.TagString;
+import de.keyle.knbt.TagType;
+import net.minecraft.nbt.ByteArrayTag;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.nbt.ShortTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 
 @Compat("v1_17_R1")
 public class ItemStackNBTConverter {
@@ -133,7 +156,7 @@ public class ItemStackNBTConverter {
                 }
                 return compound;
             case 11:
-                return new TagIntArray(((TagIntArray) vanillaTag).getIntArrayData());
+                return new TagIntArray(((IntArrayTag) vanillaTag).getAsIntArray());
         }
         return null;
     }

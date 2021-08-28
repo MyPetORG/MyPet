@@ -54,7 +54,6 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyDrowned extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_3 = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.BOOLEAN);
@@ -165,7 +164,6 @@ public class EntityMyDrowned extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(BABY_WATCHER, false);
 		getEntityData().define(UNUSED_WATCHER_1, 0);
 		getEntityData().define(UNUSED_WATCHER_2, false);
 		getEntityData().define(UNUSED_WATCHER_3, false);
@@ -173,7 +171,11 @@ public class EntityMyDrowned extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getEntityData().set(BABY_WATCHER, getMyPet().isBaby());
+		if(getMyPet().isBaby()) {
+			this.setAge(-1);
+		} else {
+			this.setAge(1);
+		}
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {
