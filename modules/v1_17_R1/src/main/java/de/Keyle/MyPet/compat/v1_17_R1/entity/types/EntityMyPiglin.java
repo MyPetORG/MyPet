@@ -55,6 +55,8 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglin extends EntityMyPet {
 
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
+
 	public EntityMyPiglin(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
@@ -142,6 +144,12 @@ public class EntityMyPiglin extends EntityMyPet {
 		return InteractionResult.PASS;
 	}
 
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false); // is baby
+	}
+
 	/**
 	 * Returns the speed of played sounds
 	 * The faster the higher the sound will be
@@ -153,11 +161,7 @@ public class EntityMyPiglin extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {

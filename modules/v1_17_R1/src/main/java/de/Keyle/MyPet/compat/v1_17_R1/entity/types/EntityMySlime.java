@@ -69,7 +69,7 @@ public class EntityMySlime extends EntityMyPet {
 	public void updateVisuals() {
 		int size = Math.max(1, getMyPet().getSize());
 		getEntityData().set(SIZE_WATCHER, size);
-		this.refreshDimensions(); //Seems not to work?
+		this.refreshDimensions();
 		if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
 			petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
 		}

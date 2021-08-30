@@ -60,6 +60,7 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombieVillager extends EntityMyPet {
 
+	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyZombieVillager.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> TYPE_WATCHER = SynchedEntityData.defineId(EntityMyZombieVillager.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> DROWN_CONVERTING = SynchedEntityData.defineId(EntityMyZombieVillager.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> SHIVER_WATCHER = SynchedEntityData.defineId(EntityMyZombieVillager.class, EntityDataSerializers.BOOLEAN);
@@ -170,6 +171,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(BABY_WATCHER, false);
 		getEntityData().define(TYPE_WATCHER, 0);
 		getEntityData().define(DROWN_CONVERTING, false);
 		getEntityData().define(SHIVER_WATCHER, false);
@@ -179,12 +181,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
-		
+		getEntityData().set(BABY_WATCHER, getMyPet().isBaby());
 		String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
 		VillagerProfession profession = Registry.VILLAGER_PROFESSION.get(new ResourceLocation(professionKey));
 		VillagerType type = Registry.VILLAGER_TYPE.get(new ResourceLocation(getMyPet().getType().getKey())); //TODO

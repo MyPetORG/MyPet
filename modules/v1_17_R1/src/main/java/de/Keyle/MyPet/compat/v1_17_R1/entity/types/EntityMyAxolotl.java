@@ -29,11 +29,13 @@ import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyAxolotl extends EntityMyPet {
 
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.INT);
 
     public EntityMyAxolotl(Level world, MyPet myPet) {
@@ -58,16 +60,13 @@ public class EntityMyAxolotl extends EntityMyPet {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        getEntityData().define(AGE_WATCHER, false);
         getEntityData().define(VARIANT_WATCHER, 0);
     }
 
     @Override
     public void updateVisuals() {
-    	if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
         this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
     }
 

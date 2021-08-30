@@ -55,6 +55,7 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyFox extends EntityMyPet {
 
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> FOX_TYPE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Byte> ACTIONS_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Optional<UUID>> FRIEND_A_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -152,6 +153,7 @@ public class EntityMyFox extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(FRIEND_A_WATCHER, Optional.empty());
 		getEntityData().define(FRIEND_B_WATCHER, Optional.empty());
 		getEntityData().define(FOX_TYPE_WATCHER, 0);
@@ -160,11 +162,7 @@ public class EntityMyFox extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		this.getEntityData().set(FOX_TYPE_WATCHER, getMyPet().getType().ordinal());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {

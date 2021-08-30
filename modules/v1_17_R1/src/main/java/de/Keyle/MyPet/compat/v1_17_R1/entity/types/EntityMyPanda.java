@@ -37,6 +37,7 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 1.825F, height = 1.25F)
 public class EntityMyPanda extends EntityMyPet {
 
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> ASK_FOR_BAMBOO_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> SNEEZE_PROGRESS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> EATING_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
@@ -89,6 +90,7 @@ public class EntityMyPanda extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(ASK_FOR_BAMBOO_TICKS_WATCHER, 0);
 		getEntityData().define(SNEEZE_PROGRESS_WATCHER, 0);
 		getEntityData().define(MAIN_GENE_WATCHER, (byte) 0);
@@ -99,11 +101,7 @@ public class EntityMyPanda extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		this.getEntityData().set(MAIN_GENE_WATCHER, (byte) getMyPet().getMainGene().ordinal());
 		this.getEntityData().set(HIDDEN_GENE_WATCHER, (byte) getMyPet().getHiddenGene().ordinal());
 	}

@@ -54,6 +54,7 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet {
 
+	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> TYPE_WATCHER = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> DROWN_CONVERTING = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
@@ -163,17 +164,14 @@ public class EntityMyZombie extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(BABY_WATCHER, false);
 		getEntityData().define(TYPE_WATCHER, 0);
 		getEntityData().define(DROWN_CONVERTING, false);
 	}
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		getEntityData().set(BABY_WATCHER, getMyPet().isBaby());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {

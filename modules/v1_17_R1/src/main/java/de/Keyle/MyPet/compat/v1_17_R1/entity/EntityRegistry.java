@@ -45,8 +45,10 @@ import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
 
 @Compat("v1_17_R1")
@@ -56,8 +58,9 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	Map<MyPetType, EntityType> entityTypes = new HashMap<>();
 
 	protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
+		EntityDimensions size = entityRegistry.get(new ResourceLocation(key.toLowerCase())).getDimensions();
+		entityTypes.put(petType, Registry.register(entityRegistry, "mypet_" + key.toLowerCase(), EntityType.Builder.createNothing(MobCategory.CREATURE).noSave().noSummon().sized(size.width, size.height).build(key)));
 		EntityType<? extends LivingEntity> types = (EntityType<? extends LivingEntity>) entityRegistry.get(new ResourceLocation(key));
-		entityTypes.put(petType, types);
 		registerDefaultAttributes(entityTypes.get(petType), types);
 		overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
 	}

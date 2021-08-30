@@ -38,6 +38,7 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 1.3F, height = 1.4F)
 public class EntityMyPolarBear extends EntityMyPet {
 
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> REAR_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
 
 	int rearCounter = -1;
@@ -85,6 +86,7 @@ public class EntityMyPolarBear extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(REAR_WATCHER, false);
 
 	}
@@ -115,11 +117,7 @@ public class EntityMyPolarBear extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 	}
 
 	@Override

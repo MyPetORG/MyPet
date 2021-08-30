@@ -54,6 +54,7 @@ import net.minecraft.world.level.block.state.BlockState;
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyMule extends EntityMyPet implements PlayerRideableJumping {
 
+	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.OPTIONAL_UUID);
 	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BOOLEAN);
@@ -173,6 +174,7 @@ public class EntityMyMule extends EntityMyPet implements PlayerRideableJumping {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());
 		getEntityData().define(CHEST_WATCHER, false);
@@ -180,11 +182,7 @@ public class EntityMyMule extends EntityMyPet implements PlayerRideableJumping {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
 		applyVisual(4, getMyPet().hasSaddle());
 	}

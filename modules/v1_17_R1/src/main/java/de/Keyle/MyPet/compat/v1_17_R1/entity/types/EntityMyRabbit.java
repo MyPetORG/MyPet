@@ -36,7 +36,8 @@ import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
-	
+
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.INT);
 
 	int jumpDelay;
@@ -90,16 +91,13 @@ public class EntityMyRabbit extends EntityMyPet {
 	@Override
 	public void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false); // is baby
 		getEntityData().define(VARIANT_WATCHER, 0); // variant
 	}
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		this.getEntityData().set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
 	}
 

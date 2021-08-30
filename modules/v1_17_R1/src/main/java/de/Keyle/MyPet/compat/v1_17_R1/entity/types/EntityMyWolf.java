@@ -46,7 +46,8 @@ import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
-	
+
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_UUID);
 	private static final EntityDataAccessor<Float> TAIL_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.FLOAT);
@@ -127,6 +128,8 @@ public class EntityMyWolf extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+
+		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SIT_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());
 		getEntityData().define(TAIL_WATCHER, 30F);
@@ -141,11 +144,7 @@ public class EntityMyWolf extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
 		byte b0 = this.getEntityData().get(SIT_WATCHER);
 		if (getMyPet().isTamed()) {

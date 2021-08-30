@@ -44,6 +44,7 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyStrider extends EntityMyPet {
 
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> BOOST_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> HAS_RIDER_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
@@ -124,6 +125,7 @@ public class EntityMyStrider extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(BOOST_TICKS_WATCHER, 0);
 		getEntityData().define(HAS_RIDER_WATCHER, false);
 		getEntityData().define(SADDLE_WATCHER, false);
@@ -131,11 +133,7 @@ public class EntityMyStrider extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		if(getMyPet().isBaby()) {
-			this.setAge(-1);
-		} else {
-			this.setAge(1);
-		}
+		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		this.getEntityData().set(SADDLE_WATCHER, getMyPet().hasSaddle());
 	}
 
