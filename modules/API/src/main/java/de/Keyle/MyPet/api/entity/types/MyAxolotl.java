@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
-@DefaultInfo(food = {"bucket"})
+@DefaultInfo(food = {"tropical_fish_bucket"})
 public interface MyAxolotl extends MyPet, MyPetBaby {
 
     int getVariant();

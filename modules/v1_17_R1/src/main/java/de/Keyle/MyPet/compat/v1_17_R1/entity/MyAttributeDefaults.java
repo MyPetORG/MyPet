@@ -142,7 +142,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.OCELOT, Ocelot.createAttributes().build())								//Ocelot
                 .putFast(EntityType.PANDA, Panda.createAttributes().build())								//Panda
                 .putFast(EntityType.PARROT, Parrot.createAttributes().build())								//Parrot
-                .putFast(EntityType.PHANTOM, Phantom.createLivingAttributes().build())						//Phantom
+                .putFast(EntityType.PHANTOM, Phantom.createMobAttributes().build())							//Phantom
                 .putFast(EntityType.PIG, Pig.createAttributes().build())									//Pig
                 .putFast(EntityType.PIGLIN, Piglin.createAttributes().build())								//Piglin
                 .putFast(EntityType.PIGLIN_BRUTE, PiglinBrute.createAttributes().build()) 					//Piglin Brute
@@ -158,7 +158,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.SILVERFISH, Silverfish.createAttributes().build())						//Silverfish
                 .putFast(EntityType.SKELETON, Skeleton.createAttributes().build())							//Skeleton
                 .putFast(EntityType.SKELETON_HORSE, SkeletonHorse.createAttributes().build())				//Skeleton Horse
-                .putFast(EntityType.SLIME, Slime.createMobAttributes().build())							//Slime
+                .putFast(EntityType.SLIME, Slime.createMobAttributes().build())								//Slime
                 .putFast(EntityType.SNOW_GOLEM, SnowGolem.createAttributes().build())						//Snow Golem
                 .putFast(EntityType.SPIDER, Spider.createAttributes().build())								//Spider
                 .putFast(EntityType.SQUID, Squid.createAttributes().build())								//Squid

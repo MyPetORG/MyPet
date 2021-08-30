@@ -20,6 +20,21 @@
 
 package de.Keyle.MyPet.gui.selectionmenu;
 
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RESET;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -33,30 +48,20 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
-
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RESET;
-
-public class MyPetSelectionGui {
-    MyPetPlayer player;
+public class MyPetAdminSelectionGui {
+    MyPetPlayer petOwner;
+    Player admin;
     String title;
-
-    public MyPetSelectionGui(MyPetPlayer player) {
-        this(player, Translation.getString("Message.SelectMyPet", player));
-    }
-
-    public MyPetSelectionGui(MyPetPlayer player, String title) {
-        this.player = player;
+    
+    public MyPetAdminSelectionGui(MyPetPlayer player, Player admin,  String title) {
+        this.petOwner = player;
+        this.admin = admin;
         this.title = title;
     }
 
     public void open(final RepositoryCallback<StoredMyPet> callback) {
-        MyPetApi.getRepository().getMyPets(player, new RepositoryCallback<List<StoredMyPet>>() {
+        MyPetApi.getRepository().getMyPets(petOwner, new RepositoryCallback<List<StoredMyPet>>() {
             @Override
             public void callback(List<StoredMyPet> pets) {
                 open(pets, callback);
@@ -75,7 +80,7 @@ public class MyPetSelectionGui {
             }
 
             final Map<Integer, StoredMyPet> petSlotList = new HashMap<>();
-            WorldGroup wg = WorldGroup.getGroupByWorld(player.getPlayer().getWorld().getName());
+            WorldGroup wg = WorldGroup.getGroupByWorld(petOwner.getPlayer().getWorld().getName());
 
             Iterator<StoredMyPet> iterator = pets.iterator();
             while (iterator.hasNext()) {
@@ -84,7 +89,7 @@ public class MyPetSelectionGui {
                     iterator.remove();
                 }
 
-                if (player.hasMyPet() && player.getMyPet().getUUID().equals(mypet.getUUID())) {
+                if (petOwner.hasMyPet() && petOwner.getMyPet().getUUID().equals(mypet.getUUID())) {
                     iterator.remove();
                 }
             }
@@ -125,25 +130,25 @@ public class MyPetSelectionGui {
                 StoredMyPet mypet = pets.get(i + ((page - 1) * 45));
 
                 List<String> lore = new ArrayList<>();
-                lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + Math.round(mypet.getSaturation()));
+                lore.add(RESET + Translation.getString("Name.Hunger", admin) + ": " + GOLD + Math.round(mypet.getSaturation()));
                 if (mypet.getRespawnTime() > 0) {
-                    lore.add(RESET + Translation.getString("Name.Respawntime", player) + ": " + GOLD + mypet.getRespawnTime() + "sec");
+                    lore.add(RESET + Translation.getString("Name.Respawntime", admin) + ": " + GOLD + mypet.getRespawnTime() + "sec");
                 } else {
-                    lore.add(RESET + Translation.getString("Name.HP", player) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+                    lore.add(RESET + Translation.getString("Name.HP", admin) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
                 }
                 boolean levelFound = false;
                 if (mypet.getInfo().containsKey("storage")) {
                     TagCompound storage = mypet.getInfo().getAs("storage", TagCompound.class);
                     if (storage.containsKey("level")) {
-                        lore.add(RESET + Translation.getString("Name.Level", player) + ": " + GOLD + storage.getAs("level", TagInt.class).getIntData());
+                        lore.add(RESET + Translation.getString("Name.Level", admin) + ": " + GOLD + storage.getAs("level", TagInt.class).getIntData());
                         levelFound = true;
                     }
                 }
                 if (!levelFound) {
-                    lore.add(RESET + Translation.getString("Name.Exp", player) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+                    lore.add(RESET + Translation.getString("Name.Exp", admin) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
                 }
-                lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + Translation.getString("Name." + mypet.getPetType().name(), player));
-                lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + Colorizer.setColors(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
+                lore.add(RESET + Translation.getString("Name.Type", admin) + ": " + GOLD + Translation.getString("Name." + mypet.getPetType().name(), admin));
+                lore.add(RESET + Translation.getString("Name.Skilltree", admin) + ": " + GOLD + Colorizer.setColors(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
                 IconMenuItem icon = new IconMenuItem();
                 icon.setTitle(RESET + mypet.getPetName());
@@ -169,7 +174,7 @@ public class MyPetSelectionGui {
                 );
             }
 
-            menu.open(player.getPlayer()); 
+            menu.open(admin); 
         }
     }
 }
