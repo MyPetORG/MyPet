@@ -117,6 +117,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("goat", new CommandOptionCreator()
                 .add("baby")
+                .add("screaming")
                 .get());
         
         petTypeOptionMap.put("glowsquid", new CommandOptionCreator()
@@ -476,6 +477,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Fire", new TagByte(true));
             } else if (arg.equalsIgnoreCase("powered")) {
                 compound.getCompoundData().put("Powered", new TagByte(true));
+            }else if (arg.equalsIgnoreCase("screaming")) {
+                compound.getCompoundData().put("Screaming", new TagByte(true));
             } else if (arg.equalsIgnoreCase("saddle")) {
                 compound.getCompoundData().put("Saddle", new TagByte(true));
             } else if (arg.equalsIgnoreCase("sheared")) {

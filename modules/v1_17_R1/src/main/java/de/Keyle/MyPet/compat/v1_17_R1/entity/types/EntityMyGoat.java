@@ -46,16 +46,25 @@ public class EntityMyGoat extends EntityMyPet {
 
     @Override
     protected String getMyPetDeathSound() {
+    	if(getMyPet().isScreaming()) {
+    		return "entity.goat.screaming.death";
+    	}
         return "entity.goat.death";
     }
 
     @Override
     protected String getHurtSound() {
+    	if(getMyPet().isScreaming()) {
+    		return "entity.goat.screaming.hurt";
+    	}
         return "entity.goat.hurt";
     }
 
     @Override
     protected String getLivingSound() {
+    	if(getMyPet().isScreaming()) {
+    		return "entity.goat.screaming.ambient";
+    	}
         return "entity.goat.ambient";
     }
 

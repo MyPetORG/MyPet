@@ -39,6 +39,7 @@ import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Fox;
+import org.bukkit.entity.Goat;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
@@ -79,6 +80,7 @@ import de.Keyle.MyPet.api.entity.types.MyBee;
 import de.Keyle.MyPet.api.entity.types.MyCat;
 import de.Keyle.MyPet.api.entity.types.MyCreeper;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
+import de.Keyle.MyPet.api.entity.types.MyGoat;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
 import de.Keyle.MyPet.api.entity.types.MyLlama;
@@ -227,6 +229,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         if (myPet instanceof MyCreeper) {
             if (((MyCreeper) myPet).isPowered()) {
                 ((Creeper) normalEntity).setPowered(true);
+            }
+        } else if (myPet instanceof MyGoat) {
+        	if (((MyGoat) myPet).isScreaming()) {
+                ((Goat) normalEntity).setScreaming(true);
             }
         } else if (myPet instanceof MyEnderman) {
             if (((MyEnderman) myPet).hasBlock()) {

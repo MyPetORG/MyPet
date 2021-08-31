@@ -27,5 +27,7 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 
 @DefaultInfo(food = {"wheat"})
 public interface MyGoat extends MyPet, MyPetBaby {
+	boolean isScreaming();
 
+    void setScreaming(boolean flag);
 }

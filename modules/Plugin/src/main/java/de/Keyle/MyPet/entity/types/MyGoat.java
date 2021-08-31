@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
@@ -29,6 +30,7 @@ import org.bukkit.ChatColor;
 
 public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGoat {
     protected boolean isBaby = false;
+    protected boolean isScreaming = false;
 
     public MyGoat(MyPetPlayer petOwner) {
         super(petOwner);
@@ -38,6 +40,7 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("Screaming", new TagByte(isScreaming()));
         return info;
     }
 
@@ -45,6 +48,9 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("Screaming")) {
+            setScreaming(info.getAs("Screaming", TagByte.class).getBooleanData());
         }
     }
 
@@ -62,6 +68,14 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+    
+    public boolean isScreaming() {
+        return isScreaming;
+    }
+    
+    public void setScreaming(boolean flag) {
+        this.isScreaming = flag;
     }
 
     @Override
