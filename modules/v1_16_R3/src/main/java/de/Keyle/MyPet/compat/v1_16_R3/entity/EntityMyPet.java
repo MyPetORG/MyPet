@@ -62,6 +62,7 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
+import de.Keyle.MyPet.api.entity.types.MyStrider;
 import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.MyPetSitEvent;
@@ -1420,5 +1421,14 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 			return deathReason;
 		}
 		return super.dm();
+	}
+	
+	@Override
+	public void burnFromLava() {
+		if(this.getMyPet() instanceof MyStrider) {
+			return;
+		} else {
+			super.burnFromLava();
+		}
 	}
 }

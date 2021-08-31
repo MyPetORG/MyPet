@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack;
 
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -118,7 +119,7 @@ public class RangedAttack implements AIGoal {
 		if (!entityMyPet.hasTarget() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
 			return true;
 		}
-		if (this.target != entityMyPet.getTarget()) {
+		if (this.target.getBukkitEntity() != entityMyPet.getMyPetTarget()) {
 			return true;
 		}
 		double meleeDamage = myPet.getDamage();

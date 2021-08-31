@@ -52,7 +52,6 @@ public class VanillaNavigation extends AbstractNavigation {
 
 	@Override
 	public boolean navigateTo(double x, double y, double z) {
-		applyNavigationParameters();
 		if (this.nav.moveTo(x, y, z, 1.D)) {
 			applyNavigationParameters();
 			return true;
