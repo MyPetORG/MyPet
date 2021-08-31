@@ -7081,4 +7081,89 @@
     "id": "piglin_brute_spawn_egg",
     "introduced": "1.16.2"
   }
+  ,
+  {
+    "id": "amethyst_shard",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "bucket_of_axolotl",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "bundle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "copper_ingot",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "glow_berries",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "glow_ink_sac",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "glow_item_frame",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "glowing_sign",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "lightning_rod",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "powder_snow_bucket",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "raw_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "raw_gold",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "raw_iron",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "spyglass",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "axolotl_spawn_egg",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "goat_spawn_egg",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "glow_squid_spawn_egg",
+    "introduced": "1.17"
+  }
 ]

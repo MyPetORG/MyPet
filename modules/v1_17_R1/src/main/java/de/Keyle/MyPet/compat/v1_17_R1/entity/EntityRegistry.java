@@ -127,11 +127,12 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	public void unregisterEntityTypes() {
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public DefaultedRegistry<EntityType<?>> getRegistry(DefaultedRegistry registryMaterials) {
 		if (!registryMaterials.getClass().getName().equals(DefaultedRegistry.class.getName())) {
 			MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
 			for (Field field : registryMaterials.getClass().getDeclaredFields()) {
-				if (field.getType() == DefaultedRegistry.class) {
+				if (field.getType() == MappedRegistry.class) {
 					field.setAccessible(true);
 					try {
 						DefaultedRegistry<EntityType<?>> reg = (DefaultedRegistry<EntityType<?>>) field.get(registryMaterials);
