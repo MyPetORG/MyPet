@@ -1146,7 +1146,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
 		AABB bb = entity.getBoundingBox();
 		bb = getBBAtPosition(bb, this.getX(), this.getY(), this.getZ());
-		if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), (MyPetMinecraftEntity) bb)) {
+		if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), bb)) {
 			entity.startRiding(this, true);
 		} else {
 			entity.setPos(getX(), getY(), getZ());
