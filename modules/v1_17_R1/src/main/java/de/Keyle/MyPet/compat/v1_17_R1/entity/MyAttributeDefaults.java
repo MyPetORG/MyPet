@@ -65,6 +65,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.CaveSpider;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Endermite;
@@ -119,7 +120,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.CREEPER, Creeper.createAttributes().build())							//Creeper
                 .putFast(EntityType.DOLPHIN, Dolphin.createAttributes().build())							//Dolphin
                 .putFast(EntityType.DONKEY, Donkey.createBaseChestedHorseAttributes().build())				//Donkey
-                .putFast(EntityType.ZOMBIE, Zombie.createAttributes().build())								//Drowned
+                .putFast(EntityType.DROWNED, Drowned.createAttributes().build())							//Drowned
                 .putFast(EntityType.ELDER_GUARDIAN, ElderGuardian.createAttributes().build())				//Elder Guardian
                 .putFast(EntityType.ENDERMAN, EnderMan.createAttributes().build())							//Enderman
                 .putFast(EntityType.ENDERMITE, Endermite.createAttributes().build())						//Endermite

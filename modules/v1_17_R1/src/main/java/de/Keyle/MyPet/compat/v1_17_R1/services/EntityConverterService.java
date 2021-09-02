@@ -56,9 +56,11 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Stray;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
+import org.bukkit.entity.WitherSkeleton;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.entity.ZombieHorse;
@@ -167,14 +169,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case ENDERMAN:
                 convertEnderman((Enderman) entity, properties);
-                break;
-            case STRAY:
-            case WITHER_SKELETON:
-            case SKELETON:
-                convertSkeleton((Skeleton) entity, properties);
-                if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
-                    convertEquipable(entity, properties);
-                }
                 break;
             case RABBIT:
                 convertRabbit((Rabbit) entity, properties);
@@ -452,10 +446,6 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertAgable(Ageable ageable, TagCompound properties) {
         properties.getCompoundData().put("Baby", new TagByte(!ageable.isAdult()));
-    }
-
-    public void convertSkeleton(Skeleton skeleton, TagCompound properties) {
-        properties.getCompoundData().put("Type", new TagInt(skeleton.getSkeletonType().ordinal()));
     }
 
     public void convertEnderman(Enderman enderman, TagCompound properties) {
