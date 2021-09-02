@@ -22,10 +22,9 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.GlowSquid;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Bee;
@@ -103,7 +102,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class MyAttributeDefaults {
 
-    private static final FastMap<EntityType<?>, AttributeSupplier> defaultAttribute = new FastMap<>();
+    private static final FastMap<EntityType<? extends LivingEntity>, AttributeSupplier> defaultAttribute = new FastMap<>();
 
     static {
         defaultAttribute
@@ -189,14 +188,14 @@ public class MyAttributeDefaults {
         return defaultAttribute.get(types);
     }
 
-    public static void registerCustomEntityType(EntityType<?> customType, EntityType<?> rootType) {
+    public static void registerCustomEntityType(EntityType<? extends LivingEntity> customType, EntityType<? extends LivingEntity> rootType) {
         defaultAttribute.put(customType, getAttribute(rootType));
     }
 
     static class FastMap<K, V> extends HashMap<K, V> {
 
-        public FastMap<K, V> putFast(K key, AttributeSupplier attributeSupplier) {
-            put(key, (V) attributeSupplier);
+        public FastMap<K, V> putFast(K key, V value) {
+            put(key, value);
             return this;
         }
     }

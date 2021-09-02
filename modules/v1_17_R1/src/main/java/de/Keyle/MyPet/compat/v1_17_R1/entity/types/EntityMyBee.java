@@ -32,6 +32,10 @@ import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 0.6f)
@@ -117,6 +121,27 @@ public class EntityMyBee extends EntityMyPet {
 				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
+	}
+	
+	@Override
+	public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+			return InteractionResult.CONSUME;
+		}
+
+		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+			if (Configuration.MyPet.Hoglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
+					if (itemStack.getCount() <= 0) {
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+					}
+				}
+				getMyPet().setBaby(false);
+				return InteractionResult.CONSUME;
+			}
+		}
+		return InteractionResult.PASS;
 	}
 
 	@Override

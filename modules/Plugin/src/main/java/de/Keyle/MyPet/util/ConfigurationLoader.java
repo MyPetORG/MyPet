@@ -20,17 +20,14 @@
 
 package de.Keyle.MyPet.util;
 
-import com.google.common.collect.Lists;
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration.*;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
-import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.NameFilter;
-import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -40,9 +37,29 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import com.google.common.collect.Lists;
+
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration.Entity;
+import de.Keyle.MyPet.api.Configuration.HungerSystem;
+import de.Keyle.MyPet.api.Configuration.LevelSystem;
+import de.Keyle.MyPet.api.Configuration.Log;
+import de.Keyle.MyPet.api.Configuration.Misc;
+import de.Keyle.MyPet.api.Configuration.MyPet;
+import de.Keyle.MyPet.api.Configuration.Name;
+import de.Keyle.MyPet.api.Configuration.Permissions;
+import de.Keyle.MyPet.api.Configuration.Repository;
+import de.Keyle.MyPet.api.Configuration.Respawn;
+import de.Keyle.MyPet.api.Configuration.Skilltree;
+import de.Keyle.MyPet.api.Configuration.Update;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
+import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.NameFilter;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 
 public class ConfigurationLoader {
 
@@ -521,29 +538,39 @@ public class ConfigurationLoader {
                 MyPetApi.getLogger().warning("There was an error while loading pet-config.yml");
             }
         }
-
+        MyPet.Axolotl.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Axolotl.GrowUpItem", "experience_bottle"));
+        MyPet.Bee.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Bee.GrowUpItem", "experience_bottle"));
+        MyPet.Cat.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cat.GrowUpItem", "experience_bottle"));
         MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle"));
         MyPet.Cow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "experience_bottle"));
+        MyPet.Donkey.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle"));
+        MyPet.Drowned.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Drowned.GrowUpItem", "experience_bottle"));
+        MyPet.Fox.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Fox.GrowUpItem", "experience_bottle"));
+        MyPet.Goat.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Goat.GrowUpItem", "experience_bottle"));
+        MyPet.Hoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle"));
         MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + "bread"));
+        MyPet.Husk.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Husk.GrowUpItem", "experience_bottle"));
         MyPet.Llama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Llama.GrowUpItem", "experience_bottle"));
         MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle"));
-        MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle"));
-        MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "experience_bottle"));
-        MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle"));
-        MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "experience_bottle"));
-        MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle"));
-        MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle"));
-        MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle"));
-        MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
-        MyPet.ZombieHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle"));
-        MyPet.SkeletonHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle"));
         MyPet.Mule.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mule.GrowUpItem", "experience_bottle"));
-        MyPet.Donkey.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle"));
-        MyPet.Zoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zoglin.GrowUpItem", "experience_bottle"));
-        MyPet.Hoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle"));
-        MyPet.Strider.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Strider.GrowUpItem", "experience_bottle"));
+        MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle"));
+        MyPet.Panda.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Panda.GrowUpItem", "experience_bottle"));
+        MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "experience_bottle"));
         MyPet.Piglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle"));
         MyPet.PiglinBrute.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle"));
+        MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle"));
+        MyPet.PolarBear.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PolarBear.GrowUpItem", "experience_bottle"));
+        MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
+        MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle"));
+        MyPet.SkeletonHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle"));
+        MyPet.Strider.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Strider.GrowUpItem", "experience_bottle"));
+        MyPet.TraderLlama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.TraderLlama.GrowUpItem", "experience_bottle"));
+        MyPet.Turtle.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Turtle.GrowUpItem", "experience_bottle"));
+        MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "experience_bottle"));
+        MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle"));
+        MyPet.Zoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zoglin.GrowUpItem", "experience_bottle"));
+        MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle"));
+        MyPet.ZombieHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle"));
         MyPet.ZombifiedPiglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombifiedPiglin.GrowUpItem", "experience_bottle"));
 
         for (MyPetType petType : MyPetType.values()) {

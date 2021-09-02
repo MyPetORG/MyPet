@@ -26,6 +26,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.bukkit.Bukkit;
+
 public class ReflectionUtil {
 
     @SuppressWarnings("rawtypes")
@@ -119,14 +121,17 @@ public class ReflectionUtil {
     public static boolean setFinalFieldValue(@NonNull Field field, Object target, Object value) {
         try {
             field.setAccessible(true);
-
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
+            
+            if(Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) < 16) { //Java-Version-Check
+                Field modifiersField = Field.class.getDeclaredField("modifiers");
+                modifiersField.setAccessible(true);
+                modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            }
+            
             field.set(target, value);
             return true;
-        } catch (Throwable ignored) {
+        } catch (Exception ignored) {
+        	ignored.printStackTrace();
         }
         return false;
     }

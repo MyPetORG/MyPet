@@ -183,7 +183,6 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	}
 
 	protected void replaceCraftAttributes() {
-		//TODO check this
 		Field craftAttributesField = ReflectionUtil.getField(LivingEntity.class, "craftAttributes");
 		CraftAttributeMap craftAttributes = new CraftAttributeMap(this.getAttributes());
 		ReflectionUtil.setFinalFieldValue(craftAttributesField, this, craftAttributes);
