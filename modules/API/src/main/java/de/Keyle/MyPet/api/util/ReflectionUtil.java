@@ -130,8 +130,7 @@ public class ReflectionUtil {
             
             field.set(target, value);
             return true;
-        } catch (Exception ignored) {
-        	ignored.printStackTrace();
+        } catch (Throwable ignored) {
         }
         return false;
     }
