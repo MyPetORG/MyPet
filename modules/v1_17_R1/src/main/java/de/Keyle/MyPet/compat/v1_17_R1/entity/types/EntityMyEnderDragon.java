@@ -90,7 +90,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 			if (this.getCommandSenderWorld() instanceof ServerLevel) {
 				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
 				Arrays.stream(this.children)
-						.forEach(entityMyPetPart -> world.addFreshEntity(entityMyPetPart)); // TODO: 2021/07/14 I don't know if this is the right replacement.
+						.forEach(entityMyPetPart -> world.addFreshEntity(entityMyPetPart)); // TODO: 2021/09/06 So... It works for me (Jakl) but not... for everyone?
 			}
 			this.registered = true;
 		}

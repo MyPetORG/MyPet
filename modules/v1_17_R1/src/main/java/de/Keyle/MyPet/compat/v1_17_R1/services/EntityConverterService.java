@@ -26,10 +26,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillagerZombie;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Axolotl;
@@ -53,14 +55,11 @@ import org.bukkit.entity.Pig;
 import org.bukkit.entity.PufferFish;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.entity.Slime;
-import org.bukkit.entity.Stray;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
-import org.bukkit.entity.WitherSkeleton;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.entity.ZombieHorse;
@@ -267,34 +266,36 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                         for (int i = 0; i < vanillaNBT.size(); ++i) {
                             net.minecraft.world.item.ItemStack itemstack = net.minecraft.world.item.ItemStack.of(vanillaNBT.getCompound(i));
+                            ItemStack item = CraftItemStack.asCraftMirror(itemstack);
                             if (!itemstack.isEmpty()) {
-                                entityVillager.getInventory().addItem(itemstack);
+                            	Villager vill = ((Villager) Bukkit.getServer().getEntity(normalEntity.getUniqueId()));
+                            	vill.getInventory().addItem(item);
                             }
                         }
                     }
                     if (villagerTag.containsKey("FoodLevel")) {
                         byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
-                        ReflectionUtil.setFieldValue("bx", entityVillager, foodLevel);
+                        ReflectionUtil.setFieldValue("cn", entityVillager, foodLevel);		// Field: foodLevel
                     }
                     if (villagerTag.containsKey("Gossips")) {
                         TagList inventoryTag = villagerTag.get("Gossips");
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                        ((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "by"))
+                        ((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "co")) //Field: gossips
                                 .update(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT));
                     }
                     if (villagerTag.containsKey("LastRestock")) {
                     	long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("bC", entityVillager, lastRestock);
+                        ReflectionUtil.setFieldValue("cs", entityVillager, lastRestock);	//Field: lastRestockGameTime
                     }
                     if (villagerTag.containsKey("LastGossipDecay")) {
                         long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("bA", entityVillager, lastGossipDecay);
+                        ReflectionUtil.setFieldValue("cq", entityVillager, lastGossipDecay);	//Field: lastGossipDecayTime
                     }
                     if (villagerTag.containsKey("RestocksToday")) {
                         int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
-                        ReflectionUtil.setFieldValue("bD", entityVillager, restocksToday);
+                        ReflectionUtil.setFieldValue("ct", entityVillager, restocksToday);		//Field: numberOfRestocksToday
                     }
-                    ReflectionUtil.setFieldValue("bF", entityVillager, true); // AssignProfessionWhenSpawned
+                    ReflectionUtil.setFieldValue("cv", entityVillager, true); // Field: AssignProfessionWhenSpawned
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
