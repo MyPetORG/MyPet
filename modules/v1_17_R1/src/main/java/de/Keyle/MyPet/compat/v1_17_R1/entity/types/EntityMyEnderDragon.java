@@ -20,14 +20,17 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -78,6 +81,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 		petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 8.5, 20));
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
@@ -89,9 +93,14 @@ public class EntityMyEnderDragon extends EntityMyPet {
 		if (!registered && this.valid) {
 			if (this.getCommandSenderWorld() instanceof ServerLevel) {
 				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
+				
+				//The next part used to be prettier but... whilst it is listed everywhere I looked, world.dragonParts is just not... available?
+				Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "R"); //Mojang Field: dragonParts
+				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, world);
 				Arrays.stream(this.children)
-						.forEach(entityMyPetPart -> world.addFreshEntity(entityMyPetPart)); // TODO: 2021/09/06 So... It works for me (Jakl) but not... for everyone?
-			}
+						.forEach(entityMyPetPart -> dragonParts.put(entityMyPetPart.getId(), entityMyPetPart));
+				ReflectionUtil.setFieldValue(dragonPartsField, world, dragonParts);
+				}
 			this.registered = true;
 		}
 	}

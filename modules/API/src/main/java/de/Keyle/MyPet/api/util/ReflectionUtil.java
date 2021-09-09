@@ -122,7 +122,7 @@ public class ReflectionUtil {
         try {
             field.setAccessible(true);
             
-            if(Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) < 16) { //Java-Version-Check
+            if(Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) < 12) { //Java-Version-Check
                 Field modifiersField = Field.class.getDeclaredField("modifiers");
                 modifiersField.setAccessible(true);
                 modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
