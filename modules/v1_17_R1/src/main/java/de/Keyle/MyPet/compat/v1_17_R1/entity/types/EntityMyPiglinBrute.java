@@ -56,26 +56,24 @@ import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglinBrute extends EntityMyPet {
-
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPiglinBrute.class, EntityDataSerializers.BOOLEAN);
-
+	
 	public EntityMyPiglinBrute(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
 	protected String getMyPetDeathSound() {
-		return NMSUtil.getSoundEffectId(SoundEvents.PIGLIN_BRUTE_DEATH);
+		return "entity.piglin_brute.death";
 	}
 
 	@Override
 	protected String getHurtSound() {
-		return NMSUtil.getSoundEffectId(SoundEvents.PIGLIN_BRUTE_HURT);
+		return "entity.piglin_brute.hurt";
 	}
 
 	@Override
 	protected String getLivingSound() {
-		return NMSUtil.getSoundEffectId(SoundEvents.PIGLIN_BRUTE_AMBIENT);
+		return "entity.piglin_brute.ambient";
 	}
 
 	@Override
@@ -132,24 +130,9 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.PiglinBrute.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
 			}
 		}
 		return InteractionResult.PASS;
-	}
-
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false); // is baby
 	}
 
 	/**
@@ -163,8 +146,6 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {
 				for (EquipmentSlot slot : EquipmentSlot.values()) {

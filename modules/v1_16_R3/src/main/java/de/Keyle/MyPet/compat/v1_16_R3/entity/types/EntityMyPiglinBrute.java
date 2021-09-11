@@ -43,8 +43,6 @@ import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglinBrute extends EntityMyPet {
 
-	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPiglinBrute.class, DataWatcherRegistry.i);
-
 	public EntityMyPiglinBrute(World world, MyPet myPet) {
 		super(world, myPet);
 	}
@@ -119,24 +117,9 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 					}
 				}
 				return EnumInteractionResult.CONSUME;
-			} else if (Configuration.MyPet.PiglinBrute.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
-					itemStack.subtract(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
-					}
-				}
-				getMyPet().setBaby(false);
-				return EnumInteractionResult.CONSUME;
 			}
 		}
 		return EnumInteractionResult.PASS;
-	}
-
-	@Override
-	protected void initDatawatcher() {
-		super.initDatawatcher();
-		getDataWatcher().register(AGE_WATCHER, false); // is baby
 	}
 
 	/**
@@ -150,8 +133,6 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {
 				for (EquipmentSlot slot : EquipmentSlot.values()) {

@@ -54,8 +54,10 @@ import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglin extends EntityMyPet {
-
+	
+	//For some reason it needs both
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyPiglin(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -148,6 +150,7 @@ public class EntityMyPiglin extends EntityMyPet {
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false); // is baby
+		getEntityData().define(BABY_WATCHER, false); // is baby
 	}
 
 	/**
@@ -162,6 +165,7 @@ public class EntityMyPiglin extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(BABY_WATCHER, getMyPet().isBaby());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {

@@ -815,7 +815,6 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 	}
 	
-	//TODO Check for Riding Jumps
 	private void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
 		double locY;
 		float speed;
