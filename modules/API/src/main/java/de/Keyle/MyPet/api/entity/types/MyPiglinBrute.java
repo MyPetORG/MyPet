@@ -27,6 +27,6 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 
 @DefaultInfo(food = {"gold_nugget"})
-public interface MyPiglinBrute extends MyPet, MyPetEquipment, MyPetBaby {
+public interface MyPiglinBrute extends MyPet, MyPetEquipment {
 
 }

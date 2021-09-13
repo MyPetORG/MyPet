@@ -31,11 +31,12 @@
     <modules>
         <module>modules/API</module>
         <module>modules/Skills</module>
-        <module>modules/v1_16_R3</module>
         <module>modules/v1_8_R3</module>
         <module>modules/v1_9_R2</module>
         <module>modules/v1_12_R1</module>
         <module>modules/v1_16_R1</module>
+        <module>modules/v1_16_R3</module>
+        <module>modules/v1_17_R1</module>
         <module>modules/GUI</module>
         <module>modules/Plugin</module>
         <module>modules/MyPet</module>
@@ -185,10 +186,18 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- http://dev.bukkit.org/bukkit-plugins/worldguard/ -->
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.6-SNAPSHOT</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <!-- https://dev.bukkit.org/projects/worldedit -->
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.1.0</version>
+            <version>7.2.5</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -355,7 +364,7 @@
             <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.5.1</version>
+            <version>4.7.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

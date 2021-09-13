@@ -60,7 +60,7 @@ public class FollowOwner implements AIGoal {
 		}
 		if (!this.petEntity.canMove()) {
 			return false;
-		} else if (this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead()) {
+		} else if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
 			return false;
 		} else if (this.petEntity.getOwner() == null) {
 			return false;
@@ -79,7 +79,7 @@ public class FollowOwner implements AIGoal {
 			return true;
 		} else if (!this.petEntity.canMove()) {
 			return true;
-		} else return this.petEntity.getTarget() != null && !this.petEntity.getTarget().isDead();
+		} else return this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead();
 	}
 
 	@Override

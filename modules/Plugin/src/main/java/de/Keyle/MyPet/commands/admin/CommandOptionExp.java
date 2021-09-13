@@ -69,8 +69,16 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             return true;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        
+        int valueInd = 1;
+        int operatorInd = 2;
+        
+        if(args.length > 2 && Util.isDouble(args[2])) {
+        	valueInd = 2;
+        	operatorInd  = 1;
+        }
 
-        String value = args[1];
+        String value = args[valueInd];
         boolean level = false;
         double exp = myPet.getExp();
 
@@ -79,7 +87,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             value = value.substring(0, value.length() - 1);
         }
 
-        if (args.length == 2 || args[2].equalsIgnoreCase("set")) {
+        if (args.length == 2 || args[operatorInd].equalsIgnoreCase("set")) {
             if (level) {
                 if (Util.isInt(value)) {
                     exp = myPet.getExperience().getExpByLevel(Math.min(Integer.parseInt(value), Configuration.LevelSystem.Experience.LEVEL_CAP));
@@ -89,7 +97,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
                     exp = Math.min(Double.parseDouble(value), myPet.getExperience().getMaxExp());
                 }
             }
-        } else if (args[2].equalsIgnoreCase("add")) {
+        } else if (args[operatorInd].equalsIgnoreCase("add")) {
             if (level) {
                 if (Util.isInt(value)) {
                     int newLevel = Math.min(myPet.getExperience().getLevel() + Integer.parseInt(value), Configuration.LevelSystem.Experience.LEVEL_CAP);
@@ -101,7 +109,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
                     exp = Math.min(Double.parseDouble(value) + exp, myPet.getExperience().getMaxExp());
                 }
             }
-        } else if (args[2].equalsIgnoreCase("remove")) {
+        } else if (args[operatorInd].equalsIgnoreCase("remove")) {
             if (level) {
                 if (Util.isInt(value)) {
                     int oldLevel = myPet.getExperience().getLevel();

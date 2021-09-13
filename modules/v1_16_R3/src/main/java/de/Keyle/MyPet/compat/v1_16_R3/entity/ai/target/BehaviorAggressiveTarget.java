@@ -108,11 +108,11 @@ public class BehaviorAggressiveTarget implements AIGoal {
 	public boolean shouldFinish() {
 		if (!petEntity.canMove()) {
 			return true;
-		} else if (petEntity.getTarget() == null) {
+		} else if (petEntity.getMyPetTarget() == null) {
 			return true;
 		}
 
-		EntityLiving target = ((CraftLivingEntity) petEntity.getTarget()).getHandle();
+		EntityLiving target = ((CraftLivingEntity) petEntity.getMyPetTarget()).getHandle();
 
 		if (!target.isAlive()) {
 			return true;
@@ -131,7 +131,7 @@ public class BehaviorAggressiveTarget implements AIGoal {
 
 	@Override
 	public void start() {
-		petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Aggressive);
+		petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.Aggressive);
 	}
 
 	@Override

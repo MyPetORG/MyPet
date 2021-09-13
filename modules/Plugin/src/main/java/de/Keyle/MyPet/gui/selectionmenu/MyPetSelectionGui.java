@@ -169,7 +169,7 @@ public class MyPetSelectionGui {
                 );
             }
 
-            menu.open(player.getPlayer());
+            menu.open(player.getPlayer()); 
         }
     }
 }

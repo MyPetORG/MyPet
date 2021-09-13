@@ -28,6 +28,13 @@ Shops:
 #        Options:
 #          - baby
 #          - saddle
+      axolotl:
+        Name: Axolotl
+        Description:
+          - <green>It's a Axolotl!
+        PetType: Axolotl
+        EXP: 0
+        Price: 100
       bat:
         Name: Bat
         Description:
@@ -103,6 +110,13 @@ Shops:
         Description:
           - <green>It's an Evoker!
         PetType: Evoker
+        EXP: 0
+        Price: 100
+      goat:
+        Name: Goat
+        Description:
+          - <green>It's a Goat!
+        PetType: Goat
         EXP: 0
         Price: 100
       guardian:
@@ -277,6 +291,13 @@ Shops:
         PetType: Squid
         EXP: 0
         Price: 100
+      glow_squid:
+        Name: Glow Squid
+        Description:
+          - <green>It's a glowing Squid!
+        PetType: GlowSquid
+        EXP: 0
+        Price: 100
       stray:
         Name: Stray
         Description:
@@ -404,6 +425,15 @@ Shops:
       Type: Private
     Position: 1
     Pets:
+      baby_axolotl:
+        Name: "Axolotl"
+        Description:
+          - <green>It's a baby Axolotl!
+        PetType: Axolotl
+        EXP: 0
+        Price: 200
+        Options:
+          - baby
       baby_chicken:
         Name: "Chicken"
         Description:
@@ -431,11 +461,11 @@ Shops:
         Price: 200
         Options:
           - baby
-      baby_horse:
-        Name: "Horse"
+      baby_goat:
+        Name: "Goat"
         Description:
-          - <green>It's a baby Horse!
-        PetType: Horse
+          - <green>It's a baby Goat!
+        PetType: Goat
         EXP: 0
         Price: 200
         Options:

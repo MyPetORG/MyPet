@@ -27,8 +27,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public interface CustomInventory {
-    int getSize();
-
     void setSize(int size);
 
     String getName();

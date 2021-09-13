@@ -25,7 +25,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySlime;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.ai.attack.MeleeAttack;
-import net.minecraft.server.v1_16_R3.*;
+import net.minecraft.server.v1_16_R3.DataWatcher;
+import net.minecraft.server.v1_16_R3.DataWatcherObject;
+import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
+import net.minecraft.server.v1_16_R3.EntityPose;
+import net.minecraft.server.v1_16_R3.World;
 
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMySlime extends EntityMyPet {

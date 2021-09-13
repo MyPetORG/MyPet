@@ -59,7 +59,9 @@ public class MonsterExperience {
         mobExp.put("PIG", new MonsterExperience(1., 3., "PIG"));
         mobExp.put("CHICKEN", new MonsterExperience(1., 3., "CHICKEN"));
         mobExp.put("SQUID", new MonsterExperience(1., 3., "SQUID"));
+        mobExp.put("GLOW_SQUID", new MonsterExperience(1., 3., "GLOW_SQUID"));
         mobExp.put("SHEEP", new MonsterExperience(1., 3., "SHEEP"));
+        mobExp.put("GOAT", new MonsterExperience(1., 3., "GOAT"));
         mobExp.put("OCELOT", new MonsterExperience(1., 3., "OCELOT"));
         mobExp.put("MUSHROOM_COW", new MonsterExperience(1., 3., "MUSHROOM_COW"));
         mobExp.put("VILLAGER", new MonsterExperience(0., "VILLAGER"));
@@ -103,6 +105,7 @@ public class MonsterExperience {
         mobExp.put("TRADER_LLAMA", new MonsterExperience(1, 3, "TRADER_LLAMA"));
         mobExp.put("WANDERING_TRADER", new MonsterExperience(1, 2, "WANDERING_TRADER"));
         mobExp.put("BEE", new MonsterExperience(1, 3, "BEE"));
+        mobExp.put("AXOLOTL", new MonsterExperience(1, 3, "AXOLOTL"));
         mobExp.put("ZOMBIFIED_PIGLIN", new MonsterExperience(5, "ZOMBIFIED_PIGLIN"));
         mobExp.put("HOGLIN", new MonsterExperience(5, "HOGLIN"));
         mobExp.put("ZOGLIN", new MonsterExperience(5, "ZOGLIN"));

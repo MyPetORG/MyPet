@@ -128,6 +128,7 @@ permissions:
   MyPet.leash.*:
     description: Player can leash all MyPet-Types.
     children:
+      MyPet.leash.Axolotl: true
       MyPet.leash.Bat: true
       MyPet.leash.Bee: true
       MyPet.leash.Blaze: true
@@ -148,6 +149,7 @@ permissions:
       MyPet.leash.Fox: true
       MyPet.leash.Giant: true
       MyPet.leash.Ghast: true
+      MyPet.leash.Goat: true
       MyPet.leash.Guardian: true
       MyPet.leash.Hoglin: true
       MyPet.leash.Horse: true
@@ -179,6 +181,7 @@ permissions:
       MyPet.leash.Snowman: true
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
+      MyPet.leash.GlowSquid: true
       MyPet.leash.Stray: true
       MyPet.leash.Strider: true
       MyPet.leash.TraderLlama: true
@@ -200,6 +203,7 @@ permissions:
   MyPet.command.trade.offer.*:
     description: Player offer all MyPet-Types.
     children:
+      MyPet.command.trade.offer.Axolotl: true
       MyPet.command.trade.offer.Bat: true
       MyPet.command.trade.offer.Bee: true
       MyPet.command.trade.offer.Blaze: true
@@ -220,6 +224,7 @@ permissions:
       MyPet.command.trade.offer.Fox: true
       MyPet.command.trade.offer.Giant: true
       MyPet.command.trade.offer.Ghast: true
+      MyPet.command.trade.offer.Goat: true
       MyPet.command.trade.offer.Guardian: true
       MyPet.command.trade.offer.Hoglin: true
       MyPet.command.trade.offer.Horse: true
@@ -250,6 +255,7 @@ permissions:
       MyPet.command.trade.offer.Snowman: true
       MyPet.command.trade.offer.Spider: true
       MyPet.command.trade.offer.Squid: true
+      MyPet.command.trade.offer.GlowSquid: true
       MyPet.command.trade.offer.Stray: true
       MyPet.command.trade.offer.Strider: true
       MyPet.command.trade.offer.TraderLlama: true
@@ -271,6 +277,7 @@ permissions:
   MyPet.command.trade.receive.*:
     description: Player receive all MyPet-Types.
     children:
+      MyPet.command.trade.receive.Axolotl: true
       MyPet.command.trade.receive.Bat: true
       MyPet.command.trade.receive.Bee: true
       MyPet.command.trade.receive.Blaze: true
@@ -291,6 +298,7 @@ permissions:
       MyPet.command.trade.receive.Fox: true
       MyPet.command.trade.receive.Giant: true
       MyPet.command.trade.receive.Ghast: true
+      MyPet.command.trade.receive.Goat: true
       MyPet.command.trade.receive.Guardian: true
       MyPet.command.trade.receive.Hoglin: true
       MyPet.command.trade.receive.Horse: true
@@ -321,6 +329,7 @@ permissions:
       MyPet.command.trade.receive.Snowman: true
       MyPet.command.trade.receive.Spider: true
       MyPet.command.trade.receive.Squid: true
+      MyPet.command.trade.receive.GlowSquid: true
       MyPet.command.trade.receive.Stray: true
       MyPet.command.trade.receive.Strider: true
       MyPet.command.trade.receive.TraderLlama: true

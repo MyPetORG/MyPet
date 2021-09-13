@@ -98,7 +98,7 @@ public class HurtByTarget implements AIGoal {
             return true;
         }
 
-        EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+        EntityLiving target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
         if (target.world != petEntity.world) {
             return true;
@@ -112,7 +112,7 @@ public class HurtByTarget implements AIGoal {
 
     @Override
     public void start() {
-        petEntity.setTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.GetHurt);
+        petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.GetHurt);
     }
 
     @Override

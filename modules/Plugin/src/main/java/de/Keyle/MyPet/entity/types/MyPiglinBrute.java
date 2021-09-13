@@ -38,7 +38,6 @@ import java.util.Map;
 
 public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglinBrute {
 
-    protected boolean isBaby = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyPiglinBrute(MyPetPlayer petOwner) {
@@ -60,7 +59,6 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -77,9 +75,6 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
     @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
         if (info.containsKey("Equipment")) {
             TagList equipment = info.getAs("Equipment", TagList.class);
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
@@ -100,17 +95,6 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
     @Override
     public MyPetType getPetType() {
         return MyPetType.PiglinBrute;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {

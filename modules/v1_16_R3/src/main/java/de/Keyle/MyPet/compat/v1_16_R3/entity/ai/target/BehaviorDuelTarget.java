@@ -100,7 +100,7 @@ public class BehaviorDuelTarget implements AIGoal {
 			return true;
 		}
 
-		EntityLiving target = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+		EntityLiving target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
 		Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
 		if (behaviorSkill.getBehavior() != BehaviorMode.Duel) {
@@ -116,7 +116,7 @@ public class BehaviorDuelTarget implements AIGoal {
 
 	@Override
 	public void start() {
-		petEntity.setTarget(this.target.getBukkitEntity(), TargetPriority.Duel);
+		petEntity.setMyPetTarget(this.target.getBukkitEntity(), TargetPriority.Duel);
 		setDuelOpponent(this.target);
 		if (target.getTargetSelector().hasGoal("DuelTarget")) {
 			BehaviorDuelTarget duelGoal = (BehaviorDuelTarget) target.getTargetSelector().getGoal("DuelTarget");

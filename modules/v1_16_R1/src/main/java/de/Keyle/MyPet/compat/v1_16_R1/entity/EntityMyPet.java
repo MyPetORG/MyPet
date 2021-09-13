@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
+import de.Keyle.MyPet.api.entity.types.MyStrider;
 import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.MyPetSitEvent;
@@ -228,7 +229,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     }
 
     @Override
-    public LivingEntity getTarget() {
+    public LivingEntity getMyPetTarget() {
         if (target != null) {
             if (target.isAlive()) {
                 return (LivingEntity) target.getBukkitEntity();
@@ -239,7 +240,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     }
 
     @Override
-    public void setTarget(LivingEntity entity, TargetPriority priority) {
+    public void setMyPetTarget(LivingEntity entity, TargetPriority priority) {
         if (entity == null || entity.isDead() || entity instanceof ArmorStand || !(entity instanceof CraftLivingEntity)) {
             forgetTarget();
             return;
@@ -1370,4 +1371,13 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         }
         return super.dl();
     }
+    
+    @Override
+	public void burnFromLava() {
+		if(this.getMyPet() instanceof MyStrider) {
+			return;
+		} else {
+			super.burnFromLava();
+		}
+	}
 }

@@ -53,7 +53,10 @@ public class ProtocolLibHook implements PluginHook {
     @Override
     public boolean onEnable() {
         try {
-            registerEnderDragonInteractionFix();
+        	if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") <= 0) {
+        		//Don't enable this in 1.17+ bc of crashes/errors
+        		registerEnderDragonInteractionFix();
+        	}
 
             checkTemporaryPlayers = ReflectionUtil.getMethod(PacketEvent.class, "isPlayerTemporary") != null;
 

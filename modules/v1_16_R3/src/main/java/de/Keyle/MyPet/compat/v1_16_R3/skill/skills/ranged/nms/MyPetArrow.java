@@ -24,7 +24,12 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_16_R3.skill.skills.ranged.bukkit.CraftMyPetArrow;
-import net.minecraft.server.v1_16_R3.*;
+import net.minecraft.server.v1_16_R3.DamageSource;
+import net.minecraft.server.v1_16_R3.EntityTippedArrow;
+import net.minecraft.server.v1_16_R3.ItemStack;
+import net.minecraft.server.v1_16_R3.Items;
+import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.server.v1_16_R3.World;
 
 @Compat("v1_16_R3")
 public class MyPetArrow extends EntityTippedArrow implements EntityMyPetProjectile {

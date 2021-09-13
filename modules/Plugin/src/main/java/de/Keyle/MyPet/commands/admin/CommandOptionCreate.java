@@ -61,6 +61,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         commonTypeOptionList.add("skilltree:");
         commonTypeOptionList.add("name:");
 
+        petTypeOptionMap.put("axolotl", new CommandOptionCreator()
+                .add("baby")
+                .add("variant:")
+                .get());
+
         petTypeOptionMap.put("bee", new CommandOptionCreator()
                 .add("baby")
                 .add("angry")
@@ -109,6 +114,14 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("type:red")
                 .add("type:white")
                 .get());
+
+        petTypeOptionMap.put("goat", new CommandOptionCreator()
+                .add("baby")
+                .add("screaming")
+                .get());
+        
+        petTypeOptionMap.put("glowsquid", new CommandOptionCreator()
+				.get());
 
         petTypeOptionMap.put("guardian", new CommandOptionCreator()
                 .add("1.7.10", "1.11", "elder")
@@ -464,6 +477,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Fire", new TagByte(true));
             } else if (arg.equalsIgnoreCase("powered")) {
                 compound.getCompoundData().put("Powered", new TagByte(true));
+            }else if (arg.equalsIgnoreCase("screaming")) {
+                compound.getCompoundData().put("Screaming", new TagByte(true));
             } else if (arg.equalsIgnoreCase("saddle")) {
                 compound.getCompoundData().put("Saddle", new TagByte(true));
             } else if (arg.equalsIgnoreCase("sheared")) {
@@ -530,6 +545,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         }
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.Parrot) {
+                    	compound.getCompoundData().put("Variant", new TagInt(variant));
+                    } else if (petType == MyPetType.Axolotl) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.TropicalFish) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));

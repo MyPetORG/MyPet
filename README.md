@@ -6,7 +6,7 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Stats][StatsImage]][Stats]
 [![Builds][BuildsImage]][Builds]
 [![Wiki][WikiImage]][Wiki]
-[![Spigot][SpigotImage]][Spigot]
+[![Spigot][SpigotImage]][Spigot] <br/>
 
 ## The License
 Copyright (c) 2011-2021, Keyle<br />

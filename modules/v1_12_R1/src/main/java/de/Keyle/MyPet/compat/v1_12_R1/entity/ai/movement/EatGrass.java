@@ -51,7 +51,7 @@ public class EatGrass implements AIGoal {
             return false;
         } else if (entityMySheep.getRandom().nextInt(1000) != 0) {
             return false;
-        } else if (this.entityMySheep.getTarget() != null && !this.entityMySheep.getTarget().isDead()) {
+        } else if (this.entityMySheep.getMyPetTarget() != null && !this.entityMySheep.getMyPetTarget().isDead()) {
             return false;
         }
         int blockLocX = MathHelper.floor(this.entityMySheep.locX);

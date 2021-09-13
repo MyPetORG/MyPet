@@ -58,7 +58,7 @@ public class Sprint implements AIGoal {
             return false;
         }
 
-        EntityLiving targetEntity = ((CraftLivingEntity) this.petEntity.getTarget()).getHandle();
+        EntityLiving targetEntity = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
         if (!targetEntity.isAlive()) {
             return false;

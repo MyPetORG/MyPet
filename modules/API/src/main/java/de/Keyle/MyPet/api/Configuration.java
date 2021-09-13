@@ -194,6 +194,9 @@ public class Configuration {
     }
 
     public static class MyPet {
+    	public static class Axolotl {
+            public static ConfigItem GROW_UP_ITEM;
+    	}
 
         public static class Bat {
 
@@ -203,11 +206,17 @@ public class Configuration {
         public static class Bee {
 
             public static boolean CAN_GLIDE = true;
+            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Blaze {
 
             public static boolean CAN_GLIDE = true;
+        }
+        
+        public static class Cat {
+
+            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Chicken {
@@ -227,7 +236,17 @@ public class Configuration {
 
             public static ConfigItem GROW_UP_ITEM;
         }
+        
+        public static class Drowned {
 
+            public static ConfigItem GROW_UP_ITEM;
+        }
+        
+        public static class Fox {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+        
         public static class EnderDragon {
 
             public static boolean CAN_GLIDE = true;
@@ -238,12 +257,23 @@ public class Configuration {
             public static boolean CAN_GLIDE = true;
         }
 
+        public static class Goat {
+            public static boolean CAN_GIVE_MILK = true;
+            public static ConfigItem GROW_UP_ITEM;
+
+        }
+
         public static class Hoglin {
 
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Horse {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+        
+        public static class Husk {
 
             public static ConfigItem GROW_UP_ITEM;
         }
@@ -270,6 +300,11 @@ public class Configuration {
         }
 
         public static class Ocelot {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class Panda {
 
             public static ConfigItem GROW_UP_ITEM;
         }
@@ -304,6 +339,11 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class PolarBear {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Rabbit {
 
             public static ConfigItem GROW_UP_ITEM;
@@ -327,6 +367,16 @@ public class Configuration {
         }
 
         public static class Strider {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+        
+        public static class TraderLlama {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+        
+        public static class Turtle {
 
             public static ConfigItem GROW_UP_ITEM;
         }

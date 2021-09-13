@@ -5,9 +5,9 @@
 .idea/
 
 # Eclipse
-/.classpath
-/.project
-/.settings
+.classpath
+.project
+.settings
 
 # NetBeans
 /nbproject
@@ -25,3 +25,4 @@ build.number
 /target
 /modules/*/target
 dependency-reduced-pom.xml
+dl/

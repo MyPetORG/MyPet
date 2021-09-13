@@ -29,6 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public enum MyPetType {
+    Axolotl("AXOLOTL", "1.17.1", MyAxolotl.class, new Compat<>()
+            .v("1.17.1", "axolotl")
+            .search()),
     Bat("BAT", "1.7.10", MyBat.class, new Compat<>()
             .v("1.7.10", 65)
             .v("1.13", "bat")
@@ -99,9 +102,15 @@ public enum MyPetType {
             .v("1.7.10", 56)
             .v("1.13", "ghast")
             .search()),
+    Goat("GOAT", "1.17.1", MyGoat.class, new Compat<>()
+            .v("1.17.1", "goat")
+            .search()),
     Giant("GIANT", "1.7.10", MyGiant.class, new Compat<>()
             .v("1.7.10", 53)
             .v("1.13", "giant")
+            .search()),
+    GlowSquid("GLOW_SQUID", "1.17.1", MyGlowSquid.class, new Compat<>()
+            .v("1.17.1", "glow_squid")
             .search()),
     Guardian("GUARDIAN", "1.8", MyGuardian.class, new Compat<>()
             .v("1.7.10", 68)

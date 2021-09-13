@@ -69,6 +69,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyPetMinecraftEntity {
 
@@ -198,8 +199,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     public TargetPriority getTargetPriority() {
         return targetPriority;
     }
-
-    public LivingEntity getTarget() {
+    
+    @Override
+    public LivingEntity getMyPetTarget() {
         if (target != null) {
             if (target.isAlive()) {
                 return (LivingEntity) target.getBukkitEntity();
@@ -208,8 +210,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
         return null;
     }
-
-    public void setTarget(LivingEntity entity, TargetPriority priority) {
+    
+    @Override
+    public void setMyPetTarget(LivingEntity entity, TargetPriority priority) {
         if (entity == null || entity.isDead() || entity instanceof ArmorStand || !(entity instanceof CraftLivingEntity)) {
             forgetTarget();
             return;
@@ -1268,4 +1271,9 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
         return source;
     }
+    
+    @Override
+	public UUID getUniqueID() {
+		return this.uniqueID;
+	}
 }
