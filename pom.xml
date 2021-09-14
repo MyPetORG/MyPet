@@ -528,9 +528,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:git:git@github.com:scomans/MyPet.git</connection>
-        <developerConnection>scm:git:git@github.com:scomans/MyPet.git</developerConnection>
-        <url>https://github.com/scomans/MyPet/tree/master/</url>
+        <connection>scm:git:git@github.com:MyPetORG/MyPet.git</connection>
+        <developerConnection>scm:git:git@github.com:MyPetORG/MyPet.git</developerConnection>
+        <url>https://github.com/MyPetORG/MyPet/tree/master/</url>
     </scm>
 
     <build>
