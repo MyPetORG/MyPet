@@ -619,7 +619,7 @@ public class BeaconImpl implements Beacon {
         TagCompound nbtTagCompound = new TagCompound();
         nbtTagCompound.getCompoundData().put("Buffs", new TagIntArray(selectedBuffs.stream().mapToInt(Buff::getId).toArray()));
         nbtTagCompound.getCompoundData().put("Active", new TagByte(this.active));
-        nbtTagCompound.getCompoundData().put("Reciever", new TagString(this.receiver.name()));
+        nbtTagCompound.getCompoundData().put("Receiver", new TagString(this.receiver.name()));
         return nbtTagCompound;
     }
 
@@ -645,8 +645,8 @@ public class BeaconImpl implements Beacon {
         if (compound.getCompoundData().containsKey("Active")) {
             this.active = compound.getAs("Active", TagByte.class).getBooleanData();
         }
-        if (compound.getCompoundData().containsKey("Reciever")) {
-            this.receiver = BuffReceiver.valueOf(compound.getAs("Reciever", TagString.class).getStringData());
+        if (compound.getCompoundData().containsKey("Receiver")) {
+            this.receiver = BuffReceiver.valueOf(compound.getAs("Receiver", TagString.class).getStringData());
         }
     }
 
