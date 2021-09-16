@@ -108,7 +108,7 @@ public class BehaviorAggressiveTarget implements AIGoal {
 	public boolean shouldFinish() {
 		if (!petEntity.canMove()) {
 			return true;
-		} else if (petEntity.getTarget() == null) {
+		} else if (!this.petEntity.hasTarget()) {
 			return true;
 		}
 

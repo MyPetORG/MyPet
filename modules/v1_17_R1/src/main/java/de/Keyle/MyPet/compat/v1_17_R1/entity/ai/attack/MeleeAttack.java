@@ -68,7 +68,7 @@ public class MeleeAttack implements AIGoal {
 		if (targetEntity instanceof ArmorStand) {
 			return false;
 		}
-		if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.distanceToSqr(targetEntity.getX(), targetEntity.getBoundingBox().minY, targetEntity.getY()) >= 20) {
+		if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.distanceToSqr(targetEntity.getX(), targetEntity.getBoundingBox().minY, targetEntity.getZ()) >= 20) {
 			return false;
 		}
 
