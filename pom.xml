@@ -62,7 +62,7 @@
         </repository>
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/scomans/*</url>
+            <url>https://maven.pkg.github.com/MyPetORG/*</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
