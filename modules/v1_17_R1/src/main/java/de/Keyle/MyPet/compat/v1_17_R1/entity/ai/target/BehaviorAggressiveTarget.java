@@ -20,6 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
@@ -32,6 +36,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;
@@ -85,14 +90,19 @@ public class BehaviorAggressiveTarget implements AIGoal {
 						continue;
 					}
 				} else if (entityLiving instanceof TamableAnimal) {
+					Method getOwnerReflect = ReflectionUtil.getMethod(TamableAnimal.class, "getOwner"); //Method: getOwner -> mojang mapping maps that to fx() even tho it still is getOwner.
 					TamableAnimal tameable = (TamableAnimal) entityLiving;
-					if (tameable.isTame() && tameable.getOwner() != null) {
-						Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
-						if (myPet.getOwner().equals(tameableOwner)) {
-							continue;
-						} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
-							continue;
+					try {
+						if (tameable.isTame() && getOwnerReflect.invoke(tameable, null) != null) {
+							Player tameableOwner = (Player) ((net.minecraft.world.entity.player.Player) getOwnerReflect.invoke(tameable, null)).getBukkitEntity();
+							if (myPet.getOwner().equals(tameableOwner)) {
+								continue;
+							} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
+								continue;
+							}
 						}
+					} catch(IllegalAccessException | InvocationTargetException e) {
+		                e.printStackTrace();
 					}
 				} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
 					continue;

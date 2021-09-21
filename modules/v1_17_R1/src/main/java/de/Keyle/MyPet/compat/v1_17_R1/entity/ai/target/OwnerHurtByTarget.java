@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
@@ -32,6 +35,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;
@@ -86,12 +90,17 @@ public class OwnerHurtByTarget implements AIGoal {
 				return false;
 			}
 		} else if (lastDamager instanceof TamableAnimal) {
+			Method getOwnerReflect = ReflectionUtil.getMethod(TamableAnimal.class, "getOwner"); //Method: getOwner -> mojang mapping maps that to fx() even tho it still is getOwner.
 			TamableAnimal tameable = (TamableAnimal) lastDamager;
-			if (tameable.isTame() && tameable.getOwner() != null) {
-				Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
-				if (myPet.getOwner().equals(tameableOwner)) {
-					return false;
+			try {
+				if (tameable.isTame() && getOwnerReflect.invoke(tameable, null) != null) {
+					Player tameableOwner = (Player) ((net.minecraft.world.entity.player.Player) getOwnerReflect.invoke(tameable, null)).getBukkitEntity();
+					if (myPet.getOwner().equals(tameableOwner)) {
+						return false;
+					}
 				}
+			} catch(IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
 			}
 		}
 		if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), lastDamager.getBukkitEntity())) {
