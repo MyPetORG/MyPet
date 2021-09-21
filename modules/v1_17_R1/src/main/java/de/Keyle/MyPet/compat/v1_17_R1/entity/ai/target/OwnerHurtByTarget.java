@@ -91,7 +91,7 @@ public class OwnerHurtByTarget implements AIGoal {
 			}
 		} else if (lastDamager instanceof TamableAnimal) {
 			Method getOwnerReflect = ReflectionUtil.getMethod(TamableAnimal.class, "getOwner"); //Method: getOwner -> mojang mapping maps that to fx() even tho it still is getOwner.
-			TamableAnimal tameable = (TamableAnimal) entityLiving;
+			TamableAnimal tameable = (TamableAnimal) lastDamager;
 			try {
 				if (tameable.isTame() && getOwnerReflect.invoke(tameable, null) != null) {
 					Player tameableOwner = (Player) ((net.minecraft.world.entity.player.Player) getOwnerReflect.invoke(tameable, null)).getBukkitEntity();
