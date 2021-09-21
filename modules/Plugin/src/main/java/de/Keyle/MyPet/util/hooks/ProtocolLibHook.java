@@ -154,6 +154,9 @@ public class ProtocolLibHook implements PluginHook {
                         } catch (RuntimeException ignored) {
                         }
                         if (entity == null) {
+                        	if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) { //1.17+ does not like this.
+                        		return;
+                        	}
                             entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
                         }
 
