@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Scheduler;
 import org.bukkit.Location;
 
@@ -67,4 +69,6 @@ public interface MyPet extends StoredMyPet, Scheduler {
     boolean hasTarget();
 
     void decreaseSaturation(double value);
+    
+    boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source);
 }

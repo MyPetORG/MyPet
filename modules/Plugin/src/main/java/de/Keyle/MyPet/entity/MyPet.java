@@ -29,8 +29,10 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
+import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelEvent;
 import de.Keyle.MyPet.api.event.MyPetNameEvent;
+import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.event.MyPetStatusEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -308,13 +310,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public boolean autoAssignSkilltree() {
         if (skilltree == null && this.petOwner.isOnline()) {
             if (Configuration.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT) {
-                return setSkilltree(MyPetApi.getSkilltreeManager().getRandomSkilltree(this));
+                return setSkilltree(MyPetApi.getSkilltreeManager().getRandomSkilltree(this), MyPetSelectSkilltreeEvent.Source.Auto);
             } else if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
                 List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getOrderedSkilltrees());
 
                 for (Skilltree skilltree : skilltrees) {
                     if (skilltree.getMobTypes().contains(getPetType()) && skilltree.checkRequirements(this)) {
-                        return setSkilltree(skilltree);
+                        return setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.Auto);
                     }
                 }
                 return false;
@@ -726,6 +728,20 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
 
+    public boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source) {
+        if (skilltree == null || this.skilltree == skilltree) {
+            return false;
+        }
+        if (skilltree.getRequiredLevel() > 1 && getExperience().getLevel() < skilltree.getRequiredLevel()) {
+            return false;
+        }
+        this.skilltree = skilltree;
+        getServer().getPluginManager().callEvent(new MyPetLevelEvent(this, experience.getLevel()));
+        MyPetSelectSkilltreeEvent selectEvent = new MyPetSelectSkilltreeEvent(this, skilltree, source);
+        Bukkit.getServer().getPluginManager().callEvent(selectEvent);
+        return true;
+    }
+    
     public boolean setSkilltree(Skilltree skilltree) {
         if (skilltree == null || this.skilltree == skilltree) {
             return false;
