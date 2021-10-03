@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
@@ -455,7 +456,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 String skilltreeName = arg.replace("skilltree:", "");
                 Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
                 if (skilltree != null) {
-                    inactiveMyPet.setSkilltree(skilltree);
+                    inactiveMyPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.AdminCreation);
                 }
             } else if (arg.startsWith("name:")) {
                 String name = arg.replace("name:", "");

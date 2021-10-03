@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -32,6 +33,8 @@ import de.keyle.knbt.*;
 
 import java.util.Collection;
 import java.util.UUID;
+
+import org.bukkit.Bukkit;
 
 public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private MyPetPlayer petOwner;
@@ -151,6 +154,13 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
 
     public boolean setSkilltree(Skilltree skilltree) {
         this.skilltree = skilltree;
+        return true;
+    }
+    
+    public boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source) {
+        this.skilltree = skilltree;
+        MyPetSelectSkilltreeEvent selectEvent = new MyPetSelectSkilltreeEvent(this, skilltree, source);
+        Bukkit.getServer().getPluginManager().callEvent(selectEvent);
         return true;
     }
 

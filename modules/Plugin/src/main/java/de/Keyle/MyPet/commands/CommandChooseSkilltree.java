@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -80,7 +81,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                                 int requiredLevel = skilltree.getRequiredLevel();
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
-                                } else if (myPet.setSkilltree(skilltree)) {
+                                } else if (myPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", player), Colorizer.setColors(skilltree.getDisplayName())));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                                         double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
@@ -134,7 +135,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                                 int requiredLevel = selecedSkilltree.getRequiredLevel();
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
-                                } else if (myPet.setSkilltree(selecedSkilltree)) {
+                                } else if (myPet.setSkilltree(selecedSkilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), Colorizer.setColors(selecedSkilltree.getDisplayName())));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                                         double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
