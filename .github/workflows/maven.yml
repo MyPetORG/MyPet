@@ -41,7 +41,7 @@ jobs:
       - name: Build and Deploy to GitHub
         run: mvn --batch-mode deploy -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Get jar file name
         run: |
