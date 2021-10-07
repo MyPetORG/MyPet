@@ -20,36 +20,44 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetCreateEvent extends Event {
-    protected static final HandlerList handlers = new HandlerList();
+import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 
+public class MyPetSelectSkilltreeEvent extends Event {
+    private static final HandlerList handlers = new HandlerList();
+
+    protected final StoredMyPet myPet;
+    protected final Skilltree skilltree;
+    private final Source source;
+    
     public enum Source {
-        Leash, AdminCommand, PetShop, Other
+        Auto, PlayerCommand, AdminCommand, AdminCreation, BossShopPro, Shop, Other
     }
 
-    private final StoredMyPet myPet;
-    private final Source source;
-
-    public MyPetCreateEvent(StoredMyPet myPet, Source source) {
+    public MyPetSelectSkilltreeEvent(StoredMyPet myPet, Skilltree skilltree, Source source) {
         this.myPet = myPet;
+        this.skilltree = skilltree;
         this.source = source;
     }
-
+    
     public Source getSource() {
         return source;
     }
 
-    public MyPetPlayer getOwner() {
-        return myPet.getOwner();
-    }
-
     public StoredMyPet getMyPet() {
         return myPet;
+    }
+
+    public Skilltree getSkilltree() {
+        return skilltree;
+    }
+
+    public MyPetPlayer getOwner() {
+        return myPet.getOwner();
     }
 
     public HandlerList getHandlers() {

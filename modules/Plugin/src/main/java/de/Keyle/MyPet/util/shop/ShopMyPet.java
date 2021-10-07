@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util.shop;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -32,6 +33,8 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
 import de.keyle.knbt.TagCompound;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -178,6 +181,8 @@ public class ShopMyPet implements StoredMyPet {
 
     public boolean setSkilltree(Skilltree skilltree) {
         this.skilltree = skilltree;
+        MyPetSelectSkilltreeEvent selectEvent = new MyPetSelectSkilltreeEvent(this, skilltree, MyPetSelectSkilltreeEvent.Source.Shop);
+        Bukkit.getServer().getPluginManager().callEvent(selectEvent);
         return true;
     }
 
