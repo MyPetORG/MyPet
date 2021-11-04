@@ -20,25 +20,22 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import org.bukkit.block.data.Ageable;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyAxolotl;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyAquaticPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 1.3F)
-public class EntityMyAxolotl extends EntityMyPet {
+public class EntityMyAxolotl extends EntityMyAquaticPet {
 
     private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.INT);

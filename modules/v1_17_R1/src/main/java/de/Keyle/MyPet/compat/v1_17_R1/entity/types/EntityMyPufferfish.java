@@ -25,14 +25,14 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPufferfish;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyAquaticPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.5F, height = 0.5f)
-public class EntityMyPufferfish extends EntityMyPet {
+public class EntityMyPufferfish extends EntityMyAquaticPet {
 
 	private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMyPufferfish.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> PUFF_WATCHER = SynchedEntityData.defineId(EntityMyPufferfish.class, EntityDataSerializers.INT);
