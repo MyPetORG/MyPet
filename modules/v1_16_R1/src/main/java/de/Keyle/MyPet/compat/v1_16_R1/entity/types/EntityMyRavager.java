@@ -66,7 +66,7 @@ public class EntityMyRavager extends EntityMyPet {
 
     @Override
     public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
+        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
             if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
                 getOwner().sendMessage("Unfortunately, Ravagers can not be ridden (Minecraft limitation)", 5000);
                 return EnumInteractionResult.CONSUME;

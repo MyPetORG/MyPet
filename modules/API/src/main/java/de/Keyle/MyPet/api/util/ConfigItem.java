@@ -63,6 +63,9 @@ public abstract class ConfigItem {
     }
 
     public static ConfigItem createConfigItem(String data) {
+    	if(data.equalsIgnoreCase("none")) {	//For enabling non itembound interaction (riding etc)
+    		return null;
+    	}
         return MyPetApi.getCompatUtil().getComapatInstance(ConfigItem.class, "util", "ConfigItem", data);
     }
 

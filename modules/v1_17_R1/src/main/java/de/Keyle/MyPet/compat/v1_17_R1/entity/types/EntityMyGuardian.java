@@ -23,11 +23,11 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyGuardian;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyAquaticPet;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 0.85F)
-public class EntityMyGuardian extends EntityMyPet {
+public class EntityMyGuardian extends EntityMyAquaticPet {
 
 	public EntityMyGuardian(Level world, MyPet myPet) {
 		super(world, myPet);

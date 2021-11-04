@@ -128,7 +128,7 @@ public class CommandRelease implements CommandTabCompleter {
                     lore.add(RESET + Translation.getString("Name.Exp", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getExp()));
                     lore.add(RESET + Translation.getString("Name.Type", petOwner) + ": " + GOLD + Translation.getString("Name." + myPet.getPetType().name(), petOwner));
                     lore.add(RESET + Translation.getString("Name.Skilltree", petOwner) + ": " + GOLD + (myPet.getSkilltree() != null ? Colorizer.setColors(myPet.getSkilltree().getDisplayName()) : "-"));
-
+                    
                     message.then(myPet.getPetName())
                             .color(ChatColor.AQUA)
                             .command("/petrelease " + ChatColor.stripColor(myPet.getPetName()))

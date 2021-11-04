@@ -72,7 +72,7 @@ public class EntityMyOcelot extends EntityMyPet {
 				}
 			}
 		}
-		return EnumInteractionResult.CONSUME;
+		return EnumInteractionResult.PASS;
 	}
 
 	@Override

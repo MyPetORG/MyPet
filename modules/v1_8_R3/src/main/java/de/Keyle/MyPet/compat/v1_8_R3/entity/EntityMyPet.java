@@ -432,7 +432,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             Player owner = this.getOwner().getPlayer();
-            if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
+            if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
                     if (Permissions.hasExtended(owner, "MyPet.extended.ride")) {
                         entityhuman.mount(this);

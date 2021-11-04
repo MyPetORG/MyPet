@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.navigation.MyPetWaterBoundPathNavigation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -39,7 +40,7 @@ import net.minecraft.world.entity.player.Player;
 public class FollowOwner implements AIGoal {
 
 	private final EntityMyPet petEntity;
-	private final AbstractNavigation nav;
+	private AbstractNavigation nav;
 	private int setPathTimer = 0;
 	private final float stopDistance;
 	private final double startDistance;
@@ -138,8 +139,8 @@ public class FollowOwner implements AIGoal {
 			
 			if (--this.setPathTimer <= 0) {
 				this.setPathTimer = 10;
-				if (this.nav.navigateTo(owner.getBukkitEntity())) { //TODO 2021/08/19 Seemingly not doing that properly?
-					applyWalkSpeed(); //It get's called so it returned true}
+				if (this.nav.navigateTo(owner.getBukkitEntity())) {
+					applyWalkSpeed();
 				}
 			}
 		}
@@ -165,9 +166,21 @@ public class FollowOwner implements AIGoal {
 			// make the pet faster when the player is has the SPEED effect
 			walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
 		}
+		
+		// make aquatic pets faster - swimming is hard
+		if(owner.isInWaterOrBubble() && this.petEntity.getNavigation() instanceof MyPetWaterBoundPathNavigation) {
+			walkSpeed += 0.6f;
+			if(owner.isSwimming()) {
+				walkSpeed -= 0.035f;
+			}
+			
+			if(owner.hasEffect(MobEffects.DOLPHINS_GRACE)) {
+				walkSpeed += 0.08f;
+			}
+		}
+
 		// make the pet a little bit faster than the player so it can catch up
 		walkSpeed += 0.07f;
-
 		nav.getParameters().addSpeedModifier("FollowOwner", walkSpeed);
 	}
 }

@@ -20,17 +20,30 @@
 
 package de.Keyle.MyPet.compat.v1_9_R2.entity.types;
 
+import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPig;
+import de.Keyle.MyPet.api.plugin.MyPetPlugin;
 import de.Keyle.MyPet.compat.v1_9_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.RideImpl;
-import net.minecraft.server.v1_9_R2.*;
-import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.minecraft.server.v1_9_R2.DataWatcher;
+import net.minecraft.server.v1_9_R2.DataWatcherObject;
+import net.minecraft.server.v1_9_R2.DataWatcherRegistry;
+import net.minecraft.server.v1_9_R2.EntityHuman;
+import net.minecraft.server.v1_9_R2.EntityItem;
+import net.minecraft.server.v1_9_R2.EntityPlayer;
+import net.minecraft.server.v1_9_R2.EnumHand;
+import net.minecraft.server.v1_9_R2.ItemStack;
+import net.minecraft.server.v1_9_R2.Items;
+import net.minecraft.server.v1_9_R2.PacketPlayOutAttachEntity;
+import net.minecraft.server.v1_9_R2.World;
+import net.minecraft.server.v1_9_R2.WorldServer;
 
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
@@ -79,7 +92,7 @@ public class EntityMyPig extends EntityMyPet {
         }
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
-            if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
+            if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
                     if (itemStack != null && itemStack.getItem() == Items.LEAD) {
                         ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutAttachEntity(this, null));

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTurtle;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyAquaticPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -36,7 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 1.2F, height = 0.4F)
-public class EntityMyTurtle extends EntityMyPet {
+public class EntityMyTurtle extends EntityMyAquaticPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<BlockPos> HOME_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
