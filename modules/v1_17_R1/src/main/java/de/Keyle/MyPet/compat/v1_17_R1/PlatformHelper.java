@@ -186,11 +186,14 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean canSpawn(Location loc, MyPetMinecraftEntity entity) {
-        return canSpawn(loc, ((net.minecraft.world.entity.LivingEntity) entity).getBoundingBox());
+        return canSpawn(loc, ((net.minecraft.world.entity.LivingEntity) entity).getBoundingBox(), ((net.minecraft.world.entity.LivingEntity) entity).canBreatheUnderwater());
     }
 
-    public Boolean canSpawn(Location loc, AABB bb) {
+    public Boolean canSpawn(Location loc, AABB bb, boolean canSpawnUnderwater) {
         net.minecraft.world.level.Level mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        if(canSpawnUnderwater) {
+        	return getBlockBBsInBB(mcWorld, bb).isEmpty();
+        }
         return getBlockBBsInBB(mcWorld, bb).isEmpty() && !mcWorld.containsAnyLiquid(bb);
     }
 

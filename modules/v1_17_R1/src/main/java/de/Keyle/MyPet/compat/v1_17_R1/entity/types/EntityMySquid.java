@@ -24,11 +24,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyAquaticPet;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 0.475f)
-public class EntityMySquid extends EntityMyPet {
+public class EntityMySquid extends EntityMyAquaticPet {
 
 	public EntityMySquid(Level world, MyPet myPet) {
 		super(world, myPet);

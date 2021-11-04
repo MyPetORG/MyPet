@@ -143,11 +143,19 @@ public class ItemTooltip {
                     if (i > 0) {
                         jsonString += ",";
                     }
+                    if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                        jsonString += "\"{\\\"text\\\":";
+                    }
                     if (minorVersion == 7 && lore.get(i).contains(":")) {
                         jsonString += "a:";
                     }
-                    jsonString += "\"" + lore.get(i).replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'") + "\"";
-
+                    if (MyPetApi.getCompatUtil().isCompatible("1.13")) {
+                    	jsonString += "\\\"" + lore.get(i).replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'") + "\\\"";
+                        jsonString += "}";
+                    } else {
+                        jsonString += "\"" + lore.get(i).replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'") + "\"";
+                    }
+                    jsonString += "\"";
                 }
                 jsonString += "]";
             }

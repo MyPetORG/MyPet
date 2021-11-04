@@ -33,7 +33,6 @@ import org.bukkit.craftbukkit.v1_17_R1.attribute.CraftAttributeMap;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.util.CraftChatMessage;
 import org.bukkit.entity.ArmorStand;
@@ -62,7 +61,6 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.entity.types.MyStrider;
 import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.MyPetSitEvent;
@@ -120,6 +118,8 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -169,6 +169,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			this.petPathfinderSelector = new AIGoalSelector(0);
 			this.petTargetSelector = new AIGoalSelector(Configuration.Entity.SKIP_TARGET_AI_TICKS);
 			this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
+			this.navigation = this.setSpecialNav();
 			this.petNavigation = new VanillaNavigation(this);
 			this.sitPathfinder = new Sit(this);
 			this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(Integer.MAX_VALUE);
@@ -515,7 +516,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		Player owner = this.getOwner().getPlayer();
 
 		if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
-			if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
+			if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
 				if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
 					if (Permissions.hasExtended(owner, "MyPet.extended.ride")) {
 						((CraftPlayer) owner).getHandle().startRiding(this);
@@ -703,9 +704,9 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		boolean silent = this.getAttribute(Attributes.MAX_HEALTH).getValue() != maxHealth;
 		this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHealth);
 
-		super.setHealth(Mth.clamp(f, 0.0F, (float) maxHealth)); // Is that right?
+		super.setHealth(Mth.clamp(f, 0.0F, (float) maxHealth));
 
-		double health = getHealth();
+		double health = super.getHealth();
 		if (deltaHealth > maxHealth) {
 			deltaHealth = 0;
 		} else {
@@ -815,7 +816,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 	}
 	
-	private void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
+	protected void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
 		double locY;
 		float speed;
 		float swimmSpeed;
@@ -859,10 +860,6 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			speed = speedModifier * (0.16277136F / (friction * friction * friction));
 
 			this.moveRelative(speed, new Vec3(motionSideways, motionUpwards, motionForward));
-			friction = 0.91F;
-			if (this.onGround) {
-				friction = this.level.getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
-			}
 
 			double motX = this.getDeltaMovement().x();
 			double motY = this.getDeltaMovement().y();
@@ -1145,7 +1142,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
 		AABB bb = entity.getBoundingBox();
 		bb = getBBAtPosition(bb, this.getX(), this.getY(), this.getZ());
-		if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), bb)) {
+		if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), this)) {
 			entity.startRiding(this, true);
 		} else {
 			entity.setPos(getX(), getY(), getZ());
@@ -1240,7 +1237,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 		LivingEntity passenger = (LivingEntity) this.getFirstPassenger();
 
-		if (this.isEyeInFluid(FluidTags.WATER)) {
+		if (this.isEyeInFluid(FluidTags.WATER) && !this.rideableUnderWater()) {
 			this.setDeltaMovement(this.getDeltaMovement().add(0, 0.4, 0));
 		}
 
@@ -1350,6 +1347,12 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 							this.isFlying = true;
 						}
 					}
+				} else if (this.rideableUnderWater() && this.isEyeInFluid(FluidTags.WATER)) {
+					if (this.getDeltaMovement().y() < ascendSpeed) {
+						this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
+						this.flyDist = 0;
+						this.isFlying = true;
+					}
 				}
 			} else {
 				flyCheckCounter = 0;
@@ -1405,11 +1408,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	
 	@Override
 	public void lavaHurt() {
-		if(this.getMyPet() instanceof MyStrider) {
-			return;
-		} else {
-			super.lavaHurt();
-		}
+		super.lavaHurt();
 	}
 
 	@Override
@@ -1423,5 +1422,27 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	@Override
 	public UUID getUniqueID() {
 		return this.uuid;
+	}
+	
+	public boolean floatsInLava() {	//Some entities do - now they can
+		return false;
+	}
+	
+	/**
+	 * Used for abnormal floating-behaviour
+	 * 
+	 * @return true if it handled the floating - false if normal floating can be used
+	 */
+	
+	public boolean specialFloat() { //Some entities do strange stuff in Water/Lava - this enables that
+		return false;
+	}
+
+	public void switchMovement(MoveControl mvcontrol) {	//This is for switching between Movesets
+		this.moveControl = mvcontrol;
+	}
+	
+	protected PathNavigation setSpecialNav() { //Some Pets have special PathNavigations
+		return this.navigation;
 	}
 }
