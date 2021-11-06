@@ -49,7 +49,7 @@ public class Control implements AIGoal, Scheduler {
 
     @Override
     public boolean shouldStart() {
-        if (this.myPet.getEntity().isEmpty() || !this.myPet.getEntity().get().canMove()) {
+        if (!this.myPet.getEntity().isPresent() || !this.myPet.getEntity().get().canMove()) {
             return false;
         }
         ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
