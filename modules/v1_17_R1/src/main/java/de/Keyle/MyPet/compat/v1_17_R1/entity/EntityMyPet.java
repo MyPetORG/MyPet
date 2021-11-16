@@ -78,6 +78,7 @@ import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.Control;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.FollowOwner;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.LookAtPlayer;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.MyPetAquaticMoveControl;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.RandomLookaround;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.Sit;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.Sprint;
@@ -88,6 +89,7 @@ import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target.BehaviorFarmTarget;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target.ControlTarget;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target.HurtByTarget;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target.OwnerHurtByTarget;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.types.EntityMyDolphin;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
@@ -1109,6 +1111,9 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 				if (cancelled) {
 					returnVal = false;
 				} else {
+					if(this.getMoveControl() instanceof MyPetAquaticMoveControl) {
+						this.switchMovement(new MoveControl(this));
+					}
 					returnVal = super.addPassenger(entity);
 				}
 			}
@@ -1139,6 +1144,12 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	@Override
 	protected boolean removePassenger(Entity entity) {
 		boolean result = super.removePassenger(entity);
+		
+		if(this.isInWaterOrBubble() && this instanceof EntityMyAquaticPet
+				&& !(this.getMoveControl() instanceof MyPetAquaticMoveControl)) {
+			this.switchMovement(new MyPetAquaticMoveControl(this));
+		}
+		
 		PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
 		AABB bb = entity.getBoundingBox();
 		bb = getBBAtPosition(bb, this.getX(), this.getY(), this.getZ());
@@ -1347,12 +1358,15 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 							this.isFlying = true;
 						}
 					}
-				} else if (this.rideableUnderWater() && this.isEyeInFluid(FluidTags.WATER)) {
+				} else if (this.rideableUnderWater() && this.isInWaterOrBubble()) { //Add Axolotl and Dolphin exception here?
 					if (this.getDeltaMovement().y() < ascendSpeed) {
 						this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
-						this.flyDist = 0;
-						this.isFlying = true;
 					}
+				} else if (this instanceof EntityMyDolphin
+						&& this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().isLiquid()
+						&& ((EntityMyDolphin)this).canDolphinjump) {
+					this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed*4, this.getDeltaMovement().z());
+					((EntityMyDolphin)this).canDolphinjump = false;
 				}
 			} else {
 				flyCheckCounter = 0;

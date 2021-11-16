@@ -35,8 +35,6 @@ public class MyPetAquaticMoveControl extends MoveControl{
 
     @Override
     public void tick() {
-    	
-    	
         if (this.operation == MoveControl.Operation.MOVE_TO && !this.fish.getNavigation().isDone()) {
             float f = (float) (this.speedModifier * this.fish.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue());
             
@@ -47,8 +45,6 @@ public class MyPetAquaticMoveControl extends MoveControl{
             this.fish.setSpeed(Mth.lerp(0.125F, this.fish.getSpeed(), f));
             
             if(this.fish.isInWaterOrBubble()) {
-                float f3 = Mth.sin(this.mob.getXRot() * 0.017453292F);
-                this.fish.yya = -f3 * f;
                 this.fish.setDeltaMovement(this.fish.getDeltaMovement().multiply(f, 1, f));
             }
             

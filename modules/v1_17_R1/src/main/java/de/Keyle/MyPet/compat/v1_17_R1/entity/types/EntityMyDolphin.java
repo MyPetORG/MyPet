@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyAquaticPet;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement.MyPetAquaticMoveControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyAquaticPet {
+	public boolean canDolphinjump = false;
 
 	private static final EntityDataAccessor<BlockPos> TREASURE_POS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> GOT_FISH_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
@@ -62,6 +64,14 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
 		super.onLivingUpdate();
 		if (!isInWater() && this.random.nextBoolean()) {
 			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
+		}
+		if (this.canDolphinjump &&
+			(this.level.getBlockState(new BlockPos(this.getBlockX(),this.getBlockY()+3,this.getBlockZ())).getMaterial().isLiquid())) {
+			this.canDolphinjump = true;
+		}
+		if (this.canDolphinjump &&
+				!(this.moveControl instanceof MyPetAquaticMoveControl)) {
+			this.canDolphinjump = false;
 		}
 	}
 

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.navigation.MyPetWaterBoundPathNavigation;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.navigation.MyAquaticPetPathNavigation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
@@ -40,7 +40,7 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
 	
 	@Override
 	protected PathNavigation setSpecialNav() {
-		return new MyPetWaterBoundPathNavigation(this, this.level);
+		return new MyAquaticPetPathNavigation(this, this.level);
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
 
 			this.move(MoverType.SELF, mot);
 
-			motY -= 0.08D;
+			motY -= 0.1D;
 			motY *= 0.6D;
 
 			motY *= 0.9800000190734863D;
