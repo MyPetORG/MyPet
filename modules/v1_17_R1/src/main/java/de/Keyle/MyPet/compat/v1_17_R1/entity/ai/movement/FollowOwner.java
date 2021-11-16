@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.navigation.MyPetWaterBoundPathNavigation;
+import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.navigation.MyAquaticPetPathNavigation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -108,7 +108,7 @@ public class FollowOwner implements AIGoal {
 		if (ownerLocation.getWorld() != petLocation.getWorld()) {
 			return;
 		}
-		
+
 		//Look at Owner
 		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot()); //TODO MIGHT be wrong (also in different places) ->getMaxHeadXRot
 
@@ -136,7 +136,7 @@ public class FollowOwner implements AIGoal {
 			} else {
 				waitForGround = true;
 			}
-			
+
 			if (--this.setPathTimer <= 0) {
 				this.setPathTimer = 10;
 				if (this.nav.navigateTo(owner.getBukkitEntity())) {
@@ -166,14 +166,13 @@ public class FollowOwner implements AIGoal {
 			// make the pet faster when the player is has the SPEED effect
 			walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
 		}
-		
+
 		// make aquatic pets faster - swimming is hard
-		if(owner.isInWaterOrBubble() && this.petEntity.getNavigation() instanceof MyPetWaterBoundPathNavigation) {
+		if(this.petEntity.isInWaterOrBubble() && this.petEntity.getNavigation() instanceof MyAquaticPetPathNavigation) {
 			walkSpeed += 0.6f;
 			if(owner.isSwimming()) {
 				walkSpeed -= 0.035f;
 			}
-			
 			if(owner.hasEffect(MobEffects.DOLPHINS_GRACE)) {
 				walkSpeed += 0.08f;
 			}

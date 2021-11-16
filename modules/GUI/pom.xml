@@ -44,17 +44,11 @@
             <artifactId>mypet-api</artifactId>
             <version>1</version>
         </dependency>
-        <dependency> <!-- This works for building locally without having to setup settings.xml BUT it doesn't enable the GUI-SkilltreeCreator -->
-    	    <groupId>com.github.scomans</groupId>
-    	    <artifactId>MyPet-SkilltreeCreator</artifactId>
-    	    <version>-SNAPSHOT</version>
-    	  </dependency>
-        <!-- This requires settings.xml with github-token. Used for releases
         <dependency>
           <groupId>de.keyle</groupId>
           <artifactId>mypet-skilltree-creator</artifactId>
           <version>3.0-SNAPSHOT</version>
-        </dependency> -->
+        </dependency>
     </dependencies>
 
     <build>
