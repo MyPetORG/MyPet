@@ -28,17 +28,20 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @PluginHookName("PlaceholderAPI")
 public class PlaceholderApiHook implements PluginHook {
@@ -161,6 +164,22 @@ public class PlaceholderApiHook implements PluginHook {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getSaturation();
+            }
+        });
+
+        placeHolders.put("petfood", new PlaceHolder<MyPet>(MyPet.class) {
+            @Override
+            public String getValue(MyPet pet) {
+                String foodString;
+                foodString = String.join(
+                        ", ",
+                        MyPetApi.getMyPetInfo().getFood(pet.getPetType())
+                                .stream()
+                                .filter(configItem -> configItem.getItem() != null && configItem.getItem().getType() != Material.AIR)
+                                .map(configItem -> configItem.getItem().getType().name())
+                                .collect(Collectors.toList())
+                );
+                return foodString;
             }
         });
 
