@@ -131,7 +131,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
-	
+
 	protected static final EntityDataAccessor<Byte> POTION_PARTICLE_WATCHER = Mob.DATA_SHARED_FLAGS_ID;
 
 	protected AIGoalSelector petPathfinderSelector, petTargetSelector;
@@ -817,7 +817,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	public Entity getFirstPassenger() {
 		return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 	}
-	
+
 	protected void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
 		double locY;
 		float speed;
@@ -940,7 +940,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	 * Allows handlePlayerInteraction() to
 	 * be fired when a lead is used
 	 */
-	@Override 
+	@Override
 	public boolean canBeLeashed(net.minecraft.world.entity.player.Player entityhuman) {
 		return false;
 	}
@@ -1057,8 +1057,8 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 		if (Math.abs(vec3d.z()) < 0.003D) {
 			motZ = 0.0D;
-		} 
-		
+		}
+
 		this.setDeltaMovement(motX, motY, motZ);
 
 		this.doMyPetTick();
@@ -1144,12 +1144,12 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	@Override
 	protected boolean removePassenger(Entity entity) {
 		boolean result = super.removePassenger(entity);
-		
+
 		if(this.isInWaterOrBubble() && this instanceof EntityMyAquaticPet
 				&& !(this.getMoveControl() instanceof MyPetAquaticMoveControl)) {
 			this.switchMovement(new MyPetAquaticMoveControl(this));
 		}
-		
+
 		PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
 		AABB bb = entity.getBoundingBox();
 		bb = getBBAtPosition(bb, this.getX(), this.getY(), this.getZ());
@@ -1257,7 +1257,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			passenger.stopRiding();
 			return;
 		}
-		
+
 		//apply pitch & yaw
 		this.yRotO = passenger.getYRot();
 		this.setYRot(passenger.getYRot());
@@ -1419,7 +1419,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void lavaHurt() {
 		super.lavaHurt();
@@ -1432,22 +1432,22 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		}
 		return super.getLastDamageSource();
 	}
-	
+
 	@Override
 	public UUID getUniqueID() {
 		return this.uuid;
 	}
-	
+
 	public boolean floatsInLava() {	//Some entities do - now they can
 		return false;
 	}
-	
+
 	/**
 	 * Used for abnormal floating-behaviour
-	 * 
+	 *
 	 * @return true if it handled the floating - false if normal floating can be used
 	 */
-	
+
 	public boolean specialFloat() { //Some entities do strange stuff in Water/Lava - this enables that
 		return false;
 	}
@@ -1455,7 +1455,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	public void switchMovement(MoveControl mvcontrol) {	//This is for switching between Movesets
 		this.moveControl = mvcontrol;
 	}
-	
+
 	protected PathNavigation setSpecialNav() { //Some Pets have special PathNavigations
 		return this.navigation;
 	}
