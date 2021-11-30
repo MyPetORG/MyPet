@@ -219,7 +219,7 @@ public class EntityMyStrider extends EntityMyPet {
 		if(this.isInLava()) {
 			CollisionContext collisioncontext = CollisionContext.of((Entity) this);
 			
-			if (collisioncontext.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) && !this.level.getFluidState(this.blockPosition().up()).is((Tag) FluidTags.LAVA)) {
+			if (collisioncontext.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) && !this.level.getFluidState(this.blockPosition().above()).is((Tag) FluidTags.LAVA)) {
 				this.onGround = true;
 	        } else {
 	        	this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));

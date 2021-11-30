@@ -68,7 +68,7 @@ public class EatGrass implements AIGoal {
 
 		BlockPos blockposition = new BlockPos(blockLocX, blockLocY, blockLocZ);
 
-		return GRASS.test(this.world.getBlockState(blockposition)) || this.world.getBlockState(blockposition.down()).getBlock() == Blocks.GRASS;
+		return GRASS.test(this.world.getBlockState(blockposition)) || this.world.getBlockState(blockposition.below()).getBlock() == Blocks.GRASS;
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class EatGrass implements AIGoal {
 				}
 				entityMySheep.getMyPet().setSheared(false);
 			} else {
-				BlockPos blockUnder = blockAt.down();
+				BlockPos blockUnder = blockAt.below();
 				if (this.world.getBlockState(blockUnder).getBlock() == Blocks.GRASS) {
 					if (!CraftEventFactory.callEntityChangeBlockEvent(
 							this.entityMySheep,

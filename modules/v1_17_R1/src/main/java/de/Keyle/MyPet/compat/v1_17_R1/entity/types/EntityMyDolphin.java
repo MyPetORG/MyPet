@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
+import org.bukkit.Bukkit;
+
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
@@ -65,12 +67,12 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
 		if (!isInWater() && this.random.nextBoolean()) {
 			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
 		}
-		if (this.canDolphinjump &&
+		if (!this.canDolphinjump &&
 			(this.level.getBlockState(new BlockPos(this.getBlockX(),this.getBlockY()+3,this.getBlockZ())).getMaterial().isLiquid())) {
 			this.canDolphinjump = true;
 		}
 		if (this.canDolphinjump &&
-				!(this.moveControl instanceof MyPetAquaticMoveControl)) {
+				this.onGround && !this.isInWaterOrBubble()) {
 			this.canDolphinjump = false;
 		}
 	}

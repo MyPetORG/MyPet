@@ -204,7 +204,7 @@ public class EntityMyZombieHorse extends EntityMyPet implements PlayerRideableJu
 	@Override
 	public void playStepSound(BlockPos blockposition, BlockState blockdata) {
 		if (!blockdata.getMaterial().isLiquid()) {
-			BlockState blockdataUp = this.level.getBlockState(blockposition.up());
+			BlockState blockdataUp = this.level.getBlockState(blockposition.above());
 			SoundType soundeffecttype = blockdata.getSoundType();
 			if (blockdataUp.getBlock() == Blocks.SNOW) {
 				soundeffecttype = blockdata.getSoundType();

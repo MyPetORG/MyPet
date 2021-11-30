@@ -191,7 +191,7 @@ public class EntityMyPillager extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack, net.minecraft.world.entity.EquipmentSlot slot) {
-		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(slot, itemStack))));
+		((ServerLevel) this.level).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(slot, itemStack))));
 		if (slot == net.minecraft.world.entity.EquipmentSlot.MAINHAND) {
 			getEntityData().set(CROSSBOW_WATCHER, itemStack.getItem() == Items.CROSSBOW);
 		}

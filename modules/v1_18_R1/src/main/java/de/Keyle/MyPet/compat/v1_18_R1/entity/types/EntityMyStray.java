@@ -152,7 +152,7 @@ public class EntityMyStray extends EntityMyPet {
 	}
 
 	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
+		((ServerLevel) this.level).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
 	}
 
 	@Override

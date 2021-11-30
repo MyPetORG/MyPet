@@ -157,7 +157,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	protected CraftMyPet bukkitEntity = null;
 	protected AttributeMap attributeMap;
 
-	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bn");	//Jumping-Field
+	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bo");	//Jumping-Field
 
 	public EntityMyPet(Level world, MyPet myPet) {
 		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
@@ -1358,7 +1358,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 							this.isFlying = true;
 						}
 					}
-				} else if (this.rideableUnderWater() && this.isInWaterOrBubble()) { //Add Axolotl and Dolphin exception here?
+				} else if (this.rideableUnderWater() && this.isInWaterOrBubble()) {
 					if (this.getDeltaMovement().y() < ascendSpeed) {
 						this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
 					}

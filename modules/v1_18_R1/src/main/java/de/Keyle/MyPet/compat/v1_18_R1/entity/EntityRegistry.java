@@ -106,7 +106,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
 		if (entity != null) {
 			Level world = ((CraftWorld) bukkitWorld).getHandle();
-			return world.addEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
+			return world.addFreshEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
 		}
 		return false;
 	}
@@ -153,7 +153,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	protected void overwriteEntityID(EntityType types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
 		try {
-			Field bgF = MappedRegistry.class.getDeclaredField("bw"); //TODO Might fail.
+			Field bgF = MappedRegistry.class.getDeclaredField("bA"); //This is toId
 			bgF.setAccessible(true);
 			Object map = bgF.get(entityRegistry);
 			Class<?> clazz = map.getClass();
