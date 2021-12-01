@@ -121,6 +121,7 @@ public class ParticleCompat {
     
     public static Compat<Object> BARRIER_BLOCK_DATA = new Compat<>()
     		.d(166)
+            .v("1.8", new int[]{166})
     		.v("1.13", "barrier")
     		.search();
 }
