@@ -1367,7 +1367,6 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 						&& ((EntityMyDolphin)this).canDolphinjump) {
 					this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed*4, this.getDeltaMovement().z());
 					((EntityMyDolphin)this).canDolphinjump = false;
-					Bukkit.getConsoleSender().sendMessage("DolphinJumping");
 				}
 			} else {
 				flyCheckCounter = 0;

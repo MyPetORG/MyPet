@@ -275,27 +275,28 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     }
                     if (villagerTag.containsKey("FoodLevel")) {
                         byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
-                        ReflectionUtil.setFieldValue("cn", entityVillager, foodLevel);		// Field: foodLevel
+                        ReflectionUtil.setFieldValue("cq", entityVillager, foodLevel);		// Field: foodLevel
                     }
                     if (villagerTag.containsKey("Gossips")) {
                         TagList inventoryTag = villagerTag.get("Gossips");
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
-                        ((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "co")) //Field: gossips
-                                .update(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT));
+                        //This might be useful for later/following versions
+                        //((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "cr")) //Field: gossips
+                        entityVillager.getGossips().update(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT));
                     }
                     if (villagerTag.containsKey("LastRestock")) {
                     	long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("cs", entityVillager, lastRestock);	//Field: lastRestockGameTime
+                        ReflectionUtil.setFieldValue("cv", entityVillager, lastRestock);	//Field: lastRestockGameTime
                     }
                     if (villagerTag.containsKey("LastGossipDecay")) {
                         long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("cq", entityVillager, lastGossipDecay);	//Field: lastGossipDecayTime
+                        ReflectionUtil.setFieldValue("ct", entityVillager, lastGossipDecay);	//Field: lastGossipDecayTime
                     }
                     if (villagerTag.containsKey("RestocksToday")) {
                         int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
-                        ReflectionUtil.setFieldValue("ct", entityVillager, restocksToday);		//Field: numberOfRestocksToday
+                        ReflectionUtil.setFieldValue("cw", entityVillager, restocksToday);		//Field: numberOfRestocksToday
                     }
-                    ReflectionUtil.setFieldValue("cv", entityVillager, true); // Field: AssignProfessionWhenSpawned
+                    ReflectionUtil.setFieldValue("cy", entityVillager, true); // Field: AssignProfessionWhenSpawned
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

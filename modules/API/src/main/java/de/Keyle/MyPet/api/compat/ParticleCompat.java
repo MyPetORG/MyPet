@@ -39,6 +39,7 @@ public class ParticleCompat {
             .d("spell")
             .v("1.8", "BARRIER")
             .v("1.13", "barrier")
+            .v("1.18", "block_marker")
             .search();
 
     public static Compat<String> ITEM_CRACK = new Compat<String>()
@@ -117,4 +118,9 @@ public class ParticleCompat {
             .v("1.8", new int[]{152})
             .v("1.13", "redstone_block")
             .search();
+    
+    public static Compat<Object> BARRIER_BLOCK_DATA = new Compat<>()
+    		.d(166)
+    		.v("1.13", "barrier")
+    		.search();
 }

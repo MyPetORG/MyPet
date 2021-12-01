@@ -663,7 +663,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			}
 		}
 		if (sitPathfinder.isSitting() && sitCounter-- <= 0) {
-			MyPetApi.getPlatformHelper().playParticleEffect(getOwner().getPlayer(), this.getBukkitEntity().getLocation().add(0, getEyeHeight() + 1, 0), ParticleCompat.BARRIER.get(), 0F, 0F, 0F, 5F, 1, 32);
+			MyPetApi.getPlatformHelper().playParticleEffect(getOwner().getPlayer(), this.getBukkitEntity().getLocation().add(0, getEyeHeight() + 1, 0), ParticleCompat.BARRIER.get(), 0F, 0F, 0F, 5F, 1, 32, ParticleCompat.BARRIER_BLOCK_DATA);
 			sitCounter = 60;
 		}
 		Player p = myPet.getOwner().getPlayer();
