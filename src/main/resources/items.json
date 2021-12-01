@@ -7088,7 +7088,77 @@
   }
   ,
   {
+    "id": "small_amethyst_bud",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "medium_amethyst_bud",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "large_amethyst_bud",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "amethyst_cluster",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "axolotl_spawn_egg",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "azalea",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "azalea_leaves",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "big_dripleaf",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "block_of_amethyst",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "block_of_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "block_of_raw_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "block_of_raw_gold",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "block_of_raw_iron",
+    "introduced": "1.17"
+  }
+  ,
+  {
     "id": "bucket_of_axolotl",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "budding_amethyst",
     "introduced": "1.17"
   }
   ,
@@ -7098,7 +7168,272 @@
   }
   ,
   {
+    "id": "calcite",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "black_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "blue_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "brown_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cyan_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "gray_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "green_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "light_blue_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "light_gray_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "lime_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "magenta_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "orange_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "pink_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "purple_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "red_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "white_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "yellow_candle",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "chiseled_deepslate",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cobbled_deepslate",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cobbled_deepslate_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cobbled_deepslate_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cobbled_deepslate_wall",
+    "introduced": "1.17"
+  }
+  ,
+  {
     "id": "copper_ingot",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "copper_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cracked_deepslate_bricks",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cracked_deepslate_tiles",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_brick_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_brick_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_brick_wall",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_bricks",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_coal_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_copper_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_diamond_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_emerald_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_gold_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_iron_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_lapis_lazuli_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_redstone_ore",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_tile_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_tile_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_tile_wall",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "deepslate_tiles",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "dripstone_block",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "exposed_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "exposed_cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "exposed_cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "exposed_cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "flowering_azalea",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "flowering_azalea_leaves",
     "introduced": "1.17"
   }
   ,
@@ -7118,12 +7453,92 @@
   }
   ,
   {
-    "id": "glowing_sign",
+    "id": "glow_lichen",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "glow_squid_spawn_egg",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "goat_spawn_egg",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "hanging_roots",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "infested_deepslate",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "light",
     "introduced": "1.17"
   }
   ,
   {
     "id": "lightning_rod",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "moss_block",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "moss_carpet",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "oxidized_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "oxidized_cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "oxidized_cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "oxidized_cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "pointed_dripstone",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "polished_deepslate",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "polished_deepslate_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "polished_deepslate_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "polished_deepslate_wall",
     "introduced": "1.17"
   }
   ,
@@ -7148,22 +7563,147 @@
   }
   ,
   {
+    "id": "rooted_dirt",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "sculk_sensor",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "small_dripleaf",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "smooth_basalt",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "spore_blossom",
+    "introduced": "1.17"
+  }
+  ,
+  {
     "id": "spyglass",
     "introduced": "1.17"
   }
   ,
   {
-    "id": "axolotl_spawn_egg",
+    "id": "tinted_glass",
     "introduced": "1.17"
   }
   ,
   {
-    "id": "goat_spawn_egg",
+    "id": "tuff",
     "introduced": "1.17"
   }
   ,
   {
-    "id": "glow_squid_spawn_egg",
+    "id": "waxed_block_of_copper",
     "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_exposed_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_exposed_cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_exposed_cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_exposed_cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_weathered_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_weathered_cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_weathered_cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "waxed_weathered_cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "weathered_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "weathered_cut_copper",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "weathered_cut_copper_slab",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "weathered_cut_copper_stairs",
+    "introduced": "1.17"
+  }
+  ,
+  {
+    "id": "music_disc_otherside",
+    "introduced": "1.18"
   }
 ]
