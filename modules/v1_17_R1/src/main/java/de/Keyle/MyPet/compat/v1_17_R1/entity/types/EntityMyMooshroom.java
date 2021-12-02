@@ -77,14 +77,13 @@ public class EntityMyMooshroom extends EntityMyPet {
 					final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
 					entityhuman.getInventory().setItem(itemInHandIndex, is);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.getInventory().setItem(itemInHandIndex, oldIs), 2L);
-
 				} else {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
 						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.MUSHROOM_STEW));
 					} else {
 						if (!entityhuman.getInventory().add(new ItemStack(Items.MUSHROOM_STEW))) {
-							entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
+							entityhuman.drop(new ItemStack(Items.MUSHROOM_STEW), true);
 						}
 					}
 					return InteractionResult.CONSUME;

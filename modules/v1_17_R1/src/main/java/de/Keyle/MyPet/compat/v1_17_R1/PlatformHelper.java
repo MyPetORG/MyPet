@@ -24,6 +24,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import net.minecraft.server.dedicated.DedicatedPlayerList;
+import net.minecraft.server.dedicated.DedicatedServer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -394,7 +396,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     	LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, world);
         lightning.setVisualOnly(true);
         lightning.moveTo(loc.getX(), loc.getY(), loc.getZ(), 0.0F, 0.0F);
-        world.getCraftServer()
+        /*world.getCraftServer()
                 .getServer()
                 .getPlayerList()
                 .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
@@ -404,6 +406,19 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 .getPlayerList()
                 .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
                         new ClientboundSoundPacket(SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+        */
+        //Thank you wrong mappings for this workaround
+        DedicatedServer server = world.getCraftServer().getServer();
+        Method getPlayerListReflect = ReflectionUtil.getMethod(DedicatedServer.class,"getPlayerList");
+        try {
+            DedicatedPlayerList playerList = (DedicatedPlayerList) getPlayerListReflect.invoke(server, null);
+            playerList.broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
+                    new ClientboundAddEntityPacket(lightning));
+            playerList.broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
+                    new ClientboundSoundPacket(SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
