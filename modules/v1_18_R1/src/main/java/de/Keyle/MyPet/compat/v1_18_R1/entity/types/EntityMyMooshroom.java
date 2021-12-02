@@ -84,7 +84,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.MUSHROOM_STEW));
 					} else {
 						if (!entityhuman.getInventory().add(new ItemStack(Items.MUSHROOM_STEW))) {
-							entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
+							entityhuman.drop(new ItemStack(Items.MUSHROOM_STEW), true);
 						}
 					}
 					return InteractionResult.CONSUME;
