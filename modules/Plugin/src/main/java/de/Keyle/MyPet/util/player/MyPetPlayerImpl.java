@@ -435,7 +435,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             Player p = this.getPlayer();
             if (myPet.getStatus() == PetState.Here) {
                 if (myPet.getLocation().get().getWorld() != p.getLocation().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), p.getLocation()) > 40) {
-                    myPet.removePet(true);
+                    myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
                 }
 

@@ -94,6 +94,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Disable-All-Actionbar-Messages", Misc.DISABLE_ALL_ACTIONBAR_MESSAGES);
         config.addDefault("MyPet.OverwriteLanguages", Misc.OVERWRITE_LANGUAGE);
         config.addDefault("MyPet.Right-Click-Command", Misc.RIGHT_CLICK_COMMAND);
+        config.addDefault("MyPet.Recall-Pet-After-Despawn", Misc.RECALL_PET_AFTER_DESPAWN);
 
         config.addDefault("MyPet.Entity.Skip-Target-AI-Ticks", Entity.SKIP_TARGET_AI_TICKS);
         config.addDefault("MyPet.Entity.FollowStartDistance", Entity.MYPET_FOLLOW_START_DISTANCE);
@@ -345,6 +346,7 @@ public class ConfigurationLoader {
         if (Misc.RIGHT_CLICK_COMMAND.startsWith("/")) {
             Misc.RIGHT_CLICK_COMMAND = Misc.RIGHT_CLICK_COMMAND.substring(1);
         }
+        Misc.RECALL_PET_AFTER_DESPAWN = config.getBoolean("MyPet.Recall-Pet-After-Despawn", Misc.RECALL_PET_AFTER_DESPAWN);
 
         Update.ASYNC = config.getBoolean("MyPet.Update.In-Background", Update.ASYNC);
         Update.CHECK = config.getBoolean("MyPet.Update.Check", Update.CHECK);
