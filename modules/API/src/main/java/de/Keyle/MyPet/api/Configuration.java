@@ -37,6 +37,7 @@ public class Configuration {
         public static boolean INVISIBLE_LIKE_OWNER = true;
         public static boolean THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = true;
         public static boolean DISABLE_ALL_ACTIONBAR_MESSAGES = false;
+        public static boolean RECALL_PET_AFTER_DESPAWN = true;
         public static String OVERWRITE_LANGUAGE = "";
         public static String WIKI_URL = "https://wiki.mypet-plugin.de";
         public static String RIGHT_CLICK_COMMAND = "";
