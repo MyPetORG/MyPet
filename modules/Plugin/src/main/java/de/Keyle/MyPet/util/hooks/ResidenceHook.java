@@ -39,11 +39,14 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
 
     @Override
     public boolean onEnable() {
-        residence = MyPetApi.getPluginHookManager().getPluginInstance(Residence.class).get();
+        if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("Residence.Enabled")) {
+            residence = MyPetApi.getPluginHookManager().getPluginInstance(Residence.class).get();
 
-        FlagPermissions.addFlag("mypet-fly");
-        FlagPermissions.addFlag("mypet-damage");
-        return true;
+            FlagPermissions.addFlag("mypet-fly");
+            FlagPermissions.addFlag("mypet-damage");
+            return true;
+        }
+        return false;
     }
 
     @Override

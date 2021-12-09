@@ -301,7 +301,7 @@ public class EntityMyHorse extends EntityMyPet implements PlayerRideableJumping 
 
 	@Override
 	public void onPlayerJump(int i) {
-		// I don't know. <- this was here before the remap
+		this.jumpPower = i;
 	}
 
 	/* Jump power methods */
