@@ -1358,7 +1358,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 							this.isFlying = true;
 						}
 					}
-				} else if (this.rideableUnderWater() && this.isInWaterOrBubble()) { //Add Axolotl and Dolphin exception here?
+				} else if (this.rideableUnderWater() && this.isInWaterOrBubble()) {
 					if (this.getDeltaMovement().y() < ascendSpeed) {
 						this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
 					}
