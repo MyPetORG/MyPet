@@ -635,7 +635,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		if (hasRider) {
 			if (!isVehicle()) {
 				hasRider = false;
-				this.walkDistO = 0.5F; // climb height -> halfslab
+				this.maxUpStep = 0.5F; // climb height -> halfslab
 				Location playerLoc = getOwner().getPlayer().getLocation();
 				Location petLoc = getBukkitEntity().getLocation();
 				petLoc.setYaw(playerLoc.getYaw());
@@ -648,7 +648,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 					Entity ridingEntity = (e instanceof EntityMySeat) ? e.getFirstPassenger() : e;
 					if (ridingEntity instanceof ServerPlayer && getOwner().equals(ridingEntity)) {
 						hasRider = true;
-						this.walkDistO = 1.0F; // climb height -> 1 block
+						this.maxUpStep = 1.0F; // climb height -> 1 block
 						petTargetSelector.finish();
 						petPathfinderSelector.finish();
 					} else {

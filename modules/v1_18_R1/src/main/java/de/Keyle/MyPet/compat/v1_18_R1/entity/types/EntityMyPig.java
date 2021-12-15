@@ -20,12 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
@@ -45,6 +39,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
@@ -54,6 +53,7 @@ public class EntityMyPig extends EntityMyPet {
 
 	public EntityMyPig(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 	}
 
 	@Override

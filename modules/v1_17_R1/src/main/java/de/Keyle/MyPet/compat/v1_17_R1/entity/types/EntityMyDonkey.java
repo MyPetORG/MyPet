@@ -67,7 +67,6 @@ public class EntityMyDonkey extends EntityMyPet {
 	public EntityMyDonkey(Level world, MyPet myPet) {
 		super(world, myPet);
 		indirectRiding = true;
-		this.maxUpStep = 1.0F;
 	}
 
 	/**

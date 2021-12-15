@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMySeat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -150,12 +151,12 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	protected int sitCounter = 0;
 	protected AbstractNavigation petNavigation;
 	protected Sit sitPathfinder;
-	protected float jumpPower = 0;
 	protected int donatorParticleCounter = 0;
 	protected float limitCounter = 0;
 	protected DamageSource deathReason = null;
 	protected CraftMyPet bukkitEntity = null;
 	protected AttributeMap attributeMap;
+	protected boolean indirectRiding = false;
 
 	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bo");	//Jumping-Field
 
@@ -641,7 +642,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		if (hasRider) {
 			if (!isVehicle()) {
 				hasRider = false;
-				this.walkDistO = 0.5F; // climb height -> halfslab
+				this.maxUpStep = 0.5F; // climb height -> halfslab
 				Location playerLoc = getOwner().getPlayer().getLocation();
 				Location petLoc = getBukkitEntity().getLocation();
 				petLoc.setYaw(playerLoc.getYaw());
@@ -651,13 +652,14 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		} else {
 			if (isVehicle()) {
 				for (Entity e : this.getPassengers()) {
-					if (e instanceof ServerPlayer && getOwner().equals(e)) {
+					Entity ridingEntity = (e instanceof EntityMySeat) ? e.getFirstPassenger() : e;
+					if (ridingEntity instanceof ServerPlayer && getOwner().equals(ridingEntity)) {
 						hasRider = true;
-						this.walkDistO = 1.0F; // climb height -> 1 block
+						this.maxUpStep = 1.0F; // climb height -> 1 block
 						petTargetSelector.finish();
 						petPathfinderSelector.finish();
 					} else {
-						e.stopRiding(); // just the owner can ride a pet
+						ridingEntity.stopRiding(); // just the owner can ride a pet
 					}
 				}
 			}
@@ -1114,16 +1116,34 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 					if(this.getMoveControl() instanceof MyPetAquaticMoveControl) {
 						this.switchMovement(new MoveControl(this));
 					}
-					returnVal = super.addPassenger(entity);
+					returnVal = mountOwner(entity);
 				}
 			}
 
-			if (this instanceof PlayerRideableJumping) {
+			/* this should not matter anymore but I'm leaving it in here in case it is relevant
+			if (this instanceof EntityMyAbstractHorse) {
 				double factor = 1;
 				if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
 					factor = Math.log10(myPet.getSaturation()) / 2;
 				}
 				getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
+			} */
+		}
+
+		if(rideSkill != null && entity instanceof EntityMySeat) {
+			if (entity.getVehicle() != this) {
+				throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
+			} else {
+				Preconditions.checkState(!entity.getPassengers().contains(this), "Circular entity riding! %s %s", this, entity);
+				boolean cancelled = false;
+				if (MyPetApi.getPlatformHelper().isSpigot()) {
+					cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
+				}
+				if (cancelled) {
+					returnVal = false;
+				} else {
+					returnVal = super.addPassenger(entity);
+				}
 			}
 		}
 		return returnVal;
@@ -1246,7 +1266,16 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			this.flyDist = 0;
 		}
 
-		LivingEntity passenger = (LivingEntity) this.getFirstPassenger();
+		LivingEntity passenger = null;
+		if(!indirectRiding) {
+			passenger = (LivingEntity) this.getFirstPassenger();
+		} else {
+			passenger = (LivingEntity) this.getFirstPassenger().getFirstPassenger();
+		}
+		if(passenger == null) {
+			super.travel(vec3d);
+			return;
+		}
 
 		if (this.isEyeInFluid(FluidTags.WATER) && !this.rideableUnderWater()) {
 			this.setDeltaMovement(this.getDeltaMovement().add(0, 0.4, 0));
@@ -1258,12 +1287,22 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 			return;
 		}
 
+		//Rotations are fun
+		if (indirectRiding) {
+			if (this.getFirstPassenger() instanceof EntityMySeat seat) {
+				seat.yRotO = this.getYRot();
+				seat.setYRot(passenger.getYRot());
+				seat.setXRot(passenger.getXRot() * 0.5F);
+				seat.yHeadRot = (this.yBodyRot = this.getYRot());
+			}
+		}
+
 		//apply pitch & yaw
-		this.yRotO = passenger.getYRot();
+		this.yRotO = this.getYRot();
 		this.setYRot(passenger.getYRot());
 		this.setXRot(passenger.getXRot() * 0.5F);
-		setRot(this.getYRot(), this.getXRot());
-		this.oRun = (this.yBodyRot = this.getYRot());
+		this.setRot(this.getYRot(), this.getXRot());
+		this.yHeadRot = (this.yBodyRot = this.getYRot());
 
 		// get motion from passenger (player)
 		double motionSideways = passenger.xxa;
@@ -1312,22 +1351,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 		if (jump != null && this.isVehicle()) {
 			boolean doJump = false;
-			if (this instanceof PlayerRideableJumping) {
-				if (this.jumpPower > 0.0F) {
-					doJump = true;
-					this.jumpPower = 0.0F;
-				} else if (!this.onGround && jump != null) {
-					try {
-						doJump = jump.getBoolean(passenger);
-					} catch (IllegalAccessException ignored) {
-					}
-				}
-			} else {
-				if (jump != null) {
-					try {
-						doJump = jump.getBoolean(passenger);
-					} catch (IllegalAccessException ignored) {
-					}
+			if (jump != null) {
+				try {
+					doJump = jump.getBoolean(passenger);
+				} catch (IllegalAccessException ignored) {
 				}
 			}
 
@@ -1337,9 +1364,6 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 					String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
 					Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
 					jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
-					if (this instanceof PlayerRideableJumping) {
-						getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(jumpVelocity);
-					}
 					this.setDeltaMovement(this.getDeltaMovement().x(), jumpVelocity, this.getDeltaMovement().z());
 				} else if (rideSkill.getCanFly().getValue()) {
 					if (limitCounter <= 0 && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
@@ -1458,5 +1482,17 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 	protected PathNavigation setSpecialNav() { //Some Pets have special PathNavigations
 		return this.navigation;
+	}
+
+	public boolean mountOwner(Entity owner) {
+		ejectPassengers();
+		if (owner != null) {
+			if (!indirectRiding) {
+				return super.addPassenger(owner);
+			} else {
+				return EntityMySeat.mountToPet(owner, this);
+			}
+		}
+		return false;
 	}
 }

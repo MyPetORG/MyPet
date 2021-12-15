@@ -20,10 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -50,6 +46,9 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyStrider extends EntityMyPet {
@@ -61,6 +60,7 @@ public class EntityMyStrider extends EntityMyPet {
 
 	public EntityMyStrider(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 	}
 
 	@Override

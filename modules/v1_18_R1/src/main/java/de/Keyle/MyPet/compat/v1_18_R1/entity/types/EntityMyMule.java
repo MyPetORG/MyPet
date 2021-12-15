@@ -20,12 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -40,7 +34,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -50,9 +43,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
+import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
-public class EntityMyMule extends EntityMyPet implements PlayerRideableJumping {
+public class EntityMyMule extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyMule.class, EntityDataSerializers.BYTE);
@@ -64,6 +62,7 @@ public class EntityMyMule extends EntityMyPet implements PlayerRideableJumping {
 
 	public EntityMyMule(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = false;
 	}
 
 	/**
@@ -91,7 +90,7 @@ public class EntityMyMule extends EntityMyPet implements PlayerRideableJumping {
 			if (flag) {
 				applyVisual(64, true);
 				rearCounter = 10;
-				this.makeSound("entity.donkey.angry", 1.0F, 1.0F);
+				this.makeSound("entity.mule.angry", 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -248,25 +247,5 @@ public class EntityMyMule extends EntityMyPet implements PlayerRideableJumping {
 	@Override
 	public MyMule getMyPet() {
 		return (MyMule) myPet;
-	}
-
-	@Override
-	public void onPlayerJump(int i) {
-		// I don't know. <- this was here before the remap
-	}
-
-	/* Jump power methods */
-	@Override
-	public boolean canJump() {
-		return true;
-	}
-
-	@Override
-	public void handleStartJump(int i) {
-		this.jumpPower = i;
-	}
-
-	@Override
-	public void handleStopJump() {
 	}
 }

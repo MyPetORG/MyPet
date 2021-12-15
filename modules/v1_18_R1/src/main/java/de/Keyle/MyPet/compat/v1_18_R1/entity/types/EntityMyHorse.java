@@ -20,16 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
-
 import com.mojang.datafixers.util.Pair;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -49,7 +40,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -58,9 +48,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 
 @EntitySize(width = 1.3965F, height = 1.6F)
-public class EntityMyHorse extends EntityMyPet implements PlayerRideableJumping {
+public class EntityMyHorse extends EntityMyPet{
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyHorse.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyHorse.class, EntityDataSerializers.BYTE);
@@ -72,6 +69,7 @@ public class EntityMyHorse extends EntityMyPet implements PlayerRideableJumping 
 
 	public EntityMyHorse(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 	}
 
 	/**
@@ -296,26 +294,5 @@ public class EntityMyHorse extends EntityMyPet implements PlayerRideableJumping 
 	@Override
 	public MyHorse getMyPet() {
 		return (MyHorse) myPet;
-	}
-
-
-	@Override
-	public void onPlayerJump(int i) {
-		// I don't know. <- this was here before the remap
-	}
-
-	/* Jump power methods */
-	@Override
-	public boolean canJump() {
-		return true;
-	}
-
-	@Override
-	public void handleStartJump(int i) {
-		this.jumpPower = i;
-	}
-
-	@Override
-	public void handleStopJump() {
 	}
 }

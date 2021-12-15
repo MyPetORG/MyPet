@@ -20,12 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -49,6 +43,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
+import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyMule extends EntityMyPet {
@@ -64,7 +63,6 @@ public class EntityMyMule extends EntityMyPet {
 	public EntityMyMule(Level world, MyPet myPet) {
 		super(world, myPet);
 		indirectRiding = true;
-		this.maxUpStep = 1.0F;
 	}
 
 	/**

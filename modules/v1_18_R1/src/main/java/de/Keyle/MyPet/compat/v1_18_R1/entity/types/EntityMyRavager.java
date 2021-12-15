@@ -20,19 +20,13 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyRavager;
 import de.Keyle.MyPet.compat.v1_18_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 1.95F, height = 2.2F)
@@ -42,6 +36,7 @@ public class EntityMyRavager extends EntityMyPet {
 
 	public EntityMyRavager(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 	}
 
 	@Override
@@ -69,17 +64,6 @@ public class EntityMyRavager extends EntityMyPet {
 	@Override
 	public void playPetStepSound() {
 		makeSound("entity.ravager.step", 0.15F, 1.0F);
-	}
-
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
-			if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
-				getOwner().sendMessage("Unfortunately, Ravagers can not be ridden (Minecraft limitation)", 5000);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return super.handlePlayerInteraction(entityhuman, enumhand, itemStack);
 	}
 
 	@Override
