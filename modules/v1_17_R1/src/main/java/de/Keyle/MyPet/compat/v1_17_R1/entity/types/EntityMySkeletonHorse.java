@@ -40,7 +40,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +50,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
 @EntitySize(width = 1.4F, height = 1.6F)
-public class EntityMySkeletonHorse extends EntityMyPet implements PlayerRideableJumping {
+public class EntityMySkeletonHorse extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySkeletonHorse.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMySkeletonHorse.class, EntityDataSerializers.BYTE);
@@ -62,6 +61,8 @@ public class EntityMySkeletonHorse extends EntityMyPet implements PlayerRideable
 
 	public EntityMySkeletonHorse(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
+		this.maxUpStep = 1.0F;
 	}
 
 	/**
@@ -228,25 +229,5 @@ public class EntityMySkeletonHorse extends EntityMyPet implements PlayerRideable
 	@Override
 	public MySkeletonHorse getMyPet() {
 		return (MySkeletonHorse) myPet;
-	}
-
-	@Override
-	public void onPlayerJump(int i) {
-		// I don't know. <- this was here before the remap
-	}
-
-	/* Jump power methods */
-	@Override
-	public boolean canJump() {
-		return true;
-	}
-
-	@Override
-	public void handleStartJump(int i) {
-		this.jumpPower = i;
-	}
-
-	@Override
-	public void handleStopJump() {
 	}
 }

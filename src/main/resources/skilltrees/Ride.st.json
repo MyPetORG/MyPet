@@ -105,8 +105,7 @@
     }
   },
   "MobTypes": [
-    "*",
-    "-Ravager"
+    "*"
   ],
   "ID": "Ride",
   "Icon": {

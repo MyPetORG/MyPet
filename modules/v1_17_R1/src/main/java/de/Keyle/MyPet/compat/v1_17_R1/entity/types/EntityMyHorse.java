@@ -25,6 +25,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
+import net.minecraft.world.entity.PlayerRideable;
+import net.minecraft.world.entity.PlayerRideableJumping;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 
@@ -49,7 +52,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -60,7 +62,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
 @EntitySize(width = 1.3965F, height = 1.6F)
-public class EntityMyHorse extends EntityMyPet implements PlayerRideableJumping {
+public class EntityMyHorse extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyHorse.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyHorse.class, EntityDataSerializers.BYTE);
@@ -72,6 +74,8 @@ public class EntityMyHorse extends EntityMyPet implements PlayerRideableJumping 
 
 	public EntityMyHorse(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
+		this.maxUpStep = 1.0F;
 	}
 
 	/**
@@ -296,26 +300,5 @@ public class EntityMyHorse extends EntityMyPet implements PlayerRideableJumping 
 	@Override
 	public MyHorse getMyPet() {
 		return (MyHorse) myPet;
-	}
-
-
-	@Override
-	public void onPlayerJump(int i) {
-		this.jumpPower = i;
-	}
-
-	/* Jump power methods */
-	@Override
-	public boolean canJump() {
-		return true;
-	}
-
-	@Override
-	public void handleStartJump(int i) {
-		this.jumpPower = i;
-	}
-
-	@Override
-	public void handleStopJump() {
 	}
 }

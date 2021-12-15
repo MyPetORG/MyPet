@@ -61,6 +61,7 @@ public class EntityMyStrider extends EntityMyPet {
 
 	public EntityMyStrider(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 	}
 
 	@Override
