@@ -46,6 +46,7 @@ import de.Keyle.MyPet.compat.v1_12_R1.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.types.EntityMyHorse;
+import de.Keyle.MyPet.compat.v1_12_R1.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_12_R1.*;
@@ -91,10 +92,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
     protected Sit sitPathfinder;
-    protected float jumpPower = 0;
     protected int donatorParticleCounter = 0;
     protected float limitCounter = 0;
     protected DamageSource deathReason = null;
+    protected boolean indirectRiding = false;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "bd");
 
@@ -563,13 +564,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         } else {
             if (isVehicle()) {
                 for (Entity e : passengers) {
-                    if (e instanceof EntityPlayer && getOwner().equals(e)) {
+                    Entity ridingEntity = (e instanceof EntityMySeat) ? e.bF().get(0) : e;
+                    if (ridingEntity instanceof EntityPlayer && getOwner().equals(ridingEntity)) {
                         hasRider = true;
                         this.P = 1.0F; // climb height -> 1 block
                         petTargetSelector.finish();
                         petPathfinderSelector.finish();
                     } else {
-                        e.stopRiding(); // just the owner can ride a pet
+                        ridingEntity.stopRiding(); // just the owner can ride a pet
                     }
                 }
             }
@@ -984,14 +986,19 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         // don't allow anything but the owner to ride this entity
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill != null && entity instanceof EntityPlayer && getOwner().equals(entity)) {
-            super.o(entity);
+            mountOwner(entity);
+
+            /* this should not matter anymore but I'm leaving it in here in case it is relevant
             if (this instanceof IJumpable) {
                 double factor = 1;
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
                     factor = Math.log10(myPet.getSaturation()) / 2;
                 }
                 getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
-            }
+            } */
+        }
+        if(rideSkill != null && entity instanceof EntityMySeat) {
+            super.o(entity);
         }
     }
 
@@ -1105,12 +1112,32 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
             this.fallDistance = 0;
         }
 
-        EntityLiving passenger = (EntityLiving) this.bw();
+        EntityLiving passenger = null;
+        if(!indirectRiding) {
+            passenger = (EntityLiving) this.bw();
+        } else {
+            if(this.bw().bF().isEmpty()) {
+                super.a(motionSideways, motionForward, f);
+                return;
+            } else {
+                passenger = (EntityLiving) this.bw().bF().get(0);
+            }
+        }
 
         Ride rideSkill = myPet.getSkills().get(RideImpl.class);
         if (rideSkill == null || !rideSkill.getActive().getValue()) {
             passenger.stopRiding();
             return;
+        }
+
+        //Rotations are fun
+        if (indirectRiding) {
+            if (this.bw() instanceof EntityMySeat) {
+                EntityMySeat seat = (EntityMySeat) this.bw();
+                seat.lastYaw = (seat.yaw = passenger.yaw);
+                seat.pitch = passenger.pitch * 0.5F;
+                seat.aP = (this.aN = this.yaw);
+            }
         }
 
         //apply pitch & yaw
@@ -1168,23 +1195,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
         if (jump != null && this.isVehicle()) {
             boolean doJump = false;
-            if (this instanceof IJumpable) {
-                if (this.jumpPower > 0.0F) {
-                    doJump = true;
-                    this.jumpPower = 0.0F;
-                } else if (!this.onGround && jump != null) {
-                    try {
-                        doJump = jump.getBoolean(passenger);
-                    } catch (IllegalAccessException ignored) {
-                    }
-                }
-            } else {
-                if (jump != null) {
-                    try {
-                        doJump = jump.getBoolean(passenger);
-                    } catch (IllegalAccessException ignored) {
-                    }
-                }
+            if (jump != null) {
+                try {
+                    doJump = jump.getBoolean(passenger);
+                } catch (IllegalAccessException ignored) {}
             }
 
             if (doJump) {
@@ -1193,9 +1207,6 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
                     Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
                     jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
-                    if (this instanceof IJumpable) {
-                        getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).setValue(jumpVelocity);
-                    }
                     this.motY = jumpVelocity;
                 } else if (rideSkill.getCanFly().getValue()) {
                     if (limitCounter <= 0 && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
@@ -1276,4 +1287,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 	public UUID getUniqueID() {
 		return this.uniqueID;
 	}
+
+    public void mountOwner(Entity owner) {
+        ejectPassengers();
+        if (owner != null) {
+            if (!indirectRiding) {
+                super.o(owner);
+            } else {
+                EntityMySeat.mountToPet(owner, this);
+            }
+        }
+    }
 }

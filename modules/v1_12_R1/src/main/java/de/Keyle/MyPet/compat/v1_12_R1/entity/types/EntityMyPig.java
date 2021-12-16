@@ -39,6 +39,7 @@ public class EntityMyPig extends EntityMyPet {
 
     public EntityMyPig(World world, MyPet myPet) {
         super(world, myPet);
+        indirectRiding = true;
     }
 
     @Override
