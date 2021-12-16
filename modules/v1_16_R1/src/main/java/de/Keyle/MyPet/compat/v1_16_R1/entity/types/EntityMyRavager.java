@@ -35,6 +35,7 @@ public class EntityMyRavager extends EntityMyPet {
 
     public EntityMyRavager(World world, MyPet myPet) {
         super(world, myPet);
+        indirectRiding = true;
     }
 
     @Override
@@ -62,17 +63,6 @@ public class EntityMyRavager extends EntityMyPet {
     @Override
     public void playPetStepSound() {
         makeSound("entity.ravager.step", 0.15F, 1.0F);
-    }
-
-    @Override
-    public EnumInteractionResult handlePlayerInteraction(EntityHuman entityhuman, EnumHand enumhand, ItemStack itemStack) {
-        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
-            if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
-                getOwner().sendMessage("Unfortunately, Ravagers can not be ridden (Minecraft limitation)", 5000);
-                return EnumInteractionResult.CONSUME;
-            }
-        }
-        return super.handlePlayerInteraction(entityhuman, enumhand, itemStack);
     }
 
     @Override

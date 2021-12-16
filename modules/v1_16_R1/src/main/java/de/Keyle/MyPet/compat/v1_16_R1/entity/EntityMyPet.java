@@ -49,6 +49,7 @@ import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.types.EntityMyHorse;
+import de.Keyle.MyPet.compat.v1_16_R1.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_16_R1.*;
@@ -99,12 +100,12 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
     protected Sit sitPathfinder;
-    protected float jumpPower = 0;
     protected int donatorParticleCounter = 0;
     protected float limitCounter = 0;
     protected DamageSource deathReason = null;
     protected CraftMyPet bukkitEntity = null;
     protected AttributeMapBase attributeMap;
+    protected boolean indirectRiding = false;
 
     private static Field jump = ReflectionUtil.getField(EntityLiving.class, "jumping");
 
@@ -597,13 +598,14 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         } else {
             if (isVehicle()) {
                 for (Entity e : passengers) {
-                    if (e instanceof EntityPlayer && getOwner().equals(e)) {
+                    Entity ridingEntity = (e instanceof EntityMySeat) ? e.getPassengers().get(0) : e;
+                    if (ridingEntity instanceof EntityPlayer && getOwner().equals(ridingEntity)) {
                         hasRider = true;
                         this.G = 1.0F; // climb height -> 1 block
                         petTargetSelector.finish();
                         petPathfinderSelector.finish();
                     } else {
-                        e.stopRiding(); // just the owner can ride a pet
+                        ridingEntity.stopRiding(); // just the owner can ride a pet
                     }
                 }
             }
@@ -1062,23 +1064,36 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                 if (cancelled) {
                     returnVal = false;
                 } else {
-                    if (!(this.getRidingPassenger() instanceof EntityHuman)) {
-                        this.passengers.add(0, entity);
-                    } else {
-                        this.passengers.add(entity);
-                    }
-                    returnVal = true;
+                    returnVal = mountOwner(entity);
                 }
             }
 
+            /* this should not matter anymore but I'm leaving it in here in case it is relevant
             if (this instanceof IJumpable) {
                 double factor = 1;
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
                     factor = Math.log10(myPet.getSaturation()) / 2;
                 }
                 getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
+            } */
+        }
+        if(rideSkill != null && entity instanceof EntityMySeat) {
+            if (entity.getVehicle() != this) {
+                throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
+            } else {
+                Preconditions.checkState(!entity.getPassengers().contains(this), "Circular entity riding! %s %s", this, entity);
+                boolean cancelled = false;
+                if (MyPetApi.getPlatformHelper().isSpigot()) {
+                    cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
+                }
+                if (cancelled) {
+                    returnVal = false;
+                } else {
+                    returnVal = super.addPassenger(entity);
+                }
             }
         }
+
         return returnVal;
     }
 
@@ -1192,7 +1207,17 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
             this.fallDistance = 0;
         }
 
-        EntityLiving passenger = (EntityLiving) this.getFirstPassenger();
+        EntityLiving passenger = null;
+        if(!indirectRiding) {
+            passenger = (EntityLiving) this.getFirstPassenger();
+        } else {
+            if(this.getFirstPassenger().getPassengers().isEmpty()) {
+                super.f(vec3d);
+                return;
+            } else {
+                passenger = (EntityLiving) this.getFirstPassenger().getPassengers().get(0);
+            }
+        }
 
         if (this.a(TagsFluid.WATER)) {
             this.setMot(this.getMot().add(0, 0.4, 0));
@@ -1202,6 +1227,16 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         if (rideSkill == null || !rideSkill.getActive().getValue()) {
             passenger.stopRiding();
             return;
+        }
+
+        //Rotations are fun
+        if (indirectRiding) {
+            if (this.getFirstPassenger() instanceof EntityMySeat) {
+                EntityMySeat seat = (EntityMySeat) this.getFirstPassenger();
+                seat.lastYaw = (seat.yaw = passenger.yaw);
+                seat.pitch = passenger.pitch * 0.5F;
+                seat.aJ = (this.aH = this.yaw);
+            }
         }
 
         //apply pitch & yaw
@@ -1260,23 +1295,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         if (jump != null && this.isVehicle()) {
             this.getBlockJumpFactor(); // TODO why?
             boolean doJump = false;
-            if (this instanceof IJumpable) {
-                if (this.jumpPower > 0.0F) {
-                    doJump = true;
-                    this.jumpPower = 0.0F;
-                } else if (!this.onGround && jump != null) {
-                    try {
-                        doJump = jump.getBoolean(passenger);
-                    } catch (IllegalAccessException ignored) {
-                    }
-                }
-            } else {
-                if (jump != null) {
-                    try {
-                        doJump = jump.getBoolean(passenger);
-                    } catch (IllegalAccessException ignored) {
-                    }
-                }
+            if (jump != null) {
+                try {
+                    doJump = jump.getBoolean(passenger);
+                } catch (IllegalAccessException ignored) {}
             }
 
             if (doJump) {
@@ -1285,9 +1307,6 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                     String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
                     Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
                     jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
-                    if (this instanceof IJumpable) {
-                        getAttributeInstance(GenericAttributes.JUMP_STRENGTH).setValue(jumpVelocity);
-                    }
                     this.setMot(this.getMot().x, jumpVelocity, this.getMot().z);
                 } else if (rideSkill.getCanFly().getValue()) {
                     if (limitCounter <= 0 && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
@@ -1380,4 +1399,16 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 			super.burnFromLava();
 		}
 	}
+
+    public boolean mountOwner(Entity owner) {
+        ejectPassengers();
+        if (owner != null) {
+            if (!indirectRiding) {
+                return super.addPassenger(owner);
+            } else {
+                return EntityMySeat.mountToPet(owner, this);
+            }
+        }
+        return false;
+    }
 }
