@@ -35,7 +35,7 @@ import java.util.UUID;
 import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
 @EntitySize(width = 1.4F, height = 1.6F)
-public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
+public class EntityMySkeletonHorse extends EntityMyPet {
 
 	protected static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.i);
 	protected static final DataWatcherObject<Byte> SADDLE_CHEST_WATCHER = DataWatcher.a(EntityMySkeletonHorse.class, DataWatcherRegistry.a);
@@ -46,6 +46,7 @@ public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
 
 	public EntityMySkeletonHorse(World world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 	}
 
 	/**
@@ -212,20 +213,5 @@ public class EntityMySkeletonHorse extends EntityMyPet implements IJumpable {
 	@Override
 	public MySkeletonHorse getMyPet() {
 		return (MySkeletonHorse) myPet;
-	}
-
-	/* Jump power methods */
-	@Override
-	public boolean P_() {
-		return true;
-	}
-
-	@Override
-	public void b(int i) {
-		this.jumpPower = i;
-	}
-
-	@Override
-	public void c() {
 	}
 }
