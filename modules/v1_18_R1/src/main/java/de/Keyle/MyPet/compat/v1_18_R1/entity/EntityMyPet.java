@@ -20,12 +20,66 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
-
+import com.google.common.base.Preconditions;
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.compat.ParticleCompat;
+import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
+import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
+import de.Keyle.MyPet.api.event.MyPetFeedEvent;
+import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
+import de.Keyle.MyPet.api.event.MyPetSitEvent;
+import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.skills.Ride;
+import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.compat.v1_18_R1.PlatformHelper;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.attack.RangedAttack;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.Float;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.*;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.navigation.VanillaNavigation;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.*;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMyDolphin;
+import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMySeat;
+import de.Keyle.MyPet.skill.skills.ControlImpl;
+import de.Keyle.MyPet.skill.skills.RideImpl;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -47,89 +101,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.google.common.base.Preconditions;
-
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
-import de.Keyle.MyPet.api.entity.EntitySize;
-import de.Keyle.MyPet.api.entity.JumpHelper;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
-import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
-import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.event.MyPetFeedEvent;
-import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
-import de.Keyle.MyPet.api.event.MyPetSitEvent;
-import de.Keyle.MyPet.api.player.DonateCheck;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.skill.skills.Ride;
-import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.compat.v1_18_R1.PlatformHelper;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.attack.RangedAttack;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.Control;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.Float;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.FollowOwner;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.LookAtPlayer;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.MyPetAquaticMoveControl;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.RandomLookaround;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.Sit;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.Sprint;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.navigation.VanillaNavigation;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.BehaviorAggressiveTarget;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.BehaviorDuelTarget;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.BehaviorFarmTarget;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.ControlTarget;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.HurtByTarget;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.OwnerHurtByTarget;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMyDolphin;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMyHorse;
-import de.Keyle.MyPet.skill.skills.ControlImpl;
-import de.Keyle.MyPet.skill.skills.RideImpl;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.PlayerRideableJumping;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 
 public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
@@ -519,7 +494,8 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		Player owner = this.getOwner().getPlayer();
 
 		if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
-			if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
+			if ((Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null && !canEat(itemStack) && !owner.isSneaking()) ||
+					(Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null && Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack))) {
 				if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
 					if (Permissions.hasExtended(owner, "MyPet.extended.ride")) {
 						((CraftPlayer) owner).getHandle().startRiding(this);

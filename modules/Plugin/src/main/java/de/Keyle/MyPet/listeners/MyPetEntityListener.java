@@ -201,11 +201,6 @@ public class MyPetEntityListener implements Listener {
                         damager.sendMessage("   " + Translation.getString("Name.RangedDamage", damager) + ": " + String.format("%1.2f", myPet.getRangedDamage()));
                         infoShown = true;
                     }
-                    if (myPet.getSkills().has(Behavior.class) && CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {
-                        Behavior behavior = myPet.getSkills().get(Behavior.class);
-                        damager.sendMessage("   " + Translation.getString("Name.Skill.Behavior", damager) + ": " + Translation.getString("Name." + behavior.getBehavior().name(), damager));
-                        infoShown = true;
-                    }
                     if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
                         damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + Math.round(myPet.getSaturation()));
 
@@ -247,6 +242,11 @@ public class MyPetEntityListener implements Listener {
                         }
                         MyPetApi.getPlatformHelper().sendMessageRaw(damager, m.toJSONString());
 
+                        infoShown = true;
+                    }
+                    if (myPet.getSkills().has(Behavior.class) && CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {
+                        Behavior behavior = myPet.getSkills().get(Behavior.class);
+                        damager.sendMessage("   " + Translation.getString("Name.Skill.Behavior", damager) + ": " + Translation.getString("Name." + behavior.getBehavior().name(), damager));
                         infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet) && myPet.getSkilltree() != null) {

@@ -20,30 +20,9 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_18_R1.util.UnsafeList;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Zombie;
-
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
@@ -51,17 +30,17 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_18_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundChatPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
@@ -75,24 +54,25 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CompassItem;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.FishingRodItem;
-import net.minecraft.world.item.FoodOnAStickItem;
-import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.item.SignItem;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.util.UnsafeList;
+import org.bukkit.entity.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 @Compat("v1_18_R1")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
@@ -290,15 +270,14 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public void sendMessageRaw(Player player, String message) {
         if (player instanceof CraftPlayer) {
-            ((CraftPlayer) player).getHandle().connection.send(new ClientboundChatPacket(Component.Serializer.fromJson(message), ChatType.CHAT, player.getUniqueId()));
+            player.spigot().sendMessage(ChatMessageType.CHAT, ComponentSerializer.parse(message));
         }
     }
 
     @Override
     public void sendMessageActionBar(Player player, String message) {
         if (player instanceof CraftPlayer) {
-        	Component cbc = Component.Serializer.fromJson("{\"text\": \"" + Util.escapeJsonString(message) + "\"}");
-            ((CraftPlayer) player).getHandle().connection.send(new ClientboundChatPacket(cbc, ChatType.GAME_INFO, player.getUniqueId()));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         }
     }
 

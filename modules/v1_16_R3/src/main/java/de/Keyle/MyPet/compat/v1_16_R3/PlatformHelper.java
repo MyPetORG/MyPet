@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_16_R3;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
@@ -31,6 +30,9 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_16_R3.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.server.v1_16_R3.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
@@ -241,15 +243,14 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public void sendMessageRaw(Player player, String message) {
         if (player instanceof CraftPlayer) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(message), ChatMessageType.CHAT, player.getUniqueId()));
+            player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.CHAT, ComponentSerializer.parse(message));
         }
     }
 
     @Override
     public void sendMessageActionBar(Player player, String message) {
         if (player instanceof CraftPlayer) {
-            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + Util.escapeJsonString(message) + "\"}");
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.GAME_INFO, player.getUniqueId()));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         }
     }
 

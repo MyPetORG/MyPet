@@ -466,7 +466,8 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 		Player owner = this.getOwner().getPlayer();
 
 		if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
-			if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack)) {
+			if ((Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null && !canEat(itemStack) && !owner.isSneaking()) ||
+					(Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null && Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack))) {
 				if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
 					if (Permissions.hasExtended(owner, "MyPet.extended.ride")) {
 						((CraftPlayer) owner).getHandle().startRiding(this);
