@@ -20,9 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -30,15 +27,19 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.ai.attack.MeleeAttack;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
 @EntitySize(width = 1.F, height = 1.F)
 public class EntityMyEnderDragon extends EntityMyPet {
 
+	private static Class leClass = null;
 	protected boolean registered = false;
 	protected int d = -1;
 	public final double[][] c = new double[64][3];
@@ -47,6 +48,14 @@ public class EntityMyEnderDragon extends EntityMyPet {
 
 	public EntityMyEnderDragon(Level world, MyPet myPet) {
 		super(world, myPet);
+
+		//I HATE ALL OF THIS - Thank you Spigot vs Paper
+		try {
+			Class.forName("it.unimi.dsi.fastutil.ints.Int2ObjectMap");
+			leClass = ReflectionUtil.getClass("it.unimi.dsi.fastutil.ints.Int2ObjectMap");
+		} catch (ClassNotFoundException e) {
+			leClass = ReflectionUtil.getClass("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.Int2ObjectMap");
+		}
 
 		children = new EntityMyPetPart[]{
 				new EntityMyPetPart(this, "head", 1.0F, 1.0F),
@@ -58,6 +67,11 @@ public class EntityMyEnderDragon extends EntityMyPet {
 				new EntityMyPetPart(this, "wing", 4.0F, 2.0F),
 				new EntityMyPetPart(this, "wing", 4.0F, 2.0F),
 		};
+	}
+
+	@Override
+	public double getPassengersRidingOffset() {
+		return (double) -2.0F;
 	}
 
 	@Override
@@ -91,16 +105,30 @@ public class EntityMyEnderDragon extends EntityMyPet {
 			}
 		}
 		if (!registered && this.valid) {
+			//I HATE ALL OF THIS - Thank you Spigot vs Paper
 			if (this.getCommandSenderWorld() instanceof ServerLevel) {
 				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
-				
+
 				//The next part used to be prettier but... whilst it is listed everywhere I looked, world.dragonParts is just not... available?
 				Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "R"); //Mojang Field: dragonParts
-				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, world);
-				Arrays.stream(this.children)
-						.forEach(entityMyPetPart -> dragonParts.put(entityMyPetPart.getId(), entityMyPetPart));
-				ReflectionUtil.setFieldValue(dragonPartsField, world, dragonParts);
+
+				var dragonParts = ReflectionUtil.getFieldValue(dragonPartsField, world);
+				try {
+					Method putMethod = leClass.getDeclaredMethod("put",Integer.class,Object.class);
+
+					Arrays.stream(this.children)
+						.forEach(entityMyPetPart -> {
+							try {
+								putMethod.invoke(leClass.cast(dragonParts), entityMyPetPart.getId(), entityMyPetPart);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						});
+					ReflectionUtil.setFieldValue(dragonPartsField, world, leClass.cast(dragonParts));
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+			}
 			this.registered = true;
 		}
 	}

@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -54,9 +55,12 @@ public class ProtocolLibHook implements PluginHook {
     public boolean onEnable() {
         try {
         	if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
-        		//Don't enable this in 1.17+ bc of crashes/errors
+        		//This is async
         		registerEnderDragonInteractionFix();
-        	}
+        	} else {
+                //This is not - 1.17+ does NOT like async stuff
+                registerSyncEnderDragonInteractionFix();
+            }
 
             checkTemporaryPlayers = ReflectionUtil.getMethod(PacketEvent.class, "isPlayerTemporary") != null;
 
@@ -93,10 +97,10 @@ public class ProtocolLibHook implements PluginHook {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Client.USE_ENTITY) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
+
                 if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
                     return;
                 }
-
                 PacketContainer packet = event.getPacket();
                 if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
 
@@ -113,6 +117,42 @@ public class ProtocolLibHook implements PluginHook {
                     if (entity instanceof MyPetBukkitPart) {
                         entity = ((MyPetBukkitPart) entity).getPetOwner();
                         packet.getIntegers().write(0, entity.getEntityId());
+                    }
+                }
+            }
+        });
+    }
+
+    private void registerSyncEnderDragonInteractionFix() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Client.USE_ENTITY) {
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+
+                if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
+                    return;
+                }
+                PacketContainer packet = event.getPacket();
+                if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
+                    try {
+                        Entity ent = Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(),() -> {
+                            int id = packet.getIntegers().read(0);
+
+                            Entity entity = null;
+                            try {
+                                entity = packet.getEntityModifier(event).readSafely(0);
+                            } catch (RuntimeException ignored) {
+                            }
+                            if (entity == null && event.getPlayer() != null) {
+                                    entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                            }
+                            if (entity instanceof MyPetBukkitPart) {
+                                entity = ((MyPetBukkitPart) entity).getPetOwner();
+                            }
+                            return entity;
+                        }).get();
+                        packet.getIntegers().write(0, ent.getEntityId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -154,10 +194,17 @@ public class ProtocolLibHook implements PluginHook {
                         } catch (RuntimeException ignored) {
                         }
                         if (entity == null) {
-                        	if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0) { //1.17+ does not like this.
-                        		return;
-                        	}
-                            entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                            if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0 && !Bukkit.isPrimaryThread()) { //1.17+ does not like async
+                                try {
+                                    entity = Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(),() -> {
+                                        return MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                                    }).get();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                            }
                         }
 
                         if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
