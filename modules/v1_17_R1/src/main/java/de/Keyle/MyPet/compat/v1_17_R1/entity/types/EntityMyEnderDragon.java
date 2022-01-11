@@ -40,6 +40,16 @@ import java.util.Arrays;
 public class EntityMyEnderDragon extends EntityMyPet {
 
 	private static Class leClass = null;
+	static {
+		//I HATE ALL OF THIS - Thank you Spigot vs Paper
+		try {
+			Class.forName("it.unimi.dsi.fastutil.ints.Int2ObjectMap");
+			leClass = ReflectionUtil.getClass("it.unimi.dsi.fastutil.ints.Int2ObjectMap");
+		} catch (ClassNotFoundException e) {
+			leClass = ReflectionUtil.getClass("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.Int2ObjectMap");
+		}
+	}
+
 	protected boolean registered = false;
 	protected int d = -1;
 	public final double[][] c = new double[64][3];
@@ -48,14 +58,6 @@ public class EntityMyEnderDragon extends EntityMyPet {
 
 	public EntityMyEnderDragon(Level world, MyPet myPet) {
 		super(world, myPet);
-
-		//I HATE ALL OF THIS - Thank you Spigot vs Paper
-		try {
-			Class.forName("it.unimi.dsi.fastutil.ints.Int2ObjectMap");
-			leClass = ReflectionUtil.getClass("it.unimi.dsi.fastutil.ints.Int2ObjectMap");
-		} catch (ClassNotFoundException e) {
-			leClass = ReflectionUtil.getClass("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.Int2ObjectMap");
-		}
 
 		children = new EntityMyPetPart[]{
 				new EntityMyPetPart(this, "head", 1.0F, 1.0F),
@@ -67,11 +69,6 @@ public class EntityMyEnderDragon extends EntityMyPet {
 				new EntityMyPetPart(this, "wing", 4.0F, 2.0F),
 				new EntityMyPetPart(this, "wing", 4.0F, 2.0F),
 		};
-	}
-
-	@Override
-	public double getPassengersRidingOffset() {
-		return (double) -2.0F;
 	}
 
 	@Override
