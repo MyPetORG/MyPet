@@ -150,7 +150,9 @@ public class ProtocolLibHook implements PluginHook {
                             }
                             return entity;
                         }).get();
-                        packet.getIntegers().write(0, ent.getEntityId());
+                        if(ent != null) {
+                            packet.getIntegers().write(0, ent.getEntityId());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
