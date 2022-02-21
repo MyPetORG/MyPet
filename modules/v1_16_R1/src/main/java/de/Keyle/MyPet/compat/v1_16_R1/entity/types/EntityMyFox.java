@@ -93,7 +93,7 @@ public class EntityMyFox extends EntityMyPet {
                         }
                     }
                     return EnumInteractionResult.CONSUME;
-                } else if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                } else if (Configuration.MyPet.Fox.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                     if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                         itemStack.subtract(1);
                         if (itemStack.getCount() <= 0) {
