@@ -29,6 +29,8 @@ import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.LlamaSpit;
+import org.bukkit.entity.SpawnCategory;
+import org.jetbrains.annotations.NotNull;
 
 @Compat("v1_18_R1")
 public class CraftMyPetLlamaSpit extends CraftLlamaSpit implements CraftMyPetProjectile {
@@ -51,5 +53,11 @@ public class CraftMyPetLlamaSpit extends CraftLlamaSpit implements CraftMyPetPro
     @Override
     public boolean isInWater() {
         return getHandle().isInWater();
+    }
+
+    @NotNull
+    @Override
+    public SpawnCategory getSpawnCategory() {
+        return SpawnCategory.MISC;
     }
 }

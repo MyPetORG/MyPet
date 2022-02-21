@@ -35,6 +35,7 @@ import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -108,6 +109,12 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 	@Override
 	public EntityType getType() {
 		return EntityType.UNKNOWN;
+	}
+
+	@NotNull
+	@Override
+	public SpawnCategory getSpawnCategory() {
+		return SpawnCategory.MISC;
 	}
 
 	@Override

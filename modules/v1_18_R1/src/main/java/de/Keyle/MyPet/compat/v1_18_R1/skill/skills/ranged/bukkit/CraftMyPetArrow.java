@@ -29,6 +29,8 @@ import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.Arrow;
+import org.bukkit.entity.SpawnCategory;
+import org.jetbrains.annotations.NotNull;
 
 @Compat("v1_18_R1")
 public class CraftMyPetArrow extends CraftArrow implements CraftMyPetProjectile {
@@ -60,5 +62,11 @@ public class CraftMyPetArrow extends CraftArrow implements CraftMyPetProjectile 
 
     @Override
     public void setPersistent(boolean b) {
+    }
+
+    @NotNull
+    @Override
+    public SpawnCategory getSpawnCategory() {
+        return SpawnCategory.MISC;
     }
 }

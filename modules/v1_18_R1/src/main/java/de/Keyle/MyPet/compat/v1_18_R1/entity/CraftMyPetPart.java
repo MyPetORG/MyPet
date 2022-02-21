@@ -27,6 +27,7 @@ import org.bukkit.craftbukkit.v1_18_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
+import org.bukkit.entity.SpawnCategory;
 
 @Compat("v1_18_R1")
 public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
@@ -71,5 +72,11 @@ public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
     @Override
     public EntityType getType() {
         return EntityType.UNKNOWN;
+    }
+
+    @NotNull
+    @Override
+    public SpawnCategory getSpawnCategory() {
+        return SpawnCategory.MISC;
     }
 }

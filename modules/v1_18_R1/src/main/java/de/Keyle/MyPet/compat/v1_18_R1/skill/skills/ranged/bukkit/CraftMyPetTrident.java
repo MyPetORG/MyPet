@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v1_18_R1.skill.skills.ranged.bukkit;
 import org.bukkit.craftbukkit.v1_18_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftTrident;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,5 +75,11 @@ public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProject
     @Override
     public void setItem(@NotNull ItemStack itemStack) {
         getHandle().tridentItem = CraftItemStack.asNMSCopy(itemStack);
+    }
+
+    @NotNull
+    @Override
+    public SpawnCategory getSpawnCategory() {
+        return SpawnCategory.MISC;
     }
 }
