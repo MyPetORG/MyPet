@@ -58,6 +58,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 
 	public EntityMyEnderDragon(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 
 		children = new EntityMyPetPart[]{
 				new EntityMyPetPart(this, "head", 1.0F, 1.0F),

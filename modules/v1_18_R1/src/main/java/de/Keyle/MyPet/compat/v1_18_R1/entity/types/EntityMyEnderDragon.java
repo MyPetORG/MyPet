@@ -20,9 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -36,6 +33,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
 @EntitySize(width = 1.F, height = 1.F)
 public class EntityMyEnderDragon extends EntityMyPet {
 
@@ -47,6 +47,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 
 	public EntityMyEnderDragon(Level world, MyPet myPet) {
 		super(world, myPet);
+		indirectRiding = true;
 
 		children = new EntityMyPetPart[]{
 				new EntityMyPetPart(this, "head", 1.0F, 1.0F),
