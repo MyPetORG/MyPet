@@ -48,7 +48,6 @@ import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.ai.target.*;
-import de.Keyle.MyPet.compat.v1_16_R1.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.compat.v1_16_R1.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
@@ -1271,7 +1270,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         ride(motionSideways, motionForward, vec3d.y, speed); // apply motion
 
         // throw player move event
-        if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING && !(this instanceof EntityMyHorse)) {
+        if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING) {
             double delta = Math.pow(this.locX() - this.lastX, 2.0D) + Math.pow(this.locY() - this.lastY, 2.0D) + Math.pow(this.locZ() - this.lastZ, 2.0D);
             float deltaAngle = Math.abs(this.yaw - lastYaw) + Math.abs(this.pitch - lastPitch);
             if (delta > 0.00390625D || deltaAngle > 10.0F) {

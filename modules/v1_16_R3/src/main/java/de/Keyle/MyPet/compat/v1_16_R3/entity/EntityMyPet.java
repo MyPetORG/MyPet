@@ -1272,7 +1272,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 		ride(motionSideways, motionForward, vec3d.y, speed); // apply motion
 
 		// throw player move event
-		if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING && !(this instanceof EntityMyHorse)) {
+		if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING) {
 			double delta = Math.pow(this.locX() - this.lastX, 2.0D) + Math.pow(this.locY() - this.lastY, 2.0D) + Math.pow(this.locZ() - this.lastZ, 2.0D);
 			float deltaAngle = Math.abs(this.yaw - lastYaw) + Math.abs(this.pitch - lastPitch);
 			if (delta > 0.00390625D || deltaAngle > 10.0F) {

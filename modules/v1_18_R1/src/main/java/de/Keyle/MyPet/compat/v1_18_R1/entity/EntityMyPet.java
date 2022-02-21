@@ -47,7 +47,6 @@ import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_18_R1.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMyDolphin;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.compat.v1_18_R1.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
@@ -1303,7 +1302,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		ride(motionSideways, motionForward, vec3d.y(), speed); // apply motion
 
 		// throw player move event
-		if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING && !(this instanceof EntityMyHorse)) {
+		if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING) {
 			double delta = Math.pow(this.getX() - this.xo, 2.0D) + Math.pow(this.getY() - this.yo, 2.0D) + Math.pow(this.getZ() - this.zo, 2.0D);
 			float deltaAngle = Math.abs(this.getYRot() - yRotO) + Math.abs(this.getXRot() - xRotO);
 			if (delta > 0.00390625D || deltaAngle > 10.0F) {
