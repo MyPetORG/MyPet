@@ -20,14 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
 import com.mojang.datafixers.util.Pair;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
@@ -46,9 +39,15 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyIllusioner extends EntityMyPet {
@@ -146,6 +145,22 @@ public class EntityMyIllusioner extends EntityMyPet {
 					}
 					return InteractionResult.CONSUME;
 				}
+			} else if (itemStack.getItem() instanceof BannerItem && getOwner().getPlayer().isSneaking() && canEquip()) {
+				ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.Helmet));
+				if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
+					entityitem.pickupDelay = 10;
+					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+					this.level.addFreshEntity(entityitem);
+				}
+				getMyPet().setEquipment(EquipmentSlot.Helmet, CraftItemStack.asBukkitCopy(itemStack));
+				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+					itemStack.shrink(1);
+					if (itemStack.getCount() <= 0) {
+						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+					}
+				}
+				return InteractionResult.CONSUME;
 			}
 		}
 		return InteractionResult.PASS;
@@ -164,7 +179,8 @@ public class EntityMyIllusioner extends EntityMyPet {
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {
-				setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)));
+				setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)), net.minecraft.world.entity.EquipmentSlot.MAINHAND);
+				setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.Helmet)), net.minecraft.world.entity.EquipmentSlot.HEAD);
 			}
 		}, 5L);
 	}
@@ -174,8 +190,8 @@ public class EntityMyIllusioner extends EntityMyPet {
 		return (MyIllusioner) myPet;
 	}
 
-	public void setPetEquipment(ItemStack itemStack) {
-		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
+	public void setPetEquipment(ItemStack itemStack, net.minecraft.world.entity.EquipmentSlot slot) {
+		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(slot, itemStack))));
 	}
 
 	@Override

@@ -161,9 +161,14 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	}
 
 	protected void replaceCraftAttributes() {
+		Bukkit.getConsoleSender().sendMessage("Should replace Attributes");
 		Field craftAttributesField = ReflectionUtil.getField(LivingEntity.class, "craftAttributes");
 		CraftAttributeMap craftAttributes = new CraftAttributeMap(this.getAttributes());
 		ReflectionUtil.setFinalFieldValue(craftAttributesField, this, craftAttributes);
+
+		boolean test = ReflectionUtil.getFieldValue(craftAttributesField,this) == craftAttributes;
+		boolean test1 = ReflectionUtil.getFieldValue(craftAttributesField,this).equals(craftAttributes);
+		Bukkit.getConsoleSender().sendMessage("Done replacing Attributes - Result: "+test+" "+test1);
 	}
 
 	protected void initAttributes() {

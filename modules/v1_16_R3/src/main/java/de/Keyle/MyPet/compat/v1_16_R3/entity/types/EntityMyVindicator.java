@@ -131,6 +131,22 @@ public class EntityMyVindicator extends EntityMyPet {
 					}
 					return EnumInteractionResult.CONSUME;
 				}
+			} else if (itemStack.getItem() instanceof ItemBanner && getOwner().getPlayer().isSneaking() && canEquip()) {
+				ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.Helmet));
+				if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+					EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), itemInSlot);
+					entityitem.pickupDelay = 10;
+					entityitem.setMot(entityitem.getMot().add(0, this.random.nextFloat() * 0.05F, 0));
+					this.world.addEntity(entityitem);
+				}
+				getMyPet().setEquipment(EquipmentSlot.Helmet, CraftItemStack.asBukkitCopy(itemStack));
+				if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
+					itemStack.subtract(1);
+					if (itemStack.getCount() <= 0) {
+						entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, ItemStack.b);
+					}
+				}
+				return EnumInteractionResult.CONSUME;
 			}
 		}
 		return EnumInteractionResult.PASS;
@@ -146,7 +162,16 @@ public class EntityMyVindicator extends EntityMyPet {
 	public void updateVisuals() {
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {
-				setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)));
+				setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand)), EnumItemSlot.MAINHAND);
+				setPetEquipment(CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.Helmet)), EnumItemSlot.HEAD);
+
+				ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(EquipmentSlot.MainHand));
+				if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && !this.isAggressive()) {
+					this.setAggressive(true);
+				}
+				if (itemInSlot == null || itemInSlot.getItem() == Items.AIR && this.isAggressive()) {
+					this.setAggressive(false);
+				}
 			}
 		}, 5L);
 	}
@@ -156,8 +181,8 @@ public class EntityMyVindicator extends EntityMyPet {
 		return (MyVindicator) myPet;
 	}
 
-	public void setPetEquipment(ItemStack itemStack) {
-		((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(EnumItemSlot.MAINHAND, itemStack))));
+	public void setPetEquipment(ItemStack itemStack, EnumItemSlot slot) {
+		((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(slot, itemStack))));
 	}
 
 	@Override
