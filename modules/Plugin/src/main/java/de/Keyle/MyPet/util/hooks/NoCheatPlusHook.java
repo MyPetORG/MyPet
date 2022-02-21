@@ -27,6 +27,7 @@ import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.checks.access.IViolationInfo;
 import fr.neatmonster.nocheatplus.hooks.NCPHook;
 import fr.neatmonster.nocheatplus.hooks.NCPHookManager;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -57,6 +58,9 @@ public class NoCheatPlusHook implements PluginHook {
                     case "MOVING_MOREPACKETS":
                     case "MOVING_VEHICLE_MOREPACKETS":
                         if (player.isInsideVehicle()) {
+                            if(player.getVehicle().getType() == EntityType.ARMOR_STAND && player.getVehicle().isInsideVehicle()) {
+                                return player.getVehicle().getVehicle() instanceof MyPetBukkitEntity;
+                            }
                             return player.getVehicle() instanceof MyPetBukkitEntity;
                         }
                 }
