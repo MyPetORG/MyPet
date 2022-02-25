@@ -121,9 +121,10 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
         return getMyPet().getPetType();
     }
 
+    //I saw other plugins do it this way - it should be fine and solve problems with p2 and wg
     @Override
     public EntityType getType() {
-        return EntityType.UNKNOWN;
+        return EntityType.valueOf(this.getPetType().getBukkitName());
     }
 
     @Override
