@@ -89,7 +89,7 @@ public class CommandRespawn implements CommandTabCompleter {
                         if (MyPetApi.getHookHelper().getEconomy().canPay(myPet.getOwner(), costs)) {
                             MyPetApi.getHookHelper().getEconomy().pay(myPet.getOwner(), costs);
                             myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
-                            myPet.setRespawnTime(1);
+                            myPet.setRespawnTime(0);
                         } else {
                             myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                         }
