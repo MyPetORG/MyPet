@@ -122,9 +122,17 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
     }
 
     //I saw other plugins do it this way - it should be fine and solve problems with p2 and wg
+    //Update - It wasn't! - GriefPrevention didn't like the previous solution!
+    //So now this ugly bs will solve it. Hopefully
     @Override
     public EntityType getType() {
-        return EntityType.valueOf(this.getPetType().getBukkitName());
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        //all special cases here
+        if(stackTraceElements[2].getClassName().contains("worldedit")) {
+            return EntityType.valueOf(this.getPetType().getBukkitName());
+        }
+
+        return EntityType.UNKNOWN;
     }
 
     @Override
