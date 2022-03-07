@@ -436,7 +436,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             if (myPet.getStatus() == PetState.Here) {
                 if (myPet.getLocation().get().getWorld() != p.getLocation().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), p.getLocation()) > 40) {
                     myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
+                    if(!p.isGliding()) {
+                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
+                    }
                 }
 
                 if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {

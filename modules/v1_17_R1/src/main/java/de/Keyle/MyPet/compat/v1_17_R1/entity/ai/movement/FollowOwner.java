@@ -20,10 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.movement;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
@@ -35,6 +31,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 
 @Compat("v1_17_R1")
 public class FollowOwner implements AIGoal {
@@ -114,7 +112,7 @@ public class FollowOwner implements AIGoal {
 
 		//Teleportation
 		if (this.petEntity.canMove()) {
-			if (!owner.getAbilities().flying) {
+			if (!owner.getAbilities().flying && !owner.getBukkitEntity().isGliding()) {
 				if (!waitForGround) {
 					if (owner.fallDistance <= 4) {
 						if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
@@ -151,7 +149,7 @@ public class FollowOwner implements AIGoal {
 		if (owner.getAbilities().flying) {
 			// make the pet faster when the player is flying
 			walkSpeed += owner.getAbilities().flyingSpeed;
-		} else if (owner.isSprinting()) {
+		} else if (owner.isSprinting() || owner.getBukkitEntity().isGliding()) {
 			// make the pet faster when the player is sprinting
 			if (owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED) != null) {
 				walkSpeed += owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue();

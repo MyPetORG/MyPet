@@ -20,16 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1;
 
-import java.lang.reflect.Method;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityToggleGlideEvent;
-
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_18_R1.services.EggIconService;
@@ -37,6 +28,10 @@ import de.Keyle.MyPet.compat.v1_18_R1.services.EntityConverterService;
 import de.Keyle.MyPet.compat.v1_18_R1.services.RepositoryMyPetConverterService;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+
+import java.lang.reflect.Method;
 
 @Compat("v1_18_R1")
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
@@ -53,20 +48,5 @@ public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager impleme
     @Override
 	public void enable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-    }
-
-    @EventHandler()
-    public void on(EntityToggleGlideEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (event.isGliding()) {
-                Player player = (Player) event.getEntity();
-                if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                    MyPet pet = MyPetApi.getMyPetManager().getMyPet(player);
-                    if (pet.getStatus() == MyPet.PetState.Here) {
-                        pet.removePet(true);
-                    }
-                }
-            }
-        }
     }
 }

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_16_R1;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_16_R1.services.EggIconService;
@@ -30,10 +29,7 @@ import de.Keyle.MyPet.compat.v1_16_R1.services.RepositoryMyPetConverterService;
 import net.minecraft.server.v1_16_R1.EntityLiving;
 import net.minecraft.server.v1_16_R1.EnumHand;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityToggleGlideEvent;
 
 import java.lang.reflect.Method;
 
@@ -50,20 +46,5 @@ public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager impleme
 
     public void enable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-    }
-
-    @EventHandler()
-    public void on(EntityToggleGlideEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (event.isGliding()) {
-                Player player = (Player) event.getEntity();
-                if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                    MyPet pet = MyPetApi.getMyPetManager().getMyPet(player);
-                    if (pet.getStatus() == MyPet.PetState.Here) {
-                        pet.removePet(true);
-                    }
-                }
-            }
-        }
     }
 }

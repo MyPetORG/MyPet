@@ -111,7 +111,7 @@ public class FollowOwner implements AIGoal {
         this.petEntity.getControllerLook().a(owner, this.petEntity.eq(), (float) this.petEntity.eo());
 
         if (this.petEntity.canMove()) {
-            if (!owner.abilities.isFlying) {
+            if (!owner.abilities.isFlying && !owner.getBukkitEntity().isGliding()) {
                 if (!waitForGround) {
                     if (owner.fallDistance <= 4) {
                         if (this.petEntity.h(owner) >= this.teleportDistance) {
@@ -148,7 +148,7 @@ public class FollowOwner implements AIGoal {
         if (owner.abilities.isFlying) {
             // make the pet faster when the player is flying
             walkSpeed += owner.abilities.flySpeed;
-        } else if (owner.isSprinting()) {
+        } else if (owner.isSprinting() || owner.getBukkitEntity().isGliding()) {
             // make the pet faster when the player is sprinting
             if (owner.getAttributeMap().a(GenericAttributes.MOVEMENT_SPEED) != null) {
                 walkSpeed += owner.getAttributeMap().a(GenericAttributes.MOVEMENT_SPEED).getValue();
