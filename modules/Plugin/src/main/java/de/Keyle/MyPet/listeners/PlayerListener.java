@@ -48,6 +48,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -265,7 +266,8 @@ public class PlayerListener implements Listener {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL &&
                         victim.isInsideVehicle() &&
-                        victim.getVehicle() instanceof MyPetBukkitEntity) {
+                            (victim.getVehicle() instanceof MyPetBukkitEntity ||
+                                    (victim.getVehicle().getType() == EntityType.ARMOR_STAND && victim.getVehicle().isInsideVehicle()))) {
                     event.setCancelled(true);
                     return;
                 }
