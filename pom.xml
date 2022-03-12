@@ -163,6 +163,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- https://dev.bukkit.org/projects/mythicmobs -->
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
+            <version>5.0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <!-- http://dev.bukkit.org/bukkit-plugins/vault/ -->
             <groupId>org.natrolite</groupId>
             <artifactId>vault-api</artifactId>
