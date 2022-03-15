@@ -28,12 +28,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.event.MyPetCallEvent;
-import de.Keyle.MyPet.api.event.MyPetCreateEvent;
-import de.Keyle.MyPet.api.event.MyPetLevelEvent;
-import de.Keyle.MyPet.api.event.MyPetNameEvent;
-import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
-import de.Keyle.MyPet.api.event.MyPetStatusEvent;
+import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
@@ -637,7 +632,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 if (respawnTime <= 0) {
                     respawnPet();
-                } else if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
+                } else if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
                     double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                     VaultHook vaultHook = MyPetApi.getPluginHookManager().getHook(VaultHook.class);
                     if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
