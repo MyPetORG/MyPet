@@ -258,6 +258,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("strider", new CommandOptionCreator()
                 .add("saddle")
+                .add("baby")
                 .get());
 
         petTypeOptionMap.put("traderllama", new CommandOptionCreator()
