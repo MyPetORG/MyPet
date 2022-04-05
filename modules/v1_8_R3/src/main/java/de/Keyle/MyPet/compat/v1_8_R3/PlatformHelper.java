@@ -343,4 +343,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         }
         return itemstack;
     }
+
+    public boolean gameruleDoDeathMessages(LivingEntity entity) {
+        return Boolean.valueOf(entity.getWorld().getGameRuleValue("showDeathMessages"));
+    }
 }

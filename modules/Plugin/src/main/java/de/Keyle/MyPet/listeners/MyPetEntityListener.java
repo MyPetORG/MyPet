@@ -53,7 +53,6 @@ import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -566,7 +565,7 @@ public class MyPetEntityListener implements Listener {
 
     @SuppressWarnings("RedundantCast")
     private void sendDeathMessage(final EntityDeathEvent event) {
-        if (event.getEntity() instanceof MyPetBukkitEntity && event.getEntity().getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES)) {
+        if (event.getEntity() instanceof MyPetBukkitEntity && MyPetApi.getPlatformHelper().gameruleDoDeathMessages(event.getEntity())) {
             MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
             String killer;
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {

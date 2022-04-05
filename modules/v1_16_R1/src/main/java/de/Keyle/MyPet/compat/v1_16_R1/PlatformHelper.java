@@ -35,6 +35,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.server.v1_16_R1.*;
 import org.apache.commons.lang.Validate;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
@@ -381,5 +382,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             itemstack += " " + CraftItemStack.asNMSCopy(itemStack).getTag().toString();
         }
         return itemstack;
+    }
+
+    @Override
+    public boolean gameruleDoDeathMessages(LivingEntity entity) {
+        return entity.getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES);
     }
 }

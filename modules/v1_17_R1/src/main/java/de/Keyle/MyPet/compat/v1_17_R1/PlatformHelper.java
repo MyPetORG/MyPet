@@ -62,6 +62,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang.Validate;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
@@ -417,5 +418,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             itemstack += " " + CraftItemStack.asNMSCopy(itemStack).getTag().toString();
         }
         return itemstack;
+    }
+
+    @Override
+    public boolean gameruleDoDeathMessages(LivingEntity entity) {
+        return entity.getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES);
     }
 }

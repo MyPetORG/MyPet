@@ -20,7 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_12_R1.entity.types;
 
-import net.minecraft.server.v1_12_R1.*;
+import net.minecraft.server.v1_12_R1.Entity;
+import net.minecraft.server.v1_12_R1.EntityArmorStand;
+import net.minecraft.server.v1_12_R1.Material;
+import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 public class EntityMySeat extends EntityArmorStand {
@@ -55,7 +58,7 @@ public class EntityMySeat extends EntityArmorStand {
 		if (bF().isEmpty()) { //Done riding? Begone seat
 			stopRiding();
 			die();
-		} else if (this.getVehicle() == null) { //Got blown off the thing or something
+		} else if (this.getVehicle() == null || !this.getVehicle().isAlive()) { //Got blown off the thing or something
 			ejectPassengers();
 			die();
 		}

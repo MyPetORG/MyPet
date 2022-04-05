@@ -177,4 +177,6 @@ public abstract class PlatformHelper {
     public abstract String getLastDamageSource(LivingEntity e);
 
     public abstract String itemstackToString(org.bukkit.inventory.ItemStack itemStack);
+
+    public abstract boolean gameruleDoDeathMessages(LivingEntity e);
 }

@@ -95,7 +95,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 			if (this.getCommandSenderWorld() instanceof ServerLevel) {
 				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
 				
-				//The next part used to be prettier but... whilst it is listed everywhere I looked, world.dragonParts is just not... available?
+				//The next part used to be prettier but... whilst it is listed everywhere I looked, ServerLevel dragonParts isn't public so...
 				Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ab"); //Mojang Field: dragonParts
 				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, world);
 				Arrays.stream(this.children)
