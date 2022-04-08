@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
@@ -59,7 +60,7 @@ public class MagicSpellsHook implements PluginHook {
                 LivingEntity caster = (LivingEntity) this.getCasterMethod.invoke(event);
                 if (((MyPetBukkitEntity) event.getTarget()).getOwner().equals(caster)) {
                     event.setCancelled(true);
-                } else if (!MyPetApi.getHookHelper().canHurt(event.getCaster(), ((MyPetBukkitEntity) event.getTarget()).getOwner().getPlayer())) {
+                } else if (!MyPetApi.getHookHelper().canHurt((Player) caster, ((MyPetBukkitEntity) event.getTarget()).getOwner().getPlayer())) {
                     event.setCancelled(true);
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {

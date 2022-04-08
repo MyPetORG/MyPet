@@ -362,10 +362,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- http://dev.bukkit.org/bukkit-plugins/magicspells/ -->
-            <groupId>com.nisovin.magicspells</groupId>
+            <!-- https://github.com/TheComputerGeek2/MagicSpells -->
+            <groupId>com.github.TheComputerGeek2</groupId>
             <artifactId>MagicSpells</artifactId>
-            <version>3.4.2</version>
+            <version>main-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
