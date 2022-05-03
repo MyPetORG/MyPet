@@ -156,6 +156,9 @@ public class Configuration {
         public static double HUNGER_SYSTEM_SATURATION_PER_FEED = 6.0;
         public static boolean AFFECT_RIDE_SPEED = true;
         public static boolean AFFECT_BEACON_RANGE = true;
+        public static double HUNGER_SYSTEM_FIXED = 1.;
+        public static double HUNGER_SYSTEM_FACTOR = 0.;
+        public static boolean HUNGER_SYSTEM_CAN_KILL = false;
     }
 
     public static class Skilltree {

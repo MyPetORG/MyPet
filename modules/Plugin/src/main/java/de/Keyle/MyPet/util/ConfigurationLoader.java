@@ -20,14 +20,17 @@
 
 package de.Keyle.MyPet.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration.*;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
+import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.NameFilter;
+import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,29 +40,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import com.google.common.collect.Lists;
-
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration.Entity;
-import de.Keyle.MyPet.api.Configuration.HungerSystem;
-import de.Keyle.MyPet.api.Configuration.LevelSystem;
-import de.Keyle.MyPet.api.Configuration.Log;
-import de.Keyle.MyPet.api.Configuration.Misc;
-import de.Keyle.MyPet.api.Configuration.MyPet;
-import de.Keyle.MyPet.api.Configuration.Name;
-import de.Keyle.MyPet.api.Configuration.Permissions;
-import de.Keyle.MyPet.api.Configuration.Repository;
-import de.Keyle.MyPet.api.Configuration.Respawn;
-import de.Keyle.MyPet.api.Configuration.Skilltree;
-import de.Keyle.MyPet.api.Configuration.Update;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
-import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.NameFilter;
-import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class ConfigurationLoader {
 
@@ -138,6 +121,9 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.HungerSystem.SaturationPerFeed", HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED);
         config.addDefault("MyPet.HungerSystem.Affect-Ride-Speed", HungerSystem.AFFECT_RIDE_SPEED);
         config.addDefault("MyPet.HungerSystem.Affect-Beacon-Range", HungerSystem.AFFECT_BEACON_RANGE);
+        config.addDefault("MyPet.HungerSystem.Damage.Fixed", HungerSystem.HUNGER_SYSTEM_FIXED);
+        config.addDefault("MyPet.HungerSystem.Damage.Factor", HungerSystem.HUNGER_SYSTEM_FACTOR);
+        config.addDefault("MyPet.HungerSystem.Damage.can-kill", HungerSystem.HUNGER_SYSTEM_CAN_KILL);
 
         config.addDefault("MyPet.Skilltree.AutomaticAssignment", Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT);
         config.addDefault("MyPet.Skilltree.RandomAssignment", Skilltree.RANDOM_SKILLTREE_ASSIGNMENT);
@@ -382,6 +368,9 @@ public class ConfigurationLoader {
         HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED = config.getDouble("MyPet.HungerSystem.SaturationPerFeed", 6.0);
         HungerSystem.AFFECT_RIDE_SPEED = config.getBoolean("MyPet.HungerSystem.Affect-Ride-Speed", true);
         HungerSystem.AFFECT_BEACON_RANGE = config.getBoolean("MyPet.HungerSystem.Affect-Beacon-Range", true);
+        HungerSystem.HUNGER_SYSTEM_FIXED = config.getDouble("MyPet.HungerSystem.Damage.Fixed", 1.);
+        HungerSystem.HUNGER_SYSTEM_FACTOR = config.getDouble("MyPet.HungerSystem.Damage.Factor", 0.);
+        HungerSystem.HUNGER_SYSTEM_CAN_KILL = config.getBoolean("MyPet.HungerSystem.Damage.can-kill", false);
         Misc.RETAIN_EQUIPMENT_ON_TAME = config.getBoolean("MyPet.RetainEquipmentOnTame", true);
         Misc.INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
         Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = config.getBoolean("MyPet.Throw-PlayerMoveEvent-While-Riding", true);
