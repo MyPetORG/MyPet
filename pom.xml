@@ -363,9 +363,9 @@
         </dependency>
         <dependency>
             <!-- https://github.com/TheComputerGeek2/MagicSpells -->
-            <groupId>com.github.TheComputerGeek2</groupId>
+            <groupId>com.nisovin.magicspells</groupId>
             <artifactId>MagicSpells</artifactId>
-            <version>main-SNAPSHOT</version>
+            <version>3.4.2</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
