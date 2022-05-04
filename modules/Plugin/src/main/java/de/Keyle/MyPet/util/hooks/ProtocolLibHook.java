@@ -191,9 +191,11 @@ public class ProtocolLibHook implements PluginHook {
                         int id = packet.getIntegers().read(0);
 
                         Entity entity = null;
-                        try {
-                            entity = packet.getEntityModifier(event).readSafely(0);
-                        } catch (RuntimeException ignored) {
+                        if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
+                            try {
+                               entity = packet.getEntityModifier(event).readSafely(0);
+                            } catch (RuntimeException ignored) {
+                            }
                         }
                         if (entity == null) {
                             if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0 && !Bukkit.isPrimaryThread()) { //1.17+ does not like async
