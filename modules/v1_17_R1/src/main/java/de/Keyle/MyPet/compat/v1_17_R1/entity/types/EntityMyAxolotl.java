@@ -39,6 +39,7 @@ public class EntityMyAxolotl extends EntityMyAquaticPet {
 
     private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> PLAYING_DEAD_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
 
     public EntityMyAxolotl(Level world, MyPet myPet) {
         super(world, myPet);
@@ -85,6 +86,17 @@ public class EntityMyAxolotl extends EntityMyAquaticPet {
         super.defineSynchedData();
         getEntityData().define(AGE_WATCHER, false);
         getEntityData().define(VARIANT_WATCHER, 0);
+        getEntityData().define(PLAYING_DEAD_WATCHER, false);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.getDeltaMovement().x() <= 0.0 && this.getDeltaMovement().y() <= 0.0 && this.getDeltaMovement().z() <= 0.0) {
+            this.getEntityData().set(PLAYING_DEAD_WATCHER, getMyPet().getHealth() <= 1);
+        } else if(this.getEntityData().get(PLAYING_DEAD_WATCHER).booleanValue()) {
+            this.getEntityData().set(PLAYING_DEAD_WATCHER, false);
+        }
     }
 
     @Override
