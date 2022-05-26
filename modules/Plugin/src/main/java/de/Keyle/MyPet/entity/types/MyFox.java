@@ -44,11 +44,11 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
         super(petOwner);
     }
 
-    public Type getType() {
+    public Type getFoxType() {
         return foxType;
     }
 
-    public void setType(Type value) {
+    public void setFoxType(Type value) {
         this.foxType = value;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
@@ -111,7 +111,7 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("FoxType", new TagInt(getType().ordinal()));
+        info.getCompoundData().put("FoxType", new TagInt(getFoxType().ordinal()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         if (getEquipment(EquipmentSlot.MainHand) != null && getEquipment(EquipmentSlot.MainHand).getType() != Material.AIR) {
             TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
@@ -123,7 +123,7 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
     @Override
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKey("FoxType")) {
-            setType(Type.values()[info.getAs("FoxType", TagInt.class).getIntData()]);
+            setFoxType(Type.values()[info.getAs("FoxType", TagInt.class).getIntData()]);
         }
         if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
@@ -146,6 +146,6 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
 
     @Override
     public String toString() {
-        return "MyFox{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", foxtype=" + getType().name() + ", baby=" + isBaby() + "}";
+        return "MyFox{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", foxtype=" + getFoxType().name() + ", baby=" + isBaby() + "}";
     }
 }

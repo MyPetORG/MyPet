@@ -29,7 +29,7 @@ import org.bukkit.entity.Fox.Type;
 @DefaultInfo(food = {"sweet_berries"})
 public interface MyFox extends MyPet, MyPetBaby, MyPetEquipment {
 
-    Type getType();
+    Type getFoxType();
 
-    void setType(Type value);
+    void setFoxType(Type value);
 }

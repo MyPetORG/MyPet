@@ -308,6 +308,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyBee) {
             ((Bee) normalEntity).setHasNectar(((MyBee) myPet).hasNectar());
             ((Bee) normalEntity).setHasStung(((MyBee) myPet).hasStung());
+        } else if (myPet instanceof MyFox) {
+            ((Fox) normalEntity).setFoxType(((MyFox) myPet).getFoxType());
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
