@@ -661,7 +661,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                             getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Starving", getOwner()), getPetName()));
                         }
                     }
-                    if (saturation == 1 && (getHealth() >= 2 || Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)) {
+                    if (saturation == 1 && (getHealth() >= 2 || Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
+                        && this.bukkitEntity.getTicksLived() >= Configuration.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE * 20) {
                         getEntity().ifPresent(entity -> {
                             double leDamage = Configuration.HungerSystem.HUNGER_SYSTEM_FIXED + entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * Configuration.HungerSystem.HUNGER_SYSTEM_FACTOR;
                             if(leDamage >= entity.getHealth() && !Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)

@@ -123,6 +123,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.HungerSystem.Affect-Beacon-Range", HungerSystem.AFFECT_BEACON_RANGE);
         config.addDefault("MyPet.HungerSystem.Damage.Fixed", HungerSystem.HUNGER_SYSTEM_FIXED);
         config.addDefault("MyPet.HungerSystem.Damage.Factor", HungerSystem.HUNGER_SYSTEM_FACTOR);
+        config.addDefault("MyPet.HungerSystem.Damage.Time-Before-Damage", HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE);
         config.addDefault("MyPet.HungerSystem.Damage.can-kill", HungerSystem.HUNGER_SYSTEM_CAN_KILL);
 
         config.addDefault("MyPet.Skilltree.AutomaticAssignment", Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT);
@@ -370,6 +371,7 @@ public class ConfigurationLoader {
         HungerSystem.AFFECT_BEACON_RANGE = config.getBoolean("MyPet.HungerSystem.Affect-Beacon-Range", true);
         HungerSystem.HUNGER_SYSTEM_FIXED = config.getDouble("MyPet.HungerSystem.Damage.Fixed", 1.);
         HungerSystem.HUNGER_SYSTEM_FACTOR = config.getDouble("MyPet.HungerSystem.Damage.Factor", 0.);
+        HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE = config.getDouble("MyPet.HungerSystem.Damage.Time-Before-Damage", 5.);
         HungerSystem.HUNGER_SYSTEM_CAN_KILL = config.getBoolean("MyPet.HungerSystem.Damage.can-kill", false);
         Misc.RETAIN_EQUIPMENT_ON_TAME = config.getBoolean("MyPet.RetainEquipmentOnTame", true);
         Misc.INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);

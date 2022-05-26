@@ -158,6 +158,7 @@ public class Configuration {
         public static boolean AFFECT_BEACON_RANGE = true;
         public static double HUNGER_SYSTEM_FIXED = 1.;
         public static double HUNGER_SYSTEM_FACTOR = 0.;
+        public static double HUNGER_SYSTEM_TIME_BEFORE_DAMAGE = 5.;
         public static boolean HUNGER_SYSTEM_CAN_KILL = false;
     }
 
