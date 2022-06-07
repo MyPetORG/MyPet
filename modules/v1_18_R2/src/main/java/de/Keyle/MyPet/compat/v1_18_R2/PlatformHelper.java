@@ -78,7 +78,6 @@ import java.util.List;
 @Compat("v1_18_R2")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
-    private static final Method ENTITY_LIVING_cD = ReflectionUtil.getMethod(net.minecraft.world.entity.LivingEntity.class, "cT");
     private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableComponent.class, "k");
 
     /**
