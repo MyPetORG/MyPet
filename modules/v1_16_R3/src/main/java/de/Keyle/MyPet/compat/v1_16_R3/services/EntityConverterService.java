@@ -139,6 +139,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case BEE:
                 convertBee((Bee) entity, properties);
                 break;
+            case TRADER_LLAMA:
+                convertTraderLlama((TraderLlama) entity, properties);
+                break;
         }
 
         if (entity instanceof Ageable) {
@@ -268,6 +271,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 ((Llama) normalEntity).getInventory().setDecor(((MyLlama) myPet).getDecor());
             }
             ((Llama) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyTraderLlama) {
+            ((TraderLlama) normalEntity).setColor(TraderLlama.Color.values()[Math.max(0, Math.min(3, ((MyTraderLlama) myPet).getVariant()))]);
+            ((TraderLlama) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyRabbit) {
             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
         } else if (myPet instanceof MyParrot) {
@@ -317,6 +323,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         if (llama.isCarryingChest()) {
             properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
         }
+    }
+
+    private void convertTraderLlama(TraderLlama tLlama, TagCompound properties) {
+        properties.getCompoundData().put("Variant", new TagInt(tLlama.getColor().ordinal()));
     }
 
     private void convertParrot(Parrot parrot, TagCompound properties) {

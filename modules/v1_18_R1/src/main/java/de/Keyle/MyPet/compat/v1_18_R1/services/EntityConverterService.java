@@ -20,104 +20,36 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftTropicalFish;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftVillager;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftVillagerZombie;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Axolotl;
-import org.bukkit.entity.Bee;
-import org.bukkit.entity.Cat;
-import org.bukkit.entity.ChestedHorse;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Enderman;
-import org.bukkit.entity.Fox;
-import org.bukkit.entity.Goat;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.IronGolem;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Llama;
-import org.bukkit.entity.MagmaCube;
-import org.bukkit.entity.MushroomCow;
-import org.bukkit.entity.Panda;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Phantom;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PufferFish;
-import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.SkeletonHorse;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.TropicalFish;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.WanderingTrader;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zombie;
-import org.bukkit.entity.ZombieHorse;
-import org.bukkit.entity.ZombieVillager;
-import org.bukkit.inventory.HorseInventory;
-import org.bukkit.inventory.ItemStack;
-
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Dynamic;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.types.MyAxolotl;
-import de.Keyle.MyPet.api.entity.types.MyBee;
-import de.Keyle.MyPet.api.entity.types.MyCat;
-import de.Keyle.MyPet.api.entity.types.MyCreeper;
-import de.Keyle.MyPet.api.entity.types.MyEnderman;
-import de.Keyle.MyPet.api.entity.types.MyGoat;
-import de.Keyle.MyPet.api.entity.types.MyHorse;
-import de.Keyle.MyPet.api.entity.types.MyIronGolem;
-import de.Keyle.MyPet.api.entity.types.MyLlama;
-import de.Keyle.MyPet.api.entity.types.MyMagmaCube;
-import de.Keyle.MyPet.api.entity.types.MyMooshroom;
-import de.Keyle.MyPet.api.entity.types.MyPanda;
-import de.Keyle.MyPet.api.entity.types.MyParrot;
-import de.Keyle.MyPet.api.entity.types.MyPhantom;
-import de.Keyle.MyPet.api.entity.types.MyPig;
-import de.Keyle.MyPet.api.entity.types.MyPufferfish;
-import de.Keyle.MyPet.api.entity.types.MyRabbit;
-import de.Keyle.MyPet.api.entity.types.MySheep;
-import de.Keyle.MyPet.api.entity.types.MySkeleton;
-import de.Keyle.MyPet.api.entity.types.MySkeletonHorse;
-import de.Keyle.MyPet.api.entity.types.MySlime;
-import de.Keyle.MyPet.api.entity.types.MyTropicalFish;
-import de.Keyle.MyPet.api.entity.types.MyVillager;
-import de.Keyle.MyPet.api.entity.types.MyWanderingTrader;
-import de.Keyle.MyPet.api.entity.types.MyWitherSkeleton;
-import de.Keyle.MyPet.api.entity.types.MyZombieHorse;
-import de.Keyle.MyPet.api.entity.types.MyZombieVillager;
+import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_18_R1.util.inventory.ItemStackNBTConverter;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagLong;
+import de.keyle.knbt.*;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.gossip.GossipContainer;
 import net.minecraft.world.item.trading.MerchantOffers;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftTropicalFish;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftVillagerZombie;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.HorseInventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
 
 @Compat("v1_18_R1")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
@@ -207,6 +139,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case BEE:
                 convertBee((Bee) entity, properties);
+                break;
+            case TRADER_LLAMA:
+                convertTraderLlama((TraderLlama) entity, properties);
                 break;
         }
 
@@ -344,6 +279,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 ((Llama) normalEntity).getInventory().setDecor(((MyLlama) myPet).getDecor());
             }
             ((Llama) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyTraderLlama) {
+            ((TraderLlama) normalEntity).setColor(TraderLlama.Color.values()[Math.max(0, Math.min(3, ((MyTraderLlama) myPet).getVariant()))]);
+            ((TraderLlama) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyRabbit) {
             ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
         } else if (myPet instanceof MyParrot) {
@@ -395,6 +333,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         if (llama.isCarryingChest()) {
             properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
         }
+    }
+
+    private void convertTraderLlama(TraderLlama tLlama, TagCompound properties) {
+        properties.getCompoundData().put("Variant", new TagInt(tLlama.getColor().ordinal()));
     }
     
     private void convertAxolotl(Axolotl axolotl, TagCompound properties) {
