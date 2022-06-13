@@ -32,6 +32,9 @@ public enum MyPetType {
     Axolotl("AXOLOTL", "1.17", MyAxolotl.class, new Compat<>()
             .v("1.17", "axolotl")
             .search()),
+    Allay("ALLAY", "1.19", MyAllay.class, new Compat<>()
+            .v("1.19", "allay")
+            .search()),
     Bat("BAT", "1.7.10", MyBat.class, new Compat<>()
             .v("1.7.10", 65)
             .v("1.13", "bat")
@@ -97,6 +100,9 @@ public enum MyPetType {
             .search()),
     Fox("FOX", "1.14", MyFox.class, new Compat<>()
             .v("1.14", "fox")
+            .search()),
+    Frog("FROG", "1.19", MyFrog.class, new Compat<>()
+            .v("1.19", "frog")
             .search()),
     Ghast("GHAST", "1.7.10", MyGhast.class, new Compat<>()
             .v("1.7.10", 56)
@@ -239,6 +245,9 @@ public enum MyPetType {
     Strider("STRIDER", "1.16", MyStray.class, new Compat<>()
             .v("1.16", "strider")
             .search()),
+    Tadpole("TADPOLE", "1.19", MyTadpole.class, new Compat<>()
+            .v("1.19", "tadpole")
+            .search()),
     TraderLlama("TRADER_LLAMA", "1.14", MyTraderLlama.class, new Compat<>()
             .v("1.14", "trader_llama")
             .search()),
@@ -259,6 +268,9 @@ public enum MyPetType {
     Vindicator("VINDICATOR", "1.11", MyVindicator.class, new Compat<>()
             .v("1.7.10", 36)
             .v("1.13", "vindicator")
+            .search()),
+    Warden("WARDEN", "1.19", MyWarden.class, new Compat<>()
+            .v("1.19", "warden")
             .search()),
     WanderingTrader("WANDERING_TRADER", "1.14", MyWanderingTrader.class, new Compat<>()
             .v("1.14", "wandering_trader")

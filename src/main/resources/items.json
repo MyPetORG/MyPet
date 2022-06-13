@@ -7706,4 +7706,259 @@
     "id": "music_disc_otherside",
     "introduced": "1.18"
   }
+  ,
+  {
+    "id": "acacia_boat_with_chest",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "allay_spawn_egg",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "birch_boat_with_chest",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "bucket_of_tadpole",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "dark_oak_boat_with_chest",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "disc_fragment",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "echo_shard",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "frog_spawn_egg",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "frogspawn",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "goat_horn",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "jungle_boat_with_chest",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_boat",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_boat_with_chest",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_button",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_door",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_fence",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_fence_gate",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_leaves",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_log",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_planks",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_pressure_plate",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_propagule",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_roots",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_sign",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_slab",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_stairs",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_trapdoor",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mangrove_wood",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mud",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mud_brick_slab",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mud_brick_stairs",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mud_brick_wall",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "mud_bricks",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "muddy_mangrove_roots",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "music_disc",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "oak_boat_with_chest",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "ochre_froglight",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "packed_mud",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "pearlescent_froglight",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "recovery_compass",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "reinforced_deepslate",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "sculk",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "sculk_catalyst",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "sculk_shrieker",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "sculk_vein",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "spruce_boat_with_chest",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "stripped_mangrove_log",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "stripped_mangrove_wood",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "tadpole_spawn_egg",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "verdant_froglight",
+    "introduced": "1.19"
+  }
+  ,
+  {
+    "id": "warden_spawn_egg",
+    "introduced": "1.19"
+  }
 ]

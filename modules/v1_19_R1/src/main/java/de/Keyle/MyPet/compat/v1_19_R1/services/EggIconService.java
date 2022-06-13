@@ -31,6 +31,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
     @Override
     public void updateIcon(MyPetType type, IconMenuItem icon) {
         switch (type) {
+            case Allay:
+                icon.setMaterial(Material.ALLAY_SPAWN_EGG);
+                break;
             case Axolotl:
                 icon.setMaterial(Material.AXOLOTL_SPAWN_EGG);
                 break;
@@ -81,6 +84,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Ghast:
                 icon.setMaterial(Material.GHAST_SPAWN_EGG);
+                break;
+            case Frog:
+                icon.setMaterial(Material.FROG_SPAWN_EGG);
                 break;
             case Giant:
                 icon.setMaterial(Material.ZOMBIE_SPAWN_EGG);
@@ -188,6 +194,13 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Squid:
                 icon.setMaterial(Material.SQUID_SPAWN_EGG);
+                break;
+            case Tadpole:
+                icon.setMaterial(Material.TADPOLE_SPAWN_EGG);
+                break;
+            case Warden:
+                icon.setMaterial(Material.WARDEN_SPAWN_EGG);
+                icon.setGlowing(true);
                 break;
             case Witch:
                 icon.setMaterial(Material.WITCH_SPAWN_EGG);

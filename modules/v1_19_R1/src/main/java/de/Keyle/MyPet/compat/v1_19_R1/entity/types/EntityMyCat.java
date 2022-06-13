@@ -20,25 +20,26 @@
 
 package de.Keyle.MyPet.compat.v1_19_R1.entity.types;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.bukkit.DyeColor;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyCat;
 import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_19_R1.util.VariantConverter;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.bukkit.DyeColor;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyCat extends EntityMyPet {
@@ -46,7 +47,7 @@ public class EntityMyCat extends EntityMyPet {
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_UUID);
-	protected static final EntityDataAccessor<Integer> TYPE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.INT);
+	protected static final EntityDataAccessor<CatVariant> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.CAT_VARIANT);
 	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.INT);
@@ -119,7 +120,7 @@ public class EntityMyCat extends EntityMyPet {
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SIT_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());
-		getEntityData().define(TYPE_WATCHER, 1);
+		getEntityData().define(VARIANT_WATCHER, CatVariant.BLACK);
 		getEntityData().define(UNUSED_WATCHER_1, false);
 		getEntityData().define(UNUSED_WATCHER_2, false);
 		getEntityData().define(COLLAR_COLOR_WATCHER, 14);
@@ -128,7 +129,7 @@ public class EntityMyCat extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(TYPE_WATCHER, getMyPet().getCatType().ordinal());
+		this.getEntityData().set(VARIANT_WATCHER, VariantConverter.convertCatVariant(getMyPet().getCatType().ordinal()));
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
 		byte b0 = this.getEntityData().get(SIT_WATCHER);

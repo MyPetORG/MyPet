@@ -40,13 +40,16 @@ public class EntityMyGoat extends EntityMyPet {
 
     private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
 
+    private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> LEFT_HORN_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> RIGHT_HORN_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
     public EntityMyGoat(Level world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
     protected String getMyPetDeathSound() {
-    	if(getMyPet().isScreaming()) {
+    	if(entityData.get(SCREAMING_WATCHER).booleanValue()) {
     		return "entity.goat.screaming.death";
     	}
         return "entity.goat.death";
@@ -54,7 +57,7 @@ public class EntityMyGoat extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-    	if(getMyPet().isScreaming()) {
+    	if(entityData.get(SCREAMING_WATCHER).booleanValue()) {
     		return "entity.goat.screaming.hurt";
     	}
         return "entity.goat.hurt";
@@ -62,7 +65,7 @@ public class EntityMyGoat extends EntityMyPet {
 
     @Override
     protected String getLivingSound() {
-    	if(getMyPet().isScreaming()) {
+    	if(entityData.get(SCREAMING_WATCHER).booleanValue()) {
     		return "entity.goat.screaming.ambient";
     	}
         return "entity.goat.ambient";
@@ -97,11 +100,25 @@ public class EntityMyGoat extends EntityMyPet {
     protected void defineSynchedData() {
         super.defineSynchedData();
         getEntityData().define(AGE_WATCHER, false);
+        getEntityData().define(LEFT_HORN_WATCHER, true);
+        getEntityData().define(RIGHT_HORN_WATCHER, true);
+        getEntityData().define(SCREAMING_WATCHER, false);
     }
 
     @Override
     public void updateVisuals() {
         this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        this.getEntityData().set(LEFT_HORN_WATCHER, getMyPet().hasLeftHorn());
+        this.getEntityData().set(RIGHT_HORN_WATCHER, getMyPet().hasRightHorn());
+        this.getEntityData().set(SCREAMING_WATCHER, getMyPet().isScreaming());
+    }
+
+    public boolean hasLeftHorn() {
+        return entityData.get(LEFT_HORN_WATCHER);
+    }
+
+    public boolean hasRightHorn() {
+        return entityData.get(RIGHT_HORN_WATCHER);
     }
 
     @Override

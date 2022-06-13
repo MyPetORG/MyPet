@@ -22,17 +22,11 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
 
+@DefaultInfo(food = {"slime_ball"})
+public interface MyFrog extends MyPet {
 
-@DefaultInfo(food = {"wheat"})
-public interface MyGoat extends MyPet, MyPetBaby {
-	boolean isScreaming();
+    void setFrogVariant(int variant);
 
-    void setScreaming(boolean flag);
-
-    boolean hasLeftHorn();
-    boolean hasRightHorn();
-    void setLeftHorn(boolean flag);
-    void setRightHorn(boolean flag);
+    int getFrogVariant();
 }

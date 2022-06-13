@@ -128,6 +128,7 @@ permissions:
   MyPet.leash.*:
     description: Player can leash all MyPet-Types.
     children:
+      MyPet.leash.Allay: true
       MyPet.leash.Axolotl: true
       MyPet.leash.Bat: true
       MyPet.leash.Bee: true
@@ -147,6 +148,7 @@ permissions:
       MyPet.leash.Endermite: true
       MyPet.leash.Evoker: true
       MyPet.leash.Fox: true
+      MyPet.leash.Frog: true
       MyPet.leash.Giant: true
       MyPet.leash.Ghast: true
       MyPet.leash.Goat: true
@@ -184,6 +186,7 @@ permissions:
       MyPet.leash.GlowSquid: true
       MyPet.leash.Stray: true
       MyPet.leash.Strider: true
+      MyPet.leash.Tadpole: true
       MyPet.leash.TraderLlama: true
       MyPet.leash.TropicalFish: true
       MyPet.leash.Turtle: true
@@ -191,6 +194,7 @@ permissions:
       MyPet.leash.Villager: true
       MyPet.leash.Vindicator: true
       MyPet.leash.WanderingTrader: true
+      MyPet.leash.Warden: true
       MyPet.leash.Witch: true
       MyPet.leash.Wither: true
       MyPet.leash.WitherSkeleton: true
@@ -203,6 +207,7 @@ permissions:
   MyPet.command.trade.offer.*:
     description: Player offer all MyPet-Types.
     children:
+      MyPet.command.trade.offer.Allay: true
       MyPet.command.trade.offer.Axolotl: true
       MyPet.command.trade.offer.Bat: true
       MyPet.command.trade.offer.Bee: true
@@ -222,6 +227,7 @@ permissions:
       MyPet.command.trade.offer.Endermite: true
       MyPet.command.trade.offer.Evoker: true
       MyPet.command.trade.offer.Fox: true
+      MyPet.command.trade.offer.Frog: true
       MyPet.command.trade.offer.Giant: true
       MyPet.command.trade.offer.Ghast: true
       MyPet.command.trade.offer.Goat: true
@@ -258,6 +264,7 @@ permissions:
       MyPet.command.trade.offer.GlowSquid: true
       MyPet.command.trade.offer.Stray: true
       MyPet.command.trade.offer.Strider: true
+      MyPet.command.trade.offer.Tadpole: true
       MyPet.command.trade.offer.TraderLlama: true
       MyPet.command.trade.offer.TropicalFish: true
       MyPet.command.trade.offer.Turtle: true
@@ -265,6 +272,7 @@ permissions:
       MyPet.command.trade.offer.Villager: true
       MyPet.command.trade.offer.Vindicator: true
       MyPet.command.trade.offer.WanderingTrader: true
+      MyPet.command.trade.offer.Warden: true
       MyPet.command.trade.offer.Witch: true
       MyPet.command.trade.offer.Wither: true
       MyPet.command.trade.offer.WitherSkeleton: true
@@ -277,6 +285,7 @@ permissions:
   MyPet.command.trade.receive.*:
     description: Player receive all MyPet-Types.
     children:
+      MyPet.command.trade.receive.Allay: true
       MyPet.command.trade.receive.Axolotl: true
       MyPet.command.trade.receive.Bat: true
       MyPet.command.trade.receive.Bee: true
@@ -296,6 +305,7 @@ permissions:
       MyPet.command.trade.receive.Endermite: true
       MyPet.command.trade.receive.Evoker: true
       MyPet.command.trade.receive.Fox: true
+      MyPet.command.trade.receive.Frog: true
       MyPet.command.trade.receive.Giant: true
       MyPet.command.trade.receive.Ghast: true
       MyPet.command.trade.receive.Goat: true
@@ -332,6 +342,7 @@ permissions:
       MyPet.command.trade.receive.GlowSquid: true
       MyPet.command.trade.receive.Stray: true
       MyPet.command.trade.receive.Strider: true
+      MyPet.command.trade.receive.Tadpole: true
       MyPet.command.trade.receive.TraderLlama: true
       MyPet.command.trade.receive.TropicalFish: true
       MyPet.command.trade.receive.Turtle: true
@@ -339,6 +350,7 @@ permissions:
       MyPet.command.trade.receive.Villager: true
       MyPet.command.trade.receive.Vindicator: true
       MyPet.command.trade.receive.WanderingTrader: true
+      MyPet.command.trade.receive.Warden: true
       MyPet.command.trade.receive.Witch: true
       MyPet.command.trade.receive.Wither: true
       MyPet.command.trade.receive.WitherSkeleton: true

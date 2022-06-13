@@ -26,7 +26,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.entity.animal.frog.Tadpole;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.horse.*;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
@@ -36,6 +39,7 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
@@ -49,6 +53,7 @@ public class MyAttributeDefaults {
     static {
         defaultAttribute
                 .putFast(EntityType.ARMOR_STAND, ArmorStand.createLivingAttributes().build()) 				//Armor-Stand
+                .putFast(EntityType.ALLAY, Allay.createAttributes().build()) 						    	//Allay
                 .putFast(EntityType.AXOLOTL, Axolotl.createAttributes().build()) 							//Axolotl
                 .putFast(EntityType.BAT, Bat.createAttributes().build())									//Bat
                 .putFast(EntityType.BEE, Bee.createAttributes().build())									//Bee
@@ -68,6 +73,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.ENDER_DRAGON, EnderDragon.createAttributes().build())					//Ender Dragon
                 .putFast(EntityType.EVOKER, Evoker.createAttributes().build())								//Evoker
                 .putFast(EntityType.FOX, Fox.createAttributes().build())									//Fox
+                .putFast(EntityType.FROG, Frog.createAttributes().build())									//Frog
                 .putFast(EntityType.GHAST, Ghast.createAttributes().build())								//Ghast
                 .putFast(EntityType.GIANT, Giant.createAttributes().build())								//Giant
                 .putFast(EntityType.GUARDIAN, Guardian.createAttributes().build())							//Guardian
@@ -107,6 +113,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.SQUID, Squid.createAttributes().build())								//Squid
                 .putFast(EntityType.STRAY, Stray.createAttributes().build())								//Stray
                 .putFast(EntityType.STRIDER, Strider.createAttributes().build())							//Strider
+                .putFast(EntityType.TADPOLE, Tadpole.createAttributes().build())							//Tadpole
                 .putFast(EntityType.TRADER_LLAMA, TraderLlama.createAttributes().build())					//Trader_Llama
                 .putFast(EntityType.TROPICAL_FISH, TropicalFish.createAttributes().build())					//Tropical Fish
                 .putFast(EntityType.TURTLE, Turtle.createAttributes().build())								//Turtle
@@ -114,6 +121,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.VILLAGER, Villager.createAttributes().build())							//Villager
                 .putFast(EntityType.VINDICATOR, Vindicator.createAttributes().build())						//Vindicator
                 .putFast(EntityType.WANDERING_TRADER, WanderingTrader.createMobAttributes().build())		//Wandering Trader
+                .putFast(EntityType.WARDEN, Warden.createMobAttributes().build())		                    //Warden
                 .putFast(EntityType.WITCH, Witch.createAttributes().build())								//Witch
                 .putFast(EntityType.WITHER, WitherBoss.createAttributes().build())							//Wither
                 .putFast(EntityType.WITHER_SKELETON, WitherSkeleton.createAttributes().build())				//Wither Skeleton

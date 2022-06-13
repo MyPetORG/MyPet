@@ -111,6 +111,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("block:")
                 .get());
 
+        petTypeOptionMap.put("frog", new CommandOptionCreator()
+                .add("variant:")
+                .get());
+
         petTypeOptionMap.put("fox", new CommandOptionCreator()
                 .add("type:red")
                 .add("type:white")
@@ -119,6 +123,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("goat", new CommandOptionCreator()
                 .add("baby")
                 .add("screaming")
+                .add("noLeftHorn")
+                .add("noRightHorn")
                 .get());
         
         petTypeOptionMap.put("glowsquid", new CommandOptionCreator()
@@ -481,6 +487,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Powered", new TagByte(true));
             }else if (arg.equalsIgnoreCase("screaming")) {
                 compound.getCompoundData().put("Screaming", new TagByte(true));
+            }else if (arg.equalsIgnoreCase("noLeftHorn")) {
+                compound.getCompoundData().put("LeftHorn", new TagByte(false));
+            }else if (arg.equalsIgnoreCase("noRightHorn")) {
+                compound.getCompoundData().put("RightHorn", new TagByte(false));
             } else if (arg.equalsIgnoreCase("saddle")) {
                 compound.getCompoundData().put("Saddle", new TagByte(true));
             } else if (arg.equalsIgnoreCase("sheared")) {
@@ -550,6 +560,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     	compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.Axolotl) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
+                    } else if (petType == MyPetType.Frog) {
+                        compound.getCompoundData().put("FrogType", new TagInt(variant));
                     } else if (petType == MyPetType.TropicalFish) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     }

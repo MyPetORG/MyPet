@@ -110,6 +110,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case AXOLOTL:
                 convertAxolotl((Axolotl) entity, properties);
                 break;
+            case GOAT:
+                convertGoat((Goat) entity, properties);
+                break;
             case PARROT:
                 convertParrot((Parrot) entity, properties);
                 break;
@@ -130,6 +133,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case FOX:
                 convertFox((Fox) entity, properties);
+                break;
+            case FROG:
+                convertFrog((Frog) entity, properties);
                 break;
             case PANDA:
                 convertPanda((Panda) entity, properties);
@@ -161,6 +167,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyGoat) {
         	if (((MyGoat) myPet).isScreaming()) {
                 ((Goat) normalEntity).setScreaming(true);
+            }
+            if(!((MyGoat) myPet).hasLeftHorn()) {
+                ((Goat) normalEntity).setLeftHorn(false);
+            }
+            if(!((MyGoat) myPet).hasRightHorn()) {
+                ((Goat) normalEntity).setRightHorn(false);
             }
         } else if (myPet instanceof MyEnderman) {
             if (((MyEnderman) myPet).hasBlock()) {
@@ -316,6 +328,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Bee) normalEntity).setHasStung(((MyBee) myPet).hasStung());
         } else if (myPet instanceof MyFox) {
             ((Fox) normalEntity).setFoxType(((MyFox) myPet).getFoxType());
+        }else if (myPet instanceof MyFrog) {
+            ((Frog) normalEntity).setVariant(Frog.Variant.values()[((MyFrog) myPet).getFrogVariant()]);
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -554,6 +568,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         properties.getCompoundData().put("FoxType", new TagInt(fox.getFoxType().ordinal()));
     }
 
+    public void convertFrog(Frog frog, TagCompound properties) {
+        properties.getCompoundData().put("FrogType", new TagInt(frog.getVariant().ordinal()));
+    }
+
     public void convertPanda(Panda panda, TagCompound properties) {
         properties.getCompoundData().put("MainGene", new TagInt(panda.getMainGene().ordinal()));
         properties.getCompoundData().put("HiddenGene", new TagInt(panda.getHiddenGene().ordinal()));
@@ -562,5 +580,11 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public void convertBee(Bee bee, TagCompound properties) {
         properties.getCompoundData().put("HasStung", new TagByte(bee.hasStung()));
         properties.getCompoundData().put("HasNectar", new TagByte(bee.hasNectar()));
+    }
+
+    public void convertGoat(Goat goat, TagCompound properties) {
+        properties.getCompoundData().put("screaming", new TagByte(goat.isScreaming()));
+        properties.getCompoundData().put("LeftHorn", new TagByte(goat.hasLeftHorn()));
+        properties.getCompoundData().put("RightHorn", new TagByte(goat.hasRightHorn()));
     }
 }

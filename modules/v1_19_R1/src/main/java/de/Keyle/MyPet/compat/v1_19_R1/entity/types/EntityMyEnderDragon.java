@@ -33,8 +33,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
+
+import static de.Keyle.MyPet.compat.v1_19_R1.PlatformHelper.dragonPartsField;
 
 @EntitySize(width = 1.F, height = 1.F)
 public class EntityMyEnderDragon extends EntityMyPet {
@@ -50,6 +51,7 @@ public class EntityMyEnderDragon extends EntityMyPet {
 		indirectRiding = true;
 
 		children = new EntityMyPetPart[]{
+				new EntityMyPetPart(this, "head", 1.0F, 1.0F),
 				new EntityMyPetPart(this, "head", 1.0F, 1.0F),
 				new EntityMyPetPart(this, "neck", 3.0F, 3.0F),
 				new EntityMyPetPart(this, "body", 5.0F, 3.0F),
@@ -96,7 +98,6 @@ public class EntityMyEnderDragon extends EntityMyPet {
 				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
 				
 				//The next part used to be prettier but... whilst it is listed everywhere I looked, ServerLevel dragonParts isn't public so...
-				Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
 				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, world);
 				Arrays.stream(this.children)
 						.forEach(entityMyPetPart -> dragonParts.put(entityMyPetPart.getId(), entityMyPetPart));

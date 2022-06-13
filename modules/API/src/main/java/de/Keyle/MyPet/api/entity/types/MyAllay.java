@@ -22,17 +22,8 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
-
-@DefaultInfo(food = {"wheat"})
-public interface MyGoat extends MyPet, MyPetBaby {
-	boolean isScreaming();
-
-    void setScreaming(boolean flag);
-
-    boolean hasLeftHorn();
-    boolean hasRightHorn();
-    void setLeftHorn(boolean flag);
-    void setRightHorn(boolean flag);
+@DefaultInfo(food = {"apple"})
+public interface MyAllay extends MyPet, MyPetEquipment {
 }

@@ -143,7 +143,7 @@ public class ProtocolLibHook implements PluginHook {
                             } catch (RuntimeException ignored) {
                             }
                             if (entity == null && event.getPlayer() != null) {
-                                    entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
+                                entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
                             }
                             if (entity instanceof MyPetBukkitPart) {
                                 entity = ((MyPetBukkitPart) entity).getPetOwner();

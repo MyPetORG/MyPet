@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
@@ -31,6 +30,8 @@ import org.bukkit.ChatColor;
 public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGoat {
     protected boolean isBaby = false;
     protected boolean isScreaming = false;
+    protected boolean leftHorn = true;
+    protected boolean rightHorn = true;
 
     public MyGoat(MyPetPlayer petOwner) {
         super(petOwner);
@@ -41,6 +42,8 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Screaming", new TagByte(isScreaming()));
+        info.getCompoundData().put("LeftHorn", new TagByte(hasLeftHorn()));
+        info.getCompoundData().put("RightHorn", new TagByte(hasRightHorn()));
         return info;
     }
 
@@ -51,6 +54,12 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
         }
         if (info.containsKey("Screaming")) {
             setScreaming(info.getAs("Screaming", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("LeftHorn")) {
+            setLeftHorn(info.getAs("LeftHorn", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("RightHorn")) {
+            setRightHorn(info.getAs("RightHorn", TagByte.class).getBooleanData());
         }
     }
 
@@ -76,6 +85,30 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
     
     public void setScreaming(boolean flag) {
         this.isScreaming = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    public boolean hasLeftHorn() {
+        return leftHorn;
+    }
+    public boolean hasRightHorn() {
+        return rightHorn;
+    }
+
+    public void setLeftHorn(boolean leftHorn) {
+        this.leftHorn = leftHorn;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    public void setRightHorn(boolean rightHorn) {
+        this.rightHorn = rightHorn;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
     }
 
     @Override

@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_19_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -60,7 +61,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -72,6 +72,7 @@ import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_19_R1.util.UnsafeList;
 import org.bukkit.entity.*;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -80,6 +81,8 @@ import java.util.List;
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableContents.class, "k");
+    public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
+
 
     /**
      * @param location   the {@link Location} around which players must be to see the effect
@@ -352,7 +355,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public Entity getEntity(int id, World world) {
-    	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntity(id);
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+    	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntities().get(id);
+        if(e==null) {
+            Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, ((CraftWorld)world).getHandle());
+            e = (net.minecraft.world.entity.Entity) dragonParts.get(id);
+        }
     	return e != null ? e.getBukkitEntity() : null;
     }
 

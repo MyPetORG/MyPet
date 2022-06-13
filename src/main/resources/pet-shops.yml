@@ -31,8 +31,15 @@ Shops:
       axolotl:
         Name: Axolotl
         Description:
-          - <green>It's a Axolotl!
+          - <green>It's an Axolotl!
         PetType: Axolotl
+        EXP: 0
+        Price: 100
+      allay:
+        Name: Allay
+        Description:
+          - <green>It's an Allay!
+        PetType: Allay
         EXP: 0
         Price: 100
       bat:
@@ -110,6 +117,13 @@ Shops:
         Description:
           - <green>It's an Evoker!
         PetType: Evoker
+        EXP: 0
+        Price: 100
+      frog:
+        Name: Frog
+        Description:
+          - <green>It's a Frog!
+        PetType: Frog
         EXP: 0
         Price: 100
       goat:
@@ -310,6 +324,13 @@ Shops:
         Description:
           - <green>It's a Strider!
         PetType: Strider
+        EXP: 0
+        Price: 100
+      tadpole:
+        Name: Tadpole
+        Description:
+          - <green>It's a Tadpole!
+        PetType: Tadpole
         EXP: 0
         Price: 100
       witch:
