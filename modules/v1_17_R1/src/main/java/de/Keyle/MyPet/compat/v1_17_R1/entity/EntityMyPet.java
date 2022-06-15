@@ -1188,6 +1188,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 					return;
 				}
 
+				if(interactCooldown>0) {
+					interactCooldown--;
+				}
+
 				if (!hasRider()) {
 					petTargetSelector.tick(); // target selector
 					petPathfinderSelector.tick(); // pathfinder selector

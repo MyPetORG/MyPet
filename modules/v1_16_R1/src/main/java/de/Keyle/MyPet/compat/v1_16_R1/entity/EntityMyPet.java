@@ -1155,6 +1155,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                     return;
                 }
 
+                if(interactCooldown>0) {
+                    interactCooldown--;
+                }
+
                 if (!hasRider()) {
                     petTargetSelector.tick(); // target selector
                     petPathfinderSelector.tick(); // pathfinder selector
