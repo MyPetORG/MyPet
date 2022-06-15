@@ -20,14 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_19_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
-
 import com.mojang.datafixers.util.Pair;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -51,6 +44,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglin extends EntityMyPet {
@@ -194,5 +192,12 @@ public class EntityMyPiglin extends EntityMyPet {
 			}
 		}
 		return super.getItemBySlot(vanillaSlot);
+	}
+
+	@Override
+	protected boolean checkInteractCooldown() {
+		boolean val = super.checkInteractCooldown();
+		this.interactCooldown = 5;
+		return val;
 	}
 }

@@ -20,31 +20,18 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
 import com.mojang.datafixers.util.Pair;
-
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.types.MyPiglinBrute;
-import de.Keyle.MyPet.api.util.NMSUtil;
 import de.Keyle.MyPet.compat.v1_17_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
@@ -53,6 +40,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglinBrute extends EntityMyPet {
@@ -173,5 +165,12 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 			}
 		}
 		return super.getItemBySlot(vanillaSlot);
+	}
+
+	@Override
+	protected boolean checkInteractCooldown() {
+		boolean val = super.checkInteractCooldown();
+		this.interactCooldown = 5;
+		return val;
 	}
 }

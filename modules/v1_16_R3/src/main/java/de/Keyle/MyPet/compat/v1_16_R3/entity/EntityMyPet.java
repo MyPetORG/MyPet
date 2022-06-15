@@ -48,7 +48,6 @@ import de.Keyle.MyPet.compat.v1_16_R3.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.ai.target.*;
-import de.Keyle.MyPet.compat.v1_16_R3.entity.types.EntityMyHorse;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
@@ -86,6 +85,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
 	protected AIGoalSelector petPathfinderSelector, petTargetSelector;
 	protected EntityLiving target = null;
+	protected int interactCooldown = 0;
 	protected TargetPriority targetPriority = TargetPriority.None;
 	protected double walkSpeed = 0.3F;
 	protected boolean hasRider = false;
@@ -909,6 +909,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 	 */
 	@Override
 	public EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
+		if(checkInteractCooldown()) {
+			return EnumInteractionResult.FAIL;
+		}
+
 		try {
 			ItemStack itemstack = entityhuman.b(enumhand);
 			EnumInteractionResult result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
@@ -919,7 +923,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return EnumInteractionResult.PASS;
+		return EnumInteractionResult.FAIL;
+	}
+	protected boolean checkInteractCooldown() {
+		return (interactCooldown>0);
 	}
 
 	/**

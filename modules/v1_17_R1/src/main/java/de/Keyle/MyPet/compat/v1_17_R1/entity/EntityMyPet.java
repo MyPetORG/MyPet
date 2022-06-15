@@ -111,6 +111,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 
 	protected AIGoalSelector petPathfinderSelector, petTargetSelector;
 	protected LivingEntity target = null;
+	protected int interactCooldown = 0;
 	protected TargetPriority targetPriority = TargetPriority.None;
 	protected double walkSpeed = 0.3F;
 	protected boolean hasRider = false;
@@ -931,6 +932,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 	 */
 	@Override
 	public InteractionResult mobInteract(net.minecraft.world.entity.player.Player entityhuman, InteractionHand enumhand) {
+		if(checkInteractCooldown()) {
+			return InteractionResult.FAIL;
+		}
+
 		try {
 			ItemStack itemstack = entityhuman.getItemInHand(enumhand);
 			InteractionResult result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
@@ -941,7 +946,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return InteractionResult.PASS;
+		return InteractionResult.FAIL;
+	}
+	protected boolean checkInteractCooldown() {
+		return (interactCooldown>0);
 	}
 
 	/**

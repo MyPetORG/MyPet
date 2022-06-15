@@ -22,7 +22,6 @@ package de.Keyle.MyPet.compat.v1_16_R3.entity.types;
 
 import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
@@ -160,5 +159,12 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 			}
 		}
 		return super.getEquipment(vanillaSlot);
+	}
+
+	@Override
+	protected boolean checkInteractCooldown() {
+		boolean val = super.checkInteractCooldown();
+		this.interactCooldown = 5;
+		return val;
 	}
 }

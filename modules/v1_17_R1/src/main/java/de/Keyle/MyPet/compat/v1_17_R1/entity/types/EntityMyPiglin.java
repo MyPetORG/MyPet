@@ -195,4 +195,11 @@ public class EntityMyPiglin extends EntityMyPet {
 		}
 		return super.getItemBySlot(vanillaSlot);
 	}
+
+	@Override
+	protected boolean checkInteractCooldown() {
+		boolean val = super.checkInteractCooldown();
+		this.interactCooldown = 5;
+		return val;
+	}
 }

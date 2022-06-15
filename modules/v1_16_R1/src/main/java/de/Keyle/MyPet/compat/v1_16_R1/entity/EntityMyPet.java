@@ -85,6 +85,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected EntityLiving target = null;
+    protected int interactCooldown = 0;
     protected TargetPriority targetPriority = TargetPriority.None;
     protected double walkSpeed = 0.3F;
     protected boolean hasRider = false;
@@ -906,6 +907,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
      */
     @Override
     public EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
+        if(checkInteractCooldown()) {
+            return EnumInteractionResult.FAIL;
+        }
+
         try {
             ItemStack itemstack = entityhuman.b(enumhand);
             EnumInteractionResult result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
@@ -916,7 +921,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return EnumInteractionResult.PASS;
+        return EnumInteractionResult.FAIL;
+    }
+    protected boolean checkInteractCooldown() {
+        return (interactCooldown>0);
     }
 
     /**
