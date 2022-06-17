@@ -59,4 +59,6 @@ public interface MyPetPlugin extends Plugin {
     ServiceManager getServiceManager();
 
     ErrorReporter getErrorReporter();
+
+    boolean isDisabling();
 }

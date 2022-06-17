@@ -82,6 +82,7 @@ import java.util.UUID;
 public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin.MyPetPlugin {
 
     private boolean isReady = false;
+    private boolean isDisabling = false;
     private Repository repo;
     private MyPetInfo petInfo;
     private PlatformHelper platformHelper;
@@ -96,6 +97,8 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private SentryErrorReporter errorReporter = null;
 
     public void onDisable() {
+        isDisabling = true;
+
         if (isReady) {
             for (MyPet myPet : myPetManager.getAllActiveMyPets()) {
                 if (myPet.getStatus() == MyPet.PetState.Here) {
@@ -677,5 +680,10 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         } catch (Throwable e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean isDisabling() {
+        return isDisabling;
     }
 }

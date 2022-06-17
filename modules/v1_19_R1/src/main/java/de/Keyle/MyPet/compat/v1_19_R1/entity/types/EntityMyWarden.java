@@ -104,9 +104,12 @@ public class EntityMyWarden extends EntityMyPet {
 	public void remove(Entity.RemovalReason entity_removalreason) {
 		//Play sound
 		this.makeSound("entity.warden.dig");
-
 		this.setPose(Pose.DIGGING);
-		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> super.remove(entity_removalreason), 100);
+		if(!MyPetApi.getPlugin().isDisabling()) {
+			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> super.remove(entity_removalreason), 100);
+		} else {
+			super.remove(entity_removalreason);
+		}
 	}
 
 	private void makeSound(String leSound) {
