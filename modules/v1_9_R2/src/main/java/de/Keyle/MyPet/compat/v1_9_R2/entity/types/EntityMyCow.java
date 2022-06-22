@@ -58,8 +58,14 @@ public class EntityMyCow extends EntityMyPet {
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Items.BUCKET && Configuration.MyPet.Cow.CAN_GIVE_MILK) {
                 ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET, 1, 0);
-
-                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
+                itemStack.count--;
+                if (itemStack.count <= 0) {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
+                } else {
+                    if(!entityhuman.inventory.pickup(milkBucket)) {
+                        entityhuman.drop(milkBucket, true);
+                    }
+                }
                 return true;
             } else if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
