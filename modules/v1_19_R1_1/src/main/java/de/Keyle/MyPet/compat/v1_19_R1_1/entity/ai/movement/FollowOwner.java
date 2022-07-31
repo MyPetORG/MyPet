@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_19_R1_1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R1_1.entity.ai.navigation.MyAquaticPetPathNavigation;
-import de.Keyle.MyPet.compat.v1_19_R1_1.entity.ai.navigation.MyFlyingPetPathNavigation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
