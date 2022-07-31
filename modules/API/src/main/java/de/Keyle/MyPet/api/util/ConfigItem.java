@@ -66,11 +66,11 @@ public abstract class ConfigItem {
     	if(data.equalsIgnoreCase("none")) {	//For enabling non itembound interaction (riding etc)
     		return null;
     	}
-        return MyPetApi.getCompatUtil().getComapatInstance(ConfigItem.class, "util", "ConfigItem", data);
+        return MyPetApi.getCompatUtil().getCompatInstance(ConfigItem.class, "util", "ConfigItem", data);
     }
 
     public static ConfigItem createConfigItem(ItemStack item, DurabilityMode durabilityMode) {
-        return MyPetApi.getCompatUtil().getComapatInstance(ConfigItem.class, "util", "ConfigItem", item, durabilityMode);
+        return MyPetApi.getCompatUtil().getCompatInstance(ConfigItem.class, "util", "ConfigItem", item, durabilityMode);
     }
 
     public boolean compare(ItemStack compareItem) {

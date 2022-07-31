@@ -37,6 +37,7 @@ public class MyPetVersion {
     private static String build = "0";
     private static String minecraftVersion = "0.0.0";
     private static List<String> bukkitPackets = new ArrayList<>();
+    private static List<String> specialMCVersions = new ArrayList<>();
 
     private static void loadData() {
         try {
@@ -56,6 +57,11 @@ public class MyPetVersion {
                 String bukkitPackets = attr.getValue("Project-Bukkit-Packets");
                 MyPetVersion.bukkitPackets.clear();
                 Collections.addAll(MyPetVersion.bukkitPackets, bukkitPackets.split(";"));
+            }
+            if (attr.getValue("Special-MC-Versions") != null) {
+                String specialMCVersion = attr.getValue("Special-MC-Versions");
+                MyPetVersion.specialMCVersions.clear();
+                Collections.addAll(MyPetVersion.specialMCVersions, specialMCVersion.split(";"));
             }
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -104,6 +110,19 @@ public class MyPetVersion {
             updated = true;
         }
         for (String p2 : bukkitPackets) {
+            if (p1.equals(p2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSpecialMCVersion(String p1) {
+        if (!updated) {
+            loadData();
+            updated = true;
+        }
+        for (String p2 : specialMCVersions) {
             if (p1.equals(p2)) {
                 return true;
             }

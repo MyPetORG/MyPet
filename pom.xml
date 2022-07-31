@@ -40,6 +40,7 @@
         <module>modules/v1_18_R1</module>
         <module>modules/v1_18_R2</module>
         <module>modules/v1_19_R1</module>
+        <module>modules/v1_19_R1_1</module>
         <module>modules/GUI</module>
         <module>modules/Plugin</module>
         <module>modules/MyPet</module>

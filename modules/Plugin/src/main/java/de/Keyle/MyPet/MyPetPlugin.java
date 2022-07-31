@@ -160,16 +160,16 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             return;
         }
 
-        petInfo = compatUtil.getComapatInstance(MyPetInfo.class, "entity", "MyPetInfo");
-        platformHelper = compatUtil.getComapatInstance(PlatformHelper.class, "", "PlatformHelper");
-        entityRegistry = compatUtil.getComapatInstance(EntityRegistry.class, "entity", "EntityRegistry");
+        petInfo = compatUtil.getCompatInstance(MyPetInfo.class, "entity", "MyPetInfo");
+        platformHelper = compatUtil.getCompatInstance(PlatformHelper.class, "", "PlatformHelper");
+        entityRegistry = compatUtil.getCompatInstance(EntityRegistry.class, "entity", "EntityRegistry");
         myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
 
         registerServices();
 
-        compatManager = compatUtil.getComapatInstance(CompatManager.class, "", "CompatManager");
+        compatManager = compatUtil.getCompatInstance(CompatManager.class, "", "CompatManager");
         compatManager.init();
 
         serviceManager.activate(Load.State.OnLoad);
@@ -184,7 +184,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         updater.update();
 
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
-            getLogger().warning("This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + "\". Is MyPet up to date?");
+            getLogger().warning("This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + " on " + compatUtil.getMinecraftVersion() + "\". Is MyPet up to date?");
             updater.waitForDownload();
             setEnabled(false);
             return;

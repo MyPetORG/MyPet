@@ -45,7 +45,7 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
 
     public BackpackImpl(MyPet myPet) {
         this.myPet = myPet;
-        inv = MyPetApi.getCompatUtil().getComapatInstance(CustomInventory.class, "util.inventory", "CustomInventory");
+        inv = MyPetApi.getCompatUtil().getCompatInstance(CustomInventory.class, "util.inventory", "CustomInventory");
         rows.addCallback((newValue, reason) -> this.inv.setSize(newValue.intValue() * 9));
     }
 

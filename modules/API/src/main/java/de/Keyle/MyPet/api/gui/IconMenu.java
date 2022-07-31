@@ -23,7 +23,6 @@ package de.Keyle.MyPet.api.gui;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.locale.Translation;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
@@ -94,7 +93,7 @@ public class IconMenu implements Listener {
             return;
         }
         if (inventory == null) {
-            inventory = MyPetApi.getCompatUtil().getComapatInstance(IconMenuInventory.class, "util.iconmenu", "IconMenuInventory");
+            inventory = MyPetApi.getCompatUtil().getCompatInstance(IconMenuInventory.class, "util.iconmenu", "IconMenuInventory");
         }
         inventory.open(this, player);
     }

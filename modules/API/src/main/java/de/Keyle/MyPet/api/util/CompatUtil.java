@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.util;
 
+import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
@@ -53,14 +54,19 @@ public class CompatUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getComapatInstance(Class<? extends T> clazz, String path, String className, Object... parameters) {
-        if (internalVersion == null) {
+    public <T> T getCompatInstance(Class<? extends T> clazz, String path, String className, Object... parameters) {
+        if (internalVersion == null || minecraftVersion == null) {
             return null;
         }
 
         String classPath = clazz.getCanonicalName();
         if (classPath.startsWith("de.Keyle.MyPet")) {
-            classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+            if(MyPetVersion.isSpecialMCVersion(minecraftVersion)) {
+                String specVers = internalVersion +"_"+ minecraftVersion.split("\\.")[2];
+                classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+            } else {
+                classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+            }
         }
 
         try {
