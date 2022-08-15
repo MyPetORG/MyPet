@@ -61,9 +61,16 @@ public class CompatUtil {
 
         String classPath = clazz.getCanonicalName();
         if (classPath.startsWith("de.Keyle.MyPet")) {
-            if(MyPetVersion.isSpecialMCVersion(minecraftVersion)) {
-                String specVers = internalVersion +"_"+ minecraftVersion.split("\\.")[2];
-                classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+            if (MyPetVersion.isSpecialMCVersion(minecraftVersion)) {
+                int special = Integer.parseInt(minecraftVersion.split("\\.")[2]);
+                for (int i = special; i > 0; i--)
+                    try {
+                        String specVers = internalVersion + "_" + i;
+                        classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+                        Class.forName(classPath);
+                        break;
+                    } catch (ClassNotFoundException ignored) {
+                    }
             } else {
                 classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.equals("") ? "." : "") + className;
             }
