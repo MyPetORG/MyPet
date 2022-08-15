@@ -45,6 +45,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 @PluginHookName("ProtocolLib")
 public class ProtocolLibHook implements PluginHook {
@@ -134,7 +136,7 @@ public class ProtocolLibHook implements PluginHook {
                 PacketContainer packet = event.getPacket();
                 if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
                     try {
-                        Entity ent = Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(),() -> {
+                        Entity ent = ensureMainThread(() -> {
                             int id = packet.getIntegers().read(0);
 
                             Entity entity = null;
@@ -149,7 +151,7 @@ public class ProtocolLibHook implements PluginHook {
                                 entity = ((MyPetBukkitPart) entity).getPetOwner();
                             }
                             return entity;
-                        }).get();
+                        });
                         if(ent != null) {
                             packet.getIntegers().write(0, ent.getEntityId());
                         }
@@ -159,6 +161,14 @@ public class ProtocolLibHook implements PluginHook {
                 }
             }
         });
+    }
+
+    private <T> T ensureMainThread(Supplier<T> supplier) throws ExecutionException, InterruptedException {
+        if(Bukkit.isPrimaryThread()) {
+            return supplier.get();
+        } else {
+            return Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(), supplier::get).get();
+        }
     }
 
     protected List<PacketType> getFixedPackets() {
@@ -198,11 +208,9 @@ public class ProtocolLibHook implements PluginHook {
                             }
                         }
                         if (entity == null) {
-                            if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0 && !Bukkit.isPrimaryThread()) { //1.17+ does not like async
+                            if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0) { //1.17+ does not like async
                                 try {
-                                    entity = Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(),() -> {
-                                        return MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
-                                    }).get();
+                                    entity = ensureMainThread(() -> MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld()));
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
