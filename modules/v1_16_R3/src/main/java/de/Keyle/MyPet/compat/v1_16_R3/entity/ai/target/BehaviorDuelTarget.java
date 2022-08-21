@@ -75,7 +75,7 @@ public class BehaviorDuelTarget implements AIGoal {
 			MyPet targetMyPet = entityMyPet.getMyPet();
 
 			if (entityMyPet != petEntity && entityMyPet.isAlive()) {
-				if (!targetMyPet.getSkills().isActive(BehaviorImpl.class) || !targetMyPet.getEntity().get().canMove()) {
+				if (!targetMyPet.getSkills().isActive(BehaviorImpl.class) || (targetMyPet.getEntity().isPresent() && !targetMyPet.getEntity().get().canMove())) {
 					continue;
 				}
 				BehaviorImpl targetbehavior = targetMyPet.getSkills().get(BehaviorImpl.class);

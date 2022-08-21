@@ -175,7 +175,7 @@
         </dependency>
         <dependency>
             <groupId>de.keyle</groupId>
-            <artifactId>mypet-compat-v1_19_R1_1</artifactId>
+            <artifactId>mypet-compat-v1_19_R1_2</artifactId>
             <version>1</version>
             <exclusions>
                 <exclusion>
