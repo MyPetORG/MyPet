@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -37,6 +35,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+
+import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
@@ -141,5 +141,12 @@ public class EntityMyBlaze extends EntityMyPet {
 			super.calculateFallDamage(f, f1);
 		}
 		return 0;
+	}
+
+	@Override
+	protected boolean checkInteractCooldown() {
+		boolean val = super.checkInteractCooldown();
+		this.interactCooldown = 5;
+		return val;
 	}
 }

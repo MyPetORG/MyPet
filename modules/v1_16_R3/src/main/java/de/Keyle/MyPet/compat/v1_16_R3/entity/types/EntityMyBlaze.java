@@ -134,4 +134,11 @@ public class EntityMyBlaze extends EntityMyPet {
 		}
 		return 0;
 	}
+
+	@Override
+	protected boolean checkInteractCooldown() {
+		boolean val = super.checkInteractCooldown();
+		this.interactCooldown = 5;
+		return val;
+	}
 }
