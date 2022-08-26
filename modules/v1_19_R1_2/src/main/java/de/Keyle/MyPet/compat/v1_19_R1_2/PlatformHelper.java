@@ -355,7 +355,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public Entity getEntity(int id, World world) {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
     	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntities().get(id);
         if(e==null) {
             Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, ((CraftWorld)world).getHandle());

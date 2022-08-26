@@ -22,7 +22,10 @@ package de.Keyle.MyPet.compat.v1_19_R1_2.entity.types;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
+import net.minecraft.server.level.ServerEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 
@@ -198,7 +201,9 @@ public class EntityMyZombie extends EntityMyPet {
 
 	@Override
 	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server.level.EntityTrackerEntry", 2)) {
+		if (StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4)
+				.walk(s -> s.limit(3).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(ServerEntity.class::equals))
+		) {
 			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
 			if (getMyPet().getEquipment(slot) != null) {
 				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
