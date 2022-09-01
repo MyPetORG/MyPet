@@ -199,7 +199,12 @@ public class Configuration {
     }
 
     public static class MyPet {
-    	public static class Axolotl {
+        public static class Allay {
+
+            public static boolean CAN_GLIDE = true;
+        }
+
+        public static class Axolotl {
             public static ConfigItem GROW_UP_ITEM;
     	}
 

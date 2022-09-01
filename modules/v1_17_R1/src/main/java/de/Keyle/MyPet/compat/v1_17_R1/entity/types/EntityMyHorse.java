@@ -20,19 +20,9 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
 import com.mojang.datafixers.util.Pair;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -44,6 +34,7 @@ import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -57,6 +48,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 
 @EntitySize(width = 1.3965F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
@@ -284,7 +282,7 @@ public class EntityMyHorse extends EntityMyPet {
 
 	@Override
 	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server.level.EntityTrackerEntry", 2)) {
+		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
 			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
 			if (slot == EquipmentSlot.Chestplate && getMyPet().getArmor() != null) {
 				return CraftItemStack.asNMSCopy(getMyPet().getArmor());

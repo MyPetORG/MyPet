@@ -47,6 +47,7 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -75,12 +76,14 @@ import org.bukkit.entity.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 @Compat("v1_19_R1_2")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableContents.class, "k");
+    private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
     public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
 
 
@@ -355,7 +358,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public Entity getEntity(int id, World world) {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
     	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntities().get(id);
         if(e==null) {
             Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, ((CraftWorld)world).getHandle());
@@ -416,5 +418,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public boolean gameruleDoDeathMessages(LivingEntity entity) {
         return entity.getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES);
+    }
+
+    @Override
+    public boolean doStackWalking(Class leClass, int oldDepth) {
+        return leWalker.walk(s -> s.limit(oldDepth+1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
     }
 }

@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_19_R1.entity.types;
 import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -33,6 +32,7 @@ import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -52,7 +52,15 @@ public class EntityMyAllay extends EntityMyPet {
 
 	public EntityMyAllay(Level world, MyPet myPet) {
 		super(world, myPet);
+		//this.moveControl = new FlyingMoveControl(this, 20, true);
+		//this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(1D);
+		//this.getAttribute(Attributes.FLYING_SPEED).setBaseValue(1D);
 	}
+
+	//@Override
+	//protected PathNavigation setSpecialNav() {
+	//	return new MyFlyingPetPathNavigation(this, this.level);
+	//}
 
 	/**
 	 * Returns the sound that is played when the MyPet dies
@@ -171,7 +179,7 @@ public class EntityMyAllay extends EntityMyPet {
 
 	@Override
 	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server.level.EntityTrackerEntry", 2)) {
+		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
 			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
 			if (getMyPet().getEquipment(slot) != null) {
 				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
@@ -183,7 +191,7 @@ public class EntityMyAllay extends EntityMyPet {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (Configuration.MyPet.Vex.CAN_GLIDE) {
+		if (Configuration.MyPet.Allay.CAN_GLIDE) {
 			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
 				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
@@ -197,7 +205,7 @@ public class EntityMyAllay extends EntityMyPet {
 	 */
 	@Override
 	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Vex.CAN_GLIDE) {
+		if (!Configuration.MyPet.Allay.CAN_GLIDE) {
 			super.calculateFallDamage(f, f1);
 		}
 		return 0;

@@ -179,4 +179,8 @@ public abstract class PlatformHelper {
     public abstract String itemstackToString(org.bukkit.inventory.ItemStack itemStack);
 
     public abstract boolean gameruleDoDeathMessages(LivingEntity e);
+
+    public boolean doStackWalking(Class leClass, int oldDepth) {
+        return false;
+    }
 }

@@ -22,7 +22,6 @@ package de.Keyle.MyPet.compat.v1_18_R2.entity.types;
 
 import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -33,6 +32,7 @@ import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -173,7 +173,7 @@ public class EntityMyEvoker extends EntityMyPet {
 
 	@Override
 	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server.level.EntityTrackerEntry", 2)) {
+		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
 			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
 			if (getMyPet().getEquipment(slot) != null) {
 				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));

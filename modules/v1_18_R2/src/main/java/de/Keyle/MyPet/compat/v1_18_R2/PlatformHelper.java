@@ -73,12 +73,14 @@ import org.bukkit.entity.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 @Compat("v1_18_R2")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableComponent.class, "k");
+    private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
 
     /**
      * @param location   the {@link Location} around which players must be to see the effect
@@ -407,5 +409,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public boolean gameruleDoDeathMessages(LivingEntity entity) {
         return entity.getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES);
+    }
+
+    @Override
+    public boolean doStackWalking(Class leClass, int oldDepth) {
+        return leWalker.walk(s -> s.limit(oldDepth+1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
     }
 }
