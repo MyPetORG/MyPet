@@ -1,0 +1,51 @@
+html {
+  font-family: sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%), url(assets/logo_800.png) no-repeat center center fixed;
+  background-size: contain;
+}
+
+.title {
+  font-size: 84px;
+  margin-bottom: 1em;
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  color: #373a3c;
+}
+
+.links a {
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #388e3c;
+}
+
+.links a:hover, .links a:focus {
+  color: #1B5E20;
+}
+
+.text {
+  color: #98a4ac;
+  margin-bottom: 35px;
+  font-size: 20px;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+.center {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
