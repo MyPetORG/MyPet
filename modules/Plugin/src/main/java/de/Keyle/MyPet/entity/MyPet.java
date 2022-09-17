@@ -651,14 +651,18 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
                     if (saturation > 1 && --hungerTime <= 0) {
-                        saturation--;
                         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
-                        if (saturation == 66) {
-                            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
-                        } else if (saturation == 33) {
-                            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Hungry", getOwner()), getPetName()));
-                        } else if (saturation == 1) {
-                            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Starving", getOwner()), getPetName()));
+                        MyPetExhaustionEvent event = new MyPetExhaustionEvent(this);
+                        Bukkit.getServer().getPluginManager().callEvent(event);
+                        if (!event.isCancelled()) {
+                            saturation--;
+                            if (saturation == 66) {
+                                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
+                            } else if (saturation == 33) {
+                                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Hungry", getOwner()), getPetName()));
+                            } else if (saturation == 1) {
+                                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Starving", getOwner()), getPetName()));
+                            }
                         }
                     }
                     if (saturation == 1 && (getHealth() >= 2 || Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
