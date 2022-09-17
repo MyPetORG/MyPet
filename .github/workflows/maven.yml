@@ -38,7 +38,7 @@ jobs:
         env:
           NUM: ${{ github.run_number }}
         run: |
-          echo "BUILD_NUMBER=$(($NUM+1500))" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$(($NUM+1592))" >> $GITHUB_ENV
 
       - name: Build and Deploy to GitHub Packages
         run: mvn --batch-mode deploy -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
