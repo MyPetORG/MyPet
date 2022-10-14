@@ -20,7 +20,10 @@
 
 package de.Keyle.MyPet.api.player;
 
-import de.Keyle.MyPet.api.Util;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class DonateCheck {
     public enum DonationRank {
@@ -44,6 +47,9 @@ public class DonateCheck {
     }
 
     public static DonationRank getDonationRank(MyPetPlayer player) {
+        BufferedReader donation = null;
+        int timeout = 2000;
+
         try {
             // Check whether this player has donated or is a helper for the MyPet project
             // returns
@@ -57,27 +63,52 @@ public class DonateCheck {
             // no data will be saved on the server
             String check;
             if (player.getMojangUUID() != null) {
-                check = "userid=" + player.getMojangUUID();
+                check = player.getName()+","+player.getMojangUUID()+",";
             } else {
-                check = "username=" + player.getName();
+                check = player.getName()+",,";
             }
-            String donation = Util.readUrlContent("http://particle.mypet-plugin.de/?" + check);
-            switch (donation) {
-                case "1":
+
+            URL url = new URL("https://raw.githubusercontent.com/MyPetORG/MyPet/particles/particles.csv");
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            huc.setConnectTimeout(timeout);
+            huc.setReadTimeout(timeout);
+            huc.setRequestMethod("GET");
+            huc.connect();
+            donation = new BufferedReader(new InputStreamReader(huc.getInputStream()));
+
+            String line;
+            Character donCheck = '0';
+            while ((line = donation.readLine()) != null) {
+                if(line.startsWith(check)) {
+                    donCheck = line.charAt(line.length() - 1);
+                    break;
+                }
+            }
+
+            switch (donCheck) {
+                case '1':
                     return DonationRank.Donator;
-                case "2":
+                case '2':
                     return DonationRank.Developer;
-                case "3":
+                case '3':
                     return DonationRank.Translator;
-                case "4":
+                case '4':
                     return DonationRank.Helper;
-                case "5":
+                case '5':
                     return DonationRank.Creator;
-                case "6":
+                case '6':
                     return DonationRank.Premium;
             }
         } catch (Exception ignored) {
+            try {
+                if (donation != null) {
+                    donation.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            return DonationRank.None;
         }
-        return DonationRank.None;
     }
 }

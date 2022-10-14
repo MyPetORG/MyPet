@@ -23,12 +23,14 @@ package de.Keyle.MyPet.util;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.io.*;
@@ -42,10 +44,12 @@ public class Updater {
 
         String version;
         int build;
+        String downloadURL;
 
-        public Update(String version, int build) {
+        public Update(String version, int build, String downloadURL) {
             this.version = version;
             this.build = build;
+            this.downloadURL = downloadURL;
         }
 
         public String getVersion() {
@@ -55,6 +59,8 @@ public class Updater {
         public int getBuild() {
             return build;
         }
+
+        public String getDownloadURL() { return downloadURL; }
 
         @Override
         public String toString() {
@@ -97,27 +103,43 @@ public class Updater {
 
     protected Optional<Update> check() {
         try {
-            String parameter = "";
-            parameter += "&package=" + MyPetApi.getCompatUtil().getInternalVersion();
-            parameter += "&build=" + MyPetVersion.getBuild();
-            parameter += "&dev=" + MyPetVersion.isDevBuild();
-
-            String url = "http";
-            if (Util.getJavaUpdate() >= 101) {
-                url = "https";
-            }
-            url += "://update.mypet-plugin.de/" + plugin + "?" + parameter;
+            String url = "https://api.github.com/repos/MyPetORG/MyPet/releases";
 
             // no data will be saved on the server
             String content = Util.readUrlContent(url);
-            JsonObject result = new Gson().fromJson(content, JsonObject.class);
+            JsonArray resultArr = new Gson().fromJson(content, JsonArray.class);
 
-            if (result.has("latest")) {
-                String version = result.get("latest").getAsString();
-                int build = result.get("build").getAsInt();
-                return Optional.of(new Update(version, build));
+            for (int i = 0; i<resultArr.size(); i++) {
+                JsonObject release = (JsonObject) resultArr.get(i);
+                if (release.has("prerelease") &&
+                        release.get("prerelease").getAsBoolean() == MyPetVersion.isDevBuild()) {
+                    String rawVersion = release.get("name").getAsString();
+
+                    String[] split = rawVersion.split("-");
+
+                    int build = Integer.parseInt(split[split.length-1].substring(1));
+                    if(MyPetVersion.getBuild().isEmpty() || build <= Integer.parseInt(MyPetVersion.getBuild())) { //Only do the rest if the build is even newer
+                        return Optional.empty();
+                    }
+
+                    if(!release.get("body").getAsString().contains(MyPetApi.getCompatUtil().getInternalVersion()))
+                        return Optional.empty();
+
+                    String version = "";
+                    for(int j = 0; j<split.length-1;j++) {
+                        version+=split[j];
+                        if(j<split.length-2) {
+                            version+="-";
+                        }
+                    }
+
+                    String downloadURL = release.get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
+                    Bukkit.getConsoleSender().sendMessage(downloadURL);
+                    return Optional.of(new Update(version, build, downloadURL));
+                }
             }
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
         return Optional.empty();
     }
@@ -128,21 +150,11 @@ public class Updater {
         m += " is available: " + latest + " #";
         MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
         MyPetApi.getLogger().info(m);
-        MyPetApi.getLogger().info("#  https://mypet-plugin.de/download" + StringUtils.repeat(" ", m.length() - 36) + "#");
+        MyPetApi.getLogger().info("#  https://github.com/MyPetORG/MyPet/releases" + StringUtils.repeat(" ", m.length() - 46) + "#");
         MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
     }
 
     public void download() {
-        String url = "http";
-        if (Util.getJavaUpdate() >= 101) {
-            url = "https";
-        }
-        url += "://mypet-plugin.de/download/" + plugin + "/";
-        if (MyPetVersion.isDevBuild()) {
-            url += "dev";
-        } else {
-            url += "release";
-        }
         File pluginFile;
         if (Configuration.Update.REPLACE_OLD) {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/" + MyPetApi.getPlugin().getFile().getName());
@@ -153,11 +165,9 @@ public class Updater {
             pluginFile.getParentFile().mkdirs();
         }
 
-        String finalUrl = url;
+        String finalUrl = latest.getDownloadURL();
         Runnable downloadRunner = () -> {
             MyPetApi.getLogger().info(ChatColor.RED + "Start update download: " + ChatColor.RESET + latest);
-            String localHash;
-            String remoteHash = "";
 
             try {
                 URL website = new URL(finalUrl);
@@ -178,7 +188,6 @@ public class Updater {
                     outputStream.write(buffer, 0, bytesRead);
                     hasher.putBytes(buffer, 0, bytesRead);
                 }
-                localHash = hasher.hash().toString();
 
                 outputStream.close();
                 inputStream.close();
@@ -186,38 +195,13 @@ public class Updater {
                 return;
             }
 
-            // Check hash now to be sure we downloaded the correct file
-            try {
-                URL website = new URL(finalUrl + "/hash");
-                HttpURLConnection httpConn = (HttpURLConnection) website.openConnection();
-                int responseCode = httpConn.getResponseCode();
-
-                boolean skipHash = responseCode != HttpURLConnection.HTTP_OK;
-                if (skipHash) {
-                    httpConn.disconnect();
-                } else {
-                    InputStream inputStream = new BufferedInputStream(httpConn.getInputStream());
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-                    String inputLine;
-                    while ((inputLine = br.readLine()) != null) {
-                        remoteHash += inputLine;
-                    }
-                    inputStream.close();
-                }
-            } catch (IOException ignored) {
-            }
-
-            if (remoteHash.isEmpty() || (!localHash.isEmpty() && localHash.equalsIgnoreCase(remoteHash))) {
-                String message = "Finished update download.";
-                if (Configuration.Update.REPLACE_OLD || MyPetApi.getPlugin().getFile().getName().equals("MyPet-" + latest.getVersion() + ".jar")) {
-                    message += " The update will be loaded on the next server start.";
-                } else {
-                    message += " The file was stored in the \"update\" folder.";
-                }
-                MyPetApi.getLogger().info(message);
+            String message = "Finished update download.";
+            if (Configuration.Update.REPLACE_OLD || MyPetApi.getPlugin().getFile().getName().equals("MyPet-" + latest.getVersion() + ".jar")) {
+                message += " The update will be loaded on the next server start.";
             } else {
-                MyPetApi.getLogger().warning("Update failed! Try again or download it manually.");
+                message += " The file was stored in the \"update\" folder.";
             }
+            MyPetApi.getLogger().info(message);
         };
         if (!Configuration.Update.ASYNC) {
             downloadRunner.run();
