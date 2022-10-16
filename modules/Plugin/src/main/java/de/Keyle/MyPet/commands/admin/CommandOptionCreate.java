@@ -150,10 +150,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("1.7.10", "1.11", "skeleton:")
                 .get());
 
-        petTypeOptionMap.put("irongolem", new CommandOptionCreator()
-                .add("flower")
-                .get());
-
         petTypeOptionMap.put("llama", new CommandOptionCreator()
                 .add("baby")
                 //.add("chest")
