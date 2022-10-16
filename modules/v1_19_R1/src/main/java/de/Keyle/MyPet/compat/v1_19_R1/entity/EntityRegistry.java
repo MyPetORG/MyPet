@@ -58,7 +58,13 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
 		EntityDimensions size = entityRegistry.get(new ResourceLocation(key.toLowerCase())).getDimensions();
-		entityTypes.put(petType, Registry.register(entityRegistry, "mypet_" + key.toLowerCase(), EntityType.Builder.createNothing(MobCategory.CREATURE).noSave().noSummon().sized(size.width, size.height).build(key)));
+		EntityType leType;
+		if(!entityRegistry.containsKey(ResourceLocation.tryParse("mypet_" + key.toLowerCase()))) {
+			leType = Registry.register(entityRegistry, "mypet_" + key.toLowerCase(), EntityType.Builder.createNothing(MobCategory.CREATURE).noSave().noSummon().sized(size.width, size.height).build(key));
+		} else {
+			leType = entityRegistry.get(ResourceLocation.tryParse("mypet_" + key.toLowerCase()));
+		}
+		entityTypes.put(petType, leType);
 		EntityType<? extends LivingEntity> types = (EntityType<? extends LivingEntity>) entityRegistry.get(new ResourceLocation(key));
 		registerDefaultAttributes(entityTypes.get(petType), types);
 		overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
