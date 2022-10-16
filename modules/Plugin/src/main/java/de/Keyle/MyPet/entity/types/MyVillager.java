@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -27,6 +29,9 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVillager {
 
@@ -35,6 +40,7 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     protected int level = 1;
     protected boolean isBaby = false;
     protected TagCompound originalData = null;
+    protected ItemStack handItem;
 
     public MyVillager(MyPetPlayer petOwner) {
         super(petOwner);
@@ -47,6 +53,10 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
         info.getCompoundData().put("VillagerType", new TagInt(getType().ordinal()));
         info.getCompoundData().put("VillagerLevel", new TagInt(getVillagerLevel()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        if (getEquipment(EquipmentSlot.MainHand) != null && getEquipment(EquipmentSlot.MainHand).getType() != Material.AIR) {
+            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(EquipmentSlot.MainHand));
+            info.getCompoundData().put("MainHand", item);
+        }
         if (originalData != null) {
             info.getCompoundData().put("OriginalData", originalData);
         }
@@ -66,6 +76,15 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
         }
         if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("MainHand")) {
+            TagCompound item = info.getAs("MainHand", TagCompound.class);
+            try {
+                ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
+                setEquipment(EquipmentSlot.MainHand, itemStack);
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
+            }
         }
         if (info.containsKey("OriginalData")) {
             originalData = info.getAs("OriginalData", TagCompound.class);
@@ -140,5 +159,55 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     @Override
     public String toString() {
         return "MyVillager{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", profession=" + getProfession() + ", type=" + getType().name() + ", baby=" + isBaby() + ", worldgroup=" + worldGroup + "}";
+    }
+
+    @Override
+    public ItemStack getEquipment(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MainHand) {
+            return handItem;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ItemStack[] getEquipment() {
+        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
+        for (int i = 0; i < EquipmentSlot.values().length; i++) {
+            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
+        }
+        return equipment;
+    }
+
+    @Override
+    public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        if (slot == EquipmentSlot.MainHand || slot == EquipmentSlot.Helmet) {
+            if (item == null) {
+                if (slot == EquipmentSlot.MainHand) {
+                    handItem = null;
+                }
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+                return;
+            }
+
+            item = item.clone();
+            item.setAmount(1);
+            if (slot == EquipmentSlot.MainHand) {
+                handItem = item;
+            }
+            if (status == PetState.Here) {
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            }
+        }
+    }
+
+    @Override
+    public void dropEquipment() {
+        if (getStatus() == PetState.Here) {
+            if (handItem != null && handItem.getType() != Material.AIR) {
+                Location dropLocation = getLocation().get();
+                dropLocation.getWorld().dropItem(dropLocation, handItem);
+            }
+        }
     }
 }
