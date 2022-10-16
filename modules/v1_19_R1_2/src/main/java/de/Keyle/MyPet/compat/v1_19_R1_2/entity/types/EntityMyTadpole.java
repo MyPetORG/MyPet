@@ -47,7 +47,7 @@ public class EntityMyTadpole extends EntityMyAquaticPet {
 
 	@Override
 	protected String getLivingSound() {
-		return "entity.frog.tounge";
+		return "entity.frog.tongue";
 	}
 
 	@Override
