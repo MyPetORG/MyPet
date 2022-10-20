@@ -20,11 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_18_R2.entity.types;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.bukkit.DyeColor;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -43,6 +38,10 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.DyeColor;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
@@ -50,9 +49,9 @@ public class EntityMyWolf extends EntityMyPet {
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_UUID);
-	private static final EntityDataAccessor<Float> TAIL_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
 
 	protected boolean shaking;
 	protected boolean isWet;
@@ -132,9 +131,9 @@ public class EntityMyWolf extends EntityMyPet {
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SIT_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());
-		getEntityData().define(TAIL_WATCHER, 30F);
 		getEntityData().define(UNUSED_WATCHER, false); // not used
 		getEntityData().define(COLLAR_COLOR_WATCHER, 14);
+		getEntityData().define(ANGER_WATCHER, 0);
 	}
 
 	@Override
@@ -153,11 +152,10 @@ public class EntityMyWolf extends EntityMyPet {
 			this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
 		}
 
-		b0 = this.getEntityData().get(SIT_WATCHER);
 		if (getMyPet().isAngry()) {
-			this.getEntityData().set(SIT_WATCHER, (byte) (b0 | 0x2));
+			this.getEntityData().set(ANGER_WATCHER, 1);
 		} else {
-			this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFD));
+			this.getEntityData().set(ANGER_WATCHER, 0);
 		}
 
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
@@ -199,24 +197,11 @@ public class EntityMyWolf extends EntityMyPet {
 				}
 			}
 		}
-
-		float tailHeight = 30F * (getHealth() / getMaxHealth());
-		if (this.getEntityData().get(TAIL_WATCHER) != tailHeight) {
-			this.getEntityData().set(TAIL_WATCHER, tailHeight); // update tail height
-		}
 	}
 
 	@Override
 	public void playPetStepSound() {
 		makeSound("entity.wolf.step", 0.15F, 1.0F);
-	}
-
-	@Override
-	public void setHealth(float i) {
-		super.setHealth(i);
-
-		float tailHeight = 30F * (i / getMaxHealth());
-		this.getEntityData().set(TAIL_WATCHER, tailHeight);
 	}
 
 	@Override
