@@ -120,14 +120,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <!-- https://www.spigotmc.org/resources/pvpdifftimer.52205/ -->
-            <groupId>br.net.fabiozumbi12</groupId>
-            <artifactId>PvPDiffTimer</artifactId>
-            <version>1.4.4</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <!-- https://www.spigotmc.org/resources/minigames.19687/ -->
             <groupId>au.com.mineauz</groupId>
             <artifactId>Minigames</artifactId>
