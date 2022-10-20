@@ -160,6 +160,7 @@ public class Configuration {
         public static double HUNGER_SYSTEM_FACTOR = 0.;
         public static double HUNGER_SYSTEM_TIME_BEFORE_DAMAGE = 5.;
         public static boolean HUNGER_SYSTEM_CAN_KILL = false;
+        public static boolean FEED_FROM_INVENTORY = true;
     }
 
     public static class Skilltree {

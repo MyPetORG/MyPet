@@ -35,6 +35,7 @@ import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -55,6 +56,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scoreboard.Team;
 
@@ -654,6 +657,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
                         MyPetExhaustionEvent event = new MyPetExhaustionEvent(this);
                         Bukkit.getServer().getPluginManager().callEvent(event);
+                        trySelfFeeding();
                         if (!event.isCancelled()) {
                             saturation--;
                             if (saturation == 66) {
@@ -758,5 +762,33 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         this.skilltree = skilltree;
         getServer().getPluginManager().callEvent(new MyPetLevelEvent(this, experience.getLevel()));
         return true;
+    }
+
+    public void trySelfFeeding() {
+        if (!getSkills().has(BackpackImpl.class))
+            return;
+        if (!Configuration.HungerSystem.FEED_FROM_INVENTORY)
+            return;
+        double foodSaturation = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
+        if (!(foodSaturation + saturation <= 100))
+            return;
+
+        Inventory bukkitInventory = getSkills().get(BackpackImpl.class).getInventory().getBukkitInventory();
+        //Check Inventory for food first, then get that food
+        List<ConfigItem> foodList = MyPetApi.getMyPetInfo().getFood(getPetType());
+        for (ConfigItem foodItem : foodList) {
+            if (bukkitInventory.contains(foodItem.getItem().getType())) {
+                ItemStack item = bukkitInventory.getItem(bukkitInventory.first(foodItem.getItem().getType()));
+
+                MyPetFeedEvent feedEvent = new MyPetFeedEvent(this, item, foodSaturation, MyPetFeedEvent.Result.Eat);
+                Bukkit.getPluginManager().callEvent(feedEvent);
+                if (!feedEvent.isCancelled()) {
+                    foodSaturation = feedEvent.getSaturation();
+                    setSaturation(getSaturation() + foodSaturation);
+                    item.setAmount(item.getAmount() - 1);
+                }
+                return;
+            }
+        }
     }
 }

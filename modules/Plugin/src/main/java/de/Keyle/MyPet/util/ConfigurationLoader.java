@@ -121,6 +121,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.HungerSystem.SaturationPerFeed", HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED);
         config.addDefault("MyPet.HungerSystem.Affect-Ride-Speed", HungerSystem.AFFECT_RIDE_SPEED);
         config.addDefault("MyPet.HungerSystem.Affect-Beacon-Range", HungerSystem.AFFECT_BEACON_RANGE);
+        config.addDefault("MyPet.HungerSystem.Feed-From-Inventory", HungerSystem.FEED_FROM_INVENTORY);
         config.addDefault("MyPet.HungerSystem.Damage.Fixed", HungerSystem.HUNGER_SYSTEM_FIXED);
         config.addDefault("MyPet.HungerSystem.Damage.Factor", HungerSystem.HUNGER_SYSTEM_FACTOR);
         config.addDefault("MyPet.HungerSystem.Damage.Time-Before-Damage", HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE);
@@ -369,6 +370,7 @@ public class ConfigurationLoader {
         HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED = config.getDouble("MyPet.HungerSystem.SaturationPerFeed", 6.0);
         HungerSystem.AFFECT_RIDE_SPEED = config.getBoolean("MyPet.HungerSystem.Affect-Ride-Speed", true);
         HungerSystem.AFFECT_BEACON_RANGE = config.getBoolean("MyPet.HungerSystem.Affect-Beacon-Range", true);
+        HungerSystem.FEED_FROM_INVENTORY = config.getBoolean("MyPet.HungerSystem.Feed-From-Inventory", true);
         HungerSystem.HUNGER_SYSTEM_FIXED = config.getDouble("MyPet.HungerSystem.Damage.Fixed", 1.);
         HungerSystem.HUNGER_SYSTEM_FACTOR = config.getDouble("MyPet.HungerSystem.Damage.Factor", 0.);
         HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE = config.getDouble("MyPet.HungerSystem.Damage.Time-Before-Damage", 5.);
