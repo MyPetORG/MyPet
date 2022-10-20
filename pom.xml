@@ -107,12 +107,17 @@
 
     <dependencies>
         <dependency>
-            <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
             <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizensapi</artifactId>
-            <version>2.0.24</version>
+            <artifactId>citizens-main</artifactId>
+            <version>2.0.30-SNAPSHOT</version>
+            <type>jar</type>
             <scope>provided</scope>
-            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <!-- https://www.spigotmc.org/resources/pvpdifftimer.52205/ -->
