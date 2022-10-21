@@ -92,10 +92,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>lumine.io</id>
-            <url>https://mvn.lumine.io/repository/maven-public/</url>
-        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -107,17 +103,12 @@
 
     <dependencies>
         <dependency>
+            <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
             <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizens-main</artifactId>
-            <version>2.0.30-SNAPSHOT</version>
-            <type>jar</type>
+            <artifactId>citizensapi</artifactId>
+            <version>2.0.24</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <!-- https://www.spigotmc.org/resources/pvpdifftimer.52205/ -->
