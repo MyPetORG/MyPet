@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -46,6 +47,10 @@ public class MyPetCreateEvent extends Event {
 
     public MyPetPlayer getOwner() {
         return myPet.getOwner();
+    }
+
+    public Player getPlayer() {
+        return myPet.getOwner().getPlayer();
     }
 
     public StoredMyPet getMyPet() {
