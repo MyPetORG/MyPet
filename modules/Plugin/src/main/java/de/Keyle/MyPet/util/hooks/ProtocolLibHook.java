@@ -22,14 +22,10 @@ package de.Keyle.MyPet.util.hooks;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -37,13 +33,9 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
@@ -72,13 +64,6 @@ public class ProtocolLibHook implements PluginHook {
             } else {
                 registerEnderDragonRotationFixLegacy();
             }
-
-            if (MyPetApi.getCompatUtil().getInternalVersion().equals("v1_7_R4")) {
-                if (MyPetApi.getPlatformHelper().isSpigot()) {
-                    registerCompatFix_1_8();
-                }
-            }
-
             return true;
         } catch (Throwable e) {
             return false;
@@ -263,132 +248,5 @@ public class ProtocolLibHook implements PluginHook {
                         }
                     }
                 });
-    }
-
-    private void registerCompatFix_1_8() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(
-                new PacketAdapter(
-                        MyPetApi.getPlugin(), ListenerPriority.HIGHEST,
-                        PacketType.Play.Server.SPAWN_ENTITY_LIVING,
-                        PacketType.Play.Server.ENTITY_METADATA
-                ) {
-                    Class entityClass = ReflectionUtil.getClass("org.bukkit.craftbukkit." + MyPetApi.getCompatUtil().getInternalVersion() + ".entity.CraftEntity");
-                    Method getHandleMethod = ReflectionUtil.getMethod(entityClass, "getHandle");
-
-                    @Override
-                    public void onPacketSending(PacketEvent event) {
-                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
-                            return;
-                        }
-
-                        Player player = event.getPlayer();
-                        if (!isPlayerRunningv1_8(player)) {
-                            return;
-                        }
-
-                        PacketContainer newPacketContainer = event.getPacket().deepClone();
-                        event.setPacket(newPacketContainer);
-
-                        if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY_LIVING) {
-
-                            Entity entity = newPacketContainer.getEntityModifier(event).readSafely(0);
-                            if (entity instanceof MyPetBukkitEntity) {
-                                MyPetBukkitEntity petEntity = (MyPetBukkitEntity) entity;
-                                List<WrappedWatchableObject> wrappedWatchableObjectList = newPacketContainer.getDataWatcherModifier().read(0).getWatchableObjects();
-                                newPacketContainer.getDataWatcherModifier().write(0, new WrappedDataWatcher(fixMetadata(petEntity, wrappedWatchableObjectList)));
-                            }
-                        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA) {
-
-                            Entity entity = newPacketContainer.getEntityModifier(event).read(0);
-                            if (entity instanceof MyPetBukkitEntity) {
-                                MyPetBukkitEntity petEntity = (MyPetBukkitEntity) entity;
-
-                                List<WrappedWatchableObject> wrappedWatchableObjectList = newPacketContainer.getWatchableCollectionModifier().read(0);
-                                newPacketContainer.getWatchableCollectionModifier().write(0, fixMetadata(petEntity, wrappedWatchableObjectList));
-                            }
-                        }
-                    }
-
-                    private List<WrappedWatchableObject> fixMetadata(MyPetBukkitEntity petEntity, List<WrappedWatchableObject> wrappedWatchableObjectList) {
-                        if (petEntity == null || wrappedWatchableObjectList == null) {
-                            return wrappedWatchableObjectList;
-                        }
-
-                        if (petEntity.getMyPet() instanceof MyPetBaby && hasKey(12, wrappedWatchableObjectList)) {
-                            Object object = getKeyValue(12, wrappedWatchableObjectList);
-                            if (object instanceof Integer) {
-                                int value = ((Number) object).intValue();
-                                removeKey(12, wrappedWatchableObjectList);
-
-                                if (petEntity.getPetType() == MyPetType.Horse) {
-                                    if (value == -24000) {
-                                        value = -1;
-                                    }
-                                }
-                                wrappedWatchableObjectList.add(new WrappedWatchableObject(12, (byte) value));
-                            }
-                        }
-                        if (petEntity.getPetType() == MyPetType.Wolf && hasKey(20, wrappedWatchableObjectList)) {
-                            Object object = getKeyValue(20, wrappedWatchableObjectList);
-
-                            if (object instanceof Byte) {
-                                DyeColor color = DyeColor.getByWoolData((byte) ((Byte) object & 0xF));
-                                removeKey(20, wrappedWatchableObjectList);
-                                wrappedWatchableObjectList.add(new WrappedWatchableObject(20, (byte) ((15 - color.ordinal()) & 0xF)));
-                            }
-                        }
-                        if (petEntity.getPetType() == MyPetType.Enderman && hasKey(16, wrappedWatchableObjectList)) {
-                            Object object = getKeyValue(16, wrappedWatchableObjectList);
-                            if (object instanceof Byte) {
-                                removeKey(16, wrappedWatchableObjectList);
-                                wrappedWatchableObjectList.add(new WrappedWatchableObject(16, Short.valueOf((Byte) object)));
-                            }
-                        }
-
-                        return wrappedWatchableObjectList;
-                    }
-
-                    private boolean hasKey(int key, List<WrappedWatchableObject> wrappedWatchableObjectList) {
-                        for (WrappedWatchableObject next : wrappedWatchableObjectList) {
-                            if (next.getIndex() == key) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
-                    private Object getKeyValue(int key, List<WrappedWatchableObject> wrappedWatchableObjectList) {
-                        for (WrappedWatchableObject next : wrappedWatchableObjectList) {
-                            if (next.getIndex() == key) {
-                                return next.getValue();
-                            }
-                        }
-                        return null;
-                    }
-
-                    private void removeKey(int key, List<WrappedWatchableObject> wrappedWatchableObjectList) {
-                        for (Iterator<WrappedWatchableObject> wrappedWatchableObjectIterator = wrappedWatchableObjectList.iterator(); wrappedWatchableObjectIterator.hasNext(); ) {
-                            WrappedWatchableObject next = wrappedWatchableObjectIterator.next();
-                            if (next.getIndex() == key) {
-                                wrappedWatchableObjectIterator.remove();
-                                break;
-                            }
-                        }
-                    }
-
-                    private boolean isPlayerRunningv1_8(Player player) {
-                        try {
-                            Object nmsPlayer = getHandleMethod.invoke(player);
-                            Object playerConnection = ReflectionUtil.getFieldValue(nmsPlayer.getClass(), nmsPlayer, "playerConnection");
-                            Object networkManager = ReflectionUtil.getFieldValue(playerConnection.getClass(), playerConnection, "networkManager");
-
-                            Method getVersionMethod = ReflectionUtil.getMethod(networkManager.getClass(), "getVersion");
-                            return (Integer) getVersionMethod.invoke(networkManager) > 5;
-                        } catch (Exception exception) {
-                            return false;
-                        }
-                    }
-                }
-        );
     }
 }
