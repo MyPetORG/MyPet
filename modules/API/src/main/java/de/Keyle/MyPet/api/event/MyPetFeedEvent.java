@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 public class MyPetFeedEvent extends MyPetInteractEvent {
 
     public enum Result {
-        Heal, Eat
+        Heal, Eat, Self_Feed
     }
 
     private double saturation;
