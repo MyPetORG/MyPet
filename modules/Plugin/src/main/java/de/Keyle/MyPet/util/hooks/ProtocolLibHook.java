@@ -34,9 +34,12 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -44,6 +47,7 @@ import java.util.function.Supplier;
 public class ProtocolLibHook implements PluginHook {
 
     protected boolean checkTemporaryPlayers = false;
+    private Set<Player> tempBlockedPlayers = new HashSet<>();
 
     @Override
     public boolean onEnable() {
@@ -118,6 +122,18 @@ public class ProtocolLibHook implements PluginHook {
                 if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
                     return;
                 }
+
+                //Prevent click-spamming causing Network-Issues for entire server. Basically cheap rate-limiting
+                if (tempBlockedPlayers.contains(event.getPlayer())) {
+                    return;
+                } else {
+                    tempBlockedPlayers.add(event.getPlayer());
+                    //Register Rate-Limit-Clear-Task
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> {
+                        tempBlockedPlayers.remove(event.getPlayer());
+                    }, 2L);
+                }
+
                 PacketContainer packet = event.getPacket();
                 if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
                     try {
