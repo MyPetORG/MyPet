@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -44,6 +45,10 @@ public class MyPetSendAwayEvent extends Event implements Cancellable {
 
     public MyPetPlayer getOwner() {
         return myPet.getOwner();
+    }
+
+    public Player getPlayer() {
+        return myPet.getOwner().getPlayer();
     }
 
     @Override

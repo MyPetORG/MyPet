@@ -780,7 +780,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             if (bukkitInventory.contains(foodItem.getItem().getType())) {
                 ItemStack item = bukkitInventory.getItem(bukkitInventory.first(foodItem.getItem().getType()));
 
-                MyPetFeedEvent feedEvent = new MyPetFeedEvent(this, item, foodSaturation, MyPetFeedEvent.Result.Eat);
+                MyPetFeedEvent feedEvent = new MyPetFeedEvent(this, item, foodSaturation, MyPetFeedEvent.Result.Self_Feed);
                 Bukkit.getPluginManager().callEvent(feedEvent);
                 if (!feedEvent.isCancelled()) {
                     foodSaturation = feedEvent.getSaturation();

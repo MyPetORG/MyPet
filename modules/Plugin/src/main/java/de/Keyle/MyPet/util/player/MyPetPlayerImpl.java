@@ -436,7 +436,11 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             if (myPet.getStatus() == PetState.Here) {
                 if (myPet.getLocation().get().getWorld() != p.getLocation().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), p.getLocation()) > 40) {
                     myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
-                    if(!p.isGliding()) {
+                    if(!MyPetApi.getCompatUtil().getMinecraftVersion().startsWith("1.8")) {
+                        if (!p.isGliding()) {
+                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
+                        }
+                    } else {
                         myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
                     }
                 }

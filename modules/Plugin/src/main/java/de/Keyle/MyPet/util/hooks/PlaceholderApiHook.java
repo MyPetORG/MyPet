@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
@@ -285,6 +284,13 @@ public class PlaceholderApiHook implements PluginHook {
             @Override
             public String getValue(Player player) {
                 return MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getMyPetManager().hasActiveMyPet(player) ? "yes" : "no";
+            }
+        });
+
+        placeHolders.put("idle_volume", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+            @Override
+            public String getValue(MyPetPlayer player) {
+                return Math.round(player.getPetLivingSoundVolume()*100f) +"%";
             }
         });
     }

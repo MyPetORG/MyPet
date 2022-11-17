@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.OnHitSkill;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -52,6 +53,10 @@ public class MyPetOnHitSkillEvent extends Event implements Cancellable {
 
     public MyPetPlayer getOwner() {
         return myPet.getOwner();
+    }
+
+    public Player getPlayer() {
+        return myPet.getOwner().getPlayer();
     }
 
     public LivingEntity getTarget() {

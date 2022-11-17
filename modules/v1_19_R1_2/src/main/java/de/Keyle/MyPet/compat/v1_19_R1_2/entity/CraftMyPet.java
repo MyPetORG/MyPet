@@ -113,7 +113,8 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 	public EntityType getType() {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		//all special cases here
-		if(stackTraceElements[2].getClassName().contains("worldedit")) {
+		if(stackTraceElements[2].getClassName().contains("worldedit") ||
+				stackTraceElements[3].getClassName().contains("worldguard")) {
 			return EntityType.valueOf(this.getPetType().getBukkitName());
 		}
 

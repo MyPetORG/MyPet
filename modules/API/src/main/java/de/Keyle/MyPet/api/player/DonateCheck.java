@@ -24,8 +24,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DonateCheck {
+    private static Map<String, Character> donMap = new HashMap<>();
+
     public enum DonationRank {
         Creator("☣"),
         Donator("❤"),
@@ -46,10 +50,27 @@ public class DonateCheck {
         }
     }
 
-    public static DonationRank getDonationRank(MyPetPlayer player) {
+    private static void fillDonMap() {
         BufferedReader donation = null;
         int timeout = 2000;
+        try {
+            URL url = new URL("https://raw.githubusercontent.com/MyPetORG/MyPet/particles/particles.csv");
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            huc.setConnectTimeout(timeout);
+            huc.setReadTimeout(timeout);
+            huc.setRequestMethod("GET");
+            huc.connect();
+            donation = new BufferedReader(new InputStreamReader(huc.getInputStream()));
 
+            String line;
+            while ((line = donation.readLine()) != null) {
+                donMap.put(line.substring(0,line.length()-1), line.charAt(line.length() - 1));
+            }
+        } catch(Exception ignored) {
+        }
+    }
+
+    public static DonationRank getDonationRank(MyPetPlayer player) {
         try {
             // Check whether this player has donated or is a helper for the MyPet project
             // returns
@@ -68,23 +89,14 @@ public class DonateCheck {
                 check = player.getName()+",,";
             }
 
-            URL url = new URL("https://raw.githubusercontent.com/MyPetORG/MyPet/particles/particles.csv");
-            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setConnectTimeout(timeout);
-            huc.setReadTimeout(timeout);
-            huc.setRequestMethod("GET");
-            huc.connect();
-            donation = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-
-            String line;
-            Character donCheck = '0';
-            while ((line = donation.readLine()) != null) {
-                if(line.startsWith(check)) {
-                    donCheck = line.charAt(line.length() - 1);
-                    break;
-                }
+            if(donMap.isEmpty()) {
+                fillDonMap();
             }
 
+            Character donCheck = '0';
+            if(donMap.containsKey(check)) {
+                donCheck = donMap.get(check);
+            }
             switch (donCheck) {
                 case '1':
                     return DonationRank.Donator;
@@ -100,13 +112,6 @@ public class DonateCheck {
                     return DonationRank.Premium;
             }
         } catch (Exception ignored) {
-            try {
-                if (donation != null) {
-                    donation.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         } finally {
             return DonationRank.None;
         }
