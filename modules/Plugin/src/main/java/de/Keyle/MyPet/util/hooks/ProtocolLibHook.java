@@ -37,9 +37,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -47,8 +47,7 @@ import java.util.function.Supplier;
 public class ProtocolLibHook implements PluginHook {
 
     protected boolean checkTemporaryPlayers = false;
-    private Set<Player> tempBlockedPlayers = new HashSet<>();
-
+    private Set<Player> tempBlockedPlayers = new ConcurrentHashMap<>().newKeySet();
     @Override
     public boolean onEnable() {
         try {

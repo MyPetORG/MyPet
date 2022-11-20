@@ -146,7 +146,7 @@ public class PluginHookManager {
         boolean enable = true;
         FileConfiguration config = this.config.getConfig();
         if (config.contains(hook.getPluginName())) {
-            enable = config.getBoolean(hook.getPluginName(), true);
+            enable = config.getBoolean(hook.getPluginName() + ".Enabled", true);
         } else {
             config.addDefault(hook.getPluginName() + ".Enabled", true);
         }
