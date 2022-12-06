@@ -52,7 +52,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -672,7 +671,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     if (saturation == 1 && (getHealth() >= 2 || Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
                         && this.bukkitEntity.getTicksLived() >= Configuration.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE * 20) {
                         getEntity().ifPresent(entity -> {
-                            double leDamage = Configuration.HungerSystem.HUNGER_SYSTEM_FIXED + entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * Configuration.HungerSystem.HUNGER_SYSTEM_FACTOR;
+                            double leDamage = Configuration.HungerSystem.HUNGER_SYSTEM_FIXED +
+                                    entity.getMyPet().getMaxHealth() * Configuration.HungerSystem.HUNGER_SYSTEM_FACTOR;
                             if(leDamage >= entity.getHealth() && !Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
                                     leDamage = entity.getHealth() - 1;
                             entity.damage(leDamage);
