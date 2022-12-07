@@ -184,6 +184,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-compat-v1_19_R2</artifactId>
+            <version>1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>de.keyle</groupId>
