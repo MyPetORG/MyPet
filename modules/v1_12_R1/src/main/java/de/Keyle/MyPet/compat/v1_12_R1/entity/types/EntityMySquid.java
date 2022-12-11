@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_12_R1.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.EntityMyPet;
@@ -47,11 +45,4 @@ public class EntityMySquid extends EntityMyPet {
         return "entity.squid.ambient";
     }
 
-    @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-        if (this.random.nextBoolean()) {
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
-        }
-    }
 }
