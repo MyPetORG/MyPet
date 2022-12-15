@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.ai.movement.MyPetRandomStroll;
 import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -651,6 +652,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         ((Scheduler) skill).schedule();
                     }
                 }
+
+                if(bukkitEntity.getHandle().getPathfinder().hasGoal("RandomStroll")) {
+                    ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomStroll")).schedule();
+                } else if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomSwim")) {
+                    ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomSwim")).schedule();
+                }
+
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
                     if (saturation > 1 && --hungerTime <= 0) {
                         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;

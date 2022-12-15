@@ -135,7 +135,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
         petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
-        petPathfinderSelector.addGoal("RandomLockaround", new RandomLookaround(this));
+        petPathfinderSelector.addGoal("RandomLookaround", new RandomLookaround(this));
         petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
         petTargetSelector.addGoal("HurtByTarget", new HurtByTarget(this));
         petTargetSelector.addGoal("ControlTarget", new ControlTarget(this, 1));

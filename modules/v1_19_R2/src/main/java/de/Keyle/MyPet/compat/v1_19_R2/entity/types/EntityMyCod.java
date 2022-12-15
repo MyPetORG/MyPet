@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyAquaticPet;
@@ -52,14 +50,6 @@ public class EntityMyCod extends EntityMyAquaticPet {
 	@Override
 	protected String getLivingSound() {
 		return "entity.cod.ambient";
-	}
-
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (!isInWater() && this.random.nextBoolean()) {
-			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
-		}
 	}
 
 	@Override

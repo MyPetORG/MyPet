@@ -49,12 +49,4 @@ public class EntityMyGlowSquid extends EntityMyAquaticPet {
 		return "entity.glow_squid.ambient";
 	}
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (!isInWater() && this.random.nextBoolean()) {
-			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
-		}
-	}
-
 }

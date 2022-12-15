@@ -105,7 +105,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
+public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraftEntity {
 
 	protected static final EntityDataAccessor<Byte> POTION_PARTICLE_WATCHER = Mob.DATA_SHARED_FLAGS_ID;
 
@@ -185,7 +185,9 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
 		petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
 		petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
-		petPathfinderSelector.addGoal("RandomLockaround", new RandomLookaround(this));
+		if(!(this instanceof EntityMyAquaticPet))
+			petPathfinderSelector.addGoal("RandomStroll", new MyPetRandomStroll(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
+		petPathfinderSelector.addGoal("RandomLookaround", new RandomLookaround(this));
 		petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
 		petTargetSelector.addGoal("HurtByTarget", new HurtByTarget(this));
 		petTargetSelector.addGoal("ControlTarget", new ControlTarget(this, 1));
