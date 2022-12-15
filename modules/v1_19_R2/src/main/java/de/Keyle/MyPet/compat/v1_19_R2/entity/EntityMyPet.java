@@ -39,6 +39,7 @@ import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.MyPetRandomStroll;
 import de.Keyle.MyPet.compat.v1_19_R2.PlatformHelper;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.attack.RangedAttack;
@@ -94,7 +95,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
@@ -106,7 +107,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
+public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraftEntity {
 
 	protected static final EntityDataAccessor<Byte> POTION_PARTICLE_WATCHER = Mob.DATA_SHARED_FLAGS_ID;
 
@@ -185,8 +186,10 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 		petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, this.getBbWidth() + 1.3, 20));
 		petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
 		petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
+		if(!(this instanceof EntityMyAquaticPet))
+			petPathfinderSelector.addGoal("RandomStroll", new MyPetRandomStroll(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
 		petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
-		petPathfinderSelector.addGoal("RandomLockaround", new RandomLookaround(this));
+		petPathfinderSelector.addGoal("RandomLookaround", new RandomLookaround(this));
 		petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
 		petTargetSelector.addGoal("HurtByTarget", new HurtByTarget(this));
 		petTargetSelector.addGoal("ControlTarget", new ControlTarget(this, 1));
@@ -565,7 +568,7 @@ public abstract class EntityMyPet extends Mob implements MyPetMinecraftEntity {
 							if (!feedEvent.isCancelled()) {
 								saturation = feedEvent.getSaturation();
 								double missingHealth = myPet.getMaxHealth() - getHealth();
-								this.heal((float) Math.min(saturation, missingHealth), RegainReason.EATING);
+								this.heal((float) Math.min(saturation, missingHealth), EntityRegainHealthEvent.RegainReason.EATING);
 								used = true;
 							}
 						}

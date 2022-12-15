@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_18_R2.entity;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.compat.v1_18_R2.entity.ai.movement.MyPetRandomSwim;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.ai.navigation.MyAquaticPetPathNavigation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
@@ -49,6 +51,12 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
 	    	return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void setPathfinder() {
+		super.setPathfinder();
+		petPathfinderSelector.addGoal("RandomSwim", new MyPetRandomSwim(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
 	}
 
 	@Override

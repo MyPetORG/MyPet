@@ -53,6 +53,6 @@ public class EntityMyEndermite extends EntityMyPet {
     public void setPathfinder() {
         super.setPathfinder();
         petPathfinderSelector.removeGoal("LookAtPlayer");
-        petPathfinderSelector.removeGoal("RandomLockaround");
+        petPathfinderSelector.removeGoal("RandomLookaround");
     }
 }

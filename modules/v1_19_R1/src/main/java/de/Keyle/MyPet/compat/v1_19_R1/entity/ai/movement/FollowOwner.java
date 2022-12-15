@@ -39,7 +39,7 @@ public class FollowOwner implements AIGoal {
 
 	private final EntityMyPet petEntity;
 	private AbstractNavigation nav;
-	private int setPathTimer = 0;
+	protected int setPathTimer = 0;
 	private final float stopDistance;
 	private final double startDistance;
 	private final float teleportDistance;
@@ -97,6 +97,7 @@ public class FollowOwner implements AIGoal {
 	public void finish() {
 		nav.getParameters().removeSpeedModifier("FollowOwner");
 		this.nav.stop();
+		this.setPathTimer = 0;
 	}
 
 	@Override
