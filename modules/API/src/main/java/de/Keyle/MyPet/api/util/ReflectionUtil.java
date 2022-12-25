@@ -22,13 +22,22 @@ package de.Keyle.MyPet.api.util;
 
 import lombok.NonNull;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.bukkit.Bukkit;
-
 public class ReflectionUtil {
+    private static MethodHandles.Lookup METHODHANDLE_LOOKUPER = MethodHandles.lookup();
+    private static Field MODIFIERS_FIELD;
+    private static Object THE_UNSAFE;
+    private static MethodHandle PUT_OBJECT;
+    private static MethodHandle STATIC_FIELD_OFFSET;
+
+    static {
+        MODIFIERS_FIELD = getField(Field.class, "modifiers");
+    }
 
     @SuppressWarnings("rawtypes")
     public static Class getClass(String name) {
@@ -135,14 +144,50 @@ public class ReflectionUtil {
         return false;
     }
 
-    public static void setFinalStaticValue(@NonNull Field field, Object newValue) throws NoSuchFieldException, IllegalAccessException {
-        field.setAccessible(true);
+    public static MethodHandle createStaticFinalSetter(Class<?> className, String fieldName) {
+        Field field = getField(className, fieldName);
+        if (field == null) {
+            return null;
+        }
 
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+        if (MODIFIERS_FIELD == null) {
+            if (THE_UNSAFE == null) {
+                try {
+                    THE_UNSAFE = getField(Class.forName("sun.misc.Unsafe"), "theUnsafe").get(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                STATIC_FIELD_OFFSET = getMethodHandle(THE_UNSAFE.getClass(), "staticFieldOffset", Field.class).bindTo(THE_UNSAFE);
+                PUT_OBJECT = getMethodHandle(THE_UNSAFE.getClass(), "putObject",  Object.class, long.class, Object.class).bindTo(THE_UNSAFE);
+            }
 
-        field.set(null, newValue);
+            try {
+                long offset = (long) STATIC_FIELD_OFFSET.invoke(field);
+
+                return MethodHandles.insertArguments(PUT_OBJECT, 0, className, offset);
+            } catch (Throwable t) {
+                t.printStackTrace();
+                return null;
+            }
+        }
+
+        try {
+            MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            return METHODHANDLE_LOOKUPER.unreflectSetter(field);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public static MethodHandle getMethodHandle(Class<?> className, String method, Class<?>... parameters) {
+        if (className != null) {
+            try {
+                return METHODHANDLE_LOOKUPER.unreflect(getMethod(className, method, parameters));
+            } catch (Exception e) {
+            }
+        }
+        return null;
     }
 
     public static boolean isTypeOf(Class<?> clazz, Class<?> superClass) {
