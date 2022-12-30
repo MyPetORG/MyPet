@@ -33,7 +33,7 @@ import org.bukkit.entity.Cat.Type;
 public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCat {
 
     protected boolean isBaby = false;
-    protected boolean isTamed = true;
+    protected boolean isTamed = false;
     protected Type catType = Type.TABBY;
     protected DyeColor collarColor = DyeColor.RED;
 
