@@ -20,19 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_16_R3.entity;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -41,15 +30,17 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
-import net.minecraft.server.v1_16_R3.EntityLiving;
-import net.minecraft.server.v1_16_R3.EntitySize;
-import net.minecraft.server.v1_16_R3.EntityTypes;
-import net.minecraft.server.v1_16_R3.EnumCreatureType;
-import net.minecraft.server.v1_16_R3.IRegistry;
-import net.minecraft.server.v1_16_R3.MinecraftKey;
-import net.minecraft.server.v1_16_R3.RegistryBlocks;
-import net.minecraft.server.v1_16_R3.RegistryMaterials;
-import net.minecraft.server.v1_16_R3.World;
+import net.minecraft.server.v1_16_R3.*;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 @Compat("v1_16_R3")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
@@ -57,6 +48,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
     @SuppressWarnings("rawtypes")
     Map<MyPetType, EntityTypes> entityTypes = new HashMap<>();
+    private RegistryBlocks<EntityTypes> custReg = null;
+
 
     @SuppressWarnings("unchecked")
     protected void registerEntityType(MyPetType petType, String key, RegistryBlocks<EntityTypes<?>> entityRegistry) {
@@ -116,8 +109,28 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @Override
     public void registerEntityTypes() {
         RegistryBlocks<EntityTypes<?>> entityRegistry = getRegistry(IRegistry.ENTITY_TYPE);
+        MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(IRegistry.class, "ENTITY_TYPE"); //ENTITY_TYPE
+
+        if(custReg != null) {
+            //Gotta put the original Registry in. Just for a moment
+            try {
+                ENTITY_REGISTRY_SETTER.invoke(entityRegistry);
+            } catch (Throwable e) {
+            }
+        }
+
+        //We are now working with the Vanilla-Registry
         for (MyPetType type : MyPetType.all()) {
             registerEntity(type, entityRegistry);
+        }
+
+        if(custReg != null) {
+            //Gotta put the custom Registry back into place
+            try {
+                ENTITY_REGISTRY_SETTER.invoke(custReg);
+            } catch (Throwable e) {
+            }
+            custReg = null;
         }
     }
 
@@ -134,8 +147,11 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     public RegistryBlocks<EntityTypes<?>> getRegistry(RegistryBlocks registryMaterials) {
         if (!registryMaterials.getClass().getName().equals(RegistryBlocks.class.getName())) {
             MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
+            if(custReg == null) {
+                custReg = registryMaterials;
+            }
             for (Field field : registryMaterials.getClass().getDeclaredFields()) {
-                if (field.getType() == RegistryMaterials.class) {
+                if (field.getType() == RegistryBlocks.class) {
                     field.setAccessible(true);
                     try {
                         RegistryBlocks<EntityTypes<?>> reg = (RegistryBlocks<EntityTypes<?>>) field.get(registryMaterials);

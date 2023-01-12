@@ -28,14 +28,12 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_12_R1.entity.types.*;
-import net.minecraft.server.v1_12_R1.EntityTypes;
-import net.minecraft.server.v1_12_R1.RegistryID;
-import net.minecraft.server.v1_12_R1.RegistryMaterials;
-import net.minecraft.server.v1_12_R1.World;
+import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -53,6 +51,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     Field RegistryID_b = ReflectionUtil.getField(RegistryID.class, "b");
     Field RegistryID_c = ReflectionUtil.getField(RegistryID.class, "c");
     Field RegistryID_d = ReflectionUtil.getField(RegistryID.class, "d");
+    private RegistryMaterials<MinecraftKey, Class<? extends Entity>> custReg = null;
 
     public EntityRegistry() {
         entityClasses.put(Bat, EntityMyBat.class);
@@ -171,14 +170,39 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     }
 
     protected RegistryMaterials getRegistry() {
-        if (EntityTypes.b.getClass() != RegistryMaterials.class) {
-            return getCustomRegistry(EntityTypes.b);
+        RegistryMaterials entityRegistry = EntityTypes.b;
+        MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(EntityTypes.class, "b"); //ENTITY_TYPE
+
+        if(custReg != null) {
+            //Gotta put the original Registry in. Just for a moment
+            try {
+                ENTITY_REGISTRY_SETTER.invoke(entityRegistry);
+            } catch (Throwable e) {
+            }
         }
-        return EntityTypes.b;
+
+        //We are now working with the Vanilla-Registry
+        if (entityRegistry.getClass() != RegistryMaterials.class) {
+            entityRegistry = getCustomRegistry(entityRegistry);
+        }
+
+        if(custReg != null) {
+            //Gotta put the custom Registry back into place
+            try {
+                ENTITY_REGISTRY_SETTER.invoke(custReg);
+            } catch (Throwable e) {
+            }
+            custReg = null;
+        }
+
+        return entityRegistry;
     }
 
     public RegistryMaterials getCustomRegistry(RegistryMaterials registryMaterials) {
         MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
+        if(custReg == null) {
+            custReg = registryMaterials;
+        }
         for (Field field : registryMaterials.getClass().getDeclaredFields()) {
             if (field.getType() == RegistryMaterials.class) {
                 field.setAccessible(true);
