@@ -20,12 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_19_R2.util.CraftMagicNumbers;
-
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -46,6 +40,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R2.util.CraftMagicNumbers;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
