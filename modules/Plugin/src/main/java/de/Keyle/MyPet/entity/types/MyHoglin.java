@@ -30,6 +30,7 @@ import org.bukkit.ChatColor;
 public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyHoglin {
 
     protected boolean isBaby = false;
+    protected boolean isShakeImmune = false;
 
     public MyHoglin(MyPetPlayer petOwner) {
         super(petOwner);
@@ -39,6 +40,7 @@ public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("ShakeImmune", new TagByte(isShakeImmune()));
         return info;
     }
 
@@ -46,6 +48,9 @@ public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("ShakeImmune")) {
+            setShakeImmune(info.getAs("ShakeImmune", TagByte.class).getBooleanData());
         }
     }
 
@@ -60,6 +65,17 @@ public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     public void setBaby(boolean flag) {
         this.isBaby = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    public boolean isShakeImmune() {
+        return isShakeImmune;
+    }
+
+    public void setShakeImmune(boolean flag) {
+        this.isShakeImmune = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }

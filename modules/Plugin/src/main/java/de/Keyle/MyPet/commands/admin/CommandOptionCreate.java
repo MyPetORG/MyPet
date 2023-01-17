@@ -109,6 +109,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("enderman", new CommandOptionCreator()
                 .add("block:")
+                .add("screaming")
                 .get());
 
         petTypeOptionMap.put("frog", new CommandOptionCreator()
@@ -137,6 +138,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("hoglin", new CommandOptionCreator()
                 .add("baby")
+                .add("noshake")
                 .get());
 
         petTypeOptionMap.put("horse", new CommandOptionCreator()
@@ -149,6 +151,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("1.7.10", "1.11", "mule:")
                 .add("1.7.10", "1.11", "zombie:")
                 .add("1.7.10", "1.11", "skeleton:")
+                .get());
+
+        petTypeOptionMap.put("husk", new CommandOptionCreator()
+                .add("baby")
                 .get());
 
         petTypeOptionMap.put("llama", new CommandOptionCreator()
@@ -212,6 +218,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("piglin", new CommandOptionCreator()
                 .add("baby")
+                .add("noshake")
+                .get());
+
+        petTypeOptionMap.put("piglinbrute", new CommandOptionCreator()
+                .add("noshake")
                 .get());
 
         petTypeOptionMap.put("pigzombie", new CommandOptionCreator()
@@ -241,7 +252,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .get());
 
         petTypeOptionMap.put("skeleton", new CommandOptionCreator()
-                .add("baby")
                 .add("1.10", "1.11", "stray")
                 .add("1.7.10", "1.11", "wither")
                 .get());
@@ -316,8 +326,12 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("zombievillager", new CommandOptionCreator()
                 .add("baby")
                 .add("profession:")
-                .add("1.14", "level:")
+                //.add("1.14", "level:")
                 .add("1.14", "type:")
+                .get());
+
+        petTypeOptionMap.put("zombifiedpiglin", new CommandOptionCreator()
+                .add("baby")
                 .get());
 
         petTypeOptionMap.put("zoglin", new CommandOptionCreator()
@@ -480,6 +494,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Baby", new TagByte(true));
             } else if (arg.equalsIgnoreCase("fire")) {
                 compound.getCompoundData().put("Fire", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("noshake")) {
+                compound.getCompoundData().put("ShakeImmune", new TagByte(true));
             } else if (arg.equalsIgnoreCase("powered")) {
                 compound.getCompoundData().put("Powered", new TagByte(true));
             }else if (arg.equalsIgnoreCase("screaming")) {
@@ -574,7 +590,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 String professionString = arg.replace("profession:", "");
                 if (Util.isInt(professionString)) {
                     int profession = Integer.parseInt(professionString);
-                    profession = Math.min(Math.max(0, profession), MyPetApi.getCompatUtil().isCompatible("1.14") ? 15 : 5);
+                    profession = Math.min(Math.max(0, profession), MyPetApi.getCompatUtil().isCompatible("1.14") ? 14 : 5);
                     if (petType == MyPetType.Villager) {
                         compound.getCompoundData().put("Profession", new TagInt(profession));
                         if (!compound.getCompoundData().containsKey("VillagerLevel")) {

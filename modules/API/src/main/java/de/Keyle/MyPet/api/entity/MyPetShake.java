@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,12 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.entity.types;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.entity.*;
+public interface MyPetShake {
+    boolean isShakeImmune();
 
-
-@DefaultInfo(food = {"gold_nugget"})
-public interface MyPiglin extends MyPet, MyPetEquipment, MyPetBaby, MyPetShake {
-
+    void setShakeImmune(boolean flag);
 }

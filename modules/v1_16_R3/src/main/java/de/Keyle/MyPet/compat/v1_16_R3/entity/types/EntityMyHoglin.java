@@ -31,6 +31,7 @@ import net.minecraft.server.v1_16_R3.*;
 public class EntityMyHoglin extends EntityMyPet {
 
 	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyHoglin.class, DataWatcherRegistry.i);
+	private static final DataWatcherObject<Boolean> NO_SHAKE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
 
 	public EntityMyHoglin(World world, MyPet myPet) {
 		super(world, myPet);
@@ -76,11 +77,13 @@ public class EntityMyHoglin extends EntityMyPet {
 	protected void initDatawatcher() {
 		super.initDatawatcher();
 		getDataWatcher().register(AGE_WATCHER, false);
+		getDataWatcher().register(NO_SHAKE_WATCHER, false);
 	}
 
 	@Override
 	public void updateVisuals() {
 		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
+		getDataWatcher().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
 	}
 
 	@Override

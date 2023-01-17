@@ -26,10 +26,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
-import de.keyle.knbt.TagShort;
-import de.keyle.knbt.TagString;
+import de.keyle.knbt.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +36,7 @@ import static org.bukkit.Material.AIR;
 public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEnderman {
 
     public boolean isScreaming = false;
+    public boolean isPermaScreaming = false;
     public ItemStack block = null;
 
     public MyEnderman(MyPetPlayer petOwner) {
@@ -55,6 +53,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
         if (block != null && block.getType() != AIR) {
             info.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
         }
+        info.getCompoundData().put("Screaming", new TagByte(isPermaScreaming));
         return info;
     }
 
@@ -109,6 +108,9 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
                 MyPetApi.getLogger().warning("Could not load Block item from pet data!");
             }
         }
+        if (info.containsKey("Screaming")) {
+            setPermaScreaming(info.getAs("Screaming", TagByte.class).getBooleanData());
+        }
     }
 
     @Override
@@ -117,14 +119,22 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
     }
 
     public boolean isScreaming() {
-        return isScreaming;
+        return isScreaming || isPermaScreaming;
     }
 
     public void setScreaming(boolean flag) {
+        if(!flag && isPermaScreaming)
+            return;
+
         this.isScreaming = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public void setPermaScreaming(boolean flag) {
+        this.isPermaScreaming = flag;
+        this.setScreaming(flag);
     }
 
     public boolean hasBlock() {

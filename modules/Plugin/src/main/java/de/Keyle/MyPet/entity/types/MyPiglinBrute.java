@@ -38,6 +38,7 @@ import java.util.Map;
 
 public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglinBrute {
 
+    protected boolean isShakeImmune = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyPiglinBrute(MyPetPlayer petOwner) {
@@ -59,6 +60,7 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("ShakeImmune", new TagByte(isShakeImmune()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -72,9 +74,23 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
         return info;
     }
 
+    public boolean isShakeImmune() {
+        return isShakeImmune;
+    }
+
+    public void setShakeImmune(boolean flag) {
+        this.isShakeImmune = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
+        if (info.containsKey("ShakeImmune")) {
+            setShakeImmune(info.getAs("ShakeImmune", TagByte.class).getBooleanData());
+        }
         if (info.containsKey("Equipment")) {
             TagList equipment = info.getAs("Equipment", TagList.class);
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();

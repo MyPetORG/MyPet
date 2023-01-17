@@ -42,8 +42,9 @@ import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglin extends EntityMyPet {
 
+	//Funnily enough this one hasn't got the age_watcher before the No_Shake
+	private static final DataWatcherObject<Boolean> NO_SHAKE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
 	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
-	private static final DataWatcherObject<Boolean> BABY_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
 
 	public EntityMyPiglin(World world, MyPet myPet) {
 		super(world, myPet);
@@ -135,8 +136,8 @@ public class EntityMyPiglin extends EntityMyPet {
 	@Override
 	protected void initDatawatcher() {
 		super.initDatawatcher();
+		getDataWatcher().register(NO_SHAKE_WATCHER, false);
 		getDataWatcher().register(AGE_WATCHER, false); // is baby
-		getDataWatcher().register(BABY_WATCHER, false); // is baby
 	}
 
 	/**
@@ -151,7 +152,7 @@ public class EntityMyPiglin extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-		getDataWatcher().set(BABY_WATCHER, getMyPet().isBaby());
+		getDataWatcher().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {

@@ -43,7 +43,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -56,7 +55,6 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
 	Map<MyPetType, EntityType> entityTypes = new HashMap<>();
-	private DefaultedRegistry<EntityType> custReg = null;
 
 	protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
 		EntityDimensions size = entityRegistry.get(new ResourceLocation(key.toLowerCase())).getDimensions();
@@ -123,17 +121,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(Registry.ENTITY_TYPE);
 		Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class,"ca"); //frozen
 		Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class,"cc"); //intrusiveHolderCache
-		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(Registry.class, "X"); //ENTITY_TYPE
 
-		if(custReg != null) {
-			//Gotta put the original Registry in. Just for a moment
-			try {
-				ENTITY_REGISTRY_SETTER.invoke(entityRegistry);
-			} catch (Throwable e) {
-			}
-		}
-
-		//We are now working with the Vanilla-Registry
 		ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
 		ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
 
@@ -141,15 +129,6 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			registerEntity(type, entityRegistry);
 		}
 		entityRegistry.freeze();
-
-		if(custReg != null) {
-			//Gotta put the custom Registry back into place
-			try {
-				ENTITY_REGISTRY_SETTER.invoke(custReg);
-			} catch (Throwable e) {
-			}
-			custReg = null;
-		}
 	}
 
 	public <T> T getEntityType(MyPetType petType) {
@@ -164,11 +143,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	public DefaultedRegistry<EntityType<?>> getRegistry(DefaultedRegistry registryMaterials) {
 		if (!registryMaterials.getClass().getName().equals(DefaultedRegistry.class.getName())) {
 			MyPetApi.getLogger().info("Custom entity registry found: " + registryMaterials.getClass().getName());
-			if(custReg == null) {
-				custReg = registryMaterials;
-			}
 			for (Field field : registryMaterials.getClass().getDeclaredFields()) {
-				if (field.getType() == DefaultedRegistry.class) {
+				if (field.getType() == MappedRegistry.class) {
 					field.setAccessible(true);
 					try {
 						DefaultedRegistry<EntityType<?>> reg = (DefaultedRegistry<EntityType<?>>) field.get(registryMaterials);

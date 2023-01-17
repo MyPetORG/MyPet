@@ -38,6 +38,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyHoglin extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyHoglin.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> NO_SHAKE_WATCHER = SynchedEntityData.defineId(EntityMyHoglin.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyHoglin(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -83,11 +84,13 @@ public class EntityMyHoglin extends EntityMyPet {
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
+		getEntityData().define(NO_SHAKE_WATCHER, false);
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
 	}
 
 	@Override

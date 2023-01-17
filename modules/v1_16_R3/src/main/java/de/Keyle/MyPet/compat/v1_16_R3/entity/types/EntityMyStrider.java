@@ -37,7 +37,7 @@ public class EntityMyStrider extends EntityMyPet {
 
 	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyStrider.class, DataWatcherRegistry.i);
 	private static final DataWatcherObject<Integer> BOOST_TICKS_WATCHER = DataWatcher.a(EntityMyStrider.class, DataWatcherRegistry.b);
-	private static final DataWatcherObject<Boolean> HAS_RIDER_WATCHER = DataWatcher.a(EntityMyStrider.class, DataWatcherRegistry.i);
+	private static final DataWatcherObject<Boolean> SUFFOCATING_WATCHER = DataWatcher.a(EntityMyStrider.class, DataWatcherRegistry.i);
 	private static final DataWatcherObject<Boolean> SADDLE_WATCHER = DataWatcher.a(EntityMyStrider.class, DataWatcherRegistry.i);
 
 	public EntityMyStrider(World world, MyPet myPet) {
@@ -119,7 +119,7 @@ public class EntityMyStrider extends EntityMyPet {
 		super.initDatawatcher();
 		getDataWatcher().register(AGE_WATCHER, false);
 		getDataWatcher().register(BOOST_TICKS_WATCHER, 0);
-		getDataWatcher().register(HAS_RIDER_WATCHER, false);
+		getDataWatcher().register(SUFFOCATING_WATCHER, false);
 		getDataWatcher().register(SADDLE_WATCHER, false);
 	}
 

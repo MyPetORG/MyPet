@@ -39,6 +39,7 @@ import java.util.Map;
 public class MyPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglin {
 
     protected boolean isBaby = false;
+    protected boolean isShakeImmune = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyPiglin(MyPetPlayer petOwner) {
@@ -61,6 +62,7 @@ public class MyPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("ShakeImmune", new TagByte(isShakeImmune()));
 
         List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -79,6 +81,9 @@ public class MyPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("ShakeImmune")) {
+            setShakeImmune(info.getAs("ShakeImmune", TagByte.class).getBooleanData());
         }
         if (info.containsKey("Equipment")) {
             TagList equipment = info.getAs("Equipment", TagList.class);
@@ -108,6 +113,17 @@ public class MyPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     public void setBaby(boolean flag) {
         this.isBaby = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    public boolean isShakeImmune() {
+        return isShakeImmune;
+    }
+
+    public void setShakeImmune(boolean flag) {
+        this.isShakeImmune = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
