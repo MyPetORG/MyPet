@@ -41,6 +41,7 @@ import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadca
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglinBrute extends EntityMyPet {
+	private static final DataWatcherObject<Boolean> NO_SHAKE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
 
 	public EntityMyPiglinBrute(World world, MyPet myPet) {
 		super(world, myPet);
@@ -121,6 +122,12 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 		return EnumInteractionResult.PASS;
 	}
 
+	@Override
+	protected void initDatawatcher() {
+		super.initDatawatcher();
+		getDataWatcher().register(NO_SHAKE_WATCHER, false);
+	}
+
 	/**
 	 * Returns the speed of played sounds
 	 * The faster the higher the sound will be
@@ -132,6 +139,7 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
+		getDataWatcher().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {
 				for (EquipmentSlot slot : EquipmentSlot.values()) {

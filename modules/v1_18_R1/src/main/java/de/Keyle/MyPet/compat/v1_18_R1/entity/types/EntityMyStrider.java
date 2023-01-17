@@ -55,7 +55,7 @@ public class EntityMyStrider extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> BOOST_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Boolean> HAS_RIDER_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SUFFOCATING_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyStrider(Level world, MyPet myPet) {
@@ -137,7 +137,7 @@ public class EntityMyStrider extends EntityMyPet {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(BOOST_TICKS_WATCHER, 0);
-		getEntityData().define(HAS_RIDER_WATCHER, false);
+		getEntityData().define(SUFFOCATING_WATCHER, false);
 		getEntityData().define(SADDLE_WATCHER, false);
 	}
 

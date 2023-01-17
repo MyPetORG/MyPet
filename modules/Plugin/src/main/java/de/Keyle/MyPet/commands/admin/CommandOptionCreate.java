@@ -138,6 +138,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("hoglin", new CommandOptionCreator()
                 .add("baby")
+                .add("noshake")
                 .get());
 
         petTypeOptionMap.put("horse", new CommandOptionCreator()
@@ -217,6 +218,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("piglin", new CommandOptionCreator()
                 .add("baby")
+                .add("noshake")
+                .get());
+
+        petTypeOptionMap.put("piglinbrute", new CommandOptionCreator()
+                .add("noshake")
                 .get());
 
         petTypeOptionMap.put("pigzombie", new CommandOptionCreator()
@@ -488,6 +494,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("Baby", new TagByte(true));
             } else if (arg.equalsIgnoreCase("fire")) {
                 compound.getCompoundData().put("Fire", new TagByte(true));
+            } else if (arg.equalsIgnoreCase("noshake")) {
+                compound.getCompoundData().put("ShakeImmune", new TagByte(true));
             } else if (arg.equalsIgnoreCase("powered")) {
                 compound.getCompoundData().put("Powered", new TagByte(true));
             }else if (arg.equalsIgnoreCase("screaming")) {

@@ -23,8 +23,9 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetShake;
 
 @DefaultInfo(food = {"crimson_fungus"})
-public interface MyHoglin extends MyPet, MyPetBaby {
+public interface MyHoglin extends MyPet, MyPetBaby, MyPetShake {
 
 }

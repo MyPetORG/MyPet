@@ -20,10 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -50,13 +46,16 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyStrider extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> BOOST_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Boolean> HAS_RIDER_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SUFFOCATING_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyStrider(Level world, MyPet myPet) {
@@ -138,7 +137,7 @@ public class EntityMyStrider extends EntityMyPet {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(BOOST_TICKS_WATCHER, 0);
-		getEntityData().define(HAS_RIDER_WATCHER, false);
+		getEntityData().define(SUFFOCATING_WATCHER, false);
 		getEntityData().define(SADDLE_WATCHER, false);
 	}
 

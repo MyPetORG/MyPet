@@ -53,9 +53,9 @@ import java.util.Arrays;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglin extends EntityMyPet {
 	
-	//For some reason it needs both
+	//Funnily enough this one hasn't got the age_watcher before the No_Shake
+	private static final EntityDataAccessor<Boolean> NO_SHAKE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyPiglin(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -147,8 +147,8 @@ public class EntityMyPiglin extends EntityMyPet {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		getEntityData().define(NO_SHAKE_WATCHER, false);
 		getEntityData().define(AGE_WATCHER, false); // is baby
-		getEntityData().define(BABY_WATCHER, false); // is baby
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class EntityMyPiglin extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(BABY_WATCHER, getMyPet().isBaby());
+		this.getEntityData().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {

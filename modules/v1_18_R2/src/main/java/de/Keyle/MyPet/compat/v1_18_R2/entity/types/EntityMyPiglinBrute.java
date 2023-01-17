@@ -30,6 +30,9 @@ import de.Keyle.MyPet.api.entity.types.MyPiglinBrute;
 import de.Keyle.MyPet.compat.v1_18_R2.CompatManager;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -48,6 +51,7 @@ import java.util.Arrays;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglinBrute extends EntityMyPet {
+	private static final EntityDataAccessor<Boolean> NO_SHAKE_WATCHER = SynchedEntityData.defineId(EntityMyPiglinBrute.class, EntityDataSerializers.BOOLEAN);
 	
 	public EntityMyPiglinBrute(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -127,6 +131,12 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 		return InteractionResult.PASS;
 	}
 
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		getEntityData().define(NO_SHAKE_WATCHER, false);
+	}
+
 	/**
 	 * Returns the speed of played sounds
 	 * The faster the higher the sound will be
@@ -138,6 +148,7 @@ public class EntityMyPiglinBrute extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
+		this.getEntityData().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == PetState.Here) {
 				for (EquipmentSlot slot : EquipmentSlot.values()) {

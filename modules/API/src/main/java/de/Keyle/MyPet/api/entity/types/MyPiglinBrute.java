@@ -22,11 +22,11 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetShake;
 
 
 @DefaultInfo(food = {"gold_nugget"})
-public interface MyPiglinBrute extends MyPet, MyPetEquipment {
+public interface MyPiglinBrute extends MyPet, MyPetEquipment, MyPetShake {
 
 }
