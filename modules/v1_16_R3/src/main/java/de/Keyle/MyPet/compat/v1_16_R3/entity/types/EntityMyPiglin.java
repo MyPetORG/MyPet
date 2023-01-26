@@ -42,7 +42,6 @@ import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadca
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglin extends EntityMyPet {
 
-	//Funnily enough this one hasn't got the age_watcher before the No_Shake
 	private static final DataWatcherObject<Boolean> NO_SHAKE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
 	private static final DataWatcherObject<Boolean> AGE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
 

@@ -41,7 +41,7 @@ import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadca
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglinBrute extends EntityMyPet {
-	private static final DataWatcherObject<Boolean> NO_SHAKE_WATCHER = DataWatcher.a(EntityMyPiglin.class, DataWatcherRegistry.i);
+	private static final DataWatcherObject<Boolean> NO_SHAKE_WATCHER = DataWatcher.a(EntityMyPiglinBrute.class, DataWatcherRegistry.i);
 
 	public EntityMyPiglinBrute(World world, MyPet myPet) {
 		super(world, myPet);
