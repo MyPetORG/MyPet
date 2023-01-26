@@ -106,7 +106,9 @@ public class EntityMyChicken extends EntityMyPet {
 
 		if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
 			this.makeSound("entity.chicken.egg", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-			spawnAtLocation(Items.EGG, 1);
+			this.forceDrops = true; // CraftBukkit
+			this.spawnAtLocation(Items.EGG);
+			this.forceDrops = false; // CraftBukkit
 			nextEggTimer = this.random.nextInt(6000) + 6000;
 		}
 	}
