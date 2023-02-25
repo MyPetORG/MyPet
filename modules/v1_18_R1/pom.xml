@@ -6,7 +6,7 @@
         <artifactId>mypet-parent</artifactId>
         <groupId>de.keyle</groupId>
         <version>1</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
