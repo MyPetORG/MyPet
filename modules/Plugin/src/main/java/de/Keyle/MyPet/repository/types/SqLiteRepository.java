@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -157,6 +158,11 @@ public class SqLiteRepository implements Repository {
                     ")");
             createTimestampTrigger("info", "last_update", "version");
 
+            create.executeUpdate("CREATE TABLE pets_evolutions (" +
+                    "uuid VARCHAR(36) NOT NULL, " +
+                    "serial_number INTEGER, " +
+                    "skilltree VARCHAR(255)" +
+                    ")");
 
             PreparedStatement insert = connection.prepareStatement("INSERT INTO info (version, mypet_version, mypet_build) VALUES (?,?,?);");
             insert.setInt(1, version);

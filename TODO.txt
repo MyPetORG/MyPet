@@ -1,0 +1,8 @@
+- Create Skilltree History []
+   - MySQL Support []
+   - MongoDB Support []
+   - Nbt Support []
+   - SQLite Support []
+
+- Save next skilltree into skilltree history []
+- cumulate older skilltree entries into the current inheritanced one (if exists) []

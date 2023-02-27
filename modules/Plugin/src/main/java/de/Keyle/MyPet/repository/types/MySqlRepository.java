@@ -175,6 +175,12 @@ public class MySqlRepository implements Repository {
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ")");
 
+            create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "pets_evolutions (" +
+                    "uuid VARCHAR(36) NOT NULL, " +
+                    "serial_number INTEGER, " +
+                    "skilltree VARCHAR(255)" +
+                    ")");
+
             PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (version, mypet_version, mypet_build) VALUES (?,?,?);");
             insert.setInt(1, version);
             insert.setString(2, MyPetVersion.getVersion());
