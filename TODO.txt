@@ -6,3 +6,4 @@
 
 - Save next skilltree into skilltree history []
 - cumulate older skilltree entries into the current inheritanced one (if exists) []
+- Check for previous SkillTree-Requirements [] from "pets_evolutions/..."
