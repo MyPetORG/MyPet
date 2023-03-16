@@ -39,14 +39,15 @@ import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.MyPetRandomStroll;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.*;
 import de.Keyle.MyPet.compat.v1_19_R2.PlatformHelper;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.attack.RangedAttack;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.Float;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.*;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.target.*;
+import de.Keyle.MyPet.compat.v1_19_R3.entity.ai.movement.*;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.navigation.VanillaNavigation;
+import de.Keyle.MyPet.compat.v1_19_R3.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMyDolphin;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
@@ -138,7 +139,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bn");	//Jumping-Field
 
 	public EntityMyPet(Level world, MyPet myPet) {
-		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
+		super(((de.Keyle.MyPet.compat.v1_19_R2.entity.EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
 
 		try {
 			this.replaceCraftAttributes();
@@ -201,7 +202,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	@Override
 	public AttributeMap getAttributes() {
 		if (attributeMap == null) {
-			EntityRegistry entityRegistry = (EntityRegistry) MyPetApi.getEntityRegistry();
+			de.Keyle.MyPet.compat.v1_19_R2.entity.EntityRegistry entityRegistry = (EntityRegistry) MyPetApi.getEntityRegistry();
 			MyPetType type = entityRegistry.getMyPetType(this.getClass());
 			EntityType<?> types = entityRegistry.entityTypes.get(type);
 			AttributeSupplier attributeProvider = MyAttributeDefaults.getAttribute(types);

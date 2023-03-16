@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.attack;
 
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
 
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -28,7 +29,6 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R2.skill.skills.ranged.nms.MyPetArrow;
 import de.Keyle.MyPet.compat.v1_19_R2.skill.skills.ranged.nms.MyPetDragonFireball;
 import de.Keyle.MyPet.compat.v1_19_R2.skill.skills.ranged.nms.MyPetEgg;

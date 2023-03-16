@@ -57,7 +57,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @EntitySize(width = 1.3965F, height = 1.6F)
-public class EntityMyHorse extends EntityMyPet{
+public class EntityMyHorse extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyHorse.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyHorse.class, EntityDataSerializers.BYTE);

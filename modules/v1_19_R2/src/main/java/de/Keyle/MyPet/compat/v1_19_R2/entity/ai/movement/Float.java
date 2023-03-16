@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement;
 
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
