@@ -135,7 +135,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	protected AttributeMap attributeMap;
 	protected boolean indirectRiding = false;
 
-	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bn");	//Jumping-Field
+	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bi");	//Jumping-Field
 
 	public EntityMyPet(Level world, MyPet myPet) {
 		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
@@ -1269,7 +1269,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			return;
 		}
 
-		if (this.isEyeInFluid(FluidTags.WATER) && this.getVehicle().dismountsUnderwater()) {
+		if (this.isEyeInFluid(FluidTags.WATER) && this.dismountsUnderwater()) {
 			this.setDeltaMovement(this.getDeltaMovement().add(0, 0.4, 0));
 		}
 
@@ -1374,7 +1374,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 							this.isFlying = true;
 						}
 					}
-				} else if (!this.getVehicle().dismountsUnderwater() && this.isInWaterOrBubble()) {
+				} else if (!this.dismountsUnderwater() && this.isInWaterOrBubble()) {
 					if (this.getDeltaMovement().y() < ascendSpeed) {
 						this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
 					}
@@ -1486,5 +1486,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean dismountsUnderwater() {
+		return true;
 	}
 }

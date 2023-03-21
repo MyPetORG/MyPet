@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_19_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R3.entity.ai.navigation.MyAquaticPetPathNavigation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -164,13 +163,7 @@ public class FollowOwner implements AIGoal {
 			}
 		} else if (owner.hasEffect(MobEffects.MOVEMENT_SPEED)) {
 			// make the pet faster when the player is has the SPEED effect
-			//TODO see if this can be removed in newer versions
-			for(MobEffectInstance eff:owner.getActiveEffects()) {
-				if (eff.getEffect() == MobEffects.MOVEMENT_SPEED) {
-					walkSpeed += eff.getAmplifier() * 0.2 * walkSpeed;
-					break;
-				}
-			}
+			walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
 		}
 
 		// make aquatic pets faster - swimming is hard
