@@ -23,10 +23,11 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
 import org.bukkit.inventory.ItemStack;
 
 @DefaultInfo(food = {"warped_fungus"})
-public interface MyStrider extends MyPet, MyPetBaby {
+public interface MyStrider extends MyPet, MyPetBaby, MyPetLavaEntity {
 
     ItemStack getSaddle();
 
