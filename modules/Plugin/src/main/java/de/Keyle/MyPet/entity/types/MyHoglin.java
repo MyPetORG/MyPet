@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
@@ -71,7 +72,10 @@ public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     public boolean isShakeImmune() {
-        return isShakeImmune;
+        if(Configuration.MyPet.Hoglin.WILL_SHAKE) {
+            return isShakeImmune;
+        }
+        return true;
     }
 
     public void setShakeImmune(boolean flag) {

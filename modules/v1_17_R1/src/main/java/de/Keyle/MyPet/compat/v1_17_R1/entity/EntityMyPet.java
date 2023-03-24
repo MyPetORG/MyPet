@@ -1434,7 +1434,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 	@Override
 	public void lavaHurt() {
-		super.lavaHurt();
+		if(!(this.getMyPet() instanceof MyPetLavaEntity))
+			super.lavaHurt();
 	}
 
 	@Override

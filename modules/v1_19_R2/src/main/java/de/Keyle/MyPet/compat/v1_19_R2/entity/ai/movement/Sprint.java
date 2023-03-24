@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement;
 
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -28,7 +29,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
 import net.minecraft.world.entity.LivingEntity;
 

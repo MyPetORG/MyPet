@@ -82,4 +82,14 @@ public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProject
     public SpawnCategory getSpawnCategory() {
         return SpawnCategory.MISC;
     }
+
+    /* I have no clue why I need to override these other deprecated methods also don't need to be implemented so yea...*/
+    @Override
+    public void setVisibleByDefault(boolean b) {
+    }
+
+    @Override
+    public boolean isVisibleByDefault() {
+        return true;
+    }
 }

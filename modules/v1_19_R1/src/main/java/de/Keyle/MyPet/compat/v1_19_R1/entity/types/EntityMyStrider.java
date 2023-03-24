@@ -162,11 +162,6 @@ public class EntityMyStrider extends EntityMyPet {
 	public boolean floatsInLava() {
 		return true;
 	}
-	
-	@Override
-	public void lavaHurt() {
-		return;
-	}
 
 	@Override
 	public boolean canStandOnFluid(FluidState fluid) {

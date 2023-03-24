@@ -244,6 +244,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false);
         }
 
+        config.addDefault("MyPet.Pets.Allay.CanGlide", MyPet.Allay.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Bat.CanGlide", MyPet.Bat.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Bee.CanGlide", MyPet.Bee.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Blaze.CanGlide", MyPet.Blaze.CAN_GLIDE);
@@ -256,6 +257,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
         }
         if (MyPetType.Hoglin.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Hoglin.WillShake",MyPet.Hoglin.WILL_SHAKE);
             config.addDefault("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
@@ -280,9 +282,11 @@ public class ConfigurationLoader {
         }
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
         if (MyPetType.Piglin.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.Piglin.WillShake",MyPet.Piglin.WILL_SHAKE);
             config.addDefault("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle");
         }
         if (MyPetType.PiglinBrute.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.PiglinBrute.WillShake",MyPet.PiglinBrute.WILL_SHAKE);
             config.addDefault("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
@@ -505,6 +509,7 @@ public class ConfigurationLoader {
         MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
         MyPet.Snowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
+        MyPet.Allay.CAN_GLIDE = config.getBoolean("MyPet.Pets.Allay.CanGlide", true);
         MyPet.Bee.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bee.CanGlide", true);
         MyPet.Bat.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bat.CanGlide", true);
         MyPet.Blaze.CAN_GLIDE = config.getBoolean("MyPet.Pets.Blaze.CanGlide", true);
@@ -567,6 +572,10 @@ public class ConfigurationLoader {
         MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle"));
         MyPet.ZombieHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle"));
         MyPet.ZombifiedPiglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombifiedPiglin.GrowUpItem", "experience_bottle"));
+
+        MyPet.Piglin.WILL_SHAKE = config.getBoolean("MyPet.Pets.Piglin.WillShake", true);
+        MyPet.PiglinBrute.WILL_SHAKE = config.getBoolean("MyPet.Pets.PiglinBrute.WillShake", true);
+        MyPet.Hoglin.WILL_SHAKE = config.getBoolean("MyPet.Pets.Hoglin.WillShake", true);
 
         for (MyPetType petType : MyPetType.values()) {
             if (!petType.checkMinecraftVersion()) {
