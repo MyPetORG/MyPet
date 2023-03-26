@@ -53,7 +53,6 @@ public class EntityMyZombieHorse extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyZombieHorse.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyZombieHorse.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyZombieHorse.class, EntityDataSerializers.OPTIONAL_UUID);
 
 	int soundCounter = 0;
 	int rearCounter = -1;
@@ -172,7 +171,6 @@ public class EntityMyZombieHorse extends EntityMyPet {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_CHEST_WATCHER, (byte) 0);
-		getEntityData().define(OWNER_WATCHER, Optional.empty());
 	}
 
 	@Override

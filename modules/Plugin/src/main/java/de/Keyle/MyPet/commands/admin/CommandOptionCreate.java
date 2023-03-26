@@ -159,7 +159,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("llama", new CommandOptionCreator()
                 .add("baby")
-                //.add("chest")
+                .add("chest")
                 .add("variant:")
                 //.add("decor:")
                 .get());
