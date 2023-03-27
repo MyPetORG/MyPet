@@ -74,9 +74,9 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @Override
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Color", TagInt.class)) {
-            setColor(DyeColor.getByDyeData((byte) info.getAs("Color", TagInt.class).getIntData()));
+            setColor(DyeColor.getByWoolData((byte) info.getAs("Color", TagInt.class).getIntData()));
         } else if (info.containsKeyAs("Color", TagByte.class)) {
-            setColor(DyeColor.getByDyeData(info.getAs("Color", TagByte.class).getByteData()));
+            setColor(DyeColor.getByWoolData(info.getAs("Color", TagByte.class).getByteData()));
         }
         if (info.containsKey("Sheared")) {
             setSheared(info.getAs("Sheared", TagByte.class).getBooleanData());
