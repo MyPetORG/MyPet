@@ -46,15 +46,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyDonkey extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyDonkey.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyDonkey.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyDonkey.class, EntityDataSerializers.OPTIONAL_UUID);
 	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyDonkey.class, EntityDataSerializers.BOOLEAN);
 
 	int soundCounter = 0;
@@ -175,7 +172,6 @@ public class EntityMyDonkey extends EntityMyPet {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_WATCHER, (byte) 0);
-		getEntityData().define(OWNER_WATCHER, Optional.empty());
 		getEntityData().define(CHEST_WATCHER, false);
 	}
 

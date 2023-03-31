@@ -43,15 +43,12 @@ import net.minecraft.world.level.block.WoolCarpetBlock;
 import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyTraderLlama extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.OPTIONAL_UUID);
 	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> STRENGTH_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
@@ -154,8 +151,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 		super.defineSynchedData();
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_CHEST_WATCHER, (byte) 0);    // saddle & chest
-		getEntityData().define(OWNER_WATCHER, Optional.empty()); // owner
-		getEntityData().define(CHEST_WATCHER, true);
+		getEntityData().define(CHEST_WATCHER, false);
 		getEntityData().define(STRENGTH_WATCHER, 0);
 		getEntityData().define(COLOR_WATCHER, 0);
 		getEntityData().define(VARIANT_WATCHER, 0);

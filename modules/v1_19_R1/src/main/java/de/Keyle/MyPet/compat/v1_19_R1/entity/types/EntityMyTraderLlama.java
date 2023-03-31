@@ -155,7 +155,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SADDLE_CHEST_WATCHER, (byte) 0);    // saddle & chest
 		getEntityData().define(OWNER_WATCHER, Optional.empty()); // owner
-		getEntityData().define(CHEST_WATCHER, true);
+		getEntityData().define(CHEST_WATCHER, false);
 		getEntityData().define(STRENGTH_WATCHER, 0);
 		getEntityData().define(COLOR_WATCHER, 0);
 		getEntityData().define(VARIANT_WATCHER, 0);
