@@ -5,13 +5,16 @@ api-version: '1.13'
 author: Keyle
 website: ${project.url}
 softdepend:
+  - GriefPrevention
+  - GriefPreventionPlus
+  - Citizens
+  - Multiverse-Core
+  - My_Worlds
+  - PlaceholderAPI
   - ProtocolLib
   - Vault
   - WGCustomFlags
   - WorldGuard
-  - Multiverse-Core
-  - My_Worlds
-  - PlaceholderAPI
 commands:
   myPet:
     description: Help for all pet commands.
