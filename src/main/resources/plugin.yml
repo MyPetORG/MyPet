@@ -6,6 +6,12 @@ author: Keyle
 website: ${project.url}
 softdepend:
   - ProtocolLib
+  - Vault
+  - WGCustomFlags
+  - WorldGuard
+  - Multiverse-Core
+  - My_Worlds
+  - PlaceholderAPI
 commands:
   myPet:
     description: Help for all pet commands.
