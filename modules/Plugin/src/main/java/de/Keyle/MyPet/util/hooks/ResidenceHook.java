@@ -24,8 +24,10 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
+import de.Keyle.MyPet.api.util.hooks.types.MountInsideHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.Location;
@@ -33,7 +35,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @PluginHookName("Residence")
-public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook {
+public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, MountInsideHook {
 
     Residence residence;
 
@@ -77,5 +79,15 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
         } catch (Throwable ignored) {
         }
         return true;
+    }
+
+    @Override
+    public boolean playerCanMount(MyPetPlayer player, Entity pet) {
+        try {
+            FlagPermissions flagPermissions = residence.getPermsByLoc(pet.getLocation());
+            return flagPermissions.has("riding", true);
+        } catch (Throwable ignored) {
+        }
+        return false;
     }
 }

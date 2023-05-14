@@ -43,10 +43,7 @@ import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
-import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
-import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
-import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.api.util.hooks.types.*;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -67,7 +64,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @PluginHookName("WorldGuard")
-public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook {
+public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook, MountInsideHook {
 
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
@@ -306,6 +303,12 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                 }
             }
         }
+    }
+
+    @Override
+    public boolean playerCanMount(MyPetPlayer player, Entity pet) {
+        //TODO implement
+        return true;
     }
 
     public class RegionModifier extends ExperienceModifier {

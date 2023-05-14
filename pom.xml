@@ -316,9 +316,9 @@
         </dependency>
         <dependency>
             <!-- http://dev.bukkit.org/bukkit-plugins/grief-prevention/ -->
-            <groupId>me.ryanhamshire</groupId>
+            <groupId>com.github.TechFortress</groupId>
             <artifactId>GriefPrevention</artifactId>
-            <version>16.11.5</version>
+            <version>16.18</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
