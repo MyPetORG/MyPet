@@ -10,6 +10,7 @@ softdepend:
   - Citizens
   - Multiverse-Core
   - My_Worlds
+  - MythicMobs
   - PlaceholderAPI
   - ProtocolLib
   - Vault
