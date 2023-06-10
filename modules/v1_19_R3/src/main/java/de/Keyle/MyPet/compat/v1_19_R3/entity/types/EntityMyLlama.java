@@ -159,7 +159,6 @@ public class EntityMyLlama extends EntityMyPet {
 
 	@Override
 	public void updateVisuals() {
-		Bukkit.getConsoleSender().sendMessage("Has Chest? "+getMyPet().hasChest());
 		this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		if (getMyPet().hasDecor()) {

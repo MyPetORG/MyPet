@@ -43,7 +43,7 @@ public class EntityMyWarden extends EntityMyPet {
 	public EntityMyWarden(Level world, MyPet myPet) {
 		super(world, myPet);
 		emerged = myPet.wantsToRespawn();
-		if(ThreadLocalRandom.current().nextInt(100 + 1) == 42) {
+		if(((MyWarden)myPet).hasHeartAttack() || ThreadLocalRandom.current().nextInt(100 + 1) == 42) {
 			this.heartAttack = true;
 		}
 	}
