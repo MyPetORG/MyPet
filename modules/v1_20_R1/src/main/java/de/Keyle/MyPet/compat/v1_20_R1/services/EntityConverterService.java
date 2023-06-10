@@ -233,17 +233,17 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     }
                     if (villagerTag.containsKey("LastRestock")) {
                     	long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("cs", entityVillager, lastRestock);	//Field: lastRestockGameTime
+                        ReflectionUtil.setFieldValue("ct", entityVillager, lastRestock);	//Field: lastRestockGameTime
                     }
                     if (villagerTag.containsKey("LastGossipDecay")) {
                         long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("cq", entityVillager, lastGossipDecay);	//Field: lastGossipDecayTime
+                        ReflectionUtil.setFieldValue("cr", entityVillager, lastGossipDecay);	//Field: lastGossipDecayTime
                     }
                     if (villagerTag.containsKey("RestocksToday")) {
                         int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
-                        ReflectionUtil.setFieldValue("ct", entityVillager, restocksToday);		//Field: numberOfRestocksToday
+                        ReflectionUtil.setFieldValue("cu", entityVillager, restocksToday);		//Field: numberOfRestocksToday
                     }
-                    ReflectionUtil.setFieldValue("cv", entityVillager, true); // Field: AssignProfessionWhenSpawned
+                    ReflectionUtil.setFieldValue("cw", entityVillager, true); // Field: AssignProfessionWhenSpawned
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

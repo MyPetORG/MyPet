@@ -134,7 +134,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	protected AttributeMap attributeMap;
 	protected boolean indirectRiding = false;
 
-	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bi");	//Jumping-Field
+	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bk");	//Jumping-Field
 
 	public EntityMyPet(Level world, MyPet myPet) {
 		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
