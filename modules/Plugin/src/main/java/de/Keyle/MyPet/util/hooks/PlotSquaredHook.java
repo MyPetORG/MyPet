@@ -20,13 +20,15 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.MountInsideHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.*;
 
 @PluginHookName("PlotSquared")
-public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
+public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, MountInsideHook {
 
     protected boolean isV4 = false;
 
@@ -58,6 +60,12 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
         } else {
             return V3.canHurt(attacker, defender);
         }
+    }
+
+    @Override
+    public boolean playerCanMount(MyPetPlayer player, Entity pet) {
+        //TODO implement
+        return true;
     }
 
     private static class V3 {

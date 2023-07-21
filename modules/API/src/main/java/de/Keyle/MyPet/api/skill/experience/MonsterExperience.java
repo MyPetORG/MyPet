@@ -55,6 +55,8 @@ public class MonsterExperience {
         mobExp.put("BLAZE", new MonsterExperience(10., "BLAZE"));
         mobExp.put("GIANT", new MonsterExperience(25., "GIANT"));
         mobExp.put("GUARDIAN", new MonsterExperience(10., "GUARDIAN"));
+        mobExp.put("ELDER_GUARDIAN", new MonsterExperience(10., "ELDER_GUARDIAN"));
+        mobExp.put("HORSE", new MonsterExperience(1, 3, "HORSE"));
         mobExp.put("COW", new MonsterExperience(1., 3., "COW"));
         mobExp.put("PIG", new MonsterExperience(1., 3., "PIG"));
         mobExp.put("CHICKEN", new MonsterExperience(1., 3., "CHICKEN"));

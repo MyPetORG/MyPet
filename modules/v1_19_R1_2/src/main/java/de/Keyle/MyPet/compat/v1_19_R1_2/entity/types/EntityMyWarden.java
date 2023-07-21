@@ -37,13 +37,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyWarden extends EntityMyPet {
-	int heartBeatTimer = 0;
 	boolean heartAttack = false;
-	boolean emerged = false;
+	boolean emerged;
 
 	public EntityMyWarden(Level world, MyPet myPet) {
 		super(world, myPet);
-		if(ThreadLocalRandom.current().nextInt(100 + 1) == 42) {
+		emerged = myPet.wantsToRespawn();
+		if(((MyWarden)myPet).hasHeartAttack() || ThreadLocalRandom.current().nextInt(100 + 1) == 42) {
 			this.heartAttack = true;
 		}
 	}
@@ -101,13 +101,19 @@ public class EntityMyWarden extends EntityMyPet {
 		makeSound("entity.warden.step", 1.0F, 1.0F);
 	}
 
+	@Override
 	public void remove(Entity.RemovalReason entity_removalreason) {
-		//Play sound
-		this.makeSound("entity.warden.dig");
-		this.setPose(Pose.DIGGING);
-		if(!MyPetApi.getPlugin().isDisabling()) {
-			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> super.remove(entity_removalreason), 100);
-		} else {
+		//We don't want it to dig multiple times
+		if(this.getPose()!=Pose.DIGGING && entity_removalreason!=RemovalReason.KILLED && !getMyPet().wantsToRespawn()) {
+			//Play sound
+			this.makeSound("entity.warden.dig");
+			this.setPose(Pose.DIGGING);
+			if(!MyPetApi.getPlugin().isDisabling()) {
+				Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> super.remove(entity_removalreason), 100);
+			} else {
+				super.remove(entity_removalreason);
+			}
+		} else if(this.getPose()!=Pose.DIGGING) { //Just in case it get's called more than once
 			super.remove(entity_removalreason);
 		}
 	}

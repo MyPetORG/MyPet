@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.compat.v1_19_R2.PlatformHelper;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.attack.MeleeAttack;
@@ -34,8 +35,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 import java.util.Arrays;
-
-import static de.Keyle.MyPet.compat.v1_19_R2.PlatformHelper.dragonPartsField;
 
 @EntitySize(width = 1.F, height = 1.F)
 public class EntityMyEnderDragon extends EntityMyPet {
@@ -98,10 +97,10 @@ public class EntityMyEnderDragon extends EntityMyPet {
 				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
 				
 				//The next part used to be prettier but... whilst it is listed everywhere I looked, ServerLevel dragonParts isn't public so...
-				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, world);
+				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(PlatformHelper.dragonPartsField, world);
 				Arrays.stream(this.children)
 						.forEach(entityMyPetPart -> dragonParts.put(entityMyPetPart.getId(), entityMyPetPart));
-				ReflectionUtil.setFieldValue(dragonPartsField, world, dragonParts);
+				ReflectionUtil.setFieldValue(PlatformHelper.dragonPartsField, world, dragonParts);
 				}
 			this.registered = true;
 		}

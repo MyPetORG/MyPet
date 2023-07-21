@@ -22,9 +22,10 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
 
 @DefaultInfo(food = {"gunpowder"})
-public interface MyBlaze extends MyPet {
+public interface MyBlaze extends MyPet, MyPetLavaEntity {
     boolean isOnFire();
 
     void setOnFire(boolean flag);

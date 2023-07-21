@@ -276,6 +276,7 @@ public class Configuration {
 
         public static class Hoglin {
 
+            public static boolean WILL_SHAKE;
             public static ConfigItem GROW_UP_ITEM;
         }
 
@@ -337,11 +338,13 @@ public class Configuration {
 
         public static class Piglin {
 
+            public static boolean WILL_SHAKE;
             public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class PiglinBrute {
 
+            public static boolean WILL_SHAKE;
             public static ConfigItem GROW_UP_ITEM;
         }
 

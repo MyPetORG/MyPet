@@ -20,19 +20,18 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.MountInsideHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.DataStore;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import me.ryanhamshire.GriefPrevention.PlayerData;
+import me.ryanhamshire.GriefPrevention.*;
 import org.bukkit.entity.*;
 
 import java.util.UUID;
 
 @PluginHookName("GriefPrevention")
-public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
+public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, MountInsideHook {
 
     protected GriefPrevention griefPrevention;
 
@@ -132,6 +131,18 @@ public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersus
                 }
             }
         } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    @Override
+    public boolean playerCanMount(MyPetPlayer player, Entity pet) {
+        DataStore dataStore = griefPrevention.dataStore;
+        UUID playerUUID = player.getMojangUUID();
+
+        Claim claim = dataStore.getClaimAt(pet.getLocation(), true, dataStore.getPlayerData(playerUUID).lastClaim);
+        if(claim != null && !claim.hasExplicitPermission(playerUUID, ClaimPermission.Access)) {
+            return false;
         }
         return true;
     }

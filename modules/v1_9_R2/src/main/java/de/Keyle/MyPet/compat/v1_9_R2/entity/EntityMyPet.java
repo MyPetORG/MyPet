@@ -597,6 +597,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
     }
 
+    @Override
+    public void burnFromLava() {
+        if(this.getMyPet() instanceof MyPetLavaEntity) {
+            return;
+        } else {
+            super.burnFromLava();
+        }
+    }
+
     public void setHealth(float f) {
         double deltaHealth = getHealth();
         double maxHealth = myPet.getMaxHealth();

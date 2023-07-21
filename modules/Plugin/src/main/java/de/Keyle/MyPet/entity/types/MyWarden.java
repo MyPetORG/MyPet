@@ -23,9 +23,13 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
 public class MyWarden extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWarden {
+    protected boolean heartAttack = false;
+
     public MyWarden(MyPetPlayer petOwner) {
         super(petOwner);
     }
@@ -38,5 +42,29 @@ public class MyWarden extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     @Override
     public String toString() {
         return "MyWarden{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("HeartAttack", new TagByte(hasHeartAttack()));
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.containsKey("HeartAttack")) {
+            setHeartAttack(info.getAs("HeartAttack", TagByte.class).getBooleanData());
+        }
+    }
+
+    @Override
+    public void setHeartAttack(boolean flag) {
+        this.heartAttack = flag;
+    }
+
+    @Override
+    public boolean hasHeartAttack() {
+        return heartAttack;
     }
 }

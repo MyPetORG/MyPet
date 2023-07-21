@@ -7961,4 +7961,524 @@
     "id": "warden_spawn_egg",
     "introduced": "1.19"
   }
+  ,
+  {
+    "id": "",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "acacia_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "angler_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "archer_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "arms_up_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_block",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_button",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_chest_raft",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_door",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_fence",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_fence_gate",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_mosaic",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_mosaic_slab",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_mosaic_stairs",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_planks",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_pressure_plate",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_raft",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_slab",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_stairs",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "bamboo_trapdoor",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "birch_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "blade_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "brewer_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "brush",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "burn_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "calibrated_sculk_sensor",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "camel_spawn_egg",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_boat",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_button",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_chest_boat",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_door",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_fence",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_fence_gate",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_leaves",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_log",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_planks",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_pressure_plate",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_sapling",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_slab",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_stairs",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_trapdoor",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "cherry_wood",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "chiseled_bookshelf",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "coast_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "crimson_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "danger_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "dark_oak_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "decorated_pot",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "dune_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "ender_dragon_spawn_egg",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "explorer_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "eye_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "friend_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "heart_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "heartbreak_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "host_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "howl_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "iron_golem_spawn_egg",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "jungle_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "mangrove_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "miner_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "mourner_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "music_disc_relic",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "netherite_upgrade_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "oak_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "piglin_head",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "pink_petals",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "pitcher_plant",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "pitcher_pod",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "plenty_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "prize_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "raiser_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "rib_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "sentry_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "shaper_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "sheaf_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "shelter_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "silence_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "skull_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "sniffer_egg",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "sniffer_spawn_egg",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "snort_pottery_sherd",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "snout_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "snow_golem_spawn_egg",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "spire_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "spruce_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "stripped_bamboo_block",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "stripped_cherry_log",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "stripped_cherry_wood",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "suspicious_gravel",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "suspicious_sand",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "tide_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "torchflower",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "torchflower_seeds",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "vex_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "ward_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "warped_hanging_sign",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "wayfinder_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "wild_armor_trim_smithing_template",
+    "introduced": "1.20"
+  }
+  ,
+  {
+    "id": "wither_spawn_egg",
+    "introduced": "1.20"
+  }
 ]

@@ -1282,6 +1282,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         }
         return source;
     }
+
+    @Override
+    public void burnFromLava() {
+        if(this.getMyPet() instanceof MyPetLavaEntity) {
+            return;
+        } else {
+            super.burnFromLava();
+        }
+    }
     
     @Override
 	public UUID getUniqueID() {

@@ -20,13 +20,12 @@
 
 package de.Keyle.MyPet.util.hooks;
 
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.hooks.types.MountInsideHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import net.kaikk.mc.gpp.Claim;
-import net.kaikk.mc.gpp.DataStore;
-import net.kaikk.mc.gpp.GriefPreventionPlus;
-import net.kaikk.mc.gpp.PlayerData;
+import net.kaikk.mc.gpp.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -35,7 +34,7 @@ import org.bukkit.entity.Tameable;
 import java.util.UUID;
 
 @PluginHookName("GriefPreventionPlus")
-public class GriefPreventionPlusHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
+public class GriefPreventionPlusHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, MountInsideHook {
 
     protected GriefPreventionPlus griefPrevention;
 
@@ -132,6 +131,18 @@ public class GriefPreventionPlusHook implements PlayerVersusEntityHook, PlayerVe
                 }
             }
         } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    @Override
+    public boolean playerCanMount(MyPetPlayer player, Entity pet) {
+        DataStore dataStore = griefPrevention.getDataStore();
+        UUID playerUUID = player.getMojangUUID();
+
+        Claim claim = dataStore.getClaimAt(pet.getLocation(), true, dataStore.getPlayerData(playerUUID).lastClaim);
+        if(claim != null && !claim.hasExplicitPermission(player.getPlayer(), ClaimPermission.ACCESS)) {
+            return false;
         }
         return true;
     }

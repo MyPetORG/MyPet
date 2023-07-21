@@ -159,7 +159,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("llama", new CommandOptionCreator()
                 .add("baby")
-                //.add("chest")
+                .add("chest")
                 .add("variant:")
                 //.add("decor:")
                 .get());
@@ -586,6 +586,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     catType = Math.min(Math.max(0, catType), 3);
                     compound.getCompoundData().put("CatType", new TagInt(catType));
                 }
+            } else if (arg.startsWith("heartattack") && petType == MyPetType.Warden) {
+                compound.getCompoundData().put("HeartAttack", new TagByte(true));
             } else if (arg.startsWith("profession:")) {
                 String professionString = arg.replace("profession:", "");
                 if (Util.isInt(professionString)) {
