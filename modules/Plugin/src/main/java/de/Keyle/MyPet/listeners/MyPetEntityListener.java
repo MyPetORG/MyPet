@@ -408,6 +408,11 @@ public class MyPetEntityListener implements Listener {
 
             MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
+            if(event.getCause() == DamageCause.FALL && bukkitEntity.hasPotionEffect(PotionEffectType.JUMP)) {
+                event.setCancelled(true);
+                return;
+            }
+            
             if (event.getCause() == DamageCause.SUFFOCATION) {
                 if (bukkitEntity.getHandle().hasRider()) {
                     event.setCancelled(true);
