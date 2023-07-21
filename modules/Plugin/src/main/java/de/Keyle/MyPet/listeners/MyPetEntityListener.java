@@ -413,6 +413,11 @@ public class MyPetEntityListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
+                if(event.getCause() == DamageCause.FALL) {
+                    event.setCancelled(true);
+                    return;
+                }
+                
                 final MyPet myPet = bukkitEntity.getMyPet();
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 

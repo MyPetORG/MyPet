@@ -46,7 +46,6 @@ public class CommandCall implements CommandTabCompleter {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
                 myPet.removePet(true);
-
                 switch (myPet.createEntity()) {
                     case Success:
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", petOwner), myPet.getPetName()));
