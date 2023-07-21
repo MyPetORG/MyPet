@@ -61,6 +61,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
 public class MyPetEntityListener implements Listener {
@@ -408,7 +409,7 @@ public class MyPetEntityListener implements Listener {
 
             MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
-            if(event.getCause() == DamageCause.FALL) {
+            if(event.getCause() == DamageCause.FALL && bukkitEntity.hasPotionEffect(PotionEffectType.JUMP)) {
                 event.setCancelled(true);
                 return;
             }
