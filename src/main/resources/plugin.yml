@@ -5,45 +5,14 @@ api-version: '1.13'
 author: Keyle
 website: ${project.url}
 softdepend:
-  - Ancient
-  - BattleArena
-  - BossShopPro
-  - Citizens
-  - CombatLogX
-  - FabledSkyBlock
-  - Factions
-  - GangsPlus
   - GriefPrevention
   - GriefPreventionPlus
-  - Guilds
-  - Heroes
-  - Kingdoms
-  - Lands
-  - MagicSpells
-  - mcMMO
-  - MiniaturePets
-  - Minigames
-  - MobArena
-  - MobStacker
+  - Citizens
   - Multiverse-Core
+  - My_Worlds
   - MythicMobs
-  - NoCheatPlus
   - PlaceholderAPI
-  - PlotSquared
-  - PreciousStones
-  - PremiumVanish
   - ProtocolLib
-  - pvparena
-  - PvPDiffTimer
-  - PvPManager
-  - RedProtect
-  - Residence
-  - SimpleClans
-  - SkillAPI
-  - StackMob
-  - SuperVanish
-  - SurvivalGames
-  - Towny
   - Vault
   - WGCustomFlags
   - WorldGuard

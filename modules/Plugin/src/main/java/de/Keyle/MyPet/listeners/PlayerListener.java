@@ -59,6 +59,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -536,5 +537,13 @@ public class PlayerListener implements Listener {
                 }.runTaskLater(MyPetApi.getPlugin(), 25L);
             }
         }
+    }
+
+    @EventHandler
+    public void onMount(EntityMountEvent event) {
+        if(!(event.getEntity() instanceof Player))
+            return;
+
+        //TODO Implement hooks
     }
 }

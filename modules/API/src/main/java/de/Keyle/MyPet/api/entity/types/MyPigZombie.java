@@ -20,12 +20,9 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.*;
 
 
 @DefaultInfo(food = {"rotten_flesh"})
-public interface MyPigZombie extends MyPet, MyPetEquipment, MyPetBaby {
+public interface MyPigZombie extends MyPet, MyPetEquipment, MyPetBaby, MyPetLavaEntity {
 }

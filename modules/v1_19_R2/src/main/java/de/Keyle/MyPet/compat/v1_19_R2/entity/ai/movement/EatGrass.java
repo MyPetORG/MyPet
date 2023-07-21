@@ -22,13 +22,13 @@ package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement;
 
 import java.util.function.Predicate;
 
+import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMySheep;
 import org.bukkit.GameRule;
 import org.bukkit.craftbukkit.v1_19_R2.event.CraftEventFactory;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMySheep;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;

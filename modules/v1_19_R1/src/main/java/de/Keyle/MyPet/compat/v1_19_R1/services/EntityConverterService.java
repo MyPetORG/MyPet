@@ -578,7 +578,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertBee(Bee bee, TagCompound properties) {
-        properties.getCompoundData().put("Angry", new TagByte(true));
+        properties.getCompoundData().put("Angry", new TagByte(bee.getAnger()>1));
         properties.getCompoundData().put("HasStung", new TagByte(bee.hasStung()));
         properties.getCompoundData().put("HasNectar", new TagByte(bee.hasNectar()));
     }

@@ -29,7 +29,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.compat.v1_19_R2.CompatManager;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;

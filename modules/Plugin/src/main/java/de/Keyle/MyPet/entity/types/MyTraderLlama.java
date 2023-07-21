@@ -129,7 +129,13 @@ public class MyTraderLlama extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
-        if (info.containsKeyAs("Chest", TagCompound.class)) {
+        if (info.containsKeyAs("Chest", TagByte.class)) {
+            boolean chest = info.getAs("Chest", TagByte.class).getBooleanData();
+            if (chest) {
+                ItemStack item = new ItemStack(Material.CHEST);
+                setChest(item);
+            }
+        } else if (info.containsKeyAs("Chest", TagCompound.class)) {
             TagCompound itemTag = info.get("Chest");
             try {
                 ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);

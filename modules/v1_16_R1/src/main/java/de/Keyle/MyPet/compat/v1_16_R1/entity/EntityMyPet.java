@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.entity.types.MyStrider;
 import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.MyPetSitEvent;
@@ -1405,7 +1404,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
     
     @Override
 	public void burnFromLava() {
-		if(this.getMyPet() instanceof MyStrider) {
+		if(this.getMyPet() instanceof MyPetLavaEntity) {
 			return;
 		} else {
 			super.burnFromLava();

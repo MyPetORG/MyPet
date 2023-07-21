@@ -165,11 +165,6 @@ public class EntityMyStrider extends EntityMyPet {
 	}
 	
 	@Override
-	public void lavaHurt() {
-		return;
-	}
-	
-	@Override
 	public boolean canStandOnFluid(Fluid fluid) {
 		return fluid.is((Tag) FluidTags.LAVA);
 	}
