@@ -62,7 +62,7 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         if (hasSaddle()) {
             info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
         }
