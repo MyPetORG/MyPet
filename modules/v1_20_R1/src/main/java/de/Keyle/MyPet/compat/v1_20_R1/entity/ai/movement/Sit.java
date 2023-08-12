@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_20_R1.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.types.*;
 
@@ -43,7 +44,7 @@ public class Sit implements AIGoal {
 				!(this.entityMyPet instanceof EntityMyPanda) &&
 				!(this.entityMyPet instanceof EntityMyFox)) {
 			return false;
-		} else if (this.entityMyPet.isInWater()) {
+		} else if (this.entityMyPet.isInWater() && !(this.entityMyPet instanceof EntityMyAquaticPet)) {
 			return false;
 		} else if (!this.entityMyPet.onGround()) {
 			return false;
