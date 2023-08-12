@@ -40,18 +40,17 @@ public class EntityMySeat extends ArmorStand {
 		persist = false;
 	}
 
-	public static boolean mountToPet(Entity passenger, Entity myPet) {
+	public static void mountToPet(Entity passenger, Entity myPet) {
 		var seat = new EntityMySeat(myPet.level(), myPet.getX(), myPet.getY(), myPet.getZ());
 		if (myPet.level().addFreshEntity(seat, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
 			if (seat.startRiding(myPet)) {
 				if (passenger.startRiding(seat)) {
-					return true;
+					return;
 				}
 				seat.stopRiding();
 			}
 			seat.discard();
 		}
-		return false;
 	}
 
 	@Override

@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyDrowned;
 import de.Keyle.MyPet.compat.v1_19_R3.CompatManager;
-import de.Keyle.MyPet.compat.v1_19_R3.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_19_R3.entity.EntityMyAquaticPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -50,7 +50,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @EntitySize(width = 0.6F, height = 1.95F)
-public class EntityMyDrowned extends EntityMyPet {
+public class EntityMyDrowned extends EntityMyAquaticPet {
 
 	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.INT);
@@ -146,7 +146,7 @@ public class EntityMyDrowned extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Zombie.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+			} else if (Configuration.MyPet.Drowned.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

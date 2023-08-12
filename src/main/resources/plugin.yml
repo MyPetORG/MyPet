@@ -102,6 +102,7 @@ permissions:
       MyPet.leash.Bat: true
       MyPet.leash.Bee: true
       MyPet.leash.Blaze: true
+      MyPet.leash.Camel: true
       MyPet.leash.Cat: true
       MyPet.leash.CaveSpider: true
       MyPet.leash.Chicken: true
@@ -149,6 +150,7 @@ permissions:
       MyPet.leash.Skeleton: true
       MyPet.leash.SkeletonHorse: true
       MyPet.leash.Slime: true
+      MyPet.leash.Sniffer: true
       MyPet.leash.Snowman: true
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true

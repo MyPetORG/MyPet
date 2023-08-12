@@ -224,7 +224,12 @@ public class Configuration {
 
             public static boolean CAN_GLIDE = true;
         }
-        
+
+        public static class Camel {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Cat {
 
             public static ConfigItem GROW_UP_ITEM;
@@ -375,6 +380,11 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class Sniffer {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Snowman {
 
             public static boolean FIX_SNOW_TRACK = true;
@@ -426,6 +436,11 @@ public class Configuration {
         }
 
         public static class ZombieHorse {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
+        public static class ZombieVillager {
 
             public static ConfigItem GROW_UP_ITEM;
         }

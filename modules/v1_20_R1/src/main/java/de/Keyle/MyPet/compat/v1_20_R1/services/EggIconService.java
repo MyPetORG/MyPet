@@ -46,6 +46,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Blaze:
                 icon.setMaterial(Material.BLAZE_SPAWN_EGG);
                 break;
+            case Camel:
+                icon.setMaterial(Material.CAMEL_SPAWN_EGG);
+                break;
             case CaveSpider:
                 icon.setMaterial(Material.CAVE_SPIDER_SPAWN_EGG);
                 break;
@@ -158,6 +161,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
                 break;
             case Rabbit:
                 icon.setMaterial(Material.RABBIT_SPAWN_EGG);
+                break;
+            case Sniffer:
+                icon.setMaterial(Material.SNIFFER_SPAWN_EGG);
                 break;
             case Sheep:
                 icon.setMaterial(Material.SHEEP_SPAWN_EGG);

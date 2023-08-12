@@ -28,10 +28,12 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.entity.animal.frog.Tadpole;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.horse.*;
+import net.minecraft.world.entity.animal.sniffer.Sniffer;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -58,6 +60,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.BAT, Bat.createAttributes().build())									//Bat
                 .putFast(EntityType.BEE, Bee.createAttributes().build())									//Bee
                 .putFast(EntityType.BLAZE, Blaze.createAttributes().build())								//Blaze
+                .putFast(EntityType.CAMEL, Camel.createAttributes().build())								//Camel
                 .putFast(EntityType.CAT, Cat.createAttributes().build())									//Cat
                 .putFast(EntityType.CAVE_SPIDER, CaveSpider.createAttributes().build())						//CaveSpider
                 .putFast(EntityType.CHICKEN, Chicken.createAttributes().build())							//Chicken
@@ -108,6 +111,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.SKELETON, Skeleton.createAttributes().build())							//Skeleton
                 .putFast(EntityType.SKELETON_HORSE, SkeletonHorse.createAttributes().build())				//Skeleton Horse
                 .putFast(EntityType.SLIME, Slime.createMobAttributes().build())								//Slime
+                .putFast(EntityType.SNIFFER, Sniffer.createAttributes().build())						    //Sniffer
                 .putFast(EntityType.SNOW_GOLEM, SnowGolem.createAttributes().build())						//Snow Golem
                 .putFast(EntityType.SPIDER, Spider.createAttributes().build())								//Spider
                 .putFast(EntityType.SQUID, Squid.createAttributes().build())								//Squid

@@ -1084,8 +1084,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	}
 
 	@Override
-	protected boolean addPassenger(Entity entity) {
-		boolean returnVal = false;
+	protected void addPassenger(Entity entity) {
 		// don't allow anything but the owner to ride this entity
 		Ride rideSkill = myPet.getSkills().get(RideImpl.class);
 		if (rideSkill != null && entity instanceof ServerPlayer && getOwner().equals(entity)) {
@@ -1097,13 +1096,11 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 				if (MyPetApi.getPlatformHelper().isSpigot()) {
 					cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
 				}
-				if (cancelled) {
-					returnVal = false;
-				} else {
+				if (!cancelled) {
 					if(this.getMoveControl() instanceof MyPetAquaticMoveControl) {
 						this.switchMovement(new MoveControl(this));
 					}
-					returnVal = mountOwner(entity);
+					mountOwner(entity);
 				}
 			}
 
@@ -1126,14 +1123,11 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 				if (MyPetApi.getPlatformHelper().isSpigot()) {
 					cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
 				}
-				if (cancelled) {
-					returnVal = false;
-				} else {
-					returnVal = super.addPassenger(entity);
+				if (!cancelled) {
+					super.addPassenger(entity);
 				}
 			}
 		}
-		return returnVal;
 	}
 
 	private static class MountEventWrapper {
@@ -1476,16 +1470,15 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		return this.navigation;
 	}
 
-	public boolean mountOwner(Entity owner) {
+	public void mountOwner(Entity owner) {
 		ejectPassengers();
 		if (owner != null) {
 			if (!indirectRiding) {
-				return super.addPassenger(owner);
+				super.addPassenger(owner);
 			} else {
-				return EntityMySeat.mountToPet(owner, this);
+				EntityMySeat.mountToPet(owner, this);
 			}
 		}
-		return false;
 	}
 
 	@Override

@@ -135,7 +135,7 @@ public class EntityMyDrowned extends EntityMyPet {
                     }
                 }
                 return EnumInteractionResult.CONSUME;
-            } else if (Configuration.MyPet.Zombie.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (Configuration.MyPet.Drowned.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {

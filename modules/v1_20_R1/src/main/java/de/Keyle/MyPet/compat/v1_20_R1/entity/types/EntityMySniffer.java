@@ -18,14 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_17_R1.entity.types;
+package de.Keyle.MyPet.compat.v1_20_R1.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.types.MyTurtle;
-import de.Keyle.MyPet.compat.v1_17_R1.entity.EntityMyAquaticPet;
-import net.minecraft.core.BlockPos;
+import de.Keyle.MyPet.api.entity.types.MySniffer;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -35,34 +34,33 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-@EntitySize(width = 1.2F, height = 0.4F)
-public class EntityMyTurtle extends EntityMyAquaticPet {
+@EntitySize(width = 0.6F, height = 0.7F)
+public class EntityMySniffer extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<BlockPos> HOME_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
-	private static final EntityDataAccessor<Boolean> HAS_EGG_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<BlockPos> TRAVEL_POS_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_3 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySniffer.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyTurtle(Level world, MyPet myPet) {
+	public EntityMySniffer(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
 
 	@Override
 	protected String getMyPetDeathSound() {
-		return "entity.turtle.death" + (isBaby() ? "_baby" : "");
+		return "entity.sniffer.death";
 	}
 
 	@Override
 	protected String getHurtSound() {
-		return "entity.turtle.hurt" + (isBaby() ? "_baby" : "");
+		return "entity.sniffer.hurt";
 	}
 
 	@Override
 	protected String getLivingSound() {
-		return "entity.turtle.ambient_land";
+		return "entity.sniffer.idle";
+	}
+
+	@Override
+	public void playPetStepSound() {
+		makeSound("entity.sniffer.step", 1.0F, 1.0F);
 	}
 
 	@Override
@@ -72,14 +70,14 @@ public class EntityMyTurtle extends EntityMyAquaticPet {
 		}
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (Configuration.MyPet.Turtle.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+			if (Configuration.MyPet.Sniffer.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
 						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 					}
 				}
-				getMyPet().setBaby(false);
+				this.getMyPet().setBaby(false);
 				return InteractionResult.CONSUME;
 			}
 		}
@@ -87,15 +85,9 @@ public class EntityMyTurtle extends EntityMyAquaticPet {
 	}
 
 	@Override
-	protected void defineSynchedData() {
+	public void defineSynchedData() {
 		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
-		getEntityData().define(HOME_WATCHER, BlockPos.ZERO);
-		getEntityData().define(HAS_EGG_WATCHER, false);
-		getEntityData().define(TRAVEL_POS_WATCHER, BlockPos.ZERO);
-		getEntityData().define(UNUSED_WATCHER_2, false);
-		getEntityData().define(UNUSED_WATCHER_3, false);
-		getEntityData().define(UNUSED_WATCHER_1, false);
+		getEntityData().define(AGE_WATCHER, false); // is baby
 	}
 
 	@Override
@@ -104,7 +96,7 @@ public class EntityMyTurtle extends EntityMyAquaticPet {
 	}
 
 	@Override
-	public MyTurtle getMyPet() {
-		return (MyTurtle) myPet;
+	public MySniffer getMyPet() {
+		return (MySniffer) myPet;
 	}
 }

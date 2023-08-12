@@ -95,25 +95,24 @@ public class EatGrass implements AIGoal {
 			int blockLocZ = Mth.floor(this.entityMySheep.getZ());
 
 			BlockPos blockAt = new BlockPos(blockLocX, blockLocY, blockLocZ);
+
 			if (GRASS.test(this.world.getBlockState(blockAt))) {
-				if (!CraftEventFactory.callEntityChangeBlockEvent(
+				if (CraftEventFactory.callEntityChangeBlockEvent(
 						this.entityMySheep,
 						blockAt,
 						Blocks.AIR.defaultBlockState(),
-						!this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING)
-				).isCancelled()) {
+						!this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING))) {
 					this.world.destroyBlock(blockAt, false);
 				}
 				entityMySheep.getMyPet().setSheared(false);
 			} else {
 				BlockPos blockUnder = blockAt.below();
 				if (this.world.getBlockState(blockUnder).getBlock() == Blocks.GRASS) {
-					if (!CraftEventFactory.callEntityChangeBlockEvent(
+					if (CraftEventFactory.callEntityChangeBlockEvent(
 							this.entityMySheep,
 							blockAt,
 							Blocks.AIR.defaultBlockState(),
-							!this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING)
-					).isCancelled()) {
+							!this.world.getWorld().getGameRuleValue(GameRule.MOB_GRIEFING))) {
 						this.world.levelEvent(2001, blockUnder, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()));
 						this.world.setBlock(blockUnder, Blocks.DIRT.defaultBlockState(), 2);
 					}

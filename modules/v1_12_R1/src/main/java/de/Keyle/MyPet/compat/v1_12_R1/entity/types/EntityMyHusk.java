@@ -114,7 +114,7 @@ public class EntityMyHusk extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (Configuration.MyPet.Zombie.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (Configuration.MyPet.Husk.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
