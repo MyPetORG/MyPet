@@ -46,5 +46,4 @@ public class EntityMyGlowSquid extends EntityMyAquaticPet {
 	protected String getLivingSound() {
 		return "entity.glow_squid.ambient";
 	}
-
 }

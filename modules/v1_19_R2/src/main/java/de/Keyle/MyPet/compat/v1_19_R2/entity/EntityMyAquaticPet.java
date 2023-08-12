@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.MyPetRandomSwim;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.navigation.MyAquaticPetPathNavigation;
 import net.minecraft.core.BlockPos;
