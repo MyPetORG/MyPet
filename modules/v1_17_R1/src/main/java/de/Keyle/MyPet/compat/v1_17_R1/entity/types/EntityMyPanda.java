@@ -72,7 +72,7 @@ public class EntityMyPanda extends EntityMyPet {
 
 		if (getOwner().equals(entityhuman)) {
 			if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
-				if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+				if (Configuration.MyPet.Panda.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
 					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {

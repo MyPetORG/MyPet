@@ -100,7 +100,7 @@ public class EntityMyCat extends EntityMyPet {
 						}
 						return InteractionResult.SUCCESS;
 					}
-				} else if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+				} else if (Configuration.MyPet.Cat.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
 					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {

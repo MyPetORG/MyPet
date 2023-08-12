@@ -440,6 +440,11 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
+        public static class ZombieVillager {
+
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class ZombifiedPiglin {
 
             public static ConfigItem GROW_UP_ITEM;

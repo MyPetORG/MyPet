@@ -146,7 +146,7 @@ public class EntityMyDrowned extends EntityMyAquaticPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Zombie.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+			} else if (Configuration.MyPet.Drowned.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

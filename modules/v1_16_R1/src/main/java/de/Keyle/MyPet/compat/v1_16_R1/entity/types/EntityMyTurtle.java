@@ -64,7 +64,7 @@ public class EntityMyTurtle extends EntityMyPet {
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            if (Configuration.MyPet.Turtle.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.b && !entityhuman.abilities.canInstantlyBuild) {
                     itemStack.subtract(1);
                     if (itemStack.getCount() <= 0) {
