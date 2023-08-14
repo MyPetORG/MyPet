@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
 import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftLivingEntity;
@@ -40,6 +41,8 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Field;
+
 @Compat("v1_20_R1")
 public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
@@ -51,6 +54,9 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 		super(server, entityMyPet);
 		petEntity = entityMyPet;
 		fakeEquipment = new FakeEquipment(this);
+
+		Field typeValue = ReflectionUtil.getField(CraftEntity.class, "entityType");
+		ReflectionUtil.setFieldValue(typeValue,this, EntityType.BLOCK_DISPLAY);
 	}
 
 	@Override
@@ -106,7 +112,8 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 		return getMyPet().getPetType();
 	}
 
-	//I saw other plugins do it this way - it should be fine and solve problems with p2 and wg
+	/* This doesn't work rn as getType was made final...
+		I saw other plugins do it this way - it should be fine and solve problems with p2 and wg
 	//Update - It wasn't! - GriefPrevention didn't like the previous solution!
 	//So now this ugly bs will solve it. Hopefully
 	@Override
@@ -120,7 +127,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 		}
 
 		return EntityType.UNKNOWN;
-	}
+	} */
 
 	/* I have no clue why I need to override these other deprecated methods also don't need to be implemented so yea...*/
 	@Override

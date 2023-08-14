@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
 import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,11 +67,12 @@ public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
     public void setPersistent(boolean b) {
     }
 
+    /* This doesn't work rn as getType was made final...
     @NotNull
     @Override
     public EntityType getType() {
         return EntityType.UNKNOWN;
-    }
+    }*/
 
     @NotNull
     @Override
