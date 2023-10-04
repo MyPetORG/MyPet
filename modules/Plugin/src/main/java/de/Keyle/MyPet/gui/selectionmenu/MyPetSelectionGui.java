@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.gui.selectionmenu;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
@@ -125,7 +126,9 @@ public class MyPetSelectionGui {
                 StoredMyPet mypet = pets.get(i + ((page - 1) * 45));
 
                 List<String> lore = new ArrayList<>();
-                lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + Math.round(mypet.getSaturation()));
+                if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+                    lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + Math.round(mypet.getSaturation()));
+                }
                 if (mypet.getRespawnTime() > 0) {
                     lore.add(RESET + Translation.getString("Name.Respawntime", player) + ": " + GOLD + mypet.getRespawnTime() + "sec");
                 } else {
