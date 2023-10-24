@@ -26,17 +26,13 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.ai.navigation.MyAquaticPetPathNavigation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
-
-import java.lang.reflect.Method;
 
 @Compat("v1_20_R2")
 public class FollowOwner implements AIGoal {
@@ -167,17 +163,7 @@ public class FollowOwner implements AIGoal {
 			}
 		} else if (owner.hasEffect(MobEffects.MOVEMENT_SPEED)) {
 			// make the pet faster when the player is has the SPEED effect
-			// YAYY Mapping-errors. Can't use previous method anymore, gotta get the method myself
-			// (fun fact: printing all declared methods still spits out "b" (the mojang-mapped-method that "doesn't exist)
-			// But hey. "c" as getEffect is fine too
-			try {
-				Method leMethod = LivingEntity.class.getDeclaredMethod("c", MobEffects.class);
-				MobEffectInstance leInstance = (MobEffectInstance) leMethod.invoke(owner, MobEffects.MOVEMENT_SPEED);
-				Bukkit.getConsoleSender().sendMessage(leInstance.getAmplifier()+"");
-				walkSpeed += leInstance.getAmplifier() * 0.2 * walkSpeed;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
 		}
 
 		// make aquatic pets faster - swimming is hard
