@@ -51,6 +51,8 @@ import java.util.zip.ZipException;
 public class MongoDbRepository implements Repository {
 
     private MongoClient mongo;
+    private ArrayList<StoredMyPet> petsToBeSaved = new ArrayList<>();
+    private ArrayList<MyPetPlayer> playersToBeSaved = new ArrayList<>();
     private MongoDatabase db;
     private int version = 4;
     // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
@@ -243,11 +245,17 @@ public class MongoDbRepository implements Repository {
         for (StoredMyPet storedMyPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             updateMyPet(storedMyPet);
         }
+        for (StoredMyPet myPet : petsToBeSaved) {
+            updateMyPet(myPet);
+        }
     }
 
     @SuppressWarnings("unchecked")
     private void savePlayers() {
         for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
+            updatePlayer(player);
+        }
+        for (MyPetPlayer player : playersToBeSaved) {
             updatePlayer(player);
         }
     }
@@ -450,10 +458,15 @@ public class MongoDbRepository implements Repository {
 
     @Override
     public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+        petsToBeSaved.add(storedMyPet);
         new BukkitRunnable() {
             @Override
             public void run() {
                 boolean result = updateMyPet(storedMyPet);
+
+                if (result) {
+                    petsToBeSaved.remove(storedMyPet);
+                }
 
                 if (callback != null) {
                     callback.runTask(result);
@@ -624,10 +637,15 @@ public class MongoDbRepository implements Repository {
 
     @Override
     public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
+        playersToBeSaved.add(player);
         new BukkitRunnable() {
             @Override
             public void run() {
                 boolean result = updatePlayer(player);
+
+                if (result) {
+                    playersToBeSaved.remove(player);
+                }
 
                 if (callback != null) {
                     callback.runTask(MyPetApi.getPlugin(), result);
