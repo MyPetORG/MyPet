@@ -55,6 +55,8 @@ import java.util.zip.ZipException;
 public class MySqlRepository implements Repository {
 
     protected Gson gson = new Gson();
+    private ArrayList<StoredMyPet> petsToBeSaved = new ArrayList<>();
+    private ArrayList<MyPetPlayer> playersToBeSaved = new ArrayList<>();
     private HikariDataSource dataSource;
     private int version = 10;
 
@@ -351,81 +353,95 @@ public class MySqlRepository implements Repository {
 
     private void savePets() {
         for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            try (Connection connection = dataSource.getConnection();
-                 PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
-                         "owner_uuid=?, " +
-                         "exp=?, " +
-                         "health=?, " +
-                         "respawn_time=?, " +
-                         "name=?, " +
-                         "type=?, " +
-                         "last_used=?, " +
-                         "hunger=?, " +
-                         "world_group=?, " +
-                         "wants_to_spawn=?, " +
-                         "skilltree=?, " +
-                         "skills=?, " +
-                         "info=? " +
-                         "WHERE uuid=?;")) {
-                statement.setString(1, myPet.getOwner().getInternalUUID().toString());
-                statement.setDouble(2, myPet.getExp());
-                statement.setDouble(3, myPet.getHealth());
-                statement.setInt(4, myPet.getRespawnTime());
-                statement.setBinaryStream(5, new ByteArrayInputStream(myPet.getPetName().getBytes(StandardCharsets.UTF_8)));
-                statement.setString(6, myPet.getPetType().name());
-                statement.setLong(7, myPet.getLastUsed());
-                statement.setDouble(8, myPet.getSaturation());
-                statement.setString(9, myPet.getWorldGroup());
-                statement.setBoolean(10, myPet.wantsToRespawn());
-                statement.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-                statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkillInfo(), true)));
-                statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
+            savePet(myPet);
+        }
+        for (StoredMyPet myPet : petsToBeSaved) {
+            savePet(myPet);
+        }
+    }
 
-                statement.setString(14, myPet.getUUID().toString());
+    private void savePet(StoredMyPet myPet) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
+                     "owner_uuid=?, " +
+                     "exp=?, " +
+                     "health=?, " +
+                     "respawn_time=?, " +
+                     "name=?, " +
+                     "type=?, " +
+                     "last_used=?, " +
+                     "hunger=?, " +
+                     "world_group=?, " +
+                     "wants_to_spawn=?, " +
+                     "skilltree=?, " +
+                     "skills=?, " +
+                     "info=? " +
+                     "WHERE uuid=?;")) {
+            statement.setString(1, myPet.getOwner().getInternalUUID().toString());
+            statement.setDouble(2, myPet.getExp());
+            statement.setDouble(3, myPet.getHealth());
+            statement.setInt(4, myPet.getRespawnTime());
+            statement.setBinaryStream(5, new ByteArrayInputStream(myPet.getPetName().getBytes(StandardCharsets.UTF_8)));
+            statement.setString(6, myPet.getPetType().name());
+            statement.setLong(7, myPet.getLastUsed());
+            statement.setDouble(8, myPet.getSaturation());
+            statement.setString(9, myPet.getWorldGroup());
+            statement.setBoolean(10, myPet.wantsToRespawn());
+            statement.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
+            statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkillInfo(), true)));
+            statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
 
-                statement.executeUpdate();
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
+            statement.setString(14, myPet.getUUID().toString());
+
+            statement.executeUpdate();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
         }
     }
 
     @SuppressWarnings("unchecked")
     private void savePlayers() {
         for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-            try (Connection connection = dataSource.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(
-                         "UPDATE " + Configuration.Repository.MySQL.PREFIX + "players SET " +
-                                 "mojang_uuid=?, " +
-                                 "name=?, " +
-                                 "auto_respawn=?, " +
-                                 "auto_respawn_min=?, " +
-                                 "capture_mode=?, " +
-                                 "health_bar=?, " +
-                                 "pet_idle_volume=?, " +
-                                 "extended_info=?, " +
-                                 "multi_world=? " +
-                                 "WHERE internal_uuid=?;")) {
-                statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
-                statement.setString(2, player.getName());
-                statement.setBoolean(3, player.hasAutoRespawnEnabled());
-                statement.setInt(4, player.getAutoRespawnMin());
-                statement.setBoolean(5, player.isCaptureHelperActive());
-                statement.setBoolean(6, player.isHealthBarActive());
-                statement.setFloat(7, player.getPetLivingSoundVolume());
-                statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+            savePlayer(player);
+        }
+        for (MyPetPlayer player : playersToBeSaved) {
+            savePlayer(player);
+        }
+    }
 
-                JsonObject multiWorldObject = new JsonObject();
-                for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                    multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
-                }
-                statement.setString(9, gson.toJson(multiWorldObject));
-                statement.setString(10, player.getInternalUUID().toString());
+    private void savePlayer(MyPetPlayer player) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "UPDATE " + Configuration.Repository.MySQL.PREFIX + "players SET " +
+                             "mojang_uuid=?, " +
+                             "name=?, " +
+                             "auto_respawn=?, " +
+                             "auto_respawn_min=?, " +
+                             "capture_mode=?, " +
+                             "health_bar=?, " +
+                             "pet_idle_volume=?, " +
+                             "extended_info=?, " +
+                             "multi_world=? " +
+                             "WHERE internal_uuid=?;")) {
+            statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
+            statement.setString(2, player.getName());
+            statement.setBoolean(3, player.hasAutoRespawnEnabled());
+            statement.setInt(4, player.getAutoRespawnMin());
+            statement.setBoolean(5, player.isCaptureHelperActive());
+            statement.setBoolean(6, player.isHealthBarActive());
+            statement.setFloat(7, player.getPetLivingSoundVolume());
+            statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
 
-                statement.executeUpdate();
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
+            JsonObject multiWorldObject = new JsonObject();
+            for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
+                multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
             }
+            statement.setString(9, gson.toJson(multiWorldObject));
+            statement.setString(10, player.getInternalUUID().toString());
+
+            statement.executeUpdate();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -753,6 +769,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+        petsToBeSaved.add(storedMyPet);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -789,6 +806,10 @@ public class MySqlRepository implements Repository {
                     statement.setString(14, storedMyPet.getUUID().toString());
 
                     int result = statement.executeUpdate();
+
+                    if (result > 0) {
+                        petsToBeSaved.remove(storedMyPet);
+                    }
 
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
@@ -960,10 +981,15 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
+        playersToBeSaved.add(player);
         new BukkitRunnable() {
             @Override
             public void run() {
                 boolean result = updatePlayer(player);
+
+                if (result) {
+                    playersToBeSaved.remove(player);
+                }
 
                 if (callback != null) {
                     callback.runTask(MyPetApi.getPlugin(), result);
