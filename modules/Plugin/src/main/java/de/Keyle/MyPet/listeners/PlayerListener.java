@@ -395,6 +395,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    //This does not work for new minecraft versions (1.19+) as the player gets dismounted before the TeleportEvent is thrown. Yay.
     public void onMyPet(PlayerTeleportEvent event) {
         if (!event.getPlayer().isOnline()) {
             return;
@@ -403,7 +404,8 @@ public class PlayerListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if (player.isInsideVehicle() && player.getVehicle() instanceof MyPetBukkitEntity) {
+        if ((player.isInsideVehicle() && player.getVehicle() instanceof MyPetBukkitEntity) ||
+                (player.isInsideVehicle() && player.getVehicle().isInsideVehicle() && player.getVehicle().getVehicle() instanceof MyPetBukkitEntity)) {
             if (player.getLocation().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
                 if (Configuration.Skilltree.Skill.Ride.PREVENT_TELEPORTATION) {
                     event.setCancelled(true);

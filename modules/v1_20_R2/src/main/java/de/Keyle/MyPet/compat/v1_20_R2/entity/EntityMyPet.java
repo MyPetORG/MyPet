@@ -137,7 +137,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bj");	//Jumping-Field
 
 	public EntityMyPet(Level world, MyPet myPet) {
-		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world); //TODO Try changing type right after this, then back later
+		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
 
 		try {
 			this.replaceCraftAttributes();
@@ -647,7 +647,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 				Location petLoc = getBukkitEntity().getLocation();
 				petLoc.setYaw(playerLoc.getYaw());
 				petLoc.setPitch(playerLoc.getPitch());
-				getOwner().getPlayer().teleport(petLoc);
 			}
 		} else {
 			if (isVehicle()) {

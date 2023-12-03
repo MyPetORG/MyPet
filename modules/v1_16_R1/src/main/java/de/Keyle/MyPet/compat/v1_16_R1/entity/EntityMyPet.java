@@ -593,7 +593,6 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
                 Location petLoc = getBukkitEntity().getLocation();
                 petLoc.setYaw(playerLoc.getYaw());
                 petLoc.setPitch(playerLoc.getPitch());
-                getOwner().getPlayer().teleport(petLoc);
             }
         } else {
             if (isVehicle()) {
