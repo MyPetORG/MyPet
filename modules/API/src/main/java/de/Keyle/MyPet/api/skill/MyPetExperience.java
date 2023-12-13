@@ -93,7 +93,7 @@ public class MyPetExperience {
 
     public double setExp(double exp) {
         exp = exp - this.exp;
-        return uppdateExp(exp, true);
+        return updateExp(exp, true);
     }
 
     public double addExp(double exp) {
@@ -104,7 +104,7 @@ public class MyPetExperience {
         if (modify) {
             exp = modifyExp(exp);
         }
-        return uppdateExp(exp, false);
+        return updateExp(exp, false);
     }
 
     public double addExp(Entity entity) {
@@ -118,7 +118,7 @@ public class MyPetExperience {
             if (modify) {
                 exp = modifyExp(exp);
             }
-            return uppdateExp(exp, false);
+            return updateExp(exp, false);
         }
         return 0;
     }
@@ -135,7 +135,7 @@ public class MyPetExperience {
                 exp = modifyExp(exp);
             }
             exp = exp * percent / 100.;
-            return uppdateExp(exp, false);
+            return updateExp(exp, false);
         }
         return 0;
     }
@@ -144,15 +144,15 @@ public class MyPetExperience {
         if (exp > getCurrentExp()) {
             exp = getCurrentExp();
         }
-        return uppdateExp(-exp, false);
+        return updateExp(-exp, false);
     }
 
     public double removeExp(double exp) {
         exp = this.exp - exp < 0 ? this.exp : exp;
-        return uppdateExp(-exp, false);
+        return updateExp(-exp, false);
     }
 
-    protected double uppdateExp(double exp, boolean quiet) {
+    protected double updateExp(double exp, boolean quiet) {
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, exp);
         Bukkit.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
