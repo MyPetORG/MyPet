@@ -153,7 +153,7 @@ public class MyPetExperience {
     }
 
     protected double updateExp(double exp, boolean quiet) {
-        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, exp);
+        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, exp, quiet);
         Bukkit.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
             return 0;
