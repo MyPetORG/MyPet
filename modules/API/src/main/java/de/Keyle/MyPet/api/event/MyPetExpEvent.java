@@ -33,10 +33,16 @@ public class MyPetExpEvent extends Event implements Cancellable {
     private final MyPet myPet;
     private boolean isCancelled = false;
     private double exp;
+    private boolean quiet;
 
-    public MyPetExpEvent(MyPet myPet, double exp) {
+    public MyPetExpEvent(MyPet myPet, double exp, boolean quiet) {
         this.myPet = myPet;
         this.exp = exp;
+        this.quiet = quiet;
+    }
+
+    public MyPetExpEvent(MyPet myPet, double exp) {
+        this(myPet, exp, false);
     }
 
     public MyPetPlayer getOwner() {
@@ -57,6 +63,10 @@ public class MyPetExpEvent extends Event implements Cancellable {
 
     public double getExp() {
         return exp;
+    }
+
+    public boolean isQuiet() {
+        return quiet;
     }
 
     public boolean isCancelled() {
