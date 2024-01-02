@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_20_R2.entity;
 
+import com.google.common.base.Predicates;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -42,8 +44,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
 import org.bukkit.ChatColor;
+import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
@@ -51,7 +57,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Compat("v1_20_R2")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
@@ -122,10 +132,11 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	@Override
 	public void registerEntityTypes() {
+		//Let's prepare the Vanilla-Registry
 		DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(BuiltInRegistries.ENTITY_TYPE);
 		Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class,"l"); //frozen
 		Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class,"m"); //intrusiveHolderCache or unregisteredIntrusiveHolders or intrusiveValueToEntry
-		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "h"); //ENTITY_TYPE
+		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "g"); //ENTITY_TYPE
 
 		if(custReg != null) {
 			//Gotta put the original Registry in. Just for a moment
@@ -134,16 +145,48 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			} catch (Throwable e) {
 			}
 		}
-
 		//We are now working with the Vanilla-Registry
 		ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
 		ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
 
-		for (MyPetType type : MyPetType.all()) {
-			registerEntity(type, entityRegistry);
-		}
-		entityRegistry.freeze();
+		//Now lets handle the Bukkit-Registry
+		//First copy the old registry
+		SimpleMyPetRegistry customBukkitRegistry = new SimpleMyPetRegistry(org.bukkit.Registry.ENTITY_TYPE);
 
+		for (MyPetType type : MyPetType.all()) {
+			//The fun part
+			registerEntity(type, entityRegistry);
+
+			/*
+			A Tutorial on how to trick Spigot:
+				Instead of falling back to the "Unknown"-Type, Spigot now does not accept "null" anymore
+				(see https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/commits/02d49078870f39892e7e2ce2916e17a879e9a3f0#src/main/java/org/bukkit/craftbukkit/entity/CraftEntityType.java)
+				This means that Mypet-Entites (aka mypet_pig etc) can't be converted.
+				This means that the "hack" MyPet used at the end of 1.20.1 doesn't work anymore.
+				And just replacing the type of the pet when it spawns doesn't work either.
+				This is bad.
+
+				Now onto the *trickery*.
+				Basically:
+				We basically tell Bukkit that we are a BlockDisplay. Yep.
+				This means everything will be created properly in the beginning, will be handled (kinda) properly with other plugins
+				and also when the pet dies.
+				It's stupid that we have to do this but it seems to work -> I'm happy.
+			 */
+			customBukkitRegistry.addCustomKeyAndEntry(NamespacedKey.fromString("mypet_" + type.getTypeID().toString()), org.bukkit.entity.EntityType.BLOCK_DISPLAY, (entity) -> entity != org.bukkit.entity.EntityType.UNKNOWN);
+		}
+
+		//Post-Handle Bukkit-Registry
+		customBukkitRegistry.build();
+		MethodHandle BUKKIT_ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(org.bukkit.Registry.class, "ENTITY_TYPE"); //ENTITY_TYPE
+		try {
+			BUKKIT_ENTITY_REGISTRY_SETTER.invoke(customBukkitRegistry);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		//Post-Handle Vanilla Registry
+		entityRegistry.freeze();
 		if(custReg != null) {
 			//Gotta put the custom Registry back into place
 			try {
@@ -207,5 +250,69 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	protected int getEntityTypeId(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
 		EntityType<?> types = entityRegistry.get(new ResourceLocation(type.getTypeID().toString()));
 		return entityRegistry.getId(types);
+	}
+
+	static final class SimpleMyPetRegistry<T extends Enum<T> & Keyed> implements org.bukkit.Registry<T> {
+
+		private Map<NamespacedKey, T> map;
+		private ImmutableMap.Builder<NamespacedKey, T> builder;
+
+		protected SimpleMyPetRegistry(@NotNull Class<T> type) {
+			this(type, Predicates.<T>alwaysTrue());
+		}
+
+		protected SimpleMyPetRegistry(@NotNull Class<T> type, @NotNull Predicate<T> predicate) {
+			builder = ImmutableMap.builder();
+
+			for (T entry : type.getEnumConstants()) {
+				if (predicate.test(entry)) {
+					builder.put(entry.getKey(), entry);
+				}
+			}
+		}
+
+		protected SimpleMyPetRegistry(@NotNull org.bukkit.Registry<T> oldReg) {
+			builder = ImmutableMap.builder();
+
+			oldReg.stream()
+					.forEach(e -> {
+						builder.put(e.getKey(), e);
+					});
+		}
+
+		public void addCustomKeyAndEntry(@NotNull NamespacedKey key, @NotNull T entry) {
+			addCustomKeyAndEntry(key, entry, Predicates.<T>alwaysTrue());
+		}
+
+		public void addCustomKeyAndEntry(@NotNull NamespacedKey key, @NotNull T entry, @NotNull Predicate<T> predicate) {
+			if(builder!=null) {
+				if (predicate.test(entry)) {
+					builder.put(key, entry);
+				}
+			}
+		}
+
+		public void build() {
+			map = builder.build();
+			builder = null;
+		}
+
+		@Nullable
+		@Override
+		public T get(@NotNull NamespacedKey key) {
+			return map.get(key);
+		}
+
+		@NotNull
+		@Override
+		public Stream<T> stream() {
+			return StreamSupport.stream(spliterator(), false);
+		}
+
+		@NotNull
+		@Override
+		public Iterator<T> iterator() {
+			return map.values().iterator();
+		}
 	}
 }
