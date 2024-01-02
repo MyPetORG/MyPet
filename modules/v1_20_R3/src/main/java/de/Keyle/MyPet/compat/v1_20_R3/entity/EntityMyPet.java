@@ -463,28 +463,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	@Override
 	public CraftMyPet getBukkitEntity() {
 		if (this.bukkitEntity == null) {
-			/*
-				A Tutorial on how to trick Spigot:
-				Instead of falling back to the "Unknown"-Type, Spigot now does not accept "null" anymore
-				(see https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/commits/02d49078870f39892e7e2ce2916e17a879e9a3f0#src/main/java/org/bukkit/craftbukkit/entity/CraftEntityType.java)
-				This means that Mypet-Entites (aka mypet_pig etc) can't be converted.
-				This means that the "hack" MyPet used at the end of 1.20.1 doesn't work anymore.
-				This is bad.
-
-				Now onto the *trickery*.
-				Basically:
-				Let's pretend to be a Vanilla BLOCK_DISPLAY for JUST a bit so that our CraftType will end up as such.
-				And then just revert back.
-				This means everything will be created properly in the beginning.
-				Not pretty but seems to work -> I'm happy.
-			 */
-			Field typeField = ReflectionUtil.getField(Entity.class, "p"); //type-field
-			Object leType = ReflectionUtil.getFieldValue(typeField, this);
-			ReflectionUtil.setFieldValue(typeField,this, EntityType.BLOCK_DISPLAY);
-
 			this.bukkitEntity = new CraftMyPet(this.level().getCraftServer(), this);
-
-			ReflectionUtil.setFieldValue(typeField,this, leType);
 		}
 		return this.bukkitEntity;
 	}
