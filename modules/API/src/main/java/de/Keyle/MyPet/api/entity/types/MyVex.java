@@ -23,10 +23,11 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 
 
 @DefaultInfo(food = {"apple"})
-public interface MyVex extends MyPet, MyPetEquipment {
+public interface MyVex extends MyPet, MyPetEquipment, MyPetFlyingEntity {
     boolean isGlowing();
 
     void setGlowing(boolean flag);

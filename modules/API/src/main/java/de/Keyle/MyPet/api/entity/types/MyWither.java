@@ -20,11 +20,8 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.*;
 
 @DefaultInfo(food = {"bone"}, leashFlags = {"Impossible"})
-public interface MyWither extends MyPet, MyPetBaby, MyPetLavaEntity {
+public interface MyWither extends MyPet, MyPetBaby, MyPetLavaEntity, MyPetFlyingEntity {
 }

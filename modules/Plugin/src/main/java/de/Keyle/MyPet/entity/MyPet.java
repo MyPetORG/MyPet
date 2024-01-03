@@ -24,10 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.EntitySize;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.movement.MyPetRandomStroll;
 import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -445,7 +442,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.InvalidPosition;
                 }
 
-                if (owner.isFlying()) {
+                if (owner.isFlying() && !(this instanceof MyPetFlyingEntity)) {
                     boolean groundFound = false;
                     for (int i = 10; i >= 0; i--) {
                         Block b = loc.getBlock();
@@ -657,6 +654,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomStroll")).schedule();
                 } else if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomSwim")) {
                     ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomSwim")).schedule();
+                } else if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomFly")) {
+                    ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomFly")).schedule();
                 }
 
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {

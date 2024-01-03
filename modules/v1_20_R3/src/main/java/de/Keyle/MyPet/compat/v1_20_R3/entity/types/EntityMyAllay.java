@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyAllay;
 import de.Keyle.MyPet.compat.v1_20_R3.CompatManager;
+import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
@@ -36,6 +37,7 @@ import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,19 +50,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @EntitySize(width = 0.4F, height = 0.8F)
-public class EntityMyAllay extends EntityMyPet {
+public class EntityMyAllay extends EntityMyFlyingPet {
 
 	public EntityMyAllay(Level world, MyPet myPet) {
 		super(world, myPet);
-		//this.moveControl = new FlyingMoveControl(this, 20, true);
-		//this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(1D);
-		//this.getAttribute(Attributes.FLYING_SPEED).setBaseValue(1D);
 	}
-
-	//@Override
-	//protected PathNavigation setSpecialNav() {
-	//	return new MyFlyingPetPathNavigation(this, this.level());
-	//}
 
 	/**
 	 * Returns the sound that is played when the MyPet dies
@@ -198,17 +192,6 @@ public class EntityMyAllay extends EntityMyPet {
 		}
 
 		this.updateVisuals();
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Allay.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 
 	@Override

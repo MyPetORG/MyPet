@@ -46,6 +46,11 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
 	}
 
 	@Override
+	protected int decreaseAirSupply(int i) {
+		return i;
+	}
+
+	@Override
 	public boolean specialFloat() {
 		if(this.isInWater()) {
 	    	return true;

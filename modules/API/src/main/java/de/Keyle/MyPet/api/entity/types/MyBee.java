@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 
 @DefaultInfo(food = {
         "poppy",
@@ -39,7 +40,7 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
         "lily_of_the_valley",
         "wither_rose",
 })
-public interface MyBee extends MyPet, MyPetBaby {
+public interface MyBee extends MyPet, MyPetBaby, MyPetFlyingEntity {
 
     boolean hasNectar();
 

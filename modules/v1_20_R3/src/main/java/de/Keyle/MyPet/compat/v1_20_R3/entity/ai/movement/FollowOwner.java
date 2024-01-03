@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.ai.navigation.MyAquaticPetPathNavigation;
 import net.minecraft.world.effect.MobEffects;
@@ -111,11 +112,13 @@ public class FollowOwner implements AIGoal {
 		//Look at Owner
 		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot()); //TODO MIGHT be wrong (also in different places) ->getMaxHeadXRot
 
+		boolean flyingPet = petEntity instanceof EntityMyFlyingPet;
+
 		//Teleportation
 		if (this.petEntity.canMove()) {
-			if (!owner.getAbilities().flying && !owner.getBukkitEntity().isGliding()) {
+			if ((!owner.getAbilities().flying && !owner.getBukkitEntity().isGliding()) || flyingPet) {
 				if (!waitForGround) {
-					if (owner.fallDistance <= 4) {
+					if (owner.fallDistance <= 4 || flyingPet) {
 						if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
 							if (controlPathfinderGoal.moveTo == null) {
 								if (!petEntity.hasTarget()) {
@@ -153,7 +156,7 @@ public class FollowOwner implements AIGoal {
 		} else if (owner.isSprinting() || owner.getBukkitEntity().isGliding()) {
 			// make the pet faster when the player is sprinting
 			if (owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED) != null) {
-				walkSpeed += owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue();
+				walkSpeed += owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue() - 0.037f;
 			}
 		} else if (owner.isPassenger() && owner.getVehicle() instanceof LivingEntity) {
 			// adjust the speed to the pet can catch up with the vehicle the player is in
@@ -166,20 +169,22 @@ public class FollowOwner implements AIGoal {
 			walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
 		}
 
-		// make aquatic pets faster - swimming is hard
+		// make aquatic/flying pets faster
+		// This is actually due to there being a difference between MovementSpeed and FlyingSpeed, FlyingSpeed being higher
+		// (I don't completely know why this is the case for swimming but I imagine it has a similar reason)
 		if(this.petEntity.isInWaterOrBubble() && this.petEntity.getNavigation() instanceof MyAquaticPetPathNavigation) {
 			walkSpeed += 0.6f;
-			if(owner.isSwimming()) {
-				walkSpeed -= 0.035f;
-			}
 			if(owner.hasEffect(MobEffects.DOLPHINS_GRACE)) {
 				walkSpeed += 0.08f;
 			}
 		}
-		// Flying seemingly too
-		/*if(this.petEntity.getNavigation() instanceof MyFlyingPetPathNavigation) {
-			walkSpeed += 0.6f;
-		}*/
+
+		if(this.petEntity.getMoveControl() instanceof MyPetFlyingMoveControl) {
+			walkSpeed += 0.575f;
+			if(owner.isSprinting()) {
+				walkSpeed -= 0.05f;
+			}
+		}
 
 		// make the pet a little bit faster than the player so it can catch up
 		walkSpeed += 0.07f;
