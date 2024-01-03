@@ -22,9 +22,10 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetSize;
 
 @DefaultInfo(food = {"rotten_flesh"})
-public interface MyPhantom extends MyPet, MyPetSize {
+public interface MyPhantom extends MyPet, MyPetSize, MyPetFlyingEntity {
 
 }

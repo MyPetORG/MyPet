@@ -22,9 +22,10 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 
 @DefaultInfo(food = {"cookie", "sweet_berries"}, leashFlags = {"Tamed"})
-public interface MyParrot extends MyPet {
+public interface MyParrot extends MyPet, MyPetFlyingEntity {
 
     int getVariant();
 

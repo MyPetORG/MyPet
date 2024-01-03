@@ -25,28 +25,30 @@ import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
 import net.minecraft.world.entity.ai.util.GoalUtils;
+import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
 @Compat("v1_20_R3")
-public class MyPetRandomSwim extends MyPetRandomStroll {
+public class MyPetRandomFly extends MyPetRandomStroll {
 
 	protected EntityMyPet petEntity;
 
-	public MyPetRandomSwim(EntityMyPet petEntity, int startDistance) {
+	public MyPetRandomFly(EntityMyPet petEntity, int startDistance) {
 		super(petEntity, startDistance);
 		this.petEntity = petEntity;
 	}
 
 	@Override
 	protected Vec3 getPosition() {
-		if(petEntity.isInWaterOrBubble() && owner.isInWaterOrBubble()) {
-			Vec3 leVec = makeWaterPos(this.petEntity, 10, 7);
-			return leVec;
-		}
-		return super.getPosition();
+		Vec3 vec3d = this.petEntity.getViewVector(0.0F);
+		boolean flag = true;
+		Vec3 vec3d1 = HoverRandomPos.getPos(this.petEntity, 8, 7, vec3d.x, vec3d.z, 1.5707964F, 3, 1);
+
+		return vec3d1 != null ? vec3d1 : AirAndWaterRandomPos.getPos(this.petEntity, 8, 4, -2, vec3d.x, vec3d.z, 1.5707963705062866D);
 	}
 
 	private Vec3 makeWaterPos(PathfinderMob mobby, int i, int j) {
@@ -78,11 +80,7 @@ public class MyPetRandomSwim extends MyPetRandomStroll {
 
 	@Override
 	protected void applySpeed() {
-		if(petEntity.isInWaterOrBubble()) {
-			double walkSpeed = owner.getAbilities().walkingSpeed+0.3f;
-			nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
-		} else {
-			super.applySpeed();
-		}
+		double walkSpeed = owner.getAbilities().walkingSpeed+0.4f;
+		nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
 	}
 }
