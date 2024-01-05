@@ -133,6 +133,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	protected CraftMyPet bukkitEntity = null;
 	protected AttributeMap attributeMap;
 	protected boolean indirectRiding = false;
+	// Needed for the MyPetFlyingMoveControl - Sometimes overwritten by specific pets
+	protected float maxTurn = 20;
 
 	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bk");	//Jumping-Field
 
@@ -185,7 +187,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, this.getBbWidth() + 1.3, 20));
 		petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
 		petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
-		if(!(this instanceof EntityMyAquaticPet))
+		if(!(this instanceof EntityMyAquaticPet) && !(this instanceof EntityMyFlyingPet))
 			petPathfinderSelector.addGoal("RandomStroll", new MyPetRandomStroll(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
 		petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
 		petPathfinderSelector.addGoal("RandomLookaround", new RandomLookaround(this));
@@ -1096,7 +1098,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 					cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
 				}
 				if (!cancelled) {
-					if(this.getMoveControl() instanceof MyPetAquaticMoveControl) {
+					if(this.getMoveControl() instanceof MyPetAquaticMoveControl ||
+							this.getMoveControl() instanceof MyPetFlyingMoveControl) {
 						this.switchMovement(new MoveControl(this));
 					}
 					mountOwner(entity);
@@ -1148,6 +1151,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		if(this.isInWaterOrBubble() && this instanceof EntityMyAquaticPet
 				&& !(this.getMoveControl() instanceof MyPetAquaticMoveControl)) {
 			this.switchMovement(new MyPetAquaticMoveControl(this));
+		}
+
+		if(this instanceof EntityMyFlyingPet && !(this.getMoveControl() instanceof MyPetFlyingMoveControl)) {
+			this.switchMovement(new MyPetFlyingMoveControl(this, this.maxTurn));
 		}
 
 		PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();

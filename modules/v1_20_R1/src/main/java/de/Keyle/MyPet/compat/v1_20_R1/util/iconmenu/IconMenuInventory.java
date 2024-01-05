@@ -126,7 +126,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         return size;
     }
 
-    protected ItemStack createItemStack(IconMenuItem icon) { //TODO Check if this works properly
+    protected ItemStack createItemStack(IconMenuItem icon) {
         ItemStack is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(icon.getMaterial(), icon.getAmount()));
         if (is == null) {
             is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.STONE));

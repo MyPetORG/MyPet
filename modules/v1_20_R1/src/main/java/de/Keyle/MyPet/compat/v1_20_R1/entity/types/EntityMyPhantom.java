@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPhantom;
-import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.ai.attack.MeleeAttack;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -33,7 +33,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.51F, height = 0.51F)
-public class EntityMyPhantom extends EntityMyPet {
+public class EntityMyPhantom extends EntityMyFlyingPet {
 
 	private static final EntityDataAccessor<Integer> SIZE_WATCHER = SynchedEntityData.defineId(EntityMyPhantom.class, EntityDataSerializers.INT);
 
@@ -99,16 +99,5 @@ public class EntityMyPhantom extends EntityMyPet {
 				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Phantom.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 }

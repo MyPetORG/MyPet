@@ -23,14 +23,14 @@ package de.Keyle.MyPet.compat.v1_20_R2.entity.types;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyFlyingPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.5F, height = 0.45f)
-public class EntityMyBat extends EntityMyPet {
+public class EntityMyBat extends EntityMyFlyingPet {
 
 	private static final EntityDataAccessor<Byte> HANGING_WATCHER = SynchedEntityData.defineId(EntityMyBat.class, EntityDataSerializers.BYTE);
 
@@ -80,16 +80,5 @@ public class EntityMyBat extends EntityMyPet {
 				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Bat.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 }

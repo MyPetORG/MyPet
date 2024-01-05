@@ -20,21 +20,21 @@
 
 package de.Keyle.MyPet.compat.v1_20_R1.entity.types;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyParrot;
-import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyFlyingPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @EntitySize(width = 0.5F, height = 0.9f)
-public class EntityMyParrot extends EntityMyPet {
+public class EntityMyParrot extends EntityMyFlyingPet {
 	
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BYTE);
@@ -94,16 +94,5 @@ public class EntityMyParrot extends EntityMyPet {
 				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 }

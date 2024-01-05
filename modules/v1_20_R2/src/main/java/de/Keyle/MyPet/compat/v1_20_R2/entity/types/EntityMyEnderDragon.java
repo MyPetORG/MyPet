@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.ai.attack.MeleeAttack;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -38,7 +38,7 @@ import java.util.Arrays;
 import static de.Keyle.MyPet.compat.v1_20_R2.PlatformHelper.dragonPartsField;
 
 @EntitySize(width = 1.F, height = 1.F)
-public class EntityMyEnderDragon extends EntityMyPet {
+public class EntityMyEnderDragon extends EntityMyFlyingPet {
 
 	protected boolean registered = false;
 	protected int d = -1;
@@ -105,17 +105,6 @@ public class EntityMyEnderDragon extends EntityMyPet {
 				}
 			this.registered = true;
 		}
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.EnderDragon.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 
 	/* fmm...

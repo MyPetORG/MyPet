@@ -18,18 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_20_R3.entity.ai.movement;
+package de.Keyle.MyPet.compat.v1_20_R1.entity.ai.movement;
 
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.world.entity.PathfinderMob;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
-import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
-import net.minecraft.world.entity.ai.util.RandomPos;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
 @Compat("v1_20_R3")
