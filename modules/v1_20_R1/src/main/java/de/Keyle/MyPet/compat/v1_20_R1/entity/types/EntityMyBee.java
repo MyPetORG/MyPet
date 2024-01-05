@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBee;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
-import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -37,7 +37,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.6F, height = 0.6f)
-public class EntityMyBee extends EntityMyPet {
+public class EntityMyBee extends EntityMyFlyingPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> BEE_STATUS_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BYTE);
@@ -158,16 +158,5 @@ public class EntityMyBee extends EntityMyPet {
 				this.updateVisuals();
 			}
 		}
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Bee.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 }

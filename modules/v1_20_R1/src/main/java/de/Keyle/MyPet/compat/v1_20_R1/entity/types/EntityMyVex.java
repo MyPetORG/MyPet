@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVex;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_20_R1.CompatManager;
-import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -52,7 +52,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @EntitySize(width = 0.4F, height = 0.8F)
-public class EntityMyVex extends EntityMyPet {
+public class EntityMyVex extends EntityMyFlyingPet {
 
 	protected static final EntityDataAccessor<Byte> CHARGING_WATCHER = SynchedEntityData.defineId(EntityMyVex.class, EntityDataSerializers.BYTE);
 
@@ -216,16 +216,5 @@ public class EntityMyVex extends EntityMyPet {
 				this.updateVisuals();
 			}
 		}
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Vex.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 }

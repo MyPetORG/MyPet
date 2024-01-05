@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R2.entity.ai.movement;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
@@ -39,28 +38,6 @@ public class MyPetRandomSwim extends MyPetRandomStroll {
 	public MyPetRandomSwim(EntityMyPet petEntity, int startDistance) {
 		super(petEntity, startDistance);
 		this.petEntity = petEntity;
-	}
-
-	@Override
-	public boolean shouldFinish() {
-		if(!petEntity.isInWaterOrBubble())
-			return super.shouldFinish();
-
-		if (controlPathfinderGoal.moveTo != null) {
-			return true;
-		} else if (this.petEntity.getOwner() == null) {
-			return true;
-		} else if (this.petEntity.distanceToSqr(owner) > this.startDistance) {
-			return true;
-		} else if (!this.petEntity.canMove()) {
-			return true;
-		} else if (moveTo == null){
-			return true;
-		} else if (MyPetApi.getPlatformHelper().distance(petEntity.getMyPet().getLocation().get(), moveTo) < 2.5) {
-			return true;
-		}else if (timeToMove <= 0) {
-			return true;
-		}else return this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead();
 	}
 
 	@Override

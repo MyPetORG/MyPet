@@ -23,12 +23,12 @@ package de.Keyle.MyPet.compat.v1_20_R1.entity.types;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.ai.attack.MeleeAttack;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 4.F, height = 4.F)
-public class EntityMyGhast extends EntityMyPet {
+public class EntityMyGhast extends EntityMyFlyingPet {
 
 	public EntityMyGhast(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -63,16 +63,5 @@ public class EntityMyGhast extends EntityMyPet {
 				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
 			}
 		}
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Ghast.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 }

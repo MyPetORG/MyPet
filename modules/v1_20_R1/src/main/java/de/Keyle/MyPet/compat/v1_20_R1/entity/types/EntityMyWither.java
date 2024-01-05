@@ -24,14 +24,14 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWither;
-import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyFlyingPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 1.9F, height = 3.5F)
-public class EntityMyWither extends EntityMyPet {
+public class EntityMyWither extends EntityMyFlyingPet {
 
 	private static final EntityDataAccessor<Integer> TARGET_WATCHER = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
@@ -79,17 +79,6 @@ public class EntityMyWither extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		getEntityData().set(INVULNERABILITY_WATCHER, getMyPet().isBaby() ? 600 : 0);
-	}
-
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Wither.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
 	}
 
 	@Override

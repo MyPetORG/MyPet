@@ -18,13 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_20_R3.entity;
+package de.Keyle.MyPet.compat.v1_20_R1.entity;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_20_R3.entity.ai.movement.MyPetFlyingMoveControl;
-import de.Keyle.MyPet.compat.v1_20_R3.entity.ai.movement.MyPetRandomFly;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.ai.movement.MyPetFlyingMoveControl;
+import de.Keyle.MyPet.compat.v1_20_R1.entity.ai.movement.MyPetRandomFly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
@@ -33,7 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
-import org.bukkit.Bukkit;
 
 @EntitySize(width = 0.5F, height = 0.3f)
 public abstract class EntityMyFlyingPet extends EntityMyPet {

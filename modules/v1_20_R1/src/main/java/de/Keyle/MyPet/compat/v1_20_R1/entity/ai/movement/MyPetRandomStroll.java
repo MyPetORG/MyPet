@@ -85,7 +85,7 @@ public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.m
             return true;
         } else if (moveTo == null){
             return true;
-        } else if (MyPetApi.getPlatformHelper().distance(petEntity.getMyPet().getLocation().get(), moveTo) < 2) {
+        } else if (MyPetApi.getPlatformHelper().distance(petEntity.getMyPet().getLocation().get(), moveTo) < 2.5) {
             return true;
         }else if (timeToMove <= 0) {
             return true;
