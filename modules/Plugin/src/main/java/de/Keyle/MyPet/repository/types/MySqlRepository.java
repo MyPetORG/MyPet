@@ -499,7 +499,7 @@ public class MySqlRepository implements Repository {
     public List<StoredMyPet> getAllMyPets() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM pets;")) {
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets;")) {
             List<MyPetPlayer> playerList = getAllMyPetPlayers();
             Map<UUID, MyPetPlayer> owners = new HashMap<>();
 
