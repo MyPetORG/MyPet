@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R3.entity;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
@@ -37,7 +36,6 @@ import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -46,13 +44,9 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
@@ -60,11 +54,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Compat("v1_20_R3")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
@@ -153,8 +143,13 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
 
 		//Now lets handle the Bukkit-Registry
-		//First copy the old registry
-		SimpleMyPetRegistry customBukkitRegistry = new SimpleMyPetRegistry(org.bukkit.Registry.ENTITY_TYPE);
+		//First copy the old registrie's map into a new one:
+		org.bukkit.Registry<org.bukkit.entity.EntityType> bukkitRegistry = org.bukkit.Registry.ENTITY_TYPE;
+		Bukkit.getConsoleSender().sendMessage(bukkitRegistry.getClass()+"");
+		Field mapField =  ReflectionUtil.getField(bukkitRegistry.getClass(), "map");
+		ImmutableMap<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (ImmutableMap) ReflectionUtil.getFieldValue(mapField,bukkitRegistry);
+		ImmutableMap.Builder<NamespacedKey, org.bukkit.entity.EntityType> ownMap = ImmutableMap.builder();
+		ownMap.putAll(bukkitMap);
 
 		for (MyPetType type : MyPetType.all()) {
 			//The fun part
@@ -176,17 +171,12 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 				and also when the pet dies.
 				It's stupid that we have to do this but it seems to work -> I'm happy.
 			 */
-			customBukkitRegistry.addCustomKeyAndEntry(NamespacedKey.fromString("mypet_" + type.getTypeID().toString()), org.bukkit.entity.EntityType.BLOCK_DISPLAY, (entity) -> entity != org.bukkit.entity.EntityType.UNKNOWN);
+			ownMap.put(NamespacedKey.fromString("mypet_" + type.getTypeID().toString()), org.bukkit.entity.EntityType.BLOCK_DISPLAY);
 		}
 
 		//Post-Handle Bukkit-Registry
-		customBukkitRegistry.build();
-		MethodHandle BUKKIT_ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(org.bukkit.Registry.class, "ENTITY_TYPE"); //ENTITY_TYPE
-		try {
-			BUKKIT_ENTITY_REGISTRY_SETTER.invoke(customBukkitRegistry);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		//We now have our entities and all the others in there
+		ReflectionUtil.setFieldValue(mapField, bukkitRegistry, ownMap.build());
 
 		//Post-Handle Vanilla Registry
 		entityRegistry.freeze();
@@ -253,69 +243,5 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	protected int getEntityTypeId(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
 		EntityType<?> types = entityRegistry.get(new ResourceLocation(type.getTypeID().toString()));
 		return entityRegistry.getId(types);
-	}
-
-	static final class SimpleMyPetRegistry<T extends Enum<T> & Keyed> implements org.bukkit.Registry<T> {
-
-		private Map<NamespacedKey, T> map;
-		private ImmutableMap.Builder<NamespacedKey, T> builder;
-
-		protected SimpleMyPetRegistry(@NotNull Class<T> type) {
-			this(type, Predicates.<T>alwaysTrue());
-		}
-
-		protected SimpleMyPetRegistry(@NotNull Class<T> type, @NotNull Predicate<T> predicate) {
-			builder = ImmutableMap.builder();
-
-			for (T entry : type.getEnumConstants()) {
-				if (predicate.test(entry)) {
-					builder.put(entry.getKey(), entry);
-				}
-			}
-		}
-
-		protected SimpleMyPetRegistry(@NotNull org.bukkit.Registry<T> oldReg) {
-			builder = ImmutableMap.builder();
-
-			oldReg.stream()
-					.forEach(e -> {
-						builder.put(e.getKey(), e);
-					});
-		}
-
-		public void addCustomKeyAndEntry(@NotNull NamespacedKey key, @NotNull T entry) {
-			addCustomKeyAndEntry(key, entry, Predicates.<T>alwaysTrue());
-		}
-
-		public void addCustomKeyAndEntry(@NotNull NamespacedKey key, @NotNull T entry, @NotNull Predicate<T> predicate) {
-			if(builder!=null) {
-				if (predicate.test(entry)) {
-					builder.put(key, entry);
-				}
-			}
-		}
-
-		public void build() {
-			map = builder.build();
-			builder = null;
-		}
-
-		@Nullable
-		@Override
-		public T get(@NotNull NamespacedKey key) {
-			return map.get(key);
-		}
-
-		@NotNull
-		@Override
-		public Stream<T> stream() {
-			return StreamSupport.stream(spliterator(), false);
-		}
-
-		@NotNull
-		@Override
-		public Iterator<T> iterator() {
-			return map.values().iterator();
-		}
 	}
 }
