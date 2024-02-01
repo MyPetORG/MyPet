@@ -42,7 +42,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
@@ -145,9 +144,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		//Now lets handle the Bukkit-Registry
 		//First copy the old registrie's map into a new one:
 		org.bukkit.Registry<org.bukkit.entity.EntityType> bukkitRegistry = org.bukkit.Registry.ENTITY_TYPE;
-		Bukkit.getConsoleSender().sendMessage(bukkitRegistry.getClass()+"");
 		Field mapField =  ReflectionUtil.getField(bukkitRegistry.getClass(), "map");
-		ImmutableMap<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (ImmutableMap) ReflectionUtil.getFieldValue(mapField,bukkitRegistry);
+		Map<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (Map) ReflectionUtil.getFieldValue(mapField,bukkitRegistry);
 		ImmutableMap.Builder<NamespacedKey, org.bukkit.entity.EntityType> ownMap = ImmutableMap.builder();
 		ownMap.putAll(bukkitMap);
 
