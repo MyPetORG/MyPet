@@ -184,11 +184,12 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		petPathfinderSelector.addGoal("Sit", sitPathfinder);
 		petPathfinderSelector.addGoal("Sprint", new Sprint(this, 0.25F));
 		petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
-		petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, this.getBbWidth() + 1.3, 20));
 		petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
 		petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
-		if(!(this instanceof EntityMyAquaticPet) && !(this instanceof EntityMyFlyingPet))
+		if(!(this instanceof EntityMyAquaticPet) && !(this instanceof EntityMyFlyingPet)) {
+			petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, this.getBbWidth() + 1.3, 20));
 			petPathfinderSelector.addGoal("RandomStroll", new MyPetRandomStroll(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
+		}
 		petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
 		petPathfinderSelector.addGoal("RandomLookaround", new RandomLookaround(this));
 		petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
