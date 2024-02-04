@@ -41,7 +41,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PickupImpl implements Pickup {
@@ -136,10 +136,10 @@ public class PickupImpl implements Pickup {
                                     continue;
                                 }
 
-                                PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, 0);
-                                Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
+                                EntityPickupItemEvent entityPickupEvent = new EntityPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, 0);
+                                Bukkit.getServer().getPluginManager().callEvent(entityPickupEvent);
 
-                                if (playerPickupEvent.isCancelled()) {
+                                if (entityPickupEvent.isCancelled()) {
                                     continue;
                                 }
 
