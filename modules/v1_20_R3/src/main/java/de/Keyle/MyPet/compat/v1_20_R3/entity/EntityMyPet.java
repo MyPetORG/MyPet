@@ -143,6 +143,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 		try {
 			this.replaceCraftAttributes();
+			this.setBukkitEntity();
 
 			this.myPet = myPet;
 			this.isMyPet = true;
@@ -170,7 +171,13 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		ReflectionUtil.setFinalFieldValue(craftAttributesField, this, craftAttributes);
 	}
 
-	protected void initAttributes() {
+	protected void initAttributes() { }
+
+	protected void setBukkitEntity() {
+		// Will be calling the overridden method to keep our own CraftMyPet to avoid potential other super. problems
+		// Using that to override bukkitEntity in Entity. Because we can. Might be redundant but who cares.
+		Field leField = ReflectionUtil.getField(Entity.class,"bukkitEntity");
+		ReflectionUtil.setFieldValue(leField, this, this.getBukkitEntity());
 	}
 
 	@Override
