@@ -51,6 +51,10 @@ public class CompatUtil {
         if (regexMatcher.find()) {
             minecraftVersion = regexMatcher.group(1);
         }
+
+        if (internalVersion == null) {
+            internalVersion = GetBukkitVersionFromMinecraftVersion();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -120,6 +124,18 @@ public class CompatUtil {
             return compare;
         }
         throw new IllegalArgumentException("\"version\" must be a valid Minecraft version. \"" + version + "\" given.");
+    }
+
+    private String GetBukkitVersionFromMinecraftVersion() {
+        String bukkitVersion = null;
+        switch(minecraftVersion) {
+            case "1.20.6":
+                bukkitVersion = "v1_20_R4";
+                break;
+            default:
+                bukkitVersion=null;
+        }
+        return bukkitVersion;
     }
 
     public boolean isCompatible(String version) {
