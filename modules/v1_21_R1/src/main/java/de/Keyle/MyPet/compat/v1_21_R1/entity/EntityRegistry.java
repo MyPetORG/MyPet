@@ -128,7 +128,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(BuiltInRegistries.ENTITY_TYPE);
 		Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class,"l"); //frozen
 		Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class,"m"); //intrusiveHolderCache or unregisteredIntrusiveHolders or intrusiveValueToEntry
-		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "g"); //ENTITY_TYPE
+		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "f"); //ENTITY_TYPE
 
 		if(custReg != null) {
 			//Gotta put the original Registry in. Just for a moment

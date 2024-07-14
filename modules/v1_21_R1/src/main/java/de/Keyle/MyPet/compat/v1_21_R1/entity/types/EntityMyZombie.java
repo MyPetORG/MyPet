@@ -52,7 +52,6 @@ public class EntityMyZombie extends EntityMyPet {
 	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> TYPE_WATCHER = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> DROWN_CONVERTING = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyZombie(Level world, MyPet myPet) {
 		super(world, myPet);

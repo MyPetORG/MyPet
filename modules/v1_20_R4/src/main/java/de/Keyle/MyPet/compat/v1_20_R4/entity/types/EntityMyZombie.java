@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyZombie;
-import de.Keyle.MyPet.compat.v1_20_R4.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -46,7 +45,6 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @EntitySize(width = 0.6F, height = 1.9F)
@@ -55,7 +53,6 @@ public class EntityMyZombie extends EntityMyPet {
 	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> TYPE_WATCHER = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> DROWN_CONVERTING = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyZombie.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyZombie(Level world, MyPet myPet) {
 		super(world, myPet);
