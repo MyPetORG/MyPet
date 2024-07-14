@@ -30,10 +30,11 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftChatMessage;
@@ -143,15 +144,21 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         }*/
 
         //add enchantment glowing
-        var enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
         if (icon.isGlowing()) {
-            enchantments.set(Enchantments.FEATHER_FALLING, 1);
+            is.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         }
-        is.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
 
         // hide item attributes like attack damage
         is.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
-
+        ItemAttributeModifiers itemattributemodifiers = (ItemAttributeModifiers) is.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+        List<ItemAttributeModifiers.Entry> newEntries = new ArrayList<>();
+        for (ItemAttributeModifiers.Entry modifierEntry : itemattributemodifiers.modifiers()) {
+            AttributeModifier modifier = modifierEntry.modifier();
+            if (modifier.id() != Item.BASE_ATTACK_DAMAGE_UUID && modifier.id() != Item.BASE_ATTACK_SPEED_UUID) {
+                newEntries.add(modifierEntry);
+            }
+        }
+        is.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(newEntries, true));
 
         // set Title
         if (!icon.getTitle().equals("")) {

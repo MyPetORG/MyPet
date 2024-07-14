@@ -26,20 +26,16 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R1.util.NBTHelper;
 import de.Keyle.MyPet.compat.v1_21_R1.util.inventory.CustomInventory;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_21_R1.CraftRegistry;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftChatMessage;
 import org.bukkit.entity.HumanEntity;
@@ -50,7 +46,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Compat("v1_21_R1")
 public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInventory {
@@ -149,17 +144,22 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         }*/
 
         //add enchantment glowing
-        var enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
         if (icon.isGlowing()) {
-            Registry<Enchantment> registry = CraftRegistry.getMinecraftRegistry(Registries.ENCHANTMENT);
-            Optional<Holder.Reference<Enchantment>> optional = registry.getHolder(Enchantments.FEATHER_FALLING);
-            enchantments.set((Holder) optional.get(), 1);
+            is.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         }
-        is.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
+
 
         // hide item attributes like attack damage
         is.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
-
+        ItemAttributeModifiers itemattributemodifiers = (ItemAttributeModifiers) is.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+        List<ItemAttributeModifiers.Entry> newEntries = new ArrayList<>();
+        for (ItemAttributeModifiers.Entry modifierEntry : itemattributemodifiers.modifiers()) {
+            AttributeModifier modifier = modifierEntry.modifier();
+            if (!modifier.is(Item.BASE_ATTACK_DAMAGE_ID) && !modifier.is(Item.BASE_ATTACK_SPEED_ID)) {
+                newEntries.add(modifierEntry);
+            }
+        }
+        is.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(newEntries, true));
 
         // set Title
         if (!icon.getTitle().equals("")) {
