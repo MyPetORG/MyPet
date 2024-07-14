@@ -46,6 +46,8 @@
         <module>modules/v1_20_R1</module>
         <module>modules/v1_20_R2</module>
         <module>modules/v1_20_R3</module>
+        <module>modules/v1_20_R4</module>
+        <module>modules/v1_21_R1</module>
         <module>modules/GUI</module>
         <module>modules/Plugin</module>
         <module>modules/MyPet</module>
@@ -519,7 +521,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>1.18.30</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -558,7 +560,7 @@
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.12.0</version>
+                <version>1.18.20.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>

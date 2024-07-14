@@ -26,22 +26,20 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftMob;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftEntityEquipment;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.SpawnCategory;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Field;
+import org.jetbrains.annotations.Nullable;
 
 @Compat("v1_20_R3")
 public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
@@ -166,6 +164,11 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 	}
 
 	@Override
+	public void damage(double v, @NotNull DamageSource damageSource) {
+
+	}
+
+	@Override
 	public void setHealth(double health) {
 		if (health < 0) {
 			health = 0;
@@ -174,6 +177,22 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 			health = getMaxHealth();
 		}
 		super.setHealth(health);
+	}
+
+	@Nullable
+	@Override
+	public ItemStack getItemInUse() {
+		return null;
+	}
+
+	@Override
+	public int getItemInUseTicks() {
+		return 0;
+	}
+
+	@Override
+	public void setItemInUseTicks(int i) {
+
 	}
 
 	@Override
