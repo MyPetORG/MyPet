@@ -135,11 +135,14 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			try {
 				ENTITY_REGISTRY_SETTER.invoke(entityRegistry);
 			} catch (Throwable e) {
+				e.printStackTrace();
 			}
+		} else {
+			// Only need to do this with the vanilla registry
+			ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
 		}
 		//We are now working with the Vanilla-Registry
 		ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
-		ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
 
 		//Now lets handle the Bukkit-Registry
 		//First copy the old registrie's map into a new one:
