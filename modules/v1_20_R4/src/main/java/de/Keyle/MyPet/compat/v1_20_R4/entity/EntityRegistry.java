@@ -128,7 +128,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(BuiltInRegistries.ENTITY_TYPE);
 		Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class,"l"); //frozen
 		Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class,"m"); //intrusiveHolderCache or unregisteredIntrusiveHolders or intrusiveValueToEntry
-		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "f"); //ENTITY_TYPE
+		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "g"); //ENTITY_TYPE
 
 		if(custReg != null) {
 			//Gotta put the original Registry in. Just for a moment
@@ -137,12 +137,10 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-		} else {
-			// Only need to do this with the vanilla registry
-			ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
 		}
 		//We are now working with the Vanilla-Registry
 		ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
+		ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
 
 		//Now lets handle the Bukkit-Registry
 		//First copy the old registrie's map into a new one:
