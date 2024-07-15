@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyLlama;
-import de.Keyle.MyPet.compat.v1_21_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -37,12 +36,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.WoolCarpetBlock;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyLlama extends EntityMyPet {
@@ -51,7 +46,7 @@ public class EntityMyLlama extends EntityMyPet {
 	private static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> STRENGTH_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.INT);
+	//private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyLlama.class, EntityDataSerializers.INT);
 
 	public EntityMyLlama(Level world, MyPet myPet) {
@@ -145,7 +140,7 @@ public class EntityMyLlama extends EntityMyPet {
 		builder.define(SADDLE_CHEST_WATCHER, (byte) 0);    // saddle & chest
 		builder.define(CHEST_WATCHER, false);
 		builder.define(STRENGTH_WATCHER, 0);
-		builder.define(COLOR_WATCHER, 0);
+		//builder.define(COLOR_WATCHER, 0);
 		builder.define(VARIANT_WATCHER, 0);
 	}
 
@@ -153,14 +148,14 @@ public class EntityMyLlama extends EntityMyPet {
 	public void updateVisuals() {
 		this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		if (getMyPet().hasDecor()) {
+		/*if (getMyPet().hasDecor()) {
 			ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
 			Block block = Block.byItem(is.getItem());
 			int color = block instanceof WoolCarpetBlock ? ((WoolCarpetBlock) block).getColor().getId() : 0;
 			this.getEntityData().set(COLOR_WATCHER, color);
 		} else {
 			this.getEntityData().set(COLOR_WATCHER, -1);
-		}
+		}*/
 		this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
 	}
 
