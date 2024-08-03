@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_21_R1;
 
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -39,6 +38,7 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -91,6 +91,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
     public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ac"); //Mojang Field: dragonParts
     private static final RegistryAccess REGISTRY_ACCESS = CraftRegistry.getMinecraftRegistry();
+    private static Method readParticleMethod = ReflectionUtil.getMethod(ParticleArgument.class,"a", StringReader.class, ParticleType.class, HolderLookup.Provider.class);
 
 
     /**
@@ -105,7 +106,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      */
     @Override
     public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
-        ParticleType effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName));
+        ParticleType<?> effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName));
 
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effect, "Effect cannot be null");
@@ -115,8 +116,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
         if (effect.codec().codec() != null && data != null) {
             try {
-                particle = ParticleArgument.readParticle(new StringReader(" " + data.get().toString()), REGISTRY_ACCESS);
-            } catch (CommandSyntaxException e) {
+                String nbt_string = parseNBTForEffect(effectName);
+                particle = (ParticleOptions) readParticleMethod.invoke(null, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (effect instanceof SimpleParticleType) {
@@ -149,7 +151,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
      */
     @Override
     public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
-    	ParticleType effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName));
+    	ParticleType<?> effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName));
 
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effect, "Effect cannot be null");
@@ -159,8 +161,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
         if (effect.codec().codec() != null && data != null) {
             try {
-                particle = ParticleArgument.readParticle(new StringReader(" " + data.get().toString()), REGISTRY_ACCESS);
-            } catch (CommandSyntaxException e) {
+                String nbt_string = parseNBTForEffect(effectName);
+                particle = (ParticleOptions) readParticleMethod.invoke(null, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (effect instanceof SimpleParticleType) {
@@ -431,5 +434,14 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public boolean doStackWalking(Class leClass, int oldDepth) {
         return leWalker.walk(s -> s.limit(oldDepth+1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
+    }
+
+    private String parseNBTForEffect(String effectName) {
+        return switch (effectName) {
+            case "item" -> "item";
+            case "block", "block_marker", "falling_dust", "dust_pillar" -> "block_state";
+            case "entity_effect" -> "color";
+            default -> "";
+        };
     }
 }
