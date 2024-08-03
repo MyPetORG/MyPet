@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.keyle.knbt.*;
 import org.bukkit.ChatColor;
 
 import java.util.*;
@@ -206,5 +207,39 @@ public class BehaviorImpl implements Behavior {
                 "activeBehaviors=" + activeBehaviors +
                 ", selectedBehavior=" + selectedBehavior +
                 '}';
+    }
+
+    @Override
+    public TagCompound save() {
+        TagCompound nbtTagCompound = new TagCompound();
+        nbtTagCompound.getCompoundData().put("selectedBehavior", new TagString(this.selectedBehavior.name()));
+        return nbtTagCompound;
+    }
+
+    @Override
+    public void load(TagCompound tagCompound) {
+        if (tagCompound.containsKey("selectedBehavior")) {
+            String behaviorString = tagCompound.getAs("selectedBehavior", TagString.class).getStringData();
+            switch (behaviorString) {
+                case "Friendly":
+                    setBehavior(Friendly);
+                    break;
+                case "Aggressive":
+                    setBehavior(Aggressive);
+                    break;
+                case "Raid":
+                    setBehavior(Raid);
+                    break;
+                case "Farm":
+                    setBehavior(Farm);
+                    break;
+                case "Duel":
+                    setBehavior(Duel);
+                    break;
+                default:
+                    setBehavior(Normal);
+                    break;
+            }
+        }
     }
 }

@@ -24,10 +24,11 @@ import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 
 @SkillName(value = "Behavior", translationNode = "Name.Skill.Behavior")
-public interface Behavior extends Skill, Scheduler, ActiveSkill {
+public interface Behavior extends Skill, Scheduler, ActiveSkill, NBTStorage {
     enum BehaviorMode {
         Normal, Friendly, Aggressive, Raid, Farm, Duel
     }
