@@ -152,7 +152,9 @@ public enum MyPetType {
             .v("1.7.10", 62)
             .v("1.13", "magma_cube")
             .search()),
-    Mooshroom("MUSHROOM_COW", "1.7.10", MyMooshroom.class, new Compat<>()
+    Mooshroom((String) new Compat<>().v("1.7.10","MUSHROOM_COW")
+            .v("1.20.6","MOOSHROOM").search().get(),
+            "1.7.10", MyMooshroom.class, new Compat<>()
             .v("1.7.10", 96)
             .v("1.13", "mooshroom")
             .search()),

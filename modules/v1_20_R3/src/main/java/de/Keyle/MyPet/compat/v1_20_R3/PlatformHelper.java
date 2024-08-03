@@ -29,7 +29,6 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyAquaticPet;
-import de.Keyle.MyPet.compat.v1_20_R3.entity.ai.movement.MyPetAquaticMoveControl;
 import de.Keyle.MyPet.compat.v1_20_R3.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

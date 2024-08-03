@@ -39,8 +39,8 @@ public class NBTHelper {
         return itemStack.save(registryAccess, tag);
     }
 
-    public static ItemStack parseItemStack(Tag tag) {
-        return ItemStack.parse(registryAccess, tag).orElseThrow();
+    public static ItemStack parseItemStack(CompoundTag tag) {
+        return ItemStack.parseOptional(registryAccess, tag);
     }
 
     public static String serializeComponent(Component cm) {
