@@ -44,9 +44,7 @@ public class ItemStackNBTConverter {
     }
 
     public static TagCompound itemStackToCompound(ItemStack itemStack) {
-        CompoundTag tagCompound = new CompoundTag();
-        NBTHelper.save(itemStack, tagCompound);
-        return (TagCompound) vanillaCompoundToCompound(tagCompound);
+        return (TagCompound) vanillaCompoundToCompound(NBTHelper.save(itemStack));
     }
 
     public static ItemStack compoundToItemStack(TagCompound compound) {
