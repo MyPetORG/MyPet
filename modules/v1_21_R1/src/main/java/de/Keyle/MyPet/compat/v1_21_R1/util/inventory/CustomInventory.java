@@ -250,6 +250,10 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		for (int i = 0; i < items.size(); i++) {
 			TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
 
+			// Make sure old items are compatible
+			if (itemCompound.containsKey("Count"))
+				itemCompound.put("count", itemCompound.get("Count"));
+
 			ItemStack itemStack = ItemStackNBTConverter.compoundToItemStack(itemCompound);
 			setItem(itemCompound.getAs("Slot", TagByte.class).getByteData(), itemStack);
 		}

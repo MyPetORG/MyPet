@@ -27,6 +27,7 @@ import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.item.ItemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.Field;
@@ -44,9 +45,7 @@ public class ItemStackNBTConverter {
     }
 
     public static TagCompound itemStackToCompound(ItemStack itemStack) {
-        CompoundTag tagCompound = new CompoundTag();
-        NBTHelper.save(itemStack, tagCompound);
-        return (TagCompound) vanillaCompoundToCompound(tagCompound);
+        return (TagCompound) vanillaCompoundToCompound(NBTHelper.save(itemStack));
     }
 
     public static ItemStack compoundToItemStack(TagCompound compound) {
