@@ -202,7 +202,10 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 	public EntityEquipment getEquipment() {
 		return fakeEquipment;
 	}
-	
+
+	@Override
+	public void setRiptiding(boolean b) {
+	}
 
 	@Override
 	public void attack(@NotNull Entity entity) {
