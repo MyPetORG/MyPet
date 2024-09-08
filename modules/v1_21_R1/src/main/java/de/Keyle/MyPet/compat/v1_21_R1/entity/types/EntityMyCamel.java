@@ -143,18 +143,15 @@ public class EntityMyCamel extends EntityMyPet {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
 		builder.define(SADDLE_CHEST_WATCHER, (byte) 0);
+		builder.define(DASH, false);
 
-		builder.define(LAST_POSE_CHANGE_TICK, (long)0);
-		resetLastPoseChangeTickToFullStand(this.level().getGameTime());
-	}
-	private void resetLastPoseChangeTickToFullStand(long i) {
-		this.resetLastPoseChangeTick(Math.max(0L, i - 52L - 1L));
+		builder.define(LAST_POSE_CHANGE_TICK, Math.max(0L, this.level().getGameTime() - 52L - 1L));
 	}
 	private void resetLastPoseChangeTick(long i) {
-		entityData.set(LAST_POSE_CHANGE_TICK, i);
+		this.getEntityData().set(LAST_POSE_CHANGE_TICK, i);
 	}
 	public long getPoseTime() {
-		return this.level().getGameTime() - Math.abs((Long) this.entityData.get(LAST_POSE_CHANGE_TICK));
+		return this.level().getGameTime() - Math.abs((Long) this.getEntityData().get(LAST_POSE_CHANGE_TICK));
 	}
 
 	@Override
