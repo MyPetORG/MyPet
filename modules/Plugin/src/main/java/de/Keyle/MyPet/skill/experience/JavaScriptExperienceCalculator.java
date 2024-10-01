@@ -39,7 +39,8 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
     public JavaScriptExperienceCalculator() {
         if (!new File(MyPetApi.getPlugin().getDataFolder(), "rhino.jar").exists() &&
                 !new File(MyPetApi.getPlugin().getDataFolder(), "rhino-1.7.9.jar").exists() &&
-                !new File(MyPetApi.getPlugin().getDataFolder(), "rhino-1.7.10.jar").exists()
+                !new File(MyPetApi.getPlugin().getDataFolder(), "rhino-1.7.10.jar").exists() &&
+                !new File(MyPetApi.getPlugin().getDataFolder(), "rhino-1.7.15.jar").exists()
         ) {
             MyPetApi.getLogger().warning("rhino.jar is missing. Please download it here (https://github.com/mozilla/rhino/releases) and put it into the MyPet folder.");
             return;

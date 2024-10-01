@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import org.bukkit.inventory.ItemStack;
 
 
-@DefaultInfo(food = {"cactus"}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {"cactus"})
 public interface MyCamel extends MyPet, MyPetBaby {
     ItemStack getSaddle();
 

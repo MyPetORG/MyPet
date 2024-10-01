@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 @PluginHookName("ProtocolLib")
@@ -155,6 +157,9 @@ public class ProtocolLibHook implements PluginHook {
                         if(ent != null) {
                             packet.getIntegers().write(0, ent.getEntityId());
                         }
+                    } catch (TimeoutException e) {
+                        // Assume the main thread is blocked and should free this netty thread.
+                        return;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -163,11 +168,12 @@ public class ProtocolLibHook implements PluginHook {
         });
     }
 
-    private <T> T ensureMainThread(Supplier<T> supplier) throws ExecutionException, InterruptedException {
+    private <T> T ensureMainThread(Supplier<T> supplier) throws ExecutionException, InterruptedException, TimeoutException {
         if(Bukkit.isPrimaryThread()) {
             return supplier.get();
         } else {
-            return Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(), supplier::get).get();
+            return Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(), supplier::get)
+                .get(100, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -211,7 +217,10 @@ public class ProtocolLibHook implements PluginHook {
                             if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0) { //1.17+ does not like async
                                 try {
                                     entity = ensureMainThread(() -> MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld()));
-                                } catch (Exception e) {
+                                } catch (TimeoutException e) {
+                                    // Assume the main thread is blocked and should free this netty thread.
+                                    return;
+                                }  catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             } else {
