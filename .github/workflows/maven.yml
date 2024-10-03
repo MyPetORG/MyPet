@@ -33,9 +33,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Install Dependencies
-        run: ./install_dependencies.sh
-
       - name: Set build number
         env:
           NUM: ${{ github.run_number }}
