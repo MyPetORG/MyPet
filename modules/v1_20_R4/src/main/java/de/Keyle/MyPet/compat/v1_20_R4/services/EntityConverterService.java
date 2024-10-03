@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_20_R4.services;
 
 import com.google.common.collect.Sets;
-import com.mojang.logging.LogUtils;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.MyPetApi;
@@ -51,7 +50,6 @@ import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
-import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -211,11 +209,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         TagCompound offersTag = villagerTag.get("Offers");
                         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
                         DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT.get("Offers"));
-                        Logger logger =  LogUtils.getLogger();
-                        Objects.requireNonNull(logger);
-                        dataresult.resultOrPartial(net.minecraft.Util.prefix("Failed to load offers: ", logger::warn)).ifPresent((merchantrecipelist) -> {
-                            entityVillager.setOffers(merchantrecipelist);
-                        });
+                        if(dataresult.hasResultOrPartial() && dataresult.resultOrPartial().isPresent()) {
+                            entityVillager.setOffers(dataresult.resultOrPartial().get());
+                        }
                     }
                     if (villagerTag.containsKey("Inventory")) {
                         TagList inventoryTag = villagerTag.get("Inventory");
