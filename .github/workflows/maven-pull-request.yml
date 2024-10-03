@@ -31,9 +31,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Install Dependencies
-        run: ./install_dependencies.sh
-
       - name: Compile
         run: mvn --batch-mode package -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
         env:
