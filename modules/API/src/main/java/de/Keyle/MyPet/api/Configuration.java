@@ -208,6 +208,9 @@ public class Configuration {
         public static class Axolotl {
             public static ConfigItem GROW_UP_ITEM;
     	}
+        public static class Armadillo {
+            public static ConfigItem GROW_UP_ITEM;
+        }
 
         public static class Bat {
 

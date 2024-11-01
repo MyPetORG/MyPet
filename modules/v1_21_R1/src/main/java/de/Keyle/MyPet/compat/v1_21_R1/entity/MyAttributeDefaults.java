@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.frog.Frog;
@@ -57,9 +58,11 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.ARMOR_STAND, ArmorStand.createLivingAttributes().build()) 				//Armor-Stand
                 .putFast(EntityType.ALLAY, Allay.createAttributes().build()) 						    	//Allay
                 .putFast(EntityType.AXOLOTL, Axolotl.createAttributes().build()) 							//Axolotl
+                .putFast(EntityType.ARMADILLO, Armadillo.createAttributes().build())                        //Armadillo
                 .putFast(EntityType.BAT, Bat.createAttributes().build())									//Bat
                 .putFast(EntityType.BEE, Bee.createAttributes().build())									//Bee
-                .putFast(EntityType.BLAZE, Blaze.createAttributes().build())								//Blaze
+                .putFast(EntityType.BLAZE, Blaze.createAttributes().build())                                //Blaze
+                .putFast(EntityType.BOGGED, Bogged.createAttributes().build())                              //Bogged
                 .putFast(EntityType.CAMEL, Camel.createAttributes().build())								//Camel
                 .putFast(EntityType.CAT, Cat.createAttributes().build())									//Cat
                 .putFast(EntityType.CAVE_SPIDER, CaveSpider.createAttributes().build())						//CaveSpider

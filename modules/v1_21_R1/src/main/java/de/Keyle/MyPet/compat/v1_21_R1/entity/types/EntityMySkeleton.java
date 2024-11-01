@@ -59,6 +59,8 @@ public class EntityMySkeleton extends EntityMyPet {
 			return "entity.stray.death";
 		} else if (getMyPet().isWither()) {
 			return "entity.wither_skeleton.death";
+		} else if (getMyPet().isBogged()) {
+			return "entity.bogged.death";
 		}
 		return "entity.skeleton.death";
 	}
@@ -69,7 +71,10 @@ public class EntityMySkeleton extends EntityMyPet {
 			return "entity.stray.hurt";
 		} else if (getMyPet().isWither()) {
 			return "entity.wither_skeleton.hurt";
+		} else if (getMyPet().isBogged()) {
+			return "entity.bogged.hurt";
 		}
+
 		return "entity.skeleton.hurt";
 	}
 
@@ -79,6 +84,8 @@ public class EntityMySkeleton extends EntityMyPet {
 			return "entity.stray.ambient";
 		} else if (getMyPet().isWither()) {
 			return "entity.wither_skeleton.ambient";
+		} else if (getMyPet().isBogged()) {
+			return "entity.bogged.ambient";
 		}
 		return "entity.skeleton.ambient";
 	}
@@ -141,6 +148,8 @@ public class EntityMySkeleton extends EntityMyPet {
 			makeSound("entity.stray.step", 0.15F, 1.0F);
 		} else if (getMyPet().isWither()) {
 			makeSound("entity.wither_skeleton.step", 0.15F, 1.0F);
+		} else if(getMyPet().isBogged()) {
+			makeSound("entity.bogged.step", 0.15F, 1.0F);
 		} else {
 			makeSound("entity.skeleton.step", 0.15F, 1.0F);
 		}

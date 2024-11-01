@@ -34,6 +34,10 @@ public interface MySkeleton extends MyPet, MyPetEquipment {
 
     void setStray(boolean flag);
 
+    boolean isBogged();
+
+    void setBogged(boolean flag);
+
     int getType();
 
     void setType(int type);

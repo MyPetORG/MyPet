@@ -66,7 +66,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("baby")
                 .add("variant:")
                 .get());
-
+        petTypeOptionMap.put("armadillo", new CommandOptionCreator()
+                .add("baby")
+                .get());
         petTypeOptionMap.put("bee", new CommandOptionCreator()
                 .add("baby")
                 .add("angry")
@@ -76,6 +78,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("blaze", new CommandOptionCreator()
                 .add("fire")
+                .get());
+
+        petTypeOptionMap.put("bogged", new CommandOptionCreator()
                 .get());
 
         petTypeOptionMap.put("chicken", new CommandOptionCreator()

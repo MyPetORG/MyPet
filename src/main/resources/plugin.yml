@@ -99,9 +99,11 @@ permissions:
     children:
       MyPet.leash.Allay: true
       MyPet.leash.Axolotl: true
+      MyPet.leash.Armadillo: true
       MyPet.leash.Bat: true
       MyPet.leash.Bee: true
       MyPet.leash.Blaze: true
+      MyPet.leash.Bogged: true
       MyPet.leash.Camel: true
       MyPet.leash.Cat: true
       MyPet.leash.CaveSpider: true

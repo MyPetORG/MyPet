@@ -35,6 +35,9 @@ public enum MyPetType {
     Allay("ALLAY", "1.19", MyAllay.class, new Compat<>()
             .v("1.19", "allay")
             .search()),
+    Armadillo("ARMADILLO", "1.21", MyArmadillo.class, new Compat<>()
+            .v("1.21", "armadillo")
+            .search()),
     Bat("BAT", "1.7.10", MyBat.class, new Compat<>()
             .v("1.7.10", 65)
             .v("1.13", "bat")
@@ -45,6 +48,9 @@ public enum MyPetType {
     Blaze("BLAZE", "1.7.10", MyBlaze.class, new Compat<>()
             .v("1.7.10", 61)
             .v("1.13", "blaze")
+            .search()),
+    Bogged("BOGGED", "1.21", MyBogged.class, new Compat<>()
+            .v("1.21", "bogged")
             .search()),
     Camel("CAMEL", "1.20", MyCat.class, new Compat<>()
             .v("1.20", "camel")
