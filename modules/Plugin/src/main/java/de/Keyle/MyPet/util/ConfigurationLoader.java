@@ -245,16 +245,21 @@ public class ConfigurationLoader {
         }
 
 
-        if (MyPetType.Axolotl.checkMinecraftVersion()) {
+        if (MyPetType.Axolotl.checkMinecraftVersion())
             config.addDefault("MyPet.Pets.Axolotl.GrowUpItem", "experience_bottle");
-        }
-        config.addDefault("MyPet.Pets.Allay.CanGlide", MyPet.Allay.CAN_GLIDE);
+        if (MyPetType.Allay.checkMinecraftVersion())
+            config.addDefault("MyPet.Pets.Allay.CanGlide", MyPet.Allay.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Bat.CanGlide", MyPet.Bat.CAN_GLIDE);
         if (MyPetType.Bee.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Bee.GrowUpItem", "experience_bottle");
             config.addDefault("MyPet.Pets.Bee.CanGlide", MyPet.Bee.CAN_GLIDE);
         }
+        if (MyPetType.Armadillo.checkMinecraftVersion())
+            config.addDefault("MyPet.Pets.Armadillo.GrowUpItem", "experience_bottle");
+
         config.addDefault("MyPet.Pets.Blaze.CanGlide", MyPet.Blaze.CAN_GLIDE);
+        if (MyPetType.Breeze.checkMinecraftVersion())
+            config.addDefault("MyPet.Pets.Breeze.CanGlide", MyPet.Breeze.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Ghast.CanGlide", MyPet.Ghast.CAN_GLIDE);
         config.addDefault("MyPet.Pets.Chicken.CanGlide", MyPet.Chicken.CAN_GLIDE);
         config.addDefault("MyPet.Pets.EnderDragon.CanGlide", MyPet.EnderDragon.CAN_GLIDE);
@@ -547,6 +552,7 @@ public class ConfigurationLoader {
         MyPet.Bee.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bee.CanGlide", true);
         MyPet.Bat.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bat.CanGlide", true);
         MyPet.Blaze.CAN_GLIDE = config.getBoolean("MyPet.Pets.Blaze.CanGlide", true);
+        MyPet.Blaze.CAN_GLIDE = config.getBoolean("MyPet.Pets.Breeze.CanGlide", true);
         MyPet.Ghast.CAN_GLIDE = config.getBoolean("MyPet.Pets.Ghast.CanGlide", true);
         MyPet.Chicken.CAN_GLIDE = config.getBoolean("MyPet.Pets.Chicken.CanGlide", true);
         MyPet.EnderDragon.CAN_GLIDE = config.getBoolean("MyPet.Pets.EnderDragon.CanGlide", true);
@@ -573,6 +579,7 @@ public class ConfigurationLoader {
             }
         }
         MyPet.Axolotl.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Axolotl.GrowUpItem", "experience_bottle"));
+        MyPet.Armadillo.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Armadillo.GrowUpItem", "experience_bottle"));
         MyPet.Bee.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Bee.GrowUpItem", "experience_bottle"));
         MyPet.Cat.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cat.GrowUpItem", "experience_bottle"));
         MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle"));

@@ -8481,4 +8481,394 @@
     "id": "wither_spawn_egg",
     "introduced": "1.20"
   }
+  ,
+  {
+    "id": "armadillo_scute",
+    "introduced": "1.20.5"
+  }
+  ,
+  {
+    "id": "wolf_armor",
+    "introduced": "1.20.5"
+  }
+  ,
+  {
+    "id": "",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "banner_pattern_-_flow",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "banner_pattern_-_guster",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "bogged_spawn_egg",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "breeze_rod",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "breeze_spawn_egg",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "chiseled_tuff",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "chiseled_tuff_bricks",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "crafter",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "exposed_chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "exposed_copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "exposed_copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "exposed_copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "exposed_copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "flow_pottery_sherd",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "guster_pottery_sherd",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "heavy_core",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "mace",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "music_disc_-_aaron_cherof_-_precipice",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "music_disc_-_lena_raine_-_creator",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "music_disc_-_lena_raine_-_creator_(music_box)",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "ominous_bottle",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "ominous_trial_key",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "oxidized_chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "oxidized_copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "oxidized_copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "oxidized_copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "oxidized_copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "polished_tuff",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "polished_tuff_slab",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "polished_tuff_stairs",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "polished_tuff_wall",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "scrape_pottery_sherd",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "smithing_template",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "smithing_template",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "trial_key",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "trial_spawner",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "tuff_brick_slab",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "tuff_brick_stairs",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "tuff_brick_wall",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "tuff_bricks",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "tuff_slab",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "tuff_stairs",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "tuff_wall",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "vault",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_exposed_chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_exposed_copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_exposed_copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_exposed_copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_exposed_copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_oxidized_copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_weathered_chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_weathered_copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_weathered_copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_weathered_copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "waxed_weathered_copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "weathered_chiseled_copper",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "weathered_copper_bulb",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "weathered_copper_door",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "weathered_copper_grate",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "weathered_copper_trapdoor",
+    "introduced": "1.21"
+  }
+  ,
+  {
+    "id": "wind_charge",
+    "introduced": "1.21"
+  }
 ]

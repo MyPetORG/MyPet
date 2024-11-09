@@ -39,6 +39,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 
+// TODO add jumping mechanic and second passenger (potentially)
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyCamel extends EntityMyPet {
 

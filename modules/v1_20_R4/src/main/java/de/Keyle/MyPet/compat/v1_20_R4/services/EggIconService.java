@@ -37,6 +37,9 @@ public class EggIconService extends de.Keyle.MyPet.api.util.service.types.EggIco
             case Axolotl:
                 icon.setMaterial(Material.AXOLOTL_SPAWN_EGG);
                 break;
+            case Armadillo:
+                icon.setMaterial(Material.ARMADILLO_SPAWN_EGG);
+                break;
             case Bat:
                 icon.setMaterial(Material.BAT_SPAWN_EGG);
                 break;

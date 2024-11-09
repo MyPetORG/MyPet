@@ -335,7 +335,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	@Override
 	public Component getCustomName() {
 		try {
-			return CraftChatMessage.fromStringOrNull(myPet.getPetName());
+			return Component.literal(myPet.getPetName());
 		} catch (Exception e) {
 			return super.getCustomName();
 		}
@@ -1505,5 +1505,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	@Override
 	public boolean dismountsUnderwater() {
 		return true;
+	}
+
+	@Override
+	public Component getDisplayName() {
+		return getName().copy();
 	}
 }
