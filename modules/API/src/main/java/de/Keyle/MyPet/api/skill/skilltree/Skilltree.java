@@ -97,6 +97,9 @@ public class Skilltree {
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, Configuration.LevelSystem.Experience.LEVEL_CAP);
     }
+    public double getWeight() {
+        return weight;
+    }
 
     public int getRequiredLevel() {
         return requiredLevel;
