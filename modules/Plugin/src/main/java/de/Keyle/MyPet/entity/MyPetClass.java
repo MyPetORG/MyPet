@@ -29,10 +29,13 @@ import java.lang.reflect.Constructor;
 
 public enum MyPetClass {
     Allay(MyAllay.class),
+    Armadillo(MyArmadillo.class),
     Axolotl(MyAxolotl.class),
     Bat(MyBat.class),
     Bee(MyBee.class),
     Blaze(MyBlaze.class),
+    Bogged(MyBogged.class),
+    Breeze(MyBreeze.class),
     Camel(MyCamel.class),
     Cat(MyCat.class),
     CaveSpider(MyCaveSpider.class),

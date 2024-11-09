@@ -149,6 +149,29 @@ public class MySkeleton extends MyPet implements de.Keyle.MyPet.api.entity.types
     }
 
     @Override
+    public boolean isBogged() {
+        return type == 3;
+    }
+
+    @Override
+    public void setBogged(boolean flag) {
+        if (flag) {
+            type = 3;
+        } else {
+            if (isBogged()) {
+                type = 0;
+            }
+        }
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") >= 0) {
+                removePet();
+                createEntity();
+            }
+        }
+    }
+
+    @Override
     public int getType() {
         if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
             return type;

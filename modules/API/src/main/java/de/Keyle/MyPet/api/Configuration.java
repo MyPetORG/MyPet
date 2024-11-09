@@ -209,6 +209,10 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
     	}
 
+        public static class Armadillo {
+            public static ConfigItem GROW_UP_ITEM;
+        }
+
         public static class Bat {
 
             public static boolean CAN_GLIDE = true;
@@ -221,6 +225,11 @@ public class Configuration {
         }
 
         public static class Blaze {
+
+            public static boolean CAN_GLIDE = true;
+        }
+
+        public static class Breeze {
 
             public static boolean CAN_GLIDE = true;
         }

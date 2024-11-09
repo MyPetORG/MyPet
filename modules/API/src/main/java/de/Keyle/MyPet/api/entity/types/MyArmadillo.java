@@ -22,23 +22,8 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
 
-@DefaultInfo(food = {"bone"})
-public interface MySkeleton extends MyPet, MyPetEquipment {
-    boolean isWither();
-
-    void setWither(boolean flag);
-
-    boolean isStray();
-
-    void setStray(boolean flag);
-
-    boolean isBogged();
-
-    void setBogged(boolean flag);
-
-    int getType();
-
-    void setType(int type);
+@DefaultInfo(food = {"spider_eye"})
+public interface MyArmadillo extends MyPet, MyPetBaby {
 }
