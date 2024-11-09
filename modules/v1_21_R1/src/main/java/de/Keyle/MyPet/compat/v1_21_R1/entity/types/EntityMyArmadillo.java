@@ -63,15 +63,21 @@ public class EntityMyArmadillo extends EntityMyPet {
 
     @Override
     public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-        if (Configuration.MyPet.Armadillo.GROW_UP_ITEM.compare(itemStack) && ((MyArmadillo)getMyPet()).isBaby() && getOwner().getPlayer().isSneaking()) {
-            if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                itemStack.shrink(1);
-                if (itemStack.getCount() <= 0) {
-                    entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-                }
-            }
-            ((MyArmadillo)getMyPet()).setBaby(false);
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
             return InteractionResult.CONSUME;
+        }
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (Configuration.MyPet.Axolotl.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
         }
         return InteractionResult.PASS;
     }

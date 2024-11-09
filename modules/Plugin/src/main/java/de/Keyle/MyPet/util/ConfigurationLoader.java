@@ -579,6 +579,7 @@ public class ConfigurationLoader {
             }
         }
         MyPet.Axolotl.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Axolotl.GrowUpItem", "experience_bottle"));
+        MyPet.Armadillo.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Armadillo.GrowUpItem", "experience_bottle"));
         MyPet.Bee.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Bee.GrowUpItem", "experience_bottle"));
         MyPet.Cat.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cat.GrowUpItem", "experience_bottle"));
         MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle"));
