@@ -51,8 +51,8 @@ import java.util.zip.ZipException;
 public class MongoDbRepository implements Repository {
 
     private MongoClient mongo;
-    private ArrayList<StoredMyPet> petsToBeSaved = new ArrayList<>();
-    private ArrayList<MyPetPlayer> playersToBeSaved = new ArrayList<>();
+    private HashMap<UUID, StoredMyPet> petsToBeSaved = new HashMap<>();
+    private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private MongoDatabase db;
     private int version = 4;
     // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
@@ -243,10 +243,10 @@ public class MongoDbRepository implements Repository {
 
     private void savePets() {
         for (StoredMyPet storedMyPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            updateMyPet(storedMyPet);
+            savePet(storedMyPet);
         }
-        for (StoredMyPet myPet : petsToBeSaved) {
-            updateMyPet(myPet);
+        for (StoredMyPet myPet : petsToBeSaved.values()) {
+            savePet(myPet);
         }
     }
 
@@ -255,7 +255,7 @@ public class MongoDbRepository implements Repository {
         for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             updatePlayer(player);
         }
-        for (MyPetPlayer player : playersToBeSaved) {
+        for (MyPetPlayer player : playersToBeSaved.values()) {
             updatePlayer(player);
         }
     }
@@ -380,6 +380,10 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if(petsToBeSaved.containsKey(uuid)) {
+                        return;
+                    }
+
                     MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                     Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
                     if (petDocument != null) {
@@ -390,8 +394,10 @@ public class MongoDbRepository implements Repository {
                             callback.runTask(pet);
                         }
                     }
+
+                    this.cancel();
                 }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
+            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
         }
     }
 
@@ -458,14 +464,14 @@ public class MongoDbRepository implements Repository {
 
     @Override
     public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
-        petsToBeSaved.add(storedMyPet);
+        petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
         new BukkitRunnable() {
             @Override
             public void run() {
-                boolean result = updateMyPet(storedMyPet);
+                boolean result = savePet(storedMyPet);
 
                 if (result) {
-                    petsToBeSaved.remove(storedMyPet);
+                    petsToBeSaved.remove(storedMyPet.getUUID());
                 }
 
                 if (callback != null) {
@@ -476,7 +482,7 @@ public class MongoDbRepository implements Repository {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean updateMyPet(StoredMyPet storedMyPet) {
+    public boolean savePet(StoredMyPet storedMyPet) {
         MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
         Document filter = new Document("uuid", storedMyPet.getUUID().toString());
         Document petDocument = (Document) petCollection.find(filter).first();
@@ -637,7 +643,7 @@ public class MongoDbRepository implements Repository {
 
     @Override
     public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        playersToBeSaved.add(player);
+        playersToBeSaved.put(player.getPlayerUUID(), player);
         new BukkitRunnable() {
             @Override
             public void run() {

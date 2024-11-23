@@ -55,8 +55,8 @@ import java.util.zip.ZipException;
 public class MySqlRepository implements Repository {
 
     protected Gson gson = new Gson();
-    private ArrayList<StoredMyPet> petsToBeSaved = new ArrayList<>();
-    private ArrayList<MyPetPlayer> playersToBeSaved = new ArrayList<>();
+    private HashMap<UUID, StoredMyPet> petsToBeSaved = new HashMap<>();
+    private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private HikariDataSource dataSource;
     private int version = 10;
 
@@ -355,12 +355,12 @@ public class MySqlRepository implements Repository {
         for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             savePet(myPet);
         }
-        for (StoredMyPet myPet : petsToBeSaved) {
+        for (StoredMyPet myPet : petsToBeSaved.values()) {
             savePet(myPet);
         }
     }
 
-    private void savePet(StoredMyPet myPet) {
+    public boolean savePet(StoredMyPet myPet) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
                      "owner_uuid=?, " +
@@ -396,7 +396,9 @@ public class MySqlRepository implements Repository {
             statement.executeUpdate();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -404,7 +406,7 @@ public class MySqlRepository implements Repository {
         for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             savePlayer(player);
         }
-        for (MyPetPlayer player : playersToBeSaved) {
+        for (MyPetPlayer player : playersToBeSaved.values()) {
             savePlayer(player);
         }
     }
@@ -596,6 +598,10 @@ public class MySqlRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if(petsToBeSaved.containsKey(uuid)) {
+                        return;
+                    }
+
                     try (Connection connection = dataSource.getConnection();
                          PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;",
                                  ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -618,8 +624,10 @@ public class MySqlRepository implements Repository {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+
+                    this.cancel();
                 }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
+            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
         }
     }
 
@@ -769,7 +777,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
-        petsToBeSaved.add(storedMyPet);
+        petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -808,7 +816,7 @@ public class MySqlRepository implements Repository {
                     int result = statement.executeUpdate();
 
                     if (result > 0) {
-                        petsToBeSaved.remove(storedMyPet);
+                        petsToBeSaved.remove(storedMyPet.getUUID());
                     }
 
                     if (callback != null) {
@@ -981,7 +989,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        playersToBeSaved.add(player);
+        playersToBeSaved.put(player.getPlayerUUID(), player);
         new BukkitRunnable() {
             @Override
             public void run() {

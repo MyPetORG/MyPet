@@ -57,6 +57,8 @@ public interface Repository {
 
     void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
 
+    boolean savePet(final StoredMyPet storedMyPet);
+
     void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
 
     void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback);

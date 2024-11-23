@@ -221,6 +221,11 @@ public class NbtRepository implements Repository {
         }
     }
 
+    @Override
+    public boolean savePet(StoredMyPet storedMyPet) {
+        return false;
+    }
+
     private int loadPets(TagList petList) {
         int petCount = 0;
         boolean oldPets = false;

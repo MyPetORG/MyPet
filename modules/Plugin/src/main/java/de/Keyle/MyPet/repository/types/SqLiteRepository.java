@@ -37,7 +37,6 @@ import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -50,8 +49,8 @@ import java.util.*;
 public class SqLiteRepository implements Repository {
 
     protected Gson gson = new Gson();
-    private ArrayList<StoredMyPet> petsToBeSaved = new ArrayList<>();
-    private ArrayList<MyPetPlayer> playersToBeSaved = new ArrayList<>();
+    private HashMap<UUID, StoredMyPet> petsToBeSaved = new HashMap<>();
+    private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private Connection connection;
     private int version = 1;
 
@@ -272,12 +271,12 @@ public class SqLiteRepository implements Repository {
         for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
             savePet(myPet);
         }
-        for (StoredMyPet myPet : petsToBeSaved) {
+        for (StoredMyPet myPet : petsToBeSaved.values()) {
             savePet(myPet);
         }
     }
 
-    private void savePet(StoredMyPet myPet) {
+    public boolean savePet(StoredMyPet myPet) {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE pets SET " +
                     "owner_uuid=?, " +
@@ -315,7 +314,9 @@ public class SqLiteRepository implements Repository {
             //MyPetLogger.write("UPDATE pet: " + result);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -323,7 +324,7 @@ public class SqLiteRepository implements Repository {
         for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             savePlayer(player);
         }
-        for (MyPetPlayer player : playersToBeSaved) {
+        for (MyPetPlayer player : playersToBeSaved.values()) {
             savePlayer(player);
         }
     }
@@ -510,6 +511,10 @@ public class SqLiteRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if(petsToBeSaved.containsKey(uuid)) {
+                        return;
+                    }
+
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE uuid=?;");
                         statement.setString(1, uuid.toString());
@@ -529,8 +534,10 @@ public class SqLiteRepository implements Repository {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+
+                    cancel();
                 }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
+            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
         }
     }
 
@@ -682,7 +689,7 @@ public class SqLiteRepository implements Repository {
 
     @Override
     public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
-        petsToBeSaved.add(storedMyPet);
+        petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -721,7 +728,7 @@ public class SqLiteRepository implements Repository {
                     int result = statement.executeUpdate();
 
                     if (result > 0) {
-                        petsToBeSaved.remove(storedMyPet);
+                        petsToBeSaved.remove(storedMyPet.getUUID());
                     }
 
                     //MyPetLogger.write("UPDATE pet: " + result);
@@ -878,7 +885,7 @@ public class SqLiteRepository implements Repository {
 
     @Override
     public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        playersToBeSaved.add(player);
+        playersToBeSaved.put(player.getPlayerUUID(), player);
         new BukkitRunnable() {
             @Override
             public void run() {
