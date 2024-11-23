@@ -42,6 +42,12 @@ public abstract class ConfigItem {
     }
 
     public ConfigItem(String data) {
+        if(data.startsWith(".")) {
+            // Assumption: This is a 1.20.5+ Item
+            load(data.replace(". ", ""));
+            return;
+        }
+
         String[] splitData = data.split("\\s+", 2);
 
         if (splitData.length == 0) {
@@ -116,6 +122,10 @@ public abstract class ConfigItem {
     }
 
     public abstract boolean compare(Object compareItem);
+
+    public void load(String data) {
+        MyPetApi.getLogger().warning("You are trying to use 1.20.5+ item-NBT! You need to use 1.13 item IDs and NBT for this version.");
+    }
 
     public abstract void load(MaterialHolder material, String data);
 }

@@ -29,7 +29,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.bukkit.ChatColor;
@@ -56,6 +55,19 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     public boolean compare(Object o) {
         net.minecraft.world.item.ItemStack compareItem = (net.minecraft.world.item.ItemStack) o;
         return this.compare(CraftItemStack.asCraftMirror(compareItem));
+    }
+
+    @Override
+    public void load(String data) {
+        // Assumption: This is just an item
+        try {
+            net.minecraft.world.item.ItemStack stack = ItemStackNBTConverter.vanillaCompoundToItemStack(TagParser.parseTag(data));
+            this.item = CraftItemStack.asCraftMirror(stack);
+
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+            MyPetApi.getLogger().warning(data);
+        }
     }
 
     @Override

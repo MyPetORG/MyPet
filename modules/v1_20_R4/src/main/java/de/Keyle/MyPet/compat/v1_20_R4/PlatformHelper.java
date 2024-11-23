@@ -26,9 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyAquaticPet;
-import de.Keyle.MyPet.compat.v1_20_R4.util.NBTHelper;
 import de.Keyle.MyPet.compat.v1_20_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -416,12 +414,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public String itemstackToString(org.bukkit.inventory.ItemStack itemStack) {
-        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-        String itemstack = itemDatabase.getByID(itemStack.getType().getKey().getKey()).getId();
-        if (itemStack.hasItemMeta()) {
-            itemstack += " " + NBTHelper.getTag(CraftItemStack.asNMSCopy(itemStack)).toString();
-        }
-        return itemstack;
+        ItemStack stack = CraftItemStack.asNMSCopy(itemStack);
+        return ItemStackNBTConverter.itemStackToVanillaCompound(stack).toString();
     }
 
     @Override

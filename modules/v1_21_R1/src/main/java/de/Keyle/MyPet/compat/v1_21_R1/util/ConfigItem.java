@@ -58,6 +58,19 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     }
 
     @Override
+    public void load(String data) {
+        // Assumption: This is just an item
+        try {
+            net.minecraft.world.item.ItemStack stack = ItemStackNBTConverter.vanillaCompoundToItemStack(TagParser.parseTag(data));
+            this.item = CraftItemStack.asCraftMirror(stack);
+
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+            MyPetApi.getLogger().warning(data);
+        }
+    }
+
+    @Override
     public void load(MaterialHolder material, String data) {
         ResourceLocation key = ResourceLocation.tryParse(material.getId());
         Item item = BuiltInRegistries.ITEM.get(key);
