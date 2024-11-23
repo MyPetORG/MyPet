@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_21_R1.util.inventory.ItemStackComparator;
+import de.Keyle.MyPet.compat.v1_21_R1.util.inventory.ItemStackNBTConverter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -70,23 +71,28 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         }
 
         net.minecraft.world.item.ItemStack is = new net.minecraft.world.item.ItemStack(item, 1);
+        net.minecraft.world.item.ItemStack finishedItem = null;
 
+        String isTagString = ItemStackNBTConverter.itemStackToVanillaCompound(is).toString();
         if (data != null) {
             CompoundTag tag = null;
             String nbtString = data.trim();
             if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 try {
-                    tag = TagParser.parseTag(nbtString);
+                    String mergedString = isTagString.substring(0,isTagString.length()-1) + ",tag:" + nbtString + "}";
+                    mergedString = mergedString.replace("count","Count");
+                    tag = TagParser.parseTag(mergedString);
                 } catch (Exception e) {
                     MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
                     MyPetApi.getLogger().warning(item.getDescriptionId() + " " + nbtString);
                 }
                 if (tag != null) {
-                    NBTHelper.setTag(is, tag);
+                    CompoundTag convertedTag = ItemStackNBTConverter.convertOldVanillaCompound(tag);
+                    finishedItem = ItemStackNBTConverter.vanillaCompoundToItemStack(convertedTag);
                 }
             }
         }
 
-        this.item = CraftItemStack.asCraftMirror(is);
+        this.item = CraftItemStack.asCraftMirror(finishedItem != null ? finishedItem : is);
     }
 }

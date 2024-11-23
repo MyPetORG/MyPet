@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R4.util.inventory;
 
-import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
@@ -66,14 +65,17 @@ public class ItemStackNBTConverter {
     public static ItemStack vanillaCompoundToItemStack(CompoundTag compoundTag) {
         // Conversion is fun
         if (compoundTag.contains("tag")) {
-            DataFixer fixer = DataFixers.getDataFixer();
-            Dynamic<Tag> dyn = new Dynamic<>(NbtOps.INSTANCE, compoundTag);
-            Dynamic<Tag> updatedDyn = fixer.update(References.ITEM_STACK, dyn,
-                    1519, SharedConstants.getCurrentVersion().getDataVersion().getVersion());
-            return ItemStack.parseOptional(registryAccess, (CompoundTag) updatedDyn.getValue());
+            return ItemStack.parseOptional(registryAccess, convertOldVanillaCompound(compoundTag));
         }
 
         return ItemStack.parseOptional(registryAccess, compoundTag);
+    }
+
+    public static CompoundTag convertOldVanillaCompound(CompoundTag oldTag) {
+        Dynamic<Tag> dyn = new Dynamic<>(NbtOps.INSTANCE, oldTag);
+        Dynamic<Tag> updatedDyn = DataFixers.getDataFixer().update(References.ITEM_STACK, dyn,
+                1519, SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+        return (CompoundTag) updatedDyn.getValue();
     }
 
     public static Tag compoundToVanillaCompound(TagBase tag) {
