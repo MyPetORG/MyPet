@@ -415,7 +415,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public String itemstackToString(org.bukkit.inventory.ItemStack itemStack) {
         ItemStack stack = CraftItemStack.asNMSCopy(itemStack);
-        return ItemStackNBTConverter.itemStackToVanillaCompound(stack).toString();
+        return ". " + ItemStackNBTConverter.itemStackToVanillaCompound(stack).toString();
     }
 
     @Override
