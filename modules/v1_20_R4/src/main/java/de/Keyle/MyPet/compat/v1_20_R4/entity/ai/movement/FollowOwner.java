@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.ai.navigation.MyAquaticPetPathNavigation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -169,7 +170,7 @@ public class FollowOwner implements AIGoal {
 			// make the pet faster when the player is has the SPEED effect
 			// TODO check if this canbe removed in later versions (again)
 			for(MobEffectInstance eff:owner.getActiveEffects()) {
-				if (eff.getEffect() == MobEffects.MOVEMENT_SPEED) {
+				if (eff.getEffect() instanceof MobEffect && eff.getEffect() == MobEffects.MOVEMENT_SPEED) {
 					walkSpeed += eff.getAmplifier() * 0.2 * walkSpeed;
 					break;
 				}
