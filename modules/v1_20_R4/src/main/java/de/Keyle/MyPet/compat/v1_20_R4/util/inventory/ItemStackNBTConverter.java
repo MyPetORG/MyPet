@@ -20,13 +20,19 @@
 
 package de.Keyle.MyPet.compat.v1_20_R4.util.inventory;
 
+import com.mojang.datafixers.DataFixer;
+import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_20_R4.util.NBTHelper;
 import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
+import net.minecraft.SharedConstants;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.ItemStack;
+import org.bukkit.craftbukkit.v1_20_R4.CraftRegistry;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 
 import java.lang.reflect.Field;
@@ -37,19 +43,37 @@ import java.util.Set;
 @Compat("v1_20_R4")
 public class ItemStackNBTConverter {
 
-	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "c"); //List-Field (or value)
+    private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "c"); //List-Field (or value)
+    public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
 
     public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
     }
 
     public static TagCompound itemStackToCompound(ItemStack itemStack) {
-        return (TagCompound) vanillaCompoundToCompound(NBTHelper.save(itemStack));
+        return (TagCompound) vanillaCompoundToCompound(itemStackToVanillaCompound(itemStack));
+    }
+
+    public static CompoundTag itemStackToVanillaCompound(ItemStack itemStack) {
+        return (CompoundTag) itemStack.save(registryAccess);
     }
 
     public static ItemStack compoundToItemStack(TagCompound compound) {
         CompoundTag tagCompound = (CompoundTag) compoundToVanillaCompound(compound);
-        return NBTHelper.parseItemStack(tagCompound);
+        return vanillaCompoundToItemStack(tagCompound);
+    }
+
+    public static ItemStack vanillaCompoundToItemStack(CompoundTag compoundTag) {
+        // Conversion is fun
+        if (compoundTag.contains("tag")) {
+            DataFixer fixer = DataFixers.getDataFixer();
+            Dynamic<Tag> dyn = new Dynamic<>(NbtOps.INSTANCE, compoundTag);
+            Dynamic<Tag> updatedDyn = fixer.update(References.ITEM_STACK, dyn,
+                    1519, SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+            return ItemStack.parseOptional(registryAccess, (CompoundTag) updatedDyn.getValue());
+        }
+
+        return ItemStack.parseOptional(registryAccess, compoundTag);
     }
 
     public static Tag compoundToVanillaCompound(TagBase tag) {

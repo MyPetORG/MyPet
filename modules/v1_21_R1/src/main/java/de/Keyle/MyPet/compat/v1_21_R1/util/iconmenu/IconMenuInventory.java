@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_21_R1.util.NBTHelper;
 import de.Keyle.MyPet.compat.v1_21_R1.util.inventory.CustomInventory;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -33,6 +32,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
 import org.bukkit.Material;
@@ -131,8 +131,8 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             is = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.STONE));
         }
 
-        if (NBTHelper.getTag(is) == null) {
-            NBTHelper.setTag(is, new CompoundTag());
+        if (is.get(DataComponents.CUSTOM_DATA) == null) {
+            is.set(DataComponents.CUSTOM_DATA, CustomData.of(new CompoundTag()));
         }
 
         /*if (icon.getBukkitMeta() != null) {

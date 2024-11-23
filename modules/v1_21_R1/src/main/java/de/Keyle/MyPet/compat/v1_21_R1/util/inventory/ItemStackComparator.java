@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.compat.v1_21_R1.util.inventory;
 
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_21_R1.util.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,15 +48,15 @@ public class ItemStackComparator {
             return false;
         }
         if (i1.hasItemMeta() && i2.hasItemMeta()) {
-            CompoundTag tag1 = NBTHelper.getTag(CraftItemStack.asNMSCopy(i1));
-            CompoundTag tag2 = NBTHelper.getTag(CraftItemStack.asNMSCopy(i2));
+            CompoundTag tag1 = ItemStackNBTConverter.itemStackToVanillaCompound(CraftItemStack.asNMSCopy(i1));
+            CompoundTag tag2 = ItemStackNBTConverter.itemStackToVanillaCompound(CraftItemStack.asNMSCopy(i2));
 
             if (tag1 != null) {
                 if (tag1.equals(tag2)) {
                     return true;
                 } else {
                     i1 = CraftItemStack.asBukkitCopy(CraftItemStack.asNMSCopy(i1));
-                    tag1 = NBTHelper.getTag(CraftItemStack.asNMSCopy(i1));
+                    tag1 = ItemStackNBTConverter.itemStackToVanillaCompound(CraftItemStack.asNMSCopy(i1));
                     return tag1.equals(tag2);
                 }
             }
