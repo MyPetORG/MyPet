@@ -328,6 +328,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("angry")
                 .add("tamed")
                 .add("collar:")
+                .add("variant:")
                 .get());
 
         petTypeOptionMap.put("zombie", new CommandOptionCreator()
@@ -597,6 +598,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     } else if (petType == MyPetType.TropicalFish) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     }
+                } else if (petType == MyPetType.Wolf) {
+                    // Wolf Variants are handled as (lowercase) Strings.
+                    compound.getCompoundData().put("Variant", new TagString(variantString.toLowerCase()));
                 }
             } else if (arg.startsWith("cat:")) {
                 String catTypeString = arg.replace("cat:", "");
