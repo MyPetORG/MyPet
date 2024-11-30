@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 
@@ -34,6 +35,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     protected boolean isTamed = false;
     protected boolean isAngry = false;
     protected DyeColor collarColor = DyeColor.RED;
+    protected String variantString = "pale";
 
     public MyWolf(MyPetPlayer petOwner) {
         super(petOwner);
@@ -57,6 +59,7 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
         info.getCompoundData().put("Tamed", new TagByte(isTamed()));
         info.getCompoundData().put("Angry", new TagByte(isAngry()));
         info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
+        info.getCompoundData().put("Variant", new TagString(getVariant()));
         return info;
     }
 
@@ -73,6 +76,9 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
         }
         if (info.containsKey("Angry")) {
             setAngry(info.getAs("Angry", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("Variant")) {
+            setVariant(info.getAs("Variant", TagString.class).getStringData());
         }
     }
 
@@ -112,6 +118,16 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    @Override
+    public String getVariant() {
+        return variantString;
+    }
+
+    @Override
+    public void setVariant(String variant) {
+        this.variantString = variant;
     }
 
     @Override

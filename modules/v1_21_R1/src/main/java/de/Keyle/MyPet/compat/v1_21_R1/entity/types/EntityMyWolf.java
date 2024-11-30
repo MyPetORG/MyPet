@@ -25,14 +25,18 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWolf;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.WolfVariant;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +56,7 @@ public class EntityMyWolf extends EntityMyPet {
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN); //Interested
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Holder<WolfVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.WOLF_VARIANT);
 
 	protected boolean shaking;
 	protected boolean isWet;
@@ -134,6 +139,9 @@ public class EntityMyWolf extends EntityMyPet {
 		builder.define(UNUSED_WATCHER, false); // not used
 		builder.define(COLLAR_COLOR_WATCHER, 14);
 		builder.define(ANGER_WATCHER, 0);
+
+		Holder<WolfVariant> variant = this.registryAccess().registryOrThrow(Registries.WOLF_VARIANT).getHolder(ResourceLocation.tryParse("pale")).get();
+		builder.define(VARIANT_WATCHER, variant);
 	}
 
 	@Override
@@ -159,6 +167,8 @@ public class EntityMyWolf extends EntityMyPet {
 		}
 
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
+
+		this.getEntityData().set(VARIANT_WATCHER, this.registryAccess().registryOrThrow(Registries.WOLF_VARIANT).getHolder(ResourceLocation.tryParse(getMyPet().getVariant())).get());
 	}
 
 	@Override

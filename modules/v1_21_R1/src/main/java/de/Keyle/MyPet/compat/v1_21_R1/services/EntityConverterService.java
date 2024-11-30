@@ -50,6 +50,7 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 @Compat("v1_21_R1")
@@ -334,6 +335,14 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Fox) normalEntity).setFoxType(((MyFox) myPet).getFoxType());
         }else if (myPet instanceof MyFrog) {
             ((Frog) normalEntity).setVariant(Frog.Variant.values()[((MyFrog) myPet).getFrogVariant()]);
+        }else if (myPet instanceof MyWolf) {
+            Method getVariant = ReflectionUtil.getMethod(Wolf.Variant.class, "getVariant", String.class);
+            try {
+                Wolf.Variant leVariant = (Wolf.Variant) getVariant.invoke(null, ((MyWolf)myPet).getVariant());
+                ((Wolf) normalEntity).setVariant(leVariant);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -544,6 +553,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public void convertWolf(Wolf wolf, TagCompound properties) {
         properties.getCompoundData().put("Tamed", new TagByte(wolf.isTamed()));
         properties.getCompoundData().put("CollarColor", new TagByte(wolf.getCollarColor().ordinal()));
+        properties.getCompoundData().put("Variant", new TagString(wolf.getVariant().getKey().getKey()));
     }
 
     public void convertTropicalFish(TropicalFish tropicalFish, TagCompound properties) {

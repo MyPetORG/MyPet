@@ -38,4 +38,8 @@ public interface MyWolf extends MyPet, MyPetBaby {
     boolean isTamed();
 
     void setTamed(boolean flag);
+
+    String getVariant();
+
+    void setVariant(String variant);
 }
