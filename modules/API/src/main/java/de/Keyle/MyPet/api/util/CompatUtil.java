@@ -136,6 +136,10 @@ public class CompatUtil {
             case "1.21.1":
                 bukkitVersion = "v1_21_R1";
                 break;
+            case "1.21.2":
+            case "1.21.3":
+                bukkitVersion = "v1_21_R2";
+                break;
             default:
                 bukkitVersion=null;
         }
