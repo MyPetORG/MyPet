@@ -84,7 +84,7 @@
             </exclusions>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_9_R2</artifactId>
             <version>1</version>
@@ -94,7 +94,7 @@
                     <artifactId>craftbukkit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_12_R1</artifactId>
@@ -107,7 +107,7 @@
             </exclusions>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_16_R1</artifactId>
             <version>1</version>
@@ -117,7 +117,7 @@
                     <artifactId>craftbukkit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-compat-v1_16_R3</artifactId>
