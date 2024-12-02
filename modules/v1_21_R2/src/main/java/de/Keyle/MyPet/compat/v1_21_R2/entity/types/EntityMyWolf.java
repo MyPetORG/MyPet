@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWolf;
 import de.Keyle.MyPet.compat.v1_21_R2.entity.EntityMyPet;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -37,6 +38,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.WolfVariant;
+import net.minecraft.world.entity.animal.WolfVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
@@ -61,6 +63,8 @@ public class EntityMyWolf extends EntityMyPet {
 	protected boolean shaking;
 	protected boolean isWet;
 	protected float shakeCounter;
+
+	Registry<WolfVariant> varRegistry;
 
 	public EntityMyWolf(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -140,9 +144,9 @@ public class EntityMyWolf extends EntityMyPet {
 		builder.define(COLLAR_COLOR_WATCHER, 14);
 		builder.define(ANGER_WATCHER, 0);
 
-		//TODO whatever happened here
-		Holder<WolfVariant> variant = this.registryAccess().get(Registries.WOLF_VARIANT).get()
-				.value().get(ResourceLocation.tryParse("pale")).get();
+		if (varRegistry == null)
+			this.varRegistry = this.registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
+		Holder<WolfVariant> variant =  varRegistry.get(WolfVariants.DEFAULT).or(varRegistry::getAny).orElseThrow();
 		builder.define(VARIANT_WATCHER, variant);
 	}
 
@@ -170,9 +174,10 @@ public class EntityMyWolf extends EntityMyPet {
 
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
-		Optional<Holder.Reference<WolfVariant>> variantOptional = this.registryAccess().get(Registries.WOLF_VARIANT).get().value().get(ResourceLocation.tryParse(getMyPet().getVariant()));
-		if (variantOptional.isPresent())
-			this.getEntityData().set(VARIANT_WATCHER, variantOptional.get());
+		if (varRegistry == null)
+			this.varRegistry = this.registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
+		Optional<Holder.Reference<WolfVariant>> variantOptional = varRegistry.get(ResourceLocation.tryParse(getMyPet().getVariant()));
+        variantOptional.ifPresent(wolfVariantReference -> this.getEntityData().set(VARIANT_WATCHER, wolfVariantReference));
 	}
 
 	@Override
