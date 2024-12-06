@@ -8871,4 +8871,269 @@
     "id": "wind_charge",
     "introduced": "1.21"
   }
+  ,
+  {
+    "id": "black_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "blue_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "bordure_indented_banner_pattern",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "brown_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "cyan_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "field_masoned_banner_pattern",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "gray_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "green_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "light_blue_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "light_gray_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "lime_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "magenta_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "orange_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "pink_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "purple_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "red_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "white_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "yellow_bundle",
+    "introduced": "1.21.2"
+  }
+  ,
+  {
+    "id": "chiseled_resin_bricks",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "closed_eyeblossom",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "creaking_heart",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "creaking_spawn_egg",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "open_eyeblossom",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_hanging_moss",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_moss_block",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_moss_carpet",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_boat",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_button",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_chest_boat",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_door",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_fence",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_fence_gate",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_hanging_sign",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_leaves",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_log",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_planks",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_pressure_plate",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_sapling",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_sign",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_slab",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_stairs",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_trapdoor",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "pale_oak_wood",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "resin_block",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "resin_brick",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "resin_brick_slab",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "resin_brick_stairs",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "resin_brick_wall",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "resin_bricks",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "resin_clump",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "stripped_pale_oak_log",
+    "introduced": "1.21.4"
+  }
+  ,
+  {
+    "id": "stripped_pale_oak_wood",
+    "introduced": "1.21.4"
+  }
 ]
