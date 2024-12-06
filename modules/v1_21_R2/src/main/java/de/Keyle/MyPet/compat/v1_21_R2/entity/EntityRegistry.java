@@ -134,6 +134,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		Field allTagsField = ReflectionUtil.getField(MappedRegistry.class,"k"); //allTags
 		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "f"); //ENTITY_TYPE
 
+		Object allTagsSaved = ReflectionUtil.getFieldValue(allTagsField, entityRegistry);
+
 		if(custReg != null) {
 			//Gotta put the original Registry in. Just for a moment
 			try {
@@ -190,6 +192,9 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 		//Post-Handle Vanilla Registry
 		entityRegistry.freeze();
+
+		ReflectionUtil.setFieldValue(allTagsField, entityRegistry, allTagsSaved);
+
 		if(custReg != null) {
 			//Gotta put the custom Registry back into place
 			try {
