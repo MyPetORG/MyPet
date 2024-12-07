@@ -57,7 +57,7 @@ public class CompatUtil {
         }
 
         if (internalVersion == null) {
-            internalVersion = GetBukkitVersionFromMinecraftVersion();
+            internalVersion = getBukkitVersionFromMinecraftVersion();
         }
     }
 
@@ -130,7 +130,7 @@ public class CompatUtil {
         throw new IllegalArgumentException("\"version\" must be a valid Minecraft version. \"" + version + "\" given.");
     }
 
-    private String GetBukkitVersionFromMinecraftVersion() {
+    private String getBukkitVersionFromMinecraftVersion() {
         HashMap<String, String> versionMap = new HashMap<>();
         BufferedReader donation = null;
         int timeout = 2000;
