@@ -24,9 +24,13 @@ import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -127,22 +131,29 @@ public class CompatUtil {
     }
 
     private String GetBukkitVersionFromMinecraftVersion() {
-        String bukkitVersion = null;
-        switch(minecraftVersion) {
-            case "1.20.6":
-                bukkitVersion = "v1_20_R4";
-                break;
-            case "1.21":
-            case "1.21.1":
-                bukkitVersion = "v1_21_R1";
-                break;
-            case "1.21.2":
-            case "1.21.3":
-                bukkitVersion = "v1_21_R2";
-                break;
-            default:
-                bukkitVersion=null;
+        HashMap<String, String> versionMap = new HashMap<>();
+        BufferedReader donation = null;
+        int timeout = 2000;
+        try {
+            URL url = new URL("https://raw.githubusercontent.com/MyPetORG/MyPet/versionmatcher/versionmatcher.csv");
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            huc.setConnectTimeout(timeout);
+            huc.setReadTimeout(timeout);
+            huc.setRequestMethod("GET");
+            huc.connect();
+            donation = new BufferedReader(new InputStreamReader(huc.getInputStream()));
+
+            String line;
+            while ((line = donation.readLine()) != null) {
+                String[] parts = line.split(",");
+                versionMap.put(parts[0], parts[1]);
+            }
+        } catch(Exception ignored) {
         }
+
+        String bukkitVersion = null;
+        if (versionMap.containsKey(minecraftVersion))
+            bukkitVersion = versionMap.get(minecraftVersion);
         return bukkitVersion;
     }
 
