@@ -202,7 +202,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		And then tell Minecraft to reload those values for them to actually take effect.
 		Gotta love MC */
 		ReflectionUtil.setFieldValue(allTagsField, entityRegistry, allTagsSaved);
-		Method refreshMethod = ReflectionUtil.getMethod(MappedRegistry.class, "u");
+		Method refreshMethod = ReflectionUtil.getMethod(MappedRegistry.class, "u"); //refreshTagsInHolders
         try {
             refreshMethod.invoke(entityRegistry);
         } catch (Exception e) {
