@@ -149,7 +149,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		}
 		if (itemAdd.getAmount() > 0) {
 			for (int i = 0; i < this.getContainerSize(); i++) {
-				if (getItem(i) == ItemStack.EMPTY) {
+				if (getItem(i).isEmpty()) {
 					if (itemAdd.getAmount() <= itemAdd.getMaxStackSize()) {
 						setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
 						itemAdd.setAmount(0);
@@ -202,7 +202,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 
 	@Override
 	public ItemStack removeItem(int slot, int subtract) {
-		if (slot < size && items.get(slot) != ItemStack.EMPTY) {
+		if (slot < size && !items.get(slot).isEmpty()) {
 			if (items.get(slot).getCount() <= subtract) {
 				ItemStack itemStack = items.get(slot);
 				items.set(slot, ItemStack.EMPTY);
@@ -233,7 +233,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		List<TagCompound> itemList = new ArrayList<>();
 		for (int i = 0; i < this.items.size(); i++) {
 			ItemStack itemStack = this.items.get(i);
-			if (itemStack != ItemStack.EMPTY) {
+			if (!itemStack.isEmpty()) {
 				TagCompound item = ItemStackNBTConverter.itemStackToCompound(itemStack);
 				item.getCompoundData().put("Slot", new TagByte((byte) i));
 				itemList.add(item);
@@ -274,9 +274,9 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 		this.transaction.remove(who);
 		if (items.size() > this.size) {
 			for (int counterOutside = items.size() - 1; counterOutside >= this.size; counterOutside--) {
-				if (items.get(counterOutside) != ItemStack.EMPTY) {
+				if (!items.get(counterOutside).isEmpty()) {
 					for (int counterInside = 0; counterInside < size; counterInside++) {
-						if (items.get(counterInside) == ItemStack.EMPTY) {
+						if (items.get(counterInside).isEmpty()) {
 							items.set(counterInside, items.get(counterOutside));
 							items.set(counterOutside, ItemStack.EMPTY);
 						}
@@ -359,7 +359,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 
 	@Override
 	public ItemStack removeItemNoUpdate(int i) {
-		if (items.get(i) != ItemStack.EMPTY) {
+		if (!items.get(i).isEmpty()) {
 			ItemStack itemstack = items.get(i);
 
 			items.set(i, ItemStack.EMPTY);
