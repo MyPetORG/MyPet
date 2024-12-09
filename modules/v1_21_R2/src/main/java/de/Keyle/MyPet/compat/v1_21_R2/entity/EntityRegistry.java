@@ -193,7 +193,21 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		//Post-Handle Vanilla Registry
 		entityRegistry.freeze();
 
+		/* Let me explain what's happening here:
+		Earlier we saved allTags. They contain stuff like special vulnerabilities to enchantments,
+		FallDamage-Resistance and in some instances (namely the Turtle) the ability for a Mob to
+		breath underwater.
+		Through the above code we reset those tags so we now have to do 2 things:
+		First re-add the Tags (that's why we saved them)
+		And then tell Minecraft to reload those values for them to actually take effect.
+		Gotta love MC */
 		ReflectionUtil.setFieldValue(allTagsField, entityRegistry, allTagsSaved);
+		Method refreshMethod = ReflectionUtil.getMethod(MappedRegistry.class, "u");
+        try {
+            refreshMethod.invoke(entityRegistry);
+        } catch (Exception e) {
+			e.printStackTrace();
+        }
 
 		if(custReg != null) {
 			//Gotta put the custom Registry back into place
