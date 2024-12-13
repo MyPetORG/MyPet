@@ -208,8 +208,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         TagCompound offersTag = villagerTag.get("Offers");
                         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
                         DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT.get("Offers"));
-                        if(dataresult.hasResultOrPartial() && dataresult.resultOrPartial().isPresent()) {
+                        try {
                             entityVillager.setOffers(dataresult.resultOrPartial().get());
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                     if (villagerTag.containsKey("Inventory")) {
