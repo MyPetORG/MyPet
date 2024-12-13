@@ -76,6 +76,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -140,8 +141,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	protected boolean indirectRiding = false;
 	// Needed for the MyPetFlyingMoveControl - Sometimes overwritten by specific pets
 	protected float maxTurn = 20;
-
-	private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bn");	//Jumping-Field
 
 	public EntityMyPet(Level world, MyPet myPet) {
 		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
@@ -516,7 +515,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 					(Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null && Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(itemStack))) {
 				if (myPet.getSkills().isActive(RideImpl.class) && canMove()) {
 					if (Permissions.hasExtended(owner, "MyPet.extended.ride")) {
-						((CraftPlayer) owner).getHandle().startRiding(this);
+						((CraftPlayer) owner).getHandle().startRiding(this, true);
 						return InteractionResult.CONSUME;
 					} else {
 						getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()), 2000);
@@ -1274,11 +1273,11 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			this.flyDist = 0;
 		}
 
-		LivingEntity passenger = null;
+		ServerPlayer passenger = null;
 		if(!indirectRiding) {
-			passenger = (LivingEntity) this.getFirstPassenger();
+			passenger = (ServerPlayer) this.getFirstPassenger();
 		} else {
-			passenger = (LivingEntity) this.getFirstPassenger().getFirstPassenger();
+			passenger = (ServerPlayer) this.getFirstPassenger().getFirstPassenger();
 		}
 		if(passenger == null) {
 			super.travel(vec3d);
@@ -1312,9 +1311,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		this.setRot(this.getYRot(), this.getXRot());
 		this.yHeadRot = (this.yBodyRot = this.getYRot());
 
-		// get motion from passenger (player)
-		double motionSideways = passenger.xxa;
-		double motionForward = passenger.zza * 2;
+		// get motion from passenger-input (player)
+		Input passengerInput = passenger.getLastClientInput();
+		float f = passengerInput.left() == passengerInput.right() ? 0.0F : (passengerInput.left() ? 1.0F : -1.0F);
+		float f1 = passengerInput.forward() == passengerInput.backward() ? 0.0F : (passengerInput.forward() ? 1.0F : -1.0F);
+
+		Vec3 move = new Vec3((double)f, 0.0, (double)f1);
+		double motionSideways = move.x;
+		double motionForward = move.z * 2;
 
 		// backwards is slower
 		if (motionForward <= 0.0F) {
@@ -1332,7 +1336,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			ascendSpeed *= factor;
 		}
 
-		ride(motionSideways, motionForward, vec3d.y(), speed); // apply motion
+		ride(motionSideways, motionForward, move.y(), speed); // apply motion
 
 		// throw player move event
 		if (Configuration.Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING) {
@@ -1357,16 +1361,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			}
 		}
 
-		if (jump != null && this.isVehicle()) {
-			boolean doJump = false;
-			if (jump != null) {
-				try {
-					doJump = jump.getBoolean(passenger);
-				} catch (IllegalAccessException ignored) {
-				}
-			}
-
-			if (doJump) {
+		if (this.isVehicle()) {
+			if (passengerInput.jump()) {
 				if (onGround) {
 					jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
 					String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
