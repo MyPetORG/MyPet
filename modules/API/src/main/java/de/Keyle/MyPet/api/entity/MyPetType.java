@@ -243,7 +243,9 @@ public enum MyPetType {
     Sniffer("SNIFFER", "1.20", MySniffer.class, new Compat<>()
             .v("1.20", "sniffer")
             .search()),
-    Snowman("SNOWMAN", "1.7.10", MySnowman.class, new Compat<>()
+    Snowman((String) new Compat<>().v("1.7.10","SNOWMAN")
+            .v("1.20.6","SNOW_GOLEM").search().get(),
+            "1.7.10", MySnowman.class, new Compat<>()
             .v("1.7.10", 97)
             .v("1.13", "snow_golem")
             .search()),
