@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.compat.v1_21_R1.util.VariantConverter;
 import de.Keyle.MyPet.compat.v1_21_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -334,7 +335,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyFox) {
             ((Fox) normalEntity).setFoxType(((MyFox) myPet).getFoxType());
         }else if (myPet instanceof MyFrog) {
-            ((Frog) normalEntity).setVariant(Frog.Variant.values()[((MyFrog) myPet).getFrogVariant()]);
+            ((Frog) normalEntity).setVariant(VariantConverter.getBukkitFrogVariant(((MyFrog) myPet).getFrogVariant()));
         }else if (myPet instanceof MyWolf) {
             Method getVariant = ReflectionUtil.getMethod(Wolf.Variant.class, "getVariant", String.class);
             try {

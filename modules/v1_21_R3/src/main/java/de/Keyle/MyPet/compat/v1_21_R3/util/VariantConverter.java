@@ -3,6 +3,7 @@ package de.Keyle.MyPet.compat.v1_21_R3.util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.entity.animal.FrogVariant;
+import org.bukkit.entity.Frog;
 
 /**
  * Converts numerical variants into fancy new variants
@@ -28,13 +29,15 @@ public class VariantConverter {
     }
 
     private static enum FrogVariants {
-        TEMPERATE(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.TEMPERATE).value()),
-        WARM(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.WARM).value()),
-        COLD(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.COLD).value());
+        TEMPERATE(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.TEMPERATE).value(), Frog.Variant.TEMPERATE),
+        WARM(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.WARM).value(), Frog.Variant.WARM),
+        COLD(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.COLD).value(), Frog.Variant.COLD);
 
         FrogVariant variant;
-        FrogVariants(FrogVariant fV) {
+        Frog.Variant bukkitVariant;
+        FrogVariants(FrogVariant fV, Frog.Variant fV2) {
             this.variant = fV;
+            this.bukkitVariant = fV2;
         }
     }
 
@@ -44,5 +47,8 @@ public class VariantConverter {
 
     public static FrogVariant convertFrogVariant(int varId) {
         return FrogVariants.values()[varId].variant;
+    }
+    public static Frog.Variant getBukkitFrogVariant(int varId) {
+        return FrogVariants.values()[varId].bukkitVariant;
     }
 }
