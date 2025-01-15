@@ -23,6 +23,8 @@ package de.Keyle.MyPet.api.gui;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.locale.Translation;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
@@ -31,20 +33,31 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class IconMenu implements Listener {
+
     private IconMenuInventory inventory;
     private String title;
+
+    private @Nullable String paginationBasePath;
+    private @Nullable Integer pageSizeInSlots;
+    private int currentPageIndex;
+
     private OptionClickEventHandler handler;
     protected Map<Integer, IconMenuItem> options = new HashMap<>(54);
+
+    private final Plugin plugin;
 
     public IconMenu(String title, OptionClickEventHandler handler, Plugin plugin) {
         this.title = title;
         this.handler = handler;
+        this.plugin = plugin;
+
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -57,6 +70,9 @@ public class IconMenu implements Listener {
     }
 
     public int getSize() {
+        if (pageSizeInSlots != null)
+            return pageSizeInSlots;
+
         int size = 0;
         for (int i : options.keySet()) {
             if (++i > size) {
@@ -64,6 +80,21 @@ public class IconMenu implements Listener {
             }
         }
         return (int) (Math.ceil(size / 9.) * 9);
+    }
+
+    public IconMenu setPaginationIdentifier(String identifier) {
+        this.paginationBasePath = "MyPet.Pagination." + identifier;
+
+        int totalRows = plugin.getConfig().getInt(paginationBasePath + ".TotalRows", -1);
+
+        if (totalRows > 0) {
+            if (totalRows > 6)
+                totalRows = 6;
+
+            this.pageSizeInSlots = totalRows * 9;
+        }
+
+        return this;
     }
 
     public IconMenu setOption(int position, IconMenuItem icon) {
@@ -83,7 +114,64 @@ public class IconMenu implements Listener {
         return -1;
     }
 
+    private String substituteVariablesAndColors(String input) {
+        String colorizedInput = ChatColor.translateAlternateColorCodes('&', input);
+
+        if (pageSizeInSlots == null)
+            return colorizedInput;
+
+        int pageCapacity = pageSizeInSlots - 9;
+        int numberOfPages = (options.size() + (pageCapacity - 1)) / pageCapacity;
+
+        return colorizedInput
+          .replace("{currentPage}", String.valueOf(currentPageIndex + 1))
+          .replace("{numberOfPages}", String.valueOf(numberOfPages));
+    }
+
+    private IconMenuItem makeConfigurableItem(String key) {
+        IconMenuItem result = new IconMenuItem();
+
+        try {
+            String materialString = plugin.getConfig().getString(paginationBasePath + "." + key + ".Type");
+            result.setMaterial(Material.valueOf(materialString));
+        } catch (Exception ignored) {}
+
+        try {
+            String titleString = plugin.getConfig().getString(paginationBasePath + "." + key + ".Title");
+            result.setTitle(substituteVariablesAndColors(titleString));
+        } catch (Exception ignored) {}
+
+        try {
+            List<String> loreLines = plugin.getConfig().getStringList(paginationBasePath + "." + key + ".Lore");
+            String[] loreContents = new String[loreLines.size()];
+
+            for (int i = 0; i < loreLines.size(); ++i)
+                loreContents[i] = substituteVariablesAndColors(loreLines.get(i));
+
+            result.setLore(loreContents);
+        } catch (Exception ignored) {}
+
+        return result;
+    }
+
     public IconMenuItem getOption(int position) {
+        if (pageSizeInSlots != null) {
+            if (position == pageSizeInSlots - 9)
+                return makeConfigurableItem("PreviousPage");
+
+            if (position == pageSizeInSlots - 1)
+                return makeConfigurableItem("NextPage");
+
+            // Last row is always empty, besides the navigation-buttons
+            if (position > pageSizeInSlots - 9 && position < pageSizeInSlots - 1)
+                return null;
+
+            int pageCapacity = pageSizeInSlots - 9;
+            int optionsOffset = currentPageIndex * pageCapacity;
+
+            position += optionsOffset;
+        }
+
         return options.get(position);
     }
 
@@ -121,6 +209,28 @@ public class IconMenu implements Listener {
         HandlerList.unregisterAll(this);
     }
 
+    private void previousPage() {
+        if (currentPageIndex == 0)
+            return;
+
+        --currentPageIndex;
+        update();
+    }
+
+    private void nextPage() {
+        if (pageSizeInSlots == null)
+            return;
+
+        int pageCapacity = pageSizeInSlots - 9;
+        int numberOfPages = (options.size() + (pageCapacity - 1)) / pageCapacity;
+
+        if (currentPageIndex == numberOfPages - 1)
+            return;
+
+        ++currentPageIndex;
+        update();
+    }
+
     @EventHandler
     void onInventoryClose(InventoryCloseEvent event) {
         if (inventory != null && inventory.isMenuInventory(event.getInventory()) && inventory.getViewers().size() == 0) {
@@ -140,8 +250,29 @@ public class IconMenu implements Listener {
             event.setCancelled(true);
             event.setResult(Event.Result.DENY);
             int slot = event.getRawSlot();
-            if (slot >= 0 && slot < getSize() && options.containsKey(slot)) {
-                final IconMenu.OptionClickEvent e = new IconMenu.OptionClickEvent((Player) event.getWhoClicked(), slot, this, options.get(slot));
+
+            if (slot < 0 || slot >= getSize())
+                return;
+
+            int absolutePosition = slot;
+
+            if (pageSizeInSlots != null) {
+                if (slot == pageSizeInSlots - 9) {
+                    previousPage();
+                    return;
+                }
+
+                if (slot == pageSizeInSlots - 1) {
+                    nextPage();
+                    return;
+                }
+
+                int pageCapacity = pageSizeInSlots - 9;
+                absolutePosition += currentPageIndex * pageCapacity;
+            }
+
+            if (options.containsKey(absolutePosition)) {
+                final IconMenu.OptionClickEvent e = new IconMenu.OptionClickEvent((Player) event.getWhoClicked(), absolutePosition, this, options.get(absolutePosition));
                 handler.onOptionClick(e);
 
                 final Player p = (Player) event.getWhoClicked();

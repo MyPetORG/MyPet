@@ -199,7 +199,7 @@ public class PetShop {
                     }
                 }
             }
-        }, MyPetApi.getPlugin());
+        }, MyPetApi.getPlugin()).setPaginationIdentifier("PetShop");
 
         double balance = economyHook.getBalance(player);
         for (int pos : pets.keySet()) {
