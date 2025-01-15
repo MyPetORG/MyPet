@@ -315,8 +315,9 @@ public class PetShop {
                     }
                 });
             }
+
             int slot = 0;
-            while (!filler.isEmpty() && slot < 54) {
+            while (!filler.isEmpty()) {
                 if (this.pets.containsKey(slot)) {
                     slot++;
                     continue;

@@ -98,7 +98,7 @@ public class IconMenu implements Listener {
     }
 
     public IconMenu setOption(int position, IconMenuItem icon) {
-        if (position >= 0 && position < 54) {
+        if (position >= 0 && (pageSizeInSlots != null || position < 54)) {
             options.put(position, icon);
         }
         return this;
