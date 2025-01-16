@@ -306,11 +306,12 @@ public class PetShop {
                             converter.convert(pet);
                         }
 
-                        if (Util.isBetween(0, 53, pet.getPosition())) {
-                            this.pets.put(pet.getPosition(), pet);
-                        } else {
+                        if (pet.getPosition() < 0) {
                             filler.add(pet);
+                            return;
                         }
+
+                        this.pets.put(pet.getPosition(), pet);
                     } catch (MyPetTypeNotFoundException ignored) {
                     }
                 });

@@ -49,7 +49,10 @@ public class IconMenu implements Listener {
     private int currentPageIndex;
 
     private OptionClickEventHandler handler;
+
     protected Map<Integer, IconMenuItem> options = new HashMap<>(54);
+    private int maximumOptionPosition;
+    private int nextVacantOptionPosition;
 
     private final Plugin plugin;
 
@@ -73,12 +76,7 @@ public class IconMenu implements Listener {
         if (pageSizeInSlots != null)
             return pageSizeInSlots;
 
-        int size = 0;
-        for (int i : options.keySet()) {
-            if (++i > size) {
-                size = i;
-            }
-        }
+        int size = maximumOptionPosition + 1;
         return (int) (Math.ceil(size / 9.) * 9);
     }
 
@@ -97,21 +95,40 @@ public class IconMenu implements Listener {
         return this;
     }
 
-    public IconMenu setOption(int position, IconMenuItem icon) {
-        if (position >= 0 && (pageSizeInSlots != null || position < 54)) {
-            options.put(position, icon);
-        }
-        return this;
+    private void advanceNextVacantOptionPosition() {
+        do {
+            ++nextVacantOptionPosition;
+        } while (options.containsKey(nextVacantOptionPosition));
+    }
+
+    public void setOption(int position, IconMenuItem icon) {
+        if (position < 0)
+            return;
+
+        if (position > maximumOptionPosition)
+            maximumOptionPosition = position;
+
+        if (position == nextVacantOptionPosition)
+            advanceNextVacantOptionPosition();
+
+        options.put(position, icon);
     }
 
     public int addOption(IconMenuItem icon) {
-        for (int i = 0; i < 54; i++) {
-            if (!options.containsKey(i)) {
-                options.put(i, icon);
-                return i;
-            }
-        }
-        return -1;
+        int position = nextVacantOptionPosition;
+
+        options.put(position, icon);
+        advanceNextVacantOptionPosition();
+
+        return position;
+    }
+
+    private int getNumberOfPages() {
+        if (pageSizeInSlots == null)
+            return 1;
+
+        int pageCapacity = pageSizeInSlots - 9;
+        return ((maximumOptionPosition + 1) + (pageCapacity - 1)) / pageCapacity;
     }
 
     private String substituteVariablesAndColors(String input) {
@@ -120,12 +137,9 @@ public class IconMenu implements Listener {
         if (pageSizeInSlots == null)
             return colorizedInput;
 
-        int pageCapacity = pageSizeInSlots - 9;
-        int numberOfPages = (options.size() + (pageCapacity - 1)) / pageCapacity;
-
         return colorizedInput
           .replace("{currentPage}", String.valueOf(currentPageIndex + 1))
-          .replace("{numberOfPages}", String.valueOf(numberOfPages));
+          .replace("{numberOfPages}", String.valueOf(getNumberOfPages()));
     }
 
     private IconMenuItem makeConfigurableItem(String key) {
@@ -221,10 +235,7 @@ public class IconMenu implements Listener {
         if (pageSizeInSlots == null)
             return;
 
-        int pageCapacity = pageSizeInSlots - 9;
-        int numberOfPages = (options.size() + (pageCapacity - 1)) / pageCapacity;
-
-        if (currentPageIndex == numberOfPages - 1)
+        if (currentPageIndex == getNumberOfPages() - 1)
             return;
 
         ++currentPageIndex;
