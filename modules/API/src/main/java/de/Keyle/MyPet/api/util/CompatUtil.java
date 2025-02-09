@@ -20,17 +20,20 @@
 
 package de.Keyle.MyPet.api.util;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -132,19 +135,13 @@ public class CompatUtil {
 
     private String getBukkitVersionFromMinecraftVersion() {
         HashMap<String, String> versionMap = new HashMap<>();
-        BufferedReader donation = null;
-        int timeout = 2000;
         try {
-            URL url = new URL("https://raw.githubusercontent.com/MyPetORG/MyPet/versionmatcher/versionmatcher.csv");
-            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setConnectTimeout(timeout);
-            huc.setReadTimeout(timeout);
-            huc.setRequestMethod("GET");
-            huc.connect();
-            donation = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-
+            InputStreamReader streamReader = new InputStreamReader(MyPetApi.getPlugin().getResource("versionmatcher.csv"), StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(streamReader);
+            Bukkit.getConsoleSender().sendMessage("Trying to read");
             String line;
-            while ((line = donation.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
+                Bukkit.getConsoleSender().sendMessage(line);
                 String[] parts = line.split(",");
                 versionMap.put(parts[0], parts[1]);
             }
