@@ -24,6 +24,6 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 
-@DefaultInfo(food = {"torchflower_seed"}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {"torchflower_seeds"}, leashFlags = {"Tamed"})
 public interface MySniffer extends MyPet, MyPetBaby {
 }
