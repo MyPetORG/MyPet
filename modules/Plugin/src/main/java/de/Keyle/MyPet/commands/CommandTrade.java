@@ -273,7 +273,13 @@ public class CommandTrade implements CommandTabCompleter {
                 return filterTabCompletionResults(tradeList, strings[0]);
             }
         }
-        return Collections.emptyList();
+        // Return all player names
+        List<String> players = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            players.add(player.getName());
+        }
+        return filterTabCompletionResults(players, strings[0]);
+
     }
 
     private class Offer {
