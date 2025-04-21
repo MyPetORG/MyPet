@@ -26,3 +26,4 @@ build.number
 /modules/*/target
 dependency-reduced-pom.xml
 dl/
+src/main/resources/versionmatcher.csv

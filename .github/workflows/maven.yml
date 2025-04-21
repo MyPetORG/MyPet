@@ -58,7 +58,7 @@ jobs:
           echo PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) >> $GITHUB_ENV
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: latest-plugin-jar
           path: ${{ env.JAR_FILE_NAME }}

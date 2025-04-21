@@ -23,6 +23,8 @@ package de.Keyle.MyPet.compat.v1_20_R2.entity;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.compat.v1_20_R2.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.compat.v1_20_R2.entity.ai.movement.Control;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.ai.movement.MyPetFlyingMoveControl;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.ai.movement.MyPetRandomFly;
 import net.minecraft.core.BlockPos;
@@ -86,5 +88,7 @@ public abstract class EntityMyFlyingPet extends EntityMyPet {
 	public void setPathfinder() {
 		super.setPathfinder();
 		petPathfinderSelector.addGoal("RandomFly", new MyPetRandomFly(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
+		petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.7F, this.getBbWidth() + 1.3, 20));
+		petPathfinderSelector.addGoal("Control", new Control(this, 0.8f));
 	}
 }

@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.repository;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.event.MyPetLoadEvent;
@@ -65,6 +67,9 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         if (storedMyPet == null) {
             return Optional.empty();
         }
+
+        if (storedMyPet.getPetType() == MyPetType.EnderDragon && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4")>=0)
+            return Optional.empty();
         
         if (!storedMyPet.getOwner().isOnline()) {
             return Optional.empty();
