@@ -27,10 +27,10 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import me.blvckbytes.raw_message.MessageColor;
+import me.blvckbytes.raw_message.RawMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -91,20 +91,22 @@ public class CommandList implements CommandTabCompleter {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.List.Player", lang), owner.getName()));
                     }
                     boolean doComma = false;
-                    FancyMessage message = new FancyMessage("");
+                    RawMessage message = new RawMessage();
                     for (StoredMyPet mypet : value) {
 
                         if (doComma) {
-                            message.then(", ");
+                            message.addExtra(", ");
                         }
-                        message.then(mypet.getPetName())
-                                .color(ChatColor.AQUA)
-                                .itemTooltip(Util.myPetToItemTooltip(mypet, lang));
+                        message.addExtra(
+                          new RawMessage(mypet.getPetName())
+                            .setColor(MessageColor.AQUA)
+                            .setHoverAction(Util.myPetToItemAction(mypet, lang))
+                        );
                         if (!doComma) {
                             doComma = true;
                         }
                     }
-                    MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
+                    message.tellRawTo((Player) sender);
                 }
             });
         }

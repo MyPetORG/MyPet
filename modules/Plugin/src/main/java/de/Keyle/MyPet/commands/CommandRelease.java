@@ -31,10 +31,12 @@ import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.chat.FancyMessage;
-import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
+import me.blvckbytes.raw_message.MessageColor;
+import me.blvckbytes.raw_message.RawMessage;
+import me.blvckbytes.raw_message.click.RunCommandAction;
+import me.blvckbytes.raw_message.hover.ShowItemAction;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -47,9 +49,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RESET;
 
 public class CommandRelease implements CommandTabCompleter {
 
@@ -116,24 +115,72 @@ public class CommandRelease implements CommandTabCompleter {
 
                     return true;
                 } else {
-                    FancyMessage message = new FancyMessage(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ");
+                    ShowItemAction hoverItem = new ShowItemAction()
+                      .setName(myPet.getPetName())
+                      .addLoreLine(
+                        new RawMessage(Translation.getString("Name.Hunger", petOwner) + ": ")
+                          .clearImplicitStyling()
+                          .addExtra(
+                            new RawMessage(Math.round(myPet.getSaturation()))
+                              .setColor(MessageColor.GOLD)
+                          )
+                      );
 
-                    List<String> lore = new ArrayList<>();
-                    lore.add(RESET + Translation.getString("Name.Hunger", petOwner) + ": " + GOLD + Math.round(myPet.getSaturation()));
                     if (myPet.getRespawnTime() > 0) {
-                        lore.add(RESET + Translation.getString("Name.Respawntime", petOwner) + ": " + GOLD + myPet.getRespawnTime() + "sec");
+                        hoverItem.addLoreLine(
+                          new RawMessage(Translation.getString("Name.Respawntime", petOwner) + ": ")
+                            .clearImplicitStyling()
+                            .addExtra(
+                              new RawMessage(myPet.getRespawnTime() + "sec")
+                                .setColor(MessageColor.GOLD)
+                            )
+                        );
                     } else {
-                        lore.add(RESET + Translation.getString("Name.HP", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getHealth()));
+                        hoverItem.addLoreLine(
+                          new RawMessage(Translation.getString("Name.HP", petOwner) + ": ")
+                            .clearImplicitStyling()
+                            .addExtra(
+                              new RawMessage(String.format("%1.2f", myPet.getHealth()))
+                                .setColor(MessageColor.GOLD)
+                            )
+                        );
                     }
-                    lore.add(RESET + Translation.getString("Name.Exp", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getExp()));
-                    lore.add(RESET + Translation.getString("Name.Type", petOwner) + ": " + GOLD + Translation.getString("Name." + myPet.getPetType().name(), petOwner));
-                    lore.add(RESET + Translation.getString("Name.Skilltree", petOwner) + ": " + GOLD + (myPet.getSkilltree() != null ? Colorizer.setColors(myPet.getSkilltree().getDisplayName()) : "-"));
-                    
-                    message.then(myPet.getPetName())
-                            .color(ChatColor.AQUA)
-                            .command("/petrelease " + ChatColor.stripColor(myPet.getPetName()))
-                            .itemTooltip(new ItemTooltip().addLore(lore).setTitle(myPet.getPetName()));
-                    MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
+
+                    hoverItem
+                      .addLoreLine(
+                        new RawMessage(Translation.getString("Name.Exp", petOwner) + ": ")
+                          .clearImplicitStyling()
+                          .addExtra(
+                            new RawMessage(String.format("%1.2f", myPet.getExp()))
+                              .setColor(MessageColor.GOLD)
+                          )
+                      )
+                      .addLoreLine(
+                        new RawMessage(Translation.getString("Name.Type", petOwner) + ": ")
+                          .clearImplicitStyling()
+                          .addExtra(
+                            new RawMessage(Translation.getString("Name." + myPet.getPetType().name(), petOwner))
+                              .setColor(MessageColor.GOLD)
+                          )
+                      )
+                      .addLoreLine(
+                        new RawMessage(Translation.getString("Name.Skilltree", petOwner) + ": ")
+                          .clearImplicitStyling()
+                          .addExtra(
+                            new RawMessage(myPet.getSkilltree() != null ? Colorizer.setColors(myPet.getSkilltree().getDisplayName()) : "-")
+                              .setColor(MessageColor.GOLD)
+                          )
+                      );
+
+                    new RawMessage(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ")
+                      .addExtra(
+                        new RawMessage(myPet.getPetName())
+                          .setColor(MessageColor.AQUA)
+                          .setClickAction(new RunCommandAction("/petrelease " + ChatColor.stripColor(myPet.getPetName())))
+                          .setHoverAction(hoverItem)
+                      )
+                      .tellRawTo((Player) sender);
+
                     return true;
                 }
             } else {

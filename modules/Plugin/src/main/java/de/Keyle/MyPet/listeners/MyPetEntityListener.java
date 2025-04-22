@@ -44,13 +44,14 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.EnumSelector;
-import de.Keyle.MyPet.api.util.chat.FancyMessage;
-import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
+import me.blvckbytes.raw_message.MessageColor;
+import me.blvckbytes.raw_message.RawMessage;
+import me.blvckbytes.raw_message.hover.ShowItemAction;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -61,8 +62,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class MyPetEntityListener implements Listener {
 
@@ -204,43 +210,51 @@ public class MyPetEntityListener implements Listener {
                     if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
                         damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + Math.round(myPet.getSaturation()));
 
-                        FancyMessage m = new FancyMessage("   " + Translation.getString("Name.Food", damager) + ": ");
+                        RawMessage message = new RawMessage("   " + Translation.getString("Name.Food", damager) + ": ");
+
                         boolean comma = false;
                         for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPet.getPetType())) {
                             ItemStack is = material.getItem();
-                            if (is == null) {
+                            if (is == null || is.getType() == Material.AIR) {
                                 continue;
                             }
                             if (comma) {
-                                m.then(", ");
+                                message.addExtra(", ");
                             }
-                            if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
-                                m.then(is.getItemMeta().getDisplayName());
+
+                            RawMessage itemPart = new RawMessage();
+                            ShowItemAction itemAction = new ShowItemAction(is.getType());
+
+                            itemPart.setHoverAction(itemAction);
+                            message.addExtra(itemPart);
+
+                            ItemMeta meta = is.getItemMeta();
+
+                            if (meta != null) {
+                                if (meta.hasDisplayName())
+                                    itemAction.setName(meta.getDisplayName());
+
+                                if (meta.hasLore())
+                                    itemAction.setLoreStrings(meta.getLore());
+                            }
+
+                            if (meta != null && meta.hasDisplayName()) {
+                                itemPart.setText(meta.getDisplayName());
                             } else {
                                 try {
-                                    m.thenTranslate(MyPetApi.getPlatformHelper().getVanillaName(is));
+                                    itemPart
+                                      .setTranslate(MyPetApi.getPlatformHelper().getVanillaName(is))
+                                      .setColor(MessageColor.GOLD);
                                 } catch (Exception e) {
-                                    MyPetApi.getLogger().warning("A food item for \"" + myPet.getPetType().name() + "\" caused an error. If you think this is a bug please report it to the MyPet developer.");
-                                    MyPetApi.getLogger().warning(is.toString());
+                                    MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
+                                    MyPetApi.getLogger().warning("" + is);
                                     e.printStackTrace();
                                     continue;
                                 }
                             }
-                            m.color(ChatColor.GOLD);
-                            ItemTooltip it = new ItemTooltip();
-                            it.setMaterial(is.getType());
-                            if (is.hasItemMeta()) {
-                                if (is.getItemMeta().hasDisplayName()) {
-                                    it.setTitle(is.getItemMeta().getDisplayName());
-                                }
-                                if (is.getItemMeta().hasLore()) {
-                                    it.setLore(is.getItemMeta().getLore().toArray(new String[0]));
-                                }
-                            }
-                            m.itemTooltip(it);
                             comma = true;
                         }
-                        MyPetApi.getPlatformHelper().sendMessageRaw(damager, m.toJSONString());
+                        message.tellRawTo(damager);
 
                         infoShown = true;
                     }
@@ -636,14 +650,29 @@ public class MyPetEntityListener implements Listener {
                 return;
             }
 
-            FancyMessage message = new FancyMessage();
+            RawMessage message = new RawMessage();
+
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                message.translateUsing(deathMessageKey, ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET, killer);
+                message.setTranslate(
+                  deathMessageKey,
+                  Arrays.asList(
+                    new RawMessage(myPet.getPetName())
+                      .setColor(MessageColor.AQUA),
+                    new RawMessage(killer)
+                      .clearImplicitStyling()
+                  )
+                );
             } else {
-                message.translateUsing(deathMessageKey, ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET);
+                message.setTranslate(
+                  deathMessageKey,
+                  Collections.singletonList(
+                    new RawMessage(myPet.getPetName())
+                      .setColor(MessageColor.AQUA)
+                  )
+                );
             }
 
-            MyPetApi.getPlatformHelper().sendMessageRaw(myPet.getOwner().getPlayer(), message.toJSONString());
+            message.tellRawTo(myPet.getOwner().getPlayer());
         }
     }
 }

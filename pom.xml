@@ -112,6 +112,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>me.blvckbytes</groupId>
+            <artifactId>RawMessage</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
             <!-- https://www.spigotmc.org/resources/citizens.13811/ -->
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
