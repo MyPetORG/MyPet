@@ -119,8 +119,6 @@ public abstract class PlatformHelper {
 
     public abstract ItemStack compundToItemStack(TagCompound compound);
 
-    public abstract void sendMessageRaw(Player player, String message);
-
     public abstract void sendMessageActionBar(Player player, String message);
 
     public abstract void addZombieTargetGoal(Zombie zombie);
