@@ -29,9 +29,9 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import me.blvckbytes.raw_message.MessageColor;
-import me.blvckbytes.raw_message.RawMessage;
-import me.blvckbytes.raw_message.hover.ShowItemAction;
+import at.blvckbytes.raw_message.MessageColor;
+import at.blvckbytes.raw_message.RawMessage;
+import at.blvckbytes.raw_message.hover.ShowItemAction;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 
