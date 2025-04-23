@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity;
+package de.Keyle.MyPet.compat.v1_21_R4.entity;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -85,7 +85,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 	}
 
 	protected void registerEntity(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
-		Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_21_R3.entity.types.EntityMy" + type.name());
+		Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_21_R4.entity.types.EntityMy" + type.name());
 		entityClasses.forcePut(type, entityClass);
 
 		String key = type.getTypeID().toString();

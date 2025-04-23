@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.services;
+package de.Keyle.MyPet.compat.v1_21_R4.services;
 
 import com.google.common.collect.Sets;
 import com.mojang.serialization.DataResult;
@@ -32,8 +32,8 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_21_R3.util.VariantConverter;
-import de.Keyle.MyPet.compat.v1_21_R3.util.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.compat.v1_21_R4.util.VariantConverter;
+import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

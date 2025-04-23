@@ -18,13 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.util.iconmenu;
+package de.Keyle.MyPet.compat.v1_21_R4.util.iconmenu;
 
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_21_R3.util.inventory.CustomInventory;
+import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.CustomInventory;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

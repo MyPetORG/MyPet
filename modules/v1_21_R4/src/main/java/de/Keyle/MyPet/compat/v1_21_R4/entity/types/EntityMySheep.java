@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.types;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.types;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,8 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySheep;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.EatGrass;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.EatGrass;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;

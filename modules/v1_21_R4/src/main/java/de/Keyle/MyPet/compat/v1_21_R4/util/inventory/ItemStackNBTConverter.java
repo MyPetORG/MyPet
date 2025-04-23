@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.util.inventory;
+package de.Keyle.MyPet.compat.v1_21_R4.util.inventory;
 
 import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.api.util.Compat;

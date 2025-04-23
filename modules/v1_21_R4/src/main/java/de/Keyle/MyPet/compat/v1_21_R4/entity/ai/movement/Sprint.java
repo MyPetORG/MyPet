@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement;
 
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
 import net.minecraft.world.entity.LivingEntity;
 

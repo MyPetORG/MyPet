@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.types;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;

@@ -18,14 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.types;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.types;
 
 import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBogged;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;

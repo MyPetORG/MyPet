@@ -18,13 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3;
+package de.Keyle.MyPet.compat.v1_21_R4;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_21_R3.services.EggIconService;
-import de.Keyle.MyPet.compat.v1_21_R3.services.EntityConverterService;
-import de.Keyle.MyPet.compat.v1_21_R3.services.RepositoryMyPetConverterService;
+import de.Keyle.MyPet.compat.v1_21_R4.services.EggIconService;
+import de.Keyle.MyPet.compat.v1_21_R4.services.EntityConverterService;
+import de.Keyle.MyPet.compat.v1_21_R4.services.RepositoryMyPetConverterService;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 

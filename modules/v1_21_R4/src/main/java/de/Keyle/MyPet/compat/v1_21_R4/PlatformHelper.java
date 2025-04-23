@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3;
+package de.Keyle.MyPet.compat.v1_21_R4;
 
 import com.mojang.brigadier.StringReader;
 import de.Keyle.MyPet.MyPetApi;
@@ -26,8 +26,8 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyAquaticPet;
-import de.Keyle.MyPet.compat.v1_21_R3.util.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
+import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.md_5.bungee.api.ChatMessageType;

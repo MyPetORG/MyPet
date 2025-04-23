@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.compat.v1_21_R3.entity.ai.navigation;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.navigation;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;

@@ -18,13 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.util;
+package de.Keyle.MyPet.compat.v1_21_R4.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
-import de.Keyle.MyPet.compat.v1_21_R3.util.inventory.ItemStackComparator;
-import de.Keyle.MyPet.compat.v1_21_R3.util.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackComparator;
+import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackNBTConverter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;

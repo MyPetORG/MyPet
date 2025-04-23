@@ -18,14 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity;
+package de.Keyle.MyPet.compat.v1_21_R4.entity;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.MyPetRandomSwim;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.navigation.MyAquaticPetPathNavigation;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.MyPetRandomSwim;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.navigation.MyAquaticPetPathNavigation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;

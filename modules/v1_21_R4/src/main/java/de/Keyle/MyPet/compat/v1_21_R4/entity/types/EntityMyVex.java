@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.types;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.types;
 
 import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.MyPetApi;
@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVex;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyFlyingPet;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;

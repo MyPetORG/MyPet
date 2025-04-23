@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.services;
+package de.Keyle.MyPet.compat.v1_21_R4.services;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.gui.IconMenuItem;

@@ -18,15 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity;
+package de.Keyle.MyPet.compat.v1_21_R4.entity;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.Control;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.MyPetFlyingMoveControl;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.MyPetRandomFly;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.Control;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.MyPetFlyingMoveControl;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.MyPetRandomFly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;

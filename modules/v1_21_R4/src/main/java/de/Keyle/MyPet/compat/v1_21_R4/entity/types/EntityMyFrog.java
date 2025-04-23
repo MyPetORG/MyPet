@@ -18,13 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.types;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyFrog;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyAquaticPet;
-import de.Keyle.MyPet.compat.v1_21_R3.util.VariantConverter;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
+import de.Keyle.MyPet.compat.v1_21_R4.util.VariantConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

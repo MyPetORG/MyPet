@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.compat.v1_21_R3.util;
+package de.Keyle.MyPet.compat.v1_21_R4.util;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.animal.CatVariant;

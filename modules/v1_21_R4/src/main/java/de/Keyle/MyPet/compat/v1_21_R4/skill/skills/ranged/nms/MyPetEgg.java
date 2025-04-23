@@ -18,12 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms;
+package de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.bukkit.CraftMyPetEgg;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.bukkit.CraftMyPetEgg;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

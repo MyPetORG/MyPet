@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.ai.attack;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.attack;
 
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
 
@@ -28,17 +28,17 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetArrow;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetDragonFireball;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetEgg;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetEnderPearl;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetLargeFireball;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetLlamaSpit;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetSmallFireball;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetSnowball;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetTrident;
-import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.nms.MyPetWitherSkull;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetArrow;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetDragonFireball;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetEgg;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetEnderPearl;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetLargeFireball;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetLlamaSpit;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetSmallFireball;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetSnowball;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetTrident;
+import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms.MyPetWitherSkull;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;

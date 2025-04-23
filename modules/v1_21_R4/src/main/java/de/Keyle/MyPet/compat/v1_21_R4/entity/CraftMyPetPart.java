@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity;
+package de.Keyle.MyPet.compat.v1_21_R4.entity;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
@@ -31,9 +31,9 @@ import org.jetbrains.annotations.NotNull;
 @Compat("v1_21_R3")
 public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
 
-    protected de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPetPart petEntity;
+    protected de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPetPart petEntity;
 
-    public CraftMyPetPart(CraftServer server, de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPetPart entityMyPet) {
+    public CraftMyPetPart(CraftServer server, de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPetPart entityMyPet) {
         super(server, entityMyPet);
         petEntity = entityMyPet;
     }
@@ -44,7 +44,7 @@ public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
     }
 
     @Override
-    public de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPetPart getHandle() {
+    public de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPetPart getHandle() {
         return petEntity;
     }
 

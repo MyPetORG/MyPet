@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity;
+package de.Keyle.MyPet.compat.v1_21_R4.entity;
 
 import com.google.common.base.Preconditions;
 import de.Keyle.MyPet.MyPetApi;
@@ -40,15 +40,15 @@ import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.compat.v1_21_R3.PlatformHelper;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.attack.RangedAttack;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.Float;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.*;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.navigation.VanillaNavigation;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.target.*;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.types.EntityMyDolphin;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.types.EntityMySeat;
+import de.Keyle.MyPet.compat.v1_21_R4.PlatformHelper;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.attack.RangedAttack;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.Float;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.*;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.navigation.VanillaNavigation;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.target.*;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.types.EntityMyDolphin;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.core.BlockPos;

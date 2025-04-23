@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_21_R3.entity.ai.navigation;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.navigation;
 
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
@@ -26,9 +26,9 @@ import org.bukkit.entity.LivingEntity;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.navigation.NavigationParameters;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyAquaticPet;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.MyPetAquaticMoveControl;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.MyPetAquaticMoveControl;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
