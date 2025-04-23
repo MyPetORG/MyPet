@@ -26,13 +26,14 @@ import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.chat.parts.ItemTooltip;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
+import at.blvckbytes.raw_message.MessageColor;
+import at.blvckbytes.raw_message.RawMessage;
+import at.blvckbytes.raw_message.hover.ShowItemAction;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.ChatColor;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -41,9 +42,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Matcher;
-
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RESET;
 
 public class Util {
 
@@ -346,34 +344,102 @@ public class Util {
         return throwable.getCause() != null && findStringInThrowable(throwable.getCause(), string);
     }
 
-    public static ItemTooltip myPetToItemTooltip(StoredMyPet mypet, String lang) {
-        List<String> lore = new ArrayList<>();
-        lore.add(RESET + Translation.getString("Name.Hunger", lang) + ": " + GOLD + Math.round(mypet.getSaturation()));
+    public static ShowItemAction myPetToItemAction(StoredMyPet mypet, String lang) {
+        ShowItemAction itemAction = new ShowItemAction();
+
+        itemAction.addLoreLine(
+          new RawMessage(Translation.getString("Name.Hunger", lang) + ": ")
+            .clearImplicitStyling()
+            .addExtra(
+              new RawMessage(Math.round(mypet.getSaturation()))
+                .setColor(MessageColor.GOLD)
+            )
+        );
+
         if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
             if (mypet.getRespawnTime() > 0) {
-                lore.add(RESET + Translation.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");
+                itemAction.addLoreLine(
+                  new RawMessage(Translation.getString("Name.Respawntime", lang) + ": ")
+                    .clearImplicitStyling()
+                    .addExtra(
+                      new RawMessage(mypet.getRespawnTime() + "sec")
+                        .setColor(MessageColor.GOLD)
+                    )
+                );
             } else {
-                lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+                itemAction.addLoreLine(
+                  new RawMessage(Translation.getString("Name.HP", lang) + ": ")
+                    .clearImplicitStyling()
+                    .addExtra(
+                      new RawMessage(String.format("%1.2f", mypet.getHealth()))
+                        .setColor(MessageColor.GOLD)
+                    )
+                );
             }
         } else if (mypet.getRespawnTime() <= 0) {
-            lore.add(RESET + Translation.getString("Name.HP", lang) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+            itemAction.addLoreLine(
+              new RawMessage(Translation.getString("Name.HP", lang) + ": ")
+                .clearImplicitStyling()
+                .addExtra(
+                  new RawMessage(String.format("%1.2f", mypet.getHealth()))
+                    .setColor(MessageColor.GOLD)
+                )
+            );
         }
-        lore.add(RESET + Translation.getString("Name.Exp", lang) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+
+        itemAction.addLoreLine(
+          new RawMessage(Translation.getString("Name.Exp", lang) + ": ")
+            .clearImplicitStyling()
+            .addExtra(
+              new RawMessage(String.format("%1.2f", mypet.getExp()))
+                .setColor(MessageColor.GOLD)
+            )
+        );
+
         if (mypet.getInfo().containsKey("storage")) {
             TagCompound storage = mypet.getInfo().getAs("storage", TagCompound.class);
             if (storage.containsKey("level")) {
-                lore.add(RESET + Translation.getString("Name.Level", lang) + ": " + GOLD + storage.getAs("level", TagInt.class).getIntData());
-            }
-        }
-        lore.add(RESET + Translation.getString("Name.Type", lang) + ": " + GOLD + mypet.getPetType().name());
-        lore.add(RESET + Translation.getString("Name.Skilltree", lang) + ": " + GOLD + (mypet.getSkilltree() != null ? Colorizer.setColors(mypet.getSkilltree().getDisplayName()) : "-"));
-        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-            if (mypet.getRespawnTime() > 0) {
-                lore.add(ChatColor.RED + Translation.getString("Name.Dead", lang));
+                itemAction.addLoreLine(
+                  new RawMessage(Translation.getString("Name.Level", lang) + ": ")
+                    .clearImplicitStyling()
+                    .addExtra(
+                      new RawMessage(storage.getAs("level", TagInt.class).getIntData())
+                        .setColor(MessageColor.GOLD)
+                    )
+                );
             }
         }
 
-        return new ItemTooltip().addLore(lore).setTitle(mypet.getPetName());
+        itemAction.addLoreLine(
+          new RawMessage(Translation.getString("Name.Type", lang) + ": ")
+            .clearImplicitStyling()
+            .addExtra(
+              new RawMessage(mypet.getPetType().name())
+                .setColor(MessageColor.GOLD)
+            )
+        );
+
+        itemAction.addLoreLine(
+          new RawMessage(Translation.getString("Name.Skilltree", lang) + ": ")
+            .clearImplicitStyling()
+            .addExtra(
+              new RawMessage(mypet.getSkilltree() != null ? Colorizer.setColors(mypet.getSkilltree().getDisplayName()) : "-")
+                .setColor(MessageColor.GOLD)
+            )
+        );
+
+        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+            if (mypet.getRespawnTime() > 0) {
+                itemAction.addLoreLine(
+                  new RawMessage(Translation.getString("Name.Dead", lang))
+                    .clearImplicitStyling()
+                    .setColor(MessageColor.RED)
+                );
+            }
+        }
+
+        return itemAction
+          .setName(mypet.getPetName());
     }
 
     public static String stackTraceToString() {
