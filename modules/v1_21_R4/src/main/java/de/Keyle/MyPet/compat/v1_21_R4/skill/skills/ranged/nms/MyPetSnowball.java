@@ -87,7 +87,7 @@ public class MyPetSnowball extends Snowball implements EntityMyPetProjectile {
         for (int i = 0; i < 8; i++) {
             // ParticleTypes.ITEM_SNOWBALL
             // This was actually Mapped correctly but for *whatever reason* it... didn't work?
-            Field snowballParticleField = ReflectionUtil.getField(ParticleTypes.class,"Y");
+            Field snowballParticleField = ReflectionUtil.getField(ParticleTypes.class,"Z");
             ParticleOptions snowballParticle = (ParticleOptions) ReflectionUtil.getFieldValue(snowballParticleField, null);
             this.level().addParticle(snowballParticle, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
