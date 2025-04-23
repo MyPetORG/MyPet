@@ -57,7 +57,7 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 	BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();

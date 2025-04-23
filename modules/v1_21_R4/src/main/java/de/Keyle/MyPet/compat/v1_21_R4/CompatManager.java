@@ -28,7 +28,7 @@ import de.Keyle.MyPet.compat.v1_21_R4.services.RepositoryMyPetConverterService;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
 
     @Override

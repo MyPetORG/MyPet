@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInventory {
 
     private static Method applyToItemMethod = null;

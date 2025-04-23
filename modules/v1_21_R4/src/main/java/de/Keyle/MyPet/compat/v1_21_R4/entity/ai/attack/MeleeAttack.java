@@ -35,7 +35,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MeleeAttack implements AIGoal {
 
 	MyPet myPet;

@@ -84,7 +84,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableContents.class, "k");

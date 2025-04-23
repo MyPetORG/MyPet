@@ -35,7 +35,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     public ConfigItem(ItemStack item, DurabilityMode durabilityMode) {

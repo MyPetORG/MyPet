@@ -35,7 +35,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetSmallFireball extends SmallFireball implements EntityMyPetProjectile {
 
     protected float damage = 0;

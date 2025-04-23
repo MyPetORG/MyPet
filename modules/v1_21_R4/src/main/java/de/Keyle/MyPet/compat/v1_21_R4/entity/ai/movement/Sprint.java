@@ -32,7 +32,7 @@ import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
 import net.minecraft.world.entity.LivingEntity;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class Sprint implements AIGoal {
 
 	private final MyPet myPet;

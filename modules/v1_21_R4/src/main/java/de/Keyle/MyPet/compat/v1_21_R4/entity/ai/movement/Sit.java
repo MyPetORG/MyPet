@@ -26,7 +26,7 @@ import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.types.*;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class Sit implements AIGoal {
 
 	private final EntityMyPet entityMyPet;

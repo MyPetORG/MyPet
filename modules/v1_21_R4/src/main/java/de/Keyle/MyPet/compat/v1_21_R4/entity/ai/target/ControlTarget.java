@@ -38,7 +38,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class ControlTarget implements AIGoal {
 
 	private final MyPet myPet;

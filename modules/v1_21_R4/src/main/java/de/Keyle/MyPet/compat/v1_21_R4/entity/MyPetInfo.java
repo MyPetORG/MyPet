@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.entity.EntityType;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
 
 	@Override

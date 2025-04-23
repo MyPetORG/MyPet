@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class RandomLookaround implements AIGoal {
 
 	protected EntityMyPet petEntity;

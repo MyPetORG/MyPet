@@ -32,7 +32,7 @@ import net.minecraft.world.entity.projectile.Arrow;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPetArrow extends CraftArrow implements CraftMyPetProjectile {
 
     public CraftMyPetArrow(CraftServer server, Arrow entity) {

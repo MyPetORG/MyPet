@@ -30,7 +30,7 @@ import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetRandomSwim extends MyPetRandomStroll {
 
 	protected EntityMyPet petEntity;

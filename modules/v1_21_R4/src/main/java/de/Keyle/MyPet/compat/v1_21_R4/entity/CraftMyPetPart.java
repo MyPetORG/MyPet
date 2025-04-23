@@ -28,7 +28,7 @@ import org.bukkit.craftbukkit.v1_21_R4.entity.CraftEntity;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
 
     protected de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPetPart petEntity;

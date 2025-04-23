@@ -25,7 +25,7 @@ import net.minecraft.nbt.CompoundTag;
 import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class ItemStackComparator {
 
     public static boolean compareItem(ItemStack i1, ItemStack i2) {

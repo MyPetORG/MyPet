@@ -36,7 +36,7 @@ import org.bukkit.craftbukkit.v1_21_R4.event.CraftEventFactory;
 
 import java.util.function.Predicate;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class EatGrass implements AIGoal {
 
 	private final EntityMySheep entityMySheep;

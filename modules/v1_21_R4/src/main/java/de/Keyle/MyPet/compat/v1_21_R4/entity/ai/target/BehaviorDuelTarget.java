@@ -35,7 +35,7 @@ import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class BehaviorDuelTarget implements AIGoal {
 
 	private final MyPet myPet;

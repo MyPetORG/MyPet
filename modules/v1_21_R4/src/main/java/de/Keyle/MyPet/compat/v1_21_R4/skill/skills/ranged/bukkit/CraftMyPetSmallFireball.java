@@ -32,7 +32,7 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPetSmallFireball extends CraftSmallFireball implements CraftMyPetProjectile {
 
     public CraftMyPetSmallFireball(CraftServer server, SmallFireball entity) {

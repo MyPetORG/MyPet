@@ -54,7 +54,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
 
     @Override

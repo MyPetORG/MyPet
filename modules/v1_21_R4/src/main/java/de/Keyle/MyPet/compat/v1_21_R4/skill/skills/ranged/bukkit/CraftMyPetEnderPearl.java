@@ -32,7 +32,7 @@ import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPetEnderPearl extends CraftEnderPearl implements CraftMyPetProjectile {
 
     public CraftMyPetEnderPearl(CraftServer server, ThrownEnderpearl entity) {

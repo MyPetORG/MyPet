@@ -47,7 +47,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class RangedAttack implements AIGoal {
 
 	private final MyPet myPet;

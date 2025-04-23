@@ -35,7 +35,7 @@ import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.monster.Monster;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class BehaviorFarmTarget implements AIGoal {
 
 	private final MyPet myPet;

@@ -37,7 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class FollowOwner implements AIGoal {
 
 	private final EntityMyPet petEntity;

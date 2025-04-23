@@ -32,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetArrow extends Arrow implements EntityMyPetProjectile {
 
 	protected CraftMyPetArrow bukkitEntity = null;

@@ -40,7 +40,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
 	protected MyPetPlayer petOwner;

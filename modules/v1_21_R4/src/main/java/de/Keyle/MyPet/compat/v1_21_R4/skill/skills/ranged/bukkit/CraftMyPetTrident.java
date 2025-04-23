@@ -34,7 +34,7 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProjectile {
 
     public CraftMyPetTrident(CraftServer server, ThrownTrident entity) {

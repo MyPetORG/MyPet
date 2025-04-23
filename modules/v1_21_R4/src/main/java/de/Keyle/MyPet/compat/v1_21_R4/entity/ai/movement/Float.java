@@ -29,7 +29,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class Float implements AIGoal {
 
 	private final EntityMyPet entityMyPet;

@@ -32,7 +32,7 @@ import net.minecraft.world.entity.projectile.DragonFireball;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPetDragonFireball extends CraftDragonFireball implements CraftMyPetProjectile {
 
     public CraftMyPetDragonFireball(CraftServer server, DragonFireball entity) {

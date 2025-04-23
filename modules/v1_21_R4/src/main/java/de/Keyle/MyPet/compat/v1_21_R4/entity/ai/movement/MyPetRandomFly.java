@@ -26,7 +26,7 @@ import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.phys.Vec3;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetRandomFly extends MyPetRandomStroll {
 
 	protected EntityMyPet petEntity;

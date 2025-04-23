@@ -32,7 +32,7 @@ import de.Keyle.MyPet.skill.skills.ControlImpl;
 
 import org.bukkit.Location;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class Control implements AIGoal, Scheduler {
 
 	private final MyPet myPet;

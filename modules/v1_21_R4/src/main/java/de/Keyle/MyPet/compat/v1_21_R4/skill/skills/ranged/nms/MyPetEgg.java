@@ -38,7 +38,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetEgg extends ThrownEgg implements EntityMyPetProjectile {
 
     protected float damage = 0;

@@ -32,7 +32,7 @@ import net.minecraft.world.entity.projectile.ThrownEgg;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class CraftMyPetEgg extends CraftEgg implements CraftMyPetProjectile {
 
     public CraftMyPetEgg(CraftServer server, ThrownEgg entity) {

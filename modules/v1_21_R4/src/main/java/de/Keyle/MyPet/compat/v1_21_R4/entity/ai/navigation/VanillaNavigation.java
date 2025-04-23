@@ -33,7 +33,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class VanillaNavigation extends AbstractNavigation {
 
 	PathNavigation nav;

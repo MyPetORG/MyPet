@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.movement.MyPetRandomStroll {
     private final EntityMyPet petEntity;
     protected AbstractNavigation nav;

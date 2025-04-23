@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class ItemStackNBTConverter {
 
 	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "c"); //List-Field (or value)

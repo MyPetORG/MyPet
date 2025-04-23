@@ -41,7 +41,7 @@ import net.minecraft.world.phys.HitResult;
 
 import java.lang.reflect.Field;
 
-@Compat("v1_21_R3")
+@Compat("v1_21_R4")
 public class MyPetSnowball extends Snowball implements EntityMyPetProjectile {
 
     protected float damage = 0;
