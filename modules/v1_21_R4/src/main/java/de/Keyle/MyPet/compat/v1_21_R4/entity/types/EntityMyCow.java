@@ -70,7 +70,7 @@ public class EntityMyCow extends EntityMyPet {
 				ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
 				itemStack.shrink(1);
 				if (itemStack.getCount() <= 0) {
-					entityhuman.getInventory().setItem(entityhuman.getInventory().selected, milkBucket);
+					entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), milkBucket);
 				} else {
 					if(!entityhuman.getInventory().add(milkBucket)) {
 						entityhuman.drop(milkBucket, true);
@@ -81,7 +81,7 @@ public class EntityMyCow extends EntityMyPet {
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 					}
 				}
 				getMyPet().setBaby(false);

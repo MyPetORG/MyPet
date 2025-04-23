@@ -97,7 +97,7 @@ public class EntityMyEnderman extends EntityMyPet {
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 					}
 				}
 				return InteractionResult.CONSUME;

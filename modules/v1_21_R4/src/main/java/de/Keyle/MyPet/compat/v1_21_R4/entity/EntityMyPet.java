@@ -540,7 +540,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 							itemStack.shrink(1);
 						}
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 						}
 						new BukkitRunnable() {
 							@Override
@@ -593,7 +593,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 						if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 							itemStack.shrink(1);
 							if (itemStack.getCount() <= 0) {
-								entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+								entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 							}
 						}
 						MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getEyeHeight(), 0), ParticleCompat.HEART.get(), 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);

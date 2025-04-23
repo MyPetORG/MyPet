@@ -81,13 +81,13 @@ public class EntityMyGoat extends EntityMyPet {
             if (itemStack.getItem() == Items.BUCKET && Configuration.MyPet.Goat.CAN_GIVE_MILK) {
                 ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
 
-                entityhuman.getInventory().setItem(entityhuman.getInventory().selected, milkBucket);
+                entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), milkBucket);
                 return InteractionResult.CONSUME;
             } else if (Configuration.MyPet.Goat.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     itemStack.shrink(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
                     }
                 }
                 getMyPet().setBaby(false);

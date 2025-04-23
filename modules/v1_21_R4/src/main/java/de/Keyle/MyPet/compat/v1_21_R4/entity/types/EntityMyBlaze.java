@@ -72,7 +72,7 @@ public class EntityMyBlaze extends EntityMyPet {
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().flying) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.BUCKET));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), new ItemStack(Items.BUCKET));
 					} else {
 						if (!entityhuman.getInventory().add(new ItemStack(Items.BUCKET))) {
 							entityhuman.drop(new ItemStack(Items.BUCKET), true);

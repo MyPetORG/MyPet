@@ -72,7 +72,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 		if (itemStack != null) {
 			if (itemStack.getItem().equals(Items.BOWL)) {
 				if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
-					final int itemInHandIndex = entityhuman.getInventory().selected;
+					final int itemInHandIndex = entityhuman.getInventory().getSelectedSlot();
 					ItemStack is = new ItemStack(Items.MUSHROOM_STEW);
 					final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
 					entityhuman.getInventory().setItem(itemInHandIndex, is);
@@ -81,7 +81,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 				} else {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.MUSHROOM_STEW));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), new ItemStack(Items.MUSHROOM_STEW));
 					} else {
 						if (!entityhuman.getInventory().add(new ItemStack(Items.MUSHROOM_STEW))) {
 							entityhuman.drop(new ItemStack(Items.MUSHROOM_STEW), true);
@@ -95,7 +95,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 						}
 					}
 					getMyPet().setBaby(false);
