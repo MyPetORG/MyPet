@@ -69,7 +69,7 @@ public class EntityMyBreeze extends EntityMyPet {
 	 * -> disable falldamage
 	 */
 	@Override
-	public int calculateFallDamage(float f, float f1) {
+	public int calculateFallDamage(double f, float f1) {
 		if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
 			super.calculateFallDamage(f, f1);
 		}

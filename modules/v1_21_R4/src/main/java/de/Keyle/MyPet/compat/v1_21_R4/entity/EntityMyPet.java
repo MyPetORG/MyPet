@@ -1253,7 +1253,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * -> falldamage
 	 */
 	@Override
-	public int calculateFallDamage(float f, float f1) {
+	public int calculateFallDamage(double f, float f1) {
 		if (!this.isFlying) {
 			return super.calculateFallDamage(f, f1);
 		}
