@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement;
 
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_21_R4.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import de.Keyle.MyPet.MyPetApi;

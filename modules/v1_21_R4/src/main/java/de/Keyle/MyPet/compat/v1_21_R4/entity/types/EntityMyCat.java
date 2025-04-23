@@ -41,7 +41,7 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.bukkit.DyeColor;
-import org.bukkit.craftbukkit.v1_21_R3.CraftRegistry;
+import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
 
 import java.util.Optional;
 import java.util.UUID;

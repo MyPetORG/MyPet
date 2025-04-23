@@ -22,7 +22,7 @@ package de.Keyle.MyPet.compat.v1_21_R4.util.inventory;
 
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.nbt.CompoundTag;
-import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 @Compat("v1_21_R3")

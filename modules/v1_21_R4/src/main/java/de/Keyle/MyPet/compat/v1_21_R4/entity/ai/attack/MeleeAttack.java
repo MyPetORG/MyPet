@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.attack;
 
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_21_R4.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 import de.Keyle.MyPet.api.entity.EquipmentSlot;

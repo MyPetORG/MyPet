@@ -36,8 +36,8 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R4.util.CraftChatMessage;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -54,7 +54,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
 
     static {
         try {
-            Class<?> craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_21_R3.inventory.CraftMetaItem");
+            Class<?> craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_21_R4.inventory.CraftMetaItem");
             applyToItemMethod = ReflectionUtil.getMethod(craftMetaItemClass, "applyToItem", CompoundTag.class);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
