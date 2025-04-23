@@ -25,16 +25,17 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.CustomInventory;
+import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R4.util.CraftChatMessage;
@@ -148,9 +149,18 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             is.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         }
 
+        is.set(DataComponents.TOOLTIP_DISPLAY, new TooltipDisplay(true, ReferenceLinkedOpenHashSet.of(
+          DataComponents.ATTRIBUTE_MODIFIERS,
+          DataComponents.DAMAGE,
+          DataComponents.INSTRUMENT,
+          DataComponents.MAP_ID,
+          DataComponents.BLOCK_STATE,
+          DataComponents.FIREWORKS,
+          DataComponents.POTION_CONTENTS,
+          DataComponents.TROPICAL_FISH_PATTERN,
+          DataComponents.WRITTEN_BOOK_CONTENT
+        )));
 
-        // hide item attributes like attack damage
-        is.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
         ItemAttributeModifiers itemattributemodifiers = (ItemAttributeModifiers) is.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
         List<ItemAttributeModifiers.Entry> newEntries = new ArrayList<>();
         for (ItemAttributeModifiers.Entry modifierEntry : itemattributemodifiers.modifiers()) {
@@ -159,7 +169,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
                 newEntries.add(modifierEntry);
             }
         }
-        is.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(newEntries, true));
+        is.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(newEntries));
 
         // set Title
         if (!icon.getTitle().equals("")) {
