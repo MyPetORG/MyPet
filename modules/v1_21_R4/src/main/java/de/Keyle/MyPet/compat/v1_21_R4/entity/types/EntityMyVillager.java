@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R4.services.EntityConverterService;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -145,7 +146,11 @@ public class EntityMyVillager extends EntityMyPet {
 		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
 			builder.define(UNUSED_WATCHER, 0);
 		}
-		builder.define(PROFESSION_WATCHER, new VillagerData(VillagerType.PLAINS, VillagerProfession.NONE, 1));
+		builder.define(PROFESSION_WATCHER, new VillagerData(
+			EntityConverterService.VILLAGER_TYPE_REGISTRY.wrapAsHolder(EntityConverterService.VILLAGER_TYPE_REGISTRY.getValue(VillagerType.PLAINS)),
+			EntityConverterService.VILLAGER_PROFESSION_REGISTRY.wrapAsHolder(EntityConverterService.VILLAGER_PROFESSION_REGISTRY.getValue(VillagerProfession.NONE)),
+			1
+		));
 	}
 
 	@Override
@@ -154,7 +159,11 @@ public class EntityMyVillager extends EntityMyPet {
 		String professionKey = MyVillager.Profession.values()[getMyPet().getProfession()].getKey();
 		VillagerProfession profession = BuiltInRegistries.VILLAGER_PROFESSION.get(ResourceLocation.tryParse(professionKey)).get().value();
 		VillagerType type = BuiltInRegistries.VILLAGER_TYPE.get(ResourceLocation.tryParse(getMyPet().getType().getKey())).get().value(); //TODO
-		this.getEntityData().set(PROFESSION_WATCHER, new VillagerData(type, profession, getMyPet().getVillagerLevel()));
+		this.getEntityData().set(PROFESSION_WATCHER, new VillagerData(
+			EntityConverterService.VILLAGER_TYPE_REGISTRY.wrapAsHolder(type),
+			EntityConverterService.VILLAGER_PROFESSION_REGISTRY.wrapAsHolder(profession),
+			getMyPet().getVillagerLevel()
+		));
 
 		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
 			if (getMyPet().getStatus() == MyPet.PetState.Here) {
