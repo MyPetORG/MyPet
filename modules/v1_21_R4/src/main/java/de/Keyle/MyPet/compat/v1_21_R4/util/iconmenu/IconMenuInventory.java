@@ -149,7 +149,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             is.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         }
 
-        is.set(DataComponents.TOOLTIP_DISPLAY, new TooltipDisplay(true, ReferenceLinkedOpenHashSet.of(
+        is.set(DataComponents.TOOLTIP_DISPLAY, new TooltipDisplay(false, ReferenceLinkedOpenHashSet.of(
           DataComponents.ATTRIBUTE_MODIFIERS,
           DataComponents.DAMAGE,
           DataComponents.INSTRUMENT,
