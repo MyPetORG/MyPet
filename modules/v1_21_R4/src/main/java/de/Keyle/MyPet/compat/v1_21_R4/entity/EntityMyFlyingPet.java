@@ -56,7 +56,7 @@ public abstract class EntityMyFlyingPet extends EntityMyPet {
 
 	@Override
 	public void travel(Vec3 vec3d) {
-		if (this.isControlledByLocalInstance()) {
+		if (this.isEffectiveAi() || this.isClientAuthoritative()) {
 			if (this.isInWater() || this.isInLava() || hasRider || this.isVehicle()) {
 				super.travel(vec3d);
 				return;
