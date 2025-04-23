@@ -65,10 +65,10 @@ public class ItemStackNBTConverter {
     public static ItemStack vanillaCompoundToItemStack(CompoundTag compoundTag) {
         // Conversion is fun
         if (compoundTag.contains("tag")) {
-            return ItemStack.parseOptional(registryAccess, convertOldVanillaCompound(compoundTag));
+            return ItemStack.parse(registryAccess, convertOldVanillaCompound(compoundTag)).orElse(ItemStack.EMPTY);
         }
 
-        return ItemStack.parseOptional(registryAccess, compoundTag);
+        return ItemStack.parse(registryAccess, compoundTag).orElse(ItemStack.EMPTY);
     }
 
     public static CompoundTag convertOldVanillaCompound(CompoundTag oldTag) {
