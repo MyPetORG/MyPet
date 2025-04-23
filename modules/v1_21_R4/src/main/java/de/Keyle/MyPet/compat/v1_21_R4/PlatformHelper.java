@@ -320,15 +320,19 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             EquipmentSlot slotRaw = equipable != null ? equipable.slot() : EquipmentSlot.MAINHAND;
             int slot = slotRaw.getId();
             if (slot == 0) {
-                if (itemstack.getItem() instanceof SwordItem) {
+                if (itemstack.getItem().components().has(DataComponents.WEAPON)) {
                     return true;
-                } else if (itemstack.getItem() instanceof AxeItem) {
+                }
+
+                if (itemstack.getItem().components().has(DataComponents.TOOL)) {
+                    return true;
+                }
+
+                if (itemstack.getItem() instanceof AxeItem) {
                     return true;
                 } else if (itemstack.getItem() instanceof ShovelItem) {
                     return true;
                 } else if (itemstack.getItem() instanceof HoeItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof PickaxeItem) {
                     return true;
                 } else if (itemstack.getItem() instanceof BowItem) {
                     return true;
