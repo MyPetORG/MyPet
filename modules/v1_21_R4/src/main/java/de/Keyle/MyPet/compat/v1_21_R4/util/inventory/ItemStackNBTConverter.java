@@ -42,7 +42,7 @@ import java.util.Set;
 @Compat("v1_21_R4")
 public class ItemStackNBTConverter {
 
-	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "c"); //List-Field (or value)
+	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "v"); //List-Field (or value)
     public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
 
     public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
