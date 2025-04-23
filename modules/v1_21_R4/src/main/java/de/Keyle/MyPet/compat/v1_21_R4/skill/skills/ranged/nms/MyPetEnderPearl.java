@@ -87,7 +87,7 @@ public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProj
         for (int i = 0; i < 32; ++i) {
             // ParticleTypes.PORTAL
             // This was actually Mapped correctly but for *whatever reason* it... didn't work?
-            Field portalParticleField = ReflectionUtil.getField(ParticleTypes.class,"ae");
+            Field portalParticleField = ReflectionUtil.getField(ParticleTypes.class,"af");
             ParticleOptions portalParticle = (ParticleOptions) ReflectionUtil.getFieldValue(portalParticleField, null);
             this.level().addParticle(portalParticle, this.getX(), this.getY() + this.random.nextDouble() * 2.0D, this.getZ(), this.random.nextGaussian(), 0.0D, this.random.nextGaussian());
         }
