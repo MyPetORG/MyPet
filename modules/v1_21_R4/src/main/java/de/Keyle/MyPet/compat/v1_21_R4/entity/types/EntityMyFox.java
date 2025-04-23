@@ -36,6 +36,8 @@ import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +48,6 @@ import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyFox extends EntityMyPet {
@@ -54,8 +55,8 @@ public class EntityMyFox extends EntityMyPet {
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> FOX_TYPE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Byte> ACTIONS_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Optional<UUID>> FRIEND_A_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.OPTIONAL_UUID);
-	private static final EntityDataAccessor<Optional<UUID>> FRIEND_B_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.OPTIONAL_UUID);
+	private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> FRIEND_A_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
+	private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> FRIEND_B_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 
 	public EntityMyFox(Level world, MyPet myPet) {
 		super(world, myPet);

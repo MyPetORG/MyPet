@@ -28,17 +28,18 @@ import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyFlyingPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 0.5F, height = 0.9f)
 public class EntityMyParrot extends EntityMyFlyingPet {
 	
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.OPTIONAL_UUID);
+	protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.INT);
 
 	public EntityMyParrot(Level world, MyPet myPet) {

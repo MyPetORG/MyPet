@@ -35,6 +35,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
@@ -44,14 +46,13 @@ import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyCat extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_UUID);
+	protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 	protected static final EntityDataAccessor<Holder<CatVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.CAT_VARIANT);
 	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
