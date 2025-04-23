@@ -27,14 +27,14 @@ import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R4.util.VariantConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.animal.FrogVariant;
+import net.minecraft.world.entity.animal.frog.FrogVariant;
+import net.minecraft.world.entity.animal.frog.FrogVariants;
 import net.minecraft.world.level.Level;
 import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
 
@@ -83,7 +83,7 @@ public class EntityMyFrog extends EntityMyAquaticPet {
         super.defineSynchedData(builder);
         builder.define(AGE_WATCHER, false);
         Registry<FrogVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.FROG_VARIANT);
-        builder.define(EntityMyFrog.DATA_VARIANT_ID, registry.wrapAsHolder(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.TEMPERATE).value()));
+        builder.define(EntityMyFrog.DATA_VARIANT_ID, registry.wrapAsHolder(VariantConverter.FROG_REGISTRY.getOrThrow(FrogVariants.TEMPERATE).value()));
         builder.define(TONGUE_TARGET_ID, OptionalInt.empty());
     }
 
@@ -125,6 +125,6 @@ public class EntityMyFrog extends EntityMyAquaticPet {
     }
 
     public ResourceLocation getResourceLocation() {
-        return this.entityData.get(DATA_VARIANT_ID).value().texture();
+        return this.entityData.get(DATA_VARIANT_ID).value().assetInfo().texturePath();
     }
 }
