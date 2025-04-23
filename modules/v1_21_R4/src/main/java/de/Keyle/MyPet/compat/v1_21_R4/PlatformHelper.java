@@ -58,12 +58,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang.Validate;
 import org.bukkit.GameRule;
@@ -394,7 +396,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     	ServerLevel world = ((CraftWorld) loc.getWorld()).getHandle();
     	LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, world);
         lightning.setVisualOnly(true);
-        lightning.moveTo(loc.getX(), loc.getY(), loc.getZ(), 0.0F, 0.0F);
+        lightning.move(MoverType.SELF, new Vec3(loc.getX(), loc.getY(), loc.getZ()));
         world.getCraftServer()
                 .getServer()
                 .getPlayerList()

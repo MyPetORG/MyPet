@@ -31,10 +31,12 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
 
@@ -127,7 +129,7 @@ public class FollowOwner implements AIGoal {
 								if (!petEntity.hasTarget()) {
 									if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
 										this.petEntity.fallDistance = 0;
-										this.petEntity.moveTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.getYRot(), this.petEntity.getXRot());
+										this.petEntity.move(MoverType.SELF, new Vec3(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
 										this.setPathTimer = 0;
 										return;
 									}
