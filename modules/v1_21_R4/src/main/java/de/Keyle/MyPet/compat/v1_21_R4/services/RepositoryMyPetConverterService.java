@@ -28,7 +28,7 @@ import de.keyle.knbt.TagCompound;
 @Load(Load.State.AfterHooks)
 public class RepositoryMyPetConverterService extends de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService {
 
-    public void v1_21_R3(StoredMyPet pet) {
+    public void v1_21_R4(StoredMyPet pet) {
         TagCompound info = pet.getInfo();
 
         switch (pet.getPetType()) {
