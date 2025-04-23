@@ -35,14 +35,19 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R4.util.VariantConverter;
 import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.*;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.gossip.GossipContainer;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.trading.MerchantOffers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftVillagerZombie;
@@ -56,6 +61,9 @@ import java.util.*;
 
 @Compat("v1_21_R4")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
+
+    public static final Registry<VillagerType> VILLAGER_TYPE_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.VILLAGER_TYPE);
+    public static final Registry<VillagerProfession> VILLAGER_PROFESSION_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.VILLAGER_PROFESSION);
 
     @Override
     public TagCompound convertEntity(LivingEntity entity) {
@@ -218,7 +226,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         TagList inventoryTag = villagerTag.get("Inventory");
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                         for (int i = 0; i < vanillaNBT.size(); ++i) {
-                            net.minecraft.world.item.ItemStack itemstack = ItemStackNBTConverter.vanillaCompoundToItemStack(vanillaNBT.getCompound(i));;
+                            net.minecraft.world.item.ItemStack itemstack = ItemStackNBTConverter.vanillaCompoundToItemStack(vanillaNBT.getCompoundOrEmpty(i));;
                             ItemStack item = CraftItemStack.asCraftMirror(itemstack);
                             if (!itemstack.isEmpty()) {
                             	Villager vill = ((Villager) Bukkit.getServer().getEntity(normalEntity.getUniqueId()));
@@ -235,7 +243,14 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                         //This might be useful for later/following versions
                         //((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "cu")) //Field: gossips
-                        entityVillager.getGossips().update(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT));
+
+                        entityVillager.setGossips(
+                          GossipContainer.CODEC
+                            .decode(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT))
+                            .resultOrPartial()
+                            .orElseThrow()
+                            .getFirst()
+                        );
                     }
                     if (villagerTag.containsKey("LastRestock")) {
                     	long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
@@ -264,9 +279,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             Villager.Profession profession = Villager.Profession.values()[((MyZombieVillager) myPet).getProfession()];
             net.minecraft.world.entity.monster.ZombieVillager nmsEntity = ((CraftVillagerZombie) normalEntity).getHandle();
             nmsEntity.setVillagerData(nmsEntity.getVillagerData()
-                    .setType(BuiltInRegistries.VILLAGER_TYPE.get(ResourceLocation.tryParse(((MyZombieVillager) myPet).getType().name().toLowerCase(Locale.ROOT))).get().value())
-                    .setLevel(((MyZombieVillager) myPet).getTradingLevel())
-                    .setProfession(BuiltInRegistries.VILLAGER_PROFESSION.get(ResourceLocation.tryParse(profession.name().toLowerCase(Locale.ROOT))).get().value()));
+                    .withType(VILLAGER_TYPE_REGISTRY.wrapAsHolder(VILLAGER_TYPE_REGISTRY.getValue(ResourceLocation.tryParse(((MyZombieVillager) myPet).getType().name().toLowerCase(Locale.ROOT)))))
+                    .withLevel(((MyZombieVillager) myPet).getTradingLevel())
+                    .withProfession(VILLAGER_PROFESSION_REGISTRY.wrapAsHolder(VILLAGER_PROFESSION_REGISTRY.getValue(ResourceLocation.tryParse(profession.name().toLowerCase(Locale.ROOT))))));
         } else if (myPet instanceof MyWitherSkeleton) {
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD));
         } else if (myPet instanceof MySkeleton) {
