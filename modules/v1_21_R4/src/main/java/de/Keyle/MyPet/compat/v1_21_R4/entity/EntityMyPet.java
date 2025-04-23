@@ -142,6 +142,11 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	protected boolean indirectRiding = false;
 	// Needed for the MyPetFlyingMoveControl - Sometimes overwritten by specific pets
 	protected float maxTurn = 20;
+	// Copied from prior version
+	protected final float rotA = (float)((Math.random() + 1.0) * 0.009999999776482582);
+
+	// FIXME: This field has been removed at the v1_21_R4 update - what was its purpose?
+	protected double lerpX;
 
 	public EntityMyPet(Level world, MyPet myPet) {
 		super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
