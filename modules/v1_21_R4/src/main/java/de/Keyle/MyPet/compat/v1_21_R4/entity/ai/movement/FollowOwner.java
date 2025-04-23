@@ -167,11 +167,11 @@ public class FollowOwner implements AIGoal {
 			if (vehicleSpeedAttribute != null) {
 				walkSpeed = (float) vehicleSpeedAttribute.getValue();
 			}
-		} else if (owner.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+		} else if (owner.hasEffect(MobEffects.SPEED)) {
 			// make the pet faster when the player is has the SPEED effect
 			// TODO check if this canbe removed in later versions (again)
 			for(MobEffectInstance eff : owner.getActiveEffects()) {
-				if (eff.getEffect() instanceof MobEffect && eff.getEffect() == MobEffects.MOVEMENT_SPEED) {
+				if (eff.getEffect() instanceof MobEffect && eff.getEffect() == MobEffects.SPEED) {
 					walkSpeed += eff.getAmplifier() * 0.2 * walkSpeed;
 					break;
 				}
