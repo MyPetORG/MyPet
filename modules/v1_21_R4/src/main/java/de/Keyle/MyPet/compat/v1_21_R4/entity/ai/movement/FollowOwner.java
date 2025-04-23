@@ -34,6 +34,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
 
@@ -180,7 +181,7 @@ public class FollowOwner implements AIGoal {
 		// make aquatic/flying pets faster
 		// This is actually due to there being a difference between MovementSpeed and FlyingSpeed, FlyingSpeed being higher
 		// (I don't completely know why this is the case for swimming but I imagine it has a similar reason)
-		if(this.petEntity.isInWaterOrBubble() && this.petEntity.getNavigation() instanceof MyAquaticPetPathNavigation) {
+		if((this.petEntity.isInWater() || this.petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && this.petEntity.getNavigation() instanceof MyAquaticPetPathNavigation) {
 			walkSpeed += 0.6f;
 			if(owner.hasEffect(MobEffects.DOLPHINS_GRACE)) {
 				walkSpeed += 0.08f;

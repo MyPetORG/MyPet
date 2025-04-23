@@ -81,6 +81,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -1166,7 +1167,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	protected boolean removePassenger(Entity entity) {
 		boolean result = super.removePassenger(entity);
 
-		if(this.isInWaterOrBubble() && this instanceof EntityMyAquaticPet
+		if((this.isInWater() || this.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && this instanceof EntityMyAquaticPet
 				&& !(this.getMoveControl() instanceof MyPetAquaticMoveControl)) {
 			this.switchMovement(new MyPetAquaticMoveControl(this));
 		}
@@ -1388,7 +1389,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 							this.isFlying = true;
 						}
 					}
-				} else if (!this.dismountsUnderwater() && this.isInWaterOrBubble()) {
+				} else if (!this.dismountsUnderwater() && (this.isInWater()) || this.getInBlockState().is(Blocks.BUBBLE_COLUMN)) {
 					if (this.getDeltaMovement().y() < ascendSpeed) {
 						this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
 					}

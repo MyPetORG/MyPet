@@ -30,6 +30,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyAquaticPet {
@@ -69,7 +70,7 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
 			this.canDolphinjump = true;
 		}
 		if (this.canDolphinjump &&
-				this.onGround && !this.isInWaterOrBubble()) {
+				this.onGround && !(this.isInWater() || this.getInBlockState().is(Blocks.BUBBLE_COLUMN))) {
 			this.canDolphinjump = false;
 		}
 	}

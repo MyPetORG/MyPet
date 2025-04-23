@@ -24,6 +24,7 @@ import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.level.block.Blocks;
 
 public class MyPetAquaticMoveControl extends MoveControl{
 	private final EntityMyPet fish;
@@ -44,7 +45,7 @@ public class MyPetAquaticMoveControl extends MoveControl{
 
             this.fish.setSpeed(Mth.lerp(0.125F, this.fish.getSpeed(), f));
 
-            if(this.fish.isInWaterOrBubble()) {
+            if(this.fish.isInWater() || this.fish.getInBlockState().is(Blocks.BUBBLE_COLUMN)) {
                 this.fish.setDeltaMovement(this.fish.getDeltaMovement().multiply(f, 1, f));
             }
 
@@ -61,7 +62,7 @@ public class MyPetAquaticMoveControl extends MoveControl{
                 this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, (double) this.fish.getSpeed() * (d1 / d3) * 0.1D, 0.0D));
             }
         } else {
-        	if(this.fish.isInWaterOrBubble()) {
+        	if(this.fish.isInWater() || this.fish.getInBlockState().is(Blocks.BUBBLE_COLUMN)) {
         		this.fish.setDeltaMovement(this.fish.getDeltaMovement().x,-0.0045,this.fish.getDeltaMovement().z);
         	}
             this.fish.setSpeed(0.0F);

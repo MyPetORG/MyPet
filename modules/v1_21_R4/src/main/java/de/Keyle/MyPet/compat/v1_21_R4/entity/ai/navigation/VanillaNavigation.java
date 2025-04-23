@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.navigation;
 
+import net.minecraft.world.level.block.Blocks;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
@@ -79,10 +80,10 @@ public class VanillaNavigation extends AbstractNavigation {
 	public void tick() {
 		//This switches between movesets enabling the pet to move naturally on land and water
 		EntityMyPet petEntity = (EntityMyPet) this.entityMyPet;
-		if(petEntity.isInWaterOrBubble() && this.entityMyPet instanceof EntityMyAquaticPet
+		if((petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && this.entityMyPet instanceof EntityMyAquaticPet
 				&& !(petEntity.getMoveControl() instanceof MyPetAquaticMoveControl)) {
 			petEntity.switchMovement(new MyPetAquaticMoveControl(petEntity));
-		} else if(!petEntity.isInWaterOrBubble() && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
+		} else if(!(petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
 			petEntity.switchMovement(new MoveControl(petEntity));
 		}
 		

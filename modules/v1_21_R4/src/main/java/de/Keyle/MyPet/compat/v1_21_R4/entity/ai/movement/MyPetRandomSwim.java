@@ -27,6 +27,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
@@ -42,7 +43,7 @@ public class MyPetRandomSwim extends MyPetRandomStroll {
 
 	@Override
 	protected Vec3 getPosition() {
-		if(petEntity.isInWaterOrBubble() && owner.isInWaterOrBubble()) {
+		if((petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && (owner.isInWater() || owner.getInBlockState().is(Blocks.BUBBLE_COLUMN))) {
 			Vec3 leVec = makeWaterPos(this.petEntity, 10, 7);
 			return leVec;
 		}
@@ -78,7 +79,7 @@ public class MyPetRandomSwim extends MyPetRandomStroll {
 
 	@Override
 	protected void applySpeed() {
-		if(petEntity.isInWaterOrBubble()) {
+		if(petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) {
 			double walkSpeed = owner.getAbilities().walkingSpeed+0.3f;
 			nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
 		} else {
