@@ -44,6 +44,8 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
@@ -89,11 +91,11 @@ import java.util.List;
 @Compat("v1_21_R4")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
-    private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableContents.class, "k");
+    private static final TagParser<?> TAG_PARSER_INSTANCE = TagParser.create(NbtOps.INSTANCE);
     private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
     public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
     private static final RegistryAccess REGISTRY_ACCESS = CraftRegistry.getMinecraftRegistry();
-    private static Method readParticleMethod = ReflectionUtil.getMethod(ParticleArgument.class,"a", StringReader.class, ParticleType.class, HolderLookup.Provider.class);
+    private static Method readParticleMethod = ReflectionUtil.getMethod(ParticleArgument.class,"a", TagParser.class, StringReader.class, ParticleType.class, HolderLookup.Provider.class);
 
 
     /**
@@ -119,7 +121,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         if (effect.codec().codec() != null && data != null) {
             try {
                 String nbt_string = parseNBTForEffect(effectName);
-                particle = (ParticleOptions) readParticleMethod.invoke(null, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
+                particle = (ParticleOptions) readParticleMethod.invoke(null, TAG_PARSER_INSTANCE, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -164,7 +166,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         if (effect.codec().codec() != null && data != null) {
             try {
                 String nbt_string = parseNBTForEffect(effectName);
-                particle = (ParticleOptions) readParticleMethod.invoke(null, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
+                particle = (ParticleOptions) readParticleMethod.invoke(null, TAG_PARSER_INSTANCE, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
             } catch (Exception e) {
                 e.printStackTrace();
             }
