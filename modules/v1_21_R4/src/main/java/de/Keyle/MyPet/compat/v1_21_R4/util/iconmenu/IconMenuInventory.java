@@ -183,13 +183,13 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             TagCompound tag = new TagCompound();
             icon.getMeta().applyTo(tag);
             CompoundTag vanillaTag = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(tag);
-            for (String key : vanillaTag.getAllKeys()) {
+            for (String key : vanillaTag.keySet()) {
                 NBTHelper.getTag(is).put(key, vanillaTag.get(key));
             }
         }
         if (icon.getTags() != null) {
         	CompoundTag vanillaTag = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(icon.getTags());
-            for (String key : vanillaTag.getAllKeys()) {
+            for (String key : vanillaTag.keySet()) {
                 NBTHelper.getTag(is).put(key, vanillaTag.get(key));
             }
         }

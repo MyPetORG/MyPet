@@ -152,7 +152,7 @@ public class ItemStackNBTConverter {
             case 10:
                 TagCompound compound = new TagCompound();
                 CompoundTag tagCompound = ((CompoundTag) vanillaTag);
-                Set<String> keys = tagCompound.getAllKeys();
+                Set<String> keys = tagCompound.keySet();
                 for (String tagName : keys) {
                     compound.getCompoundData().put(tagName, vanillaCompoundToCompound(tagCompound.get(tagName)));
                 }
