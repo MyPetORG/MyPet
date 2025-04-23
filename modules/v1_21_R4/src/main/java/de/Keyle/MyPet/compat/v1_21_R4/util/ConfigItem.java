@@ -61,7 +61,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     public void load(String data) {
         // Assumption: This is just an item
         try {
-            net.minecraft.world.item.ItemStack stack = ItemStackNBTConverter.vanillaCompoundToItemStack(TagParser.parseTag(data));
+            net.minecraft.world.item.ItemStack stack = ItemStackNBTConverter.vanillaCompoundToItemStack(TagParser.parseCompoundFully(data));
             this.item = CraftItemStack.asCraftMirror(stack);
 
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
                 try {
                     String mergedString = isTagString.substring(0,isTagString.length()-1) + ",tag:" + nbtString + "}";
                     mergedString = mergedString.replace("count","Count");
-                    tag = TagParser.parseTag(mergedString);
+                    tag = TagParser.parseCompoundFully(mergedString);
                 } catch (Exception e) {
                     MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
                     MyPetApi.getLogger().warning(item.getDescriptionId() + " " + nbtString);
