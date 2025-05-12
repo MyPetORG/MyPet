@@ -44,6 +44,13 @@ public class ItemStackNBTConverter {
 
 	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "v"); //List-Field (or value)
     public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
+    private static final CompoundTag EMPTY_ITEM_COMPOUND;
+
+    static {
+        EMPTY_ITEM_COMPOUND = new CompoundTag();
+        EMPTY_ITEM_COMPOUND.putString("id", "minecraft:air");
+        EMPTY_ITEM_COMPOUND.putInt("count", 1);
+    }
 
     public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
@@ -54,6 +61,10 @@ public class ItemStackNBTConverter {
     }
 
     public static CompoundTag itemStackToVanillaCompound(ItemStack itemStack) {
+        if (itemStack == ItemStack.EMPTY) {
+            return EMPTY_ITEM_COMPOUND.copy();
+        }
+
         return (CompoundTag) itemStack.save(registryAccess);
     }
 
@@ -63,6 +74,12 @@ public class ItemStackNBTConverter {
     }
 
     public static ItemStack vanillaCompoundToItemStack(CompoundTag compoundTag) {
+        var idProperty = compoundTag.getString("id");
+
+        if (idProperty.isPresent() && idProperty.get().equals("minecraft:air")) {
+            return ItemStack.EMPTY;
+        }
+
         // Conversion is fun
         if (compoundTag.contains("tag")) {
             return ItemStack.parse(registryAccess, convertOldVanillaCompound(compoundTag)).orElse(ItemStack.EMPTY);
