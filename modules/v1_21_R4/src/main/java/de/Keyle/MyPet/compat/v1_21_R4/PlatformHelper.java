@@ -288,13 +288,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public void sendMessageRaw(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            player.spigot().sendMessage(ChatMessageType.CHAT, ComponentSerializer.parse(message));
-        }
-    }
-
-    @Override
     public void sendMessageActionBar(Player player, String message) {
         if (player instanceof CraftPlayer) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
