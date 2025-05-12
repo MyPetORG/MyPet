@@ -32,8 +32,9 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import at.blvckbytes.raw_message.RawMessage;
+import at.blvckbytes.raw_message.click.RunCommandAction;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -249,11 +250,12 @@ public class CommandTrade implements CommandTabCompleter {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Offer", player), myPet.getPetName(), receiver.getName()));
                         receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer", receiver), player.getName()));
                     }
-                    FancyMessage petMessage = new FancyMessage(" »» ")
-                            .then(myPet.getPetName())
-                            .itemTooltip(Util.myPetToItemTooltip(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)))
-                            .command("/pettrade accept");
-                    MyPetApi.getPlatformHelper().sendMessageRaw(receiver, petMessage.toJSONString());
+
+                    new RawMessage(" »» " + myPet.getPetName())
+                      .setHoverAction(Util.myPetToItemAction(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)))
+                      .setClickAction(new RunCommandAction("/pettrade accept"))
+                      .tellRawTo(receiver);
+
                     return true;
                 } else {
                     sender.sendMessage(Translation.getString("Message.No.HasPet", player));

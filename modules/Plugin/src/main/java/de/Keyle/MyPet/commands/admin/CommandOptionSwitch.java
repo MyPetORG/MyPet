@@ -29,8 +29,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.chat.FancyMessage;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import at.blvckbytes.raw_message.MessageColor;
+import at.blvckbytes.raw_message.RawMessage;
+import at.blvckbytes.raw_message.click.RunCommandAction;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -90,21 +92,24 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                     sender.sendMessage("Select the MyPet you want the player to switch to:");
                     if (sender instanceof Player) {
                         boolean doComma = false;
-                        FancyMessage message = new FancyMessage("");
+
+                        RawMessage message = new RawMessage();
                         for (StoredMyPet mypet : value) {
 
                             if (doComma) {
-                                message.then(", ");
+                                message.addExtra(", ");
                             }
-                            message.then(mypet.getPetName())
-                                    .color(ChatColor.AQUA)
-                                    .command("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID())
-                                    .itemTooltip(Util.myPetToItemTooltip(mypet, lang));
+                            message.addExtra(
+                              new RawMessage(mypet.getPetName())
+                                .setColor(MessageColor.AQUA)
+                                .setClickAction(new RunCommandAction("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID()))
+                                .setHoverAction(Util.myPetToItemAction(mypet, lang))
+                            );
                             if (!doComma) {
                                 doComma = true;
                             }
                         }
-                        MyPetApi.getPlatformHelper().sendMessageRaw((Player) sender, message.toJSONString());
+                        message.tellRawTo((Player) sender);
                     } else {
                         for (StoredMyPet mypet : value) {
                             sender.sendMessage(mypet.getPetName() + "(" + mypet.getPetType().name() + ") -> /petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID());

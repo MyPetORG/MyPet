@@ -32,7 +32,6 @@ import de.Keyle.MyPet.compat.v1_18_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -267,13 +266,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
-    }
-
-    @Override
-    public void sendMessageRaw(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            player.spigot().sendMessage(ChatMessageType.CHAT, ComponentSerializer.parse(message));
-        }
     }
 
     @Override
