@@ -42,7 +42,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyMooshroom extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<String> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.INT);
 
 	public EntityMyMooshroom(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -110,13 +110,13 @@ public class EntityMyMooshroom extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
-		builder.define(COLOR_WATCHER, "red");
+		builder.define(COLOR_WATCHER, MyMooshroom.Type.Red.ordinal());
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());
+		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().ordinal());
 	}
 
 	@Override
