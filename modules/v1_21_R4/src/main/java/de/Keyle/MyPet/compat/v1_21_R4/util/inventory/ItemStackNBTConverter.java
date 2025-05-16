@@ -152,7 +152,7 @@ public class ItemStackNBTConverter {
             case 7:
                 return new TagByteArray(((ByteArrayTag) vanillaTag).getAsByteArray());
             case 8:
-                return new TagString(vanillaTag.toString());
+                return new TagString(((StringTag) vanillaTag).value());
             case 9:
                 ListTag tagList = (ListTag) vanillaTag;
                 List compoundList = new ArrayList();
