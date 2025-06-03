@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPig;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
+import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -34,7 +35,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.animal.PigVariant;
+import net.minecraft.world.entity.animal.PigVariants;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -46,7 +51,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EntityMyPig extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Holder<PigVariant>> DATA_VARIANT_ID = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.PIG_VARIANT);
 
 	public EntityMyPig(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -141,13 +147,18 @@ public class EntityMyPig extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
-		builder.define(SADDLE_WATCHER, false); // saddle
+		builder.define(DATA_BOOST_TIME, 0);
+		builder.define(DATA_VARIANT_ID, VariantUtils.getDefaultOrAny(this.registryAccess(), PigVariants.DEFAULT));
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(SADDLE_WATCHER, getMyPet().hasSaddle());
+		this.getEntityData().set(DATA_VARIANT_ID, VariantUtils.getDefaultOrAny(this.registryAccess(), PigVariants.DEFAULT));
+
+		if (getMyPet().hasSaddle()) {
+			equipment.set(EquipmentSlot.SADDLE, Items.SADDLE.getDefaultInstance());
+		}
 	}
 
 	@Override
