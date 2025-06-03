@@ -52,7 +52,6 @@ public class EntityMyDrowned extends EntityMyAquaticPet {
 	private static final EntityDataAccessor<Boolean> BABY_WATCHER = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_3 = SynchedEntityData.defineId(EntityMyDrowned.class, EntityDataSerializers.BOOLEAN);
 
 
 	public EntityMyDrowned(Level world, MyPet myPet) {
@@ -156,7 +155,6 @@ public class EntityMyDrowned extends EntityMyAquaticPet {
 		builder.define(BABY_WATCHER, false);
 		builder.define(UNUSED_WATCHER_1, 0);
 		builder.define(UNUSED_WATCHER_2, false);
-		builder.define(UNUSED_WATCHER_3, false);
 	}
 
 	@Override
