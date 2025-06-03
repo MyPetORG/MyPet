@@ -34,6 +34,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -52,7 +53,6 @@ public class EntityMyStrider extends EntityMyPet {
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> BOOST_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> SUFFOCATING_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> SADDLE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyStrider(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -127,13 +127,15 @@ public class EntityMyStrider extends EntityMyPet {
 		builder.define(AGE_WATCHER, false);
 		builder.define(BOOST_TICKS_WATCHER, 0);
 		builder.define(SUFFOCATING_WATCHER, false);
-		builder.define(SADDLE_WATCHER, false);
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(SADDLE_WATCHER, getMyPet().hasSaddle());
+
+		if (getMyPet().hasSaddle()) {
+			equipment.set(EquipmentSlot.SADDLE, Items.SADDLE.getDefaultInstance());
+		}
 	}
 
 	@Override
