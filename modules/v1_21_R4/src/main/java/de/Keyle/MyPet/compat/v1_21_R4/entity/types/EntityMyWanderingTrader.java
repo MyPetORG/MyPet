@@ -33,7 +33,8 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyWanderingTrader extends EntityMyPet {
 
-	private static final EntityDataAccessor<Integer> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> UNHAPPY_COUNTER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.INT);
 
 	public EntityMyWanderingTrader(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -57,8 +58,11 @@ public class EntityMyWanderingTrader extends EntityMyPet {
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
+
+		builder.define(AGE_WATCHER, false);
+
 		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
-			builder.define(UNUSED_WATCHER, 0);
+			builder.define(UNHAPPY_COUNTER, 0);
 		}
 	}
 
