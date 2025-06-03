@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTurtle;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -39,12 +38,8 @@ import net.minecraft.world.level.Level;
 public class EntityMyTurtle extends EntityMyAquaticPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<BlockPos> HOME_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> HAS_EGG_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<BlockPos> TRAVEL_POS_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BLOCK_POS);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER_3 = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> LAYING_EGG_WATCHER = SynchedEntityData.defineId(EntityMyTurtle.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyTurtle(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -90,12 +85,8 @@ public class EntityMyTurtle extends EntityMyAquaticPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
-		builder.define(HOME_WATCHER, BlockPos.ZERO);
 		builder.define(HAS_EGG_WATCHER, false);
-		builder.define(TRAVEL_POS_WATCHER, BlockPos.ZERO);
-		builder.define(UNUSED_WATCHER_2, false);
-		builder.define(UNUSED_WATCHER_3, false);
-		builder.define(UNUSED_WATCHER_1, false);
+		builder.define(LAYING_EGG_WATCHER, false);
 	}
 
 	@Override
