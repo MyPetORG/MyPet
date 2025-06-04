@@ -133,9 +133,7 @@ public class EntityMyStrider extends EntityMyPet {
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
-		if (getMyPet().hasSaddle()) {
-			equipment.set(EquipmentSlot.SADDLE, Items.SADDLE.getDefaultInstance());
-		}
+		equipment.set(EquipmentSlot.SADDLE, getMyPet().hasSaddle() ? Items.SADDLE.getDefaultInstance() : ItemStack.EMPTY);
 	}
 
 	@Override

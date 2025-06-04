@@ -156,9 +156,7 @@ public class EntityMyPig extends EntityMyPet {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		this.getEntityData().set(DATA_VARIANT_ID, VariantUtils.getDefaultOrAny(this.registryAccess(), PigVariants.DEFAULT));
 
-		if (getMyPet().hasSaddle()) {
-			equipment.set(EquipmentSlot.SADDLE, Items.SADDLE.getDefaultInstance());
-		}
+		equipment.set(EquipmentSlot.SADDLE, getMyPet().hasSaddle() ? Items.SADDLE.getDefaultInstance() : ItemStack.EMPTY);
 	}
 
 	@Override
