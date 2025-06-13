@@ -208,7 +208,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     if (villagerTag.containsKey("Offers")) {
                         TagCompound offersTag = villagerTag.get("Offers");
                         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
-                        DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT.get("Offers"));
+                        DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT);
                         try {
                             entityVillager.setOffers(dataresult.resultOrPartial().get());
                         } catch (Exception e) {
@@ -258,6 +258,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
                     entityVillager.setVillagerXp(xp);
                 }
+
+                //Have to refresh brain, otherwise will not store new job site in memories
+                entityVillager.refreshBrain(entityVillager.level().getMinecraftWorld());
             }
         } else if (myPet instanceof MySlime) {
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());

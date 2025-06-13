@@ -35,14 +35,20 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R2.util.VariantConverter;
 import de.Keyle.MyPet.compat.v1_21_R2.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.*;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.trading.MerchantOffers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_21_R2.CraftRegistry;
 import org.bukkit.craftbukkit.v1_21_R2.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_21_R2.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_21_R2.entity.CraftVillagerZombie;
@@ -56,6 +62,9 @@ import java.util.*;
 
 @Compat("v1_21_R2")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
+
+    public final Registry<VillagerType> VILLAGER_TYPE_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.VILLAGER_TYPE);
+    public final Registry<VillagerProfession> VILLAGER_PROFESSION_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.VILLAGER_PROFESSION);
 
     @Override
     public TagCompound convertEntity(LivingEntity entity) {
@@ -193,23 +202,22 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyVillager) {
             MyVillager villagerPet = (MyVillager) myPet;
             Villager villagerEntity = ((Villager) normalEntity);
+            net.minecraft.world.entity.npc.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 
-            Villager.Profession profession = Villager.Profession.values()[villagerPet.getProfession()];
-            Villager.Type type = Villager.Type.values()[villagerPet.getType().ordinal()];
-            villagerEntity.setVillagerType(type);
-            villagerEntity.setProfession(profession);
-            villagerEntity.setVillagerLevel(villagerPet.getVillagerLevel());
+            VillagerProfession profession = VILLAGER_PROFESSION_REGISTRY.byId(villagerPet.getProfession());
+            VillagerType type = VILLAGER_TYPE_REGISTRY.byId(villagerPet.getType().ordinal());
+
+            VillagerData villagerData = new VillagerData(type, profession, villagerPet.getVillagerLevel());
+            entityVillager.setVillagerData(villagerData);
 
             if (villagerPet.hasOriginalData()) {
                 TagCompound villagerTag = villagerPet.getOriginalData();
-
-                net.minecraft.world.entity.npc.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 
                 try {
                     if (villagerTag.containsKey("Offers")) {
                         TagCompound offersTag = villagerTag.get("Offers");
                         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
-                        DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT.get("Offers"));
+                        DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT);
                         if(dataresult.hasResultOrPartial() && dataresult.resultOrPartial().isPresent()) {
                             entityVillager.setOffers(dataresult.resultOrPartial().get());
                         }
@@ -257,6 +265,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
                     entityVillager.setVillagerXp(xp);
                 }
+
+                //Have to refresh brain, otherwise will not store new job site in memories
+                entityVillager.refreshBrain(entityVillager.level().getMinecraftWorld());
             }
         } else if (myPet instanceof MySlime) {
             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
@@ -506,9 +517,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertVillager(Villager villager, TagCompound properties) {
-        int profession = villager.getProfession().ordinal();
+        net.minecraft.world.entity.npc.Villager npcVillager = ((CraftVillager) villager).getHandle();
+        VillagerData villagerData = npcVillager.getVillagerData();
+
+        int profession = VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession());
         properties.getCompoundData().put("Profession", new TagInt(profession));
-        int type = villager.getVillagerType().ordinal();
+        int type = VILLAGER_TYPE_REGISTRY.getId(villagerData.getType());
         properties.getCompoundData().put("VillagerType", new TagInt(type));
         int level = villager.getVillagerLevel();
         properties.getCompoundData().put("VillagerLevel", new TagInt(level));
