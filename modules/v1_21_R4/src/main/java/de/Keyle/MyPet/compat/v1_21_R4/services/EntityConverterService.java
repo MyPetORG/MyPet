@@ -35,6 +35,7 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R4.util.VariantConverter;
 import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.*;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -42,6 +43,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.gossip.GossipContainer;
+import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -201,23 +203,21 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyVillager) {
             MyVillager villagerPet = (MyVillager) myPet;
             Villager villagerEntity = ((Villager) normalEntity);
+            net.minecraft.world.entity.npc.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 
-            Villager.Profession profession = Villager.Profession.values()[villagerPet.getProfession()];
-            Villager.Type type = Villager.Type.values()[villagerPet.getType().ordinal()];
-            villagerEntity.setVillagerType(type);
-            villagerEntity.setProfession(profession);
-            villagerEntity.setVillagerLevel(villagerPet.getVillagerLevel());
+            Holder<VillagerProfession> professionHolder = VILLAGER_PROFESSION_REGISTRY.wrapAsHolder(VILLAGER_PROFESSION_REGISTRY.byId(villagerPet.getProfession()));
+            Holder<VillagerType> typeHolder = VILLAGER_TYPE_REGISTRY.wrapAsHolder(VILLAGER_TYPE_REGISTRY.byId(villagerPet.getType().ordinal()));
+            VillagerData villagerData = new VillagerData(typeHolder, professionHolder, villagerPet.getVillagerLevel());
+            entityVillager.setVillagerData(villagerData);
 
             if (villagerPet.hasOriginalData()) {
                 TagCompound villagerTag = villagerPet.getOriginalData();
-
-                net.minecraft.world.entity.npc.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 
                 try {
                     if (villagerTag.containsKey("Offers")) {
                         TagCompound offersTag = villagerTag.get("Offers");
                         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
-                        DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT.get("Offers"));
+                        DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT);
                         if(dataresult.hasResultOrPartial() && dataresult.resultOrPartial().isPresent()) {
                             entityVillager.setOffers(dataresult.resultOrPartial().get());
                         }
@@ -521,9 +521,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertVillager(Villager villager, TagCompound properties) {
-        int profession = villager.getProfession().ordinal();
+        net.minecraft.world.entity.npc.Villager npcVillager = ((CraftVillager) villager).getHandle();
+        VillagerData villagerData = npcVillager.getVillagerData();
+
+        int profession = VILLAGER_PROFESSION_REGISTRY.getId(villagerData.profession().value());
         properties.getCompoundData().put("Profession", new TagInt(profession));
-        int type = villager.getVillagerType().ordinal();
+        int type = VILLAGER_TYPE_REGISTRY.getId(villagerData.type().value());
         properties.getCompoundData().put("VillagerType", new TagInt(type));
         int level = villager.getVillagerLevel();
         properties.getCompoundData().put("VillagerLevel", new TagInt(level));
