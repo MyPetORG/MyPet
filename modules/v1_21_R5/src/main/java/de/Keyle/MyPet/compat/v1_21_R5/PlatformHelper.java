@@ -377,8 +377,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public Entity getEntity(int id, World world) {
     	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntities().get(id);
         if(e==null) {
-            Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, ((CraftWorld)world).getHandle());
-            e = (net.minecraft.world.entity.Entity) dragonParts.get(id);
+            /*Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, ((CraftWorld)world).getHandle());
+            e = (net.minecraft.world.entity.Entity) dragonParts.get(id);*/
         }
     	return e != null ? e.getBukkitEntity() : null;
     }

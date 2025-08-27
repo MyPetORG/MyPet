@@ -107,7 +107,7 @@ public class EntityMyEnderDragon extends EntityMyFlyingPet {
 			}
 			this.registered = true;
 		}*/
-		registerPartsIfNeeded(); // TODO Generated solution for dragon parts, requires testing
+		//registerPartsIfNeeded(); // TODO Generated solution for dragon parts, requires testing
 
 	}
 
