@@ -159,7 +159,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		try {
 			this.replaceCraftAttributes();
 			this.setBukkitEntity();
-
 			this.myPet = myPet;
 			this.isMyPet = true;
 			this.refreshDimensions();
@@ -169,12 +168,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			this.navigation = this.setSpecialNav();
 			this.petNavigation = new VanillaNavigation(this);
 			this.sitPathfinder = new Sit(this);
+			this.attributeMap = this.getAttributes(); // Make sure to initiate the attributeMap, otherwise teleporting crashes the server
 			this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(Integer.MAX_VALUE);
 			this.setHealth((float) myPet.getHealth());
 			this.updateNameTag();
 			this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(walkSpeed);
 			this.setPathfinder();
 			this.updateVisuals();
+			this.getAttributes();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -231,6 +232,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			MyPetType type = entityRegistry.getMyPetType(this.getClass());
 			EntityType<?> types = entityRegistry.entityTypes.get(type);
 			AttributeSupplier attributeProvider = MyAttributeDefaults.getAttribute(types);
+			Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "MyPet Type: " + type);
+			Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "Supplier null: " + (attributeProvider == null));
 			this.attributeMap = new AttributeMap(attributeProvider);
 		}
 		return attributeMap;
