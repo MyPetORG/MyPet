@@ -424,6 +424,7 @@ public class PlayerListener implements Listener {
                     if (event.getFrom().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
                         final boolean sameWorld = event.getFrom().getWorld() == event.getTo().getWorld();
                         myPet.removePet();
+                        Bukkit.getConsoleSender().sendMessage("MyPet: Teleporting player " + player.getName() + " (" + event.getFrom().getWorld().getName() + " -> " + event.getTo().getWorld().getName() + "). Respawning pet...");
                         new BukkitRunnable() {
                             public void run() {
                                 if (myPetPlayer.isOnline() && myPetPlayer.hasMyPet()) {
