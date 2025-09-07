@@ -62,7 +62,7 @@ import java.util.List;
 public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
 
 	private String inventoryName = "";
-	private final NonNullList<ItemStack> items = NonNullList.withSize(64, ItemStack.EMPTY);
+	private final NonNullList<ItemStack> items = NonNullList.withSize(54, ItemStack.EMPTY);
 	private int size = 0;
 	private int stackSize = 64;
 	private final List<HumanEntity> transaction = new ArrayList<>();

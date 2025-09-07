@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R5.util.inventory.CustomInventory;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
+import lombok.Getter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -62,12 +63,9 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         }
     }
 
+    @Getter
     CustomInventory minecraftInventory;
     int size = 0;
-
-    public CustomInventory getMinecraftInventory() {
-        return minecraftInventory;
-    }
 
     @Override
     public void open(IconMenu menu, HumanEntity player) {

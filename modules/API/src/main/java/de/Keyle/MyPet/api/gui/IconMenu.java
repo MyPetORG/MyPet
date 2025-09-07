@@ -88,10 +88,8 @@ public class IconMenu implements Listener {
         if (totalRows > 0) {
             if (totalRows > 6)
                 totalRows = 6;
-
             this.pageSizeInSlots = totalRows * 9;
         }
-
         return this;
     }
 
