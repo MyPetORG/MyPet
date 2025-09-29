@@ -384,12 +384,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- https://www.spigotmc.org/resources/protocollib.1997/ -->
-            <groupId>com.comphenix.protocol</groupId>
+            <groupId>net.dmulloy2</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.7.0</version>
+            <version>5.4.0</version>
             <scope>provided</scope>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <!-- https://www.spigotmc.org/resources/placeholderapi.6245/ -->
