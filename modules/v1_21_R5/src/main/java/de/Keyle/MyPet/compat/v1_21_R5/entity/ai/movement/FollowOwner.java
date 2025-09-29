@@ -53,6 +53,10 @@ public class FollowOwner implements AIGoal {
 	private final Player owner;
 	private boolean waitForGround = false;
 
+	private static final int PATHFINDING_INTERVAL = 20; // 1 Sekunde bei 20 TPS
+	private static final int LOOKAT_INTERVAL = 5; // alle 5 Ticks Kopf drehen
+	private int lookAtTimer = 0;
+
 	public FollowOwner(EntityMyPet entityMyPet, double startDistance, float stopDistance, float teleportDistance) {
 		this.petEntity = entityMyPet;
 		this.nav = entityMyPet.getPetNavigation();
@@ -114,8 +118,11 @@ public class FollowOwner implements AIGoal {
 			return;
 		}
 
-		//Look at Owner
-		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot()); //TODO MIGHT be wrong (also in different places) ->getMaxHeadXRot
+		// Look at Owner nur alle LOOKAT_INTERVAL Ticks
+		if (--lookAtTimer <= 0) {
+			this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot());
+			lookAtTimer = LOOKAT_INTERVAL;
+		}
 
 		boolean flyingPet = petEntity instanceof EntityMyFlyingPet;
 
@@ -127,7 +134,8 @@ public class FollowOwner implements AIGoal {
 						if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
 							if (controlPathfinderGoal.moveTo == null) {
 								if (!petEntity.hasTarget()) {
-									if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
+									// canSpawn nur alle PATHFINDING_INTERVAL Ticks prüfen
+									if (this.setPathTimer % PATHFINDING_INTERVAL == 0 && MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
 										this.petEntity.fallDistance = 0;
 										this.petEntity.move(MoverType.SELF, new Vec3(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
 										this.setPathTimer = 0;
@@ -144,10 +152,14 @@ public class FollowOwner implements AIGoal {
 				waitForGround = true;
 			}
 
+			// Pathfinding nur alle PATHFINDING_INTERVAL Ticks oder bei signifikanter Bewegung
 			if (--this.setPathTimer <= 0) {
-				this.setPathTimer = 10;
-				if (this.nav.navigateTo(owner.getBukkitEntity())) {
-					applyWalkSpeed();
+				this.setPathTimer = PATHFINDING_INTERVAL;
+				// Nur neuen Pfad berechnen, wenn sich der Spieler signifikant bewegt hat
+				if (this.petEntity.distanceToSqr(owner) > 2.0) {
+					if (this.nav.navigateTo(owner.getBukkitEntity())) {
+						applyWalkSpeed();
+					}
 				}
 			}
 		}

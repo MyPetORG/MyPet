@@ -235,6 +235,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         return attributeMap;
     }
 
+    // This method has to be overriden in 1.21.8+ because teleporting says "this.supplier == null"
     @Override
     protected void onAttributeUpdated(Holder<Attribute> holder) {
         if (holder.value() == Attributes.MAX_HEALTH) {
