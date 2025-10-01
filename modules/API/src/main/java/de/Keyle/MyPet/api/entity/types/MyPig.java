@@ -32,4 +32,8 @@ public interface MyPig extends MyPet, MyPetBaby {
     boolean hasSaddle();
 
     void setSaddle(ItemStack item);
+
+    String getVariant();
+
+    void setVariant(String key);
 }

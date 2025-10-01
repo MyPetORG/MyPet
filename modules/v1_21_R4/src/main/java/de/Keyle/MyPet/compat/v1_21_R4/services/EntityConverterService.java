@@ -43,6 +43,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.gossip.GossipContainer;
+import net.minecraft.world.entity.animal.CowVariant;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
@@ -50,6 +51,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
+import org.bukkit.craftbukkit.v1_21_R4.entity.CraftCow;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftVillagerZombie;
@@ -82,6 +84,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case PIG:
                 convertPig((Pig) entity, properties);
+                break;
+            case COW:
+                convertCow((Cow) entity, properties);
+                break;
+            case CHICKEN:
+                convertChicken((Chicken) entity, properties);
                 break;
             case MAGMA_CUBE:
             case SLIME:
@@ -197,6 +205,14 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
         } else if (myPet instanceof MyPig) {
             ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
+            ((Pig) normalEntity).setVariant(VariantConverter.getBukkitPigVariant(((MyPig) myPet).getVariant()));
+        } else if (myPet instanceof MyCow) {
+            // Use CraftCow to avoid AbstractCow#setVariant NoSuchMethodError on Paper
+            CraftCow craftCow = (CraftCow) normalEntity;
+            CowVariant cowVariant = VariantConverter.convertCowVariant(((MyCow) myPet).getVariant());
+            craftCow.getHandle().setVariant(VariantConverter.COW_REGISTRY.wrapAsHolder(cowVariant));
+        } else if (myPet instanceof MyChicken) {
+            ((Chicken) normalEntity).setVariant(VariantConverter.getBukkitChickenVariant(((MyChicken) myPet).getVariant()));
         } else if (myPet instanceof MySheep) {
             ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
             ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
@@ -518,6 +534,34 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     public void convertPig(Pig pig, TagCompound properties) {
         properties.getCompoundData().put("Saddle", new TagByte(pig.hasSaddle()));
+        properties.getCompoundData().put("Variant", new TagString(pig.getVariant().getKey().getKey()));
+    }
+
+    public void convertCow(Cow cow, TagCompound properties) {
+        String key;
+        // We have to use NMS because Paper redirects Cow#getVariant() to AbstractCow#getVariant() due to paper.yml's api-version being set to 1.13.
+        // Related GitHub issue (labeled as "not a bug"): https://github.com/PaperMC/Paper/issues/13064
+        try {
+            CraftCow craftCow = (CraftCow) cow;
+            net.minecraft.world.entity.animal.Cow nmsCow = craftCow.getHandle();
+
+            Holder<CowVariant> holder = nmsCow.getVariant();
+            ResourceLocation rl = holder
+                    .unwrapKey()
+                    .orElseThrow(() -> new IllegalStateException("Cow variant missing ResourceKey"))
+                    .location();
+
+            key = rl.getPath();
+        } catch (Throwable nmsErr) {
+            // If, somehow, NMS fails, default to temperate
+            key = "temperate";
+        }
+
+        properties.getCompoundData().put("Variant", new TagString(key));
+    }
+
+    public void convertChicken(Chicken chicken, TagCompound properties) {
+        properties.getCompoundData().put("Variant", new TagString(chicken.getVariant().getKey().getKey()));
     }
 
     public void convertVillager(Villager villager, TagCompound properties) {
