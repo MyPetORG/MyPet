@@ -42,6 +42,7 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.breeze.Breeze;
+import net.minecraft.world.entity.monster.creaking.Creaking;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
@@ -74,6 +75,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.COD, Cod.createAttributes().build())									//Cod
                 .putFast(EntityType.COW, Cow.createAttributes().build())									//Cow
                 .putFast(EntityType.CREEPER, Creeper.createAttributes().build())							//Creeper
+                .putFast(EntityType.CREAKING, Creaking.createAttributes().build())							//Creaking
                 .putFast(EntityType.DOLPHIN, Dolphin.createAttributes().build())							//Dolphin
                 .putFast(EntityType.DONKEY, Donkey.createBaseChestedHorseAttributes().build())				//Donkey
                 .putFast(EntityType.DROWNED, Drowned.createAttributes().build())							//Drowned

@@ -608,6 +608,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         MyPetApi.getLeashFlagManager().registerLeashFlag(new UserCreatedFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WildFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WorldFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new PermissionFlag());
     }
 
     public static void registerSkilltreeRequirements() {
