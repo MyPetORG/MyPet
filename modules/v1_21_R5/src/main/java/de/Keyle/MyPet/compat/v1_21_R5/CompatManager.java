@@ -41,5 +41,7 @@ public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager impleme
     @Override
 	public void enable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        // Register version-specific ride listener
+        Bukkit.getServer().getPluginManager().registerEvents(new de.Keyle.MyPet.compat.v1_21_R5.listeners.RideInteractListener(), MyPetApi.getPlugin());
     }
 }
