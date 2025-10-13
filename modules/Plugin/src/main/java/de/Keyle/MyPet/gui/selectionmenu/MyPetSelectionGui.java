@@ -43,13 +43,32 @@ public class MyPetSelectionGui {
 
     private final MyPetPlayer player;
     private final String title;
+    private final int page;
 
     public MyPetSelectionGui(MyPetPlayer player, String title) {
         this.player = player;
         this.title = title;
+        this.page = 1;
+    }
+
+    public MyPetSelectionGui(MyPetPlayer player, String title, int page) {
+        this.player = player;
+        this.title = title;
+        this.page = page;
     }
 
     public void open(List<StoredMyPet> pets, final RepositoryCallback<StoredMyPet> callback) {
+        List<StoredMyPet> pagedPets;
+        // restrict the number of pets to 54 per page
+        int startIndex = (page - 1) * 54;
+        int endIndex = Math.min(startIndex + 54, pets.size());
+        if (startIndex < pets.size()) {
+            pagedPets = pets.subList(startIndex, endIndex);
+        } else {
+            pagedPets = pets.subList(0, Math.min(54, pets.size()));
+        }
+
+
         final Map<Integer, StoredMyPet> petSlotList = new HashMap<>();
         WorldGroup wg = WorldGroup.getGroupByWorld(player.getPlayer().getWorld().getName());
 
@@ -67,7 +86,7 @@ public class MyPetSelectionGui {
 
         int nextPosition = 0;
 
-        for (StoredMyPet currentPet : pets) {
+        for (StoredMyPet currentPet : pagedPets) {
             if (currentPet.getWorldGroup().isEmpty() || !currentPet.getWorldGroup().equals(wg.getName()))
                 continue;
 
@@ -111,7 +130,6 @@ public class MyPetSelectionGui {
             menu.setOption(currentPosition, icon);
             petSlotList.put(currentPosition, currentPet);
         }
-
         menu.open(player.getPlayer());
     }
 }

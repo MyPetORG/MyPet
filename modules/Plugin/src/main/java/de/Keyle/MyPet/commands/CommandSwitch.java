@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -68,6 +69,19 @@ public class CommandSwitch implements CommandTabCompleter {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
+            int page = 1;
+
+            if (args.length > 0) {
+                try {
+                    page = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    Bukkit.getConsoleSender().sendMessage("MyPet: Invalid page number format in /petswitch command by player " + player.getName() + ". Using page 1.");
+                }
+                if (page < 1) {
+                    return true;
+                }
+            }
+            final int finalPage = page;
             MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
                 @Override
                 public void callback(List<StoredMyPet> pets) {
@@ -90,7 +104,7 @@ public class CommandSwitch implements CommandTabCompleter {
 
                         String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title + " " + stats);
+                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title + " " + stats, finalPage);
                         gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
@@ -165,8 +179,22 @@ public class CommandSwitch implements CommandTabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         if (sender instanceof Player && strings.length == 1) {
-            if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
-                return filterTabCompletionResults(storeList, strings[0]);
+            final int[] petCount = {0};
+            MyPetApi.getRepository().getMyPets(MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender), new RepositoryCallback<List<StoredMyPet>>() {
+                @Override
+                public void callback(List<StoredMyPet> value) {
+                    petCount[0]++;
+                }
+            });
+            // Tab as many pages as 54 slots might fit
+            int maxPages = (int) Math.ceil((double) petCount[0] / 54);
+            for (int i = 1; i <= maxPages; i++) {
+                if (!storeList.contains(String.valueOf(i))) {
+                    storeList.add(String.valueOf(i));
+                }
+                if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
+                    return filterTabCompletionResults(storeList, strings[0]);
+                }
             }
         }
         return Collections.emptyList();

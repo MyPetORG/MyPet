@@ -43,6 +43,7 @@ public enum MyPetClass {
     Cod(MyCod.class),
     Cow(MyCow.class),
     Creeper(MyCreeper.class),
+    Creaking(MyCreaking.class),
     Dolphin(MyDolphin.class),
     Donkey(MyDonkey.class),
     Drowned(MyDrowned.class),
