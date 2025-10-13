@@ -183,7 +183,10 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 				and also when the pet dies.
 				It's stupid that we have to do this but it seems to work -> I'm happy.
 			 */
-			ownMap.put(NamespacedKey.fromString("mypet_" + type.getTypeID().toString()), org.bukkit.entity.EntityType.BLOCK_DISPLAY);
+            NamespacedKey key = NamespacedKey.fromString("mypet_" + type.getTypeID().toString());
+            if (!(bukkitMap.containsKey(key) && bukkitMap.get(key) == org.bukkit.entity.EntityType.BLOCK_DISPLAY)) {
+                ownMap.put(key, org.bukkit.entity.EntityType.BLOCK_DISPLAY);
+            }
 		}
 
 		//Post-Handle Bukkit-Registry
