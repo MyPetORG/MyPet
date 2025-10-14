@@ -150,7 +150,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
         private static MythicMobsHook leHook;
 
         public V4(MythicMobsHook leHook) {
-            this.leHook = leHook;
+            V4.leHook = leHook;
         }
 
         @EventHandler
@@ -267,7 +267,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
         private static MythicMobsHook leHook;
 
         public V5(MythicMobsHook leHook) {
-            this.leHook = leHook;
+            V5.leHook = leHook;
         }
 
         @EventHandler

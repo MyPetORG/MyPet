@@ -49,7 +49,7 @@ import java.util.function.Supplier;
 public class ProtocolLibHook implements PluginHook {
 
     protected boolean checkTemporaryPlayers = false;
-    private Set<Player> tempBlockedPlayers = new ConcurrentHashMap<>().newKeySet();
+    private Set<Player> tempBlockedPlayers = ConcurrentHashMap.newKeySet();
     @Override
     public boolean onEnable() {
         try {
