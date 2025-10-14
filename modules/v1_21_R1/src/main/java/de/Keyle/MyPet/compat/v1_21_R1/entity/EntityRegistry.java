@@ -134,7 +134,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			//Gotta put the original Registry in. Just for a moment
 			try {
 				ENTITY_REGISTRY_SETTER.invoke(entityRegistry);
-			} catch (Throwable e) {
+			} catch (Throwable ignored) {
 			}
 		}
 		//We are now working with the Vanilla-Registry
@@ -182,7 +182,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			//Gotta put the custom Registry back into place
 			try {
 				ENTITY_REGISTRY_SETTER.invoke(custReg);
-			} catch (Throwable e) {
+			} catch (Throwable ignored) {
 			}
 			custReg = null;
 		}

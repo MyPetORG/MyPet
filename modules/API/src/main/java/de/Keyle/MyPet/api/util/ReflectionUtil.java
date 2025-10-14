@@ -43,8 +43,8 @@ public class ReflectionUtil {
     public static Class getClass(String name) {
         try {
             return Class.forName(name);
-        } catch (Throwable ignored) {
-            throw new RuntimeException("failed to load a class", ignored);
+        } catch (Throwable e) {
+            throw new RuntimeException("failed to load a class", e);
         }
     }
 
@@ -175,7 +175,7 @@ public class ReflectionUtil {
         try {
             MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
             return METHODHANDLE_LOOKUPER.unreflectSetter(field);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return null;
     }
@@ -184,7 +184,7 @@ public class ReflectionUtil {
         if (className != null) {
             try {
                 return METHODHANDLE_LOOKUPER.unreflect(getMethod(className, method, parameters));
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return null;

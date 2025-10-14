@@ -139,8 +139,8 @@ public class Updater {
                     return Optional.of(new Update(version, build, downloadURL));
                 }
             }
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return Optional.empty();
     }
