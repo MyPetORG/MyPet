@@ -82,7 +82,7 @@ public class EntityListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getLocation().getWorld()).isDisabled()) {
             return;
         }
-        if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0) {
+        if (!Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.isEmpty()) {
             event.getEntity().setMetadata("SpawnReason", new FixedMetadataValue(MyPetApi.getPlugin(), event.getSpawnReason().name()));
         }
         if (event.getEntity() instanceof Zombie) {
@@ -491,7 +491,7 @@ public class EntityListener implements Listener {
         if (Configuration.LevelSystem.Experience.DISABLED_WORLDS.contains(deadEntity.getWorld().getName())) {
             return;
         }
-        if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.size() > 0 && event.getEntity().hasMetadata("SpawnReason")) {
+        if (!Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.isEmpty() && event.getEntity().hasMetadata("SpawnReason")) {
             for (MetadataValue value : event.getEntity().getMetadata("SpawnReason")) {
                 if (value.getOwningPlugin().getName().equals("MyPet")) {
                     if (Configuration.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.contains(value.asString())) {

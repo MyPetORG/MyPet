@@ -195,7 +195,7 @@ public class ExperienceCache implements ServiceContainer {
                                 .greaterEqual(expMap.get("" + (level - 1)).getAsDouble())
                                 .less(exp)
                                 .build();
-                        if (tree.query(interval).size() == 0) {
+                        if (tree.query(interval).isEmpty()) {
                             tree.add(interval);
                         }
                     }
@@ -205,7 +205,7 @@ public class ExperienceCache implements ServiceContainer {
                                 .greaterEqual(exp)
                                 .less(expMap.get("" + (level + 1)).getAsDouble())
                                 .build();
-                        if (tree.query(interval).size() == 0) {
+                        if (tree.query(interval).isEmpty()) {
                             tree.add(interval);
                         }
                     }

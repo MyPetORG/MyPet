@@ -306,7 +306,7 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
         from.decreasing.removeAll(tmp);
         increasing.addAll(tmp);
         decreasing.addAll(tmp);
-        if (from.increasing.size() == 0) {
+        if (from.increasing.isEmpty()) {
             return deleteNode(from);
         }
         return from;
@@ -375,7 +375,7 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
                 tree.size--;
             }
             root.increasing.remove(interval);
-            if (root.increasing.size() == 0) {
+            if (root.increasing.isEmpty()) {
                 return deleteNode(root);
             }
 

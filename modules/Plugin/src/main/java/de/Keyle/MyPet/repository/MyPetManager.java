@@ -95,7 +95,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         myPet.getExperience().setExp(storedMyPet.getExp());
         myPet.setSkilltree(storedMyPet.getSkilltree());
         Collection<Skill> skills = myPet.getSkills().all();
-        if (skills.size() > 0) {
+        if (!skills.isEmpty()) {
             for (Skill skill : skills) {
                 if (skill instanceof NBTStorage) {
                     NBTStorage storageSkill = (NBTStorage) skill;

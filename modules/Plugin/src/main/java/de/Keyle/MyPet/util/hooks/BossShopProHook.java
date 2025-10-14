@@ -176,7 +176,7 @@ public class BossShopProHook implements PluginHook {
                         }
                     } else if (os instanceof ArrayList) {
                         ArrayList options = (ArrayList) os;
-                        if (options.size() > 0) {
+                        if (!options.isEmpty()) {
                             optionsArray = new String[options.size()];
                             for (int i = 0; i < options.size(); i++) {
                                 optionsArray[i] = options.get(i).toString();

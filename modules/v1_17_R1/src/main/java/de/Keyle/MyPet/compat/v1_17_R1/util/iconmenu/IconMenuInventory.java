@@ -174,7 +174,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
             display.putString("Name", "{\"text\":\"" + icon.getTitle() + "\"}");
         }
 
-        if (icon.getLore().size() > 0) {
+        if (!icon.getLore().isEmpty()) {
             // set Lore
         	ListTag loreTag = new ListTag();
             display.put("Lore", loreTag);

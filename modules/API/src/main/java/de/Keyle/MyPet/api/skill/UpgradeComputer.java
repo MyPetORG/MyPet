@@ -50,7 +50,7 @@ public class UpgradeComputer<T> {
         if (upgrade != null) {
             this.currentValue = upgrade.modify(this.currentValue);
             this.upgrades.add(upgrade);
-            if (this.callbacks.size() > 0) {
+            if (!this.callbacks.isEmpty()) {
                 for (UpgradeCallback<T> callback : this.callbacks) {
                     callback.run(this.currentValue, CallbackReason.Add);
                 }
@@ -59,12 +59,12 @@ public class UpgradeComputer<T> {
     }
 
     public void addUpgrades(Collection<UpgradeModifier<T>> upgrades) {
-        if (upgrades != null && upgrades.size() > 0) {
+        if (upgrades != null && !upgrades.isEmpty()) {
             for (UpgradeModifier<T> upgrade : upgrades) {
                 this.currentValue = upgrade.modify(this.currentValue);
                 this.upgrades.add(upgrade);
             }
-            if (this.callbacks.size() > 0) {
+            if (!this.callbacks.isEmpty()) {
                 for (UpgradeCallback<T> callback : this.callbacks) {
                     callback.run(this.currentValue, CallbackReason.Add);
                 }
@@ -80,7 +80,7 @@ public class UpgradeComputer<T> {
             for (UpgradeModifier<T> u : this.upgrades) {
                 this.currentValue = u.modify(this.currentValue);
             }
-            if (this.callbacks.size() > 0) {
+            if (!this.callbacks.isEmpty()) {
                 for (UpgradeCallback<T> callback : this.callbacks) {
                     callback.run(this.currentValue, CallbackReason.Remove);
                 }
@@ -89,7 +89,7 @@ public class UpgradeComputer<T> {
     }
 
     public void removeUpgrades(Collection<UpgradeModifier<T>> upgrades) {
-        if (upgrades != null && upgrades.size() > 0) {
+        if (upgrades != null && !upgrades.isEmpty()) {
             for (UpgradeModifier<T> upgrade : upgrades) {
                 int last = this.upgrades.lastIndexOf(upgrade);
                 this.upgrades.remove(last);
@@ -98,7 +98,7 @@ public class UpgradeComputer<T> {
             for (UpgradeModifier<T> u : this.upgrades) {
                 this.currentValue = u.modify(this.currentValue);
             }
-            if (this.callbacks.size() > 0) {
+            if (!this.callbacks.isEmpty()) {
                 for (UpgradeCallback<T> callback : this.callbacks) {
                     callback.run(this.currentValue, CallbackReason.Remove);
                 }

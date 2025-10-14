@@ -94,7 +94,7 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
         }
 
         public static Buff getBuffAtPosition(int positiion) {
-            if (buffPositions.size() == 0) {
+            if (buffPositions.isEmpty()) {
                 for (Buff buff : values()) {
                     buffPositions.put(buff.position, buff);
                 }
@@ -103,7 +103,7 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
         }
 
         public static Buff getBuffByID(int id) {
-            if (buffIds.size() == 0) {
+            if (buffIds.isEmpty()) {
                 for (Buff buff : values()) {
                     buffIds.put(buff.id, buff);
                 }

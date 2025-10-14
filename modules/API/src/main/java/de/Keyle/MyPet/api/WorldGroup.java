@@ -194,7 +194,7 @@ public class WorldGroup {
         groups = groups.stream().filter(s -> !s.equals("default")).collect(Collectors.toSet());
         for (String node : groups) {
             List<String> worlds = config.getStringList("Groups." + node);
-            if (worlds.size() > 0) {
+            if (!worlds.isEmpty()) {
                 WorldGroup newGroup = new WorldGroup(node, false);
                 for (String world : worlds) {
                     if (Bukkit.getServer().getWorld(world) != null) {
@@ -209,7 +209,7 @@ public class WorldGroup {
         List<String> worldNames = new ArrayList<>();
         boolean newWorldFound = false;
         List<String> worlds = config.getStringList("Groups." + DEFAULT_GROUP.name);
-        if (worlds.size() > 0) {
+        if (!worlds.isEmpty()) {
             for (String world : worlds) {
                 if (Bukkit.getServer().getWorld(world) != null) {
                     if (DEFAULT_GROUP.addWorld(world)) {
@@ -226,7 +226,7 @@ public class WorldGroup {
                 newWorldFound = true;
             }
         }
-        if (newWorldFound && worldNames.size() > 0) {
+        if (newWorldFound && !worldNames.isEmpty()) {
             config.set("Groups.default", worldNames);
             yamlConfiguration.saveConfig();
         }

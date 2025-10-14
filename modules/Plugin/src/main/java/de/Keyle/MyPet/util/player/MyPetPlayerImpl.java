@@ -108,9 +108,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             return true;
         } else if (captureHelperMode) {
             return true;
-        } else if (extendedInfo.getCompoundData().size() > 0) {
+        } else if (!extendedInfo.getCompoundData().isEmpty()) {
             return true;
-        } else if (petWorldUUID.size() > 0) {
+        } else if (!petWorldUUID.isEmpty()) {
             return true;
         } else if (showHealthBar) {
             return true;
@@ -218,7 +218,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     public void setExtendedInfo(TagCompound compound) {
-        if (extendedInfo.getCompoundData().size() == 0) {
+        if (extendedInfo.getCompoundData().isEmpty()) {
             extendedInfo = compound;
         }
     }

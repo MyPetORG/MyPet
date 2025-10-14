@@ -273,7 +273,7 @@ public class BeaconImpl implements Beacon {
                                             .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner()), 0)));
                                 }
                             } else if (!selectedBuffs.contains(selectedBuff)) {
-                                if (selectedBuffs.size() != 0 && menu.getOption(selectedBuff.getPosition()) != null) {
+                                if (!selectedBuffs.isEmpty() && menu.getOption(selectedBuff.getPosition()) != null) {
                                     for (Buff buff : selectedBuffs) {
                                         IconMenuItem item = menu.getOption(buff.getPosition());
                                         if (item != null) {
@@ -491,7 +491,7 @@ public class BeaconImpl implements Beacon {
     }
 
     public void schedule() {
-        if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
+        if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && !selectedBuffs.isEmpty() && --beaconTimer <= 0) {
             beaconTimer = 2;
 
             double range = this.range.getValue().doubleValue();
@@ -505,7 +505,7 @@ public class BeaconImpl implements Beacon {
             }
 
 
-            if (selectedBuffs.size() == 0) {
+            if (selectedBuffs.isEmpty()) {
                 return;
             }
             if (selectedBuffs.size() > selectableBuffs.getValue()) {

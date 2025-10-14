@@ -245,7 +245,7 @@ public class ShopMyPet implements StoredMyPet {
             icon.addLoreLine(ChatColor.RESET + Colorizer.setColors(line));
         }
         List<String> options = config.getStringList("Options");
-        if (options != null && options.size() > 0) {
+        if (options != null && !options.isEmpty()) {
             TagCompound compound = new TagCompound();
             String[] optionsArray = options.toArray(new String[0]);
             CommandOptionCreate.createInfo(petType, optionsArray, compound);

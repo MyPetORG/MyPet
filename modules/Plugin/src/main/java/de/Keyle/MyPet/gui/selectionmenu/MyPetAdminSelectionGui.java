@@ -74,7 +74,7 @@ public class MyPetAdminSelectionGui {
     }
 
     public void open(final List<StoredMyPet> pets, int page, final RepositoryCallback<StoredMyPet> callback) {
-        if (pets.size() > 0) {
+        if (!pets.isEmpty()) {
             if (page < 1 || Math.ceil(pets.size() / 45.) < page) {
                 page = 1;
             }

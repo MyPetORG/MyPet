@@ -525,7 +525,7 @@ public class SqLiteRepository implements Repository {
                             MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
                             if (owner != null) {
                                 List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, false);
-                                if (pets.size() > 0) {
+                                if (!pets.isEmpty()) {
                                     //MyPetLogger.write("LOAD pet: " + pets.get(0));
                                     callback.runTask(MyPetApi.getPlugin(), pets.get(0));
                                 }
