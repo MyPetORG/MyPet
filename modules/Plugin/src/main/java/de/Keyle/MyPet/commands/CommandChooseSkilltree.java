@@ -70,13 +70,13 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                     } else if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner()), myPet.getPetName()));
                     } else {
-                        String skilltreeName = "";
+                        StringBuilder skilltreeName = new StringBuilder();
                         for (String arg : args) {
-                            skilltreeName += arg + " ";
+                            skilltreeName.append(arg).append(" ");
                         }
-                        skilltreeName = skilltreeName.substring(0, skilltreeName.length() - 1);
-                        if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
-                            Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
+                        skilltreeName = new StringBuilder(skilltreeName.substring(0, skilltreeName.length() - 1));
+                        if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName.toString())) {
+                            Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName.toString());
                             if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {
                                 int requiredLevel = skilltree.getRequiredLevel();
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
@@ -101,10 +101,10 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                                     sender.sendMessage(Translation.getString("Message.Skilltree.NotSwitched", player));
                                 }
                             } else {
-                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName));
+                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName.toString()));
                             }
                         } else {
-                            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName));
+                            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName.toString()));
                         }
                     }
                 } else {

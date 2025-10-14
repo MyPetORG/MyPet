@@ -73,16 +73,16 @@ public class CommandRelease implements CommandTabCompleter {
                     return true;
                 }
 
-                String name = "";
+                StringBuilder name = new StringBuilder();
                 if (args.length > 0) {
                     for (String arg : args) {
-                        if (!name.isEmpty()) {
-                            name += " ";
+                        if (name.length() > 0) {
+                            name.append(" ");
                         }
-                        name += arg;
+                        name.append(arg);
                     }
                 }
-                if (ChatColor.stripColor(myPet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
+                if (ChatColor.stripColor(myPet.getPetName()).trim().equalsIgnoreCase(name.toString().trim())) {
                     MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Release);
                     Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 

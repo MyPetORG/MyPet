@@ -183,11 +183,12 @@ public class Util {
 
     public static String decimal2roman(int src) {
         char digits[] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
-        String thousands = "", result = "";
+        StringBuilder thousands = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         int rang, digit, i;
 
         for (i = src / 1000; i > 0; i--) {
-            thousands += "M";
+            thousands.append("M");
         }
         src %= 1000;
 
@@ -197,52 +198,52 @@ public class Util {
             src /= 10;
             switch (digit) {
                 case 1:
-                    result = "" + digits[rang] + result;
+                    result.insert(0, "" + digits[rang]);
                     break;
                 case 2:
-                    result = "" + digits[rang] + digits[rang] + result;
+                    result.insert(0, "" + digits[rang] + digits[rang]);
                     break;
                 case 3:
-                    result = "" + digits[rang] + digits[rang] + digits[rang] + result;
+                    result.insert(0, "" + digits[rang] + digits[rang] + digits[rang]);
                     break;
                 case 4:
-                    result = "" + digits[rang] + digits[rang + 1] + result;
+                    result.insert(0, "" + digits[rang] + digits[rang + 1]);
                     break;
                 case 5:
-                    result = "" + digits[rang + 1] + result;
+                    result.insert(0, "" + digits[rang + 1]);
                     break;
                 case 6:
-                    result = "" + digits[rang + 1] + digits[rang] + result;
+                    result.insert(0, "" + digits[rang + 1] + digits[rang]);
                     break;
                 case 7:
-                    result = "" + digits[rang + 1] + digits[rang] + digits[rang] + result;
+                    result.insert(0, "" + digits[rang + 1] + digits[rang] + digits[rang]);
                     break;
                 case 8:
-                    result = "" + digits[rang + 1] + digits[rang] + digits[rang] + digits[rang] + result;
+                    result.insert(0, "" + digits[rang + 1] + digits[rang] + digits[rang] + digits[rang]);
                     break;
                 case 9:
-                    result = "" + digits[rang] + digits[rang + 2] + result;
+                    result.insert(0, "" + digits[rang] + digits[rang + 2]);
                     break;
             }
             rang += 2;
         }
-        return thousands + result;
+        return thousands.toString() + result;
     }
 
     public static String toString(InputStream is, Charset charset) {
-        String content = "";
+        StringBuilder content = new StringBuilder();
 
         try {
             InputStreamReader in = new InputStreamReader(is, charset);
             int numBytes;
             final char[] buf = new char[512];
             while ((numBytes = in.read(buf)) != -1) {
-                content += String.copyValueOf(buf, 0, numBytes);
+                content.append(String.copyValueOf(buf, 0, numBytes));
             }
         } catch (Exception ignored) {
         }
 
-        return content;
+        return content.toString();
     }
 
     /**
@@ -443,11 +444,11 @@ public class Util {
     }
 
     public static String stackTraceToString() {
-        String trace = "";
+        StringBuilder trace = new StringBuilder();
         for (StackTraceElement e1 : Thread.currentThread().getStackTrace()) {
-            trace += "\t " + e1.toString() + "\n";
+            trace.append("\t ").append(e1.toString()).append("\n");
         }
-        return trace;
+        return trace.toString();
     }
 
     public static int getJavaUpdate() {
