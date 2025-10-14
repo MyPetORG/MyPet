@@ -105,6 +105,7 @@ import retrofit2.http.HEAD;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 
@@ -1352,7 +1353,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 			if (doJump) {
 				if (onGround) {
-					jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+					jumpHeight = new BigDecimal(jumpHeight).setScale(1, RoundingMode.HALF_UP).doubleValue();
 					String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
 					Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
 					jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;
