@@ -95,11 +95,7 @@ public class MyPetLogger extends PluginLogger {
 
     public String applyStyles(String message) {
         for (ChatColor color : replacements.keySet()) {
-            if (this.replacements.containsKey(color)) {
-                message = message.replaceAll("(?i)" + color.toString(), this.replacements.get(color));
-            } else {
-                message = message.replaceAll("(?i)" + color.toString(), "");
-            }
+            message = message.replaceAll("(?i)" + color.toString(), this.replacements.getOrDefault(color, ""));
         }
         return message + Ansi.ansi().reset().toString();
     }
