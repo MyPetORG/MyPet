@@ -104,7 +104,7 @@ public class StorageTrait extends Trait {
                         UUID activePetUUID = myPetPlayer.getMyPet().getUUID();
 
                         for (StoredMyPet mypet : pets) {
-                            if (activePetUUID.equals(mypet.getUUID()) || (!mypet.getWorldGroup().equals("") && !mypet.getWorldGroup().equals(wg.getName()))) {
+                            if (activePetUUID.equals(mypet.getUUID()) || (!mypet.getWorldGroup().isEmpty() && !mypet.getWorldGroup().equals(wg.getName()))) {
                                 continue;
                             }
                             inactivePetCount++;

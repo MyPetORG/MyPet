@@ -85,7 +85,7 @@ public class MyPetAdminSelectionGui {
             Iterator<StoredMyPet> iterator = pets.iterator();
             while (iterator.hasNext()) {
                 StoredMyPet mypet = iterator.next();
-                if (mypet.getWorldGroup().equals("") || !mypet.getWorldGroup().equals(wg.getName())) {
+                if (mypet.getWorldGroup().isEmpty() || !mypet.getWorldGroup().equals(wg.getName())) {
                     iterator.remove();
                 }
 

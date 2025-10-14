@@ -166,7 +166,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID) {
-        if (worldGroup == null || worldGroup.equals("")) {
+        if (worldGroup == null || worldGroup.isEmpty()) {
             return;
         }
         if (myPetUUID == null) {

@@ -548,7 +548,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
                     updateStatus(PetState.Here);
 
-                    if (worldGroup == null || worldGroup.equals("")) {
+                    if (worldGroup == null || worldGroup.isEmpty()) {
                         setWorldGroup(WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName());
                     }
 

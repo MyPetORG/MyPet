@@ -61,7 +61,7 @@ public class CommandName implements CommandTabCompleter {
 
                 String name = "";
                 for (String arg : args) {
-                    if (!name.equals("")) {
+                    if (!name.isEmpty()) {
                         name += " ";
                     }
                     name += arg;

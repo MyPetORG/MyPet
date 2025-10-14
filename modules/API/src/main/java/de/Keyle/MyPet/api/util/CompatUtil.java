@@ -77,13 +77,13 @@ public class CompatUtil {
                 for (int i = special; i > 0; i--)
                     try {
                         String specVers = internalVersion + "_" + i;
-                        classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+                        classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
                         Class.forName(classPath);
                         break;
                     } catch (ClassNotFoundException ignored) {
                     }
             } else {
-                classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+                classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
             }
         }
 

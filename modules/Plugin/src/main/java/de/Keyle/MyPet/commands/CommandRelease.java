@@ -76,7 +76,7 @@ public class CommandRelease implements CommandTabCompleter {
                 String name = "";
                 if (args.length > 0) {
                     for (String arg : args) {
-                        if (!name.equals("")) {
+                        if (!name.isEmpty()) {
                             name += " ";
                         }
                         name += arg;

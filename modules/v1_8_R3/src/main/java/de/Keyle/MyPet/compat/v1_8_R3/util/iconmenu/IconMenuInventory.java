@@ -159,7 +159,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         }
 
         // set Title
-        if (!icon.getTitle().equals("")) {
+        if (!icon.getTitle().isEmpty()) {
             display.setString("Name", icon.getTitle());
         }
 
