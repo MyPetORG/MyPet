@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
 
@@ -183,7 +184,7 @@ public class EntityMyIllusioner extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack, net.minecraft.world.entity.EquipmentSlot slot) {
-		((ServerLevel) this.level()).getChunkSource().sendToTrackingPlayersAndSelf(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(slot, itemStack))));
+		((ServerLevel) this.level()).getChunkSource().sendToTrackingPlayersAndSelf(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(slot, itemStack))));
 	}
 
 	@Override

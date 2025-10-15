@@ -51,6 +51,7 @@ import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 
 @EntitySize(width = 0.4F, height = 0.8F)
 public class EntityMyVex extends EntityMyFlyingPet {
@@ -177,7 +178,7 @@ public class EntityMyVex extends EntityMyFlyingPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
+		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
 	}
 
 	@Override

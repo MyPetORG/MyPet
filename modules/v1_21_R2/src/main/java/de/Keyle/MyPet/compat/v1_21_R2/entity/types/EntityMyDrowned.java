@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyDrowned extends EntityMyAquaticPet {
@@ -183,7 +184,7 @@ public class EntityMyDrowned extends EntityMyAquaticPet {
 	}
 
 	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
+		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
 	}
 
 	@Override
