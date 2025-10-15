@@ -28,6 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
@@ -130,7 +131,7 @@ public class Translation {
         File localeFile = new File(MyPetApi.getPlugin().getDataFolder() + File.separator + "locale" + File.separator + "MyPet_" + localeString + ".properties");
         if (localeFile.exists()) {
             try {
-                newLocale.load(new InputStreamReader(new FileInputStream(localeFile), "UTF-8"));
+                newLocale.load(new InputStreamReader(Files.newInputStream(localeFile.toPath()), "UTF-8"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

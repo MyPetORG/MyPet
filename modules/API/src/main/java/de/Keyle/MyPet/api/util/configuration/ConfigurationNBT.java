@@ -26,6 +26,7 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
 
 import java.io.*;
+import java.nio.file.Files;
 
 public class ConfigurationNBT {
     private File NBTFile;
@@ -50,7 +51,7 @@ public class ConfigurationNBT {
 
     public boolean save() {
         try {
-            OutputStream os = new FileOutputStream(NBTFile);
+            OutputStream os = Files.newOutputStream(NBTFile.toPath());
             TagStream.writeTag(nbtTagCompound, os, true);
             os.close();
             return true;
@@ -65,7 +66,7 @@ public class ConfigurationNBT {
             return false;
         }
         try {
-            InputStream is = new FileInputStream(NBTFile);
+            InputStream is = Files.newInputStream(NBTFile.toPath());
             TagBase tag = TagStream.readTag(is, true);
             if (tag != null) {
                 nbtTagCompound = (TagCompound) tag;

@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +42,7 @@ public class CommandOptionTicket implements CommandOption {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         try {
             File ticketFile = new File(MyPetApi.getPlugin().getDataFolder(), "ticket.zip");
-            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(ticketFile));
+            ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(ticketFile.toPath()));
 
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "config.yml"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-config.yml"), out, "");

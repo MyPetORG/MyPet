@@ -40,6 +40,7 @@ import java.lang.annotation.Annotation;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
 
@@ -475,7 +476,7 @@ public class Util {
     public static long getSha256FromFile(File file) {
         try {
             Hasher hasher = Hashing.sha256().newHasher();
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file.toPath()));
             byte[] buf = new byte[1024];
             int numRead;
             while ((numRead = bis.read(buf)) != -1) {
