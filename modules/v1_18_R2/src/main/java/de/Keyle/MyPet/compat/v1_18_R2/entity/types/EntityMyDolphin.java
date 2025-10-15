@@ -20,14 +20,11 @@
 
 package de.Keyle.MyPet.compat.v1_18_R2.entity.types;
 
-import org.bukkit.Bukkit;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyAquaticPet;
-import de.Keyle.MyPet.compat.v1_18_R2.entity.ai.movement.MyPetAquaticMoveControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

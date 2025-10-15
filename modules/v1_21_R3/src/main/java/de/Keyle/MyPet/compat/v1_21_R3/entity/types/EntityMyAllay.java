@@ -44,6 +44,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 
 @EntitySize(width = 0.4F, height = 0.8F)
 public class EntityMyAllay extends EntityMyFlyingPet {
@@ -157,7 +158,7 @@ public class EntityMyAllay extends EntityMyFlyingPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
+		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
 	}
 
 	@Override

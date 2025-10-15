@@ -2,7 +2,6 @@ package de.Keyle.MyPet.compat.v1_19_R1.util;
 
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.entity.animal.FrogVariant;
-import org.bukkit.Bukkit;
 
 /**
  * Converts numerical variants into fancy new variants

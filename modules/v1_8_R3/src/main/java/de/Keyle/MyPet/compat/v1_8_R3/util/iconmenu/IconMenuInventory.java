@@ -159,11 +159,11 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         }
 
         // set Title
-        if (!icon.getTitle().equals("")) {
+        if (!icon.getTitle().isEmpty()) {
             display.setString("Name", icon.getTitle());
         }
 
-        if (icon.getLore().size() > 0) {
+        if (!icon.getLore().isEmpty()) {
             // set Lore
             NBTTagList loreTag = new NBTTagList();
             display.set("Lore", loreTag);

@@ -104,7 +104,7 @@ public class StorageTrait extends Trait {
                         UUID activePetUUID = myPetPlayer.getMyPet().getUUID();
 
                         for (StoredMyPet mypet : pets) {
-                            if (activePetUUID.equals(mypet.getUUID()) || (!mypet.getWorldGroup().equals("") && !mypet.getWorldGroup().equals(wg.getName()))) {
+                            if (activePetUUID.equals(mypet.getUUID()) || (!mypet.getWorldGroup().isEmpty() && !mypet.getWorldGroup().equals(wg.getName()))) {
                                 continue;
                             }
                             inactivePetCount++;
@@ -222,7 +222,7 @@ public class StorageTrait extends Trait {
                 MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<List<StoredMyPet>>() {
                     @Override
                     public void callback(List<StoredMyPet> pets) {
-                        if (pets.size() > 0) {
+                        if (!pets.isEmpty()) {
                             int maxPetCount = 0;
                             if (!Permissions.has(player, "MyPet.admin")) {
                                 for (int i = Misc.MAX_STORED_PET_COUNT; i > 0; i--) {

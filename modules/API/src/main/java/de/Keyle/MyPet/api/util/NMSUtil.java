@@ -1,9 +1,6 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.NotImplemented;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
-import org.bukkit.Bukkit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -46,12 +43,10 @@ public class NMSUtil {
 	public static String getSoundEffectId(Object s){
 		try {
 			return (String) MinecraftKeyGetKey.invoke(SoundEffectB.get(s));
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
-		return null;
+        return null;
 	}
 	private static Class<?> getNMSClass(String name)  {
 		String clazz = "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + "." + name;

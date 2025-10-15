@@ -90,6 +90,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("chicken", new CommandOptionCreator()
                 .add("baby")
+                .add("1.21.5", "variant:")
                 .get());
 
         petTypeOptionMap.put("camel", new CommandOptionCreator()
@@ -106,6 +107,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("cow", new CommandOptionCreator()
                 .add("baby")
+                .add("1.21.5", "variant:")
                 .get());
 
         petTypeOptionMap.put("creeper", new CommandOptionCreator()
@@ -143,9 +145,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("noLeftHorn")
                 .add("noRightHorn")
                 .get());
-        
+
         petTypeOptionMap.put("glowsquid", new CommandOptionCreator()
-				.get());
+                .get());
 
         petTypeOptionMap.put("guardian", new CommandOptionCreator()
                 .add("1.7.10", "1.11", "elder")
@@ -229,6 +231,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("pig", new CommandOptionCreator()
                 .add("baby")
                 .add("saddle")
+                .add("1.21.5", "variant:")
                 .get());
 
         petTypeOptionMap.put("piglin", new CommandOptionCreator()
@@ -518,11 +521,11 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 compound.getCompoundData().put("ShakeImmune", new TagByte(true));
             } else if (arg.equalsIgnoreCase("powered")) {
                 compound.getCompoundData().put("Powered", new TagByte(true));
-            }else if (arg.equalsIgnoreCase("screaming")) {
+            } else if (arg.equalsIgnoreCase("screaming")) {
                 compound.getCompoundData().put("Screaming", new TagByte(true));
-            }else if (arg.equalsIgnoreCase("noLeftHorn")) {
+            } else if (arg.equalsIgnoreCase("noLeftHorn")) {
                 compound.getCompoundData().put("LeftHorn", new TagByte(false));
-            }else if (arg.equalsIgnoreCase("noRightHorn")) {
+            } else if (arg.equalsIgnoreCase("noRightHorn")) {
                 compound.getCompoundData().put("RightHorn", new TagByte(false));
             } else if (arg.equalsIgnoreCase("saddle")) {
                 compound.getCompoundData().put("Saddle", new TagByte(true));
@@ -590,7 +593,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         }
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.Parrot) {
-                    	compound.getCompoundData().put("Variant", new TagInt(variant));
+                        compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.Axolotl) {
                         compound.getCompoundData().put("Variant", new TagInt(variant));
                     } else if (petType == MyPetType.Frog) {
@@ -600,6 +603,9 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     }
                 } else if (petType == MyPetType.Wolf) {
                     // Wolf Variants are handled as (lowercase) Strings.
+                    compound.getCompoundData().put("Variant", new TagString(variantString.toLowerCase()));
+                } else if (petType == MyPetType.Cow || petType == MyPetType.Chicken || petType == MyPetType.Pig) {
+                    // Cow/chicken/pig Variants are handled as (lowercase) Strings.
                     compound.getCompoundData().put("Variant", new TagString(variantString.toLowerCase()));
                 }
             } else if (arg.startsWith("cat:")) {

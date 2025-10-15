@@ -26,7 +26,6 @@ import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R3.skill.skills.ranged.bukkit.CraftMyPetArrow;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

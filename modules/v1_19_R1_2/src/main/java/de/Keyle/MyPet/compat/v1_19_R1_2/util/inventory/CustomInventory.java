@@ -291,7 +291,7 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 
 	@Override
 	public void close() {
-		if (transaction.size() > 0) {
+		if (!transaction.isEmpty()) {
 			for (HumanEntity humanEntity : new ArrayList<>(transaction)) {
 				humanEntity.closeInventory();
 			}
@@ -378,6 +378,6 @@ public class CustomInventory implements Container, Listener, de.Keyle.MyPet.api.
 
 	@Override
 	public boolean isEmpty() {
-		return items.size() == 0;
+		return items.isEmpty();
 	}
 }

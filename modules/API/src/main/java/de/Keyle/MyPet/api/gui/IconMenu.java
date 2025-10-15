@@ -242,7 +242,7 @@ public class IconMenu implements Listener {
 
     @EventHandler
     void onInventoryClose(InventoryCloseEvent event) {
-        if (inventory != null && inventory.isMenuInventory(event.getInventory()) && inventory.getViewers().size() == 0) {
+        if (inventory != null && inventory.isMenuInventory(event.getInventory()) && inventory.getViewers().isEmpty()) {
             inventory = null;
         }
     }

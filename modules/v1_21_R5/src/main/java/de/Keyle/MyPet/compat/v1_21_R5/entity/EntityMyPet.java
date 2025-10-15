@@ -25,7 +25,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
-import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
@@ -45,10 +44,6 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.attack.RangedAttack;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement.*;
-import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement.MyPetRandomStroll;
-import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement.RandomLookaround;
-import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement.Sit;
-import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement.Sprint;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.types.EntityMyDolphin;
@@ -107,10 +102,10 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -1392,7 +1387,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         if (this.isVehicle()) {
             if (passengerInput.jump()) {
                 if (onGround) {
-                    jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    jumpHeight = new BigDecimal(jumpHeight).setScale(1, RoundingMode.HALF_UP).doubleValue();
                     String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
                     Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
                     jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;

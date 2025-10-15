@@ -162,7 +162,7 @@ public class MongoDbRepository implements Repository {
     private void connect() throws RepositoryInitException {
         try {
             MongoClientOptions.Builder o = MongoClientOptions.builder().connectTimeout(3000);
-            if (Configuration.Repository.MongoDB.USER.equals("")) {
+            if (Configuration.Repository.MongoDB.USER.isEmpty()) {
                 this.mongo = new MongoClient(new ServerAddress(Configuration.Repository.MongoDB.HOST, Configuration.Repository.MongoDB.PORT), o.build());
             } else {
                 MongoCredential credentials = MongoCredential.createCredential(Configuration.Repository.MongoDB.USER, Configuration.Repository.MongoDB.DATABASE, Configuration.Repository.MongoDB.PASSWORD.toCharArray());

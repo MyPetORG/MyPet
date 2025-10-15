@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
-import de.Keyle.MyPet.compat.v1_20_R4.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -43,7 +42,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftMagicNumbers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 @EntitySize(width = 0.6F, height = 2.55F)

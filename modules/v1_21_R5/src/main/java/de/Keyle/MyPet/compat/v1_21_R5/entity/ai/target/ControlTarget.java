@@ -103,13 +103,19 @@ public class ControlTarget implements AIGoal {
 					}
 					if (behaviorSkill != null) {
 						if (behaviorSkill.getBehavior() == BehaviorMode.Raid) {
-							if (entityLiving instanceof TamableAnimal) {
-								continue;
-							} else if (entityLiving instanceof EntityMyPet) {
-								continue;
-							} else if (entityLiving instanceof ServerPlayer) {
-								continue;
-							}
+                            switch (entityLiving) {
+                                case TamableAnimal tamableAnimal -> {
+                                    continue;
+                                }
+                                case EntityMyPet entityMyPet -> {
+                                    continue;
+                                }
+                                case ServerPlayer serverPlayer -> {
+                                    continue;
+                                }
+                                default -> {
+                                }
+                            }
 						}
 					}
 					controlPathfinderGoal.stopControl();

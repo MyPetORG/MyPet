@@ -30,7 +30,6 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R5.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R5.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.commands.arguments.ParticleArgument;
@@ -57,7 +56,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
@@ -67,10 +65,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.level.storage.TagValueOutput;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -242,7 +236,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public String getPlayerLanguage(Player player) {
         String locale = player.getLocale();
-        if (locale == null || locale.equals("")) {
+        if (locale == null || locale.isEmpty()) {
             return "en_us";
         }
         return locale;

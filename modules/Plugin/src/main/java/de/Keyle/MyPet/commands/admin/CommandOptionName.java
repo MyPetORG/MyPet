@@ -62,22 +62,22 @@ public class CommandOptionName implements CommandOptionTabCompleter {
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
-        String name = "";
+        StringBuilder name = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
-            if (!name.equals("")) {
-                name += " ";
+            if (name.length() > 0) {
+                name.append(" ");
             }
-            name += args[i];
+            name.append(args[i]);
         }
-        name = Colorizer.setColors(name);
+        name = new StringBuilder(Colorizer.setColors(name.toString()));
 
         Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
-        Matcher regexMatcher = regex.matcher(name);
+        Matcher regexMatcher = regex.matcher(name.toString());
         if (regexMatcher.find()) {
-            name += ChatColor.RESET;
+            name.append(ChatColor.RESET);
         }
 
-        myPet.setPetName(name);
+        myPet.setPetName(name.toString());
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
 
         return true;

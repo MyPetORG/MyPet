@@ -39,7 +39,6 @@ import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.compat.v1_19_R3.entity.ai.movement.MyPetRandomStroll;
 import de.Keyle.MyPet.compat.v1_19_R3.PlatformHelper;
 import de.Keyle.MyPet.compat.v1_19_R3.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_19_R3.entity.ai.attack.RangedAttack;
@@ -104,6 +103,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 
@@ -1351,7 +1351,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 			if (doJump) {
 				if (onGround) {
-					jumpHeight = new BigDecimal(jumpHeight).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+					jumpHeight = new BigDecimal(jumpHeight).setScale(1, RoundingMode.HALF_UP).doubleValue();
 					String jumpHeightString = JumpHelper.JUMP_FORMAT.format(jumpHeight);
 					Double jumpVelocity = JumpHelper.JUMP_MAP.get(jumpHeightString);
 					jumpVelocity = jumpVelocity == null ? 0.44161199999510264 : jumpVelocity;

@@ -24,9 +24,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.UUID;
 
-import net.minecraft.world.entity.PlayerRideable;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 
 import de.Keyle.MyPet.api.Configuration;
