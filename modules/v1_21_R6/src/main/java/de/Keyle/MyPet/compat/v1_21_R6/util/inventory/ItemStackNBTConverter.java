@@ -27,18 +27,13 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
 import net.minecraft.SharedConstants;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.TagValueInput;
 import org.bukkit.craftbukkit.v1_21_R6.CraftRegistry;
-import org.bukkit.craftbukkit.v1_21_R6.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
 
 import java.lang.reflect.Field;

@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R6.skill.skills.ranged.bukkit.CraftMyPetSmallFireball;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;

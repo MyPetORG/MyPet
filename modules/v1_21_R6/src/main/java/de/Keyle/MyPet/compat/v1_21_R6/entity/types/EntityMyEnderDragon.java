@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_21_R6.entity.types;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPetPart;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.attack.MeleeAttack;
@@ -35,8 +34,6 @@ import net.minecraft.world.level.Level;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-
-import static de.Keyle.MyPet.compat.v1_21_R6.PlatformHelper.dragonPartsField;
 
 @EntitySize(width = 1.F, height = 1.F)
 public class EntityMyEnderDragon extends EntityMyFlyingPet {

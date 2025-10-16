@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
-import de.Keyle.MyPet.compat.v1_21_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
@@ -51,7 +50,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 

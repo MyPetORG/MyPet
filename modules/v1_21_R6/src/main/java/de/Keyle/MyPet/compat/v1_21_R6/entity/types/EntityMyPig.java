@@ -45,7 +45,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R6.CraftRegistry;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
 import org.bukkit.entity.Player;

@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyStrider;
-import de.Keyle.MyPet.compat.v1_20_R4.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -46,8 +45,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyStrider extends EntityMyPet {

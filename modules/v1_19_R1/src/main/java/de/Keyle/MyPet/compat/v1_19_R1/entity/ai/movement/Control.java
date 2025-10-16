@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 @Compat("v1_19_R1")

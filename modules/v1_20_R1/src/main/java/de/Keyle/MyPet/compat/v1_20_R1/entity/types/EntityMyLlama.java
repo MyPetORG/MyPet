@@ -40,7 +40,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WoolCarpetBlock;
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;

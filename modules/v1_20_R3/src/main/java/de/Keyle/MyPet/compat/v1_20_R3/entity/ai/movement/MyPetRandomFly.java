@@ -22,14 +22,8 @@ package de.Keyle.MyPet.compat.v1_20_R3.entity.ai.movement;
 
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
-import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
-import net.minecraft.world.entity.ai.util.RandomPos;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
 @Compat("v1_20_R3")

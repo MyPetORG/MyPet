@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_17_R1.entity.ai.target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;

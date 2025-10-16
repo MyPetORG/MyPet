@@ -26,7 +26,6 @@ import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R6.skill.skills.ranged.bukkit.CraftMyPetEgg;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;

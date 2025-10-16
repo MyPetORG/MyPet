@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.types.MyWitherSkeleton;
-import de.Keyle.MyPet.compat.v1_20_R4.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyPet;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.server.level.ServerEntity;
@@ -43,7 +42,6 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 

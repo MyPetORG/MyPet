@@ -26,7 +26,6 @@ import de.Keyle.MyPet.compat.v1_19_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R3.skill.skills.ranged.bukkit.CraftMyPetDragonFireball;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.DragonFireball;

@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.types.*;
-import de.Keyle.MyPet.compat.v1_21_R6.entity.types.*;
 
 @Compat("v1_21_R6")
 public class Sit implements AIGoal {

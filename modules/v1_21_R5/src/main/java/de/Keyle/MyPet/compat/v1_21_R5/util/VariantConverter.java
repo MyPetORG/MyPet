@@ -9,9 +9,6 @@ import org.bukkit.craftbukkit.v1_21_R5.CraftRegistry;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Frog;
-import net.minecraft.world.entity.animal.PigVariants;
-import net.minecraft.world.entity.animal.ChickenVariants;
-import net.minecraft.world.entity.animal.CowVariants;
 import org.bukkit.entity.Pig;
 
 /**

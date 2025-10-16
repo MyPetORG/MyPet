@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.entity.types.MyVex;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.compat.v1_20_R3.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyFlyingPet;
-import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;

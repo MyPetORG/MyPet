@@ -26,7 +26,6 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetLlamaSpit;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;

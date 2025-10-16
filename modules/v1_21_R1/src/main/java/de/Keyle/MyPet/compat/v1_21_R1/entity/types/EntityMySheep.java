@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_21_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySheep;
-import de.Keyle.MyPet.compat.v1_21_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.ai.movement.EatGrass;
 import net.minecraft.network.syncher.EntityDataAccessor;

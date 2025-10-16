@@ -25,7 +25,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
-import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;

@@ -20,12 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_16_R3.entity.types;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyRavager;
 import de.Keyle.MyPet.compat.v1_16_R3.entity.EntityMyPet;
-import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.server.v1_16_R3.*;
 
 @EntitySize(width = 1.95F, height = 2.2F)

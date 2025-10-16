@@ -32,7 +32,6 @@ import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

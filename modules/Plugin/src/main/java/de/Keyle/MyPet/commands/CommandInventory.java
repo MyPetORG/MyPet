@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.commands;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,16 +36,9 @@ import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.entity.MyPetClass;
-import de.Keyle.MyPet.gui.selectionmenu.MyPetAdminSelectionGui;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
-import de.keyle.knbt.TagCompound;
 
 public class CommandInventory implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

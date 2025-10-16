@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_18_R1.entity.EntityMyAquaticPet;
