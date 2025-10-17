@@ -27,12 +27,12 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
+import de.Keyle.MyPet.compat.v1_21_R4.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -248,17 +248,26 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = new CompoundTag();
 
-        if (entity instanceof net.minecraft.world.entity.LivingEntity) {
-            ((net.minecraft.world.entity.LivingEntity) entity).addAdditionalSaveData(vanillaNBT);
-        } else {
-            Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-            try {
-                b.invoke(entity, vanillaNBT);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+        // For villagers and wandering traders we need to use the special NBT IO helpers
+        try {
+            if (bukkitEntity instanceof Villager || bukkitEntity instanceof WanderingTrader) {
+                // VillagerNbtIO.writeFrom returns a CompoundTag -> use it
+                CompoundTag written = VillagerNbtIO.writeFrom(bukkitEntity);
+                if (written != null) {
+                    vanillaNBT = written;
+                }
+            } else {
+                // Fallback: use entity's internal writer method (named "b" in obfuscated mappings)
+                Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
+                try {
+                    b.invoke(entity, vanillaNBT);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
     }
 
@@ -268,11 +277,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(tag);
         if (vanillaNBT != null) {
             if (bukkitEntity instanceof Villager) {
-            	net.minecraft.world.entity.npc.Villager villager = (net.minecraft.world.entity.npc.Villager) entity;
-                villager.readAdditionalSaveData(vanillaNBT);
-            } else if (bukkitEntity instanceof net.minecraft.world.entity.npc.WanderingTrader) {
-            	net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
-                villager.addAdditionalSaveData(vanillaNBT);
+                VillagerNbtIO.readInto(bukkitEntity, vanillaNBT);
+            } else if (bukkitEntity instanceof WanderingTrader) {
+                // Wandering traders are handled the same way as villagers for NBT read
+                VillagerNbtIO.readInto(bukkitEntity, vanillaNBT);
             }
         }
     }
