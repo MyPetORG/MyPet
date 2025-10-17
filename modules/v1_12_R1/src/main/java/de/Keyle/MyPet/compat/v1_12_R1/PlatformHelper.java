@@ -158,7 +158,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public String getPlayerLanguage(Player player) {
         String locale = player.getLocale();
-        if (locale == null || locale.equals("")) {
+        if (locale == null || locale.isEmpty()) {
             return "en_us";
         }
         return locale;

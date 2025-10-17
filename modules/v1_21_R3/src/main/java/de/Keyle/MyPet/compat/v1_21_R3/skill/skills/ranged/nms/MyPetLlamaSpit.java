@@ -49,9 +49,9 @@ public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
     public MyPetLlamaSpit(Level world, EntityMyPet entityMyPet) {
         super(EntityType.LLAMA_SPIT, world);
         this.setOwner(entityMyPet);
-        this.setPos(entityMyPet.getX() - (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.sin(entityMyPet.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F),
+        this.setPos(entityMyPet.getX() - (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.sin(LivingEntity.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F),
                 entityMyPet.getY() + (double) entityMyPet.getEyeHeight() - 0.10000000149011612D,
-                entityMyPet.getZ() + (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.cos(entityMyPet.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F));
+                entityMyPet.getZ() + (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.cos(LivingEntity.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F));
     }
 
     @Override

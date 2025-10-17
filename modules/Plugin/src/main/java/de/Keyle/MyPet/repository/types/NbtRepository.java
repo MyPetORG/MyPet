@@ -140,7 +140,7 @@ public class NbtRepository implements Repository {
     }
 
     public boolean hasMyPets(UUID playerUUID) {
-        return petPlayerMultiMap.containsKey(playerUUID) && petPlayerMultiMap.get(playerUUID).size() > 0;
+        return petPlayerMultiMap.containsKey(playerUUID) && !petPlayerMultiMap.get(playerUUID).isEmpty();
     }
 
     @Override

@@ -53,6 +53,7 @@ import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -277,7 +278,7 @@ public class EntityMyHorse extends EntityMyPet{
 	}
 
 	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((ServerLevel) this.level).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
+		((ServerLevel) this.level).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
 	}
 
 	@Override

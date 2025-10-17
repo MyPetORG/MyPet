@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
-import de.Keyle.MyPet.compat.v1_21_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
@@ -51,8 +50,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 
 @EntitySize(width = 1.3965F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet{
@@ -266,7 +265,7 @@ public class EntityMyHorse extends EntityMyPet{
 	}
 
 	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
+		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
 	}
 
 	@Override

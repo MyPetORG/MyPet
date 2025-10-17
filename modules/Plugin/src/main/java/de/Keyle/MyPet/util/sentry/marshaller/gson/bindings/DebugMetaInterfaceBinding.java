@@ -42,7 +42,7 @@ public class DebugMetaInterfaceBinding implements InterfaceBinding<DebugMetaInte
         return generator;
     }
 
-    private void writeDebugImages(JsonObject generator, DebugMetaInterface debugMetaInterface) throws IOException {
+    private void writeDebugImages(JsonObject generator, DebugMetaInterface debugMetaInterface) {
         JsonArray images = new JsonArray();
         for (DebugMetaInterface.DebugImage debugImage : debugMetaInterface.getDebugImages()) {
             JsonObject image = new JsonObject();

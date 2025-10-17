@@ -35,6 +35,7 @@ import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collections;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyIllusioner extends EntityMyPet {
@@ -178,7 +179,7 @@ public class EntityMyIllusioner extends EntityMyPet {
     }
 
     public void setPetEquipment(ItemStack itemStack, EnumItemSlot slot) {
-        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(slot, itemStack))));
+        ((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Collections.singletonList(new Pair<>(slot, itemStack))));
     }
 
     @Override

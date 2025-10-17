@@ -102,7 +102,7 @@ public class CommandShop implements CommandTabCompleter {
                     }
                 } else {
                     final List<String> availableShops = getAvailablePetShops(player);
-                    if (availableShops != null && availableShops.size() > 0) {
+                    if (availableShops != null && !availableShops.isEmpty()) {
                         final Player finalPlayer = player;
                         Map<Integer, String> shops = new HashMap<>();
                         IconMenu menu = new IconMenu(Translation.getString("Message.Shop.Available", player), event -> {

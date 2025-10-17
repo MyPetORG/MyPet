@@ -36,7 +36,7 @@ public class Timer {
     }
 
     public static void stopTimer() {
-        if (timerIDs.size() > 0) {
+        if (!timerIDs.isEmpty()) {
             for (int timerID : timerIDs) {
                 Bukkit.getScheduler().cancelTask(timerID);
             }

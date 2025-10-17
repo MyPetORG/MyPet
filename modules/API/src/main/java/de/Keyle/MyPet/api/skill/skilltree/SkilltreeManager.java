@@ -74,7 +74,7 @@ public class SkilltreeManager implements ServiceContainer {
     public Skilltree getRandomSkilltree(MyPet pet) {
         TreeMap<Double, Skilltree> skilltreeMap = new TreeMap<>();
         List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getSkilltrees());
-        if (skilltrees.size() == 0) {
+        if (skilltrees.isEmpty()) {
             return null;
         }
 

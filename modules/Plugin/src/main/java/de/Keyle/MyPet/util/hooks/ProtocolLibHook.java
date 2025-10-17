@@ -49,7 +49,7 @@ import java.util.function.Supplier;
 public class ProtocolLibHook implements PluginHook {
 
     protected boolean checkTemporaryPlayers = false;
-    private Set<Player> tempBlockedPlayers = new ConcurrentHashMap<>().newKeySet();
+    private Set<Player> tempBlockedPlayers = ConcurrentHashMap.newKeySet();
     @Override
     public boolean onEnable() {
         try {
@@ -130,9 +130,7 @@ public class ProtocolLibHook implements PluginHook {
                 } else {
                     tempBlockedPlayers.add(event.getPlayer());
                     //Register Rate-Limit-Clear-Task
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> {
-                        tempBlockedPlayers.remove(event.getPlayer());
-                    }, 2L);
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> tempBlockedPlayers.remove(event.getPlayer()), 2L);
                 }
 
                 PacketContainer packet = event.getPacket();

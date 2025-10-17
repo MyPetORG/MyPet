@@ -50,6 +50,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
@@ -164,7 +165,7 @@ public class EntityMyVillager extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
+		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class ShopTrait extends Trait {
         super("mypet-shop");
     }
 
-    public void load(DataKey key) throws NPCLoadException {
+    public void load(DataKey key) {
         shop = key.getString("shop", null);
     }
 

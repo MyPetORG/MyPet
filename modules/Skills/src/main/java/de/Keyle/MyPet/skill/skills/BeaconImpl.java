@@ -273,7 +273,7 @@ public class BeaconImpl implements Beacon {
                                             .setTitle(GRAY + Util.formatText(Translation.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner()), 0)));
                                 }
                             } else if (!selectedBuffs.contains(selectedBuff)) {
-                                if (selectedBuffs.size() != 0 && menu.getOption(selectedBuff.getPosition()) != null) {
+                                if (!selectedBuffs.isEmpty() && menu.getOption(selectedBuff.getPosition()) != null) {
                                     for (Buff buff : selectedBuffs) {
                                         IconMenuItem item = menu.getOption(buff.getPosition());
                                         if (item != null) {
@@ -468,18 +468,18 @@ public class BeaconImpl implements Beacon {
     }
 
     public String toPrettyString(String locale) {
-        String availableBuffs = "";
+        StringBuilder availableBuffs = new StringBuilder();
         for (Buff buff : Buff.values()) {
             if (getBuffLevel(buff) > 0) {
-                if (!availableBuffs.equalsIgnoreCase("")) {
-                    availableBuffs += ", ";
+                if (!availableBuffs.toString().equalsIgnoreCase("")) {
+                    availableBuffs.append(", ");
                 }
-                availableBuffs += GOLD + Translation.getString("Name." + buff.getName(), locale);
-                availableBuffs += GRAY + " " + Util.decimal2roman(getBuffLevel(buff));
-                availableBuffs += ChatColor.RESET;
+                availableBuffs.append(GOLD).append(Translation.getString("Name." + buff.getName(), locale));
+                availableBuffs.append(GRAY + " ").append(Util.decimal2roman(getBuffLevel(buff)));
+                availableBuffs.append(ChatColor.RESET);
             }
         }
-        return availableBuffs;
+        return availableBuffs.toString();
     }
 
     @Override
@@ -491,7 +491,7 @@ public class BeaconImpl implements Beacon {
     }
 
     public void schedule() {
-        if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
+        if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && !selectedBuffs.isEmpty() && --beaconTimer <= 0) {
             beaconTimer = 2;
 
             double range = this.range.getValue().doubleValue();
@@ -505,7 +505,7 @@ public class BeaconImpl implements Beacon {
             }
 
 
-            if (selectedBuffs.size() == 0) {
+            if (selectedBuffs.isEmpty()) {
                 return;
             }
             if (selectedBuffs.size() > selectableBuffs.getValue()) {

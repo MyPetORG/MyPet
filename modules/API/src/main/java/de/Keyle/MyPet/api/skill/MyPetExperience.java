@@ -254,8 +254,7 @@ public class MyPetExperience {
                 if (value.getOwningPlugin().getName().equals("MyPet")) {
                     damageMap = (Map<UUID, Double>) value.value();
                     if (damageMap.containsKey(damager.getUniqueId())) {
-                        double oldDamage = damageMap.get(damager.getUniqueId());
-                        damageMap.put(damager.getUniqueId(), victim.getHealth() < damage ? victim.getHealth() + oldDamage : damage + oldDamage);
+                        damageMap.compute(damager.getUniqueId(), (k, oldDamage) -> victim.getHealth() < damage ? victim.getHealth() + oldDamage : damage + oldDamage);
                     } else {
                         damageMap.put(damager.getUniqueId(), victim.getHealth() < damage ? victim.getHealth() : damage);
                     }

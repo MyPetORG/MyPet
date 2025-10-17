@@ -20,10 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_18_R2.entity.ai.target;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
@@ -36,7 +32,6 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;

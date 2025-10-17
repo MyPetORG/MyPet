@@ -35,7 +35,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage;
@@ -170,7 +169,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         }
 
         // set Title
-        if (!icon.getTitle().equals("")) {
+        if (!icon.getTitle().isEmpty()) {
             display.putString("Name", "{\"text\":\"" + icon.getTitle() + "\"}");
         }
 

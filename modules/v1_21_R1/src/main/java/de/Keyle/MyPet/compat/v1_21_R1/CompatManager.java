@@ -22,16 +22,11 @@ package de.Keyle.MyPet.compat.v1_21_R1;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R1.services.EggIconService;
 import de.Keyle.MyPet.compat.v1_21_R1.services.EntityConverterService;
 import de.Keyle.MyPet.compat.v1_21_R1.services.RepositoryMyPetConverterService;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
-
-import java.lang.reflect.Method;
 
 @Compat("v1_21_R1")
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {

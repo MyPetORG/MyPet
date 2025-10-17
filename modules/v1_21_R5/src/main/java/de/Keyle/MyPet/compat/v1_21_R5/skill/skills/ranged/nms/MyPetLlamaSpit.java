@@ -26,7 +26,6 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetLlamaSpit;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -49,9 +48,9 @@ public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
     public MyPetLlamaSpit(Level world, EntityMyPet entityMyPet) {
         super(EntityType.LLAMA_SPIT, world);
         this.setOwner(entityMyPet);
-        this.setPos(entityMyPet.getX() - (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.sin(entityMyPet.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F),
+        this.setPos(entityMyPet.getX() - (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.sin(LivingEntity.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F),
                 entityMyPet.getY() + (double) entityMyPet.getEyeHeight() - 0.10000000149011612D,
-                entityMyPet.getZ() + (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.cos(entityMyPet.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F));
+                entityMyPet.getZ() + (double) (entityMyPet.getBbWidth() + 1.0F) * 0.5D * (double) Mth.cos(LivingEntity.EXTRA_RENDER_CULLING_SIZE_WITH_BIG_HAT * 0.017453292F));
     }
 
     @Override

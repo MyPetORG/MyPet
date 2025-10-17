@@ -34,6 +34,7 @@ import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static de.Keyle.MyPet.compat.v1_16_R3.CompatManager.ENTITY_LIVING_broadcastItemBreak;
 
@@ -177,7 +178,7 @@ public class EntityMyPillager extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack, EnumItemSlot slot) {
-		((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Arrays.asList(new Pair<>(slot, itemStack))));
+		((WorldServer) this.world).getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutEntityEquipment(getId(), Collections.singletonList(new Pair<>(slot, itemStack))));
 		if (slot == EnumItemSlot.MAINHAND) {
 			getDataWatcher().set(CROSSBOW_WATCHER, itemStack.getItem() == Items.CROSSBOW);
 		}

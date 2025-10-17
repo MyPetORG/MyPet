@@ -22,9 +22,7 @@ package de.Keyle.MyPet.compat.v1_20_R3.skill.skills.ranged.bukkit;
 
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftTrident;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.entity.SpawnCategory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;

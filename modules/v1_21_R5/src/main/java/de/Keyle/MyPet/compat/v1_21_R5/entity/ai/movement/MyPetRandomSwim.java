@@ -44,8 +44,7 @@ public class MyPetRandomSwim extends MyPetRandomStroll {
 	@Override
 	protected Vec3 getPosition() {
 		if((petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && (owner.isInWater() || owner.getInBlockState().is(Blocks.BUBBLE_COLUMN))) {
-			Vec3 leVec = makeWaterPos(this.petEntity, 10, 7);
-			return leVec;
+            return makeWaterPos(this.petEntity, 10, 7);
 		}
 		return super.getPosition();
 	}

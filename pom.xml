@@ -37,7 +37,6 @@
         <!--<module>modules/v1_16_R1</module>-->
         <module>modules/v1_16_R3</module>
         <module>modules/v1_17_R1</module>
-        <module>modules/v1_18_R1</module>
         <module>modules/v1_18_R2</module>
         <module>modules/v1_19_R1</module>
         <module>modules/v1_19_R1_2</module>
@@ -52,6 +51,7 @@
         <module>modules/v1_21_R3</module>
         <module>modules/v1_21_R4</module>
         <module>modules/v1_21_R5</module>
+        <module>modules/v1_21_R6</module>
         <module>modules/Plugin</module>
         <module>modules/MyPet</module>
 
@@ -69,6 +69,13 @@
             <snapshots>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
         <repository>
             <id>oss-sonartype-repo</id>
@@ -513,7 +520,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>1.18.42</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -596,6 +603,13 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.42</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

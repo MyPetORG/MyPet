@@ -281,9 +281,7 @@ public class PetShop {
             switch (wallet) {
                 case Bank:
                 case Player:
-                    tryToLoad("Display Name", () -> {
-                        walletOwner = section.getString("Balance.Owner", null);
-                    });
+                    tryToLoad("Display Name", () -> walletOwner = section.getString("Balance.Owner", null));
             }
         });
 

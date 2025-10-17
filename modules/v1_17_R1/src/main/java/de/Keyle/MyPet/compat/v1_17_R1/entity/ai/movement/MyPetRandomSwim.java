@@ -30,7 +30,7 @@ import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
-@Compat("v1_18_R1")
+@Compat("v1_17_R1")
 public class MyPetRandomSwim extends MyPetRandomStroll {
 
 	protected EntityMyPet petEntity;
@@ -65,8 +65,7 @@ public class MyPetRandomSwim extends MyPetRandomStroll {
 	@Override
 	protected Vec3 getPosition() {
 		if(petEntity.isInWaterOrBubble() && owner.isInWaterOrBubble()) {
-			Vec3 leVec = makeWaterPos(this.petEntity, 10, 7);
-			return leVec;
+            return makeWaterPos(this.petEntity, 10, 7);
 		}
 		return super.getPosition();
 	}

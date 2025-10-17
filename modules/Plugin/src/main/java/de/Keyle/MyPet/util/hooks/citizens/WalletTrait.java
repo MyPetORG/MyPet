@@ -40,7 +40,7 @@ public class WalletTrait extends Trait {
         super("mypet-wallet");
     }
 
-    public void load(DataKey key) throws NPCLoadException {
+    public void load(DataKey key) {
         String type = key.getString("type", "Private");
         if (type.equalsIgnoreCase("Owner")) {
             type = "Player";

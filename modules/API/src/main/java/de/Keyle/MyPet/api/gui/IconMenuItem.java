@@ -153,7 +153,7 @@ public class IconMenuItem implements Cloneable {
     }
 
     public IconMenuItem addLore(List<String> lore) {
-        if (lore != null && lore.size() > 0) {
+        if (lore != null && !lore.isEmpty()) {
             this.lore.addAll(lore);
             hasChanged = true;
         }

@@ -52,7 +52,7 @@ public class CommandOptionShop implements CommandOptionTabCompleter {
             String shop = args[0];
 
             List<ShopService> shopServiceList = MyPetApi.getServiceManager().getServices(ShopService.class);
-            if (shopServiceList.size() > 0) {
+            if (!shopServiceList.isEmpty()) {
                 boolean shopFound = false;
                 for (ShopService shopService : shopServiceList) {
                     if (shopService.getShopNames().contains(shop)) {
@@ -81,7 +81,7 @@ public class CommandOptionShop implements CommandOptionTabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
         if (strings.length == 3) {
             List<ShopService> shopServiceList = MyPetApi.getServiceManager().getServices(ShopService.class);
-            if (shopServiceList.size() > 0) {
+            if (!shopServiceList.isEmpty()) {
                 return new ArrayList<>(shopServiceList.get(0).getShopNames());
             }
         }

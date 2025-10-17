@@ -127,20 +127,20 @@ public class Updater {
                     if(!release.get("body").getAsString().contains(MyPetApi.getCompatUtil().getInternalVersion()))
                         return Optional.empty();
 
-                    String version = "";
+                    StringBuilder version = new StringBuilder();
                     for(int j = 0; j<split.length-1;j++) {
-                        version+=split[j];
+                        version.append(split[j]);
                         if(j<split.length-2) {
-                            version+="-";
+                            version.append("-");
                         }
                     }
 
                     String downloadURL = release.get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
-                    return Optional.of(new Update(version, build, downloadURL));
+                    return Optional.of(new Update(version.toString(), build, downloadURL));
                 }
             }
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return Optional.empty();
     }
