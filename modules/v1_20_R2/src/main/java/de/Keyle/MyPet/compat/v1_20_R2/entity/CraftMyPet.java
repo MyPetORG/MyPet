@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftLivingEntity;
@@ -34,14 +33,11 @@ import org.bukkit.craftbukkit.v1_20_R2.entity.CraftMob;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftEntityEquipment;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.SpawnCategory;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Field;
 
 @Compat("v1_20_R2")
 public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {

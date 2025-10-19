@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyZombieHorse;
-import de.Keyle.MyPet.compat.v1_21_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -43,8 +42,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyZombieHorse extends EntityMyPet {

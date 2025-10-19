@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_21_R5.entity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftPart;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;

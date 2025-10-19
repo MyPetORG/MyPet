@@ -615,7 +615,7 @@ public class MySqlRepository implements Repository {
                             if (owner != null) {
                                 resultSet.beforeFirst();
                                 List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
-                                if (pets.size() > 0) {
+                                if (!pets.isEmpty()) {
                                     callback.runTask(MyPetApi.getPlugin(), pets.get(0));
                                 }
                             }

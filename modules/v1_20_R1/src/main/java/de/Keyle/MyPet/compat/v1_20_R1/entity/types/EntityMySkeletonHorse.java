@@ -45,8 +45,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.util.UUID;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMySkeletonHorse extends EntityMyPet {

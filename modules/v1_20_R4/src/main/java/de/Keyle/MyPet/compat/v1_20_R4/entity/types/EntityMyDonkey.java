@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyDonkey;
-import de.Keyle.MyPet.compat.v1_20_R4.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,8 +43,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyDonkey extends EntityMyPet {

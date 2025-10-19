@@ -264,7 +264,7 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
     }
 
     public void close() {
-        if (transaction.size() > 0) {
+        if (!transaction.isEmpty()) {
             for (HumanEntity humanEntity : new ArrayList<>(transaction)) {
                 humanEntity.closeInventory();
             }

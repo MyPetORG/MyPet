@@ -161,7 +161,7 @@ public class IconMenuInventory implements de.Keyle.MyPet.api.gui.IconMenuInvento
         is.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(newEntries, true));
 
         // set Title
-        if (!icon.getTitle().equals("")) {
+        if (!icon.getTitle().isEmpty()) {
             is.set(DataComponents.CUSTOM_NAME, Component.literal(icon.getTitle()));
         }
 

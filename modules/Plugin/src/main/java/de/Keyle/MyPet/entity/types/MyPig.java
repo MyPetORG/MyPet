@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPig {
     protected boolean isBaby = false;
     public ItemStack saddle = null;
+    protected String variantString = "temperate";
 
     public MyPig(MyPetPlayer petOwner) {
         super(petOwner);
@@ -45,6 +47,7 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
             info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
         }
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("Variant", new TagString(getVariant()));
         return info;
     }
 
@@ -67,6 +70,9 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
         }
         if (info.containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+        if (info.containsKey("Variant")) {
+            setVariant(info.getAs("Variant", TagString.class).getStringData());
         }
     }
 
@@ -110,7 +116,18 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
     }
 
     @Override
+    public String getVariant() {
+        return variantString;
+    }
+
+    @Override
+    public void setVariant(String variant) {
+        this.variantString = variant;
+    }
+
+
+    @Override
     public String toString() {
-        return "MyPig{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
+        return "MyPig{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + ", variant=" + getVariant() + "}";
     }
 }

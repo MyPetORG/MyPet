@@ -34,6 +34,7 @@ import lombok.Getter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -145,7 +146,7 @@ public class ExperienceCache implements ServiceContainer {
 
     @SuppressWarnings("unchecked")
     protected void save() {
-        try (OutputStreamWriter oos = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(cacheFile)))) {
+        try (OutputStreamWriter oos = new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(cacheFile.toPath())))) {
             JsonObject cacheObject = new JsonObject();
             cacheObject.add("expMap", expMap);
             cacheObject.addProperty("version", version);
@@ -158,7 +159,7 @@ public class ExperienceCache implements ServiceContainer {
     }
 
     protected void load() {
-        try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(new FileInputStream(cacheFile)), StandardCharsets.UTF_8)) {
+        try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(Files.newInputStream(cacheFile.toPath())), StandardCharsets.UTF_8)) {
             Gson gson = new Gson();
             JsonObject cacheObject = gson.fromJson(reader, JsonObject.class);
             this.expMap = cacheObject.get("expMap").getAsJsonObject();
@@ -194,7 +195,7 @@ public class ExperienceCache implements ServiceContainer {
                                 .greaterEqual(expMap.get("" + (level - 1)).getAsDouble())
                                 .less(exp)
                                 .build();
-                        if (tree.query(interval).size() == 0) {
+                        if (tree.query(interval).isEmpty()) {
                             tree.add(interval);
                         }
                     }
@@ -204,7 +205,7 @@ public class ExperienceCache implements ServiceContainer {
                                 .greaterEqual(exp)
                                 .less(expMap.get("" + (level + 1)).getAsDouble())
                                 .build();
-                        if (tree.query(interval).size() == 0) {
+                        if (tree.query(interval).isEmpty()) {
                             tree.add(interval);
                         }
                     }

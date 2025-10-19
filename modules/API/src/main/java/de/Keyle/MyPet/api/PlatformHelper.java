@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.UUID;
 
 public abstract class PlatformHelper {
@@ -98,7 +99,7 @@ public abstract class PlatformHelper {
     public boolean copyResource(Plugin plugin, String ressource, File destination) {
         try {
             InputStream template = plugin.getResource(ressource);
-            OutputStream out = new FileOutputStream(destination);
+            OutputStream out = Files.newOutputStream(destination.toPath());
 
             byte[] buf = new byte[1024];
             int len;

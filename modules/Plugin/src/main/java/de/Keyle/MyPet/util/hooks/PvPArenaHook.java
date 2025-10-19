@@ -51,7 +51,7 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, AllowedHook {
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            if (!PVPArenaAPI.getArenaName(defender).equals("")) {
+            if (!PVPArenaAPI.getArenaName(defender).isEmpty()) {
                 if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender))) {
                     return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
                 }
@@ -64,7 +64,7 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, AllowedHook {
     @Override
     public boolean isPetAllowed(MyPetPlayer owner) {
         try {
-            return PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
+            return PVPArenaAPI.getArenaName(owner.getPlayer()).isEmpty();
         } catch (Throwable ignored) {
         }
         return true;

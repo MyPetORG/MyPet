@@ -52,6 +52,7 @@ import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
@@ -173,7 +174,7 @@ public class EntityMyVillager extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack) {
-		((ServerLevel) this.level).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
+		((ServerLevel) this.level).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
 	}
 
 	@Override

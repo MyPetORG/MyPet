@@ -262,7 +262,7 @@ public class GsonMarshaller implements Marshaller {
         return generator;
     }
 
-    private JsonObject writeTags(Map<String, String> tags) throws IOException {
+    private JsonObject writeTags(Map<String, String> tags) {
         JsonObject generator = new JsonObject();
         for (Map.Entry<String, String> tag : tags.entrySet()) {
             generator.addProperty(tag.getKey(), tag.getValue());

@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
-import de.Keyle.MyPet.compat.v1_21_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -35,8 +34,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-
-import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {

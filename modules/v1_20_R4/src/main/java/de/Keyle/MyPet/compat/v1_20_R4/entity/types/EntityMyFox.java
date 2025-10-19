@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -187,7 +188,7 @@ public class EntityMyFox extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), Arrays.asList(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
+		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
 	}
 
 	@Override

@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.leashing;
 
-import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Goat;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

@@ -25,20 +25,28 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyChicken;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_21_R5.util.VariantConverter;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.animal.ChickenVariant;
+import net.minecraft.world.entity.animal.ChickenVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.craftbukkit.v1_21_R5.CraftRegistry;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Holder<ChickenVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.CHICKEN_VARIANT);
 
 	private int nextEggTimer;
 
@@ -87,11 +95,17 @@ public class EntityMyChicken extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+
+        Registry<ChickenVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CHICKEN_VARIANT);
+        builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.CHICKEN_REGISTRY.getOrThrow(ChickenVariants.TEMPERATE).value()));
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+
+        Registry<ChickenVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CHICKEN_VARIANT);
+        this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertChickenVariant(getMyPet().getVariant())));
 	}
 
 	@Override

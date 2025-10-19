@@ -89,7 +89,7 @@ public class NoCheatPlusHook implements PluginHook {
             return false;
         }
 
-        return hookIds.size() > 0;
+        return !hookIds.isEmpty();
     }
 
     @Override

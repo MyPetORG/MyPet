@@ -40,6 +40,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -434,7 +435,7 @@ public class SkillTreeLoaderJSON {
     }
 
     private static JsonObject loadJsonObject(File jsonFile) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(jsonFile.toPath()), StandardCharsets.UTF_8))) {
             Gson gson = new Gson();
             return gson.fromJson(reader, JsonObject.class);
         }

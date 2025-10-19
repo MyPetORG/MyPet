@@ -26,13 +26,10 @@ import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,13 +74,13 @@ public class CompatUtil {
                 for (int i = special; i > 0; i--)
                     try {
                         String specVers = internalVersion + "_" + i;
-                        classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+                        classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
                         Class.forName(classPath);
                         break;
                     } catch (ClassNotFoundException ignored) {
                     }
             } else {
-                classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.equals("") ? "." : "") + className;
+                classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
             }
         }
 

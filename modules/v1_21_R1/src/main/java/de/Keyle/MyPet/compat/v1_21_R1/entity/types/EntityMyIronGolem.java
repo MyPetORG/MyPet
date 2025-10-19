@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_21_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 
@@ -30,7 +28,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
-import de.Keyle.MyPet.compat.v1_21_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
