@@ -43,7 +43,6 @@ jobs:
           echo "next=$NEXT" >> $GITHUB_OUTPUT
           echo "Bumping $v -> $NEXT"
 
-      # 2) Apply new version to the MyPet module POM
       - name: Set version in MyPet module POM
         run: |
           mvn -f modules/MyPet/pom.xml versions:set -DnewVersion='${{ steps.bump.outputs.next }}' -DgenerateBackupPoms=false
@@ -53,20 +52,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add modules/MyPet/pom.xml
-          git commit -m "chore(release): bump MyPet to ${{ steps.bump.outputs.next }}"
+          git commit -m "Bump MyPet dev-release to ${{ steps.bump.outputs.next }}"
           git push
 
-      # 3) Tag the repo with the same version
       - name: Tag and push
         run: |
           git tag -a '${{ steps.bump.outputs.next }}' -m 'Release ${{ steps.bump.outputs.next }}'
           git push origin '${{ steps.bump.outputs.next }}'
 
-      # 4) Build only the MyPet module (and its dependencies)
       - name: Maven build (MyPet only)
         run: mvn -B -pl modules/MyPet -am clean package -DskipTests=false
 
-      # 5) Determine the exact JAR path for MyPet-<version>.jar (exclude sources/javadoc)
       - name: Find MyPet jar
         id: findjar
         shell: bash
@@ -88,8 +84,6 @@ jobs:
           echo "jar=$JAR" >> "$GITHUB_OUTPUT"
           echo "Found: $JAR"
 
-      # 6) Create GitHub Release with ONLY the MyPet jar
-      #    Source code archives (.zip/.tar.gz) will be auto-attached by GitHub for the tag.
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
