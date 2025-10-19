@@ -24,6 +24,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+          cache: maven
 
       # 1) Read current version from modules/MyPet/pom.xml and bump PATCH
       - name: Read current version
@@ -37,14 +38,12 @@ jobs:
         run: |
           v='${{ steps.getver.outputs.current }}'
           IFS='.' read -r MA MI PA <<< "$v"
-          if [[ -z "$MA" || -z "$MI" || -z "$PA" ]]; then
-            echo "Could not parse version: $v"; exit 1
-          fi
+          [[ -z "$MA" || -z "$MI" || -z "$PA" ]] && { echo "Could not parse version: $v"; exit 1; }
           NEXT="${MA}.${MI}.$((PA+1))"
           echo "next=$NEXT" >> $GITHUB_OUTPUT
           echo "Bumping $v -> $NEXT"
 
-      # 2) Apply new version to the MyPet module POM (the one your plugin inherits from)
+      # 2) Apply new version to the MyPet module POM
       - name: Set version in MyPet module POM
         run: |
           mvn -f modules/MyPet/pom.xml versions:set -DnewVersion='${{ steps.bump.outputs.next }}' -DgenerateBackupPoms=false
@@ -63,18 +62,40 @@ jobs:
           git tag -a '${{ steps.bump.outputs.next }}' -m 'Release ${{ steps.bump.outputs.next }}'
           git push origin '${{ steps.bump.outputs.next }}'
 
-      # 4) Build (no -Dproject.version override needed now)
-      - name: Maven build
-        run: mvn -B clean package -DskipTests=false
+      # 4) Build only the MyPet module (and its dependencies)
+      - name: Maven build (MyPet only)
+        run: mvn -B -pl modules/MyPet -am clean package -DskipTests=false
 
-      # 5) Create GitHub Release and upload JARs
+      # 5) Determine the exact JAR path for MyPet-<version>.jar (exclude sources/javadoc)
+      - name: Find MyPet jar
+        id: findjar
+        shell: bash
+        run: |
+          # Try to read finalName; fall back to artifactId-version
+          ARTIFACT_ID=$(mvn -f modules/MyPet/pom.xml -q -DforceStdout help:evaluate -Dexpression=project.artifactId)
+          VERSION='${{ steps.bump.outputs.next }}'
+          # default expected name
+          CANDIDATE="modules/MyPet/target/${ARTIFACT_ID}-${VERSION}.jar"
+
+          if [[ -f "$CANDIDATE" ]]; then
+            JAR="$CANDIDATE"
+          else
+            # fallback: pick MyPet-*.jar but exclude -sources/-javadoc
+            JAR=$(ls modules/MyPet/target/*.jar | grep -vE '(-sources|-javadoc)\.jar$' | head -n 1 || true)
+          fi
+
+          [[ -z "$JAR" || ! -f "$JAR" ]] && { echo "MyPet jar not found"; ls -la modules/MyPet/target || true; exit 1; }
+          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          echo "Found: $JAR"
+
+      # 6) Create GitHub Release with ONLY the MyPet jar
+      #    Source code archives (.zip/.tar.gz) will be auto-attached by GitHub for the tag.
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.bump.outputs.next }}
           name: v${{ steps.bump.outputs.next }}
-          files: |
-            modules/**/target/*.jar
-            **/target/*.jar
+          generate_release_notes: true
+          files: ${{ steps.findjar.outputs.jar }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
