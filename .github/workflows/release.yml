@@ -38,12 +38,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Bump version (PATCH)
-        id: bump
-        uses: christian-draeger/increment-version@v1.0.2
-        with:
-          current-version: ${{ steps.getver.outputs.version }}
-          version-fragment: patch
+      - name: Bump tag (PATCH)
+        id: tag
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch        # always bump the 3rd number
+          WITH_V: false              # produces 1.2.3 instead of v1.2.3
+          RELEASE_BRANCHES: release  # only bump on this branch
 
       - name: Read current version from MyPet module
         id: getver
