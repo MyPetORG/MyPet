@@ -68,12 +68,8 @@ jobs:
           mvn -B --no-transfer-progress versions:commit
 
       # Build with same props your working pipeline uses
-      - name: Maven build
-        run: |
-          mvn -B -T 1C --no-transfer-progress clean package \
-            -DskipTests=false \
-            -DGIT_COMMIT='${{ github.sha }}' \
-            -DBUILD_NUMBER='${{ github.run_number }}'
+      - name: Compile
+        run: mvn --batch-mode package -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
