@@ -17,17 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package de.Keyle.MyPet.compat.v1_21_R6.entity.types;
 
-package de.Keyle.MyPet.compat.v1_18_R1.entity.types;
+import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 
-import org.bukkit.Bukkit;
-
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMooshroom;
-import de.Keyle.MyPet.compat.v1_18_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -76,7 +73,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 				} else {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.MUSHROOM_STEW));
+						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), new ItemStack(Items.MUSHROOM_STEW));
 					} else {
 						if (!entityhuman.getInventory().add(new ItemStack(Items.MUSHROOM_STEW))) {
 							entityhuman.drop(new ItemStack(Items.MUSHROOM_STEW), true);
@@ -90,7 +87,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+							entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 						}
 					}
 					getMyPet().setBaby(false);
@@ -101,12 +98,12 @@ public class EntityMyMooshroom extends EntityMyPet {
 		return InteractionResult.PASS;
 	}
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
-		getEntityData().define(COLOR_WATCHER, "red");
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(COLOR_WATCHER, MyMooshroom.Type.Red.name());
+    }
 
 	@Override
 	public void updateVisuals() {
