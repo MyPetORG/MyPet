@@ -132,15 +132,20 @@ public class FollowOwner implements AIGoal {
 				if (!waitForGround) {
 					if (owner.fallDistance <= 4 || flyingPet) {
 						if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
-							if (controlPathfinderGoal.moveTo == null) {
-								if (!petEntity.hasTarget()) {
-									// canSpawn nur alle PATHFINDING_INTERVAL Ticks prüfen
-									if (this.setPathTimer % PATHFINDING_INTERVAL == 0 && MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
-										this.petEntity.fallDistance = 0;
-										this.petEntity.move(MoverType.SELF, new Vec3(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
-										this.setPathTimer = 0;
-										return;
-									}
+							if (controlPathfinderGoal.moveTo == null && !petEntity.hasTarget()) {
+								if (this.setPathTimer % PATHFINDING_INTERVAL == 0
+										&& MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
+
+									// stop pathing & velocity before teleport
+									this.nav.stop(); // or .navigateTo(null) depending on your API
+									this.petEntity.setDeltaMovement(Vec3.ZERO);
+
+									// TELEPORT (no swept collision)
+									// NMS:
+									this.petEntity.teleportTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ());
+									this.petEntity.fallDistance = 0F;
+									this.setPathTimer = 0;
+									return;
 								}
 							}
 						}

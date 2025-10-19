@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyAquaticPet;
+import de.Keyle.MyPet.compat.v1_21_R3.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R3.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -243,17 +244,26 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = new CompoundTag();
 
-        if (entity instanceof net.minecraft.world.entity.LivingEntity) {
-            ((net.minecraft.world.entity.LivingEntity) entity).addAdditionalSaveData(vanillaNBT);
-        } else {
-            Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-            try {
-                b.invoke(entity, vanillaNBT);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+        // For villagers and wandering traders we need to use the special NBT IO helpers
+        try {
+            if (bukkitEntity instanceof Villager || bukkitEntity instanceof WanderingTrader) {
+                // VillagerNbtIO.writeFrom returns a CompoundTag -> use it
+                CompoundTag written = VillagerNbtIO.writeFrom(bukkitEntity);
+                if (written != null) {
+                    vanillaNBT = written;
+                }
+            } else {
+                // Fallback: use entity's internal writer method (named "b" in obfuscated mappings)
+                Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
+                try {
+                    b.invoke(entity, vanillaNBT);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
     }
 
