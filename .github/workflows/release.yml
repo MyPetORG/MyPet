@@ -2,7 +2,7 @@ name: Release Dev-Build
 
 on:
   push:
-    branches: [ release ]   # adjust if you want 'development' instead
+    branches: [ development ]   # adjust if you want 'development' instead
   workflow_dispatch:
 
 permissions:
