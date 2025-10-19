@@ -21,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1   # ← was 0; depth=1 is faster
+          fetch-depth: 0
 
       - name: Set up Java with Maven cache
         uses: actions/setup-java@v4
@@ -29,7 +29,7 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-          
+
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
@@ -37,16 +37,16 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ hashFiles('**/install_dependencies.sh') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-            
-      # Read version WITHOUT launching Maven (faster). Requires xmlstarlet (small).
+
       - name: Install xmlstarlet
         run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
+      # Read root version (parent POM), not just modules/MyPet
       - name: Read current version
         id: getver
         run: |
           CURR=$(xmlstarlet sel -N x="http://maven.apache.org/POM/4.0.0" \
-            -t -v "/x:project/x:version" modules/MyPet/pom.xml)
+            -t -v "/x:project/x:version" pom.xml)
           echo "current=$CURR" >> "$GITHUB_OUTPUT"
 
       - name: Compute next PATCH version
@@ -59,29 +59,36 @@ jobs:
           echo "next=$NEXT" >> "$GITHUB_OUTPUT"
           echo "Bumping $v -> $NEXT"
 
-      - name: Set version in POM (no Maven run)
+      # Set the version across ALL modules so reactor stays consistent
+      - name: Set version across modules (Maven Versions Plugin)
         run: |
-          xmlstarlet ed -L \
-            -N x="http://maven.apache.org/POM/4.0.0" \
-            -u "/x:project/x:version" -v "${{ steps.bump.outputs.next }}" \
-            modules/MyPet/pom.xml
+          mvn -B --no-transfer-progress \
+            versions:set -DnewVersion='${{ steps.bump.outputs.next }}' -DprocessAllModules=true
+          # Prevent '-SNAPSHOT' rewrite of parents in modules, if you use a revision scheme include -DgenerateBackupPoms=false
+          mvn -B --no-transfer-progress versions:commit
 
-      # Commit/tag only AFTER a successful build; avoid retrigger loops using [skip ci]
-      - name: Maven build (parallel, quiet transfer)
-        run: mvn -B -T 1C --no-transfer-progress clean package -DskipTests=false
+      # Build with same props your working pipeline uses
+      - name: Maven build
+        run: |
+          mvn -B -T 1C --no-transfer-progress clean package \
+            -DskipTests=false \
+            -DGIT_COMMIT='${{ github.sha }}' \
+            -DBUILD_NUMBER='${{ github.run_number }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit version bump
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add modules/MyPet/pom.xml
-          git commit -m "[skip ci] Bump MyPet dev-release to ${{ steps.bump.outputs.next }}"
+          # Add all changed POMs (root + modules)
+          git add **/pom.xml pom.xml
+          git commit -m "[skip ci] Bump dev-release to ${{ steps.bump.outputs.next }}"
           git push
 
       - name: Tag and push
         run: |
-          git tag -a '${{ steps.bump.outputs.next }}' -m 'Release ${{ steps.bump.outputs.next }}'
-          # add [skip ci] to annotated message if your CI watches tag messages
+          git tag -a '${{ steps.bump.outputs.next }}' -m 'Release ${{ steps.bump.outputs.next }} [skip ci]'
           git push origin '${{ steps.bump.outputs.next }}'
 
       - name: Create GitHub Release
