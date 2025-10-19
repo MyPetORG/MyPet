@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  bump_build_release:
+  release:
     runs-on: ubuntu-latest
 
     steps:
