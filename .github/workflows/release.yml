@@ -2,7 +2,7 @@ name: Release Dev-Build
 
 on:
   push:
-    branches: [ development ]
+    branches: [ release ]   # adjust if you want 'development' instead
   workflow_dispatch:
 
 permissions:
@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  release:
+  Release:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,52 +23,45 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Java with Maven cache
+      - name: Set up Java (with Maven cache)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: 21
           cache: maven
 
-      - name: Cache local Maven repository
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ hashFiles('**/install_dependencies.sh') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Bump tag (PATCH)
-        id: tag
-        uses: anothrNick/github-tag-action@1.71.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch        # always bump the 3rd number
-          WITH_V: false              # produces 1.2.3 instead of v1.2.3
-          RELEASE_BRANCHES: release  # only bump on this branch
-
+      # Read current version from MyPet module (must come BEFORE the bump step)
       - name: Read current version from MyPet module
         id: getver
         run: |
-          ver=$(mvn -f modules/MyPet/pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "version=$ver" >> $GITHUB_OUTPUT
+          ver=$(mvn -f modules/MyPet/pom.xml -q -DforceStdout help:evaluate -Dexpression=project.version)
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+
+      # Bump PATCH version (uses the version read above)
+      - name: Bump version (PATCH)
+        id: bump
+        uses: christian-draeger/increment-version@v1.0.2
+        with:
+          current-version: ${{ steps.getver.outputs.version }}
+          version-fragment: patch
 
       - name: Update version in MyPet module
         run: |
           mvn -f modules/MyPet versions:set -DnewVersion=${{ steps.bump.outputs.next-version }} -DgenerateBackupPoms=false
 
-      - name: Commit bumped version
+      - name: Commit bumped version and tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add modules/MyPet/pom.xml
-          git commit -m "chore(release): bump version to ${{ steps.bump.outputs.next-version }}"
+          git commit -m "chore(release): bump version to ${{ steps.bump.outputs.next-version }}" || echo "No changes to commit"
           git tag -a ${{ steps.bump.outputs.next-version }} -m "Release ${{ steps.bump.outputs.next-version }}"
           git push origin HEAD --tags
-          
-      # Build with same props your working pipeline uses
+
+      # Build using your previous compile flags
       - name: Compile
-        run: mvn --batch-mode package -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
+        run: |
+          mvn --batch-mode clean package -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
