@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout (shallow)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 1   # ← was 0; depth=1 is faster
@@ -28,8 +28,16 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-          cache: maven     # ← built-in cache (alternative to actions/cache)
-
+          cache: maven
+          
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ hashFiles('**/install_dependencies.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+            
       # Read version WITHOUT launching Maven (faster). Requires xmlstarlet (small).
       - name: Install xmlstarlet
         run: sudo apt-get update && sudo apt-get install -y xmlstarlet
