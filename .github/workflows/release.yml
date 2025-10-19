@@ -38,62 +38,44 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Install xmlstarlet
-        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+      - name: Bump version (PATCH)
+        id: bump
+        uses: christian-draeger/increment-version@v1.0.2
+        with:
+          current-version: ${{ steps.getver.outputs.version }}
+          version-fragment: patch
 
-      # Read root version (parent POM), not just modules/MyPet
-      - name: Read current version
+      - name: Read current version from MyPet module
         id: getver
         run: |
-          CURR=$(xmlstarlet sel -N x="http://maven.apache.org/POM/4.0.0" \
-            -t -v "/x:project/x:version" pom.xml)
-          echo "current=$CURR" >> "$GITHUB_OUTPUT"
+          ver=$(mvn -f modules/MyPet/pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$ver" >> $GITHUB_OUTPUT
 
-      - name: Compute next PATCH version
-        id: bump
+      - name: Update version in MyPet module
         run: |
-          v='${{ steps.getver.outputs.current }}'
-          IFS='.' read -r MA MI PA <<< "$v"
-          [ -z "$MA" ] && { echo "Bad version: $v"; exit 1; }
-          NEXT="${MA}.${MI}.$((PA+1))"
-          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
-          echo "Bumping $v -> $NEXT"
+          mvn -f modules/MyPet versions:set -DnewVersion=${{ steps.bump.outputs.next-version }} -DgenerateBackupPoms=false
 
-      # Set the version across ALL modules so reactor stays consistent
-      - name: Set version across modules (Maven Versions Plugin)
+      - name: Commit bumped version
         run: |
-          mvn -B --no-transfer-progress \
-            versions:set -DnewVersion='${{ steps.bump.outputs.next }}' -DprocessAllModules=true
-          # Prevent '-SNAPSHOT' rewrite of parents in modules, if you use a revision scheme include -DgenerateBackupPoms=false
-          mvn -B --no-transfer-progress versions:commit
-
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add modules/MyPet/pom.xml
+          git commit -m "chore(release): bump version to ${{ steps.bump.outputs.next-version }}"
+          git tag -a ${{ steps.bump.outputs.next-version }} -m "Release ${{ steps.bump.outputs.next-version }}"
+          git push origin HEAD --tags
+          
       # Build with same props your working pipeline uses
       - name: Compile
         run: mvn --batch-mode package -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Add all changed POMs (root + modules)
-          git add **/pom.xml pom.xml
-          git commit -m "[skip ci] Bump dev-release to ${{ steps.bump.outputs.next }}"
-          git push
-
-      - name: Tag and push
-        run: |
-          git tag -a '${{ steps.bump.outputs.next }}' -m 'Release ${{ steps.bump.outputs.next }} [skip ci]'
-          git push origin '${{ steps.bump.outputs.next }}'
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.bump.outputs.next }}
-          name: v${{ steps.bump.outputs.next }}
+          tag_name: ${{ steps.bump.outputs.next-version }}
+          name: v${{ steps.bump.outputs.next-version }}
           files: |
-            modules/**/target/*.jar
-            **/target/*.jar
+            modules/MyPet/target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
