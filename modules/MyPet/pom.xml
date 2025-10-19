@@ -24,7 +24,7 @@
 
     <groupId>de.keyle</groupId>
     <artifactId>mypet</artifactId>
-    <version>3.13.5</version>
+    <version>1..1</version>
     <packaging>jar</packaging>
     <name>MyPet</name>
     <url>https://www.spigotmc.org/resources/mypet.12725/</url>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-plugin</artifactId>
-            <version>1</version>
+            <version>1..1</version>
         </dependency>
     </dependencies>
 

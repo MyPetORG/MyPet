@@ -23,14 +23,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mypet-skills</artifactId>
-    <version>1</version>
+    <version>1..1</version>
     <packaging>jar</packaging>
     <name>MyPet-Skills</name>
 
     <parent>
         <groupId>de.keyle</groupId>
         <artifactId>mypet-parent</artifactId>
-        <version>1</version>
+        <version>1..1</version>
         <relativePath>../../</relativePath>
     </parent>
 
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-api</artifactId>
-            <version>1</version>
+            <version>1..1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
