@@ -9,12 +9,8 @@ permissions:
   contents: write
   pull-requests: write
 
-concurrency:
-  group: dev-release-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  Release:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,57 +19,62 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Java (with Maven cache)
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
-          cache: maven
+          java-version: '21'
 
-      # Optional: read current version (kept for visibility / logs)
-      - name: Read current version from MyPet module
+      # 1) Read current version from modules/MyPet/pom.xml and bump PATCH
+      - name: Read current version
         id: getver
         run: |
-          ver=$(mvn -f modules/MyPet/pom.xml -q -DforceStdout help:evaluate -Dexpression=project.version)
-          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          CURR=$(mvn -f modules/MyPet/pom.xml -q -DforceStdout help:evaluate -Dexpression=project.version)
+          echo "current=$CURR" >> $GITHUB_OUTPUT
 
-      # Compute next PATCH tag from existing repo tags, but DO NOT create the tag yet
-      - name: Compute next tag (PATCH, dry-run)
-        id: tag
-        uses: anothrNick/github-tag-action@1.71.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
-          WITH_V: false              # produce 1.2.3 (no leading v)
-          RELEASE_BRANCHES: development
-          DRY_RUN: true              # important: only calculate, don't tag yet
-
-      - name: Update version in MyPet module
+      - name: Compute next PATCH version
+        id: bump
         run: |
-          mvn -f modules/MyPet versions:set -DnewVersion=${{ steps.tag.outputs.new_tag }} -DgenerateBackupPoms=false
+          v='${{ steps.getver.outputs.current }}'
+          IFS='.' read -r MA MI PA <<< "$v"
+          if [[ -z "$MA" || -z "$MI" || -z "$PA" ]]; then
+            echo "Could not parse version: $v"; exit 1
+          fi
+          NEXT="${MA}.${MI}.$((PA+1))"
+          echo "next=$NEXT" >> $GITHUB_OUTPUT
+          echo "Bumping $v -> $NEXT"
 
-      - name: Commit bumped version and tag
+      # 2) Apply new version to the MyPet module POM (the one your plugin inherits from)
+      - name: Set version in MyPet module POM
         run: |
-          git config user.name  "github-actions[bot]"
+          mvn -f modules/MyPet/pom.xml versions:set -DnewVersion='${{ steps.bump.outputs.next }}' -DgenerateBackupPoms=false
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add modules/MyPet/pom.xml
-          git commit -m "chore(release): bump version to ${{ steps.tag.outputs.new_tag }}" || echo "No changes to commit"
-          git tag -a ${{ steps.tag.outputs.new_tag }} -m "Release ${{ steps.tag.outputs.new_tag }}"
-          git push origin HEAD --tags
+          git commit -m "chore(release): bump MyPet to ${{ steps.bump.outputs.next }}"
+          git push
 
-      # Build using your previous compile flags
-      - name: Compile
+      # 3) Tag the repo with the same version
+      - name: Tag and push
         run: |
-          mvn --batch-mode clean package -DGIT_COMMIT=${{ github.sha }} -DBUILD_NUMBER=${{ github.run_number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git tag -a '${{ steps.bump.outputs.next }}' -m 'Release ${{ steps.bump.outputs.next }}'
+          git push origin '${{ steps.bump.outputs.next }}'
 
+      # 4) Build (no -Dproject.version override needed now)
+      - name: Maven build
+        run: mvn -B clean package -DskipTests=false
+
+      # 5) Create GitHub Release and upload JARs
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.new_tag }}
-          name: v${{ steps.tag.outputs.new_tag }}
+          tag_name: ${{ steps.bump.outputs.next }}
+          name: v${{ steps.bump.outputs.next }}
           files: |
-            modules/MyPet/target/*.jar
+            modules/**/target/*.jar
+            **/target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
