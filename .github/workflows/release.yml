@@ -9,65 +9,73 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: dev-release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout (shallow)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1   # ← was 0; depth=1 is faster
 
-      - name: Set up Java
+      - name: Set up Java with Maven cache
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
+          cache: maven     # ← built-in cache (alternative to actions/cache)
 
-      # 1) Read current version from modules/MyPet/pom.xml and bump PATCH
+      # Read version WITHOUT launching Maven (faster). Requires xmlstarlet (small).
+      - name: Install xmlstarlet
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+
       - name: Read current version
         id: getver
         run: |
-          CURR=$(mvn -f modules/MyPet/pom.xml -q -DforceStdout help:evaluate -Dexpression=project.version)
-          echo "current=$CURR" >> $GITHUB_OUTPUT
+          CURR=$(xmlstarlet sel -N x="http://maven.apache.org/POM/4.0.0" \
+            -t -v "/x:project/x:version" modules/MyPet/pom.xml)
+          echo "current=$CURR" >> "$GITHUB_OUTPUT"
 
       - name: Compute next PATCH version
         id: bump
         run: |
           v='${{ steps.getver.outputs.current }}'
           IFS='.' read -r MA MI PA <<< "$v"
-          if [[ -z "$MA" || -z "$MI" || -z "$PA" ]]; then
-            echo "Could not parse version: $v"; exit 1
-          fi
+          [ -z "$MA" ] && { echo "Bad version: $v"; exit 1; }
           NEXT="${MA}.${MI}.$((PA+1))"
-          echo "next=$NEXT" >> $GITHUB_OUTPUT
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
           echo "Bumping $v -> $NEXT"
 
-      # 2) Apply new version to the MyPet module POM (the one your plugin inherits from)
-      - name: Set version in MyPet module POM
+      - name: Set version in POM (no Maven run)
         run: |
-          mvn -f modules/MyPet/pom.xml versions:set -DnewVersion='${{ steps.bump.outputs.next }}' -DgenerateBackupPoms=false
+          xmlstarlet ed -L \
+            -N x="http://maven.apache.org/POM/4.0.0" \
+            -u "/x:project/x:version" -v "${{ steps.bump.outputs.next }}" \
+            modules/MyPet/pom.xml
+
+      # Commit/tag only AFTER a successful build; avoid retrigger loops using [skip ci]
+      - name: Maven build (parallel, quiet transfer)
+        run: mvn -B -T 1C --no-transfer-progress clean package -DskipTests=false
 
       - name: Commit version bump
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add modules/MyPet/pom.xml
-          git commit -m "Bump MyPet dev-release to ${{ steps.bump.outputs.next }}"
+          git commit -m "[skip ci] Bump MyPet dev-release to ${{ steps.bump.outputs.next }}"
           git push
 
-      # 3) Tag the repo with the same version
       - name: Tag and push
         run: |
           git tag -a '${{ steps.bump.outputs.next }}' -m 'Release ${{ steps.bump.outputs.next }}'
+          # add [skip ci] to annotated message if your CI watches tag messages
           git push origin '${{ steps.bump.outputs.next }}'
 
-      # 4) Build (no -Dproject.version override needed now)
-      - name: Maven build
-        run: mvn -B clean package -DskipTests=false
-
-      # 5) Create GitHub Release and upload JARs
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
