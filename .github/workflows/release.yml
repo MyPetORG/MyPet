@@ -68,10 +68,10 @@ jobs:
         run: |
           VERSION='${{ steps.bump.outputs.next }}'
           # Find exactly MyPet-<version>.jar (case-sensitive)
-          FILE=$(find **/target -type f -name "MyPet-${VERSION}.jar" | head -n 1)
+          FILE=$(find target -type f -name "MyPet-${VERSION}.jar" | head -n 1)
           if [ -z "$FILE" ]; then
             echo "❌ No matching MyPet-${VERSION}.jar found!"
-            ls -la modules/MyPet/target
+            ls -la target
             exit 1
           fi
           echo "Found: $FILE"
