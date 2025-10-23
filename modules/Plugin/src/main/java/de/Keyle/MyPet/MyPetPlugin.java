@@ -34,6 +34,7 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.*;
+import de.Keyle.MyPet.api.util.configuration.ConfigurationManager;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -65,7 +66,10 @@ import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -75,6 +79,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -95,6 +100,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
     private PluginHookManager pluginHookManager;
     private ServiceManager serviceManager;
     private SentryErrorReporter errorReporter = null;
+    private ConfigurationManager configurationManager;
 
     public void onDisable() {
         isDisabling = true;
@@ -160,6 +166,7 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
             return;
         }
 
+        configurationManager = new ConfigurationManager();
         petInfo = compatUtil.getCompatInstance(MyPetInfo.class, "entity", "MyPetInfo");
         platformHelper = compatUtil.getCompatInstance(PlatformHelper.class, "", "PlatformHelper");
         entityRegistry = compatUtil.getCompatInstance(EntityRegistry.class, "entity", "EntityRegistry");
@@ -664,12 +671,29 @@ public class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin
         return repo;
     }
 
+    @Override
+    public ConfigurationManager getConfigurationManager() {
+        return configurationManager;
+    }
+
     public PlatformHelper getPlatformHelper() {
         return platformHelper;
     }
 
     public SentryErrorReporter getErrorReporter() {
         return errorReporter;
+    }
+
+    @Override
+    public void registerListener(Listener listener) {
+        getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+    @Override
+    public void registerCommand(String command, CommandExecutor executor) {
+        if (getCommand(command) != null) {
+            Objects.requireNonNull(getCommand(command)).setExecutor(executor);
+        }
     }
 
     private void replaceLogger() {

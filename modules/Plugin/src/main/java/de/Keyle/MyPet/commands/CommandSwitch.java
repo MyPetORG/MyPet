@@ -104,41 +104,7 @@ public class CommandSwitch implements CommandTabCompleter {
 
                         String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title + " " + stats, finalPage);
-                        gui.open(pets, new RepositoryCallback<StoredMyPet>() {
-                            @Override
-                            public void callback(StoredMyPet storedMyPet) {
-                                Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
-                                if (activePet.isPresent() && owner.isOnline()) {
-                                    Player player = owner.getPlayer();
-                                    activePet.get().getOwner().sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.get().getPetName()));
-                                    WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                                    owner.setMyPetForWorldGroup(wg, activePet.get().getUUID());
-
-                                    switch (activePet.get().createEntity()) {
-                                        case Canceled:
-                                            owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), activePet.get().getPetName()));
-                                            break;
-                                        case NoSpace:
-                                            owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), activePet.get().getPetName()));
-                                            break;
-                                        case NotAllowed:
-                                            owner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner), activePet.get().getPetName()));
-                                            break;
-                                        case Dead:
-                                            if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                owner.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), activePet.get().getPetName()));
-                                            } else {
-                                                owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner), activePet.get().getPetName(), activePet.get().getRespawnTime()));
-                                            }
-                                            break;
-                                        case Spectator:
-                                            sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", owner), activePet.get().getPetName()));
-                                            break;
-                                    }
-                                }
-                            }
-                        });
+                        new MyPetSelectionGui(owner, pets, title).open();
                     }
                 }
             });

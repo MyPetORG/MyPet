@@ -130,8 +130,8 @@ public class StorageTrait extends Trait {
                         if (inactivePetCount >= maxPetCount) {
                             String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                            final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, stats + " " + Translation.getString("Message.Npc.SwitchTitle", player));
-                            gui.open(pets, new RepositoryCallback<StoredMyPet>() {
+                            final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, pets, stats + " " + Translation.getString("Message.Npc.SwitchTitle", myPetPlayer));
+                            /*gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
                                     MyPetApi.getMyPetManager().deactivateMyPet(myPetPlayer, true);
@@ -165,7 +165,7 @@ public class StorageTrait extends Trait {
                                         }
                                     }
                                 }
-                            });
+                            });*/
                         } else {
                             IconMenu menu = new IconMenu(Translation.getString("Message.Npc.HandOverTitle", myPetPlayer), event -> {
                                 if (!myPetPlayer.hasMyPet()) {
@@ -235,8 +235,8 @@ public class StorageTrait extends Trait {
                                 maxPetCount = Misc.MAX_STORED_PET_COUNT;
                             }
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
-                            MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Translation.getString("Message.Npc.TakeTitle", myPetPlayer) + " " + stats);
-                            gui.open(pets, new RepositoryCallback<StoredMyPet>() {
+                            MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, pets, Translation.getString("Message.Npc.TakeTitle", myPetPlayer) + " " + stats);
+                            /*gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
                                     Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
@@ -267,7 +267,7 @@ public class StorageTrait extends Trait {
                                         }
                                     }
                                 }
-                            });
+                            });*/
                         } else {
                             myPetPlayer.sendMessage(Translation.getString("Message.No.HasPet", myPetPlayer), 5000);
                         }

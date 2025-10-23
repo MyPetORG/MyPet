@@ -1,0 +1,35 @@
+Title: "Select your Pet"
+Icons:
+  Sort:
+    Material: CLOCK
+    Name: "§eSort Pets"
+    Lore:
+      - "§7Click to sort your pets"
+      - "&7Current: &a%sort%"
+      - " "
+      - "&eLeft Click to cycle"
+      - "&eRight Click to reset"
+    Slot: 7
+    SortTypes:
+      Ascending: "§aAscending"
+      Descending: "§aDescending"
+      ByType: "§aBy Type"
+  FillerItem:
+    Material: BLACK_STAINED_GLASS_PANE
+    Name: " "
+    Lore: []
+  Previous:
+    Material: LIME_DYE
+    Name: "§7Previous Page"
+    Lore: []
+    Slot: 39
+  Next:
+    Material: LIME_DYE
+    Name: "§7Next Page"
+    Lore: []
+    Slot: 41
+  Close:
+      Material: BARRIER
+      Name: "§cClose"
+      Lore: []
+      Slot: 36

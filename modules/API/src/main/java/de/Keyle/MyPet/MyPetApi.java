@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.skill.SkillManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.ErrorReporter;
+import de.Keyle.MyPet.api.util.configuration.ConfigurationManager;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.logger.MyPetLogger;
@@ -48,6 +49,10 @@ public class MyPetApi {
             return;
         }
         MyPetApi.plugin = plugin;
+    }
+
+    public static ConfigurationManager getConfigurationManager() {
+        return plugin.getConfigurationManager();
     }
 
     /**

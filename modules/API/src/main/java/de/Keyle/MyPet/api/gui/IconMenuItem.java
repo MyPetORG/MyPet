@@ -239,4 +239,11 @@ public class IconMenuItem implements Cloneable {
 
         return newItem;
     }
+
+    public ItemStack asItemStack() {
+        ItemStack itemStack = new ItemStack(this.material, this.amount);
+        if (this.bukkitMeta != null)
+            itemStack.setItemMeta(this.bukkitMeta);
+        return itemStack;
+    }
 }
