@@ -135,10 +135,8 @@ public class CompatUtil {
         try {
             InputStreamReader streamReader = new InputStreamReader(MyPetApi.getPlugin().getResource("versionmatcher.csv"), StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(streamReader);
-            Bukkit.getConsoleSender().sendMessage("Trying to read");
             String line;
             while ((line = reader.readLine()) != null) {
-                Bukkit.getConsoleSender().sendMessage(line);
                 String[] parts = line.split(",");
                 versionMap.put(parts[0], parts[1]);
             }
