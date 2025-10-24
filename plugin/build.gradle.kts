@@ -5,14 +5,14 @@ plugins {
 
 version = "3.14-SNAPSHOT"
 
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(8)
+    options.encoding = "UTF-8"
+}
+
 dependencies {
     compileOnly(project(":api"))
     compileOnly(project(":skills"))
-    val nmsModules = File(rootDir, "nms").listFiles()!!.filter { s -> s.isDirectory() && s.name.matches("v[\\d_]+R\\d+".toRegex()) }.map { s -> ":nms:" + s.name };
-    gradle.extra["nmsModules"] = nmsModules
-    for (module in nmsModules) {
-        compileOnly(project(module))
-    }
 
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("de.keyle:knbt:0.0.5")

@@ -1,6 +1,7 @@
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import org.gradle.api.attributes.Usage
 
 plugins {
     java
@@ -35,6 +36,9 @@ repositories {
 }
 
 subprojects {
+    apply(plugin = "java-library")
+    apply(plugin = "io.freefair.lombok")
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -54,18 +58,15 @@ subprojects {
         maven { url = uri("https://repo.mypet-plugin.de/") }
     }
 
-    apply(plugin = "java-library")
-    apply(plugin = "io.freefair.lombok")
-
-    java {
-        toolchain { languageVersion = JavaLanguageVersion.of(21) }
-        disableAutoTargetJvm()
-    }
-
-    // prevent accidental publish from submodules
     plugins.withId("maven-publish") {
         tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
         tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
     }
 }
 
@@ -159,6 +160,34 @@ tasks.jar {
     manifest { attributesForMyPet() }
 }
 
+/* ---------- Shading without JVM attribute conflicts ---------- */
+
+// Create a resolvable-only configuration to collect jars to shade.
+val shade by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+    // Mark as runtime usage and leave TargetJvmVersion unset.
+    attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
+}
+
+dependencies {
+    // Pull submodules as built jars (regardless of their target JVM)
+    add("shade", project(path = ":plugin", configuration = "runtimeElements"))
+    add("shade", project(path = ":api",    configuration = "runtimeElements"))
+    add("shade", project(path = ":skills", configuration = "runtimeElements"))
+    nmsModules.forEach { add("shade", project(path = it, configuration = "runtimeElements")) }
+
+    // External libs to be shaded
+    add("shade", "at.blvckbytes:RawMessage:0.2")
+    add("shade", "org.bstats:bstats-bukkit:1.7")
+    add("shade", "org.mongodb:mongodb-driver:3.12.11")
+    add("shade", "de.keyle:knbt:0.0.5")
+    add("shade", "com.google.code.gson:gson:2.8.9")
+    add("shade", "io.sentry:sentry:1.7.30")
+    add("shade", "com.zaxxer:HikariCP:3.4.2")
+}
+
+// Build the shaded jar strictly from the 'shade' configuration
 tasks.shadowJar {
     archiveBaseName.set(archivesBaseName)
     archiveVersion.set(project.version.toString())
@@ -166,10 +195,10 @@ tasks.shadowJar {
     exclude("META-INF/**")
     manifest { attributesForMyPet() }
 
-    dependsOn(":plugin:classes", ":api:classes", ":skills:classes")
-    nmsModules.forEach { dependsOn("$it:classes") }
+    dependsOn(shade)
 
-    // avoid runtime conflicts
+    configurations = listOf(shade)
+
     relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
@@ -183,24 +212,12 @@ tasks.shadowJar {
 tasks.assemble { dependsOn(tasks.shadowJar) }
 tasks.build { dependsOn(tasks.shadowJar) }
 
-dependencies {
-    implementation(project(":plugin")) { isTransitive = false }
-    implementation(project(":api")) { isTransitive = false }
-    implementation(project(":skills")) { isTransitive = false }
-    nmsModules.forEach {
-        implementation(project(it)) { isTransitive = false }
-    }
-
-    implementation("at.blvckbytes:RawMessage:0.2")
-    implementation("org.bstats:bstats-bukkit:1.7")
-    implementation("org.mongodb:mongodb-driver:3.12.11")
-    implementation("de.keyle:knbt:0.0.5")
-    implementation("com.google.code.gson:gson:2.8.9")
-    implementation("io.sentry:sentry:1.7.30")
-    implementation("com.zaxxer:HikariCP:3.4.2")
-}
+/* ---------- Root compilation settings (Java 8 output) ---------- */
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
+}
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(8)
+    options.encoding = "UTF-8"
 }

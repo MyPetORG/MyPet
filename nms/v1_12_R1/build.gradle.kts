@@ -5,7 +5,7 @@ extra["remapServerCode"] = false
 
 description = "v1_12_R1"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(8)
+    options.encoding = "UTF-8"
 }

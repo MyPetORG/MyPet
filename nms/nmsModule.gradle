@@ -8,8 +8,8 @@ ext {
 }
 
 dependencies {
-    implementation project(':api')
-    implementation project(':skills')
+    compileOnly(project(':api'))
+    compileOnly(project(':skills'))
 
     compileOnly("com.mojang:brigadier:1.0.18")
     compileOnly("com.mojang:datafixerupper:8.0.16")
@@ -21,13 +21,13 @@ dependencies {
 
     afterEvaluate {
         if (remapServerCode) {
-            implementation "org.spigotmc:spigot:${craftbukkitVersion}:remapped-mojang"
-            implementation "org.spigotmc:spigot:${craftbukkitVersion}:remapped-obf"
+            compileOnly "org.spigotmc:spigot:${craftbukkitVersion}:remapped-mojang"
+            compileOnly "org.spigotmc:spigot:${craftbukkitVersion}:remapped-obf"
 
-            implementation "org.spigotmc:minecraft-server:${craftbukkitVersion}:maps-mojang@txt"
-            implementation "org.spigotmc:minecraft-server:${craftbukkitVersion}:maps-spigot@csrg"
+            compileOnly "org.spigotmc:minecraft-server:${craftbukkitVersion}:maps-mojang@txt"
+            compileOnly "org.spigotmc:minecraft-server:${craftbukkitVersion}:maps-spigot@csrg"
         } else {
-            implementation "org.spigotmc:spigot:${craftbukkitVersion}"
+            compileOnly "org.spigotmc:spigot:${craftbukkitVersion}"
         }
     }
 }
@@ -46,5 +46,3 @@ afterEvaluate {
         }
     }
 }
-
-// Note: The NMS modules are not published as standalone artifacts, but are shaded into the final plugin jar.
