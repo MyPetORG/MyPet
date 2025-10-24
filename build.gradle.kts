@@ -2,6 +2,7 @@ import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import org.gradle.api.attributes.Usage
+import java.net.URI
 
 plugins {
     java
@@ -14,7 +15,7 @@ group = "de.keyle"
 version = "3.14-SNAPSHOT"
 
 val minecraftVersion by extra("1.21.9")
-val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R1;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6")
+val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6")
 val specialVersions by extra("")
 
 val nmsModules: List<String> = File(rootDir, "nms")
@@ -95,7 +96,7 @@ val downloadVersionmatcher by tasks.register("downloadVersionmatcher") {
     outputs.file(dest)
     doLast {
         dest.asFile.parentFile.mkdirs()
-        val url = URL("https://raw.githubusercontent.com/MyPetORG/MyPet/versionmatcher/versionmatcher.csv")
+        val url = URI("https://raw.githubusercontent.com/MyPetORG/MyPet/versionmatcher/versionmatcher.csv").toURL()
         url.openStream().use { input ->
             dest.asFile.outputStream().use { out -> input.copyTo(out) }
         }
