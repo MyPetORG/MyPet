@@ -17,17 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.Keyle.MyPet.compat.v1_21_R6.entity.types;
 
-import org.bukkit.Bukkit;
+import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMooshroom;
-import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -42,7 +39,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyMooshroom extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<String> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.STRING);
 
 	public EntityMyMooshroom(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -72,12 +69,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 		if (itemStack != null) {
 			if (itemStack.getItem().equals(Items.BOWL)) {
 				if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
-					final int itemInHandIndex = entityhuman.getInventory().getSelectedSlot();
-					ItemStack is = new ItemStack(Items.MUSHROOM_STEW);
-					final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
-					entityhuman.getInventory().setItem(itemInHandIndex, is);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.getInventory().setItem(itemInHandIndex, oldIs), 2L);
-
+                    return InteractionResult.FAIL;
 				} else {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
@@ -106,17 +98,17 @@ public class EntityMyMooshroom extends EntityMyPet {
 		return InteractionResult.PASS;
 	}
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(COLOR_WATCHER, MyMooshroom.Type.Red.ordinal());
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(COLOR_WATCHER, MyMooshroom.Type.Red.name());
+    }
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().ordinal());
+		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());
 	}
 
 	@Override

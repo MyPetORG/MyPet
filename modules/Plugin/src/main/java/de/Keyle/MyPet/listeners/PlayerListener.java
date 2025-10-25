@@ -135,7 +135,16 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(PlayerInteractEntityEvent event) {
-        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.8") >= 0) return;
+        String internalVersion = MyPetApi.getCompatUtil().getInternalVersion();
+        if (internalVersion != null) {
+            try {
+                // If we're running on a server using the v1_21_* (or newer) compat module, skip this logic
+                if (internalVersion.startsWith("v1_21_")) {
+                    return;
+                }
+            } catch (Exception ignored) {
+            }
+        }
         if (event.isCancelled()) {
             if (event.getRightClicked() instanceof MyPetBukkitEntity) {
                 if (((MyPetBukkitEntity) event.getRightClicked()).getOwner().equals(event.getPlayer())) {

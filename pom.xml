@@ -24,7 +24,7 @@
 
     <groupId>de.keyle</groupId>
     <artifactId>mypet-parent</artifactId>
-    <version>1</version>
+    <version>1..1</version>
     <packaging>pom</packaging>
     <name>MyPet-Parent</name>
 
@@ -32,9 +32,7 @@
         <module>modules/API</module>
         <module>modules/Skills</module>
         <module>modules/v1_8_R3</module>
-        <!--<module>modules/v1_9_R2</module>-->
         <module>modules/v1_12_R1</module>
-        <!--<module>modules/v1_16_R1</module>-->
         <module>modules/v1_16_R3</module>
         <module>modules/v1_17_R1</module>
         <module>modules/v1_18_R2</module>
