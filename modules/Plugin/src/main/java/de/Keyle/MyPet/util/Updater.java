@@ -45,12 +45,10 @@ public class Updater {
     public class Update {
 
         String version;
-        int build;
         String downloadURL;
 
-        public Update(String version, int build, String downloadURL) {
+        public Update(String version, String downloadURL) {
             this.version = version;
-            this.build = build;
             this.downloadURL = downloadURL;
         }
 
@@ -58,15 +56,11 @@ public class Updater {
             return version;
         }
 
-        public int getBuild() {
-            return build;
-        }
-
         public String getDownloadURL() { return downloadURL; }
 
         @Override
         public String toString() {
-            return version + " #" + build;
+            return version;
         }
     }
 
@@ -110,35 +104,24 @@ public class Updater {
             // no data will be saved on the server
             String content = Util.readUrlContent(url);
             JsonArray resultArr = new Gson().fromJson(content, JsonArray.class);
+            Optional<Update> update = Optional.empty();
 
             for (int i = 0; i<resultArr.size(); i++) {
                 JsonObject release = (JsonObject) resultArr.get(i);
-                if (release.has("prerelease") &&
-                        release.get("prerelease").getAsBoolean() == MyPetVersion.isDevBuild()) {
-                    String rawVersion = release.get("name").getAsString();
 
-                    String[] split = rawVersion.split("-");
-
-                    int build = Integer.parseInt(split[split.length-1].substring(1));
-                    if(MyPetVersion.getBuild().isEmpty() || build <= Integer.parseInt(MyPetVersion.getBuild())) { //Only do the rest if the build is even newer
-                        return Optional.empty();
+                // If prerelease and we allow prereleases or it is not a prerelease
+                if ((release.has("prerelease") && release.get("prerelease").getAsBoolean() == MyPetVersion.isDevBuild()) ||
+                        !release.has("prerelease")) {
+                    if(!release.get("body").getAsString().contains(MyPetApi.getCompatUtil().getInternalVersion())) {
+                        continue;
                     }
-
-                    if(!release.get("body").getAsString().contains(MyPetApi.getCompatUtil().getInternalVersion()))
-                        return Optional.empty();
-
-                    StringBuilder version = new StringBuilder();
-                    for(int j = 0; j<split.length-1;j++) {
-                        version.append(split[j]);
-                        if(j<split.length-2) {
-                            version.append("-");
-                        }
-                    }
-
+;
                     String downloadURL = release.get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
-                    return Optional.of(new Update(version.toString(), build, downloadURL));
+                    update = Optional.of(new Update(release.get("name").getAsString(), downloadURL));
+                    break;
                 }
             }
+            return update;
         } catch (Exception e) {
             e.printStackTrace();
         }

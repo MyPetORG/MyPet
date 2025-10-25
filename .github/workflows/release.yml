@@ -38,11 +38,14 @@ jobs:
         run: |
           v='${{ steps.getver.outputs.current }}'
           IFS='.' read -r MA MI PA <<< "$v"
-          [[ -z "$MA" || -z "$MI" || -z "$PA" ]] && { echo "Could not parse version: $v"; exit 1; }
+          if [[ -z "$MA" || -z "$MI" || -z "$PA" ]]; then
+            echo "Could not parse version: $v"; exit 1
+          fi
           NEXT="${MA}.${MI}.$((PA+1))"
           echo "next=$NEXT" >> $GITHUB_OUTPUT
           echo "Bumping $v -> $NEXT"
 
+      # 2) Apply new version to the MyPet module POM (the one your plugin inherits from)
       - name: Set version in MyPet module POM
         run: |
           mvn -f modules/MyPet/pom.xml versions:set -DnewVersion='${{ steps.bump.outputs.next }}' -DgenerateBackupPoms=false
