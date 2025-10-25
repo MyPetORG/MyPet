@@ -29,10 +29,6 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Read current version
-        id: getver
-        run: echo "version=$(./gradlew -q --console=plain --warning-mode=none printVersion)" >> "$GITHUB_OUTPUT"
-
       # 3) Gradle build (MyPet only)
       - name: Build MyPet module
         run: |
@@ -42,17 +38,33 @@ jobs:
         id: findjar
         shell: bash
         run: |
-          # pick primary plugin jar, exclude sources/javadoc/classifier jars
+          # pick primary plugin jar, exclude sources/javadoc/plain classifier jars
           JAR=$(ls build/libs/*.jar 2>/dev/null | grep -vE '(-sources|-javadoc|-plain)\.jar$' | head -n1 || true)
           [[ -z "$JAR" || ! -f "$JAR" ]] && { echo "Jar not found"; ls -la build/libs || true; exit 1; }
+
+          BASENAME=$(basename "$JAR")
+          NAME="${BASENAME%.jar}"
+          # strip common classifier
+          NAME="${NAME%-all}"
+
+          # extract version assuming artifactId-version.jar
+          VERSION="${NAME##*-}"
+
+          # fallback regex if needed
+          if [[ "$VERSION" == "$NAME" ]]; then
+            VERSION=$(echo "$NAME" | sed -E 's/.*-([0-9][0-9A-Za-z.\-+]*$)/\1/')
+          fi
+
           echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Found: $JAR"
+          echo "Version: $VERSION"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: $${{ steps.getver.outputs.version }}
-          name: v$${{ steps.getver.outputs.version }}
+          tag_name: ${{ steps.findjar.outputs.version }}
+          name: v${{ steps.findjar.outputs.version }}
           generate_release_notes: true
           files: ${{ steps.findjar.outputs.jar }}
         env:

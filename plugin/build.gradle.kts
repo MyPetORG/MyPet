@@ -44,7 +44,7 @@ dependencies {
     compileOnly("com.gmail.nossr50:mcMMO:2.1.0")
 
     compileOnly("com.sk89q.worldguard:worldguard-legacy:7.0.0")
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.6-SNAPSHOT")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.5")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.5")
 
     compileOnly("com.mewin:WGCustomFlags:1.9")
@@ -67,7 +67,7 @@ dependencies {
     compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
     compileOnly("com.sucy.skill:SkillAPI:3.108")
     compileOnly("com.nisovin.magicspells:MagicSpells:3.4.2")
-    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
+    compileOnly("net.dmulloy2:ProtocolLib:5.3.0")
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("fr.neatmonster:nocheatplus:3.16.0")
     compileOnly("de.myzelyam:supervanish:6.1.0")
@@ -84,7 +84,7 @@ dependencies {
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
     compileOnly("de.keyle:knbt:0.0.5")
-    compileOnly("com.google.code.gson:gson:2.8.9")
+    compileOnly("com.google.code.gson:gson:2.8.0")
 
     // Prefer Lombok as compileOnly + annotationProcessor in Gradle:
     compileOnly("org.projectlombok:lombok:1.18.42")

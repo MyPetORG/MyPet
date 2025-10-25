@@ -53,7 +53,6 @@ subprojects {
         maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
         maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
         maven { url = uri("https://maven.pkg.github.com/MyPetORG/*") }
-        maven { url = uri("https://repo.dmulloy2.net/nexus/repository/public/") }
         maven { url = uri("https://maven.enginehub.org/repo/") }
         maven { url = uri("https://hub.spigotmc.org/nexus/content/groups/public/") }
         maven { url = uri("https://repo.md-5.net/content/repositories/public") }
@@ -185,7 +184,7 @@ dependencies {
     add("shade", "org.bstats:bstats-bukkit:1.7")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
-    add("shade", "com.google.code.gson:gson:2.8.9")
+    add("shade", "com.google.code.gson:gson:2.8.0")
     add("shade", "io.sentry:sentry:1.7.30")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
 }
@@ -204,7 +203,6 @@ tasks.shadowJar {
 
     relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
-    relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("io.sentry", "de.Keyle.MyPet.util.sentry")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
