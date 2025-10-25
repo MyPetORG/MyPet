@@ -1,0 +1,114 @@
+name: Build MyPet (Gradle)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_NUMBER: 0
+      JAR_FILE_NAME: ""
+      NMS_VERSIONS: ""
+      PROJECT_VERSION: ""
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: 21
+          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Set build number
+        env:
+          NUM: ${{ github.run_number }}
+        run: echo "BUILD_NUMBER=$(($NUM+1592))" >> "$GITHUB_ENV"
+
+      - name: Build and Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./gradlew --no-daemon \
+            -PBUILD_NUMBER="${BUILD_NUMBER}" \
+            -PGIT_COMMIT="${{ github.sha }}" \
+            clean build publish
+
+      - name: Resolve shaded JAR path
+        run: |
+          # Search typical Gradle output locations for MyPet shaded jar
+          JAR=$(find . -type f -path '*/build/libs/*' \
+            -regex '.*/MyPet-3\.[0-9]+-?S\?N\?A\?P\?S\?H\?O\?T\?\.jar' \
+            | head -n1)
+          echo "JAR_FILE_NAME=${JAR}" >> "$GITHUB_ENV"
+
+      - name: Create CI init script for property reads
+        run: |
+          cat > ci-props.init.gradle.kts <<'EOF'
+          allprojects {
+            tasks.register("ciPrintProp") {
+              doLast {
+                val key = providers.systemProperty("prop").orNull
+                  ?: throw GradleException("Missing -Dprop")
+                val value = if (extra.has(key)) {
+                  extra[key]
+                } else {
+                  findProperty(key)
+                } ?: ""
+                println(value.toString())
+              }
+            }
+          }
+          EOF
+
+      - name: Get supported NMS versions
+        run: |
+          echo "NMS_VERSIONS=$(./gradlew -I ci-props.init.gradle.kts -q :modules:MyPet:ciPrintProp -Dprop=bukkitPackets)" | tee -a "$GITHUB_ENV"
+
+      - name: Get project version
+        run: |
+          echo "PROJECT_VERSION=$(./gradlew -I ci-props.init.gradle.kts -q :modules:MyPet:ciPrintProp -Dprop=version)" | tee -a "$GITHUB_ENV"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: latest-plugin-jar
+          path: ${{ env.JAR_FILE_NAME }}
+
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: false
+          prerelease: ${{ contains(env.PROJECT_VERSION, 'SNAPSHOT') }}
+          release_name: ${{ env.PROJECT_VERSION }}-B${{ env.BUILD_NUMBER }}
+          tag_name: ${{ env.PROJECT_VERSION }}-B${{ env.BUILD_NUMBER }}
+          body: |
+            Supported NMS Versions: ${{ env.NMS_VERSIONS }}
+
+            Download: [MyPet-${{ env.PROJECT_VERSION }}-B${{ env.BUILD_NUMBER }}.jar](https://github.com/MyPetORG/MyPet/releases/download/${{ env.PROJECT_VERSION }}-B${{ env.BUILD_NUMBER }}/MyPet-${{ env.PROJECT_VERSION }}-B${{ env.BUILD_NUMBER }}.jar)
+
+      - name: Upload JAR to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.JAR_FILE_NAME }}
+          asset_name: MyPet-${{ env.PROJECT_VERSION }}-B${{ env.BUILD_NUMBER }}.jar
+          asset_content_type: application/java-archive
+
+      - name: Delete old pre-releases
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          keep_latest: 3
+          delete_tag_pattern: SNAPSHOT

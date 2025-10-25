@@ -1,0 +1,77 @@
+name: Build Development Snapshot
+
+on:
+  push:
+    branches: [ development ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      # 3) Gradle build (MyPet only)
+      - name: Build MyPet module
+        run: |
+          ./gradlew --no-daemon clean build
+
+      - name: Find MyPet jar
+        id: findjar
+        shell: bash
+        run: |
+          # pick primary plugin jar, exclude sources/javadoc/plain classifier jars
+          JAR=$(ls build/libs/*.jar 2>/dev/null | grep -vE '(-sources|-javadoc|-plain)\.jar$' | head -n1 || true)
+          [[ -z "$JAR" || ! -f "$JAR" ]] && { echo "Jar not found"; ls -la build/libs || true; exit 1; }
+
+          BASENAME=$(basename "$JAR")
+          NAME="${BASENAME%.jar}"
+          # strip common classifier
+          NAME="${NAME%-all}"
+
+          # Extract semantic version like 3.13.4 or 3.13.4-R1, with optional -SNAPSHOT, from the end of the name
+          # Works for names like MyPet-3.13.4-SNAPSHOT[-all].jar and MyPet-Plugin-3.13.4-R1[-all].jar
+          VERSION=$(echo "$NAME" | sed -E 's/.*-([0-9]+(\.[0-9]+)*(-R[0-9]+)?(-SNAPSHOT)?)(-all)?$/\1/')
+
+          # get short git commit hash
+          COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
+  
+          # sanity check
+          if [[ -z "$VERSION" || "$VERSION" == "$NAME" ]]; then
+            echo "Failed to parse version from $BASENAME"; exit 1
+          fi
+
+          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Found: $JAR"
+          echo "Version: $VERSION"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.findjar.outputs.version }}-${{ steps.findjar.outputs.commit }}
+          name: v${{ steps.findjar.outputs.version }}-${{ steps.findjar.outputs.commit }}
+          generate_release_notes: true
+          prerelease: true
+          files: ${{ steps.findjar.outputs.jar }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

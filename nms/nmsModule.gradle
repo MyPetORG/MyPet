@@ -1,0 +1,48 @@
+apply from: rootProject.file('nms/specialSource.gradle')
+
+ext {
+    // This needs to be defined by projects that apply this script.
+    craftbukkitVersion = 'UNSPECIFIED'
+    // This can be overridden by projects that apply this script.
+    remapServerCode = true
+}
+
+dependencies {
+    compileOnly(project(':api'))
+    compileOnly(project(':skills'))
+
+    compileOnly("com.mojang:brigadier:1.0.18")
+    compileOnly("com.mojang:datafixerupper:8.0.16")
+    compileOnly("com.mojang:javabridge:1.2.24")
+    compileOnly("com.mojang:authlib:3.2.38")
+
+    compileOnly("org.jetbrains:annotations:13.0")
+    compileOnly("de.keyle:knbt:0.0.5")
+
+    afterEvaluate {
+        if (remapServerCode) {
+            compileOnly "org.spigotmc:spigot:${craftbukkitVersion}:remapped-mojang"
+            compileOnly "org.spigotmc:spigot:${craftbukkitVersion}:remapped-obf"
+
+            compileOnly "org.spigotmc:minecraft-server:${craftbukkitVersion}:maps-mojang@txt"
+            compileOnly "org.spigotmc:minecraft-server:${craftbukkitVersion}:maps-spigot@csrg"
+        } else {
+            compileOnly "org.spigotmc:spigot:${craftbukkitVersion}"
+        }
+    }
+}
+
+afterEvaluate {
+    if (remapServerCode) {
+        jar {
+            doLast {
+                def outputFiles = outputs.files.files
+                for (inputFile in outputFiles) {
+                    File intermediateFile = new File(temporaryDir, inputFile.name.replace('.jar', '-obf.jar'))
+                    File outputFile = inputFile
+                    remapMojangToSpigot(inputFile, intermediateFile, outputFile, craftbukkitVersion)
+                }
+            }
+        }
+    }
+}
