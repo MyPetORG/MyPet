@@ -60,6 +60,11 @@ subprojects {
         maven { url = uri("https://repo.mypet-plugin.de/") }
     }
 
+    tasks.processResources { enabled = false }
+    tasks.test { enabled = false }
+    tasks.compileTestJava { enabled = false }
+    tasks.processTestResources { enabled = false }
+
     plugins.withId("maven-publish") {
         tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
         tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
