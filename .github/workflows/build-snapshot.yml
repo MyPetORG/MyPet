@@ -47,12 +47,17 @@ jobs:
           # strip common classifier
           NAME="${NAME%-all}"
 
-          # extract version assuming artifactId-version.jar
-          VERSION="${NAME##*-}"
+          # Extract semantic version like 3.13.4 or 3.13.4-R1, with optional -SNAPSHOT, from the end of the name
+          # Works for names like MyPet-3.13.4-SNAPSHOT[-all].jar and MyPet-Plugin-3.13.4-R1[-all].jar
+          VERSION=$(echo "$NAME" | sed -E 's/.*-([0-9]+(\.[0-9]+)*(-R[0-9]+)?(-SNAPSHOT)?)(-all)?$/\1/')
 
-          # fallback regex if needed
-          if [[ "$VERSION" == "$NAME" ]]; then
-            VERSION=$(echo "$NAME" | sed -E 's/.*-([0-9][0-9A-Za-z.\-+]*$)/\1/')
+          # get short git commit hash
+          COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
+  
+          # sanity check
+          if [[ -z "$VERSION" || "$VERSION" == "$NAME" ]]; then
+            echo "Failed to parse version from $BASENAME"; exit 1
           fi
 
           echo "jar=$JAR" >> "$GITHUB_OUTPUT"
@@ -63,9 +68,10 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.findjar.outputs.version }}
-          name: v${{ steps.findjar.outputs.version }}
+          tag_name: ${{ steps.findjar.outputs.version }}-${{ steps.findjar.outputs.commit }}
+          name: v${{ steps.findjar.outputs.version }}-${{ steps.findjar.outputs.commit }}
           generate_release_notes: true
+          prerelease: true
           files: ${{ steps.findjar.outputs.jar }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
