@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "de.keyle"
-version = "3.14-SNAPSHOT"
+version = "3.14.0-SNAPSHOT"
 
 val minecraftVersion by extra("1.21.9")
 val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6")
@@ -27,6 +27,8 @@ val nmsModules: List<String> = File(rootDir, "nms")
 repositories {
     mavenLocal()
     mavenCentral()
+    maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+    maven("https://repo.mypet-plugin.de/")
     /*maven {
         url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
         credentials {
@@ -212,6 +214,40 @@ tasks.shadowJar {
 
 tasks.assemble { dependsOn(tasks.shadowJar) }
 tasks.build { dependsOn(tasks.shadowJar) }
+
+tasks.register("printVersion") {
+    doLast { println(project.version) }
+}
+
+tasks.register("setProjectVersion") {
+    group = "ci"
+    description = "Set project version from -PnextVersion or env NEXT"
+    doLast {
+        val next = (findProperty("nextVersion") as String?)
+            ?: System.getenv("NEXT")
+            ?: error("Provide -PnextVersion or set env NEXT")
+
+        val propsFile = rootProject.file("gradle.properties")
+        if (propsFile.isFile) {
+            val src = propsFile.readText()
+            val line = Regex("""^version=.*$""", RegexOption.MULTILINE)
+            val out = if (line.containsMatchIn(src)) {
+                line.replace(src, "version=$next")
+            } else {
+                src + (if (src.endsWith("\n")) "" else "\n") + "version=$next\n"
+            }
+            propsFile.writeText(out)
+        } else {
+            val buildFile = rootProject.file("build.gradle.kts")
+            val src = buildFile.readText()
+            val assign = Regex("""^version\s*=\s*["'][^"']*["']""", RegexOption.MULTILINE)
+            val out = assign.replace(src, """version = "$next"""")
+            require(out != src) { "Could not find version assignment in build.gradle.kts" }
+            buildFile.writeText(out)
+        }
+        println("version -> $next")
+    }
+}
 
 /* ---------- Root compilation settings (Java 8 output) ---------- */
 

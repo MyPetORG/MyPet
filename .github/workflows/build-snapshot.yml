@@ -1,0 +1,59 @@
+name: Build Development Snapshot
+
+on:
+  push:
+    branches: [ development ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Read current version
+        id: getver
+        run: echo "version=$(./gradlew -q --console=plain --warning-mode=none printVersion)" >> "$GITHUB_OUTPUT"
+
+      # 3) Gradle build (MyPet only)
+      - name: Build MyPet module
+        run: |
+          ./gradlew --no-daemon clean build
+
+      - name: Find MyPet jar
+        id: findjar
+        shell: bash
+        run: |
+          # pick primary plugin jar, exclude sources/javadoc/classifier jars
+          JAR=$(ls build/libs/*.jar 2>/dev/null | grep -vE '(-sources|-javadoc|-plain)\.jar$' | head -n1 || true)
+          [[ -z "$JAR" || ! -f "$JAR" ]] && { echo "Jar not found"; ls -la build/libs || true; exit 1; }
+          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          echo "Found: $JAR"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: $${{ steps.getver.outputs.version }}
+          name: v$${{ steps.getver.outputs.version }}
+          generate_release_notes: true
+          files: ${{ steps.findjar.outputs.jar }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
