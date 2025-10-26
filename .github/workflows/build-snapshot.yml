@@ -29,10 +29,9 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      # 3) Gradle build (MyPet only)
       - name: Build MyPet module
         run: |
-          ./gradlew --no-daemon clean build
+          ./gradlew --no-daemon build
 
       - name: Find MyPet jar
         id: findjar
