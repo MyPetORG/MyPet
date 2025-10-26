@@ -1,4 +1,3 @@
-import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import org.gradle.api.attributes.Usage
@@ -86,7 +85,7 @@ val filteringProps = mapOf(
     "minecraft" to mapOf("version" to minecraftVersion),
     "bukkit" to mapOf("packets" to bukkitPackets),
     "special" to mapOf("versions" to specialVersions),
-    "mypetVersion" to project(":plugin").version,
+    "mypetVersion" to "3.14.0-SNAPSHOT",
     "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
     "buildNumber" to System.getProperty("build.number", "unknown")
 )
@@ -133,16 +132,11 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
 }
 
 tasks.processResources {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     dependsOn(downloadVersionmatcher, downloadTranslations)
-    filesMatching("plugin.yml") {
-        expand(
-            filteringProps
-        )
-    }
-    filesMatching("**/*.yml") {
-        if (name != "plugin.yml") expand(filteringProps)
-    }
+    duplicatesStrategy = DuplicatesStrategy.WARN
+
+    filesMatching("plugin.yml") { expand(filteringProps) }
+    filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
 }
 
 fun Manifest.attributesForMyPet() = attributes(
@@ -217,40 +211,6 @@ tasks.shadowJar {
 
 tasks.assemble { dependsOn(tasks.shadowJar) }
 tasks.build { dependsOn(tasks.shadowJar) }
-
-tasks.register("printVersion") {
-    doLast { println(project.version) }
-}
-
-tasks.register("setProjectVersion") {
-    group = "ci"
-    description = "Set project version from -PnextVersion or env NEXT"
-    doLast {
-        val next = (findProperty("nextVersion") as String?)
-            ?: System.getenv("NEXT")
-            ?: error("Provide -PnextVersion or set env NEXT")
-
-        val propsFile = rootProject.file("gradle.properties")
-        if (propsFile.isFile) {
-            val src = propsFile.readText()
-            val line = Regex("""^version=.*$""", RegexOption.MULTILINE)
-            val out = if (line.containsMatchIn(src)) {
-                line.replace(src, "version=$next")
-            } else {
-                src + (if (src.endsWith("\n")) "" else "\n") + "version=$next\n"
-            }
-            propsFile.writeText(out)
-        } else {
-            val buildFile = rootProject.file("build.gradle.kts")
-            val src = buildFile.readText()
-            val assign = Regex("""^version\s*=\s*["'][^"']*["']""", RegexOption.MULTILINE)
-            val out = assign.replace(src, """version = "$next"""")
-            require(out != src) { "Could not find version assignment in build.gradle.kts" }
-            buildFile.writeText(out)
-        }
-        println("version -> $next")
-    }
-}
 
 /* ---------- Root compilation settings (Java 8 output) ---------- */
 

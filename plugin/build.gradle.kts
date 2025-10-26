@@ -3,8 +3,6 @@ plugins {
     `maven-publish`
 }
 
-version = "3.14-SNAPSHOT"
-
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
     options.encoding = "UTF-8"
@@ -17,7 +15,6 @@ dependencies {
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("de.keyle:knbt:0.0.5")
     compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
-    //compileOnly("org.bukkit:bukkit:1.17.1-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.12")
 
     compileOnly("org.slf4j:slf4j-api:1.7.30")
