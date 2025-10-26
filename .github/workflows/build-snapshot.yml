@@ -29,46 +29,72 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Read project version from Gradle
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          PV=$(./gradlew -q properties | awk -F': ' '/^version:/ {print $2; exit}')
+          if [[ -z "${PV}" ]]; then
+            echo "Failed to read Gradle version"; exit 1
+          fi
+          echo "PROJECT_VERSION=${PV}" >> "$GITHUB_ENV"
+          echo "version=${PV}" >> "$GITHUB_OUTPUT"
+
+      - name: Compute BUILD_NUMBER from GitHub Releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          
+          V="$(./gradlew -q properties | awk -F': ' '/^version:/ {print $2; exit}')"
+          echo "PROJECT_VERSION=$V" >> "$GITHUB_ENV"
+          
+          # List tag and name fields line-by-line, drop quotes
+          LINES="$(gh release list --limit 200 --json tagName,name --jq '.[] | .tagName, .name' | tr -d '"')"
+          
+          # Exact matches like "<version>-bNN"
+          CANDS="$(printf '%s\n' "$LINES" | grep -F "^$V-b" | grep -E "^$V-b[0-9]+$" || true)"
+          
+          # Extract NN and compute max
+          NUMS="$(printf '%s\n' "$CANDS" | sed -E "s/^$V-b([0-9]+)$/\1/" || true)"
+          MAX_B="$(printf '%s\n' "${NUMS:-}" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)"
+          [[ -z "${MAX_B:-}" ]] && MAX_B=0
+          
+          BUILD_NUMBER=$((MAX_B + 1))
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
+          echo "Derived $V-b$BUILD_NUMBER"
+
       - name: Build MyPet module
         run: |
-          ./gradlew --no-daemon build
+          ./gradlew --no-daemon build -PbuildType=dev -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
 
-      - name: Find MyPet jar
+      - name: Find and rename MyPet jar with build number
         id: findjar
         shell: bash
         run: |
-          # pick primary plugin jar, exclude sources/javadoc/plain classifier jars
+          set -euo pipefail
+          
           JAR=$(ls build/libs/*.jar 2>/dev/null | grep -vE '(-sources|-javadoc|-plain)\.jar$' | head -n1 || true)
           [[ -z "$JAR" || ! -f "$JAR" ]] && { echo "Jar not found"; ls -la build/libs || true; exit 1; }
-
-          BASENAME=$(basename "$JAR")
-          NAME="${BASENAME%.jar}"
-          # strip common classifier
-          NAME="${NAME%-all}"
-
-          # Extract semantic version like 3.13.4 or 3.13.4-R1, with optional -SNAPSHOT, from the end of the name
-          # Works for names like MyPet-3.13.4-SNAPSHOT[-all].jar and MyPet-Plugin-3.13.4-R1[-all].jar
-          VERSION=$(echo "$NAME" | sed -E 's/.*-([0-9]+(\.[0-9]+)*(-R[0-9]+)?(-SNAPSHOT)?)(-all)?$/\1/')
-
-          # get short git commit hash
-          COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
-          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
-  
-          # sanity check
-          if [[ -z "$VERSION" || "$VERSION" == "$NAME" ]]; then
-            echo "Failed to parse version from $BASENAME"; exit 1
-          fi
-
-          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Found: $JAR"
-          echo "Version: $VERSION"
+          
+          DIR=$(dirname "$JAR")
+          BASE=$(basename "$JAR" .jar)
+          NEW_NAME="${BASE}-SNAPSHOT-b${BUILD_NUMBER}.jar"
+          NEW_PATH="${DIR}/${NEW_NAME}"
+          
+          mv "$JAR" "$NEW_PATH"
+          
+          echo "jar=$NEW_PATH" >> "$GITHUB_OUTPUT"
+          echo "filename=$NEW_NAME" >> "$GITHUB_OUTPUT"
+          echo "Renamed to: $NEW_NAME"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.findjar.outputs.version }}-${{ steps.findjar.outputs.commit }}
-          name: v${{ steps.findjar.outputs.version }}-${{ steps.findjar.outputs.commit }}
+          tag_name: ${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
+          name: v${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
           generate_release_notes: true
           prerelease: true
           files: ${{ steps.findjar.outputs.jar }}
