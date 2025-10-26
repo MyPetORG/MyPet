@@ -9,9 +9,19 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: build-snapshot-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      JAVA_VERSION: '21'
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
     steps:
       - name: Checkout
@@ -19,76 +29,136 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Java 21
+      - name: Set up Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
       - name: Read project version from Gradle
-        id: version
+        id: meta
         shell: bash
         run: |
           set -euo pipefail
           PV=$(./gradlew -q properties | awk -F': ' '/^version:/ {print $2; exit}')
-          if [[ -z "${PV}" ]]; then
-            echo "Failed to read Gradle version"; exit 1
+          if [[ -z "${PV:-}" ]]; then
+            echo "Failed to read Gradle version" >&2; exit 1
           fi
           echo "PROJECT_VERSION=${PV}" >> "$GITHUB_ENV"
-          echo "version=${PV}" >> "$GITHUB_OUTPUT"
 
-      - name: Compute BUILD_NUMBER from GitHub Releases
+      - name: Ensure PR to master exists with release title
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_BRANCH: ${{ github.ref_name }}
+          BASE_BRANCH: master
         shell: bash
         run: |
           set -euo pipefail
+          : "${PROJECT_VERSION?Missing PROJECT_VERSION}"
+          TITLE="Release (${PROJECT_VERSION})"
+
+          # Skip if on base branch
+          if [[ "$HEAD_BRANCH" == "$BASE_BRANCH" ]]; then
+            echo "On $BASE_BRANCH; nothing to do."; exit 0
+          fi
+
+          OWNER_REPO="${GITHUB_REPOSITORY}"
+          OWNER="${OWNER_REPO%%/*}"
+
+          echo "Checking for existing open PR from $HEAD_BRANCH to $BASE_BRANCH"
+          PR_NUMBER=$(gh pr list \
+            --state open \
+            --base "$BASE_BRANCH" \
+            --head "$HEAD_BRANCH" \
+            --json number \
+            --jq '.[0].number' || true)
+
+          if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
+            PR_NUMBER=$(gh pr list \
+              --state open \
+              --base "$BASE_BRANCH" \
+              --head "$OWNER:$HEAD_BRANCH" \
+              --json number \
+              --jq '.[0].number' || true)
+          fi
+
+          if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
+            echo "No open PR found. Creating one with title: $TITLE"
+            BODY=$(cat <<'EOF'
+          This pull request was automatically created by the snapshot build to keep master up to date with development.
+          EOF
+            )
+            # Try unqualified head first, then qualified
+            if ! gh pr create --base "$BASE_BRANCH" --head "$HEAD_BRANCH" --title "$TITLE" --body "$BODY"; then
+              gh pr create --base "$BASE_BRANCH" --head "$OWNER:$HEAD_BRANCH" --title "$TITLE" --body "$BODY"
+            fi
+          else
+            echo "Open PR #$PR_NUMBER exists. Ensuring title is set to: $TITLE"
+            gh pr edit "$PR_NUMBER" --title "$TITLE" || echo "Warning: failed to update PR title"
+          fi
+
+      - name: Compute BUILD_NUMBER from GitHub Releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${PROJECT_VERSION?Missing PROJECT_VERSION}"
           
-          V="$(./gradlew -q properties | awk -F': ' '/^version:/ {print $2; exit}')"
-          echo "PROJECT_VERSION=$V" >> "$GITHUB_ENV"
+          # List existing release tag names, strip quotes, and normalize optional leading 'v'
+          LINES=$(gh release list --limit 200 --json tagName --jq '.[].tagName' | tr -d '"' || true)
+          LINES=$(printf '%s\n' "$LINES" | sed -E 's/^v//' )
           
-          # List tag and name fields line-by-line, drop quotes
-          LINES="$(gh release list --limit 200 --json tagName,name --jq '.[] | .tagName, .name' | tr -d '"')"
-          
-          # Exact matches like "<version>-bNN"
-          CANDS="$(printf '%s\n' "$LINES" | grep -F "^$V-b" | grep -E "^$V-b[0-9]+$" || true)"
-          
-          # Extract NN and compute max
-          NUMS="$(printf '%s\n' "$CANDS" | sed -E "s/^$V-b([0-9]+)$/\1/" || true)"
-          MAX_B="$(printf '%s\n' "${NUMS:-}" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)"
+          # Match exact tags like "<version>-SNAPSHOT-bNN"
+          CANDS=$(printf '%s\n' "$LINES" | grep -E "^${PROJECT_VERSION}-SNAPSHOT-b[0-9]+$" || true)
+          NUMS=$(printf '%s\n' "$CANDS" | sed -E "s/^${PROJECT_VERSION}-SNAPSHOT-b([0-9]+)$/\1/" || true)
+          MAX_B=$(printf '%s\n' "${NUMS:-}" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
           [[ -z "${MAX_B:-}" ]] && MAX_B=0
           
           BUILD_NUMBER=$((MAX_B + 1))
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
-          echo "Derived $V-b$BUILD_NUMBER"
+          echo "Next build number: $BUILD_NUMBER for ${PROJECT_VERSION}-SNAPSHOT"
 
       - name: Build MyPet module
         run: |
-          ./gradlew --no-daemon build -PbuildType=dev -DBUILD_NUMBER=${{ env.BUILD_NUMBER }}
+          ./gradlew --no-daemon build -PbuildType=dev -DBUILD_NUMBER=${BUILD_NUMBER}
 
-      - name: Find and rename MyPet jar with build number
+      - name: Find and rename shaded JAR with build number
         id: findjar
         shell: bash
         run: |
           set -euo pipefail
-          
-          JAR=$(ls build/libs/*.jar 2>/dev/null | grep -vE '(-sources|-javadoc|-plain)\.jar$' | head -n1 || true)
-          [[ -z "$JAR" || ! -f "$JAR" ]] && { echo "Jar not found"; ls -la build/libs || true; exit 1; }
-          
+          shopt -s nullglob
+          # Prefer "MyPet-<ver>.jar" non-classifier jars in root build/libs
+          CANDIDATES=(build/libs/MyPet-*.jar)
+          # Filter out sources/javadoc/plain jars
+          FILTERED=()
+          for j in "${CANDIDATES[@]}"; do
+            [[ "$j" =~ -(sources|javadoc|plain)\.jar$ ]] || FILTERED+=("$j")
+          done
+          if (( ${#FILTERED[@]} == 0 )); then
+            echo "No candidate jar found in build/libs" >&2
+            ls -la build/libs || true
+            exit 1
+          fi
+          JAR="${FILTERED[0]}"
           DIR=$(dirname "$JAR")
           BASE=$(basename "$JAR" .jar)
           NEW_NAME="${BASE}-SNAPSHOT-b${BUILD_NUMBER}.jar"
           NEW_PATH="${DIR}/${NEW_NAME}"
-          
           mv "$JAR" "$NEW_PATH"
-          
           echo "jar=$NEW_PATH" >> "$GITHUB_OUTPUT"
           echo "filename=$NEW_NAME" >> "$GITHUB_OUTPUT"
           echo "Renamed to: $NEW_NAME"
+
+      - name: Upload workflow artifact (jar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mypet-snapshot-jar
+          path: ${{ steps.findjar.outputs.jar }}
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -100,3 +170,28 @@ jobs:
           files: ${{ steps.findjar.outputs.jar }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Send a Discord webhook notification
+        run: |
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
+          "username": "MyPet Snapshot",
+          "content": "<@&1431929679626895450>",
+          "embeds": [
+            {
+              "type": "rich",
+              "title": "${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}",
+              "description": "New snapshot released",
+              "color": 439741,
+              "thumbnail": {
+                "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
+              },
+              "author": {
+                "name": "${{ github.actor }}",
+                "url": "https://github.com/${{ github.actor_id }}",
+                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
+              },
+              "url": "https://github.com/MyPetORG/MyPet/releases/tag/${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}"
+            }
+          ]
+          }' ${{ secrets.WEBHOOK_URL }})
+          echo "Webhook server response: $RESPONSE"
