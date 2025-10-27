@@ -88,7 +88,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     compileOnly("org.mozilla:rhino:1.7.12")
-    compileOnly("io.sentry:sentry:1.7.30")
 
 }
 
