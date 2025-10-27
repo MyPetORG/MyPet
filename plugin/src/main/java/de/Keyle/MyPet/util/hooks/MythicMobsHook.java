@@ -37,7 +37,6 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import io.sentry.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -235,7 +234,11 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                     List<String> modifiers = (List<String>) leHook.METHOD_getDamageModifiers_list.invoke(mob);
                     for (String m : modifiers) {
                         if (m.startsWith("ENTITY_ATTACK")) {
-                            return Util.parseDouble(m.substring(14), 1D);
+                            try {
+                                return Double.parseDouble(m.substring(14));
+                            } catch (Exception e) {
+                                return 1D;
+                            }
                         }
                     }
                 } catch (IllegalAccessException | InvocationTargetException ignored) {
@@ -352,7 +355,11 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                     List<String> modifiers = (List<String>) leHook.METHOD_getDamageModifiers_list.invoke(mob);
                     for (String m : modifiers) {
                         if (m.startsWith("ENTITY_ATTACK")) {
-                            return Util.parseDouble(m.substring(14), 1D);
+                            try {
+                                return Double.parseDouble(m.substring(14));
+                            } catch (Exception e) {
+                                return 1D;
+                            }
                         }
                     }
                 } catch (IllegalAccessException | InvocationTargetException ignored) {

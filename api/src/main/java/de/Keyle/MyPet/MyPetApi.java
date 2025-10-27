@@ -90,13 +90,6 @@ public class MyPetApi {
     }
 
     /**
-     * @return instance of the error reporter
-     */
-    public static ErrorReporter getErrorReporter() {
-        return plugin.getErrorReporter();
-    }
-
-    /**
      * @return you can find info about pet types here
      */
     public static MyPetInfo getMyPetInfo() {
