@@ -11,11 +11,13 @@ plugins {
 }
 
 group = "de.keyle"
-version = "3.14.0-SNAPSHOT"
 
+val buildType = project.findProperty("buildType")?.toString() ?: "local"
 val minecraftVersion by extra("1.21.9")
 val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6")
 val specialVersions by extra("")
+
+version = "3.14.0"
 
 val nmsModules: List<String> = File(rootDir, "nms")
     .listFiles()
@@ -80,14 +82,13 @@ val archivesBaseName = "MyPet"
 
 val filteringProps = mapOf(
     "project" to project,
-    "BUILD_NUMBER" to (System.getenv("BUILD_NUMBER") ?: ""),
-    "GIT_COMMIT" to (System.getenv("GIT_COMMIT") ?: ""),
+    "buildNumber" to (System.getenv("BUILD_NUMBER") ?: ""),
+    "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
     "minecraft" to mapOf("version" to minecraftVersion),
     "bukkit" to mapOf("packets" to bukkitPackets),
     "special" to mapOf("versions" to specialVersions),
-    "mypetVersion" to "3.14.0-SNAPSHOT",
+    "mypetVersion" to version,
     "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
-    "buildNumber" to System.getProperty("build.number", "unknown")
 )
 
 sourceSets {
@@ -141,12 +142,10 @@ tasks.processResources {
 
 fun Manifest.attributesForMyPet() = attributes(
     mapOf(
-        "Class-Path" to "MyPet/rhino.jar MyPet/rhino-1.7.9.jar MyPet/rhino-1.7.10.jar MyPet/rhino-1.7.15.jar ../MyPet/rhino.jar ../MyPet/rhino-1.7.9.jar ../MyPet/rhino-1.7.10.jar ../MyPet/rhino-1.7.15.jar MyPet/mongo-java-driver.jar MyPet/mongo-java-driver-3.12.11.jar",
-        "Main-Class" to "de.Keyle.MyPet.skilltreecreator.Main",
-        "Project-Author" to "Keyle",
         "Project-Name" to project.name,
         "Project-Version" to project.version.toString(),
         "Project-Build" to (System.getenv("BUILD_NUMBER") ?: ""),
+        "Project-Type" to buildType,
         "Project-Minecraft-Version" to minecraftVersion,
         "Project-Bukkit-Packets" to bukkitPackets,
         "Special-MC-Versions" to specialVersions,
