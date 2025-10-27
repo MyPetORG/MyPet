@@ -111,7 +111,7 @@ publishing {
                 }
             }
         } else {
-            mavenLocal();
+            mavenLocal()
         }
     }
 
