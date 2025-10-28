@@ -77,17 +77,18 @@ dependencies {
     compileOnly("me.glaremasters:Guilds:3.3")
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
     compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
+    compileOnly("net.kyori:adventure-api:4.25.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.25.0")
+    compileOnly("net.kyori:adventure-platform-bukkit:4.3.3")
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
     compileOnly("de.keyle:knbt:0.0.5")
-    compileOnly("com.google.code.gson:gson:2.8.0")
+    compileOnly("com.google.code.gson:gson:2.13.2")
 
     // Prefer Lombok as compileOnly + annotationProcessor in Gradle:
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
-
-    compileOnly("org.mozilla:rhino:1.7.12")
 
 }
 

@@ -223,13 +223,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 
-    public void sendMessageActionBar(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + Util.escapeJsonString(message) + "\"}");
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.GAME_INFO));
-        }
-    }
-
     public void addZombieTargetGoal(Zombie zombie) {
     }
 

@@ -30,8 +30,6 @@ import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R6.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R6.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -286,12 +284,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 
-    @Override
-    public void sendMessageActionBar(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-        }
-    }
 
     @Override
     public void addZombieTargetGoal(Zombie zombie) {
