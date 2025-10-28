@@ -215,8 +215,6 @@ public abstract class PlatformHelper {
         return Material.matchMaterial(materialHolder.getId().toUpperCase());
     }
 
-    public abstract void strikeLightning(Location loc, float distance);
-
     public boolean compareBlockPositions(Location a, Location b) {
         return a.getBlockX() == b.getBlockX() &&
                 a.getBlockY() == b.getBlockY() &&

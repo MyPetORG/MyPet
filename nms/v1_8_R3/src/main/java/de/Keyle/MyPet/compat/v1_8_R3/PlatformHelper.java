@@ -33,8 +33,7 @@ import de.Keyle.MyPet.compat.v1_8_R3.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_8_R3.*;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
@@ -289,22 +288,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             mat = Material.matchMaterial(materialHolder.getLegacyName().getName());
         }
         return mat;
-    }
-
-    @Override
-    public void strikeLightning(Location loc, float distance) {
-        WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
-        EntityLightning lightning = new EntityLightning(world, loc.getX(), loc.getY(), loc.getZ(), true);
-        world.getServer()
-                .getServer()
-                .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
-                        new PacketPlayOutSpawnEntityWeather(lightning));
-        world.getServer()
-                .getServer()
-                .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
-                        new PacketPlayOutNamedSoundEffect("ambient.weather.thunder", loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
     }
 
     @Override

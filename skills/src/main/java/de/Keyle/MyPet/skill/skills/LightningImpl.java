@@ -20,13 +20,14 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -37,17 +38,16 @@ public class LightningImpl implements Lightning {
 
     private static Random random = new Random();
 
+    @Getter
     private MyPet myPet;
     private boolean isStriking = false;
+    @Getter
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
+    @Getter
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
 
     public LightningImpl(MyPet myPet) {
         this.myPet = myPet;
-    }
-
-    public MyPet getMyPet() {
-        return myPet;
     }
 
     public boolean isActive() {
@@ -81,7 +81,10 @@ public class LightningImpl implements Lightning {
         isStriking = true;
         myPet.getEntity().ifPresent(petEntity -> {
             Player owner = myPet.getOwner().getPlayer();
-            MyPetApi.getPlatformHelper().strikeLightning(target.getLocation(), 32);
+            World world = target.getLocation().getWorld();
+            if(world != null) {
+                world.strikeLightningEffect(target.getLocation());
+            }
             target.damage(damage.getValue().doubleValue(), petEntity);
             for (Entity entity : target.getNearbyEntities(1.5, 1.5, 1.5)) {
                 if (entity instanceof LivingEntity && entity != owner && entity != petEntity) {
@@ -90,14 +93,6 @@ public class LightningImpl implements Lightning {
             }
         });
         isStriking = false;
-    }
-
-    public UpgradeComputer<Integer> getChance() {
-        return chance;
-    }
-
-    public UpgradeComputer<Number> getDamage() {
-        return damage;
     }
 
     @Override

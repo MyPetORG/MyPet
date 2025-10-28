@@ -385,24 +385,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public void strikeLightning(Location loc, float distance) {
-    	ServerLevel world = ((CraftWorld) loc.getWorld()).getHandle();
-    	LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, world);
-        lightning.setVisualOnly(true);
-        lightning.moveTo(loc.getX(), loc.getY(), loc.getZ(), 0.0F, 0.0F);
-        world.getCraftServer()
-                .getServer()
-                .getPlayerList()
-                .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
-                        new ClientboundAddEntityPacket(lightning,0,lightning.getBlockPosBelowThatAffectsMyMovement()));
-        world.getCraftServer()
-                .getServer()
-                .getPlayerList()
-                .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
-                        new ClientboundSoundPacket(Holder.direct(SoundEvents.LIGHTNING_BOLT_THUNDER), SoundSource.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F, 1));
-    }
-
-    @Override
     public String getLastDamageSource(LivingEntity e) {
         net.minecraft.world.entity.LivingEntity el = ((CraftLivingEntity) e).getHandle();
         if (el.getLastDamageSource() == null) {
