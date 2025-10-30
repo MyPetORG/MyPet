@@ -26,10 +26,8 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.keyle.knbt.TagCompound;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -85,7 +83,13 @@ public abstract class PlatformHelper {
 
     public abstract boolean canSpawn(Location loc, MyPetMinecraftEntity entity);
 
-    public abstract String getPlayerLanguage(Player player);
+    public String getPlayerLanguage(Player player) {
+        String locale = player.getLocale();
+        if (locale.isEmpty()) {
+            return "en_us";
+        }
+        return locale;
+    }
 
     public abstract TagCompound entityToTag(Entity entity);
 

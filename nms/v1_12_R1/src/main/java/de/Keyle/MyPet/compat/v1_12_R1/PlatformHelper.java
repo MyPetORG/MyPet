@@ -156,14 +156,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return unsafeList;
     }
 
-    public String getPlayerLanguage(Player player) {
-        String locale = player.getLocale();
-        if (locale == null || locale.isEmpty()) {
-            return "en_us";
-        }
-        return locale;
-    }
-
     @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
         net.minecraft.server.v1_12_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
