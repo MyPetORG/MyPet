@@ -129,21 +129,9 @@ public abstract class PlatformHelper {
 
     public abstract ItemStack compundToItemStack(TagCompound compound);
 
-    private static BukkitAudiences ADVENTURE_AUDIENCES;
-    private static final MiniMessage MINI = MiniMessage.miniMessage();
-
-    private static BukkitAudiences audiences() {
-        if (ADVENTURE_AUDIENCES == null) {
-            ADVENTURE_AUDIENCES = BukkitAudiences.create(MyPetApi.getPlugin());
-        }
-        return ADVENTURE_AUDIENCES;
-    }
-
     public void sendMessageActionBar(Player player, Component message) {
-        if (player == null || !player.isOnline() || message == null) {
-            return;
-        }
-        audiences().player(player).sendActionBar(message);
+        if (player == null || !player.isOnline()) return;
+        MyPetApi.getPlugin().audiences().player(player).sendActionBar(message);
     }
 
     /**
@@ -152,7 +140,7 @@ public abstract class PlatformHelper {
      */
     public Component buildPetHealthActionBar(MyPet myPet, double health, double maxHealth) {
         if (myPet == null) {
-            return null;
+            return Component.empty();
         }
         double deltaHealth = maxHealth - health;
 
@@ -162,23 +150,23 @@ public abstract class PlatformHelper {
         } else if (health > maxHealth / 3) {
             healthColor = NamedTextColor.YELLOW;
         }
-        Component parsed = MINI.deserialize(
+        Component parsed = MyPetApi.getPlugin().miniMessage().deserialize(
                 "<petname><reset>: ",
                 Placeholder.unparsed("petname", myPet.getPetName()));
         if (health > 0) {
-            parsed = parsed.append(MINI.deserialize(
+            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
                     "<healthcolor><health><white>/<maxhealth> ",
                     Placeholder.styling("healthcolor", healthColor),
                     Placeholder.unparsed("health", String.format("%1.2f", health)),
                     Placeholder.unparsed("maxhealth", String.format("%1.2f", maxHealth))));
             if (!myPet.getOwner().isHealthBarActive()) {
-                parsed = parsed.append(MINI.deserialize(
+                parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
                         "(<deltahealthcolor><deltahealth><reset>)",
                         Placeholder.parsed("deltahealthcolor", deltaHealth < 0 ? "<green>+" : "<red>-"),
                         Placeholder.unparsed("deltahealth", String.format("%1.2f", deltaHealth))));
             }
         } else {
-            parsed = parsed.append(MINI.deserialize(
+            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
                     "<dead>",
                     Placeholder.unparsed("dead", Translation.getString("Name.Dead", myPet.getOwner()))));
         }

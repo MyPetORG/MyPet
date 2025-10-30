@@ -30,13 +30,15 @@ repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     maven("https://repo.mypet-plugin.de/")
-    /*maven {
+
+    maven {
         url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
         credentials {
             username = System.getenv("GITHUB_ACTOR") ?: System.getenv("GITHUB_USERNAME")
             password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GITHUB_PACKAGES_TOKEN")
         }
-    }*/
+    }
+
 }
 
 subprojects {
@@ -59,6 +61,14 @@ subprojects {
         maven { url = uri("https://repo.md-5.net/content/repositories/public") }
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
+
+        maven {
+            url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: System.getenv("GITHUB_USERNAME")
+                password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GITHUB_PACKAGES_TOKEN")
+            }
+        }
     }
 
     tasks.processResources { enabled = false }
@@ -185,7 +195,16 @@ dependencies {
     add("shade", "com.google.code.gson:gson:2.13.2")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
     add("shade", "net.kyori:adventure-api:4.25.0")
-    add("shade", "net.kyori:adventure-platform-bukkit:4.4.1")
+    add("shade", "net.kyori:adventure-platform-bukkit:4.4.2-SNAPSHOT")
+    add("shade", "net.kyori:adventure-nbt:4.21.0")
+    add("shade", "net.kyori:adventure-platform-api:4.4.1")
+    add("shade", "net.kyori:adventure-platform-facet:4.4.1")
+    add("shade", "net.kyori:adventure-platform-viaversion:4.4.1")
+    add("shade", "net.kyori:adventure-text-serializer-bungeecord:4.4.1")
+    add("shade", "net.kyori:adventure-text-serializer-gson-legacy-impl:4.21.0")
+    add("shade", "net.kyori:adventure-text-serializer-gson:4.21.0")
+    add("shade", "net.kyori:adventure-text-serializer-legacy:4.21.0")
+
     add("shade", "net.kyori:adventure-text-minimessage:4.25.0")
 }
 
@@ -208,6 +227,7 @@ tasks.shadowJar {
     relocate("org.bson", "de.Keyle.MyPet.util.bson")
     relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
+    relocate("net.kyori", "de.Keyle.MyPet.util.kyori")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }

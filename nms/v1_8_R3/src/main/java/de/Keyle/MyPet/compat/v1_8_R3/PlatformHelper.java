@@ -149,6 +149,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return unsafeList;
     }
 
+    @Override
     public String getPlayerLanguage(Player player) {
         if (!(player instanceof CraftPlayer)) {
             return "en_US";
