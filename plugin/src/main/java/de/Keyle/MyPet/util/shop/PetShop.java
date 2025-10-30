@@ -205,6 +205,12 @@ public class PetShop {
         for (int pos : pets.keySet()) {
             ShopMyPet pet = pets.get(pos);
             IconMenuItem icon = pet.getIcon();
+            Bukkit.broadcastMessage("hasMeta " + icon.hasMeta());
+            Bukkit.broadcastMessage("data " + icon.getData());
+            if(icon.hasMeta()) {
+                Bukkit.broadcastMessage(icon.getMeta().toString());
+                Bukkit.broadcastMessage(icon.getBukkitMeta().toString());
+            }
             ChatColor canPay = balance >= pet.getPrice() ? ChatColor.GREEN : ChatColor.RED;
             icon.addLoreLine(ChatColor.RESET + "" + ChatColor.BLUE + Translation.getString("Name.Price", player) + ": " + canPay + economyHook.getEconomy().format(pet.getPrice()), 0);
             shop.setOption(pos, icon);
