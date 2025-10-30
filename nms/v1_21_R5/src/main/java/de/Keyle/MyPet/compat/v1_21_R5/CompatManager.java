@@ -22,7 +22,7 @@ package de.Keyle.MyPet.compat.v1_21_R5;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.compat.v1_21_R5.services.EggIconService;
+import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.compat.v1_21_R5.services.EntityConverterService;
 import de.Keyle.MyPet.compat.v1_21_R5.services.RepositoryMyPetConverterService;
 import org.bukkit.Bukkit;
