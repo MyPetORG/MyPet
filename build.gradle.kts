@@ -34,8 +34,8 @@ repositories {
     maven {
         url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
         credentials {
-            username = ${{ secrets.USER_GITHUB }}
-            password = ${{ secrets.TOKEN_GITHUB }}
+            username = providers.gradleProperty("USER_GITHUB").orNull ?: System.getenv("GITHUB_ACTOR")
+            password = providers.gradleProperty("TOKEN_GITHUB").orNull ?: System.getenv("GITHUB_TOKEN")
         }
     }
 
@@ -65,8 +65,8 @@ subprojects {
         maven {
             url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
             credentials {
-                username = ${{ secrets.USER_GITHUB }}
-                password = ${{ secrets.TOKEN_GITHUB }}
+                username = providers.gradleProperty("USER_GITHUB").orNull ?: System.getenv("GITHUB_ACTOR")
+                password = providers.gradleProperty("TOKEN_GITHUB").orNull ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
@@ -92,7 +92,7 @@ val archivesBaseName = "MyPet"
 
 val filteringProps = mapOf(
     "project" to project,
-    "buildNumber" to (System.getenv("BUILD_NUMBER") ?: ""),
+    "buildNumber" to providers.gradleProperty("BUILD_NUMBER").orElse(""),
     "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
     "minecraft" to mapOf("version" to minecraftVersion),
     "bukkit" to mapOf("packets" to bukkitPackets),
@@ -241,4 +241,17 @@ java {
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
     options.encoding = "UTF-8"
+}
+
+
+tasks.register("printNmsVersions") {
+    doLast {
+        println(nmsModules.sorted().joinToString(", ").replace(":nms:", ""))
+    }
+}
+
+tasks.register("printProjectVersion") {
+    doLast {
+        println(version)
+    }
 }
