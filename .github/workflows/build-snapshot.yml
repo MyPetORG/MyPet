@@ -25,7 +25,7 @@ jobs:
       SUPPORTED_NMS_VERSIONS: ""
       BUILD_NUMBER: 0
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-      TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
+      GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       USER_GITHUB: ${{ secrets.USER_GITHUB }}
 
     steps:
@@ -126,7 +126,7 @@ jobs:
 
       - name: Build MyPet module
         run: |
-          ./gradlew --no-daemon build -PbuildType=dev -PBUILD_NUMBER=${BUILD_NUMBER} -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
+          ./gradlew --no-daemon build -PbuildType=dev -PBUILD_NUMBER=${BUILD_NUMBER} -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${GH_TOKEN}
 
       - name: Find and rename shaded JAR with build number
         id: findjar
