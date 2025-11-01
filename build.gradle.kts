@@ -242,16 +242,3 @@ tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
     options.encoding = "UTF-8"
 }
-
-
-tasks.register("printNmsVersions") {
-    doLast {
-        println(nmsModules.sorted().joinToString(", ").replace(":nms:", ""))
-    }
-}
-
-tasks.register("printProjectVersion") {
-    doLast {
-        println(version)
-    }
-}

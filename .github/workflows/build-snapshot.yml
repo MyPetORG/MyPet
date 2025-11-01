@@ -44,15 +44,27 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Get project version from Gradle
+      - name: Read version from build.gradle.kts
+        id: ver
+        shell: bash
         run: |
-          echo PROJECT_VERSION=$(./gradlew -q printProjectVersion | tail -n1)
-          export PROJECT_VERSION=$(./gradlew -q printProjectVersion | tail -n1) >> $GITHUB_ENV
+            VERSION=$(grep -Po 'version\s*=\s*"([^"]+)' build.gradle.kts | cut -d'"' -f2)
+            echo "PROJECT_VERSION=$VERSION" >> "$GITHUB_ENV"
 
-      - name: Get supported NMS versions
+      - name: Collect NMS modules
+        shell: bash
         run: |
-          echo NMS_VERSIONS=$(./gradlew -q printNmsVersions | tail -n1)
-          export NMS_VERSIONS=$(./gradlew -q printNmsVersions | tail -n1) >> $GITHUB_ENV
+          set -euo pipefail
+
+          # list directories under modules/, strip trailing slash, join with ", "
+          SUPPORTED_NMS_VERSIONS=$(
+            find modules -maxdepth 1 -mindepth 1 -type d \
+            | sed 's|.*/||' \
+            | paste -sd ", " -
+          )
+
+          echo "SUPPORTED_NMS_VERSIONS=$SUPPORTED_NMS_VERSIONS"
+          echo "SUPPORTED_NMS_VERSIONS=$SUPPORTED_NMS_VERSIONS" >> "$GITHUB_ENV"
 
       - name: Ensure PR to master exists with release title
         env:
