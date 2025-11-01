@@ -34,8 +34,8 @@ repositories {
     maven {
         url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
         credentials {
-            username = System.getenv("GITHUB_ACTOR") ?: System.getenv("GITHUB_USERNAME")
-            password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GITHUB_PACKAGES_TOKEN")
+            username = System.getenv("USER_GITHUB")
+            password = System.getenv("TOKEN_GITHUB")
         }
     }
 
@@ -65,8 +65,8 @@ subprojects {
         maven {
             url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
             credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: System.getenv("GITHUB_USERNAME")
-                password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GITHUB_PACKAGES_TOKEN")
+                username = System.getenv("USER_GITHUB")
+                password = System.getenv("TOKEN_GITHUB")
             }
         }
     }
