@@ -34,8 +34,8 @@ repositories {
     maven {
         url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
         credentials {
-            username = System.getenv("USER_GITHUB")
-            password = System.getenv("TOKEN_GITHUB")
+            username = ${{ secrets.USER_GITHUB }}
+            password = ${{ secrets.TOKEN_GITHUB }}
         }
     }
 
