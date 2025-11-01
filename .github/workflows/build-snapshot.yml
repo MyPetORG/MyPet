@@ -56,9 +56,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          # list directories under modules/, strip trailing slash, join with ", "
+          # list directories under nms/, strip trailing slash, join with ", "
           SUPPORTED_NMS_VERSIONS=$(
-            find modules -maxdepth 1 -mindepth 1 -type d \
+            find nms -maxdepth 1 -mindepth 1 -type d \
             | sed 's|.*/||' \
             | paste -sd ", " -
           )
