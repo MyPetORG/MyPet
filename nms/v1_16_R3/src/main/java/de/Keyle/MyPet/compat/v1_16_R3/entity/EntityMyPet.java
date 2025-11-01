@@ -648,48 +648,19 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 	}
 
 	@Override
-	public void setHealth(float f) {
-		double deltaHealth = this.datawatcher.get(HEALTH);
-		double maxHealth = myPet.getMaxHealth();
+    public void setHealth(float f) {
+        double maxHealth = myPet.getMaxHealth();
 
-		boolean silent = this.getAttributeInstance(GenericAttributes.MAX_HEALTH).getValue() != maxHealth;
-		this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(maxHealth);
+        boolean silent = this.getAttributeInstance(GenericAttributes.MAX_HEALTH).getValue() != maxHealth;
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(maxHealth);
 
-		this.datawatcher.set(HEALTH, MathHelper.a(f, 0.0F, (float) maxHealth));
+        this.datawatcher.set(HEALTH, MathHelper.a(f, 0.0F, (float) maxHealth));
 
-		double health = this.datawatcher.get(HEALTH);
-		if (deltaHealth > maxHealth) {
-			deltaHealth = 0;
-		} else {
-			deltaHealth = health - deltaHealth;
-		}
-
-		if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
-			String msg = myPet.getPetName() + ChatColor.RESET + ": ";
-			if (health > maxHealth / 3 * 2) {
-				msg += ChatColor.GREEN;
-			} else if (health > maxHealth / 3) {
-				msg += ChatColor.YELLOW;
-			} else {
-				msg += ChatColor.RED;
-			}
-			if (health > 0) {
-				msg += String.format("%1.2f", health) + ChatColor.WHITE + "/" + String.format("%1.2f", maxHealth);
-
-				if (!myPet.getOwner().isHealthBarActive()) {
-					if (deltaHealth > 0) {
-						msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
-					} else if (deltaHealth < 0) {
-						msg += " (" + ChatColor.RED + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
-					}
-				}
-			} else {
-				msg += Translation.getString("Name.Dead", getOwner());
-			}
-
-			MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
-		}
-	}
+        if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
+            net.kyori.adventure.text.Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, getHealth(), maxHealth);
+            MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
+        }
+    }
 
 	@Override
 	public void die(DamageSource damagesource) {

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.compat.v1_16_R3;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.compat.v1_16_R3.services.EggIconService;
+import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.compat.v1_16_R3.services.EntityConverterService;
 import de.Keyle.MyPet.compat.v1_16_R3.services.RepositoryMyPetConverterService;
 import net.minecraft.server.v1_16_R3.EntityLiving;

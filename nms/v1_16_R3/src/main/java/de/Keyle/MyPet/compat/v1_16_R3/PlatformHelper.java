@@ -188,15 +188,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public String getPlayerLanguage(Player player) {
-        String locale = player.getLocale();
-        if (locale == null || locale.isEmpty()) {
-            return "en_us";
-        }
-        return locale;
-    }
-
-    @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
         net.minecraft.server.v1_16_R3.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         NBTTagCompound vanillaNBT = new NBTTagCompound();
@@ -238,13 +229,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
-    }
-
-    @Override
-    public void sendMessageActionBar(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-        }
     }
 
     @Override
@@ -331,24 +315,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public net.minecraft.server.v1_16_R3.World getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
-    }
-
-    @Override
-    public void strikeLightning(Location loc, float distance) {
-        WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
-        EntityLightning lightning = new EntityLightning(EntityTypes.LIGHTNING_BOLT, world);
-        lightning.setEffect(true);
-        lightning.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), 0.0F, 0.0F);
-        world.getServer()
-                .getServer()
-                .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.getDimensionKey(),
-                        new PacketPlayOutSpawnEntity(lightning));
-        world.getServer()
-                .getServer()
-                .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.getDimensionKey(),
-                        new PacketPlayOutNamedSoundEffect(SoundEffects.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
     }
 
     @Override

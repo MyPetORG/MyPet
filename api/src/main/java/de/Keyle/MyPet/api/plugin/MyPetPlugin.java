@@ -27,10 +27,11 @@ import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.CompatUtil;
-import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -59,4 +60,8 @@ public interface MyPetPlugin extends Plugin {
     ServiceManager getServiceManager();
 
     boolean isDisabling();
+
+    BukkitAudiences audiences();
+
+    MiniMessage miniMessage();
 }

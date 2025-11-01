@@ -446,15 +446,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 }
 
                 if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
-                    String msg = myPet.getPetName() + ChatColor.RESET + ": ";
-                    if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
-                        msg += ChatColor.GREEN;
-                    } else if (myPet.getHealth() > myPet.getMaxHealth() / 3) {
-                        msg += ChatColor.YELLOW;
-                    } else {
-                        msg += ChatColor.RED;
-                    }
-                    msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
+                    net.kyori.adventure.text.Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
                     MyPetApi.getPlatformHelper().sendMessageActionBar(getPlayer(), msg);
                 }
             } else if (myPet.getStatus() == PetState.Despawned) {

@@ -30,11 +30,8 @@ import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R6.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R6.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -46,27 +43,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang.Validate;
 import org.bukkit.GameRule;
@@ -234,15 +223,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public String getPlayerLanguage(Player player) {
-        String locale = player.getLocale();
-        if (locale == null || locale.isEmpty()) {
-            return "en_us";
-        }
-        return locale;
-    }
-
-    @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = new CompoundTag();
@@ -286,12 +266,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 
-    @Override
-    public void sendMessageActionBar(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-        }
-    }
 
     @Override
     public void addZombieTargetGoal(Zombie zombie) {
@@ -387,24 +361,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public Level getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
-    }
-
-    @Override
-    public void strikeLightning(Location loc, float distance) {
-    	ServerLevel world = ((CraftWorld) loc.getWorld()).getHandle();
-    	LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, world);
-        lightning.setVisualOnly(true);
-        lightning.move(MoverType.SELF, new Vec3(loc.getX(), loc.getY(), loc.getZ()));
-        world.getCraftServer()
-                .getServer()
-                .getPlayerList()
-                .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
-                        new ClientboundAddEntityPacket(lightning,0,lightning.getBlockPosBelowThatAffectsMyMovement()));
-        world.getCraftServer()
-                .getServer()
-                .getPlayerList()
-                .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
-                        new ClientboundSoundPacket(Holder.direct(SoundEvents.LIGHTNING_BOLT_THUNDER), SoundSource.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F, 1));
     }
 
     @Override

@@ -231,15 +231,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public String getPlayerLanguage(Player player) {
-        String locale = player.getLocale();
-        if (locale == null || locale.isEmpty()) {
-            return "en_us";
-        }
-        return locale;
-    }
-
-    @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = new CompoundTag();
@@ -290,13 +281,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
-    }
-
-    @Override
-    public void sendMessageActionBar(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-        }
     }
 
     @Override
@@ -389,24 +373,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public Level getWorldNMS(World world) {
         return ((CraftWorld) world).getHandle();
-    }
-
-    @Override
-    public void strikeLightning(Location loc, float distance) {
-    	ServerLevel world = ((CraftWorld) loc.getWorld()).getHandle();
-    	LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, world);
-        lightning.setVisualOnly(true);
-        lightning.moveTo(loc.getX(), loc.getY(), loc.getZ(), 0.0F, 0.0F);
-        world.getCraftServer()
-                .getServer()
-                .getPlayerList()
-                .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
-                        new ClientboundAddEntityPacket(lightning,0,lightning.getBlockPosBelowThatAffectsMyMovement()));
-        world.getCraftServer()
-                .getServer()
-                .getPlayerList()
-                .broadcast(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension(),
-                        new ClientboundSoundPacket(Holder.direct(SoundEvents.LIGHTNING_BOLT_THUNDER), SoundSource.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F, 1));
     }
 
     @Override

@@ -20,10 +20,17 @@
 
 package de.Keyle.MyPet.api;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.compat.Compat;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -52,7 +59,7 @@ public abstract class PlatformHelper {
      * @param count    the number of particles
      * @param radius   the radius around the location
      */
-    public abstract void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data);
+    public abstract void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, Compat<Object> data);
 
     public void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
         playParticleEffect(location, effect, offsetX, offsetY, offsetZ, speed, count, radius, null);
@@ -68,7 +75,7 @@ public abstract class PlatformHelper {
      * @param count    the number of particles
      * @param radius   the radius around the location
      */
-    public abstract void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data);
+    public abstract void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, Compat<Object> data);
 
     public void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
         playParticleEffect(player, location, effect, offsetX, offsetY, offsetZ, speed, count, radius, null);
@@ -76,7 +83,13 @@ public abstract class PlatformHelper {
 
     public abstract boolean canSpawn(Location loc, MyPetMinecraftEntity entity);
 
-    public abstract String getPlayerLanguage(Player player);
+    public String getPlayerLanguage(Player player) {
+        String locale = player.getLocale();
+        if (locale.isEmpty()) {
+            return "en_us";
+        }
+        return locale;
+    }
 
     public abstract TagCompound entityToTag(Entity entity);
 
@@ -120,7 +133,49 @@ public abstract class PlatformHelper {
 
     public abstract ItemStack compundToItemStack(TagCompound compound);
 
-    public abstract void sendMessageActionBar(Player player, String message);
+    public void sendMessageActionBar(Player player, Component message) {
+        if (player == null || !player.isOnline()) return;
+        MyPetApi.getPlugin().audiences().player(player).sendActionBar(message);
+    }
+
+    /**
+     * Builds the action bar message for pet health updates so it can be reused by all NMS modules.
+     * This method only constructs the message; caller is responsible for sending and for any gating (e.g., config flags).
+     */
+    public Component buildPetHealthActionBar(MyPet myPet, double health, double maxHealth) {
+        if (myPet == null) {
+            return Component.empty();
+        }
+        double deltaHealth = maxHealth - health;
+
+        NamedTextColor healthColor = NamedTextColor.RED;
+        if (health > maxHealth / 3 * 2) {
+            healthColor = NamedTextColor.GREEN;
+        } else if (health > maxHealth / 3) {
+            healthColor = NamedTextColor.YELLOW;
+        }
+        Component parsed = MyPetApi.getPlugin().miniMessage().deserialize(
+                "<petname><reset>: ",
+                Placeholder.unparsed("petname", myPet.getPetName()));
+        if (health > 0) {
+            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
+                    "<healthcolor><health><white>/<maxhealth> ",
+                    Placeholder.styling("healthcolor", healthColor),
+                    Placeholder.unparsed("health", String.format("%1.2f", health)),
+                    Placeholder.unparsed("maxhealth", String.format("%1.2f", maxHealth))));
+            if (!myPet.getOwner().isHealthBarActive()) {
+                parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
+                        "(<deltahealthcolor><deltahealth><reset>)",
+                        Placeholder.parsed("deltahealthcolor", deltaHealth < 0 ? "<green>+" : "<red>-"),
+                        Placeholder.unparsed("deltahealth", String.format("%1.2f", deltaHealth))));
+            }
+        } else {
+            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
+                    "<dead>",
+                    Placeholder.unparsed("dead", Translation.getString("Name.Dead", myPet.getOwner()))));
+        }
+        return parsed;
+    }
 
     public abstract void addZombieTargetGoal(Zombie zombie);
 
@@ -152,8 +207,6 @@ public abstract class PlatformHelper {
         return Material.matchMaterial(materialHolder.getId().toUpperCase());
     }
 
-    public abstract void strikeLightning(Location loc, float distance);
-
     public boolean compareBlockPositions(Location a, Location b) {
         return a.getBlockX() == b.getBlockX() &&
                 a.getBlockY() == b.getBlockY() &&
@@ -175,7 +228,7 @@ public abstract class PlatformHelper {
 
     public abstract String getLastDamageSource(LivingEntity e);
 
-    public abstract String itemstackToString(org.bukkit.inventory.ItemStack itemStack);
+    public abstract String itemstackToString(ItemStack itemStack);
 
     public abstract boolean gameruleDoDeathMessages(LivingEntity e);
 

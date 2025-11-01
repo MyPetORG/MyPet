@@ -1,12 +1,12 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU General Public License,
+ * as published by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * MyPet is distributed in the hope that it will be useful,
@@ -20,194 +20,122 @@
 
 package de.Keyle.MyPet.compat.v1_8_R3.util.inventory;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.Compat;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
-import net.minecraft.server.v1_8_R3.*;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
+import de.keyle.knbt.TagString;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * 1.8.8-compatible override. Replaces Material#isAir usage with legacy checks.
+ */
 @Compat("v1_8_R3")
-public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api.util.inventory.CustomInventory {
-
-    private String inventroyName = "";
-    private List<ItemStack> items = new ArrayList<>();
-    private int size = 0;
-    private int stackSize = 64;
-    private List<HumanEntity> transaction = new ArrayList<>();
-    private CraftInventory bukkitInventory = null;
+public class CustomInventory extends de.Keyle.MyPet.api.util.inventory.CustomInventory {
 
     public CustomInventory() {
-        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        super();
     }
 
     public CustomInventory(int size, String name) {
-        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-        setSize(size);
-        setName(name);
+        super(size, name);
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        size = (int) (size / 9.);
-        size *= 9;
-        this.size = Util.clamp(size, 0, 54);
-        for (int i = items.size(); i < this.size; i++) {
-            items.add(i, null);
-        }
-    }
-
-    public String getName() {
-        return inventroyName;
-    }
-
-    public void setName(String name) {
-        if (name != null) {
-            name = StringUtils.left(name, 64);
-            this.inventroyName = name;
-        }
-    }
-
-    public ItemStack getItem(int i) {
-        if (i < size) {
-            return items.get(i);
-        }
-        return null;
-    }
-
-    public void setItem(int i, ItemStack itemStack) {
-        if (i < items.size()) {
-            items.set(i, itemStack);
-        } else {
-            for (int x = items.size(); x < i; x++) {
-                items.add(x, null);
-            }
-            items.add(i, itemStack);
-        }
-        update();
-    }
-
-    public int addItem(org.bukkit.inventory.ItemStack itemAdd) {
-        if (itemAdd == null) {
-            return 0;
-        }
-        itemAdd = itemAdd.clone();
-
-        for (int i = 0; i < this.getSize(); i++) {
-            CraftItemStack craftItem = CraftItemStack.asCraftMirror(getItem(i));
-
-            if (ItemStackComparator.compareItem(itemAdd, craftItem)) {
-                if (craftItem.getAmount() >= craftItem.getMaxStackSize()) {
-                    continue;
-                }
-                while (craftItem.getAmount() < craftItem.getMaxStackSize() && itemAdd.getAmount() > 0) {
-                    craftItem.setAmount(craftItem.getAmount() + 1);
-                    itemAdd.setAmount(itemAdd.getAmount() - 1);
-                }
-                if (itemAdd.getAmount() == 0) {
-                    break;
-                }
-            }
-        }
-        if (itemAdd.getAmount() > 0) {
-            for (int i = 0; i < this.getSize(); i++) {
-                if (getItem(i) == null) {
-                    if (itemAdd.getAmount() <= itemAdd.getMaxStackSize()) {
-                        setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
-                        itemAdd.setAmount(0);
-                        break;
-                    } else {
-                        CraftItemStack itemStack = (CraftItemStack) itemAdd.clone();
-                        itemStack.setAmount(itemStack.getMaxStackSize());
-                        setItem(i, CraftItemStack.asNMSCopy(itemStack));
-                        itemAdd.setAmount(itemAdd.getAmount() - itemStack.getMaxStackSize());
-                    }
-                    if (itemAdd.getAmount() == 0) {
-                        break;
-                    }
-                }
-            }
-        }
-        return itemAdd.getAmount();
+    private static boolean isAir(ItemStack stack) {
+        return stack == null || stack.getType() == Material.AIR;
     }
 
     @Override
-    public Inventory getBukkitInventory() {
-        if (bukkitInventory == null) {
-            bukkitInventory = new CraftInventory(this);
+    public int addItem(ItemStack itemAdd) {
+        if (isAir(itemAdd)) {
+            return 0;
         }
-        return bukkitInventory;
+        Inventory inv = getBukkitInventory();
+        ItemStack toAdd = itemAdd.clone();
+        Map<Integer, ItemStack> leftover = inv.addItem(toAdd);
+        int remaining = 0;
+        for (ItemStack rem : leftover.values()) {
+            if (rem != null) remaining += rem.getAmount();
+        }
+        return remaining;
     }
 
+    @Override
     public void dropContentAt(Location loc) {
-        World world = ((CraftWorld) loc.getWorld()).getHandle();
-        for (int i = 0; i < this.getSize(); i++) {
-            ItemStack is = this.splitWithoutUpdate(i);
-            if (is != null && CraftMagicNumbers.getMaterial(is.getItem()) != org.bukkit.Material.AIR) {
-                is = is.cloneItemStack();
-                EntityItem itemEntity = new EntityItem(world, loc.getX(), loc.getY(), loc.getZ(), is);
-                itemEntity.pickupDelay = 20;
-                world.addEntity(itemEntity);
+        Inventory inv = getBukkitInventory();
+        if (loc == null) return;
+        World world = loc.getWorld();
+        if (world == null) return;
+        for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack is = removeItemNoUpdate(i);
+            if (!isAir(is)) {
+                world.dropItem(loc, is);
             }
         }
     }
 
-    public ItemStack splitStack(int slot, int subtract) {
-        if (slot < size && items.get(slot) != null) {
-            if (items.get(slot).count <= subtract) {
-                ItemStack itemStack = items.get(slot);
-                items.set(slot, null);
-                return itemStack;
-            } else {
-                ItemStack itemStack = items.get(slot);
-                ItemStack splittedStack = itemStack.cloneAndSubtract(subtract);
-                if (items.get(slot).count == 0) {
-                    items.set(slot, null);
-                }
-                return splittedStack;
+    @Override
+    public ItemStack removeItem(int slot, int subtract) {
+        Inventory inv = getBukkitInventory();
+        if (slot < 0 || slot >= inv.getSize()) return null;
+        ItemStack current = inv.getItem(slot);
+        if (isAir(current)) return null;
+        int take = Math.min(subtract, current.getAmount());
+        ItemStack result = current.clone();
+        result.setAmount(take);
+        int remaining = current.getAmount() - take;
+        if (remaining <= 0) {
+            inv.clear(slot);
+        } else {
+            current.setAmount(remaining);
+            inv.setItem(slot, current);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        Inventory inv = getBukkitInventory();
+        for (ItemStack is : inv.getContents()) {
+            if (!isAir(is)) {
+                return false;
             }
         }
-        return null;
+        return true;
     }
 
-    public ItemStack[] getContents() {
-        ItemStack[] itemStack = new ItemStack[getSize()];
-        for (int i = 0; i < getSize(); i++) {
-            itemStack[i] = items.get(i);
-        }
-        return itemStack;
-    }
-
+    @Override
     public TagCompound save(TagCompound compound) {
+        Inventory inv = getBukkitInventory();
         List<TagCompound> itemList = new ArrayList<>();
-        for (int i = 0; i < this.items.size(); i++) {
-            ItemStack itemStack = this.items.get(i);
-            if (itemStack != null) {
-                TagCompound item = ItemStackNBTConverter.itemStackToCompound(itemStack);
+        for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack itemStack = inv.getItem(i);
+            if (!isAir(itemStack)) {
+                TagCompound item = new TagCompound();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                try (BukkitObjectOutputStream oos = new BukkitObjectOutputStream(bos)) {
+                    oos.writeObject(itemStack);
+                    oos.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String b64 = Base64.getEncoder().encodeToString(bos.toByteArray());
                 item.getCompoundData().put("Slot", new TagByte((byte) i));
+                item.getCompoundData().put("BukkitItem", new TagString(b64));
                 itemList.add(item);
             }
         }
@@ -215,131 +143,28 @@ public class CustomInventory implements IInventory, Listener, de.Keyle.MyPet.api
         return compound;
     }
 
+    @Override
     public void load(TagCompound nbtTagCompound) {
+        Inventory inv = getBukkitInventory();
         TagList items = nbtTagCompound.getAs("Items", TagList.class);
-
+        if (items == null) return;
         for (int i = 0; i < items.size(); i++) {
             TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
-
-            ItemStack itemStack = ItemStackNBTConverter.compoundToItemStack(itemCompound);
-            setItem(itemCompound.getAs("Slot", TagByte.class).getByteData(), itemStack);
-        }
-    }
-
-    public boolean a(EntityHuman entityHuman) {
-        return true;
-    }
-
-    public void startOpen(EntityHuman paramEntityHuman) {
-    }
-
-    public void onOpen(CraftHumanEntity who) {
-        this.transaction.add(who);
-    }
-
-    public void onClose(CraftHumanEntity who) {
-        this.transaction.remove(who);
-        if (items.size() > this.size) {
-            for (int counterOutside = items.size() - 1; counterOutside >= this.size; counterOutside--) {
-                if (items.get(counterOutside) != null) {
-                    for (int counterInside = 0; counterInside < size; counterInside++) {
-                        if (items.get(counterInside) == null) {
-                            items.set(counterInside, items.get(counterOutside));
-                            items.set(counterOutside, null);
-                        }
-                    }
+            int slot = itemCompound.getAs("Slot", TagByte.class).getByteData();
+            String b64 = itemCompound.getAs("BukkitItem", TagString.class).getStringData();
+            byte[] bytes = Base64.getDecoder().decode(b64);
+            ItemStack itemStack = null;
+            try (BukkitObjectInputStream ois = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
+                Object obj = ois.readObject();
+                if (obj instanceof ItemStack) {
+                    itemStack = (ItemStack) obj;
                 }
-                if (items.get(counterOutside) == null) {
-                    items.remove(counterOutside);
-                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (slot >= 0 && slot < inv.getSize()) {
+                inv.setItem(slot, itemStack);
             }
         }
-    }
-
-    @EventHandler
-    void onPluginDisable(PluginDisableEvent event) {
-        if (event.getPlugin().equals(MyPetApi.getPlugin())) {
-            close();
-        }
-    }
-
-    public void close() {
-        if (!transaction.isEmpty()) {
-            for (HumanEntity humanEntity : new ArrayList<>(transaction)) {
-                humanEntity.closeInventory();
-            }
-        }
-    }
-
-    @Override
-    public void open(Player player) {
-        EntityPlayer eh = ((CraftPlayer) player).getHandle();
-        eh.openContainer(this);
-    }
-
-    public void closeContainer(EntityHuman paramEntityHuman) {
-    }
-
-    public List<HumanEntity> getViewers() {
-        return this.transaction;
-    }
-
-    public InventoryHolder getOwner() {
-        return null;
-    }
-
-    public int getMaxStackSize() {
-        return stackSize;
-    }
-
-    public void setMaxStackSize(int i) {
-        this.stackSize = i;
-    }
-
-    public ItemStack splitWithoutUpdate(int i) {
-        if (items.get(i) != null) {
-            ItemStack itemstack = items.get(i);
-
-            items.set(i, null);
-            return itemstack;
-        }
-        return null;
-    }
-
-    public void update() {
-    }
-
-    public boolean b(int paramInt, ItemStack paramItemStack) {
-        return true;
-    }
-
-    @Override
-    public int getProperty(int i) {
-        return 0;
-    }
-
-    @Override
-    public void b(int i, int i1) {
-
-    }
-
-    @Override
-    public int g() {
-        return 0;
-    }
-
-    @Override
-    public void l() {
-
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return this.inventroyName != null;
-    }
-
-    @Override
-    public IChatBaseComponent getScoreboardDisplayName() {
-        return new ChatComponentText(this.inventroyName);
     }
 }

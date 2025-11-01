@@ -156,14 +156,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return unsafeList;
     }
 
-    public String getPlayerLanguage(Player player) {
-        String locale = player.getLocale();
-        if (locale == null || locale.isEmpty()) {
-            return "en_us";
-        }
-        return locale;
-    }
-
     @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
         net.minecraft.server.v1_12_R1.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
@@ -221,13 +213,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
-    }
-
-    public void sendMessageActionBar(Player player, String message) {
-        if (player instanceof CraftPlayer) {
-            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + Util.escapeJsonString(message) + "\"}");
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, ChatMessageType.GAME_INFO));
-        }
     }
 
     public void addZombieTargetGoal(Zombie zombie) {
@@ -320,22 +305,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             mat = Material.matchMaterial(materialHolder.getLegacyName().getName());
         }
         return mat;
-    }
-
-    @Override
-    public void strikeLightning(Location loc, float distance) {
-        WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
-        EntityLightning lightning = new EntityLightning(world, loc.getX(), loc.getY(), loc.getZ(), true);
-        world.getServer()
-                .getServer()
-                .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
-                        new PacketPlayOutSpawnEntityWeather(lightning));
-        world.getServer()
-                .getServer()
-                .getPlayerList()
-                .sendPacketNearby(null, loc.getX(), loc.getY(), loc.getZ(), distance, world.dimension,
-                        new PacketPlayOutNamedSoundEffect(SoundEffects.dK, SoundCategory.WEATHER, loc.getX(), loc.getY(), loc.getZ(), distance, 1F));
     }
 
     public String getLastDamageSource(LivingEntity e) {
