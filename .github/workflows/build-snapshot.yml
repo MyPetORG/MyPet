@@ -20,8 +20,14 @@ jobs:
 
     env:
       JAVA_VERSION: '21'
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      JAR_FILE_NAME: ""
+      PROJECT_VERSION: ""
+      SUPPORTED_NMS_VERSIONS: ""
+      BUILD_NUMBER: 0
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
+      USER_GITHUB: ${{ secrets.USER_GITHUB }}
 
     steps:
       - name: Checkout
@@ -39,16 +45,15 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Read project version from Gradle
-        id: meta
-        shell: bash
+      - name: Get project version from Gradle
         run: |
-          set -euo pipefail
-          PV=$(./gradlew -q properties | awk -F': ' '/^version:/ {print $2; exit}')
-          if [[ -z "${PV:-}" ]]; then
-            echo "Failed to read Gradle version" >&2; exit 1
-          fi
-          echo "PROJECT_VERSION=${PV}" >> "$GITHUB_ENV"
+          echo PROJECT_VERSION=$(./gradlew -q printProjectVersion | tail -n1)
+          export PROJECT_VERSION=$(./gradlew -q printProjectVersion | tail -n1) >> $GITHUB_ENV
+
+      - name: Get supported NMS versions
+        run: |
+          echo NMS_VERSIONS=$(./gradlew -q printNmsVersions | tail -n1)
+          export NMS_VERSIONS=$(./gradlew -q printNmsVersions | tail -n1) >> $GITHUB_ENV
 
       - name: Ensure PR to master exists with release title
         env:
@@ -100,7 +105,7 @@ jobs:
             gh pr edit "$PR_NUMBER" --title "$TITLE" || echo "Warning: failed to update PR title"
           fi
 
-      - name: Compute BUILD_NUMBER from GitHub Releases
+      - name: Compute beta BUILD_NUMBER from GitHub Releases
         shell: bash
         run: |
           set -euo pipefail
@@ -122,7 +127,7 @@ jobs:
 
       - name: Build MyPet module
         run: |
-          ./gradlew --no-daemon build -PbuildType=dev -DBUILD_NUMBER=${BUILD_NUMBER}
+          ./gradlew --no-daemon build -PbuildType=dev -PBUILD_NUMBER=${BUILD_NUMBER} -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
 
       - name: Find and rename shaded JAR with build number
         id: findjar
@@ -158,7 +163,7 @@ jobs:
           name: mypet-snapshot-jar
           path: ${{ steps.findjar.outputs.jar }}
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 90
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -167,6 +172,7 @@ jobs:
           name: v${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
           generate_release_notes: true
           prerelease: true
+          overwrite_files: false
           files: ${{ steps.findjar.outputs.jar }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
