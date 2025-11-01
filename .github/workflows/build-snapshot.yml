@@ -49,22 +49,24 @@ jobs:
         shell: bash
         run: |
             VERSION=$(grep -Po 'version\s*=\s*"([^"]+)' build.gradle.kts | cut -d'"' -f2)
+            echo "PROJECT_VERSION=$VERSION"
             echo "PROJECT_VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Collect NMS modules
         shell: bash
         run: |
-          set -euo pipefail
-
-          # list directories under nms/, strip trailing slash, join with ", "
-          SUPPORTED_NMS_VERSIONS=$(
+            set -euo pipefail
+            
+            SUPPORTED_NMS_VERSIONS=$(
             find nms -maxdepth 1 -mindepth 1 -type d \
             | sed 's|.*/||' \
+            | grep -E '^v[0-9]+_[0-9]+_R[0-9]+' \
+            | sort -V \
             | paste -sd ", " -
-          )
-
-          echo "SUPPORTED_NMS_VERSIONS=$SUPPORTED_NMS_VERSIONS"
-          echo "SUPPORTED_NMS_VERSIONS=$SUPPORTED_NMS_VERSIONS" >> "$GITHUB_ENV"
+            )
+            
+            echo "SUPPORTED_NMS_VERSIONS=$SUPPORTED_NMS_VERSIONS"
+            echo "SUPPORTED_NMS_VERSIONS=$SUPPORTED_NMS_VERSIONS" >> "$GITHUB_ENV"
 
       - name: Ensure PR to master exists with release title
         env:
