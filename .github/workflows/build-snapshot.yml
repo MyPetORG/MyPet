@@ -20,7 +20,6 @@ jobs:
 
     env:
       JAVA_VERSION: '21'
-
       JAR_FILE_NAME: ""
       PROJECT_VERSION: ""
       SUPPORTED_NMS_VERSIONS: ""
