@@ -26,8 +26,8 @@ val nmsModules: List<String> = File(rootDir, "nms")
     ?: emptyList()
 
 repositories {
-    mavenLocal()
     mavenCentral()
+    mavenLocal()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     maven("https://repo.mypet-plugin.de/")
 
@@ -46,8 +46,8 @@ subprojects {
     apply(plugin = "io.freefair.lombok")
 
     repositories {
-        mavenLocal()
         mavenCentral()
+        mavenLocal()
         maven { url = uri("https://mvn.lib.co.nz/spigot/") }
         maven { url = uri("https://repo.md-5.net/content/groups/public/") }
         maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
