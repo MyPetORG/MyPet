@@ -192,7 +192,7 @@ dependencies {
     add("shade", "org.bstats:bstats-bukkit:1.7")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
-    add("shade", "com.google.code.gson:gson:2.13.2")
+    add("shade", "com.google.code.gson:gson:2.8.0")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
     add("shade", "net.kyori:adventure-api:4.25.0")
     add("shade", "net.kyori:adventure-platform-bukkit:4.4.2-SNAPSHOT")
