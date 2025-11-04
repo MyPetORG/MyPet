@@ -15,7 +15,7 @@ dependencies {
     compileOnly("org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT")
 
     compileOnly("org.fusesource.jansi:jansi:1.18")
-    compileOnly("com.google.code.gson:gson:2.13.2")
+    compileOnly("com.google.code.gson:gson:2.8.0")
     compileOnly("de.keyle:knbt:0.0.5")
     compileOnly("at.blvckbytes:RawMessage:0.2")
     compileOnly("org.jetbrains:annotations:16.0.2")
