@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -30,27 +30,53 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
+import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
 
+/**
+ * Implementation of the Behavior skill for a MyPet entity.
+ * <p>
+ * This component manages a set of currently usable behavior modes (activeBehaviors),
+ * the currently selected mode (selectedBehavior), and a cyclic iterator (behaviorCycler)
+ * to rotate through the active modes. It also reacts to upgrade callbacks which enable
+ * or disable specific behavior modes at runtime.
+ * <p>
+ * Robustness: The implementation ensures the selected behavior is always one of the
+ * currently active modes and aligns the internal iterator using a bounded algorithm
+ * to avoid infinite loops. When an unavailable mode is requested, it falls back to
+ * {@link de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode#Normal}.
+ */
 public class BehaviorImpl implements Behavior {
 
+    @Getter
     protected MyPet myPet;
     protected Set<BehaviorMode> activeBehaviors = new HashSet<>();
     protected BehaviorMode selectedBehavior = BehaviorMode.Normal;
     protected static Random random = new Random();
     Iterator<BehaviorMode> behaviorCycler;
 
+    @Getter
     UpgradeComputer<Boolean> farmBehavior = new UpgradeComputer<>(false);
+    @Getter
     UpgradeComputer<Boolean> raidBehavior = new UpgradeComputer<>(false);
+    @Getter
     UpgradeComputer<Boolean> duelBehavior = new UpgradeComputer<>(false);
-    UpgradeComputer<Boolean> aggressiceBehavior = new UpgradeComputer<>(false);
+    @Getter
+    UpgradeComputer<Boolean> aggressiveBehavior = new UpgradeComputer<>(false);
+    @Getter
     UpgradeComputer<Boolean> friendlyBehavior = new UpgradeComputer<>(false);
 
-    public BehaviorImpl(MyPet myPet) {
+    /**
+     * Creates a new Behavior skill instance for the given pet.
+     *
+     * @param myPet the owning pet (must not be null)
+     */
+    public BehaviorImpl(@NotNull MyPet myPet) {
         this.myPet = myPet;
         activeBehaviors.add(BehaviorMode.Normal);
         updateCycler();
@@ -58,18 +84,25 @@ public class BehaviorImpl implements Behavior {
         farmBehavior.addCallback((newValue, reason) -> setBehaviorMode(Farm, newValue));
         raidBehavior.addCallback((newValue, reason) -> setBehaviorMode(Raid, newValue));
         duelBehavior.addCallback((newValue, reason) -> setBehaviorMode(Duel, newValue));
-        aggressiceBehavior.addCallback((newValue, reason) -> setBehaviorMode(Aggressive, newValue));
+        aggressiveBehavior.addCallback((newValue, reason) -> setBehaviorMode(Aggressive, newValue));
         friendlyBehavior.addCallback((newValue, reason) -> setBehaviorMode(Friendly, newValue));
     }
 
-    public MyPet getMyPet() {
-        return myPet;
-    }
-
+    /**
+     * Indicates whether this skill currently has more than the default behavior available.
+     *
+     * @return true if there is at least one additional behavior besides Normal; false otherwise
+     */
     public boolean isActive() {
         return activeBehaviors.size() > 1;
     }
 
+    /**
+     * Resets the Behavior skill to its default state.
+     * <p>
+     * Active behaviors are cleared and only Normal remains, the selected behavior is set
+     * to Normal, and the internal cycler is rebuilt and aligned.
+     */
     @Override
     public void reset() {
         activeBehaviors.clear();
@@ -78,23 +111,65 @@ public class BehaviorImpl implements Behavior {
         updateCycler();
     }
 
+    /**
+     * Rebuilds and aligns the internal behavior cycler based on the currently active modes.
+     * <p>
+     * The active modes are copied and sorted for deterministic iteration order. The
+     * selected behavior is validated to ensure it is included; otherwise it falls back to
+     * Normal or, if needed, the first available entry. Finally, the iterator is aligned to
+     * the selected behavior in a bounded fashion to avoid unbounded loops.
+     */
     protected void updateCycler() {
         List<BehaviorMode> activeBehaviors = new ArrayList<>(this.activeBehaviors);
         Collections.sort(activeBehaviors);
+
+        // Ensure selectedBehavior is valid
+        if (!activeBehaviors.contains(selectedBehavior)) {
+            selectedBehavior = BehaviorMode.Normal;
+            if (!activeBehaviors.contains(selectedBehavior) && !activeBehaviors.isEmpty()) {
+                selectedBehavior = activeBehaviors.get(0);
+            }
+        }
+
         behaviorCycler = Iterables.cycle(activeBehaviors).iterator();
-        //noinspection StatementWithEmptyBody
-        while (behaviorCycler.next() != selectedBehavior) {
+
+        // Align iterator position to selectedBehavior boundedly
+        for (int i = 0; i < activeBehaviors.size(); i++) {
+            if (behaviorCycler.next() == selectedBehavior) {
+                break;
+            }
         }
     }
 
-    public void setBehavior(BehaviorMode mode) {
+    /**
+     * Selects the given behavior mode for this pet.
+     * <p>
+     * Note: The selected mode must be present in the active behaviors set; otherwise the
+     * internal alignment could misbehave. The current implementation of this class ensures
+     * safety by validating and aligning in {@link #updateCycler()}.
+     *
+     * @param mode the behavior mode to select (must not be null)
+     */
+    @Override
+    public void setBehavior(@NotNull BehaviorMode mode) {
+        // If the requested mode isn’t currently usable, fall back to Normal
+        if (!activeBehaviors.contains(mode)) {
+            mode = BehaviorMode.Normal;
+        }
         selectedBehavior = mode;
-        //noinspection StatementWithEmptyBody
-        while (behaviorCycler.next() != selectedBehavior) {
-        }
+        // Rebuild and safely align the cycler
+        updateCycler();
     }
 
-    protected void setBehaviorMode(BehaviorMode mode, boolean value) {
+    /**
+     * Enables or disables a specific behavior mode and updates the cycler accordingly.
+     * <p>
+     * If a mode is disabled while it is currently selected, the selection falls back to Normal.
+     *
+     * @param mode  the behavior mode to change
+     * @param value true to enable (make usable); false to disable
+     */
+    protected void setBehaviorMode(@NotNull BehaviorMode mode, boolean value) {
         if (value) {
             activeBehaviors.add(mode);
         } else {
@@ -106,35 +181,33 @@ public class BehaviorImpl implements Behavior {
         updateCycler();
     }
 
-    public BehaviorMode getBehavior() {
+    /**
+     * Gets the currently selected behavior mode.
+     *
+     * @return the current behavior mode (never null)
+     */
+    @Override
+    public @NotNull BehaviorMode getBehavior() {
         return selectedBehavior;
     }
 
-    public boolean isModeUsable(BehaviorMode mode) {
+    /**
+     * Checks if the given behavior mode is currently usable (i.e., active) for this pet.
+     *
+     * @param mode the mode to check (must not be null)
+     * @return true if the mode is contained in the active behavior set; false otherwise
+     */
+    public boolean isModeUsable(@NotNull BehaviorMode mode) {
         return activeBehaviors.contains(mode);
     }
 
-    public UpgradeComputer<Boolean> getFarmBehavior() {
-        return farmBehavior;
-    }
-
-    public UpgradeComputer<Boolean> getRaidBehavior() {
-        return raidBehavior;
-    }
-
-    public UpgradeComputer<Boolean> getDuelBehavior() {
-        return duelBehavior;
-    }
-
-    public UpgradeComputer<Boolean> getAggressiveBehavior() {
-        return aggressiceBehavior;
-    }
-
-    public UpgradeComputer<Boolean> getFriendlyBehavior() {
-        return friendlyBehavior;
-    }
-
-    public String toPrettyString(String locale) {
+    /**
+     * Returns a human-readable list of all currently active behavior modes in the given locale.
+     *
+     * @param locale the locale key used for translations (must not be null)
+     * @return a formatted String describing the active behavior modes
+     */
+    public @NotNull String toPrettyString(@NotNull String locale) {
         String activeModes = ChatColor.GOLD + Translation.getString("Name.Normal", locale) + ChatColor.RESET;
         if (activeBehaviors.contains(Friendly)) {
             activeModes += ", " + ChatColor.GOLD + Translation.getString("Name.Friendly", locale) + ChatColor.RESET;
@@ -166,14 +239,29 @@ public class BehaviorImpl implements Behavior {
         return Translation.getString("Name.Modes", locale) + ": " + activeModes;
     }
 
+    /**
+     * Creates the localized upgrade message shown to the pet owner when the Behavior skill
+     * gains or changes the availability of modes.
+     *
+     * @return a two-line, localized message array (never null)
+     */
     @Override
-    public String[] getUpgradeMessage() {
+    public @NotNull String[] getUpgradeMessage() {
         return new String[]{
                 Util.formatText(Translation.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()),
                 "  " + toPrettyString(myPet.getOwner().getLanguage())
         };
     }
 
+    /**
+     * Cycles to the next available behavior mode and informs the pet owner.
+     * <p>
+     * If additional modes are available, the cycler advances until it finds a mode that is either
+     * Normal or a mode the player has the corresponding permission for. The selection is updated
+     * and a localized chat message is sent to the owner.
+     *
+     * @return true if a mode change occurred or could be confirmed; false if the skill has only Normal
+     */
     public boolean activate() {
         if (isActive()) {
             while (true) {
@@ -194,6 +282,13 @@ public class BehaviorImpl implements Behavior {
         }
     }
 
+    /**
+     * Periodic tick hook from the Scheduler interface.
+     * <p>
+     * Emits a cosmetic angry villager particle above the pet’s head occasionally when the
+     * current mode is Aggressive and the pet is present (Here).
+     */
+    @Override
     public void schedule() {
         if (selectedBehavior == Aggressive && random.nextBoolean() && myPet.getStatus() == MyPet.PetState.Here) {
             myPet.getEntity().ifPresent(entity -> MyPetApi.getPlatformHelper()
@@ -201,6 +296,9 @@ public class BehaviorImpl implements Behavior {
         }
     }
 
+    /**
+     * Debug String containing the set of active behaviors and the currently selected mode.
+     */
     @Override
     public String toString() {
         return "BehaviorImpl{" +
@@ -209,15 +307,29 @@ public class BehaviorImpl implements Behavior {
                 '}';
     }
 
+    /**
+     * Serializes the current state of this skill to NBT.
+     * <p>
+     * Currently stores only the name of the selected behavior under the key "selectedBehavior".
+     *
+     * @return a compound tag with this skill’s persisted data (never null)
+     */
     @Override
-    public TagCompound save() {
+    public @NotNull TagCompound save() {
         TagCompound nbtTagCompound = new TagCompound();
         nbtTagCompound.getCompoundData().put("selectedBehavior", new TagString(this.selectedBehavior.name()));
         return nbtTagCompound;
     }
 
+    /**
+     * Deserializes the saved state from NBT and restores the selected behavior.
+     * <p>
+     * Unknown or currently unavailable modes are mapped to Normal to guarantee a valid state.
+     *
+     * @param tagCompound the NBT data for this skill (must not be null)
+     */
     @Override
-    public void load(TagCompound tagCompound) {
+    public void load(@NotNull TagCompound tagCompound) {
         if (tagCompound.containsKey("selectedBehavior")) {
             String behaviorString = tagCompound.getAs("selectedBehavior", TagString.class).getStringData();
             switch (behaviorString) {
