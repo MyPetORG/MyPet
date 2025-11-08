@@ -81,7 +81,7 @@ commands:
     aliases: [pstore, pst]
     description: Stores your current pet
   petlist:
-    aliases: [plist, pl]
+    aliases: [plist]
     description: Lists all your pet
     usage: '/<command> <player name>'
   pettrade:
