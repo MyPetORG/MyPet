@@ -80,8 +80,8 @@ public enum MyPetType {
             .v("1.7.10", 50)
             .v("1.13", "creeper")
             .search()),
-    Creaking("CREAKING", "1.21", MyCreaking.class, new Compat<>()
-            .v("1.21", "creaking")
+    Creaking("CREAKING", "1.21.4", MyCreaking.class, new Compat<>()
+            .v("1.21.4", "creaking")
             .search()),
     Dolphin("DOLPHIN", "1.13", MyDolphin.class, new Compat<>()
             .v("1.13", "dolphin")
