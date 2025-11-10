@@ -64,9 +64,9 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                     sender.sendMessage("See server logs for the result.");
                     if (itemStack != null && itemStack.getType() != Material.AIR) {
                         String itemString = MyPetApi.getPlatformHelper().itemstackToString(itemStack);
-                        System.out.println("MyPet Info Item: " + itemString);
+                        MyPetApi.getLogger().info("MyPet Info Item: " + itemString);
                     } else {
-                        System.out.println("MyPet Info Item: air");
+                        MyPetApi.getLogger().info("MyPet Info Item: air");
                     }
                 } else {
                     sender.sendMessage("You can't use this command from server console!");
@@ -82,7 +82,7 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                         if (configItemStack != null) {
                             itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
                         }
-                        System.out.println("MyPet Leash Item (" + type + "): " + itemString);
+                        MyPetApi.getLogger().info("MyPet Leash Item (" + type + "): " + itemString);
                         if (sender instanceof Player) {
                             ((Player) sender).getInventory().addItem(configItemStack);
                         }
