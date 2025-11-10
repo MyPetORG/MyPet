@@ -26,8 +26,10 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
 import de.keyle.knbt.TagString;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -39,6 +41,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.bukkit.util.io.BukkitObjectInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -46,67 +49,171 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * API-level CustomInventory implementation backed by Spigot's Inventory API only.
- * No NMS or CraftBukkit classes are referenced.
+ * API-only inventory implementation
+ * <p>
+ * This class provides methods for sizing, naming, persisting (to K-NBT),
+ * and opening/closing the GUI for players. It avoids direct CraftBukkit/NMS
+ * usage and should work across modern Bukkit/Paper versions.
+ * </p>
  */
-public class CustomInventory implements Listener {
+public class CustomInventory implements InventoryHolder {
+    /**
+     * Bukkit inventory that stores the actual contents.
+     */
+    private Inventory bukkitInventory;
 
-    private String inventoryName = "";
-    private int size = 0;
+    /**
+     * Current display name (title) of the inventory GUI.
+     * Defaults to "Inventory".
+     */
+    @Getter
+    private String name = "Inventory";
+    /**
+     * Logical size of the inventory in slots. Always a multiple of 9 in the
+     * inclusive range [9, 54].
+     * Defaults to null.
+     */
+    @Getter
+    private int size;
+    /**
+     * Max stack size applied to the backing Bukkit inventory.
+     * Defaults to 64.
+     */
     private int stackSize = 64;
+    /**
+     * Auxiliary viewer list used to track open/close when the backing inventory
+     * may not yet be initialized.
+     */
     private final List<HumanEntity> transaction = new ArrayList<>();
-    private Inventory bukkitInventory = null;
 
-    public CustomInventory() {
-        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+
+    /**
+     * Track instances and register a single shared shutdown listener (no per-instance listeners)
+     */
+    private static final Set<CustomInventory> INSTANCES = Collections.newSetFromMap(new WeakHashMap<>());
+    private static boolean LISTENER_REGISTERED = false;
+    private static final Listener SHUTDOWN_LISTENER = new Listener() {
+        @EventHandler
+        public void onPluginDisable(PluginDisableEvent e) {
+            if (!e.getPlugin().equals(MyPetApi.getPlugin())) return;
+            closeAllOpen();
+            INSTANCES.clear();
+            LISTENER_REGISTERED = false;
+        }
+    };
+
+    /**
+     * Ensures the shared shutdown listener is registered exactly once for the plugin.
+     * Thread-safe to guard against concurrent initialization.
+     */
+    private static synchronized void ensureListener() {
+        if (!LISTENER_REGISTERED) {
+            Bukkit.getPluginManager().registerEvents(SHUTDOWN_LISTENER, MyPetApi.getPlugin());
+            LISTENER_REGISTERED = true;
+        }
     }
 
+    /**
+     * Closes all open inventories for all currently tracked CustomInventory instances.
+     * Invoked on plugin disable by the shared shutdown listener.
+     */
+    static void closeAllOpen() {
+        for (CustomInventory ci : new ArrayList<>(INSTANCES)) {
+            if (ci != null) ci.close();
+        }
+    }
+
+    /**
+     * Creates a new CustomInventory instance and ensures the shared shutdown listener
+     * is registered. The instance is also tracked for lifecycle management so that
+     * all open inventories can be closed on plugin disable.
+     */
+    public CustomInventory() {
+        ensureListener();
+        INSTANCES.add(this);
+    }
+
+    /**
+     * Convenience constructor to initialize size and name.
+     *
+     * @param size initial size in slots (will be normalized to a multiple of 9 and clamped [9,54])
+     * @param name initial GUI title (will be truncated to 64 chars if longer)
+     */
     public CustomInventory(int size, String name) {
         this();
         setSize(size);
         setName(name);
     }
 
-    /** API preserved: previously declared on interface **/
-    public void setSize(int size) {
-        int normalized = (size / 9) * 9;
-        this.size = Util.clamp(Math.max(normalized, 9), 9, 54);
-        if (bukkitInventory != null) {
-            List<ItemStack> old = Arrays.asList(bukkitInventory.getContents());
-            createInventoryIfNeeded();
-            for (int i = 0; i < Math.min(old.size(), this.size); i++) {
-                bukkitInventory.setItem(i, old.get(i));
+    /**
+     * Sets the inventory size in slots.
+     * <p>
+     * The value is clamped to a multiple of 9 between [9, 54]
+     *
+     * @param newSize desired slot count
+     */
+    public void setSize(int newSize) {
+        newSize = (int) (newSize / 9.);
+        newSize *= 9;
+        this.size = Util.clamp(newSize, 9, 54);
+        ItemStack[] old = bukkitInventory != null ? bukkitInventory.getContents() : null;
+
+        this.bukkitInventory = Bukkit.createInventory(this, this.size, this.name);
+        this.bukkitInventory.setMaxStackSize(this.stackSize);
+        if (old != null) {
+            for (int i = 0; i < Math.min(old.length, this.size); i++) {
+                this.bukkitInventory.setItem(i, old[i]);
             }
-        } else {
-            createInventoryIfNeeded();
         }
     }
 
-    /** API preserved: previously declared on interface **/
-    public String getName() {
-        return inventoryName;
-    }
-
-    /** API preserved: previously declared on interface **/
+    /**
+     * Sets the inventory GUI title.
+     * <p>
+     * Renaming reconstructs the underlying Bukkit inventory to apply the new
+     * title while preserving contents and max stack size.
+     *
+     * @param name new title (null is ignored)
+     */
     public void setName(String name) {
-        if (name != null) {
-            if (name.length() > 64) {
-                name = name.substring(0, 64);
-            }
-            this.inventoryName = name;
-            if (bukkitInventory != null) {
-                ItemStack[] contents = bukkitInventory.getContents();
-                this.bukkitInventory = Bukkit.createInventory(null, this.size, this.inventoryName);
-                this.bukkitInventory.setMaxStackSize(this.stackSize);
-                this.bukkitInventory.setContents(contents);
+        if (name == null) return;
+
+        // Enforce reasonable title bounds and remove control chars
+        String cleaned = name.replaceAll("\\p{Cntrl}", "");
+        String newName = cleaned.length() > 64 ? cleaned.substring(0, 64) : cleaned;
+
+        if (Objects.equals(this.name, newName)) return;
+
+        this.name = newName;
+
+        // If no backing inventory yet, we only cache the title
+        if (bukkitInventory == null) {
+            return;
+        }
+
+        // Preserve contents and viewers, then rebuild inventory with the new title.
+        ItemStack[] contents = bukkitInventory.getContents();
+        List<HumanEntity> viewers = new ArrayList<>(bukkitInventory.getViewers());
+
+        this.bukkitInventory = Bukkit.createInventory(this, this.size, this.name);
+        this.bukkitInventory.setMaxStackSize(this.stackSize);
+        this.bukkitInventory.setContents(contents);
+
+        // Reopen for all viewers so the new title applies immediately.
+        for (HumanEntity viewer : viewers) {
+            if (viewer instanceof Player) {
+                viewer.openInventory(this.bukkitInventory);
             }
         }
     }
 
+    /**
+     * Creates a Bukkit inventory for this CustomInventory instance if one has not been created already.
+     */
     private void createInventoryIfNeeded() {
-        if (this.bukkitInventory == null || this.bukkitInventory.getSize() != this.size) {
+        if (this.bukkitInventory == null || this.bukkitInventory.getSize() != this.size || this.bukkitInventory.getHolder() != this) {
             ItemStack[] contents = this.bukkitInventory != null ? this.bukkitInventory.getContents() : null;
-            this.bukkitInventory = Bukkit.createInventory(null, this.size, this.inventoryName);
+            this.bukkitInventory = Bukkit.createInventory(this, this.size, this.name);
             this.bukkitInventory.setMaxStackSize(this.stackSize);
             if (contents != null) {
                 this.bukkitInventory.setContents(contents);
@@ -114,30 +221,48 @@ public class CustomInventory implements Listener {
         }
     }
 
-    /** Convenience accessors **/
-    public int getContainerSize() {
-        return this.size;
-    }
-
+    /**
+     * Gets the item currently stored at the given slot index.
+     *
+     * @param i zero-based slot index
+     * @return the item at the slot or null if out of bounds, uninitialized, or empty
+     */
     public ItemStack getItem(int i) {
-        createInventoryIfNeeded();
+        if (this.bukkitInventory == null) return null;
         if (i < 0 || i >= this.size) return null;
         return this.bukkitInventory.getItem(i);
     }
 
+    /**
+     * Sets the item for the specified slot.
+     *
+     * @param i          zero-based slot index
+     * @param itemStack  the item to set (may be null to clear)
+     */
     public void setItem(int i, ItemStack itemStack) {
         createInventoryIfNeeded();
+        if (this.bukkitInventory == null) return;
         if (i < 0 || i >= this.size) return;
         this.bukkitInventory.setItem(i, itemStack);
-        setChanged();
     }
 
-    /** API preserved: previously declared on interface **/
+    /**
+     * Attempts to add the provided item stack to the inventory.
+     * <p>
+     * Delegates to Bukkit's Inventory#addItem and returns the number of items
+     * that could not be inserted due to lack of space.
+     *
+     * @param itemAdd the stack to add (null or air results in 0 leftover)
+     * @return the amount that could not be added (0 if fully inserted)
+     */
     public int addItem(ItemStack itemAdd) {
-        if (itemAdd == null || itemAdd.getType().isAir()) {
+        if (itemAdd == null || itemAdd.getType() == Material.AIR) {
             return 0;
         }
         createInventoryIfNeeded();
+        if (this.bukkitInventory == null) {
+            return itemAdd.getAmount();
+        }
         ItemStack toAdd = itemAdd.clone();
         Map<Integer, ItemStack> leftover = this.bukkitInventory.addItem(toAdd);
         int remaining = 0;
@@ -147,31 +272,60 @@ public class CustomInventory implements Listener {
         return remaining;
     }
 
-    /** API preserved: previously declared on interface **/
+    /**
+     * Returns the underlying Bukkit Inventory instance for integration points
+     * that require direct access.
+     *
+     * @return the backing Bukkit inventory, creating it if needed
+     */
     public Inventory getBukkitInventory() {
-        createInventoryIfNeeded();
+        return getInventory();
+    }
+
+    /**
+     * InventoryHolder contract. Returns the held Bukkit Inventory, creating it
+     * lazily if the size has been set. The holder is always this instance.
+     *
+     * @return the held Bukkit inventory or null if size has not been set yet
+     */
+    @Override
+    public Inventory getInventory() {
         return bukkitInventory;
     }
 
-    /** API preserved: previously declared on interface **/
+    /**
+     * Drops all non-air contents of this inventory into the world at the given
+     * location and clears the slots.
+     *
+     * @param loc the world location where items should be spawned (ignored if null or world missing)
+     */
     public void dropContentAt(Location loc) {
         createInventoryIfNeeded();
         if (loc == null) return;
         World world = loc.getWorld();
         if (world == null) return;
-        for (int i = 0; i < this.getContainerSize(); i++) {
+        for (int i = 0; i < this.getSize(); i++) {
             ItemStack is = this.removeItemNoUpdate(i);
-            if (is != null && !is.getType().isAir()) {
+            if (is != null && is.getType() != Material.AIR) {
                 world.dropItem(loc, is);
             }
         }
     }
 
+    /**
+     * Removes up to the requested amount from the specified slot and returns
+     * the removed items as a separate stack.
+     *
+     * @param slot     zero-based slot index
+     * @param subtract the maximum number of items to take from the slot
+     * @return a stack representing the removed items, or null if slot was empty/out of bounds
+     */
     public ItemStack removeItem(int slot, int subtract) {
         createInventoryIfNeeded();
+        if (this.bukkitInventory == null) return null;
         if (slot < 0 || slot >= this.size) return null;
         ItemStack current = this.bukkitInventory.getItem(slot);
-        if (current == null || current.getType().isAir()) return null;
+        if (current == null || current.getType() == Material.AIR) return null;
         int take = Math.min(subtract, current.getAmount());
         ItemStack result = current.clone();
         result.setAmount(take);
@@ -185,18 +339,37 @@ public class CustomInventory implements Listener {
         return result;
     }
 
+    /**
+     * Returns a copy of the current contents of the inventory.
+     *
+     * @return a mutable list containing the current slot contents (may include nulls)
+     */
     public List<ItemStack> getContents() {
-        createInventoryIfNeeded();
+        if (this.bukkitInventory == null) {
+            return new ArrayList<>();
+        }
         return new ArrayList<>(Arrays.asList(this.bukkitInventory.getContents()));
     }
 
-    /** API preserved: previously declared on interface **/
+    /**
+     * Serializes the inventory contents into the provided K-NBT compound.
+     * <p>
+     * Each non-empty slot is stored as a Base64-encoded Bukkit ItemStack under
+     * the key "BukkitItem" along with its slot index.
+     *
+     * @param compound destination compound to write into (must not be null)
+     * @return the same compound instance for chaining
+     */
     public TagCompound save(TagCompound compound) {
         createInventoryIfNeeded();
         List<TagCompound> itemList = new ArrayList<>();
+        if (this.bukkitInventory == null) {
+            compound.getCompoundData().put("Items", new TagList(itemList));
+            return compound;
+        }
         for (int i = 0; i < this.bukkitInventory.getSize(); i++) {
             ItemStack itemStack = this.bukkitInventory.getItem(i);
-            if (itemStack != null && !itemStack.getType().isAir()) {
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
                 TagCompound item = new TagCompound();
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 try (BukkitObjectOutputStream oos = new BukkitObjectOutputStream(bos)) {
@@ -215,11 +388,16 @@ public class CustomInventory implements Listener {
         return compound;
     }
 
-    /** API preserved: previously declared on interface **/
+    /**
+     * Restores inventory contents from the provided K-NBT compound created by {@link #save(TagCompound)}.
+     *
+     * @param nbtTagCompound source compound containing an "Items" list
+     */
     public void load(TagCompound nbtTagCompound) {
         createInventoryIfNeeded();
         TagList items = nbtTagCompound.getAs("Items", TagList.class);
         if (items == null) return;
+        if (this.bukkitInventory == null) return;
         for (int i = 0; i < items.size(); i++) {
             TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
             int slot = itemCompound.getAs("Slot", TagByte.class).getByteData();
@@ -240,91 +418,120 @@ public class CustomInventory implements Listener {
         }
     }
 
-    /** Optional hooks retained without CraftBukkit types **/
+    /**
+     * Should be called when a player opens this inventory to keep the viewer
+     * list in sync while the underlying inventory may be lazily created.
+     *
+     * @param who the human entity opening the inventory
+     */
     public void onOpen(HumanEntity who) {
         this.transaction.add(who);
     }
 
+    /**
+     * Should be called when a player closes this inventory to remove them from
+     * the tracked viewer list.
+     *
+     * @param who the human entity closing the inventory
+     */
     public void onClose(HumanEntity who) {
         this.transaction.remove(who);
     }
 
-    @EventHandler
-    void onPluginDisable(PluginDisableEvent event) {
-        if (event.getPlugin().equals(MyPetApi.getPlugin())) {
-            close();
-        }
-    }
 
-    /** API preserved: previously declared on interface **/
+    /**
+     * Closes this inventory for all current viewers, if any.
+     */
     public void close() {
-        createInventoryIfNeeded();
         for (HumanEntity viewer : new ArrayList<>(getViewers())) {
             viewer.closeInventory();
         }
     }
 
-    /** API preserved: previously declared on interface **/
+    /**
+     * Opens this inventory GUI for the specified player.
+     *
+     * @param player the player who should see the inventory
+     */
     public void open(Player player) {
         createInventoryIfNeeded();
-        player.openInventory(getBukkitInventory());
+        Inventory inv = getBukkitInventory();
+        if (inv != null) {
+            player.openInventory(inv);
+        }
     }
+
+    /**
+     * Returns the current viewers of this inventory. If the backing inventory
+     * has not been created yet, falls back to the internally tracked openers.
+     *
+     * @return a list of human entities currently viewing this inventory
+     */
 
     public List<HumanEntity> getViewers() {
-        createInventoryIfNeeded();
-        List<HumanEntity> v = this.bukkitInventory.getViewers();
-        if (!transaction.isEmpty()) {
-            Set<HumanEntity> merged = new LinkedHashSet<>(v);
-            merged.addAll(transaction);
-            return new ArrayList<>(merged);
-        }
-        return v;
+        if (bukkitInventory != null) return bukkitInventory.getViewers();
+        return new ArrayList<>(transaction); // soft fallback, no allocation
     }
 
+    /**
+     * Returns the InventoryHolder for the backing inventory. Always {@code this}.
+     *
+     * @return this instance
+     */
     public InventoryHolder getOwner() {
-        return null;
+        return this;
     }
 
+    /**
+     * Gets the maximum stack size used by the backing Bukkit inventory.
+     *
+     * @return the max stack size (defaults to 64 before initialization)
+     */
     public int getMaxStackSize() {
-        createInventoryIfNeeded();
-        return this.bukkitInventory.getMaxStackSize();
+        return this.bukkitInventory != null ? this.bukkitInventory.getMaxStackSize() : this.stackSize;
     }
 
+    /**
+     * Sets the maximum stack size applied to the backing Bukkit inventory and
+     * updates the cached value used before initialization.
+     *
+     * @param i the new max stack size
+     */
     public void setMaxStackSize(int i) {
         this.stackSize = i;
         createInventoryIfNeeded();
-        this.bukkitInventory.setMaxStackSize(i);
+        if (this.bukkitInventory != null) {
+            this.bukkitInventory.setMaxStackSize(i);
+        }
     }
 
-    public Location getLocation() {
-        return null;
-    }
-
+    /**
+     * Removes and returns the item currently in the specified slot without
+     * triggering any additional logic.
+     *
+     * @param i zero-based slot index
+     * @return the previous item in the slot or null if empty/out of bounds
+     */
     public ItemStack removeItemNoUpdate(int i) {
         createInventoryIfNeeded();
+        if (this.bukkitInventory == null) return null;
         ItemStack current = this.bukkitInventory.getItem(i);
         if (current == null) return null;
         this.bukkitInventory.clear(i);
         return current;
     }
 
-    public void setChanged() {
-        // No-op for Bukkit inventory
-    }
-
-    public void clearContent() {
-        createInventoryIfNeeded();
-        this.bukkitInventory.clear();
-    }
-
-    public boolean isNotEmpty() {
-        return !this.isEmpty();
-    }
-
+    /**
+     * Checks whether the inventory contains no items (all slots null or air).
+     *
+     * @return true if inventory has no meaningful items; false otherwise
+     */
     public boolean isEmpty() {
-        createInventoryIfNeeded();
+        if (this.bukkitInventory == null) {
+            return true;
+        }
         for (ItemStack is : this.bukkitInventory.getContents()) {
-            if (is != null && !is.getType().isAir()) {
+            if (is != null && is.getType() != Material.AIR) {
                 return false;
             }
         }
