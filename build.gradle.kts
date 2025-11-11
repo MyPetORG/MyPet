@@ -14,8 +14,6 @@ group = "de.keyle"
 
 val buildType = project.findProperty("buildType")?.toString() ?: "local"
 val minecraftVersion by extra("1.21.9")
-val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6")
-val specialVersions by extra("")
 
 version = "3.14.0"
 
@@ -24,6 +22,16 @@ val nmsModules: List<String> = File(rootDir, "nms")
     ?.filter { it.isDirectory && it.name.matches(Regex("v[\\d_]+R\\d+")) }
     ?.map { ":nms:${it.name}" }
     ?: emptyList()
+
+val bukkitPackets by extra(
+    File(rootDir, "nms")
+        .listFiles()
+        ?.filter { it.isDirectory && it.name.matches(Regex("v[\\d_]+R\\d+")) }
+        ?.map { it.name }
+        ?.sorted()
+        ?.joinToString(";")
+        ?: ""
+)
 
 repositories {
     mavenCentral()
@@ -96,7 +104,6 @@ val filteringProps = mapOf(
     "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
     "minecraft" to mapOf("version" to minecraftVersion),
     "bukkit" to mapOf("packets" to bukkitPackets),
-    "special" to mapOf("versions" to specialVersions),
     "mypetVersion" to version,
     "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
 )
@@ -158,7 +165,6 @@ fun Manifest.attributesForMyPet() = attributes(
         "Project-Type" to buildType,
         "Project-Minecraft-Version" to minecraftVersion,
         "Project-Bukkit-Packets" to bukkitPackets,
-        "Special-MC-Versions" to specialVersions,
         "Git-Commit" to (System.getenv("GIT_COMMIT") ?: "")
     )
 )

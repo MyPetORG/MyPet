@@ -195,13 +195,7 @@ public class MonsterExperience {
 
     @SuppressWarnings("RedundantCast")
     public static MonsterExperience getMonsterExperience(Entity entity) {
-        String name = null;
-        if (MyPetApi.getCompatUtil().isCompatible("1.8")) {
-            name = entity.getCustomName();
-        } else if (entity instanceof LivingEntity) {
-            // casting for 1.7.10
-            name = ((LivingEntity) entity).getCustomName();
-        }
+        String name = entity.getCustomName();
 
         List<MonsterExperienceHook> hooks = MyPetApi.getPluginHookManager().getHooks(MonsterExperienceHook.class);
         for (MonsterExperienceHook hook : hooks) {

@@ -55,12 +55,8 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
         switch (args[0].toLowerCase()) {
             case "item":
                 if (sender instanceof Player) {
-                    ItemStack itemStack;
-                    if (MyPetApi.getCompatUtil().isCompatible("1.9")) {
-                        itemStack = ((Player) sender).getInventory().getItemInMainHand();
-                    } else {
-                        itemStack = ((Player) sender).getInventory().getItemInHand();
-                    }
+                    ItemStack itemStack = ((Player) sender).getInventory().getItemInMainHand();
+
                     sender.sendMessage("See server logs for the result.");
                     if (itemStack != null && itemStack.getType() != Material.AIR) {
                         String itemString = MyPetApi.getPlatformHelper().itemstackToString(itemStack);

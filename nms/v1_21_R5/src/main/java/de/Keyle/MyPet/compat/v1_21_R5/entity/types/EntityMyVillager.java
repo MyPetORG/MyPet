@@ -144,9 +144,7 @@ public class EntityMyVillager extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
-		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
-			builder.define(UNUSED_WATCHER, 0);
-		}
+        builder.define(UNUSED_WATCHER, 0);
 		builder.define(PROFESSION_WATCHER, new VillagerData(
 			EntityConverterService.VILLAGER_TYPE_REGISTRY.wrapAsHolder(EntityConverterService.VILLAGER_TYPE_REGISTRY.getValue(VillagerType.PLAINS)),
 			EntityConverterService.VILLAGER_PROFESSION_REGISTRY.wrapAsHolder(EntityConverterService.VILLAGER_PROFESSION_REGISTRY.getValue(VillagerProfession.NONE)),

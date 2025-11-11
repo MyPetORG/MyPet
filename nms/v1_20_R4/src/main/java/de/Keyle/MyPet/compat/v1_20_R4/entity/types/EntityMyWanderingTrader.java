@@ -57,9 +57,7 @@ public class EntityMyWanderingTrader extends EntityMyPet {
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
-		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
-			builder.define(UNUSED_WATCHER, 0);
-		}
+        builder.define(UNUSED_WATCHER, 0);
 	}
 
 	@Override

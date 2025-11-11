@@ -621,7 +621,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 String professionString = arg.replace("profession:", "");
                 if (Util.isInt(professionString)) {
                     int profession = Integer.parseInt(professionString);
-                    profession = Math.min(Math.max(0, profession), MyPetApi.getCompatUtil().isCompatible("1.14") ? 14 : 5);
+                    profession = Math.min(Math.max(0, profession), 14);
                     if (petType == MyPetType.Villager) {
                         compound.getCompoundData().put("Profession", new TagInt(profession));
                         if (!compound.getCompoundData().containsKey("VillagerLevel")) {

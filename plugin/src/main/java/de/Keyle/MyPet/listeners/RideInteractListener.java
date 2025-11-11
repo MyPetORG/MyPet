@@ -1,4 +1,24 @@
-package de.Keyle.MyPet.compat.v1_21_R5.listeners;
+/*
+ * This file is part of MyPet
+ *
+ * Copyright © 2011-2020 Keyle
+ * MyPet is licensed under the GNU Lesser General Public License.
+ *
+ * MyPet is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MyPet is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -6,20 +26,14 @@ import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import de.Keyle.MyPet.compat.v1_21_R5.entity.CraftMyPet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
 
 /**
- * 1.21_R5-specific riding compatibility:
- * - On 1.21+, Mojang has made changes to lead logic. We handle riding here using NMS startRiding.
- * - Kept entirely within the v1_21_R5 module to avoid legacy API issues on 1.8.8.
+ * Handles riding pets when players interact with them using the configured ride item.
  */
 public class RideInteractListener implements Listener {
 
@@ -37,7 +51,7 @@ public class RideInteractListener implements Listener {
                 return;
             }
         } catch (NoSuchMethodError ignored) {
-            // Not applicable on legacy, but this class is only loaded on 1.21_R5
+            // Fallback for versions without getHand() method (should not happen on 1.17+)
         }
 
         final Player player = event.getPlayer();
@@ -60,17 +74,12 @@ public class RideInteractListener implements Listener {
             return;
         }
 
-        // Use NMS directly for riding in this version module
-        try {
-            ServerPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
-            Entity nmsPet = ((CraftMyPet) petEntity).getHandle();
-            if (!petEntity.getPassengers().contains(player)) {
-                boolean mounted = nmsPlayer.startRiding(nmsPet, true);
-                if (mounted) {
-                    event.setCancelled(true);
-                }
+        // Use Bukkit API for riding (available since 1.11)
+        if (!petEntity.getPassengers().contains(player)) {
+            boolean mounted = petEntity.addPassenger(player);
+            if (mounted) {
+                event.setCancelled(true);
             }
-        } catch (Throwable ignored) {
         }
     }
 

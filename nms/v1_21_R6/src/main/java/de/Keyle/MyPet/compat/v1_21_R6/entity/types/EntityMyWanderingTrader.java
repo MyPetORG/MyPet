@@ -61,9 +61,7 @@ public class EntityMyWanderingTrader extends EntityMyPet {
 
 		builder.define(AGE_WATCHER, false);
 
-		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
-			builder.define(UNHAPPY_COUNTER, 0);
-		}
+        builder.define(UNHAPPY_COUNTER, 0);
 	}
 
 	@Override
