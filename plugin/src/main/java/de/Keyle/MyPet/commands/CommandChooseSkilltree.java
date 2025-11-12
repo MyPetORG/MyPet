@@ -47,11 +47,10 @@ import java.util.*;
 public class CommandChooseSkilltree implements CommandTabCompleter {
 
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("You can't use this command from server console!");
             return true;
         }
-        Player player = (Player) sender;
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
             player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
             return true;
@@ -213,8 +212,7 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (Permissions.has(player, "MyPet.admin", false)) {
                 if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);

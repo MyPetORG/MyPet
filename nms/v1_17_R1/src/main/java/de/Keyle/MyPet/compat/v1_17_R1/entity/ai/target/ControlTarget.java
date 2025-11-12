@@ -86,10 +86,9 @@ public class ControlTarget implements AIGoal {
 						} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
 							continue;
 						}
-					} else if (entityLiving instanceof TamableAnimal) {
+					} else if (entityLiving instanceof TamableAnimal tameable) {
 						Method getOwnerReflect = ReflectionUtil.getMethod(TamableAnimal.class, "getOwner"); //Method: getOwner -> mojang mapping maps that to fx() even tho it still is getOwner.
-						TamableAnimal tameable = (TamableAnimal) entityLiving;
-						try {
+                        try {
 							if (tameable.isTame() && getOwnerReflect.invoke(tameable, null) != null) {
 								Player tameableOwner = (Player) ((net.minecraft.world.entity.player.Player) getOwnerReflect.invoke(tameable, null)).getBukkitEntity();
 								if (myPet.getOwner().equals(tameableOwner)) {

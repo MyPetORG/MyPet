@@ -54,8 +54,7 @@ public class GriefPreventionPlusHook implements PlayerVersusEntityHook, PlayerVe
             DataStore dataStore = griefPrevention.getDataStore();
 
             if (!(defender instanceof Monster) && griefPrevention.config.claims_protectCreatures) {
-                if (defender instanceof Tameable && !griefPrevention.config.pvp_enabledWorlds.contains(defender.getWorld().getUID())) {
-                    final Tameable tameable = (Tameable) defender;
+                if (defender instanceof Tameable tameable && !griefPrevention.config.pvp_enabledWorlds.contains(defender.getWorld().getUID())) {
                     if (tameable.isTamed() && (tameable.getOwner() != null)) {
                         final UUID ownerID = tameable.getOwner().getUniqueId();
 

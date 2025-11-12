@@ -240,13 +240,11 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerDamageByEntity(final EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player victim = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player victim) {
             if (WorldGroup.getGroupByWorld(victim.getWorld()).isDisabled()) {
                 return;
             }
-            if (event.getDamager() instanceof CraftMyPetProjectile) {
-                CraftMyPetProjectile projectile = (CraftMyPetProjectile) event.getDamager();
+            if (event.getDamager() instanceof CraftMyPetProjectile projectile) {
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
                     MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
                     if (myPetPlayerDamagee.hasMyPet()) {
@@ -269,8 +267,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (!event.isCancelled() && event.getEntity() instanceof Player) {
-            Player victim = (Player) event.getEntity();
+        if (!event.isCancelled() && event.getEntity() instanceof Player victim) {
             if (WorldGroup.getGroupByWorld(victim.getWorld()).isDisabled()) {
                 return;
             }

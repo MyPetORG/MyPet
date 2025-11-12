@@ -48,12 +48,14 @@ public class ConfigurationLoader {
     public static void setDefault() {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
-        config.options().header("" +
-                "#################################################################\n" +
-                "           This is the main configuration of MyPet              #\n" +
-                "             You can find more info on the wiki:                #\n" +
-                "  https://wiki.mypet-plugin.de/setup/configurations/config.yml  #\n" +
-                "#################################################################\n");
+        config.options().header("""
+                \
+                #################################################################
+                           This is the main configuration of MyPet              #
+                             You can find more info on the wiki:                #
+                  https://wiki.mypet-plugin.de/setup/configurations/config.yml  #
+                #################################################################
+                """);
         config.options().copyHeader(true);
 
         config.addDefault("MyPet.Update.Check", Update.CHECK);
@@ -169,12 +171,14 @@ public class ConfigurationLoader {
 
         File expConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "exp-config.yml");
         config = new YamlConfiguration();
-        config.options().header("" +
-                "#####################################################################\n" +
-                "              This is the exp configuration of MyPet                #\n" +
-                "                You can find more info on the wiki:                 #\n" +
-                "  https://wiki.mypet-plugin.de/setup/configurations/exp-config.yml  #\n" +
-                "#####################################################################\n");
+        config.options().header("""
+                \
+                #####################################################################
+                              This is the exp configuration of MyPet                #
+                                You can find more info on the wiki:                 #
+                  https://wiki.mypet-plugin.de/setup/configurations/exp-config.yml  #
+                #####################################################################
+                """);
         config.options().copyHeader(true);
 
         if (expConfigFile.exists()) {
@@ -213,12 +217,14 @@ public class ConfigurationLoader {
             }
         }
 
-        config.options().header("" +
-                "#####################################################################\n" +
-                "              This is the pet configuration of MyPet                #\n" +
-                "                You can find more info on the wiki:                 #\n" +
-                "  https://wiki.mypet-plugin.de/setup/configurations/pet-config.yml  #\n" +
-                "#####################################################################\n");
+        config.options().header("""
+                \
+                #####################################################################
+                              This is the pet configuration of MyPet                #
+                                You can find more info on the wiki:                 #
+                  https://wiki.mypet-plugin.de/setup/configurations/pet-config.yml  #
+                #####################################################################
+                """);
         config.options().copyHeader(true);
 
         for (MyPetType petType : MyPetType.values()) {

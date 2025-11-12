@@ -278,8 +278,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean comparePlayerWithEntity(MyPetPlayer player, Object obj) {
-        if (obj instanceof net.minecraft.world.entity.player.Player && player != null && player.getPlayer() != null) {
-            net.minecraft.world.entity.player.Player entityHuman = (net.minecraft.world.entity.player.Player) obj;
+        if (obj instanceof net.minecraft.world.entity.player.Player entityHuman && player != null && player.getPlayer() != null) {
             return player.getPlayer().getUniqueId().equals(entityHuman.getUUID());
         }
         return false;

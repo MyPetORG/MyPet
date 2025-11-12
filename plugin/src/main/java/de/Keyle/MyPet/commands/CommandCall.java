@@ -36,8 +36,7 @@ import java.util.List;
 
 public class CommandCall implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player petOwner = (Player) sender;
+        if (sender instanceof Player petOwner) {
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
                 sender.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
                 return true;

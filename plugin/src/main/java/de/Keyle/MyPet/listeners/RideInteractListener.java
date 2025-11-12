@@ -42,7 +42,7 @@ public class RideInteractListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (!(event.getRightClicked() instanceof MyPetBukkitEntity)) {
+        if (!(event.getRightClicked() instanceof MyPetBukkitEntity petEntity)) {
             return;
         }
         // Only consider main-hand interactions
@@ -55,7 +55,6 @@ public class RideInteractListener implements Listener {
         }
 
         final Player player = event.getPlayer();
-        final MyPetBukkitEntity petEntity = (MyPetBukkitEntity) event.getRightClicked();
 
         if (!isOwner(player, petEntity)) {
             return;
@@ -85,7 +84,7 @@ public class RideInteractListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMonitorRideFinisher(PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof MyPetBukkitEntity)) {
+        if (!(event.getRightClicked() instanceof MyPetBukkitEntity petEntity)) {
             return;
         }
         try {
@@ -95,7 +94,6 @@ public class RideInteractListener implements Listener {
         } catch (NoSuchMethodError ignored) {
         }
         final Player player = event.getPlayer();
-        final MyPetBukkitEntity petEntity = (MyPetBukkitEntity) event.getRightClicked();
         if (!isOwner(player, petEntity)) {
             return;
         }

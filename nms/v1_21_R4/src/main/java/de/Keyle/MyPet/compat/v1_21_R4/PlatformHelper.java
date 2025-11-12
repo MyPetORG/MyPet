@@ -309,8 +309,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean comparePlayerWithEntity(MyPetPlayer player, Object obj) {
-        if (obj instanceof net.minecraft.world.entity.player.Player && player != null && player.getPlayer() != null) {
-            net.minecraft.world.entity.player.Player entityHuman = (net.minecraft.world.entity.player.Player) obj;
+        if (obj instanceof net.minecraft.world.entity.player.Player entityHuman && player != null && player.getPlayer() != null) {
             return player.getPlayer().getUniqueId().equals(entityHuman.getUUID());
         }
         return false;
@@ -332,27 +331,19 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                     return true;
                 }
 
-                if (itemstack.getItem() instanceof AxeItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof ShovelItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof HoeItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof BowItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof ShieldItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof TridentItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof FishingRodItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof CompassItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof FoodOnAStickItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof SignItem) {
-                    return true;
-                } else return itemstack.getItem() instanceof CrossbowItem;
+                return switch (itemstack.getItem()) {
+                    case AxeItem axeItem -> true;
+                    case ShovelItem shovelItem -> true;
+                    case HoeItem hoeItem -> true;
+                    case BowItem bowItem -> true;
+                    case ShieldItem shieldItem -> true;
+                    case TridentItem tridentItem -> true;
+                    case FishingRodItem fishingRodItem -> true;
+                    case CompassItem compassItem -> true;
+                    case FoodOnAStickItem foodOnAStickItem -> true;
+                    case SignItem signItem -> true;
+                    default -> itemstack.getItem() instanceof CrossbowItem;
+                };
             }
             return true;
         }

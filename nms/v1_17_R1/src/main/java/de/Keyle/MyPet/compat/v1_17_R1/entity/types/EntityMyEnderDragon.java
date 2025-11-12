@@ -104,10 +104,9 @@ public class EntityMyEnderDragon extends EntityMyPet {
 		}
 		if (!registered && this.valid) {
 			//I HATE ALL OF THIS - Thank you Spigot vs Paper
-			if (this.getCommandSenderWorld() instanceof ServerLevel) {
-				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
+			if (this.getCommandSenderWorld() instanceof ServerLevel world) {
 
-				//The next part used to be prettier but... whilst it is listed everywhere I looked, world.dragonParts is just not... available?
+                //The next part used to be prettier but... whilst it is listed everywhere I looked, world.dragonParts is just not... available?
 				Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "R"); //Mojang Field: dragonParts
 
 				var dragonParts = ReflectionUtil.getFieldValue(dragonPartsField, world);

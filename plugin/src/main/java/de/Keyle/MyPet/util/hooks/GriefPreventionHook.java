@@ -49,8 +49,7 @@ public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersus
             }
 
             if (!(defender instanceof Monster) && griefPrevention.config_claims_protectCreatures) {
-                if (defender instanceof Tameable) {
-                    final Tameable tameable = (Tameable) defender;
+                if (defender instanceof Tameable tameable) {
                     if (tameable.isTamed() && tameable.getOwner() != null) {
                         UUID ownerID = tameable.getOwner().getUniqueId();
                         if (attacker.getUniqueId().equals(ownerID)) {

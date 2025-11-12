@@ -178,8 +178,7 @@ public class CommandShop implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
         if (shopManager.isPresent()) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
+            if (sender instanceof Player player) {
                 if (strings.length == 1) {
                     return filterTabCompletionResults(getAvailablePetShops(player), strings[0]);
                 } else if (strings.length == 2) {

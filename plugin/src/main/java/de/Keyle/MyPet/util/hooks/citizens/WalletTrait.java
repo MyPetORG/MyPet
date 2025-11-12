@@ -83,26 +83,27 @@ public class WalletTrait extends Trait {
         if (amount <= 0.0D) {
             return false;
         }
-        switch (type) {
-            case Private:
+        return switch (type) {
+            case Private -> {
                 this.credit += amount;
-                return true;
-            case Player:
+                yield true;
+            }
+            case Player -> {
                 if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
                     MyPetApi.getPlugin().getLogger().info(ChatColor.RED + "The MyPet-Wallet trait needs an economy plugin to use the \"Owner\" wallet type! (NPC: " + this.getNPC().getId() + ")");
-                    return false;
+                    yield false;
                 }
-                return ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.npc.getTrait(Owner.class).getOwnerId()), amount).transactionSuccess();
-            case Bank:
+                yield ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.npc.getTrait(Owner.class).getOwnerId()), amount).transactionSuccess();
+            }
+            case Bank -> {
                 if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
                     MyPetApi.getPlugin().getLogger().info(ChatColor.RED + "The MyPet-Wallet trait needs an economy plugin to use the \"Bank\" wallet type! (NPC: " + this.getNPC().getId() + ")");
-                    return false;
+                    yield false;
                 }
-                return ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().isBankOwner(account, Bukkit.getOfflinePlayer(this.npc.getTrait(Owner.class).getOwnerId())).transactionSuccess() && ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().bankDeposit(account, amount).transactionSuccess();
-            case None:
-                return true;
-        }
-        return false;
+                yield ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().isBankOwner(account, Bukkit.getOfflinePlayer(this.npc.getTrait(Owner.class).getOwnerId())).transactionSuccess() && ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().bankDeposit(account, amount).transactionSuccess();
+            }
+            case None -> true;
+        };
     }
 
     @Override

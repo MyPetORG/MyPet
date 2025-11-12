@@ -97,8 +97,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         Collection<Skill> skills = myPet.getSkills().all();
         if (!skills.isEmpty()) {
             for (Skill skill : skills) {
-                if (skill instanceof NBTStorage) {
-                    NBTStorage storageSkill = (NBTStorage) skill;
+                if (skill instanceof NBTStorage storageSkill) {
                     if (storedMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {
                         storageSkill.load(storedMyPet.getSkillInfo().getAs(skill.getName(), TagCompound.class));
                     }

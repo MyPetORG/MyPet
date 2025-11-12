@@ -199,8 +199,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MySheep) {
             ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
             ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
-        } else if (myPet instanceof MyVillager) {
-            MyVillager villagerPet = (MyVillager) myPet;
+        } else if (myPet instanceof MyVillager villagerPet) {
             Villager villagerEntity = ((Villager) normalEntity);
             net.minecraft.world.entity.npc.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 

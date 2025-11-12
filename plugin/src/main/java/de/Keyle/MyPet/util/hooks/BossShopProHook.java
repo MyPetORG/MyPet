@@ -173,8 +173,7 @@ public class BossShopProHook implements PluginHook {
                                 pet.setExp(Double.parseDouble(exp));
                             }
                         }
-                    } else if (os instanceof ArrayList) {
-                        ArrayList options = (ArrayList) os;
+                    } else if (os instanceof ArrayList options) {
                         if (!options.isEmpty()) {
                             optionsArray = new String[options.size()];
                             for (int i = 0; i < options.size(); i++) {

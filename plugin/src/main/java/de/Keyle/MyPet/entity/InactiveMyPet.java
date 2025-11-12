@@ -288,8 +288,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
             NBTSkills = new TagCompound();
         }
         for (Skill skill : skills) {
-            if (skill instanceof NBTStorage) {
-                NBTStorage storageSkill = (NBTStorage) skill;
+            if (skill instanceof NBTStorage storageSkill) {
                 TagCompound s = storageSkill.save();
                 if (s != null) {
                     this.NBTSkills.getCompoundData().put(skill.getName(), s);

@@ -38,8 +38,7 @@ import java.util.List;
 
 public class CommandPickup implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player owner = (Player) sender;
+        if (sender instanceof Player owner) {
             if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
                 owner.sendMessage(Translation.getString("Message.No.AllowedHere", owner));
                 return true;

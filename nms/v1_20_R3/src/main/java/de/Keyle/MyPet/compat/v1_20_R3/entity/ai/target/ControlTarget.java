@@ -82,9 +82,8 @@ public class ControlTarget implements AIGoal {
 						} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
 							continue;
 						}
-					} else if (entityLiving instanceof TamableAnimal) {
-						TamableAnimal tameable = (TamableAnimal) entityLiving;
-						if (tameable.isTame() && tameable.getOwner() != null) {
+					} else if (entityLiving instanceof TamableAnimal tameable) {
+                        if (tameable.isTame() && tameable.getOwner() != null) {
 							Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
 							if (myPet.getOwner().equals(tameableOwner)) {
 								continue;

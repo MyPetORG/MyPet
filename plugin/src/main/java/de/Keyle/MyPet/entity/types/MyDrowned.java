@@ -72,8 +72,7 @@ public class MyDrowned extends MyPet implements de.Keyle.MyPet.api.entity.types.
             TagList equipment = info.get("Equipment");
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
             for (TagBase tag : equipmentList) {
-                if (tag instanceof TagCompound) {
-                    TagCompound item = (TagCompound) tag;
+                if (tag instanceof TagCompound item) {
                     try {
                         ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
                         setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);

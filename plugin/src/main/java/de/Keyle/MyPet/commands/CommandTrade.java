@@ -53,8 +53,7 @@ public class CommandTrade implements CommandTabCompleter {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
 
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
                 player.sendMessage(Translation.getString("Message.No.AllowedHere", player));

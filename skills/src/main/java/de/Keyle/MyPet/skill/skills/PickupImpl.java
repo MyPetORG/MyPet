@@ -124,8 +124,7 @@ public class PickupImpl implements Pickup {
                 double range = this.range.getValue().doubleValue();
                 for (Entity entity : petEntity.getNearbyEntities(range, range, range)) {
                     if (!entity.isDead()) {
-                        if (entity instanceof Item) {
-                            Item itemEntity = (Item) entity;
+                        if (entity instanceof Item itemEntity) {
                             ItemStack itemStack = itemEntity.getItemStack();
 
                             if (itemEntity.getPickupDelay() <= 0 && itemStack.getAmount() > 0) {
@@ -157,8 +156,7 @@ public class PickupImpl implements Pickup {
                                     itemEntity.setItemStack(itemStack);
                                 }
                             }
-                        } else if (expPickup.getValue() && entity instanceof ExperienceOrb) {
-                            ExperienceOrb expEntity = (ExperienceOrb) entity;
+                        } else if (expPickup.getValue() && entity instanceof ExperienceOrb expEntity) {
                             myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
                             MyPetApi.getPlatformHelper().doPickupAnimation(petEntity, expEntity);
                             expEntity.setExperience(0);

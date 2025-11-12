@@ -162,12 +162,14 @@ public class WorldGroup {
             return;
         }
 
-        config.options().header("" +
-                "######################################################################\n" +
-                "          This is the world group configuration of MyPet             #\n" +
-                "                You can find more info on the wiki:                  #\n" +
-                "  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #\n" +
-                "######################################################################\n");
+        config.options().header("""
+                \
+                ######################################################################
+                          This is the world group configuration of MyPet             #
+                                You can find more info on the wiki:                  #
+                  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #
+                ######################################################################
+                """);
         config.options().copyHeader(true);
 
         Set<String> groups;

@@ -40,8 +40,7 @@ import java.util.List;
 
 public class CommandHelp implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             player.sendMessage("-------------------- " + ChatColor.GOLD + "MyPet - " + Translation.getString("Name.Help", player) + ChatColor.RESET + " --------------------");
             if (Permissions.has(player, "MyPet.admin", false)) {
                 player.sendMessage(Util.formatText(Translation.getString("Message.Command.Help.Admin", player), "/petadmin"));

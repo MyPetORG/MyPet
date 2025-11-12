@@ -37,8 +37,7 @@ import java.util.List;
 public class CommandCaptureHelper implements CommandTabCompleter {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        if (commandSender instanceof Player player) {
 
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
                 player.sendMessage(Translation.getString("Message.No.AllowedHere", player));

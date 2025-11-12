@@ -93,18 +93,15 @@ public class StompImpl implements Stomp {
 
         myPet.getEntity().ifPresent(petEntity -> {
             for (Entity e : petEntity.getNearbyEntities(2.5, 2.5, 2.5)) {
-                if (e instanceof LivingEntity) {
-                    final LivingEntity livingEntity = (LivingEntity) e;
+                if (e instanceof LivingEntity livingEntity) {
 
-                    if (livingEntity instanceof Player) {
-                        Player targetPlayer = (Player) livingEntity;
+                    if (livingEntity instanceof Player targetPlayer) {
                         if (myPet.getOwner().equals(targetPlayer)) {
                             continue;
                         } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                             continue;
                         }
-                    } else if (livingEntity instanceof Tameable) {
-                        Tameable tameable = (Tameable) livingEntity;
+                    } else if (livingEntity instanceof Tameable tameable) {
                         if (tameable.isTamed() && tameable.getOwner() != null) {
                             AnimalTamer tameableOwner = tameable.getOwner();
                             if (myPet.getOwner().equals(tameableOwner)) {

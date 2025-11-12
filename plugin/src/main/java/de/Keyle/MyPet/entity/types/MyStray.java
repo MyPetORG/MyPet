@@ -81,8 +81,7 @@ public class MyStray extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             TagList equipment = info.getAs("Equipment", TagList.class);
             List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
             for (TagBase tag : equipmentList) {
-                if (tag instanceof TagCompound) {
-                    TagCompound item = (TagCompound) tag;
+                if (tag instanceof TagCompound item) {
                     try {
                         ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
                         setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);

@@ -92,8 +92,7 @@ public class CombatLogXHook implements PluginHook {
         }
 
         if (damager != null && damaged instanceof LivingEntity) {
-            if (damaged instanceof Player) {
-                Player p = (Player) damaged;
+            if (damaged instanceof Player p) {
                 LivingEntity enemy = (LivingEntity) damager;
                 TagReason reason = TagReason.ATTACKED;
                 CombatUtil.tag(p, enemy, TagType.PLAYER, reason);

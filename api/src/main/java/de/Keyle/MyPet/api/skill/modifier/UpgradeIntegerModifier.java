@@ -43,14 +43,11 @@ public class UpgradeIntegerModifier implements UpgradeModifier<Integer> {
     }
 
     public Integer modify(Integer n) {
-        switch (type) {
-            case Add:
-                return new BigDecimal(n.toString()).add(new BigDecimal(value.toString())).intValue();
-            case Subtract:
-                return new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString())).intValue();
-            default:
-                return value;
-        }
+        return switch (type) {
+            case Add -> new BigDecimal(n.toString()).add(new BigDecimal(value.toString())).intValue();
+            case Subtract -> new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString())).intValue();
+            default -> value;
+        };
     }
 
     @Override

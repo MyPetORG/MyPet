@@ -99,13 +99,9 @@ public class FactionsHook implements PlayerVersusPlayerHook {
     public boolean canHurt(Player attacker, Player defender) {
         try {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
-            switch (apiVersion) {
-                case V1:
-                case V2:
-                case V3:
-                case Savage:
-                    return engineMethod.invoke(engine, sub, false).equals(true);
-            }
+            return switch (apiVersion) {
+                case V1, V2, V3, Savage -> engineMethod.invoke(engine, sub, false).equals(true);
+            };
         } catch (Throwable ignored) {
         }
         return true;

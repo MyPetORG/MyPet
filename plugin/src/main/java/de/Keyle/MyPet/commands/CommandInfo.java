@@ -66,8 +66,7 @@ public class CommandInfo implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         MyPetPlayer petOwner;
 
-        if (args.length == 0 && sender instanceof Player) {
-            Player player = (Player) sender;
+        if (args.length == 0 && sender instanceof Player player) {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
                 player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
                 return true;
@@ -145,8 +144,7 @@ public class CommandInfo implements CommandTabCompleter {
             if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, sender, myPet)) {
                 sender.sendMessage("   " + Translation.getString("Name.Hunger", sender) + ": " + Math.round(myPet.getSaturation()));
 
-                if (sender instanceof Player) {
-                    Player player = (Player) sender;
+                if (sender instanceof Player player) {
 
                     RawMessage message = new RawMessage("   " + Translation.getString("Name.Food", player) + ": ");
 
@@ -267,8 +265,7 @@ public class CommandInfo implements CommandTabCompleter {
     }
 
     public static boolean canSee(boolean adminOnly, CommandSender sender, StoredMyPet storedMyPet) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin", false);
         } else {
             return true;

@@ -93,10 +93,9 @@ public class EntityMyEnderDragon extends EntityMyPet {
 			}
 		}
 		if (!registered && this.valid) {
-			if (this.getCommandSenderWorld() instanceof ServerLevel) {
-				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
-				
-				//The next part used to be prettier but... whilst it is listed everywhere I looked, ServerLevel dragonParts isn't public so...
+			if (this.getCommandSenderWorld() instanceof ServerLevel world) {
+
+                //The next part used to be prettier but... whilst it is listed everywhere I looked, ServerLevel dragonParts isn't public so...
 				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(PlatformHelper.dragonPartsField, world);
 				Arrays.stream(this.children)
 						.forEach(entityMyPetPart -> dragonParts.put(entityMyPetPart.getId(), entityMyPetPart));

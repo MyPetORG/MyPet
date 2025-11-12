@@ -464,16 +464,11 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                             }
                         }
                         if (spawn && fall) {
-                            switch (p.getWorld().getBlockAt(p.getLocation().subtract(0, 0.5, 0)).getType().name()) {
-                                case "AIR":
-                                case "CAVE_AIR":
-                                case "VOID_AIR":
-                                case "WATER":
-                                case "STATIONARY_WATER":
-                                case "LAVA":
-                                case "STATIONARY_LAVA":
-                                    spawn = false;
-                            }
+                            spawn = switch (p.getWorld().getBlockAt(p.getLocation().subtract(0, 0.5, 0)).getType().name()) {
+                                case "AIR", "CAVE_AIR", "VOID_AIR", "WATER", "STATIONARY_WATER", "LAVA",
+                                     "STATIONARY_LAVA" -> false;
+                                default -> spawn;
+                            };
                         }
 
                         if (spawn && myPet.createEntity() == MyPet.SpawnFlags.Success) {
@@ -539,14 +534,11 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
-        } else if (obj instanceof Player) {
-            Player player = (Player) obj;
+        } else if (obj instanceof Player player) {
             return getPlayerUUID().equals(player.getUniqueId()) || Util.stringsEqual(getName(), player.getName(), false);
-        } else if (obj instanceof OfflinePlayer) {
-            OfflinePlayer offlinePlayer = (OfflinePlayer) obj;
+        } else if (obj instanceof OfflinePlayer offlinePlayer) {
             return Objects.equals(getPlayer().getUniqueId(), offlinePlayer.getUniqueId()) || Util.stringsEqual(offlinePlayer.getName(), getName(), false);
-        } else if (obj instanceof AnimalTamer) {
-            AnimalTamer animalTamer = (AnimalTamer) obj;
+        } else if (obj instanceof AnimalTamer animalTamer) {
             return Util.stringsEqual(animalTamer.getName(), getName(), false);
         } else if (obj instanceof MyPetPlayerImpl) {
             return this == obj;

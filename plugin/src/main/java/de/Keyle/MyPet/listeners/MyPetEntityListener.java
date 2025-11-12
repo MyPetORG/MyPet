@@ -153,8 +153,7 @@ public class MyPetEntityListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
             return;
         }
-        if (event.getEntity() instanceof MyPetBukkitEntity) {
-            MyPetBukkitEntity craftMyPet = (MyPetBukkitEntity) event.getEntity();
+        if (event.getEntity() instanceof MyPetBukkitEntity craftMyPet) {
             MyPet myPet = craftMyPet.getMyPet();
             if (event.getDamager() instanceof Player || (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)) {
                 Player damager;
@@ -310,8 +309,7 @@ public class MyPetEntityListener implements Listener {
                     }
                 }
             }
-            if (!event.isCancelled() && event.getDamager() instanceof LivingEntity) {
-                LivingEntity damager = (LivingEntity) event.getDamager();
+            if (!event.isCancelled() && event.getDamager() instanceof LivingEntity damager) {
                 if (damager instanceof Player) {
                     if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
                         return;
@@ -320,8 +318,7 @@ public class MyPetEntityListener implements Listener {
 
                 if (!isSkillActive) {
                     for (Skill skill : myPet.getSkills().all()) {
-                        if (skill instanceof OnDamageByEntitySkill) {
-                            OnDamageByEntitySkill damageByEntitySkill = (OnDamageByEntitySkill) skill;
+                        if (skill instanceof OnDamageByEntitySkill damageByEntitySkill) {
                             if (damageByEntitySkill.trigger()) {
                                 isSkillActive = true;
                                 damageByEntitySkill.apply(damager, event);
@@ -351,8 +348,7 @@ public class MyPetEntityListener implements Listener {
 
             if (Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && !(target instanceof Player) && !(target instanceof MyPetBukkitEntity)) {
                 LivingEntity livingSource = null;
-                if (source instanceof Projectile) {
-                    Projectile projectile = (Projectile) source;
+                if (source instanceof Projectile projectile) {
                     if (projectile.getShooter() instanceof LivingEntity) {
                         livingSource = (LivingEntity) projectile.getShooter();
                     }
@@ -390,8 +386,7 @@ public class MyPetEntityListener implements Listener {
 
                 if (!isSkillActive) {
                     for (Skill skill : myPet.getSkills().all()) {
-                        if (skill instanceof OnHitSkill) {
-                            OnHitSkill onHitSkill = (OnHitSkill) skill;
+                        if (skill instanceof OnHitSkill onHitSkill) {
                             if (onHitSkill.trigger()) {
                                 MyPetOnHitSkillEvent skillEvent = new MyPetOnHitSkillEvent(myPet, onHitSkill, (LivingEntity) target);
                                 Bukkit.getPluginManager().callEvent(skillEvent);
@@ -415,12 +410,10 @@ public class MyPetEntityListener implements Listener {
             // catch invalid events (i.e. EnchantmentAPI)
             return;
         }
-        if (event.getEntity() instanceof MyPetBukkitEntity) {
+        if (event.getEntity() instanceof MyPetBukkitEntity bukkitEntity) {
             if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) {
                 return;
             }
-
-            MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
             if(event.getCause() == DamageCause.FALL && bukkitEntity.hasPotionEffect(PotionEffectType.JUMP)) {
                 event.setCancelled(true);
@@ -513,8 +506,7 @@ public class MyPetEntityListener implements Listener {
             myPet.setRespawnTime((Configuration.Respawn.TIME_FIXED + MyPetApi.getMyPetInfo().getCustomRespawnTimeFixed(myPet.getPetType())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_FACTOR + MyPetApi.getMyPetInfo().getCustomRespawnTimeFactor(myPet.getPetType()))));
             myPet.setStatus(PetState.Dead);
 
-            if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
+            if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent e) {
 
                 if (e.getDamager() instanceof Player) {
                     myPet.setRespawnTime((Configuration.Respawn.TIME_PLAYER_FIXED + MyPetApi.getMyPetInfo().getCustomRespawnTimeFixed(myPet.getPetType())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_PLAYER_FACTOR + MyPetApi.getMyPetInfo().getCustomRespawnTimeFactor(myPet.getPetType()))));
@@ -587,8 +579,7 @@ public class MyPetEntityListener implements Listener {
         if (event.getEntity() instanceof MyPetBukkitEntity && MyPetApi.getPlatformHelper().gameruleDoDeathMessages(event.getEntity())) {
             MyPet myPet = ((MyPetBukkitEntity) event.getEntity()).getMyPet();
             String killer;
-            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent e) {
 
                 if (e.getDamager().getType() == EntityType.PLAYER) {
                     if (e.getDamager() == myPet.getOwner().getPlayer()) {
@@ -602,11 +593,9 @@ public class MyPetEntityListener implements Listener {
                     if (w.isTamed()) {
                         killer += " (" + w.getOwner().getName() + ')';
                     }
-                } else if (e.getDamager() instanceof MyPetBukkitEntity) {
-                    MyPetBukkitEntity craftMyPet = (MyPetBukkitEntity) e.getDamager();
+                } else if (e.getDamager() instanceof MyPetBukkitEntity craftMyPet) {
                     killer = ChatColor.AQUA + craftMyPet.getMyPet().getPetName() + ChatColor.RESET + " (" + craftMyPet.getOwner().getName() + ')';
-                } else if (e.getDamager() instanceof Projectile) {
-                    Projectile projectile = (Projectile) e.getDamager();
+                } else if (e.getDamager() instanceof Projectile projectile) {
                     killer = Translation.getString("Name." + Util.capitalizeName(projectile.getType().name()), myPet.getOwner()) + " (";
                     if (projectile.getShooter() instanceof Player) {
                         if (projectile.getShooter() == myPet.getOwner().getPlayer()) {

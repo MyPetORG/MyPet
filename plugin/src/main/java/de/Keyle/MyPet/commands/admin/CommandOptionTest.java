@@ -32,8 +32,7 @@ public class CommandOptionTest implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
 

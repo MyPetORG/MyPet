@@ -331,8 +331,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         Collection<Skill> skillList = this.getSkills().all();
         if (!skillList.isEmpty()) {
             for (Skill skill : skillList) {
-                if (skill instanceof NBTStorage) {
-                    NBTStorage storageSkill = (NBTStorage) skill;
+                if (skill instanceof NBTStorage storageSkill) {
                     TagCompound s = storageSkill.save();
                     if (s != null) {
                         skillsNBT.getCompoundData().put(skill.getName(), s);
@@ -717,8 +716,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         Collection<Skill> skillList = this.getSkills().all();
         if (!skillList.isEmpty()) {
             for (Skill skill : skillList) {
-                if (skill instanceof NBTStorage) {
-                    NBTStorage storageSkill = (NBTStorage) skill;
+                if (skill instanceof NBTStorage storageSkill) {
                     TagCompound s = storageSkill.save();
                     if (s != null) {
                         skillsNBT.getCompoundData().put(skill.getName(), s);

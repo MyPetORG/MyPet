@@ -53,8 +53,7 @@ import java.util.Optional;
 public class CommandRelease implements CommandTabCompleter {
 
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player petOwner = (Player) sender;
+        if (sender instanceof Player petOwner) {
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
                 petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
                 return true;

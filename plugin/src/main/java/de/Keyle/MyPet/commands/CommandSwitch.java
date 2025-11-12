@@ -52,11 +52,10 @@ public class CommandSwitch implements CommandTabCompleter {
 
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("You can't use this command from server console!");
             return true;
         }
-        Player player = (Player) sender;
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
             player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
             return true;

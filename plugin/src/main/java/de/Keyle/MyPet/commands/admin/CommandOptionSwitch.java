@@ -53,8 +53,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         final String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
 
         if (parameter.length == 0) {
-            if (sender instanceof Player) {
-                Player petOwner = (Player) sender;
+            if (sender instanceof Player petOwner) {
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(petOwner)) {
                     o = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
                 }

@@ -119,10 +119,8 @@ public class EntityListener implements Listener {
             return;
         }
         if (Configuration.Misc.ALLOW_RANGED_LEASHING) {
-            if (event.getEntity() instanceof Player) {
-                if (event.getProjectile() instanceof Arrow) {
-                    Player player = (Player) event.getEntity();
-                    Arrow projectile = (Arrow) event.getProjectile();
+            if (event.getEntity() instanceof Player player) {
+                if (event.getProjectile() instanceof Arrow projectile) {
                     PlayerInventory inventory = player.getInventory();
 
                     if (event.getBow() != null) {
@@ -131,18 +129,14 @@ public class EntityListener implements Listener {
 
                     ItemStack arrow = null;
                     if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                        switch (inventory.getItemInOffHand().getType()) {
-                            case ARROW:
-                            case TIPPED_ARROW:
-                            case SPECTRAL_ARROW:
-                                arrow = inventory.getItemInOffHand();
-                        }
-                        switch (inventory.getItemInMainHand().getType()) {
-                            case ARROW:
-                            case TIPPED_ARROW:
-                            case SPECTRAL_ARROW:
-                                arrow = inventory.getItemInMainHand();
-                        }
+                        arrow = switch (inventory.getItemInOffHand().getType()) {
+                            case ARROW, TIPPED_ARROW, SPECTRAL_ARROW -> inventory.getItemInOffHand();
+                            default -> arrow;
+                        };
+                        arrow = switch (inventory.getItemInMainHand().getType()) {
+                            case ARROW, TIPPED_ARROW, SPECTRAL_ARROW -> inventory.getItemInMainHand();
+                            default -> arrow;
+                        };
                     }
                     if (arrow == null) {
                         int firstArrow = -1;
@@ -182,8 +176,7 @@ public class EntityListener implements Listener {
             return;
         }
         Projectile projectile = event.getEntity();
-        if (projectile.getShooter() instanceof Player && !(projectile instanceof Arrow)) {
-            Player player = (Player) projectile.getShooter();
+        if (projectile.getShooter() instanceof Player player && !(projectile instanceof Arrow)) {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
                 return;
             }
@@ -211,8 +204,7 @@ public class EntityListener implements Listener {
                 ItemStack leashItem = null;
                 ItemStack leashItemArrow = null;
                 Player player;
-                if (Configuration.Misc.ALLOW_RANGED_LEASHING && event.getDamager() instanceof Projectile) {
-                    Projectile projectile = (Projectile) event.getDamager();
+                if (Configuration.Misc.ALLOW_RANGED_LEASHING && event.getDamager() instanceof Projectile projectile) {
                     if (!(projectile.getShooter() instanceof Player)) {
                         return;
                     }
@@ -409,8 +401,7 @@ public class EntityListener implements Listener {
 
             if (Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && !(target instanceof Player) && !(target instanceof MyPetBukkitEntity)) {
                 LivingEntity livingSource = null;
-                if (source instanceof Projectile) {
-                    Projectile projectile = (Projectile) source;
+                if (source instanceof Projectile projectile) {
                     if (projectile.getShooter() instanceof LivingEntity) {
                         livingSource = (LivingEntity) projectile.getShooter();
                     }
@@ -429,8 +420,7 @@ public class EntityListener implements Listener {
                 }
             }
 
-            if (source instanceof Player) {
-                Player player = (Player) source;
+            if (source instanceof Player player) {
                 if (event.getDamage() == 0) {
                     return;
                 } else if (target instanceof MyPetBukkitEntity) {
@@ -517,8 +507,7 @@ public class EntityListener implements Listener {
                         double randomExp = MonsterExperience.getMonsterExperience(deadEntity).getRandomExp();
                         myPet.getExperience().addExp(damagePercentMap.get(entity.getUniqueId()) * randomExp, true);
                     }
-                } else if (entity instanceof Player) {
-                    Player owner = (Player) entity;
+                } else if (entity instanceof Player owner) {
                     if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
                         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
                         if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
@@ -535,10 +524,8 @@ public class EntityListener implements Listener {
                             }
                         }
                     }
-                } else if (entity instanceof Tameable) {
-                    Tameable tameable = (Tameable) entity;
-                    if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player) {
-                        Player owner = (Player) tameable.getOwner();
+                } else if (entity instanceof Tameable tameable) {
+                    if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player owner) {
                         if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
                             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
                             if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
@@ -557,8 +544,7 @@ public class EntityListener implements Listener {
                 }
             }
             deadEntity.removeMetadata("MyPetDamageCount", MyPetApi.getPlugin());
-        } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
+        } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent edbee) {
 
             Entity damager = edbee.getDamager();
             if (damager instanceof Projectile && ((Projectile) damager).getShooter() instanceof Entity) {
@@ -572,8 +558,7 @@ public class EntityListener implements Listener {
                     }
                 }
                 myPet.getExperience().addExp(edbee.getEntity(), true);
-            } else if (damager instanceof Player) {
-                Player owner = (Player) damager;
+            } else if (damager instanceof Player owner) {
                 if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
@@ -589,10 +574,8 @@ public class EntityListener implements Listener {
                         }
                     }
                 }
-            } else if (damager instanceof Tameable) {
-                Tameable tameable = (Tameable) damager;
-                if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player) {
-                    Player owner = (Player) tameable.getOwner();
+            } else if (damager instanceof Tameable tameable) {
+                if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player owner) {
                     if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
                         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
                         if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
@@ -639,9 +622,8 @@ public class EntityListener implements Listener {
                     }
                 }
             }
-        } else if (event.getEntity() instanceof Tameable) {
+        } else if (event.getEntity() instanceof Tameable tameable) {
             if (event.getTarget() instanceof MyPetBukkitEntity) {
-                Tameable tameable = ((Tameable) event.getEntity());
                 MyPet myPet = ((MyPetBukkitEntity) event.getTarget()).getMyPet();
                 if (myPet.getOwner().equals(tameable.getOwner())) {
                     event.setCancelled(true);

@@ -35,8 +35,7 @@ public class VehicleListener implements Listener {
 
     @EventHandler
     public void on(VehicleEnterEvent event) {
-        if (event.getEntered() instanceof Player && !(event.getVehicle() instanceof Horse)) {
-            Player player = (Player) event.getEntered();
+        if (event.getEntered() instanceof Player player && !(event.getVehicle() instanceof Horse)) {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet pet = MyPetApi.getMyPetManager().getMyPet(player);
                 if (pet.getStatus() == MyPet.PetState.Here) {

@@ -78,9 +78,8 @@ public class HurtByTarget implements AIGoal {
 			if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
 				return false;
 			}
-		} else if (target instanceof TamableAnimal) {
-			TamableAnimal tameable = (TamableAnimal) target;
-			if (tameable.isTame() && tameable.getOwner() != null) {
+		} else if (target instanceof TamableAnimal tameable) {
+            if (tameable.isTame() && tameable.getOwner() != null) {
 				Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
 				if (myPet.getOwner().equals(tameableOwner)) {
 					return false;

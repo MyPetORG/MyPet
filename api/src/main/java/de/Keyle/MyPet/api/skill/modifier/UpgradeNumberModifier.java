@@ -44,25 +44,19 @@ public class UpgradeNumberModifier implements UpgradeModifier<Number> {
     }
 
     public Number modify(Number n) {
-        switch (type) {
-            case Add:
-                return new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
-            case Subtract:
-                return new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
-            default:
-                return value;
-        }
+        return switch (type) {
+            case Add -> new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
+            case Subtract -> new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
+            default -> value;
+        };
     }
 
     public Number invert(Number n) {
-        switch (type) {
-            case Add:
-                return new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
-            case Subtract:
-                return new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
-            default:
-                return value;
-        }
+        return switch (type) {
+            case Add -> new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
+            case Subtract -> new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
+            default -> value;
+        };
     }
 
     @Override

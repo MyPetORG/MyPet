@@ -572,9 +572,7 @@ public class Util {
                 String ss = Integer.toHexString(ch);
                 sb.append("\\u");
 
-                for (int k = 0; k < 4 - ss.length(); ++k) {
-                    sb.append('0');
-                }
+                sb.append("0".repeat(4 - ss.length()));
 
                 sb.append(ss.toUpperCase());
             } else {
