@@ -48,33 +48,41 @@ public class MyPetLogger extends PluginLogger {
     private static FileHandler debugLogFileHandler = null;
     private static final ANSIComponentSerializer ANSI_SERIALIZER = ANSIComponentSerializer.ansi();
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
+    private String customName;
 
     public MyPetLogger(Plugin context) {
         super(context);
 
-        // Create plugin name with Adventure components
+        // Get the plugin name
         String prefix = context.getDescription().getPrefix();
         String name = prefix != null ? prefix : context.getDescription().getName();
-
-        Component pluginNameComponent = Component.text("[", NamedTextColor.WHITE)
-            .append(Component.text(name, NamedTextColor.DARK_GREEN))
-            .append(Component.text("] ", NamedTextColor.WHITE));
-
-        // Convert to ANSI-colored string
-        String pluginName = ANSI_SERIALIZER.serialize(pluginNameComponent);
+        this.customName = name;
 
         try {
+            // Set pluginName to empty string to prevent double [MyPet] prefix
+            // Paper's formatter will add the [PluginName] prefix automatically
             Field pluginNameField = ReflectionUtil.getField(PluginLogger.class, "pluginName");
-            pluginNameField.set(this, pluginName);
+            pluginNameField.set(this, "");
+
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getName() {
+        return customName != null ? customName : super.getName();
     }
 
     public void log(LogRecord logRecord) {
         if (!debugSetup) {
             setupDebugLogger();
             debugSetup = true;
+        }
+
+        // Set the logger name in the record itself
+        if (customName != null) {
+            logRecord.setLoggerName(customName);
         }
 
         String message = logRecord.getMessage();
