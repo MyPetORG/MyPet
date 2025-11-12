@@ -46,7 +46,6 @@ public class UpgradeIntegerModifier implements UpgradeModifier<Integer> {
         return switch (type) {
             case Add -> new BigDecimal(n.toString()).add(new BigDecimal(value.toString())).intValue();
             case Subtract -> new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString())).intValue();
-            default -> value;
         };
     }
 

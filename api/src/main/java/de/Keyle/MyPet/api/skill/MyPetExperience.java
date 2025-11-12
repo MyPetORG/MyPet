@@ -256,14 +256,14 @@ public class MyPetExperience {
                     if (damageMap.containsKey(damager.getUniqueId())) {
                         damageMap.compute(damager.getUniqueId(), (k, oldDamage) -> victim.getHealth() < damage ? victim.getHealth() + oldDamage : damage + oldDamage);
                     } else {
-                        damageMap.put(damager.getUniqueId(), victim.getHealth() < damage ? victim.getHealth() : damage);
+                        damageMap.put(damager.getUniqueId(), Math.min(victim.getHealth(), damage));
                     }
                     break;
                 }
             }
         } else {
             damageMap = new WeakHashMap<>();
-            damageMap.put(damager.getUniqueId(), victim.getHealth() < damage ? victim.getHealth() : damage);
+            damageMap.put(damager.getUniqueId(), Math.min(victim.getHealth(), damage));
             victim.setMetadata("MyPetDamageCount", new FixedMetadataValue(MyPetApi.getPlugin(), damageMap));
         }
     }

@@ -302,8 +302,8 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
             }
         }
 
-        from.increasing.removeAll(tmp);
-        from.decreasing.removeAll(tmp);
+        tmp.forEach(from.increasing::remove);
+        tmp.forEach(from.decreasing::remove);
         increasing.addAll(tmp);
         decreasing.addAll(tmp);
         if (from.increasing.isEmpty()) {

@@ -157,7 +157,6 @@ public class ProtocolLibHook implements PluginHook {
                         }
                     } catch (TimeoutException e) {
                         // Assume the main thread is blocked and should free this netty thread.
-                        return;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

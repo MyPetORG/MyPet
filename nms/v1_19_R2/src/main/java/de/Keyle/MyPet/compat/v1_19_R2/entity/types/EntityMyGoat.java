@@ -49,7 +49,7 @@ public class EntityMyGoat extends EntityMyPet {
 
     @Override
     protected String getMyPetDeathSound() {
-    	if(entityData.get(SCREAMING_WATCHER).booleanValue()) {
+    	if(entityData.get(SCREAMING_WATCHER)) {
     		return "entity.goat.screaming.death";
     	}
         return "entity.goat.death";
@@ -57,7 +57,7 @@ public class EntityMyGoat extends EntityMyPet {
 
     @Override
     protected String getHurtSound() {
-    	if(entityData.get(SCREAMING_WATCHER).booleanValue()) {
+    	if(entityData.get(SCREAMING_WATCHER)) {
     		return "entity.goat.screaming.hurt";
     	}
         return "entity.goat.hurt";
@@ -65,7 +65,7 @@ public class EntityMyGoat extends EntityMyPet {
 
     @Override
     protected String getLivingSound() {
-    	if(entityData.get(SCREAMING_WATCHER).booleanValue()) {
+    	if(entityData.get(SCREAMING_WATCHER)) {
     		return "entity.goat.screaming.ambient";
     	}
         return "entity.goat.ambient";

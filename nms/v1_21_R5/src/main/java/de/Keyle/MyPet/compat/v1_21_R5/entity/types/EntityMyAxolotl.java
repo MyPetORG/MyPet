@@ -94,7 +94,7 @@ public class EntityMyAxolotl extends EntityMyAquaticPet {
         super.tick();
         if(this.getDeltaMovement().x() <= 0.0 && this.getDeltaMovement().y() <= 0.0 && this.getDeltaMovement().z() <= 0.0) {
             this.getEntityData().set(PLAYING_DEAD_WATCHER, getMyPet().getHealth() <= 1);
-        } else if(this.getEntityData().get(PLAYING_DEAD_WATCHER).booleanValue()) {
+        } else if(this.getEntityData().get(PLAYING_DEAD_WATCHER)) {
             this.getEntityData().set(PLAYING_DEAD_WATCHER, false);
         }
     }

@@ -60,8 +60,8 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
         private final int id;
         private final int position;
         private final boolean moreThanOneLevel;
-        protected static Map<Integer, Buff> buffPositions = new HashMap<>();
-        protected static Map<Integer, Buff> buffIds = new HashMap<>();
+        private static Map<Integer, Buff> buffPositions = new HashMap<>();
+        private static Map<Integer, Buff> buffIds = new HashMap<>();
 
         Buff(String name, int id, int position) {
             this.name = name;

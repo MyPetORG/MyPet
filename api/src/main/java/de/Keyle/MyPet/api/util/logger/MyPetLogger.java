@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.util.LogFormat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
@@ -124,17 +123,16 @@ public class MyPetLogger extends PluginLogger {
     }
 
     protected boolean setupDebugLogger() {
-        if (getHandlers().length > 0) {
-            for (Handler h : getHandlers()) {
-                if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
-                    if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
-                        removeHandler(h);
-                        h.close();
-                        return false;
-                    }
-                    debugLogFileHandler = (FileHandler) h;
-                    return true;
+        getHandlers();
+        for (Handler h : getHandlers()) {
+            if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
+                if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
+                    removeHandler(h);
+                    h.close();
+                    return false;
                 }
+                debugLogFileHandler = (FileHandler) h;
+                return true;
             }
         }
         if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {

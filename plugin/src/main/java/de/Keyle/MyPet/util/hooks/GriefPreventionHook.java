@@ -140,9 +140,6 @@ public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersus
         UUID playerUUID = player.getMojangUUID();
 
         Claim claim = dataStore.getClaimAt(pet.getLocation(), true, dataStore.getPlayerData(playerUUID).lastClaim);
-        if(claim != null && !claim.hasExplicitPermission(playerUUID, ClaimPermission.Access)) {
-            return false;
-        }
-        return true;
+        return claim == null || claim.hasExplicitPermission(playerUUID, ClaimPermission.Access);
     }
 }

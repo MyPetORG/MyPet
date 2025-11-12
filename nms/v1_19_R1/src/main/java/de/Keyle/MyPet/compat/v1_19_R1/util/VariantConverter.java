@@ -7,7 +7,7 @@ import net.minecraft.world.entity.animal.FrogVariant;
  * Converts numerical variants into fancy new variants
  */
 public class VariantConverter {
-    private static enum CatVariants {
+    private enum CatVariants {
         TABBY(CatVariant.TABBY),
         BLACK(CatVariant.BLACK),
         RED(CatVariant.RED),
@@ -26,7 +26,7 @@ public class VariantConverter {
         }
     }
 
-    private static enum FrogVariants {
+    private enum FrogVariants {
         TEMPERATE(FrogVariant.TEMPERATE),
         WARM(FrogVariant.WARM),
         COLD(FrogVariant.COLD);

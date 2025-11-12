@@ -70,10 +70,7 @@ public class PvPManagerHook implements PlayerVersusPlayerHook, AllowedHook {
                     return false;
                 }
             }
-            if (PREVENT_DAMAGE_IN_COMBAT && pvpDefender.isInCombat()) {
-                return false;
-            }
-            return true;
+            return !PREVENT_DAMAGE_IN_COMBAT || !pvpDefender.isInCombat();
         } catch (Throwable ignored) {
         }
         return true;

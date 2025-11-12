@@ -33,7 +33,7 @@ import org.bukkit.entity.Cat.Type;
 public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCat {
 
     // Needed as some newer versions have integer -> Type mismatches
-    static enum OwnCatType {
+    enum OwnCatType {
         TABBY(Type.TABBY),
         BLACK(Type.BLACK),
         RED(Type.RED),

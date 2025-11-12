@@ -9,18 +9,18 @@ import org.bukkit.entity.Frog;
  * Converts numerical variants into fancy new variants
  */
 public class VariantConverter {
-    private static enum CatVariants {
-        TABBY((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.TABBY).value()),
-        BLACK((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BLACK).value()),
-        RED((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.RED).value()),
-        SIAMESE((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.SIAMESE).value()),
-        BRITISH_SHORTHAIR((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BRITISH_SHORTHAIR).value()),
-        CALICO((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.CALICO).value()),
-        PERSIAN((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.PERSIAN).value()),
-        RAGDOLL((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.RAGDOLL).value()),
-        WHITE((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.WHITE).value()),
-        JELLIE((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.JELLIE).value()),
-        ALL_BLACK((CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.ALL_BLACK).value());
+    private enum CatVariants {
+        TABBY(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.TABBY).value()),
+        BLACK(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BLACK).value()),
+        RED(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.RED).value()),
+        SIAMESE(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.SIAMESE).value()),
+        BRITISH_SHORTHAIR(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BRITISH_SHORTHAIR).value()),
+        CALICO(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.CALICO).value()),
+        PERSIAN(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.PERSIAN).value()),
+        RAGDOLL(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.RAGDOLL).value()),
+        WHITE(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.WHITE).value()),
+        JELLIE(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.JELLIE).value()),
+        ALL_BLACK(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.ALL_BLACK).value());
 
         CatVariant variant;
         CatVariants(CatVariant cV) {
@@ -28,7 +28,7 @@ public class VariantConverter {
         }
     }
 
-    private static enum FrogVariants {
+    private enum FrogVariants {
         TEMPERATE(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.TEMPERATE).value(), Frog.Variant.TEMPERATE),
         WARM(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.WARM).value(), Frog.Variant.WARM),
         COLD(BuiltInRegistries.FROG_VARIANT.getOrThrow(FrogVariant.COLD).value(), Frog.Variant.COLD);

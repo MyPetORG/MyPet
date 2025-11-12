@@ -97,7 +97,7 @@ public class EntityMyArmadillo extends EntityMyPet {
 
     @Override
     public void updateVisuals() {
-        this.getEntityData().set(AGE_WATCHER, ((MyArmadillo)getMyPet()).isBaby());
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
     }
 
     @Override

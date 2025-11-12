@@ -181,7 +181,7 @@ public class IntervalTree<T extends Comparable<? super T>, S> extends AbstractSe
             return Collections.emptyIterator();
         } else {
             final TreeNode.TreeNodeIterator it = root.iterator();
-            return new Iterator<Interval<T, S>>() {
+            return new Iterator<>() {
                 @Override
                 public void remove() {
                     if (it.currentNode.increasing.size() == 1) {

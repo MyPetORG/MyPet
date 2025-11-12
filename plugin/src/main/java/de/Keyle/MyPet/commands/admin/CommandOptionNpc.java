@@ -86,7 +86,7 @@ public class CommandOptionNpc implements CommandOptionTabCompleter {
             }
         }
         if (strings.length == 2) {
-            if (optionsList.size() != COMMAND_OPTIONS.keySet().size()) {
+            if (optionsList.size() != COMMAND_OPTIONS.size()) {
                 optionsList = new ArrayList<>(COMMAND_OPTIONS.keySet());
                 Collections.sort(optionsList);
             }

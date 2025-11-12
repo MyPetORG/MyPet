@@ -71,7 +71,7 @@ public class CommandOptionTicket implements CommandOption {
     private String accumulatePermissions() {
         StringBuilder retValue = new StringBuilder();
         for (Player p : Bukkit.getOnlinePlayers()) {
-            retValue.append(p.getName()).append(" (").append(p.getUniqueId().toString()).append(")\n");
+            retValue.append(p.getName()).append(" (").append(p.getUniqueId()).append(")\n");
             List<String> permList = new ArrayList<>();
             for (PermissionAttachmentInfo perm : p.getEffectivePermissions()) {
                 if (perm.getValue()) {

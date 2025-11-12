@@ -72,7 +72,7 @@ public class CommandOptionCleanup implements CommandOption {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] delete MyPets older than " + new Date(cal.getTimeInMillis()) + "...");
         }
 
-        MyPetApi.getRepository().cleanup(timestamp, new RepositoryCallback<Integer>() {
+        MyPetApi.getRepository().cleanup(timestamp, new RepositoryCallback<>() {
             @Override
             public void callback(Integer value) {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + " MyPets.");

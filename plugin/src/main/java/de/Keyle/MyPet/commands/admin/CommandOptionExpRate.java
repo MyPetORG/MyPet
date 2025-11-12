@@ -44,7 +44,7 @@ public class CommandOptionExpRate implements CommandOptionTabCompleter {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
 
-        if (args.length == 0 || !args[0].toLowerCase().equals("global")) {
+        if (args.length == 0 || !args[0].equalsIgnoreCase("global")) {
             sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", lang));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin exp-rate " + ChatColor.RED + "global");
             return false;

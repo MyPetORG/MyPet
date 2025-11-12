@@ -67,14 +67,14 @@ public class ConfigurationNBT {
         }
         try {
             InputStream is = Files.newInputStream(NBTFile.toPath());
-            TagBase tag = TagStream.readTag(is, true);
+            TagCompound tag = TagStream.readTag(is, true);
             if (tag != null) {
-                nbtTagCompound = (TagCompound) tag;
+                nbtTagCompound = tag;
                 return true;
             }
             tag = TagStream.readTag(is, false);
             if (tag != null) {
-                nbtTagCompound = (TagCompound) tag;
+                nbtTagCompound = tag;
                 return true;
             } else {
                 MyPetApi.getLogger().warning("Could not parse/load " + NBTFile.getName());

@@ -50,7 +50,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
-import java.util.Arrays;
 import java.util.List;
 
 @EntitySize(width = 1.3965F, height = 1.6F)

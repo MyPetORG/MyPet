@@ -85,7 +85,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         final MyPetPlayer owner = o;
 
         if (show && owner != null) {
-            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
                 @Override
                 public void callback(List<StoredMyPet> value) {
                     sender.sendMessage("Select the MyPet you want the player to switch to:");
@@ -99,10 +99,10 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                                 message.addExtra(", ");
                             }
                             message.addExtra(
-                              new RawMessage(mypet.getPetName())
-                                .setColor(MessageColor.AQUA)
-                                .setClickAction(new RunCommandAction("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID()))
-                                .setHoverAction(Util.myPetToItemAction(mypet, lang))
+                                    new RawMessage(mypet.getPetName())
+                                            .setColor(MessageColor.AQUA)
+                                            .setClickAction(new RunCommandAction("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID()))
+                                            .setHoverAction(Util.myPetToItemAction(mypet, lang))
                             );
                             if (!doComma) {
                                 doComma = true;
@@ -118,7 +118,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
             });
 
         } else if (!show && owner != null && petUUID != null) {
-            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
+            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<>() {
                 @Override
                 public void callback(StoredMyPet newPet) {
                     if (newPet != null) {

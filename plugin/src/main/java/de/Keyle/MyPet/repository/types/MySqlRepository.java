@@ -1123,7 +1123,7 @@ public class MySqlRepository implements Repository {
             for (MyPetPlayer player : players) {
                 String playerName = player.getName();
                 if (playerNames.contains(playerName)) {
-                    MyPetApi.getLogger().info("Found duplicate Player: " + player.toString());
+                    MyPetApi.getLogger().info("Found duplicate Player: " + player);
                     continue;
                 }
                 playerNames.add(playerName);

@@ -39,10 +39,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
         if (attacker == null || defender == null) {
             return false;
         }
-        if (!canHurt(attacker, defender) || (viceversa && !canHurt(defender, attacker))) {
-            return false;
-        }
-        return true;
+        return canHurt(attacker, defender) && (!viceversa || canHurt(defender, attacker));
     }
 
     @Override

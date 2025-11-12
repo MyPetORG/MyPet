@@ -24,7 +24,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.hooks.types.MonsterExperienceHook;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 
 import java.util.HashMap;
 import java.util.List;

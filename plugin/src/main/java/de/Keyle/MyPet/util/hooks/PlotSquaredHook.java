@@ -27,6 +27,8 @@ import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.*;
 
+import java.util.Objects;
+
 @PluginHookName("PlotSquared")
 public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, MountInsideHook {
 
@@ -91,18 +93,10 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
                         if (defender.getTicksLived() > attacker.getTicksLived()) {
                             if (dplot != null && defender instanceof Player) {
                                 plot = dplot;
-                            } else if (vplot == null) {
-                                plot = dplot;
-                            } else {
-                                plot = vplot;
-                            }
+                            } else plot = Objects.requireNonNullElse(vplot, dplot);
                         } else if (dplot != null && defender instanceof Player) {
                             plot = vplot == null ? dplot : vplot;
-                        } else if (vplot == null) {
-                            plot = dplot;
-                        } else {
-                            plot = vplot;
-                        }
+                        } else plot = Objects.requireNonNullElse(vplot, dplot);
                         stub = plot.hasOwner() ? "other" : "unowned";
                     }
 
@@ -242,11 +236,7 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
                         }
                     } else if (dplot == null || !(defender instanceof Player)) {
                         plot = vplot == null ? dplot : vplot;
-                    } else if (vplot == null) {
-                        plot = dplot;
-                    } else {
-                        plot = vplot;
-                    }
+                    } else plot = Objects.requireNonNullElse(vplot, dplot);
                     stub = plot.hasOwner() ? "other" : "unowned";
                 }
 

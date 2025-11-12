@@ -29,8 +29,6 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-;
-
 @PluginHookName("Guilds")
 public class GuildsHook implements PlayerVersusPlayerHook {
 

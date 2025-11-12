@@ -64,7 +64,7 @@ public class CommandOptionName implements CommandOptionTabCompleter {
 
         StringBuilder name = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
-            if (name.length() > 0) {
+            if (!name.isEmpty()) {
                 name.append(" ");
             }
             name.append(args[i]);

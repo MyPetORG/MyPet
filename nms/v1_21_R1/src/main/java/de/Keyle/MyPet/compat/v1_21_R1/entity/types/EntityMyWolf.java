@@ -169,8 +169,7 @@ public class EntityMyWolf extends EntityMyPet {
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
 		Optional<Holder.Reference<WolfVariant>> variantOptional = this.registryAccess().registryOrThrow(Registries.WOLF_VARIANT).getHolder(ResourceLocation.tryParse(getMyPet().getVariant()));
-		if (variantOptional.isPresent())
-			this.getEntityData().set(VARIANT_WATCHER, variantOptional.get());
+        variantOptional.ifPresent(wolfVariantReference -> this.getEntityData().set(VARIANT_WATCHER, wolfVariantReference));
 	}
 
 	@Override

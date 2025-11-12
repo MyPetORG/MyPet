@@ -28,6 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
@@ -121,7 +122,7 @@ public class Translation {
         try {
             JarEntry jarEntry = jarFile.getJarEntry("locale/MyPet_" + localeString + ".properties");
             if (jarEntry != null) {
-                newLocale.load(new InputStreamReader(jarFile.getInputStream(jarEntry), "UTF-8"));
+                newLocale.load(new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8));
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -131,7 +132,7 @@ public class Translation {
         File localeFile = new File(MyPetApi.getPlugin().getDataFolder() + File.separator + "locale" + File.separator + "MyPet_" + localeString + ".properties");
         if (localeFile.exists()) {
             try {
-                newLocale.load(new InputStreamReader(Files.newInputStream(localeFile.toPath()), "UTF-8"));
+                newLocale.load(new InputStreamReader(Files.newInputStream(localeFile.toPath()), StandardCharsets.UTF_8));
             } catch (IOException e) {
                 e.printStackTrace();
             }

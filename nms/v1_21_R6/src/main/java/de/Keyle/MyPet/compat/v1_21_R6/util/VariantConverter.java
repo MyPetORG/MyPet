@@ -22,7 +22,7 @@ public class VariantConverter {
     public static final Registry<ChickenVariant> CHICKEN_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.CHICKEN_VARIANT);
     public static final Registry<CowVariant> COW_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.COW_VARIANT);
 
-    private static enum ConverterCatVariants {
+    private enum ConverterCatVariants {
         TABBY(CAT_REGISTRY.getValue(CatVariants.TABBY)),
         BLACK(CAT_REGISTRY.getValue(CatVariants.BLACK)),
         RED(CAT_REGISTRY.getValue(CatVariants.RED)),
@@ -41,7 +41,7 @@ public class VariantConverter {
         }
     }
 
-    private static enum ConverterFrogVariants {
+    private enum ConverterFrogVariants {
         TEMPERATE(FROG_REGISTRY.getValue(FrogVariants.TEMPERATE), Frog.Variant.TEMPERATE),
         WARM(FROG_REGISTRY.getValue(FrogVariants.WARM), Frog.Variant.WARM),
         COLD(FROG_REGISTRY.getValue(FrogVariants.COLD), Frog.Variant.COLD);
@@ -54,7 +54,7 @@ public class VariantConverter {
         }
     }
 
-    private static enum ConverterPigVariants {
+    private enum ConverterPigVariants {
         TEMPERATE(PIG_REGISTRY.getValue(PigVariants.TEMPERATE), Pig.Variant.TEMPERATE),
         WARM(PIG_REGISTRY.getValue(PigVariants.WARM), Pig.Variant.WARM),
         COLD(PIG_REGISTRY.getValue(PigVariants.COLD), Pig.Variant.COLD);
@@ -67,7 +67,7 @@ public class VariantConverter {
         }
     }
 
-    private static enum ConverterChickenVariants {
+    private enum ConverterChickenVariants {
         TEMPERATE(CHICKEN_REGISTRY.getValue(ChickenVariants.TEMPERATE), Chicken.Variant.TEMPERATE),
         WARM(CHICKEN_REGISTRY.getValue(ChickenVariants.WARM), Chicken.Variant.WARM),
         COLD(CHICKEN_REGISTRY.getValue(ChickenVariants.COLD), Chicken.Variant.COLD);
@@ -80,7 +80,7 @@ public class VariantConverter {
         }
     }
 
-    private static enum ConverterCowVariants {
+    private enum ConverterCowVariants {
         TEMPERATE(COW_REGISTRY.getValue(CowVariants.TEMPERATE), Cow.Variant.TEMPERATE),
         WARM(COW_REGISTRY.getValue(CowVariants.WARM), Cow.Variant.WARM),
         COLD(COW_REGISTRY.getValue(CowVariants.COLD), Cow.Variant.COLD);

@@ -50,9 +50,6 @@ import de.Keyle.MyPet.compat.v1_21_R6.entity.types.EntityMyDolphin;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.types.EntityMySeat;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -639,7 +636,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 command = command.replaceAll("%pet_name%", myPet.getPetName());
                 command = command.replaceAll("%pet_owner%", myPet.getOwner().getName());
                 command = command.replaceAll("%pet_level%", "" + myPet.getExperience().getLevel());
-                command = command.replaceAll("%pet_status%", "" + myPet.getStatus().name());
+                command = command.replaceAll("%pet_status%", myPet.getStatus().name());
                 command = command.replaceAll("%pet_type%", myPet.getPetType().name());
                 command = command.replaceAll("%pet_uuid%", myPet.getUUID().toString());
                 command = command.replaceAll("%pet_world_group%", myPet.getWorldGroup());
@@ -1313,7 +1310,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         float f = passengerInput.left() == passengerInput.right() ? 0.0F : (passengerInput.left() ? 1.0F : -1.0F);
         float f1 = passengerInput.forward() == passengerInput.backward() ? 0.0F : (passengerInput.forward() ? 1.0F : -1.0F);
 
-        Vec3 move = new Vec3((double) f, 0.0, (double) f1);
+        Vec3 move = new Vec3(f, 0.0, f1);
         double motionSideways = move.x;
         double motionForward = move.z * 2;
 
@@ -1344,7 +1341,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 Location from = new Location(level().getWorld(), this.xo, this.yo, this.zo, this.yRotO, this.xRotO);
                 if (from.getX() != Double.MAX_VALUE) {
                     Location oldTo = to.clone();
-                    PlayerMoveEvent event = new PlayerMoveEvent((Player) passenger.getBukkitEntity(), from, to);
+                    PlayerMoveEvent event = new PlayerMoveEvent(passenger.getBukkitEntity(), from, to);
                     Bukkit.getPluginManager().callEvent(event);
                     if (event.isCancelled()) {
                         passenger.getBukkitEntity().teleport(from);

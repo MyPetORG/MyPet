@@ -76,7 +76,7 @@ public abstract class EntityMyFlyingPet extends EntityMyPet {
 
 				this.moveRelative(this.onGround() ? 0.1F * f1 : 0.02F, vec3d);
 				this.move(MoverType.SELF, this.getDeltaMovement());
-				this.setDeltaMovement(this.getDeltaMovement().scale((double) f));
+				this.setDeltaMovement(this.getDeltaMovement().scale(f));
 			}
 		}
 

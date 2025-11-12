@@ -52,7 +52,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 
 @EntitySize(width = 1.3965F, height = 1.6F)

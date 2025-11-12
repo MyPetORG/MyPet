@@ -79,7 +79,7 @@ public class Converter {
             for (MyPetPlayer player : playerList) {
                 String playerName = player.getName();
                 if (playerNames.contains(playerName)) {
-                    MyPetApi.getLogger().info("Found duplicate Player: " + player.toString());
+                    MyPetApi.getLogger().info("Found duplicate Player: " + player);
                     continue;
                 }
                 playerNames.add(playerName);

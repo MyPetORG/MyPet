@@ -75,222 +75,219 @@ public class PlaceholderApiHook implements PluginHook {
     }
 
     public void registerPlaceholder() {
-        placeHolders.put("name", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("name", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getPetName();
             }
         });
 
-        placeHolders.put("level", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("level", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getExperience().getLevel();
             }
         });
 
-        placeHolders.put("exp", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("exp", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return String.format("%.2f", pet.getExp());
             }
         });
 
-        placeHolders.put("exp_long", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("exp_long", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getExp();
             }
         });
 
-        placeHolders.put("type", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("type", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getPetType().name();
             }
         });
 
-        placeHolders.put("status", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("status", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getStatus().name();
             }
         });
 
-        placeHolders.put("health", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("health", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return String.format("%.2f", pet.getHealth());
             }
         });
 
-        placeHolders.put("health_long", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("health_long", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getHealth();
             }
         });
 
-        placeHolders.put("health_max", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("health_max", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return String.format("%.2f", pet.getMaxHealth());
             }
         });
 
-        placeHolders.put("health_max_long", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("health_max_long", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getMaxHealth();
             }
         });
 
-        placeHolders.put("respawn_time", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("respawn_time", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getRespawnTime();
             }
         });
 
-        placeHolders.put("saturation", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("saturation", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return String.format("%.2f", pet.getSaturation());
             }
         });
 
-        placeHolders.put("saturation_long", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("saturation_long", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return "" + pet.getSaturation();
             }
         });
 
-        placeHolders.put("petfood", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("petfood", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 String foodString;
-                foodString = String.join(
-                        ", ",
-                        MyPetApi.getMyPetInfo().getFood(pet.getPetType())
-                                .stream()
-                                .filter(configItem -> configItem.getItem() != null && configItem.getItem().getType() != Material.AIR)
-                                .map(configItem -> configItem.getItem().getType().name())
-                                .collect(Collectors.toList())
-                );
+                foodString = MyPetApi.getMyPetInfo().getFood(pet.getPetType())
+                        .stream()
+                        .filter(configItem -> configItem.getItem() != null && configItem.getItem().getType() != Material.AIR)
+                        .map(configItem -> configItem.getItem().getType().name())
+                        .collect(Collectors.joining(", "));
                 return foodString;
             }
         });
 
-        placeHolders.put("uuid", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("uuid", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getUUID().toString();
             }
         });
 
-        placeHolders.put("behavior", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("behavior", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getSkills().has(BehaviorImpl.class) ? pet.getSkills().get(BehaviorImpl.class).getBehavior().name() : "Normal";
             }
         });
 
-        placeHolders.put("skilltree_display", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("skilltree_display", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getSkilltree() != null ? Colorizer.setColors(pet.getSkilltree().getDisplayName()) : "";
             }
         });
 
-        placeHolders.put("skilltree_name", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("skilltree_name", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getSkilltree() != null ? pet.getSkilltree().getName() : "";
             }
         });
 
-        placeHolders.put("world_group", new PlaceHolder<MyPet>(MyPet.class) {
+        placeHolders.put("world_group", new PlaceHolder<>(MyPet.class) {
             @Override
             public String getValue(MyPet pet) {
                 return pet.getWorldGroup();
             }
         });
 
-        placeHolders.put("player_is_premium", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_is_premium", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getDonationRank() == DonateCheck.DonationRank.Premium ? "yes" : "no";
             }
         });
 
-        placeHolders.put("player_is_donator", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_is_donator", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getDonationRank() == DonateCheck.DonationRank.Donator ? "yes" : "no";
             }
         });
 
-        placeHolders.put("player_is_creator", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_is_creator", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getDonationRank() == DonateCheck.DonationRank.Creator ? "yes" : "no";
             }
         });
 
-        placeHolders.put("player_is_developer", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_is_developer", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getDonationRank() == DonateCheck.DonationRank.Developer ? "yes" : "no";
             }
         });
 
-        placeHolders.put("player_is_translator", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_is_translator", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getDonationRank() == DonateCheck.DonationRank.Translator ? "yes" : "no";
             }
         });
 
-        placeHolders.put("player_is_none", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_is_none", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getDonationRank() == DonateCheck.DonationRank.None ? "yes" : "no";
             }
         });
 
-        placeHolders.put("player_particle_rank", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_particle_rank", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getDonationRank().name();
             }
         });
 
-        placeHolders.put("player_language", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_language", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getLanguage();
             }
         });
 
-        placeHolders.put("player_uuid_internal", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("player_uuid_internal", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
                 return player.getInternalUUID().toString();
             }
         });
 
-        placeHolders.put("has_pet", new PlaceHolder<Player>(Player.class) {
+        placeHolders.put("has_pet", new PlaceHolder<>(Player.class) {
             @Override
             public String getValue(Player player) {
                 return MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getMyPetManager().hasActiveMyPet(player) ? "yes" : "no";
             }
         });
 
-        placeHolders.put("idle_volume", new PlaceHolder<MyPetPlayer>(MyPetPlayer.class) {
+        placeHolders.put("idle_volume", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return Math.round(player.getPetLivingSoundVolume()*100f) +"%";
+                return Math.round(player.getPetLivingSoundVolume() * 100f) + "%";
             }
         });
     }

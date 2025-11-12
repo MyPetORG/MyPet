@@ -164,7 +164,7 @@ public class EntityMyCamel extends EntityMyPet {
 		entityData.set(LAST_POSE_CHANGE_TICK, i);
 	}
 	public long getPoseTime() {
-		return this.level().getGameTime() - Math.abs((Long) this.entityData.get(LAST_POSE_CHANGE_TICK));
+		return this.level().getGameTime() - Math.abs(this.entityData.get(LAST_POSE_CHANGE_TICK));
 	}
 
 	@Override

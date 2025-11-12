@@ -81,7 +81,7 @@ public class CommandSwitch implements CommandTabCompleter {
                 }
             }
             final int finalPage = page;
-            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
                 @Override
                 public void callback(List<StoredMyPet> pets) {
                     if (pets.size() - (owner.hasMyPet() ? 1 : 0) == 0) {
@@ -104,7 +104,7 @@ public class CommandSwitch implements CommandTabCompleter {
                         String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
                         final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title + " " + stats, finalPage);
-                        gui.open(pets, new RepositoryCallback<StoredMyPet>() {
+                        gui.open(pets, new RepositoryCallback<>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
                                 Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
@@ -179,7 +179,7 @@ public class CommandSwitch implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         if (sender instanceof Player && strings.length == 1) {
             final int[] petCount = {0};
-            MyPetApi.getRepository().getMyPets(MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender), new RepositoryCallback<List<StoredMyPet>>() {
+            MyPetApi.getRepository().getMyPets(MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender), new RepositoryCallback<>() {
                 @Override
                 public void callback(List<StoredMyPet> value) {
                     petCount[0]++;

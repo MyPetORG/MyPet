@@ -100,7 +100,7 @@ public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.m
         applySpeed();
         moveTo = new Location(this.petEntity.getBukkitEntity().getWorld(), vec.x, vec.y, vec.z);
         timeToMove = (int) MyPetApi.getPlatformHelper().distance(petEntity.getMyPet().getLocation().get(), moveTo) / 3;
-        timeToMove = timeToMove < 3 ? 3 : timeToMove;
+        timeToMove = Math.max(timeToMove, 3);
 
         if(!nav.navigateTo(moveTo)) {
             this.moveTo = null;

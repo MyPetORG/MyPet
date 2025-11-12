@@ -592,7 +592,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 				command = command.replaceAll("%pet_name%", myPet.getPetName());
 				command = command.replaceAll("%pet_owner%", myPet.getOwner().getName());
 				command = command.replaceAll("%pet_level%", "" + myPet.getExperience().getLevel());
-				command = command.replaceAll("%pet_status%", "" + myPet.getStatus().name());
+				command = command.replaceAll("%pet_status%", myPet.getStatus().name());
 				command = command.replaceAll("%pet_type%", myPet.getPetType().name());
 				command = command.replaceAll("%pet_uuid%", myPet.getUUID().toString());
 				command = command.replaceAll("%pet_world_group%", myPet.getWorldGroup());

@@ -65,7 +65,7 @@ public class CommandStore implements CommandTabCompleter {
             }
 
             if (owner.hasMyPet()) {
-                MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+                MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
                     @Override
                     public void callback(List<StoredMyPet> pets) {
                         if (owner.hasMyPet()) {

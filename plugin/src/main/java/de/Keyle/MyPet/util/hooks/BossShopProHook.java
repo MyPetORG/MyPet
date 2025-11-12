@@ -115,7 +115,7 @@ public class BossShopProHook implements PluginHook {
             clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(p.getWorld().getName()).getName());
             clonedPet.setUUID(null);
 
-            MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
+            MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<>() {
                 @Override
                 public void callback(Boolean value) {
                     if (petOwner.hasMyPet()) {

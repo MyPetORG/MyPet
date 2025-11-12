@@ -35,7 +35,7 @@ public class EntityMySeat extends ArmorStand {
 		setNoGravity(true);
 		setSmall(true);
 		setMarker(true);
-		((CraftLivingEntity) getBukkitEntity()).setInvisible(true);
+		getBukkitEntity().setInvisible(true);
 		setInvulnerable(true);
 		persist = false;
 	}

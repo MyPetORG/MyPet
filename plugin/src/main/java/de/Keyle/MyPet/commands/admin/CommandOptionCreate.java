@@ -437,7 +437,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
                 Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
-                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
+                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
                     @Override
                     public void callback(Boolean added) {
                         if (added) {

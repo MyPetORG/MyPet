@@ -406,7 +406,6 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                     }
                     return false;
                 }
-                return true;
             } else { //notV4
                 if (MythicBukkit.inst().getMobManager().isActiveMob(io.lumine.mythic.bukkit.BukkitAdapter.adapt(entity))) {
                     String name = MythicBukkit.inst().getMobManager().getMythicMobInstance(entity).getType().getInternalName();
@@ -417,8 +416,8 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                     }
                     return false;
                 }
-                return true;
             }
+            return true;
         }
     }
 }

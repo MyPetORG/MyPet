@@ -103,7 +103,7 @@ public class Skilltree {
     }
 
     public void setRequiredLevel(int requiredLevel) {
-        this.requiredLevel = requiredLevel < 1 ? 1 : requiredLevel;
+        this.requiredLevel = Math.max(requiredLevel, 1);
     }
 
     public String getDisplayName() {

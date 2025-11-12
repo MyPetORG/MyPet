@@ -47,7 +47,6 @@ public class UpgradeNumberModifier implements UpgradeModifier<Number> {
         return switch (type) {
             case Add -> new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
             case Subtract -> new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
-            default -> value;
         };
     }
 
@@ -55,7 +54,6 @@ public class UpgradeNumberModifier implements UpgradeModifier<Number> {
         return switch (type) {
             case Add -> new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString()));
             case Subtract -> new BigDecimal(n.toString()).add(new BigDecimal(value.toString()));
-            default -> value;
         };
     }
 

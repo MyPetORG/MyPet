@@ -97,7 +97,7 @@ public class CommandAdmin implements CommandTabCompleter {
             return Collections.emptyList();
         }
         if (strings.length == 1) {
-            if (optionsList.size() != COMMAND_OPTIONS.keySet().size()) {
+            if (optionsList.size() != COMMAND_OPTIONS.size()) {
                 optionsList = new ArrayList<>(COMMAND_OPTIONS.keySet());
                 Collections.sort(optionsList);
             }

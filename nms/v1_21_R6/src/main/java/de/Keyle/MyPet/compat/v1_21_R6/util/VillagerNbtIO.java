@@ -15,7 +15,7 @@ public final class VillagerNbtIO {
     private static HolderLookup.Provider lookupFor(org.bukkit.World world) {
         // registry access needed by Value I/O
         RegistryAccess ra = ((CraftWorld) world).getHandle().registryAccess();
-        return (HolderLookup.Provider) ra; // RegistryAccess implements Provider
+        return ra; // RegistryAccess implements Provider
     }
 
     /** Read/apply NBT into an existing villager */

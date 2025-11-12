@@ -365,7 +365,7 @@ public class EntityListener implements Listener {
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                         justLeashed.add(player.getUniqueId());
-                        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
+                        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
                             @Override
                             public void callback(Boolean value) {
                                 owner.sendMessage(Translation.getString("Message.Leash.Add", owner));

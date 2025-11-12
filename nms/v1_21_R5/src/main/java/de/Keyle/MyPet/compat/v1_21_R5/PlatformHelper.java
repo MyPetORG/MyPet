@@ -30,11 +30,8 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R5.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R5.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -46,27 +43,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
@@ -228,7 +217,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                if (((ServerChunkCache) world.getChunkSource()).hasChunk(x >> 4, z >> 4)) {
+                if (world.getChunkSource().hasChunk(x >> 4, z >> 4)) {
                     for (int y = minY - 1; y <= maxY; y++) {
                         BlockPos bp = new BlockPos(x, y, z);
                         BlockState blockData = world.getBlockState(bp);
@@ -319,7 +308,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
         {
             ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            Equippable equipable = (Equippable) itemstack.get(DataComponents.EQUIPPABLE);;
+            Equippable equipable = itemstack.get(DataComponents.EQUIPPABLE);
             EquipmentSlot slotRaw = equipable != null ? equipable.slot() : EquipmentSlot.MAINHAND;
             int slot = slotRaw.getId();
             if (slot == 0) {

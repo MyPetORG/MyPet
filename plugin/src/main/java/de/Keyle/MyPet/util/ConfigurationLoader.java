@@ -593,7 +593,7 @@ public class ConfigurationLoader {
         MyPet.Fox.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Fox.GrowUpItem", "experience_bottle"));
         MyPet.Goat.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Goat.GrowUpItem", "experience_bottle"));
         MyPet.Hoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle"));
-        MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + "bread"));
+        MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "bread"));
         MyPet.Husk.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Husk.GrowUpItem", "experience_bottle"));
         MyPet.Llama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Llama.GrowUpItem", "experience_bottle"));
         MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle"));

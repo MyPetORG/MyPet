@@ -53,11 +53,8 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
 
 	@Override
 	public boolean specialFloat() {
-		if(this.isInWater()) {
-	    	return true;
-		}
-		return false;
-	}
+        return this.isInWater();
+    }
 
 	@Override
 	public void setPathfinder() {

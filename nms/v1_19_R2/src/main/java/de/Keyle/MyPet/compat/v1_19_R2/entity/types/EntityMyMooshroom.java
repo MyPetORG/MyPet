@@ -21,9 +21,7 @@
 package de.Keyle.MyPet.compat.v1_19_R2.entity.types;
 
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
-import org.bukkit.Bukkit;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;

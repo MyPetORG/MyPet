@@ -61,7 +61,7 @@ public class MyPetAdminSelectionGui {
     }
 
     public void open(final RepositoryCallback<StoredMyPet> callback) {
-        MyPetApi.getRepository().getMyPets(petOwner, new RepositoryCallback<List<StoredMyPet>>() {
+        MyPetApi.getRepository().getMyPets(petOwner, new RepositoryCallback<>() {
             @Override
             public void callback(List<StoredMyPet> pets) {
                 open(pets, callback);
@@ -163,7 +163,7 @@ public class MyPetAdminSelectionGui {
             if (previousPage != page) {
                 menu.setOption(45, new IconMenuItem()
                         .setMaterial(EnumSelector.find(Material.class, "SIGN", "OAK_SIGN"))
-                        .setTitle("" + previousPage + " ≪≪")
+                        .setTitle(previousPage + " ≪≪")
                 );
             }
 

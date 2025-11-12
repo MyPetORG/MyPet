@@ -34,7 +34,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.Arrays;
 import java.util.List;
 
 @EntitySize(width = 0.6F, height = 1.9F)

@@ -185,7 +185,7 @@ public class Util {
     }
 
     public static String decimal2roman(int src) {
-        char digits[] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
+        char[] digits = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
         StringBuilder thousands = new StringBuilder();
         StringBuilder result = new StringBuilder();
         int rang, digit, i;
@@ -453,7 +453,7 @@ public class Util {
     public static String stackTraceToString() {
         StringBuilder trace = new StringBuilder();
         for (StackTraceElement e1 : Thread.currentThread().getStackTrace()) {
-            trace.append("\t ").append(e1.toString()).append("\n");
+            trace.append("\t ").append(e1).append("\n");
         }
         return trace.toString();
     }

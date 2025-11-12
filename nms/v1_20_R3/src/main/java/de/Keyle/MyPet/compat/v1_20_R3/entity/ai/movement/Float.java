@@ -42,8 +42,8 @@ public class Float implements AIGoal {
 		this.entityMyPet = entityMyPet;
 		//entityMyPet.getNavigation().e(true);
 		this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
-		((PathNavigation) entityMyPet.getNavigation()).setCanFloat(true);;
-	}
+		entityMyPet.getNavigation().setCanFloat(true);
+    }
 
 	@Override
 	public boolean shouldStart() {

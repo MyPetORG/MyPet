@@ -193,14 +193,11 @@ public class CommandInfo implements CommandTabCompleter {
                     message.tellRawTo(player);
                 } else {
                     String foodString = "   " + Translation.getString("Name.Food", sender) + ": ";
-                    foodString += String.join(
-                            ", ",
-                            MyPetApi.getMyPetInfo().getFood(myPet.getPetType())
-                                    .stream()
-                                    .filter(configItem -> configItem.getItem() != null && configItem.getItem().getType() != Material.AIR)
-                                    .map(configItem -> configItem.getItem().getType().name())
-                                    .collect(Collectors.toList())
-                    );
+                    foodString += MyPetApi.getMyPetInfo().getFood(myPet.getPetType())
+                            .stream()
+                            .filter(configItem -> configItem.getItem() != null && configItem.getItem().getType() != Material.AIR)
+                            .map(configItem -> configItem.getItem().getType().name())
+                            .collect(Collectors.joining(", "));
                     sender.sendMessage(foodString);
                 }
                 infoShown = true;

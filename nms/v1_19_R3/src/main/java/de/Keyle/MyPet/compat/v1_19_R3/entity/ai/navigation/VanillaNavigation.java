@@ -40,12 +40,12 @@ public class VanillaNavigation extends AbstractNavigation {
 
 	public VanillaNavigation(EntityMyPet entityMyPet) {
 		super(entityMyPet);
-		nav = (PathNavigation) entityMyPet.getNavigation();
+		nav = entityMyPet.getNavigation();
 	}
 
 	public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
 		super(entityMyPet, parameters);
-		nav = (PathNavigation) entityMyPet.getNavigation();
+		nav = entityMyPet.getNavigation();
 	}
 
 	@Override

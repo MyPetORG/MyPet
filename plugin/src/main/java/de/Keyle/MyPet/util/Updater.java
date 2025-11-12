@@ -115,7 +115,6 @@ public class Updater {
                     if(!release.get("body").getAsString().contains(MyPetApi.getCompatUtil().getInternalVersion())) {
                         continue;
                     }
-;
                     String downloadURL = release.get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
                     update = Optional.of(new Update(release.get("name").getAsString(), downloadURL));
                     break;

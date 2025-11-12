@@ -203,7 +203,7 @@ public class EntityMyStrider extends EntityMyPet {
 	@Override	//Striders stand on Lava. This does this
 	public boolean specialFloat() {
 		if(this.isInLava()) {
-			CollisionContext collisioncontext = CollisionContext.of((Entity) this);
+			CollisionContext collisioncontext = CollisionContext.of(this);
 			
 			if (collisioncontext.isAbove(LiquidBlock.SHAPE_STABLE, this.blockPosition(), true) && !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.LAVA)) {
 				this.onGround = true;

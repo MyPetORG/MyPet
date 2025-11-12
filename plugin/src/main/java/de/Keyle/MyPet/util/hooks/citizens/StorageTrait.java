@@ -96,7 +96,7 @@ public class StorageTrait extends Trait {
 
                 final NPC npc = this.npc;
 
-                MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<List<StoredMyPet>>() {
+                MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<>() {
                     @Override
                     public void callback(List<StoredMyPet> pets) {
                         WorldGroup wg = WorldGroup.getGroupByWorld(myPetPlayer.getPlayer().getWorld().getName());
@@ -131,7 +131,7 @@ public class StorageTrait extends Trait {
                             String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
                             final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, stats + " " + Translation.getString("Message.Npc.SwitchTitle", player));
-                            gui.open(pets, new RepositoryCallback<StoredMyPet>() {
+                            gui.open(pets, new RepositoryCallback<>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
                                     MyPetApi.getMyPetManager().deactivateMyPet(myPetPlayer, true);
@@ -219,7 +219,7 @@ public class StorageTrait extends Trait {
                     }
                 });
             } else {
-                MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<List<StoredMyPet>>() {
+                MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<>() {
                     @Override
                     public void callback(List<StoredMyPet> pets) {
                         if (!pets.isEmpty()) {
@@ -236,7 +236,7 @@ public class StorageTrait extends Trait {
                             }
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
                             MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Translation.getString("Message.Npc.TakeTitle", myPetPlayer) + " " + stats);
-                            gui.open(pets, new RepositoryCallback<StoredMyPet>() {
+                            gui.open(pets, new RepositoryCallback<>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
                                     Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);

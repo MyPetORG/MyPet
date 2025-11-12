@@ -143,7 +143,7 @@ public class PetShop {
                                     clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
                                     clonedPet.setUUID(null);
 
-                                    MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
+                                    MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<>() {
                                         @Override
                                         public void callback(Boolean value) {
                                             p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
@@ -182,7 +182,7 @@ public class PetShop {
                     };
 
                     if (owner != null && owner.hasMyPet()) {
-                        MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+                        MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
                             @Override
                             public void callback(List<StoredMyPet> value) {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;

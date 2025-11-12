@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R3.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWanderingTrader;

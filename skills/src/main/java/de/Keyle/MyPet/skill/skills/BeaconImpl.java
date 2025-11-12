@@ -542,7 +542,7 @@ public class BeaconImpl implements Beacon {
                 switch (receiver) {
                     case Owner:
                         if (!myPet.getOwner().equals(player)) {
-                            continue targetLoop;
+                            continue;
                         } else {
                             for (PotionEffect effect : potionEffects) {
                                 player.addPotionEffect(effect, true);
@@ -633,12 +633,10 @@ public class BeaconImpl implements Beacon {
         }
         if (compound.getCompoundData().containsKey("Buffs")) {
             int[] selectedBuffs = compound.getAs("Buffs", TagIntArray.class).getIntArrayData();
-            if (selectedBuffs.length != 0) {
-                for (int selectedBuffId : selectedBuffs) {
-                    Buff selectedBuff = Buff.getBuffByID(selectedBuffId);
-                    if (selectedBuff != null) {
-                        this.selectedBuffs.add(selectedBuff);
-                    }
+            for (int selectedBuffId : selectedBuffs) {
+                Buff selectedBuff = Buff.getBuffByID(selectedBuffId);
+                if (selectedBuff != null) {
+                    this.selectedBuffs.add(selectedBuff);
                 }
             }
         }

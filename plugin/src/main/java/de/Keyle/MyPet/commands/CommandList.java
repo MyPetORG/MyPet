@@ -48,7 +48,7 @@ public class CommandList implements CommandTabCompleter {
         }
 
         final Player petOwner;
-        if (args.length <= 0) {
+        if (args.length == 0) {
             if (sender instanceof Player) {
                 petOwner = (Player) sender;
             } else {
@@ -82,7 +82,7 @@ public class CommandList implements CommandTabCompleter {
 
 
         if (owner != null) {
-            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
                 @Override
                 public void callback(List<StoredMyPet> value) {
                     if (petOwner == sender) {
@@ -98,9 +98,9 @@ public class CommandList implements CommandTabCompleter {
                             message.addExtra(", ");
                         }
                         message.addExtra(
-                          new RawMessage(mypet.getPetName())
-                            .setColor(MessageColor.AQUA)
-                            .setHoverAction(Util.myPetToItemAction(mypet, lang))
+                                new RawMessage(mypet.getPetName())
+                                        .setColor(MessageColor.AQUA)
+                                        .setHoverAction(Util.myPetToItemAction(mypet, lang))
                         );
                         if (!doComma) {
                             doComma = true;

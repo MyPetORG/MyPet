@@ -55,22 +55,16 @@ public class GangsPlusHook implements PlayerVersusPlayerHook {
 
             if (Objects.equals(attackerGang, defenderGang)) {
                 if (Settings.friendlyFire && !Settings.disableFriendlyFireInWorlds.contains(defender.getWorld().getName())) {
-                    if (!Settings.friendlyFireTogglableByLeader || attackerGang.isFriendlyFire()) {
-                        return true;
-                    }
+                    return !Settings.friendlyFireTogglableByLeader || attackerGang.isFriendlyFire();
                 }
             } else {
                 if (!attackerGang.isAlly(defenderGang)) {
                     if (!Settings.enableModuleAlliances || Settings.alliancesAllowPvp) {
                         return true;
-                    } else if (plugin.fightManager.areFighting(attackerGang, defenderGang)) {
-                        return true;
-                    }
+                    } else return plugin.fightManager.areFighting(attackerGang, defenderGang);
                 } else if (!Settings.enableModuleAlliances || Settings.alliancesAllowPvp) {
                     return true;
-                } else if (plugin.fightManager.areFighting(attackerGang, defenderGang)) {
-                    return true;
-                }
+                } else return plugin.fightManager.areFighting(attackerGang, defenderGang);
             }
             return false;
         } catch (Throwable ignored) {

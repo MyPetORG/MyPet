@@ -121,7 +121,7 @@ public class EntityMyCat extends EntityMyPet {
 		getEntityData().define(AGE_WATCHER, false);
 		getEntityData().define(SIT_WATCHER, (byte) 0);
 		getEntityData().define(OWNER_WATCHER, Optional.empty());
-		getEntityData().define(VARIANT_WATCHER, (CatVariant) BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BLACK));
+		getEntityData().define(VARIANT_WATCHER, BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BLACK));
 		getEntityData().define(UNUSED_WATCHER_1, false);
 		getEntityData().define(UNUSED_WATCHER_2, false);
 		getEntityData().define(COLLAR_COLOR_WATCHER, 14);

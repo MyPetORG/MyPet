@@ -118,7 +118,7 @@ public class CommandTrade implements CommandTabCompleter {
                         final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.getPet());
 
                         final Repository repo = MyPetApi.getRepository();
-                        repo.removeMyPet(pet, new RepositoryCallback<Boolean>() {
+                        repo.removeMyPet(pet, new RepositoryCallback<>() {
                             @Override
                             public void callback(Boolean value) {
                                 pet.setOwner(newOwner);

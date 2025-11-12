@@ -1,7 +1,6 @@
 package de.Keyle.MyPet.compat.v1_21_R3.util;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
@@ -10,8 +9,7 @@ import org.bukkit.entity.Entity;
 public final class VillagerNbtIO {
     private static HolderLookup.Provider lookupFor(org.bukkit.World world) {
         // registry access needed by Value I/O
-        RegistryAccess ra = ((CraftWorld) world).getHandle().registryAccess();
-        return ra; // RegistryAccess implements Provider
+        return ((CraftWorld) world).getHandle().registryAccess(); // RegistryAccess implements Provider
     }
 
     /** Read/apply NBT into an existing villager */
@@ -51,7 +49,6 @@ public final class VillagerNbtIO {
             try {
                 java.lang.reflect.Method loadCompound = villager.getClass().getMethod("load", CompoundTag.class);
                 loadCompound.invoke(villager, tag);
-                return;
             } catch (NoSuchMethodException ex) {
                 throw new RuntimeException("Could not read villager NBT: no suitable read method found");
             }

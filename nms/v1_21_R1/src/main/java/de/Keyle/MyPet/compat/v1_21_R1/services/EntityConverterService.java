@@ -225,7 +225,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         TagList inventoryTag = villagerTag.get("Inventory");
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                         for (int i = 0; i < vanillaNBT.size(); ++i) {
-                            net.minecraft.world.item.ItemStack itemstack = ItemStackNBTConverter.vanillaCompoundToItemStack(vanillaNBT.getCompound(i));;
+                            net.minecraft.world.item.ItemStack itemstack = ItemStackNBTConverter.vanillaCompoundToItemStack(vanillaNBT.getCompound(i));
                             ItemStack item = CraftItemStack.asCraftMirror(itemstack);
                             if (!itemstack.isEmpty()) {
                             	Villager vill = ((Villager) Bukkit.getServer().getEntity(normalEntity.getUniqueId()));

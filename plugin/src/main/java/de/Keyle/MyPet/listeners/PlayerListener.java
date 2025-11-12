@@ -164,7 +164,7 @@ public class PlayerListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                MyPetApi.getRepository().getMyPetPlayer(event.getPlayer(), new RepositoryCallback<MyPetPlayer>() {
+                MyPetApi.getRepository().getMyPetPlayer(event.getPlayer(), new RepositoryCallback<>() {
                     @Override
                     public void callback(final MyPetPlayer p) {
                         final MyPetPlayerImpl joinedPlayer = (MyPetPlayerImpl) p;
@@ -189,7 +189,7 @@ public class PlayerListener implements Listener {
 
                         if (!joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                             final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
+                            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
                                     MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
@@ -373,7 +373,7 @@ public class PlayerListener implements Listener {
 
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup)) {
                     final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
-                    MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<List<StoredMyPet>>() {
+                    MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<>() {
                         @Override
                         public void callback(List<StoredMyPet> pets) {
                             for (StoredMyPet myPet : pets) {
@@ -552,8 +552,8 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onMount(EntityMountEvent event) {
-        if(!(event.getEntity() instanceof Player))
-            return;
+        if(!(event.getEntity() instanceof Player)) {
+        }
 
         //TODO Implement hooks
     }

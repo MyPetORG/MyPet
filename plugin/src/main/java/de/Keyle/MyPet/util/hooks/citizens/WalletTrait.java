@@ -23,12 +23,13 @@ package de.Keyle.MyPet.util.hooks.citizens;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.util.hooks.VaultHook;
-import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+
+import java.util.Objects;
 
 public class WalletTrait extends Trait {
 
@@ -46,11 +47,7 @@ public class WalletTrait extends Trait {
             type = "Player";
         }
         WalletType wt = WalletType.getByName(type);
-        if (wt != null) {
-            this.type = wt;
-        } else {
-            this.type = WalletType.Private;
-        }
+        this.type = Objects.requireNonNullElse(wt, WalletType.Private);
         account = key.getString("accountName", key.getString("account", ""));
         credit = key.getDouble("privateWallet", key.getDouble("credit", 0D));
     }

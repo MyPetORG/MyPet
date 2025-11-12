@@ -42,7 +42,7 @@ public class CommandSettings implements CommandTabCompleter {
         commandOptions.put("healthbar", new CommandSettingHealthbar());
         commandOptions.put("idle-volume", new CommandSettingsPetLivingSound());
 
-        if (optionsList.size() != commandOptions.keySet().size()) {
+        if (optionsList.size() != commandOptions.size()) {
             optionsList = new ArrayList<>(commandOptions.keySet());
             Collections.sort(optionsList);
         }

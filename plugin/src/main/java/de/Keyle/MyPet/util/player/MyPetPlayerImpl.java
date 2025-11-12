@@ -40,7 +40,6 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
@@ -114,10 +113,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             return true;
         } else if (showHealthBar) {
             return true;
-        } else if (petLivingSoundVolume < 1f) {
-            return true;
-        }
-        return false;
+        } else return petLivingSoundVolume < 1f;
     }
 
     // Custom Data -----------------------------------------------------------------

@@ -206,7 +206,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                if (((ServerChunkCache) world.getChunkSource()).hasChunk(x >> 4, z >> 4)) {
+                if (world.getChunkSource().hasChunk(x >> 4, z >> 4)) {
                     for (int y = minY - 1; y <= maxY; y++) {
                         BlockPos bp = new BlockPos(x, y, z);
                         BlockState blockData = world.getBlockState(bp);

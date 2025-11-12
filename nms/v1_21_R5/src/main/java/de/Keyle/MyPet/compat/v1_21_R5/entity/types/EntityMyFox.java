@@ -46,7 +46,6 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

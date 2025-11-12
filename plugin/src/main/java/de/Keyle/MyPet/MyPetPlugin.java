@@ -421,7 +421,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             @Override
             public void run() {
                 for (final Player player : getServer().getOnlinePlayers()) {
-                    repo.getMyPetPlayer(player, new RepositoryCallback<MyPetPlayer>() {
+                    repo.getMyPetPlayer(player, new RepositoryCallback<>() {
                         @Override
                         public void callback(final MyPetPlayer p) {
                             if (p != null) {
@@ -451,7 +451,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                                 if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                                     final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
 
-                                    MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
+                                    MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<>() {
                                         @Override
                                         public void callback(StoredMyPet storedMyPet) {
                                             myPetManager.activateMyPet(storedMyPet);

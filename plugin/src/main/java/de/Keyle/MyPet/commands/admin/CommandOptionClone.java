@@ -98,7 +98,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         MyPetSaveEvent event = new MyPetSaveEvent(newPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        MyPetApi.getRepository().addMyPet(newPet, new RepositoryCallback<Boolean>() {
+        MyPetApi.getRepository().addMyPet(newPet, new RepositoryCallback<>() {
             @Override
             public void callback(Boolean value) {
                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
