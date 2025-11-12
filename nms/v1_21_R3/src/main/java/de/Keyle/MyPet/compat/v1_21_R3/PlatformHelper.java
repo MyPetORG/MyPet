@@ -65,17 +65,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang.Validate;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_21_R3.CraftRegistry;
-import org.bukkit.craftbukkit.v1_21_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R3.util.UnsafeList;
+import org.bukkit.craftbukkit.CraftRegistry;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.util.UnsafeList;
 import org.bukkit.entity.*;
 
 import java.lang.reflect.Field;
@@ -108,9 +107,18 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         ParticleType<?> effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName)).get().value();
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if (location == null) {
+            MyPetApi.getLogger().warning("Location is null");
+            return;
+        }
+        if (effect == null) {
+            MyPetApi.getLogger().warning("Effect is null");
+            return;
+        }
+        if (location.getWorld() == null) {
+            MyPetApi.getLogger().warning("World is null for location " + location);
+            return;
+        }
 
         ParticleOptions particle = null;
 
@@ -153,9 +161,18 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
     	ParticleType<?> effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName)).get().value();
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if (location == null) {
+            MyPetApi.getLogger().warning("Location is null");
+            return;
+        }
+        if (effect == null) {
+            MyPetApi.getLogger().warning("Effect is null");
+            return;
+        }
+        if (location.getWorld() == null) {
+            MyPetApi.getLogger().warning("World is null for location " + location);
+            return;
+        }
 
         ParticleOptions particle = null;
 

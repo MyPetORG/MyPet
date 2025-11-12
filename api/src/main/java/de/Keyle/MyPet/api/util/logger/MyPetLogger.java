@@ -24,17 +24,19 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.LogFormat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginLogger;
-import org.fusesource.jansi.Ansi;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -44,30 +46,27 @@ import java.util.stream.Collectors;
 public class MyPetLogger extends PluginLogger {
 
     protected boolean debugSetup = false;
-    private final Map<ChatColor, String> replacements = new HashMap<>();
     private static FileHandler debugLogFileHandler = null;
-    private static boolean AnsiSupported = true;
+    private static final ANSIComponentSerializer ANSI_SERIALIZER = ANSIComponentSerializer.ansi();
+    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
 
     public MyPetLogger(Plugin context) {
         super(context);
 
-        try {
-            if (Ansi.isEnabled()) {
-                registerStyles();
-            }
-        } catch (NoClassDefFoundError e) {
-            AnsiSupported = false;
-        }
-
+        // Create plugin name with Adventure components
         String prefix = context.getDescription().getPrefix();
-        String pluginName = prefix != null ? "[" + ChatColor.DARK_GREEN + prefix + ChatColor.RESET + "] " : "[" + ChatColor.DARK_GREEN + context.getDescription().getName() + ChatColor.RESET + "] ";
-        if (AnsiSupported) {
-            pluginName = applyStyles(pluginName);
-        }
+        String name = prefix != null ? prefix : context.getDescription().getName();
+
+        Component pluginNameComponent = Component.text("[", NamedTextColor.WHITE)
+            .append(Component.text(name, NamedTextColor.DARK_GREEN))
+            .append(Component.text("] ", NamedTextColor.WHITE));
+
+        // Convert to ANSI-colored string
+        String pluginName = ANSI_SERIALIZER.serialize(pluginNameComponent);
 
         try {
-            Field logger = ReflectionUtil.getField(PluginLogger.class, "pluginName");
-            logger.set(this, pluginName);
+            Field pluginNameField = ReflectionUtil.getField(PluginLogger.class, "pluginName");
+            pluginNameField.set(this, pluginName);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -81,12 +80,13 @@ public class MyPetLogger extends PluginLogger {
 
         String message = logRecord.getMessage();
         if (message != null) {
+            // Add red color for warnings and errors
             if (logRecord.getLevel() == Level.WARNING || logRecord.getLevel() == Level.SEVERE) {
                 message = ChatColor.RED + message;
             }
-            if (AnsiSupported) {
-                message = applyStyles(message);
-            }
+
+            // Convert legacy color codes to ANSI escape sequences
+            message = applyStyles(message);
             logRecord.setMessage(message);
         }
 
@@ -94,10 +94,11 @@ public class MyPetLogger extends PluginLogger {
     }
 
     public String applyStyles(String message) {
-        for (ChatColor color : replacements.keySet()) {
-            message = message.replaceAll("(?i)" + color.toString(), this.replacements.getOrDefault(color, ""));
-        }
-        return message + Ansi.ansi().reset().toString();
+        // Convert legacy color codes (§) to Adventure IChatBaseComponent
+        Component component = LEGACY_SERIALIZER.deserialize(message);
+
+        // Convert Adventure IChatBaseComponent to ANSI-colored string
+        return ANSI_SERIALIZER.serialize(component);
     }
 
     public void updateDebugLoggerLogLevel() {
@@ -170,31 +171,6 @@ public class MyPetLogger extends PluginLogger {
             e.printStackTrace();
             return false;
         }
-    }
-
-    private void registerStyles() {
-        this.replacements.put(ChatColor.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
-        this.replacements.put(ChatColor.DARK_BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString());
-        this.replacements.put(ChatColor.DARK_GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).boldOff().toString());
-        this.replacements.put(ChatColor.DARK_AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).boldOff().toString());
-        this.replacements.put(ChatColor.DARK_RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).boldOff().toString());
-        this.replacements.put(ChatColor.DARK_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).boldOff().toString());
-        this.replacements.put(ChatColor.GOLD, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).boldOff().toString());
-        this.replacements.put(ChatColor.GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).boldOff().toString());
-        this.replacements.put(ChatColor.DARK_GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).bold().toString());
-        this.replacements.put(ChatColor.BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).bold().toString());
-        this.replacements.put(ChatColor.GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).bold().toString());
-        this.replacements.put(ChatColor.AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).bold().toString());
-        this.replacements.put(ChatColor.RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).bold().toString());
-        this.replacements.put(ChatColor.LIGHT_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).bold().toString());
-        this.replacements.put(ChatColor.YELLOW, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).bold().toString());
-        this.replacements.put(ChatColor.WHITE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).bold().toString());
-        this.replacements.put(ChatColor.MAGIC, Ansi.ansi().a(Ansi.Attribute.BLINK_SLOW).toString());
-        this.replacements.put(ChatColor.BOLD, Ansi.ansi().a(Ansi.Attribute.UNDERLINE_DOUBLE).toString());
-        this.replacements.put(ChatColor.STRIKETHROUGH, Ansi.ansi().a(Ansi.Attribute.STRIKETHROUGH_ON).toString());
-        this.replacements.put(ChatColor.UNDERLINE, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString());
-        this.replacements.put(ChatColor.ITALIC, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString());
-        this.replacements.put(ChatColor.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());
     }
 
     public void info(Object... params) {

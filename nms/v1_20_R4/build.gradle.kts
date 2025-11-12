@@ -1,10 +1,18 @@
-apply(from = rootProject.file("nms/nmsModule.gradle"))
+plugins {
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
+}
 
-extra["craftbukkitVersion"] = "1.20.6-R0.1-SNAPSHOT";
+extra["needsReobf"] = false  // Paper 1.20.5+ uses Mojang mappings at runtime
+
+apply(from = rootProject.file("nms/nmsPaperweightModule.gradle"))
+
+dependencies {
+    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
+}
 
 description = "v1_20_R4"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(21)
+    options.encoding = "UTF-8"
 }

@@ -192,7 +192,7 @@ public class EntityMyIllusioner extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack, net.minecraft.world.entity.EquipmentSlot slot) {
-		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(slot, itemStack))));
+		((ServerLevel) this.level).chunkSource.broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(slot, itemStack))));
 	}
 
 	@Override

@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_20_R4.entity.ai.target;
 
-import org.bukkit.craftbukkit.v1_20_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_20_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;

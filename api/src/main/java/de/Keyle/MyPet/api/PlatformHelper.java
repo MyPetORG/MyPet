@@ -135,7 +135,7 @@ public abstract class PlatformHelper {
 
     public void sendMessageActionBar(Player player, Component message) {
         if (player == null || !player.isOnline()) return;
-        MyPetApi.getPlugin().audiences().player(player).sendActionBar(message);
+        player.sendActionBar(message);
     }
 
     /**

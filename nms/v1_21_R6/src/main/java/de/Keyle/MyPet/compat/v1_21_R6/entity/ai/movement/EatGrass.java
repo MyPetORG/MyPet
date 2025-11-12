@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import org.bukkit.GameRule;
-import org.bukkit.craftbukkit.v1_21_R6.event.CraftEventFactory;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
 import java.util.function.Predicate;
 

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.compat.v1_21_R6.entity.ai.navigation;
 
 import net.minecraft.world.level.block.Blocks;
-import org.bukkit.craftbukkit.v1_21_R6.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;

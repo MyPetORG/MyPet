@@ -256,7 +256,7 @@ public class EntityMyHorse extends EntityMyPet {
 	@Override
 	public void playStepSound(BlockPos blockposition, BlockState blockdata) {
 		if (!blockdata.getMaterial().isLiquid()) {
-			BlockState blockdataUp = this.level.getBlockState(blockposition.up());
+			BlockState blockdataUp = this.level.getBlockState(blockposition.above());
 			SoundType soundeffecttype = blockdata.getSoundType();
 			if (blockdataUp.getBlock() == Blocks.SNOW) {
 				soundeffecttype = blockdata.getSoundType();
@@ -278,7 +278,7 @@ public class EntityMyHorse extends EntityMyPet {
 	}
 
 	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
+		((ServerLevel) this.level).chunkSource.broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
 	}
 
 	@Override

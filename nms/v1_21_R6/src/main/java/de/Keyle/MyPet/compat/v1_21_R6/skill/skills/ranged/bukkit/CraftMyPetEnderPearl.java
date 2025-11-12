@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_21_R6.skill.skills.ranged.bukkit;
 
-import org.bukkit.craftbukkit.v1_21_R6.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R6.entity.CraftEnderPearl;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftEnderPearl;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
@@ -68,15 +68,5 @@ public class CraftMyPetEnderPearl extends CraftEnderPearl implements CraftMyPetP
     @Override
     public SpawnCategory getSpawnCategory() {
         return SpawnCategory.MISC;
-    }
-
-    /* I have no clue why I need to override these other deprecated methods also don't need to be implemented so yea...*/
-    @Override
-    public void setVisibleByDefault(boolean b) {
-    }
-
-    @Override
-    public boolean isVisibleByDefault() {
-        return true;
     }
 }

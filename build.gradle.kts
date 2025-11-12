@@ -7,6 +7,7 @@ plugins {
     java
     id("com.gradleup.shadow") version "9.2.2"
     id("io.freefair.lombok") version "9.0.0"
+    id("io.typst.gradlesource.spigot") version "2.0.0" apply false
     `maven-publish`
 }
 
@@ -38,15 +39,6 @@ repositories {
     mavenLocal()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     maven("https://repo.mypet-plugin.de/")
-
-    maven {
-        url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
-        credentials {
-            username = providers.gradleProperty("USER_GITHUB").orNull ?: System.getenv("GITHUB_ACTOR")
-            password = providers.gradleProperty("TOKEN_GITHUB").orNull ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
-
 }
 
 subprojects {
@@ -63,20 +55,11 @@ subprojects {
         maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
         maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
         maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
-        maven { url = uri("https://maven.pkg.github.com/MyPetORG/*") }
         maven { url = uri("https://maven.enginehub.org/repo/") }
         maven { url = uri("https://hub.spigotmc.org/nexus/content/groups/public/") }
         maven { url = uri("https://repo.md-5.net/content/repositories/public") }
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
-
-        maven {
-            url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
-            credentials {
-                username = providers.gradleProperty("USER_GITHUB").orNull ?: System.getenv("GITHUB_ACTOR")
-                password = providers.gradleProperty("TOKEN_GITHUB").orNull ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
     }
 
     tasks.processResources { enabled = false }
@@ -198,20 +181,11 @@ dependencies {
     add("shade", "org.bstats:bstats-bukkit:1.7")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
-    add("shade", "com.google.code.gson:gson:2.8.9")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
-    add("shade", "net.kyori:adventure-api:4.25.0")
-    add("shade", "net.kyori:adventure-platform-bukkit:4.4.2-SNAPSHOT")
-    add("shade", "net.kyori:adventure-nbt:4.21.0")
-    add("shade", "net.kyori:adventure-platform-api:4.4.1")
-    add("shade", "net.kyori:adventure-platform-facet:4.4.1")
-    add("shade", "net.kyori:adventure-platform-viaversion:4.4.1")
-    add("shade", "net.kyori:adventure-text-serializer-bungeecord:4.4.1")
-    add("shade", "net.kyori:adventure-text-serializer-gson-legacy-impl:4.21.0")
-    add("shade", "net.kyori:adventure-text-serializer-gson:4.21.0")
-    add("shade", "net.kyori:adventure-text-serializer-legacy:4.21.0")
-
     add("shade", "net.kyori:adventure-text-minimessage:4.25.0")
+    add("shade", "net.kyori:adventure-text-serializer-ansi:4.25.0")
+    add("shade", "net.kyori:adventure-text-serializer-legacy:4.25.0")
+
 }
 
 // Build the shaded jar strictly from the 'shade' configuration
@@ -230,8 +204,6 @@ tasks.shadowJar {
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
-    relocate("org.bson", "de.Keyle.MyPet.util.bson")
-    relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
     relocate("net.kyori", "de.Keyle.MyPet.util.kyori")
 }
@@ -245,6 +217,6 @@ java {
     toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
 }
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(8)
+    options.release.set(16)
     options.encoding = "UTF-8"
 }

@@ -77,7 +77,7 @@ public class EntityMyPig extends EntityMyPet {
 		if (enumhand == InteractionHand.OFF_HAND) {
 			if (itemStack != null) {
 				if (itemStack.getItem() == Items.LEAD) {
-					((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEntityLinkPacket(this, null));
+					((ServerLevel) this.level).chunkSource.broadcastAndSend(this, new ClientboundSetEntityLinkPacket(this, null));
 					entityhuman.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
 					new BukkitRunnable() {
 						@Override

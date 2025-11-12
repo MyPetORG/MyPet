@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_21_R2.skill.skills.ranged.bukkit;
 
-import org.bukkit.craftbukkit.v1_21_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftSmallFireball;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftSmallFireball;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
@@ -68,15 +68,5 @@ public class CraftMyPetSmallFireball extends CraftSmallFireball implements Craft
     @Override
     public SpawnCategory getSpawnCategory() {
         return SpawnCategory.MISC;
-    }
-
-    /* I have no clue why I need to override these other deprecated methods also don't need to be implemented so yea...*/
-    @Override
-    public void setVisibleByDefault(boolean b) {
-    }
-
-    @Override
-    public boolean isVisibleByDefault() {
-        return true;
     }
 }

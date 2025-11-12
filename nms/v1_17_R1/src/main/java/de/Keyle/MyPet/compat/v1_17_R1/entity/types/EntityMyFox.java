@@ -197,7 +197,7 @@ public class EntityMyFox extends EntityMyPet {
 	}
 
 	public void setPetEquipment(ItemStack itemStack) {
-		((ServerLevel) this.level).getChunkProvider().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
+		((ServerLevel) this.level).chunkSource.broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.MAINHAND, itemStack))));
 	}
 
 	@Override

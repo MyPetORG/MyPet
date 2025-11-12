@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_21_R6.entity.ai.movement;
 
-import org.bukkit.craftbukkit.v1_21_R6.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;

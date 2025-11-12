@@ -87,12 +87,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_21_R2.attribute.CraftAttributeMap;
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_21_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R2.util.CraftChatMessage;
+import org.bukkit.craftbukkit.attribute.CraftAttributeMap;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -962,7 +962,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * -> getHurtSound()
 	 */
 	@Override
-	protected SoundEvent getHurtSound(DamageSource damagesource) {
+	public SoundEvent getHurtSound(DamageSource damagesource) {
 		try {
 			return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.tryParse(getHurtSound())).get().value();
 		} catch (Exception e) {
@@ -975,7 +975,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected SoundEvent getDeathSound() {
+	public SoundEvent getDeathSound() {
 		try {
 			return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.tryParse(getMyPetDeathSound())).get().value();
 		} catch (Exception e) {
@@ -1408,7 +1408,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * -> getLivingSound()
 	 */
 	@Override
-	protected SoundEvent getAmbientSound() {
+	public SoundEvent getAmbientSound() {
 		try {
 			if (getLivingSound() != null && playIdleSound()) {
 				makeLivingSound();

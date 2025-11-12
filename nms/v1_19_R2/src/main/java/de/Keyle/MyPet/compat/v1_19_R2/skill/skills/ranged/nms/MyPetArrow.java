@@ -59,7 +59,7 @@ public class MyPetArrow extends Arrow implements EntityMyPetProjectile {
 	}
 
 	@Override
-	protected ItemStack getPickupItem() {
+	public ItemStack getPickupItem() {
 		return new ItemStack(Items.ARROW);
 	}
 

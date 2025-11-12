@@ -948,7 +948,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * -> getHurtSound()
 	 */
 	@Override
-	protected SoundEvent getHurtSound(DamageSource damagesource) {
+	public SoundEvent getHurtSound(DamageSource damagesource) {
 		try {
 			return BuiltInRegistries.SOUND_EVENT.get(new ResourceLocation(getHurtSound()));
 		} catch (Exception e) {
@@ -961,7 +961,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * Returns the sound that is played when the MyPet dies
 	 */
 	@Override
-	protected SoundEvent getDeathSound() {
+	public SoundEvent getDeathSound() {
 		try {
 			return BuiltInRegistries.SOUND_EVENT.get(new ResourceLocation(getMyPetDeathSound()));
 		} catch (Exception e) {
@@ -1397,7 +1397,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * -> getLivingSound()
 	 */
 	@Override
-	protected SoundEvent getAmbientSound() {
+	public SoundEvent getAmbientSound() {
 		try {
 			if (getLivingSound() != null && playIdleSound()) {
 				makeLivingSound();

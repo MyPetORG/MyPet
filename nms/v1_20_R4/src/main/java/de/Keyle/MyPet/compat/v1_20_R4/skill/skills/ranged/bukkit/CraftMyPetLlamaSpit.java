@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.compat.v1_20_R4.skill.skills.ranged.bukkit;
 
-import org.bukkit.craftbukkit.v1_20_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R4.entity.CraftLlamaSpit;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftLlamaSpit;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
@@ -59,15 +59,5 @@ public class CraftMyPetLlamaSpit extends CraftLlamaSpit implements CraftMyPetPro
     @Override
     public SpawnCategory getSpawnCategory() {
         return SpawnCategory.MISC;
-    }
-
-    /* I have no clue why I need to override these other deprecated methods also don't need to be implemented so yea...*/
-    @Override
-    public void setVisibleByDefault(boolean b) {
-    }
-
-    @Override
-    public boolean isVisibleByDefault() {
-        return true;
     }
 }

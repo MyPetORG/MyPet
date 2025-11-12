@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.compat.v1_20_R4.entity.types;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;

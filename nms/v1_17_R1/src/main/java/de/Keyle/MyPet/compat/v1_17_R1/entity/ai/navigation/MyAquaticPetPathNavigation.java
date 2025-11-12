@@ -25,6 +25,6 @@ public class MyAquaticPetPathNavigation extends WaterBoundPathNavigation {
 
     @Override
     public boolean isStableDestination(BlockPos blockposition) {
-        return !this.level.getBlockState(blockposition.down()).isAir();
+        return !this.level.getBlockState(blockposition.below()).isAir();
     }
 }

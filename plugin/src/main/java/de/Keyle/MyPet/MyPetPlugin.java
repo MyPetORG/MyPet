@@ -61,7 +61,6 @@ import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.util.shop.ShopManager;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -95,7 +94,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     private HookHelper hookHelper;
     private PluginHookManager pluginHookManager;
     private ServiceManager serviceManager;
-    private BukkitAudiences audiences;
     private MiniMessage miniMessage;
 
     public void onDisable() {
@@ -123,7 +121,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         if (serviceManager != null) {
             serviceManager.disableServices();
         }
-        if (audiences != null) audiences.close();
     }
 
     public void onLoad() {
@@ -168,7 +165,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         this.isReady = false;
 
         miniMessage = MiniMessage.miniMessage();
-        audiences = BukkitAudiences.create(this);
 
         Updater updater = new Updater("MyPet");
         updater.update();
@@ -675,9 +671,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     public boolean isDisabling() {
         return isDisabling;
     }
-
-    @Override
-    public BukkitAudiences audiences() { return audiences; }
 
     @Override
     public MiniMessage miniMessage() { return miniMessage; }

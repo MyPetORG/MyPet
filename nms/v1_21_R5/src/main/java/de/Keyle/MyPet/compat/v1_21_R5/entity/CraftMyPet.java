@@ -26,12 +26,12 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
-import org.bukkit.craftbukkit.v1_21_R5.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftMob;
-import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftEntityEquipment;
-import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftMob;
+import org.bukkit.craftbukkit.inventory.CraftEntityEquipment;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -125,16 +125,6 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
 		return EntityType.UNKNOWN;
 	} */
-
-	/* I have no clue why I need to override these other deprecated methods also don't need to be implemented so yea...*/
-	@Override
-	public void setVisibleByDefault(boolean b) {
-	}
-
-	@Override
-	public boolean isVisibleByDefault() {
-		return true;
-	}
 
 	@NotNull
 	@Override

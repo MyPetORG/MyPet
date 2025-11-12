@@ -4,7 +4,7 @@ plugins {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(8)
+    options.release.set(16)
     options.encoding = "UTF-8"
 }
 
@@ -14,13 +14,8 @@ dependencies {
 
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("de.keyle:knbt:0.0.5")
-    compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.12")
-
-    compileOnly("org.slf4j:slf4j-api:1.7.30")
-    compileOnly("org.slf4j:slf4j-nop:1.7.30")
-
-    compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")
 
     compileOnly("at.blvckbytes:RawMessage:0.2")
 
@@ -77,9 +72,7 @@ dependencies {
     compileOnly("me.glaremasters:Guilds:3.3")
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
     compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
-    compileOnly("net.kyori:adventure-api:4.25.0")
     compileOnly("net.kyori:adventure-text-minimessage:4.25.0")
-    compileOnly("net.kyori:adventure-platform-bukkit:4.4.2-SNAPSHOT")
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")

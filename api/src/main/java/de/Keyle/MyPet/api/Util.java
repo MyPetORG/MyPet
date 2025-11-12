@@ -32,7 +32,6 @@ import de.keyle.knbt.TagInt;
 import at.blvckbytes.raw_message.MessageColor;
 import at.blvckbytes.raw_message.RawMessage;
 import at.blvckbytes.raw_message.hover.ShowItemAction;
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 
 import java.io.*;
@@ -123,7 +122,10 @@ public class Util {
     }
 
     public static String capitalizeName(String name) {
-        Validate.notNull(name, "Name can't be null");
+        if (name == null) {
+            MyPetApi.getLogger().warning("Name is null");
+            return null;
+        }
 
         name = name.replace("_", " ");
         name = WordUtils.capitalizeFully(name);
@@ -317,8 +319,12 @@ public class Util {
     }
 
     public static boolean findClassInStackTrace(StackTraceElement[] stackTrace, String className, int from, int to, boolean debug) {
-        Validate.isTrue(to >= from, "\"to\" has to be >= \"from\".");
-        Validate.isTrue(from >= 0, "\"from\" has to be >= 0.");
+        if (to < from) {
+            MyPetApi.getLogger().warning("\"to\" must be >= \"from\" (from=" + from + ", to=" + to + ")");
+        }
+        if (from < 0) {
+            MyPetApi.getLogger().warning("\"from\" must be >= 0 (from=" + from + ")");
+        }
         to = Math.min(stackTrace.length - 1, to);
         if (debug) {
             MyPetApi.getLogger().info("=====================================================================================================================================");

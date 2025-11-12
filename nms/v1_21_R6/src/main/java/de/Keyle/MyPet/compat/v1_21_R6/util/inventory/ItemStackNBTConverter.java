@@ -33,8 +33,8 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.ItemStack;
-import org.bukkit.craftbukkit.v1_21_R6.CraftRegistry;
-import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.CraftRegistry;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

@@ -36,7 +36,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.animal.frog.FrogVariant;
 import net.minecraft.world.entity.animal.frog.FrogVariants;
 import net.minecraft.world.level.Level;
-import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
+import org.bukkit.craftbukkit.CraftRegistry;
 
 import java.util.OptionalInt;
 

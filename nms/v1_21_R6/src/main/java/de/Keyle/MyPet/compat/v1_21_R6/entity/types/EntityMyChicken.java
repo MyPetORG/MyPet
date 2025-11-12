@@ -40,7 +40,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.bukkit.craftbukkit.v1_21_R6.CraftRegistry;
+import org.bukkit.craftbukkit.CraftRegistry;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
