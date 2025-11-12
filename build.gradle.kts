@@ -205,7 +205,6 @@ tasks.shadowJar {
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
-    relocate("net.kyori", "de.Keyle.MyPet.util.kyori")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }
