@@ -90,9 +90,9 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
         // Ensure inventory reflects current row count immediately
         if(rows.getValue().intValue() > 0) {
             inventory.setSize(rows.getValue().intValue() * 9);
-            // Keep size in sync with future row changes
-            rows.addCallback((newValue, reason) -> this.inventory.setSize(newValue.intValue() * 9));
         }
+        // Keep size in sync with future row changes (always register callback)
+        rows.addCallback((newValue, reason) -> this.inventory.setSize(newValue.intValue() * 9));
     }
 
     /**
