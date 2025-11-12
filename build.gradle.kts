@@ -16,7 +16,7 @@ group = "de.keyle"
 val buildType = project.findProperty("buildType")?.toString() ?: "local"
 val minecraftVersion by extra("1.21.9")
 
-version = "3.14.0"
+version = "4.0.0"
 
 val nmsModules: List<String> = File(rootDir, "nms")
     .listFiles()
