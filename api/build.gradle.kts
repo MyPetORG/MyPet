@@ -16,9 +16,9 @@ dependencies {
     compileOnly("de.keyle:knbt:0.0.5")
     compileOnly("at.blvckbytes:RawMessage:0.2")
     compileOnly("org.jetbrains:annotations:16.0.2")
-    compileOnly("net.kyori:adventure-text-minimessage:4.25.0")
-    compileOnly("net.kyori:adventure-text-serializer-ansi:4.25.0")
-    compileOnly("net.kyori:adventure-text-serializer-legacy:4.25.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
+    compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0")
+    compileOnly("net.kyori:adventure-text-serializer-legacy:4.17.0")
 }
 
 tasks.withType<JavaCompile>().configureEach {

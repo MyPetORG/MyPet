@@ -72,7 +72,7 @@ dependencies {
     compileOnly("me.glaremasters:Guilds:3.3")
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
     compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
-    compileOnly("net.kyori:adventure-text-minimessage:4.25.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")

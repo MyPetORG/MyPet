@@ -182,9 +182,9 @@ dependencies {
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
-    add("shade", "net.kyori:adventure-text-minimessage:4.25.0")
-    add("shade", "net.kyori:adventure-text-serializer-ansi:4.25.0")
-    add("shade", "net.kyori:adventure-text-serializer-legacy:4.25.0")
+    add("shade", "net.kyori:adventure-text-minimessage:4.17.0")
+    add("shade", "net.kyori:adventure-text-serializer-ansi:4.17.0")
+    add("shade", "net.kyori:adventure-text-serializer-legacy:4.17.0")
 
 }
 
@@ -205,6 +205,7 @@ tasks.shadowJar {
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
+    //relocate("net.kyori.adventure.text.minimessage", "de.Keyle.MyPet.util.kyori.adventure.text.minimessage")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }

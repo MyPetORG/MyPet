@@ -13,8 +13,7 @@ dependencies {
     add("compileOnly", "com.mojang:javabridge:1.2.24")
     add("compileOnly", "com.mojang:authlib:3.2.38")
 
-    add("compileOnly", "net.kyori:adventure-api:4.25.0")
-    add("compileOnly", "net.kyori:adventure-text-minimessage:4.25.0")
+    add("compileOnly", "net.kyori:adventure-text-minimessage:4.17.0")
 
     add("compileOnly", "org.jetbrains:annotations:13.0")
     add("compileOnly", "de.keyle:knbt:0.0.5")
