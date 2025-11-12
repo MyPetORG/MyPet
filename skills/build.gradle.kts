@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
 
     compileOnly("de.keyle:knbt:0.0.5")
     compileOnly("at.blvckbytes:RawMessage:0.2")
@@ -28,6 +28,6 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(16)
+    options.release.set(17)
     options.encoding = "UTF-8"
 }

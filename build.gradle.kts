@@ -216,6 +216,6 @@ java {
     toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
 }
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(16)
+    options.release.set(17)
     options.encoding = "UTF-8"
 }
