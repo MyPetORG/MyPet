@@ -4,7 +4,9 @@ plugins {
 
 extra["needsReobf"] = true  // 1.17 needs Spigot mappings at runtime
 
-apply(from = rootProject.file("nms/nmsPaperweightModule.gradle"))
+apply(from = rootProject.file("nms/nmsPaperweightModule.gradle.kts"))
+
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
 
 dependencies {
     paperweight.paperDevBundle("1.17.1-R0.1-SNAPSHOT")

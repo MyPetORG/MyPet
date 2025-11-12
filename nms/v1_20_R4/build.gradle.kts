@@ -4,7 +4,9 @@ plugins {
 
 extra["needsReobf"] = false  // Paper 1.20.5+ uses Mojang mappings at runtime
 
-apply(from = rootProject.file("nms/nmsPaperweightModule.gradle"))
+apply(from = rootProject.file("nms/nmsPaperweightModule.gradle.kts"))
+
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
 
 dependencies {
     paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
