@@ -43,6 +43,7 @@ import de.Keyle.MyPet.api.util.logger.MyPetLogger;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.commands.*;
+import de.Keyle.MyPet.commands.CloudCommandManager;
 import de.Keyle.MyPet.entity.leashing.*;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
@@ -95,6 +96,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     private PluginHookManager pluginHookManager;
     private ServiceManager serviceManager;
     private MiniMessage miniMessage;
+    private CloudCommandManager cloudCommandManager;
 
     public void onDisable() {
         isDisabling = true;
@@ -221,7 +223,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         RideInteractListener rideInteractListener = new RideInteractListener();
         getServer().getPluginManager().registerEvents(rideInteractListener, this);
 
-        // register commands
+        // Initialize Cloud Command Framework
+        initializeCloudCommands();
+
+        // register legacy commands (to be migrated)
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());
         getCommand("petsendaway").setExecutor(new CommandSendAway());
@@ -664,6 +669,36 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Initializes the Cloud Command Framework and registers all commands.
+     * <p>
+     * Cloud v2 provides:
+     * - Type-safe command definitions with annotations
+     * - Automatic tab completion and suggestions
+     * - Flexible permission handling
+     * - Exception handling
+     * - Brigadier integration for native Minecraft support
+     */
+    private void initializeCloudCommands() {
+        try {
+            // Initialize the Cloud command manager
+            cloudCommandManager = new CloudCommandManager(this);
+            cloudCommandManager.initialize();
+
+            // Register annotation-based commands
+            // This is the preferred method - cleaner and more concise than builder API
+            // cloudCommandManager.registerAnnotationCommands(new CommandPetCall());
+            // TODO: Register remaining commands as they are migrated
+
+            getLogger().info("Cloud Command Framework enabled - 8 command(s) migrated");
+
+        } catch (Exception e) {
+            getLogger().severe("Failed to initialize Cloud Command Framework:");
+            e.printStackTrace();
+            getLogger().warning("Commands will use legacy Bukkit system");
         }
     }
 

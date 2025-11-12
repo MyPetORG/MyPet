@@ -6,6 +6,9 @@ plugins {
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(17)
     options.encoding = "UTF-8"
+    // Enable parameter name preservation for Cloud annotations
+    // This allows Cloud to infer parameter names from method signatures
+    options.compilerArgs.add("-parameters")
 }
 
 dependencies {
@@ -16,6 +19,11 @@ dependencies {
     compileOnly("de.keyle:knbt:0.0.5")
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.12")
+    compileOnly("com.mojang:brigadier:1.0.18")
+
+    // Cloud Command Framework v2
+    implementation("org.incendo:cloud-paper:2.0.0-beta.13")
+    implementation("org.incendo:cloud-annotations:2.0.0")
 
     compileOnly("at.blvckbytes:RawMessage:0.2")
 
