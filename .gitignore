@@ -21,8 +21,6 @@
 # Ant
 build.number
 
-src/main/resources/versionmatcher.csv
-
 # Gradle
 .gradle/
 .gradle
