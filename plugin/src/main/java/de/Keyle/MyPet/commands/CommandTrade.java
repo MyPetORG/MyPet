@@ -33,8 +33,8 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.click.RunCommandAction;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -250,10 +250,11 @@ public class CommandTrade implements CommandTabCompleter {
                         receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer", receiver), player.getName()));
                     }
 
-                    new RawMessage(" »» " + myPet.getPetName())
-                      .setHoverAction(Util.myPetToItemAction(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)))
-                      .setClickAction(new RunCommandAction("/pettrade accept"))
-                      .tellRawTo(receiver);
+                    receiver.sendMessage(
+                        Component.text(" »» " + myPet.getPetName())
+                            .hoverEvent(Util.myPetToItemHover(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)))
+                            .clickEvent(ClickEvent.runCommand("/pettrade accept"))
+                    );
 
                     return true;
                 } else {

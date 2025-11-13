@@ -35,9 +35,9 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.hover.ShowItemAction;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -146,7 +146,8 @@ public class CommandInfo implements CommandTabCompleter {
 
                 if (sender instanceof Player player) {
 
-                    RawMessage message = new RawMessage("   " + Translation.getString("Name.Food", player) + ": ");
+                    TextComponent.Builder messageBuilder = Component.text()
+                            .append(Component.text("   " + Translation.getString("Name.Food", player) + ": "));
 
                     boolean comma = false;
                     for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPet.getPetType())) {
@@ -155,32 +156,20 @@ public class CommandInfo implements CommandTabCompleter {
                             continue;
                         }
                         if (comma) {
-                            message.addExtra(", ");
+                            messageBuilder.append(Component.text(", "));
                         }
-
-                        RawMessage itemPart = new RawMessage();
-                        ShowItemAction itemAction = new ShowItemAction(is.getType());
-
-                        itemPart.setHoverAction(itemAction);
-                        message.addExtra(itemPart);
 
                         ItemMeta meta = is.getItemMeta();
 
-                        if (meta != null) {
-                            if (meta.hasDisplayName())
-                                itemAction.setName(meta.getDisplayName());
-
-                            if (meta.hasLore())
-                                itemAction.setLoreStrings(meta.getLore());
-                        }
-
+                        Component itemComponent;
                         if (meta != null && meta.hasDisplayName()) {
-                            itemPart.setText(meta.getDisplayName());
+                            itemComponent = Component.text(meta.getDisplayName())
+                                    .hoverEvent(Util.myPetToItemHover(myPet, player.getName()));
                         } else {
                             try {
-                                itemPart
-                                  .setTranslate(MyPetApi.getPlatformHelper().getVanillaName(is))
-                                  .setColor(MessageColor.GOLD);
+                                itemComponent = Component.translatable(MyPetApi.getPlatformHelper().getVanillaName(is))
+                                        .color(NamedTextColor.GOLD)
+                                        .hoverEvent(Util.myPetToItemHover(myPet, player.getName()));
                             } catch (Exception e) {
                                 MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
                                 MyPetApi.getLogger().warning("" + is);
@@ -188,9 +177,10 @@ public class CommandInfo implements CommandTabCompleter {
                                 continue;
                             }
                         }
+                        messageBuilder.append(itemComponent);
                         comma = true;
                     }
-                    message.tellRawTo(player);
+                    player.sendMessage(messageBuilder.build());
                 } else {
                     String foodString = "   " + Translation.getString("Name.Food", sender) + ": ";
                     foodString += MyPetApi.getMyPetInfo().getFood(myPet.getPetType())

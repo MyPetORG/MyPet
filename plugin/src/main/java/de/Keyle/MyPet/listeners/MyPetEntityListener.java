@@ -49,9 +49,10 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.hover.ShowItemAction;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -208,7 +209,8 @@ public class MyPetEntityListener implements Listener {
                     if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
                         damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + Math.round(myPet.getSaturation()));
 
-                        RawMessage message = new RawMessage("   " + Translation.getString("Name.Food", damager) + ": ");
+                        TextComponent.Builder messageBuilder = Component.text()
+                                .append(Component.text("   " + Translation.getString("Name.Food", damager) + ": "));
 
                         boolean comma = false;
                         for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPet.getPetType())) {
@@ -217,32 +219,20 @@ public class MyPetEntityListener implements Listener {
                                 continue;
                             }
                             if (comma) {
-                                message.addExtra(", ");
+                                messageBuilder.append(Component.text(", "));
                             }
-
-                            RawMessage itemPart = new RawMessage();
-                            ShowItemAction itemAction = new ShowItemAction(is.getType());
-
-                            itemPart.setHoverAction(itemAction);
-                            message.addExtra(itemPart);
 
                             ItemMeta meta = is.getItemMeta();
 
-                            if (meta != null) {
-                                if (meta.hasDisplayName())
-                                    itemAction.setName(meta.getDisplayName());
-
-                                if (meta.hasLore())
-                                    itemAction.setLoreStrings(meta.getLore());
-                            }
-
+                            Component itemComponent;
                             if (meta != null && meta.hasDisplayName()) {
-                                itemPart.setText(meta.getDisplayName());
+                                itemComponent = Component.text(meta.getDisplayName())
+                                        .hoverEvent(Util.myPetToItemHover(myPet, damager.getName()));
                             } else {
                                 try {
-                                    itemPart
-                                      .setTranslate(MyPetApi.getPlatformHelper().getVanillaName(is))
-                                      .setColor(MessageColor.GOLD);
+                                    itemComponent = Component.translatable(MyPetApi.getPlatformHelper().getVanillaName(is))
+                                            .color(NamedTextColor.GOLD)
+                                            .hoverEvent(Util.myPetToItemHover(myPet, damager.getName()));
                                 } catch (Exception e) {
                                     MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
                                     MyPetApi.getLogger().warning("" + is);
@@ -250,9 +240,10 @@ public class MyPetEntityListener implements Listener {
                                     continue;
                                 }
                             }
+                            messageBuilder.append(itemComponent);
                             comma = true;
                         }
-                        message.tellRawTo(damager);
+                        damager.sendMessage(messageBuilder.build());
 
                         infoShown = true;
                     }
@@ -638,29 +629,24 @@ public class MyPetEntityListener implements Listener {
                 return;
             }
 
-            RawMessage message = new RawMessage();
+            Component deathMessage;
 
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                message.setTranslate(
+                // Entity damage - death message with two arguments (pet name and killer)
+                deathMessage = Component.translatable(
                   deathMessageKey,
-                  Arrays.asList(
-                    new RawMessage(myPet.getPetName())
-                      .setColor(MessageColor.AQUA),
-                    new RawMessage(killer)
-                      .clearImplicitStyling()
-                  )
+                  Component.text(myPet.getPetName()).color(NamedTextColor.AQUA),
+                  Component.text(killer)
                 );
             } else {
-                message.setTranslate(
+                // Environmental damage - death message with one argument (pet name only)
+                deathMessage = Component.translatable(
                   deathMessageKey,
-                  Collections.singletonList(
-                    new RawMessage(myPet.getPetName())
-                      .setColor(MessageColor.AQUA)
-                  )
+                  Component.text(myPet.getPetName()).color(NamedTextColor.AQUA)
                 );
             }
 
-            message.tellRawTo(myPet.getOwner().getPlayer());
+            myPet.getOwner().getPlayer().sendMessage(deathMessage);
         }
     }
 }

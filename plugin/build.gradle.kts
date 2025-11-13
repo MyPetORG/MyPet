@@ -25,8 +25,6 @@ dependencies {
     implementation("org.incendo:cloud-paper:2.0.0-beta.13")
     implementation("org.incendo:cloud-annotations:2.0.0")
 
-    compileOnly("at.blvckbytes:RawMessage:0.2")
-
     compileOnly("net.citizensnpcs:citizensapi:2.0.24")
     compileOnly("br.net.fabiozumbi12:PvPDiffTimer:1.4.4")
     compileOnly("au.com.mineauz:Minigames:1.12.0")

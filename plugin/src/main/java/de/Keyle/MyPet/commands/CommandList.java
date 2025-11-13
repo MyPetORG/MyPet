@@ -28,8 +28,9 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -91,22 +92,24 @@ public class CommandList implements CommandTabCompleter {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.List.Player", lang), owner.getName()));
                     }
                     boolean doComma = false;
-                    RawMessage message = new RawMessage();
+                    TextComponent.Builder messageBuilder = Component.text();
                     for (StoredMyPet mypet : value) {
 
                         if (doComma) {
-                            message.addExtra(", ");
+                            messageBuilder.append(Component.text(", "));
                         }
-                        message.addExtra(
-                                new RawMessage(mypet.getPetName())
-                                        .setColor(MessageColor.AQUA)
-                                        .setHoverAction(Util.myPetToItemAction(mypet, lang))
+                        messageBuilder.append(
+                                Component.text(mypet.getPetName())
+                                        .color(NamedTextColor.AQUA)
+                                        .hoverEvent(Util.myPetToItemHover(mypet, lang))
                         );
                         if (!doComma) {
                             doComma = true;
                         }
                     }
-                    message.tellRawTo((Player) sender);
+                    if (sender instanceof Player player) {
+                        player.sendMessage(messageBuilder.build());
+                    }
                 }
             });
         }

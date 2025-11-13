@@ -177,7 +177,6 @@ dependencies {
     nmsModules.forEach { add("shade", project(path = it, configuration = "runtimeElements")) }
 
     // External libs to be shaded
-    add("shade", "at.blvckbytes:RawMessage:0.2")
     add("shade", "org.bstats:bstats-bukkit:1.7")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
@@ -200,12 +199,10 @@ tasks.shadowJar {
 
     configurations = listOf(shade)
 
-    relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
-    //relocate("net.kyori.adventure.text.minimessage", "de.Keyle.MyPet.util.kyori.adventure.text.minimessage")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }
