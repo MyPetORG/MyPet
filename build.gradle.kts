@@ -30,15 +30,6 @@ repositories {
     mavenLocal()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     maven("https://repo.mypet-plugin.de/")
-
-    maven {
-        url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
-        credentials {
-            username = providers.gradleProperty("USER_GITHUB").orNull ?: System.getenv("GITHUB_ACTOR")
-            password = providers.gradleProperty("TOKEN_GITHUB").orNull ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
-
 }
 
 subprojects {
@@ -194,18 +185,6 @@ dependencies {
     add("shade", "de.keyle:knbt:0.0.5")
     add("shade", "com.google.code.gson:gson:2.8.9")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
-    add("shade", "net.kyori:adventure-api:4.25.0")
-    add("shade", "net.kyori:adventure-platform-bukkit:4.4.2-SNAPSHOT")
-    add("shade", "net.kyori:adventure-nbt:4.21.0")
-    add("shade", "net.kyori:adventure-platform-api:4.4.1")
-    add("shade", "net.kyori:adventure-platform-facet:4.4.1")
-    add("shade", "net.kyori:adventure-platform-viaversion:4.4.1")
-    add("shade", "net.kyori:adventure-text-serializer-bungeecord:4.4.1")
-    add("shade", "net.kyori:adventure-text-serializer-gson-legacy-impl:4.21.0")
-    add("shade", "net.kyori:adventure-text-serializer-gson:4.21.0")
-    add("shade", "net.kyori:adventure-text-serializer-legacy:4.21.0")
-
-    add("shade", "net.kyori:adventure-text-minimessage:4.25.0")
 }
 
 // Build the shaded jar strictly from the 'shade' configuration
@@ -227,7 +206,6 @@ tasks.shadowJar {
     relocate("org.bson", "de.Keyle.MyPet.util.bson")
     relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
-    relocate("net.kyori", "de.Keyle.MyPet.util.kyori")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }

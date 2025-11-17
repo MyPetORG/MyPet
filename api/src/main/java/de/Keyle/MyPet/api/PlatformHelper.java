@@ -26,9 +26,6 @@ import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.keyle.knbt.TagCompound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.Bukkit;
@@ -133,48 +130,47 @@ public abstract class PlatformHelper {
 
     public abstract ItemStack compundToItemStack(TagCompound compound);
 
-    public void sendMessageActionBar(Player player, Component message) {
-        if (player == null || !player.isOnline()) return;
-        MyPetApi.getPlugin().audiences().player(player).sendActionBar(message);
-    }
+    public abstract void sendMessageActionBar(Player player, String message);
 
     /**
      * Builds the action bar message for pet health updates so it can be reused by all NMS modules.
      * This method only constructs the message; caller is responsible for sending and for any gating (e.g., config flags).
      */
-    public Component buildPetHealthActionBar(MyPet myPet, double health, double maxHealth) {
+    public String buildPetHealthActionBar(MyPet myPet, double health, double maxHealth) {
         if (myPet == null) {
-            return Component.empty();
+            return "";
         }
         double deltaHealth = maxHealth - health;
 
-        NamedTextColor healthColor = NamedTextColor.RED;
+        String healthColor = "§c"; // Red
         if (health > maxHealth / 3 * 2) {
-            healthColor = NamedTextColor.GREEN;
+            healthColor = "§a"; // Green
         } else if (health > maxHealth / 3) {
-            healthColor = NamedTextColor.YELLOW;
+            healthColor = "§e"; // Yellow
         }
-        Component parsed = MyPetApi.getPlugin().miniMessage().deserialize(
-                "<petname><reset>: ",
-                Placeholder.unparsed("petname", myPet.getPetName()));
+
+        StringBuilder message = new StringBuilder();
+        message.append(myPet.getPetName()).append("§r: ");
+
         if (health > 0) {
-            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
-                    "<healthcolor><health><white>/<maxhealth> ",
-                    Placeholder.styling("healthcolor", healthColor),
-                    Placeholder.unparsed("health", String.format("%1.2f", health)),
-                    Placeholder.unparsed("maxhealth", String.format("%1.2f", maxHealth))));
+            message.append(healthColor)
+                   .append(String.format("%1.2f", health))
+                   .append("§f/")
+                   .append(String.format("%1.2f", maxHealth))
+                   .append(" ");
+
             if (!myPet.getOwner().isHealthBarActive()) {
-                parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
-                        "(<deltahealthcolor><deltahealth><reset>)",
-                        Placeholder.parsed("deltahealthcolor", deltaHealth < 0 ? "<green>+" : "<red>-"),
-                        Placeholder.unparsed("deltahealth", String.format("%1.2f", deltaHealth))));
+                String deltaColor = deltaHealth < 0 ? "§a+" : "§c-";
+                message.append("(")
+                       .append(deltaColor)
+                       .append(String.format("%1.2f", Math.abs(deltaHealth)))
+                       .append("§r)");
             }
         } else {
-            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
-                    "<dead>",
-                    Placeholder.unparsed("dead", Translation.getString("Name.Dead", myPet.getOwner()))));
+            message.append(Translation.getString("Name.Dead", myPet.getOwner()));
         }
-        return parsed;
+
+        return message.toString();
     }
 
     public abstract void addZombieTargetGoal(Zombie zombie);

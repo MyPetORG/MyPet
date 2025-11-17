@@ -16,10 +16,6 @@ dependencies {
     compileOnly("com.mojang:javabridge:1.2.24")
     compileOnly("com.mojang:authlib:3.2.38")
 
-    compileOnly("net.kyori:adventure-api:4.25.0")
-    compileOnly("net.kyori:adventure-text-minimessage:4.25.0")
-    compileOnly("net.kyori:adventure-platform-bukkit:4.4.2-SNAPSHOT")
-
     compileOnly("org.jetbrains:annotations:13.0")
     compileOnly("de.keyle:knbt:0.0.5")
 

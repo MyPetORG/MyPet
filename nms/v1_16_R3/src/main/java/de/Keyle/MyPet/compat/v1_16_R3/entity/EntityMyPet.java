@@ -657,7 +657,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
         this.datawatcher.set(HEALTH, MathHelper.a(f, 0.0F, (float) maxHealth));
 
         if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
-            net.kyori.adventure.text.Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, getHealth(), maxHealth);
+            String msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, getHealth(), maxHealth);
             MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
         }
     }

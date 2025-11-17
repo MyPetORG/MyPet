@@ -446,7 +446,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 }
 
                 if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
-                    net.kyori.adventure.text.Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
+                    String msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
                     MyPetApi.getPlatformHelper().sendMessageActionBar(getPlayer(), msg);
                 }
             } else if (myPet.getStatus() == PetState.Despawned) {
