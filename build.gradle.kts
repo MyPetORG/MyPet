@@ -143,6 +143,7 @@ tasks.processResources {
 
 fun Manifest.attributesForMyPet() = attributes(
     mapOf(
+        "Main-Class" to "de.Keyle.MyPet.Main",
         "Project-Name" to project.name,
         "Project-Version" to project.version.toString(),
         "Project-Build" to (System.getenv("BUILD_NUMBER") ?: ""),
