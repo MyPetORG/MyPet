@@ -211,6 +211,9 @@ public class CustomInventory implements InventoryHolder {
      * Creates a Bukkit inventory for this CustomInventory instance if one has not been created already.
      */
     private void createInventoryIfNeeded() {
+        if (this.size <= 0) {
+            return;
+        }
         if (this.bukkitInventory == null || this.bukkitInventory.getSize() != this.size || this.bukkitInventory.getHolder() != this) {
             ItemStack[] contents = this.bukkitInventory != null ? this.bukkitInventory.getContents() : null;
             this.bukkitInventory = Bukkit.createInventory(this, this.size, this.name);
