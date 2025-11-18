@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,9 +23,13 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
 public class MyDolphin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyDolphin {
+
+    protected boolean isBaby = false;
 
     public MyDolphin(MyPetPlayer petOwner) {
         super(petOwner);
@@ -36,8 +40,33 @@ public class MyDolphin extends MyPet implements de.Keyle.MyPet.api.entity.types.
         return MyPetType.Dolphin;
     }
 
+    public boolean isBaby() {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag) {
+        this.isBaby = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+    }
+
     @Override
     public String toString() {
-        return "MyDolphin{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+        return "MyDolphin{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
     }
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MyDolphin;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyAquaticPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -57,6 +58,16 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
 	@Override
 	protected String getLivingSound() {
 		return "entity.dolphin.ambient";
+	}
+
+	@Override
+	public MyDolphin getMyPet() {
+		return (MyDolphin) myPet;
+	}
+
+	@Override
+	public void updateVisuals() {
+		getEntityData().set(DATA_BABY_ID, getMyPet().isBaby());
 	}
 
 	@Override
