@@ -781,6 +781,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             return;
 
         Inventory bukkitInventory = getSkills().get(BackpackImpl.class).getInventory().getBukkitInventory();
+        if (bukkitInventory == null)
+            return;
         //Check Inventory for food first, then get that food
         List<ConfigItem> foodList = MyPetApi.getMyPetInfo().getFood(getPetType());
         for (ConfigItem foodItem : foodList) {
