@@ -20,12 +20,17 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 
 public class MySalmon extends MyPet implements de.Keyle.MyPet.api.entity.types.MySalmon {
+
+    protected int variant = 0;
 
     public MySalmon(MyPetPlayer petOwner) {
         super(petOwner);
@@ -36,8 +41,33 @@ public class MySalmon extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         return MyPetType.Salmon;
     }
 
+    public int getVariant() {
+        return variant;
+    }
+
+    public void setVariant(int variant) {
+        this.variant = Util.clamp(variant, 0, 2);
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("Variant", new TagInt(getVariant()));
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.containsKey("Variant")) {
+            setVariant(info.getAs("Variant", TagInt.class).getIntData());
+        }
+    }
+
     @Override
     public String toString() {
-        return "MySalmon{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+        return "MySalmon{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", variant=" + variant + "}";
     }
 }

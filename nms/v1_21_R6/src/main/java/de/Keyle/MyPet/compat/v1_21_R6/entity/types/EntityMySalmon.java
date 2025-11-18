@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_21_R6.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MySalmon;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyAquaticPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.Level;
 public class EntityMySalmon extends EntityMyAquaticPet {
 
 	private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMySalmon.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMySalmon.class, EntityDataSerializers.INT);
 
 	public EntityMySalmon(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -53,8 +55,19 @@ public class EntityMySalmon extends EntityMyAquaticPet {
 	}
 
 	@Override
+	public MySalmon getMyPet() {
+		return (MySalmon) myPet;
+	}
+
+	@Override
+	public void updateVisuals() {
+		getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
+	}
+
+	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(FROM_BUCKET_WATCHER, false);
+		builder.define(VARIANT_WATCHER, 1);
 	}
 }

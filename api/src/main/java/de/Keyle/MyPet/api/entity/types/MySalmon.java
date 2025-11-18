@@ -26,4 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 @DefaultInfo(food = {"seagrass"})
 public interface MySalmon extends MyPet {
 
+    int getVariant();
+
+    void setVariant(int variant);
 }
