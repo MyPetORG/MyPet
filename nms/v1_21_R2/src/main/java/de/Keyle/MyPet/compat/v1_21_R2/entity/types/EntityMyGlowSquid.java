@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -22,11 +22,17 @@ package de.Keyle.MyPet.compat.v1_21_R2.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MyGlowSquid;
 import de.Keyle.MyPet.compat.v1_21_R2.entity.EntityMyAquaticPet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 0.475f)
 public class EntityMyGlowSquid extends EntityMyAquaticPet {
+
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyGlowSquid.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMyGlowSquid(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -45,6 +51,22 @@ public class EntityMyGlowSquid extends EntityMyAquaticPet {
 	@Override
 	protected String getLivingSound() {
 		return "entity.glow_squid.ambient";
+	}
+
+	@Override
+	public MyGlowSquid getMyPet() {
+		return (MyGlowSquid) myPet;
+	}
+
+	@Override
+	public void updateVisuals() {
+		getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+	}
+
+	@Override
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(AGE_WATCHER, false);
 	}
 
 }
