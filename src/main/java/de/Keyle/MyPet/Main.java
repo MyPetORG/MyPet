@@ -24,27 +24,19 @@ import java.awt.Desktop;
 import java.net.URI;
 
 public class Main {
+    static String url = "https://skilltree.mypet-plugin.de";
     public static void main(String[] args) {
         try {
-            String url = "https://skilltree.mypet-plugin.de";
-
-            if (Desktop.isDesktopSupported()) {
-                Desktop desktop = Desktop.getDesktop();
-                if (desktop.isSupported(Desktop.Action.BROWSE)) {
-                    desktop.browse(new URI(url));
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                    Desktop.getDesktop().browse(new URI(url));
                     System.out.println("Opening MyPet Skilltree Editor in your default browser...");
-                    System.out.println("URL: " + url);
-                } else {
-                    System.err.println("Desktop browsing is not supported on this system.");
-                    System.out.println("Please visit: " + url);
-                }
             } else {
-                System.err.println("Desktop is not supported on this system.");
+                System.err.println("Failed to open Skilltree Editor.");
                 System.out.println("Please visit: " + url);
             }
         } catch (Exception e) {
-            System.err.println("Failed to open browser: " + e.getMessage());
-            System.out.println("Please visit: https://skilltree.mypet-plugin.de");
+            System.err.println("Failed to open Skilltree Editor: " + e.getMessage());
+            System.out.println("Please visit: " + url);
         }
     }
 }
