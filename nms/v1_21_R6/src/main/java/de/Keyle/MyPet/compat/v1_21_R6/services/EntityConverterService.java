@@ -140,6 +140,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case TROPICAL_FISH:
                 convertTropicalFish((TropicalFish) entity, properties);
                 break;
+            case SALMON:
+                convertSalmon((Salmon) entity, properties);
+                break;
             case PUFFERFISH:
                 convertPufferFish((PufferFish) entity, properties);
                 break;
@@ -339,6 +342,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Axolotl) normalEntity).setVariant(Axolotl.Variant.values()[((MyAxolotl) myPet).getVariant()]);
         } else if (myPet instanceof MyTropicalFish) {
             ((CraftTropicalFish) normalEntity).getHandle().setPackedVariant(((MyTropicalFish) myPet).getVariant());
+        } else if (myPet instanceof MySalmon) {
+            ((Salmon) normalEntity).setVariant(Salmon.Variant.values()[((MySalmon) myPet).getVariant()]);
         } else if (myPet instanceof MyPufferfish) {
             ((PufferFish) normalEntity).setPuffState(((MyPufferfish) myPet).getPuffState().ordinal());
         } else if (myPet instanceof MyPhantom) {
@@ -622,6 +627,10 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public void convertTropicalFish(TropicalFish tropicalFish, TagCompound properties) {
         CraftTropicalFish fish = (CraftTropicalFish) tropicalFish;
         properties.getCompoundData().put("Variant", new TagInt(fish.getHandle().getPackedVariant()));
+    }
+
+    public void convertSalmon(Salmon salmon, TagCompound properties) {
+        properties.getCompoundData().put("Variant", new TagInt(salmon.getVariant().ordinal()));
     }
 
     public void convertPufferFish(PufferFish pufferFish, TagCompound properties) {
