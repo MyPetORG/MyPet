@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_21_R5.util.inventory;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.TagType;
@@ -45,7 +46,7 @@ import java.util.Set;
 @Compat("v1_21_R5")
 public class ItemStackNBTConverter {
 
-	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "v"); //List-Field (or value)
+    private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "v"); //List-Field (or value)
     public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
     private static final CompoundTag EMPTY_ITEM_COMPOUND;
 
@@ -92,13 +93,135 @@ public class ItemStackNBTConverter {
             return ItemStack.EMPTY;
         }
 
-        // If you have legacy structure adjustments, keep your converter:
-        CompoundTag toParse = compoundTag.contains("tag")
-                ? convertOldVanillaCompound(compoundTag)
-                : compoundTag;
+        CompoundTag toParse = compoundTag;
+        boolean modified = false;
+
+        // Check if this has the old "tag" format and needs DataFixer conversion
+        if (toParse.contains("tag")) {
+            toParse = convertOldVanillaCompound(toParse);
+            modified = true;
+        }
+
+        // If it has components but with old intermediate formats, fix them
+        else if (toParse.contains("components")) {
+            CompoundTag fixed = fixEnchantmentsFormat(toParse);
+            if (!fixed.equals(toParse)) {
+                toParse = fixed;
+                modified = true;
+            }
+        }
+
+        // Output the corrected string if conversion happened
+        if (modified) {
+            MyPetApi.getLogger().warning("Old item format detected! Update your item to the new format (make sure to include the period at the beginning):");
+            MyPetApi.getLogger().warning(" . " + toParse);
+            MyPetApi.getLogger().warning("This warning will disappear once you update your config.");
+        }
 
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registryAccess);
-        return ItemStack.CODEC.parse(ops, toParse).result().orElse(ItemStack.EMPTY);
+
+        DataResult<ItemStack> parseResult = ItemStack.CODEC.parse(ops, toParse);
+        if (parseResult.error().isPresent()) {
+            MyPetApi.getLogger().warning("Failed to parse ItemStack: " + parseResult.error().get().message());
+        }
+        return parseResult.result().orElse(ItemStack.EMPTY);
+    }
+
+    private static CompoundTag fixEnchantmentsFormat(CompoundTag compoundTag) {
+        CompoundTag result = compoundTag.copy();
+
+        // Check if components exists and has old-format enchantments
+        if (result.contains("components")) {
+            Optional<CompoundTag> componentsOpt = result.getCompound("components");
+            if (componentsOpt.isEmpty()) {
+                return result;
+            }
+            CompoundTag components = componentsOpt.get().copy();
+            boolean modified = false;
+
+            // Fix enchantments format
+            if (components.contains("minecraft:enchantments")) {
+                Optional<CompoundTag> enchantmentsOpt = components.getCompound("minecraft:enchantments");
+                if (enchantmentsOpt.isPresent()) {
+                    CompoundTag enchantments = enchantmentsOpt.get();
+
+                    // Check if it has the old format with "levels" and "show_in_tooltip"
+                    if (enchantments.contains("levels")) {
+                        Optional<CompoundTag> levelsOpt = enchantments.getCompound("levels");
+                        if (levelsOpt.isPresent()) {
+                            CompoundTag levels = levelsOpt.get();
+                            components.put("minecraft:enchantments", levels);
+                            modified = true;
+                        }
+                    }
+                }
+            }
+
+            // Fix text components that are stored as strings (custom_name, lore, etc.)
+            modified |= fixTextComponent(components, "minecraft:custom_name");
+            modified |= fixTextComponentList(components, "minecraft:lore");
+
+            if (modified) {
+                result.put("components", components);
+            }
+        }
+
+        return result;
+    }
+
+    private static boolean fixTextComponent(CompoundTag components, String key) {
+        if (components.contains(key)) {
+            Optional<String> textOpt = components.getString(key);
+            if (textOpt.isPresent()) {
+                String text = textOpt.get();
+                // Check if it's a JSON string that needs to be parsed
+                if (text.startsWith("{") && text.endsWith("}")) {
+                    try {
+                        CompoundTag parsed = TagParser.parseCompoundFully(text);
+                        components.put(key, parsed);
+                        return true;
+                    } catch (Exception e) {
+                        de.Keyle.MyPet.MyPetApi.getLogger().warning("Failed to parse text component for " + key + ": " + e.getMessage());
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean fixTextComponentList(CompoundTag components, String key) {
+        // Similar logic for lore (list of text components)
+        if (components.contains(key)) {
+            Tag loreTag = components.get(key);
+            if (loreTag instanceof ListTag loreList) {
+                ListTag newLore = new ListTag();
+                boolean modified = false;
+
+                for (int i = 0; i < loreList.size(); i++) {
+                    Tag element = loreList.get(i);
+                    if (element instanceof StringTag strTag) {
+                        String text = strTag.value();
+                        if (text.startsWith("{") && text.endsWith("}")) {
+                            try {
+                                CompoundTag parsed = TagParser.parseCompoundFully(text);
+                                newLore.add(parsed);
+                                modified = true;
+                                continue;
+                            } catch (Exception e) {
+                                de.Keyle.MyPet.MyPetApi.getLogger().warning("Failed to parse lore component: " + e.getMessage());
+                            }
+                        }
+                    }
+                    newLore.add(element);
+                }
+
+                if (modified) {
+                    components.put(key, newLore);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static CompoundTag convertOldVanillaCompound(CompoundTag oldTag) {
