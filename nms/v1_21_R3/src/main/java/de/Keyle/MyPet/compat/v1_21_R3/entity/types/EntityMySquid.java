@@ -22,11 +22,17 @@ package de.Keyle.MyPet.compat.v1_21_R3.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.types.MySquid;
 import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyAquaticPet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 0.7F, height = 0.475f)
 public class EntityMySquid extends EntityMyAquaticPet {
+
+	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySquid.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMySquid(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -45,5 +51,21 @@ public class EntityMySquid extends EntityMyAquaticPet {
 	@Override
 	protected String getLivingSound() {
 		return "entity.squid.ambient";
+	}
+
+	@Override
+	public MySquid getMyPet() {
+		return (MySquid) myPet;
+	}
+
+	@Override
+	public void updateVisuals() {
+		getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+	}
+
+	@Override
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(AGE_WATCHER, false);
 	}
 }

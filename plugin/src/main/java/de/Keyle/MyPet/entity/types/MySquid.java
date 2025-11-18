@@ -23,9 +23,14 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 
 public class MySquid extends MyPet implements de.Keyle.MyPet.api.entity.types.MySquid {
+
+    protected boolean isBaby = false;
+
     public MySquid(MyPetPlayer petOwner) {
         super(petOwner);
     }
@@ -35,8 +40,33 @@ public class MySquid extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         return MyPetType.Squid;
     }
 
+    public boolean isBaby() {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag) {
+        this.isBaby = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        return info;
+    }
+
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+    }
+
     @Override
     public String toString() {
-        return "MySquid{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+        return "MySquid{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
     }
 }
