@@ -46,6 +46,8 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     SpawnFlags createEntity();
 
+    SpawnFlags createEntity(Location spawnLocation);
+
     PetState getStatus();
 
     void setStatus(PetState status);
