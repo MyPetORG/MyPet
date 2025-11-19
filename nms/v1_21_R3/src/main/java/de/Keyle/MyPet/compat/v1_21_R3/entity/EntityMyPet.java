@@ -110,6 +110,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraftEntity {
@@ -867,17 +868,15 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		this.startRiding(this, false);
 	}
 
-	@Override
-	public void makeSound(String sound, float volume, float pitch) {
-		if (sound != null) {
-			SoundEvent se = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.tryParse(sound)).get().value();
-			if (se != null) {
-				this.playSound(se, volume, pitch);
-			} else {
-				MyPetApi.getLogger().warning("Sound \"" + sound + "\" not found. Please report this to the developer.");
-			}
-		}
-	}
+    @Override
+    public void makeSound(String sound, float volume, float pitch) {
+        Optional<SoundEvent> soundEvent = BuiltInRegistries.SOUND_EVENT.getOptional(ResourceLocation.tryParse(sound));
+        if (soundEvent.isPresent()) {
+            this.playSound(soundEvent.get(), volume, pitch);
+        } else {
+            MyPetApi.getLogger().warning("Sound \"" + sound + "\" not found. Please report this to the developer.");
+        }
+    }
 
 	/**
 	 * do NOT drop anything
