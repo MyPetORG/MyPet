@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -263,6 +263,10 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         if (MyPetType.Cat.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.Cat.GrowUpItem", "experience_bottle");
+        }
+        if (MyPetType.CopperGolem.checkMinecraftVersion()) {
+            config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
+            config.addDefault("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
         if (MyPetType.Donkey.checkMinecraftVersion()) {
@@ -539,6 +543,8 @@ public class ConfigurationLoader {
             }
         }
         MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
+        MyPet.CopperGolem.CAN_OXIDIZE = config.getBoolean("MyPet.Pets.CopperGolem.CanOxidize", true);
+        MyPet.CopperGolem.OXIDATION_TIME = config.getInt("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);

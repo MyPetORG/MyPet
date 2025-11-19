@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
+import net.minecraft.world.entity.animal.coppergolem.CopperGolem;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.entity.animal.frog.Tadpole;
 import net.minecraft.world.entity.animal.goat.Goat;
@@ -73,6 +74,7 @@ public class MyAttributeDefaults {
                 .putFast(EntityType.CAVE_SPIDER, CaveSpider.createAttributes().build())						//CaveSpider
                 .putFast(EntityType.CHICKEN, Chicken.createAttributes().build())							//Chicken
                 .putFast(EntityType.COD, Cod.createAttributes().build())									//Cod
+                .putFast(EntityType.COPPER_GOLEM, CopperGolem.createAttributes().build())					//Copper Golem
                 .putFast(EntityType.COW, Cow.createAttributes().build())									//Cow
                 .putFast(EntityType.CREEPER, Creeper.createAttributes().build())							//Creeper
                 .putFast(EntityType.CREAKING, Creaking.createAttributes().build())							//Creaking

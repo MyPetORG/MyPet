@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -51,6 +51,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R6.CraftRegistry;
+import org.bukkit.craftbukkit.v1_21_R6.entity.CraftCopperGolem;
 import org.bukkit.craftbukkit.v1_21_R6.entity.CraftCow;
 import org.bukkit.craftbukkit.v1_21_R6.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.v1_21_R6.entity.CraftVillager;
@@ -84,6 +85,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case PIG:
                 convertPig((Pig) entity, properties);
+                break;
+            case COPPER_GOLEM:
+                convertCopperGolem((CopperGolem) entity, properties);
                 break;
             case COW:
                 convertCow((Cow) entity, properties);
@@ -380,6 +384,40 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (myPet instanceof MyCopperGolem) {
+            // Apply oxidation state, waxed status, and poppy back to the vanilla entity
+            try {
+                CraftCopperGolem craftGolem = (CraftCopperGolem) normalEntity;
+                net.minecraft.world.entity.animal.coppergolem.CopperGolem nmsGolem = craftGolem.getHandle();
+
+                // Convert our OxidationState to NMS WeatherState
+                MyCopperGolem myCopperGolem = (MyCopperGolem) myPet;
+                net.minecraft.world.level.block.WeatheringCopper.WeatherState weatherState = switch (myCopperGolem.getOxidationState()) {
+                    case EXPOSED -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.EXPOSED;
+                    case WEATHERED -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.WEATHERED;
+                    case OXIDIZED -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.OXIDIZED;
+                    default -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.UNAFFECTED;
+                };
+
+                // Apply weathering state
+                nmsGolem.setWeatherState(weatherState);
+
+                // Apply waxed status (waxed = negative nextWeatheringTick)
+                if (myCopperGolem.isWaxed()) {
+                    nmsGolem.nextWeatheringTick = -2;
+                } else {
+                    nmsGolem.nextWeatheringTick = -1;
+                }
+
+                // Apply poppy (antenna slot)
+                if (myCopperGolem.hasPoppy()) {
+                    org.bukkit.inventory.ItemStack bukkitPoppy = myCopperGolem.getPoppy();
+                    net.minecraft.world.item.ItemStack poppyStack = CraftItemStack.asNMSCopy(bukkitPoppy);
+                    nmsGolem.setItemSlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, poppyStack);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
@@ -673,5 +711,35 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         properties.getCompoundData().put("screaming", new TagByte(goat.isScreaming()));
         properties.getCompoundData().put("LeftHorn", new TagByte(goat.hasLeftHorn()));
         properties.getCompoundData().put("RightHorn", new TagByte(goat.hasRightHorn()));
+    }
+
+    public void convertCopperGolem(CopperGolem copperGolem, TagCompound properties) {
+        // Bukkit CopperGolem API not available, access NMS directly
+        try {
+            CraftCopperGolem craftGolem = (CraftCopperGolem) copperGolem;
+            net.minecraft.world.entity.animal.coppergolem.CopperGolem nmsGolem = craftGolem.getHandle();
+
+            // Get weathering state from NMS
+            net.minecraft.world.level.block.WeatheringCopper.WeatherState weatherState = nmsGolem.getWeatherState();
+            properties.getCompoundData().put("OxidationState", new TagString(weatherState.name()));
+
+            // Store waxed state based on nextWeatheringTick
+            // Waxed: nextWeatheringTick < 0
+            boolean waxed = nmsGolem.nextWeatheringTick < 0;
+            properties.getCompoundData().put("Waxed", new TagByte(waxed ? 1 : 0));
+
+            // Get poppy from antenna slot
+            net.minecraft.world.item.ItemStack poppyNMS = nmsGolem.getItemBySlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA);
+
+            if (poppyNMS != null && !poppyNMS.isEmpty()) {
+                org.bukkit.inventory.ItemStack poppyBukkit = CraftItemStack.asBukkitCopy(poppyNMS);
+                properties.getCompoundData().put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompund(poppyBukkit));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fallback: use default values
+            properties.getCompoundData().put("OxidationState", new TagString("UNAFFECTED"));
+            properties.getCompoundData().put("Waxed", new TagByte(0));
+        }
     }
 }
