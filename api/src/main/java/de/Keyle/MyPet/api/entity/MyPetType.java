@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -71,6 +71,9 @@ public enum MyPetType {
             .search()),
     Cod("COD", "1.13", MyCod.class, new Compat<>()
             .v("1.13", "cod")
+            .search()),
+    CopperGolem("COPPER_GOLEM", "1.21.10", MyCopperGolem.class, new Compat<>()
+            .v("1.21.10", "copper_golem")
             .search()),
     Cow("COW", "1.7.10", MyCow.class, new Compat<>()
             .v("1.7.10", 92)

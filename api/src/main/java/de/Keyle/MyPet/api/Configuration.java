@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2020 Keyle
+ * Copyright © 2011-2025 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -249,6 +249,12 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_LAY_EGGS = true;
             public static boolean CAN_GLIDE = true;
+        }
+
+        public static class CopperGolem {
+
+            public static boolean CAN_OXIDIZE = true;
+            public static int OXIDATION_TIME = 24000;
         }
 
         public static class Cow {
