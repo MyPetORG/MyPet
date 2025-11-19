@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_12_R1.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_12_R1.*;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -68,9 +67,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             effect = EnumParticle.a(effectName);
         }
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if(location == null) {
+            throw new NullPointerException("Location cannot be null");
+        }
+        if(effect == null) {
+            throw new NullPointerException("Effect cannot be null");
+        }
+        if(location.getWorld() == null) {
+            throw new NullPointerException("World cannot be null");
+        }
 
         int[] intData = data != null ? (int[]) data.get() : new int[0];
 
@@ -102,9 +107,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             effect = EnumParticle.a(effectName);
         }
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if(location == null) {
+            throw new NullPointerException("Location cannot be null");
+        }
+        if(effect == null) {
+            throw new NullPointerException("Effect cannot be null");
+        }
+        if(location.getWorld() == null) {
+            throw new NullPointerException("World cannot be null");
+        }
 
         int[] intData = data != null ? (int[]) data.get() : new int[0];
 

@@ -32,7 +32,6 @@ import de.Keyle.MyPet.compat.v1_8_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_8_R3.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import net.minecraft.server.v1_8_R3.*;
-import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -72,9 +71,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         EnumParticle effect = EnumParticle.valueOf(effectName);
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if(location == null) {
+            throw new NullPointerException("Location cannot be null");
+        }
+        if(effect == null) {
+            throw new NullPointerException("Effect cannot be null");
+        }
+        if(location.getWorld() == null) {
+            throw new NullPointerException("World cannot be null");
+        }
 
         int[] intData = data != null ? (int[]) data.get() : new int[0];
 
@@ -101,9 +106,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         EnumParticle effect = EnumParticle.valueOf(effectName);
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if(location == null) {
+            throw new NullPointerException("Location cannot be null");
+        }
+        if(effect == null) {
+            throw new NullPointerException("Effect cannot be null");
+        }
+        if(location.getWorld() == null) {
+            throw new NullPointerException("World cannot be null");
+        }
 
         int[] intData = data != null ? (int[]) data.get() : new int[0];
 

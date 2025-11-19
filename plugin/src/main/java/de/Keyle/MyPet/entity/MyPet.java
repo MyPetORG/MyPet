@@ -46,7 +46,6 @@ import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import de.keyle.knbt.*;
-import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -480,7 +479,14 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
                     Random r = new Random(petOwner.getInternalUUID().toString().hashCode());
-                    String random = RandomStringUtils.random(10, 0, 0, true, true, null, r);
+                    final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+                    StringBuilder sb = new StringBuilder(10);
+
+                    for (int i = 0; i < 10; i++) {
+                        sb.append(chars[r.nextInt(chars.length)]);
+                    }
+
+                    String random = sb.toString();
 
                     Team t;
                     if (owner.getScoreboard().getTeam("MyPet-" + random) != null) {

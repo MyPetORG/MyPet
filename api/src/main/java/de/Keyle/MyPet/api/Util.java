@@ -32,8 +32,6 @@ import de.keyle.knbt.TagInt;
 import at.blvckbytes.raw_message.MessageColor;
 import at.blvckbytes.raw_message.RawMessage;
 import at.blvckbytes.raw_message.hover.ShowItemAction;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.WordUtils;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -123,10 +121,26 @@ public class Util {
     }
 
     public static String capitalizeName(String name) {
-        Validate.notNull(name, "Name can't be null");
+        if (name == null) {
+            MyPetApi.getLogger().warning("Name is null");
+            return null;
+        }
 
         name = name.replace("_", " ");
-        name = WordUtils.capitalizeFully(name);
+
+        StringBuilder sb = new StringBuilder(name.length());
+        boolean capitalizeNext = true;
+
+        for (char c : name.toCharArray()) {
+            if (Character.isLetter(c) && capitalizeNext) {
+                sb.append(Character.toTitleCase(c));
+                capitalizeNext = false;
+            } else {
+                sb.append(c);
+                capitalizeNext = !Character.isLetter(c);
+            }
+        }
+        name = sb.toString();
         name = name.replace(" ", "");
         return name;
     }
@@ -317,8 +331,12 @@ public class Util {
     }
 
     public static boolean findClassInStackTrace(StackTraceElement[] stackTrace, String className, int from, int to, boolean debug) {
-        Validate.isTrue(to >= from, "\"to\" has to be >= \"from\".");
-        Validate.isTrue(from >= 0, "\"from\" has to be >= 0.");
+        if (to < from) {
+            MyPetApi.getLogger().warning("\"to\" must be >= \"from\" (from=" + from + ", to=" + to + ")");
+        }
+        if (from < 0) {
+            MyPetApi.getLogger().warning("\"from\" must be >= 0 (from=" + from + ")");
+        }
         to = Math.min(stackTrace.length - 1, to);
         if (debug) {
             MyPetApi.getLogger().info("=====================================================================================================================================");
@@ -594,4 +612,38 @@ public class Util {
         }
         return ignoreCase ? a.equalsIgnoreCase(b) : a.equals(b);
     }
+
+    public static Set<Class<?>> getAllInterfaces(Class<?> type) {
+        Set<Class<?>> interfaces = new LinkedHashSet<>();
+
+        while (type != null) {
+            for (Class<?> iface : type.getInterfaces()) {
+                collectInterfaces(iface, interfaces);
+            }
+            type = type.getSuperclass();
+        }
+
+        return interfaces;
+    }
+
+    private static void collectInterfaces(Class<?> iface, Set<Class<?>> interfaces) {
+        if (interfaces.add(iface)) {
+            for (Class<?> sub : iface.getInterfaces()) {
+                collectInterfaces(sub, interfaces);
+            }
+        }
+    }
+
+    public static List<Class<?>> getAllSuperclasses(Class<?> cls) {
+        List<Class<?>> list = new ArrayList<>();
+
+        Class<?> current = cls.getSuperclass();
+        while (current != null) {
+            list.add(current);
+            current = current.getSuperclass();
+        }
+
+        return list;
+    }
+
 }

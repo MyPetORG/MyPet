@@ -33,7 +33,6 @@ import de.keyle.knbt.TagCompound;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_16_R3.*;
-import org.apache.commons.lang.Validate;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -70,9 +69,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         Particle effect = IRegistry.PARTICLE_TYPE.get(new MinecraftKey(effectName));
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if(location == null) {
+            throw new NullPointerException("Location cannot be null");
+        }
+        if(effect == null) {
+            throw new NullPointerException("Effect cannot be null");
+        }
+        if(location.getWorld() == null) {
+            throw new NullPointerException("World cannot be null");
+        }
 
         ParticleParam particle = null;
 
@@ -114,9 +119,15 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
         Particle effect = IRegistry.PARTICLE_TYPE.get(new MinecraftKey(effectName));
 
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effect, "Effect cannot be null");
-        Validate.notNull(location.getWorld(), "World cannot be null");
+        if(location == null) {
+            throw new NullPointerException("Location cannot be null");
+        }
+        if(effect == null) {
+            throw new NullPointerException("Effect cannot be null");
+        }
+        if(location.getWorld() == null) {
+            throw new NullPointerException("World cannot be null");
+        }
 
         ParticleParam particle = null;
 

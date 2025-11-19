@@ -29,7 +29,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
 import java.io.File;
@@ -38,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Updater {
@@ -132,10 +132,19 @@ public class Updater {
         String m = "#  A new ";
         m += MyPetVersion.isDevBuild() ? "build" : "version";
         m += " is available: " + latest + " #";
-        MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
+
+        int len = m.length();
+
+        MyPetApi.getLogger().info(new String(new char[len]).replace('\0', '#'));
+
         MyPetApi.getLogger().info(m);
-        MyPetApi.getLogger().info("#  https://github.com/MyPetORG/MyPet/releases" + StringUtils.repeat(" ", m.length() - 46) + "#");
-        MyPetApi.getLogger().info(StringUtils.repeat("#", m.length()));
+
+        String url = "#  https://github.com/MyPetORG/MyPet/releases";
+        int pad = len - url.length();
+        String spaces = pad > 0 ? new String(new char[pad]).replace('\0', ' ') : "";
+
+        MyPetApi.getLogger().info(url + spaces + "#");
+        MyPetApi.getLogger().info(new String(new char[len]).replace('\0', '#'));
     }
 
     public void download() {
