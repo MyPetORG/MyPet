@@ -43,7 +43,6 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -501,7 +500,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 }
             } else if (arg.startsWith("name:")) {
                 String name = arg.replace("name:", "");
-                int index = ArrayUtils.indexOf(args, arg);
+                int index = -1;
+                for (int i = 0; i < args.length; i++) {
+                    if (Objects.equals(args[i], arg)) { index = i; break; }
+                }
                 if (args.length > index + 1) {
                     name += " " + String.join(" ", Arrays.copyOfRange(args, index + 1, args.length));
                 }

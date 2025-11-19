@@ -29,7 +29,10 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.apache.commons.lang.WordUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -39,6 +42,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
+
 public class Util {
 
     static Random rng = new Random();
@@ -124,7 +128,20 @@ public class Util {
         }
 
         name = name.replace("_", " ");
-        name = WordUtils.capitalizeFully(name);
+
+        StringBuilder sb = new StringBuilder(name.length());
+        boolean capitalizeNext = true;
+
+        for (char c : name.toCharArray()) {
+            if (Character.isLetter(c) && capitalizeNext) {
+                sb.append(Character.toTitleCase(c));
+                capitalizeNext = false;
+            } else {
+                sb.append(c);
+                capitalizeNext = !Character.isLetter(c);
+            }
+        }
+        name = sb.toString();
         name = name.replace(" ", "");
         return name;
     }
@@ -353,73 +370,73 @@ public class Util {
      * Replacement for the old myPetToItemAction using RawMessage
      * Returns a hover event showing formatted pet statistics with colored values
      */
-    public static net.kyori.adventure.text.event.HoverEvent<net.kyori.adventure.text.Component> myPetToItemHover(StoredMyPet mypet, String lang) {
+    public static HoverEvent<Component> myPetToItemHover(StoredMyPet mypet, String lang) {
         // Build component with proper colors matching the old RawMessage style
-        net.kyori.adventure.text.TextComponent.Builder builder = net.kyori.adventure.text.Component.text();
+        TextComponent.Builder builder = Component.text();
 
         // Hunger stat
-        builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.Hunger", lang) + ": "))
-                .append(net.kyori.adventure.text.Component.text(Math.round(mypet.getSaturation()))
-                        .color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
-                .append(net.kyori.adventure.text.Component.newline());
+        builder.append(Component.text(Translation.getString("Name.Hunger", lang) + ": "))
+                .append(Component.text(Math.round(mypet.getSaturation()))
+                        .color(NamedTextColor.GOLD))
+                .append(Component.newline());
 
         // HP or Respawn time based on configuration
         if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
             if (mypet.getRespawnTime() > 0) {
-                builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.Respawntime", lang) + ": "))
-                        .append(net.kyori.adventure.text.Component.text(mypet.getRespawnTime() + "sec")
-                                .color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
-                        .append(net.kyori.adventure.text.Component.newline());
+                builder.append(Component.text(Translation.getString("Name.Respawntime", lang) + ": "))
+                        .append(Component.text(mypet.getRespawnTime() + "sec")
+                                .color(NamedTextColor.GOLD))
+                        .append(Component.newline());
             } else {
-                builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.HP", lang) + ": "))
-                        .append(net.kyori.adventure.text.Component.text(String.format("%1.2f", mypet.getHealth()))
-                                .color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
-                        .append(net.kyori.adventure.text.Component.newline());
+                builder.append(Component.text(Translation.getString("Name.HP", lang) + ": "))
+                        .append(Component.text(String.format("%1.2f", mypet.getHealth()))
+                                .color(NamedTextColor.GOLD))
+                        .append(Component.newline());
             }
         } else if (mypet.getRespawnTime() <= 0) {
-            builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.HP", lang) + ": "))
-                    .append(net.kyori.adventure.text.Component.text(String.format("%1.2f", mypet.getHealth()))
-                            .color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
-                    .append(net.kyori.adventure.text.Component.newline());
+            builder.append(Component.text(Translation.getString("Name.HP", lang) + ": "))
+                    .append(Component.text(String.format("%1.2f", mypet.getHealth()))
+                            .color(NamedTextColor.GOLD))
+                    .append(Component.newline());
         }
 
         // Experience
-        builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.Exp", lang) + ": "))
-                .append(net.kyori.adventure.text.Component.text(String.format("%1.2f", mypet.getExp()))
-                        .color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
-                .append(net.kyori.adventure.text.Component.newline());
+        builder.append(Component.text(Translation.getString("Name.Exp", lang) + ": "))
+                .append(Component.text(String.format("%1.2f", mypet.getExp()))
+                        .color(NamedTextColor.GOLD))
+                .append(Component.newline());
 
         // Level (if available)
         if (mypet.getInfo().containsKey("storage")) {
             TagCompound storage = mypet.getInfo().getAs("storage", TagCompound.class);
             if (storage != null && storage.containsKey("level")) {
-                builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.Level", lang) + ": "))
-                        .append(net.kyori.adventure.text.Component.text(storage.getAs("level", TagInt.class).getIntData())
-                                .color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
-                        .append(net.kyori.adventure.text.Component.newline());
+                builder.append(Component.text(Translation.getString("Name.Level", lang) + ": "))
+                        .append(Component.text(storage.getAs("level", TagInt.class).getIntData())
+                                .color(NamedTextColor.GOLD))
+                        .append(Component.newline());
             }
         }
 
         // Pet Type
-        builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.Type", lang) + ": "))
-                .append(net.kyori.adventure.text.Component.text(mypet.getPetType().name())
-                        .color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
-                .append(net.kyori.adventure.text.Component.newline());
+        builder.append(Component.text(Translation.getString("Name.Type", lang) + ": "))
+                .append(Component.text(mypet.getPetType().name())
+                        .color(NamedTextColor.GOLD))
+                .append(Component.newline());
 
         // Skill tree
         String skilltreeName = mypet.getSkilltree() != null ? Colorizer.setColors(mypet.getSkilltree().getDisplayName()) : "-";
-        builder.append(net.kyori.adventure.text.Component.text(Translation.getString("Name.Skilltree", lang) + ": "))
-                .append(net.kyori.adventure.text.Component.text(skilltreeName)
-                        .color(net.kyori.adventure.text.format.NamedTextColor.GOLD));
+        builder.append(Component.text(Translation.getString("Name.Skilltree", lang) + ": "))
+                .append(Component.text(skilltreeName)
+                        .color(NamedTextColor.GOLD));
 
         // Dead status (if applicable)
         if (Configuration.Respawn.DISABLE_AUTO_RESPAWN && mypet.getRespawnTime() > 0) {
-            builder.append(net.kyori.adventure.text.Component.newline())
-                    .append(net.kyori.adventure.text.Component.text(Translation.getString("Name.Dead", lang))
-                            .color(net.kyori.adventure.text.format.NamedTextColor.RED));
+            builder.append(Component.newline())
+                    .append(Component.text(Translation.getString("Name.Dead", lang))
+                            .color(NamedTextColor.RED));
         }
 
-        return net.kyori.adventure.text.event.HoverEvent.showText(builder.build());
+        return HoverEvent.showText(builder.build());
     }
 
     public static String stackTraceToString() {
@@ -570,4 +587,38 @@ public class Util {
         }
         return ignoreCase ? a.equalsIgnoreCase(b) : a.equals(b);
     }
+
+    public static Set<Class<?>> getAllInterfaces(Class<?> type) {
+        Set<Class<?>> interfaces = new LinkedHashSet<>();
+
+        while (type != null) {
+            for (Class<?> iface : type.getInterfaces()) {
+                collectInterfaces(iface, interfaces);
+            }
+            type = type.getSuperclass();
+        }
+
+        return interfaces;
+    }
+
+    private static void collectInterfaces(Class<?> iface, Set<Class<?>> interfaces) {
+        if (interfaces.add(iface)) {
+            for (Class<?> sub : iface.getInterfaces()) {
+                collectInterfaces(sub, interfaces);
+            }
+        }
+    }
+
+    public static List<Class<?>> getAllSuperclasses(Class<?> cls) {
+        List<Class<?>> list = new ArrayList<>();
+
+        Class<?> current = cls.getSuperclass();
+        while (current != null) {
+            list.add(current);
+            current = current.getSuperclass();
+        }
+
+        return list;
+    }
+
 }

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.util.service;
 
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
-import org.apache.commons.lang.ClassUtils;
+import de.Keyle.MyPet.api.Util;
 
 import java.util.*;
 
@@ -63,13 +63,13 @@ public class ServiceManager {
     @SuppressWarnings("unchecked")
     private void registerService(ServiceContainer service) {
         boolean genericService = true;
-        for (Object o : ClassUtils.getAllInterfaces(service.getClass())) {
+        for (Object o : Util.getAllInterfaces(service.getClass())) {
             if (o != ServiceContainer.class && ServiceContainer.class.isAssignableFrom((Class) o)) {
                 services.put((Class) o, service);
                 genericService = false;
             }
         }
-        for (Object o : ClassUtils.getAllSuperclasses(service.getClass())) {
+        for (Object o : Util.getAllSuperclasses(service.getClass())) {
             if (o != ServiceContainer.class && ServiceContainer.class.isAssignableFrom((Class) o)) {
                 services.put((Class) o, service);
                 genericService = false;

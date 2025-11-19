@@ -22,9 +22,9 @@ package de.Keyle.MyPet.api.util.hooks;
 
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import lombok.Getter;
-import org.apache.commons.lang.ClassUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -116,7 +116,7 @@ public class PluginHookManager {
 
             if (enable && hook.onEnable()) {
                 boolean genericHook = true;
-                for (Object o : ClassUtils.getAllInterfaces(hook.getClass())) {
+                for (Object o : Util.getAllInterfaces(hook.getClass())) {
                     if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
                         hooks.put((Class) o, hook);
                         genericHook = false;
@@ -191,7 +191,7 @@ public class PluginHookManager {
      */
     public void disableHook(PluginHook hook) {
         hook.onDisable();
-        for (Object o : ClassUtils.getAllInterfaces(hook.getClass())) {
+        for (Object o : Util.getAllInterfaces(hook.getClass())) {
             if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
                 hooks.remove(o, hook);
             }
