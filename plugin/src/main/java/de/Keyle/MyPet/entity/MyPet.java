@@ -417,6 +417,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public SpawnFlags createEntity() {
+        return createEntity(null);
+    }
+
+    public SpawnFlags createEntity(Location spawnLocation) {
         lastUsed = System.currentTimeMillis();
         if (status != PetState.Here && getOwner().isOnline()) {
             Player owner = getOwner().getPlayer();
@@ -429,7 +433,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
 
             if (respawnTime <= 0) {
-                Location loc = petOwner.getPlayer().getLocation();
+                Location loc = spawnLocation != null ? spawnLocation : petOwner.getPlayer().getLocation();
 
                 if (!WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName().equals(getWorldGroup())) {
                     return SpawnFlags.WrongWorldGroup;
@@ -514,27 +518,39 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 Location origin = loc.clone();
                 boolean positionFound = false;
 
-                loc.subtract(1, 0, 1);
-                for (double x = 0; x <= 2; x += 0.5) {
-                    for (double z = 0; z <= 2; z += 0.5) {
-                        if (x != 1 && z != 1) {
-                            minecraftEntity.setLocation(loc);
-                            if (MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
-                                Block b = loc.getBlock();
-                                if (b.getRelative(BlockFace.DOWN).getType().isSolid()) {
-                                    positionFound = true;
-                                    break;
+                // If an explicit spawn location was provided (e.g., from capturing), try to use it directly first
+                if (spawnLocation != null) {
+                    minecraftEntity.setLocation(loc);
+                    if (MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
+                        positionFound = true;
+                    }
+                }
+
+                // If the exact location doesn't work, search for a nearby valid position
+                if (!positionFound) {
+                    loc.subtract(1, 0, 1);
+                    for (double x = 0; x <= 2; x += 0.5) {
+                        for (double z = 0; z <= 2; z += 0.5) {
+                            if (x != 1 && z != 1) {
+                                minecraftEntity.setLocation(loc);
+                                if (MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
+                                    Block b = loc.getBlock();
+                                    if (b.getRelative(BlockFace.DOWN).getType().isSolid()) {
+                                        positionFound = true;
+                                        break;
+                                    }
                                 }
                             }
+                            loc.add(0, 0, 0.5);
                         }
-                        loc.add(0, 0, 0.5);
+                        if (positionFound) {
+                            break;
+                        }
+                        loc.subtract(0, 0, 2);
+                        loc.add(0.5, 0, 0);
                     }
-                    if (positionFound) {
-                        break;
-                    }
-                    loc.subtract(0, 0, 2);
-                    loc.add(0.5, 0, 0);
                 }
+
                 if (!positionFound) {
                     minecraftEntity.setLocation(origin);
                     if (!MyPetApi.getPlatformHelper().canSpawn(origin, minecraftEntity)) {

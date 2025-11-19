@@ -49,6 +49,7 @@ import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -342,6 +343,9 @@ public class EntityListener implements Listener {
                         Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
                         converter.ifPresent(service -> inactiveMyPet.setInfo(service.convertEntity(leashTarget)));
 
+                        // Store the location of the captured entity before removing it
+                        final Location capturedEntityLocation = leashTarget.getLocation().clone();
+
                         boolean remove = true;
                         for (LeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(LeashEntityHook.class)) {
                             if (!hook.prepare(leashTarget)) {
@@ -379,7 +383,7 @@ public class EntityListener implements Listener {
                                 owner.sendMessage(Translation.getString("Message.Leash.Add", owner));
 
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
-                                myPet.ifPresent(MyPet::createEntity);
+                                myPet.ifPresent(pet -> pet.createEntity(capturedEntityLocation));
                                 if (owner.isCaptureHelperActive()) {
                                     owner.setCaptureHelperActive(false);
                                     owner.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", owner), Translation.getString("Name.Disabled", owner)));
