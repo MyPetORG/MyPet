@@ -42,7 +42,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.entity.item.ItemEntity;
-import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
 
@@ -224,7 +224,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
 		// Update poppy visual in antenna slot
 		if (getMyPet().hasPoppy()) {
 			org.bukkit.inventory.ItemStack bukkitPoppy = getMyPet().getPoppy();
-			net.minecraft.world.item.ItemStack nmsPoppy = org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack.asNMSCopy(bukkitPoppy);
+			net.minecraft.world.item.ItemStack nmsPoppy = org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(bukkitPoppy);
 			this.setItemSlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, nmsPoppy);
 		} else {
 			this.setItemSlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, net.minecraft.world.item.ItemStack.EMPTY);
