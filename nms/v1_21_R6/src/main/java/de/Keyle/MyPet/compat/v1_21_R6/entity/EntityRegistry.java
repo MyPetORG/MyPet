@@ -132,7 +132,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class,"l"); //frozen
 		Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class,"m"); //intrusiveHolderCache or unregisteredIntrusiveHolders or intrusiveValueToEntry
 		Field allTagsField = ReflectionUtil.getField(MappedRegistry.class,"k"); //allTags
-		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "f"); //ENTITY_TYPE
+		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "g"); //ENTITY_TYPE
 
 		Object allTagsSaved = ReflectionUtil.getFieldValue(allTagsField, entityRegistry);
 
