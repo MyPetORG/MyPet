@@ -69,7 +69,7 @@ public class RideInteractListener implements Listener {
             return;
         }
         if (!Permissions.hasExtended(player, "MyPet.extended.ride")) {
-            myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()), 2000);
+            myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", myPet.getOwner()), 2000);
             return;
         }
 

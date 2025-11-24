@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.gui;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.locale.Translation;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -42,7 +43,7 @@ import java.util.Map;
 public class IconMenu implements Listener {
 
     private IconMenuInventory inventory;
-    private String title;
+    private Component title;
 
     private @Nullable String paginationBasePath;
     private @Nullable Integer pageSizeInSlots;
@@ -56,7 +57,7 @@ public class IconMenu implements Listener {
 
     private final Plugin plugin;
 
-    public IconMenu(String title, OptionClickEventHandler handler, Plugin plugin) {
+    public IconMenu(Component title, OptionClickEventHandler handler, Plugin plugin) {
         this.title = title;
         this.handler = handler;
         this.plugin = plugin;
@@ -64,11 +65,11 @@ public class IconMenu implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public String getTitle() {
+    public Component getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Component title) {
         this.title = title;
     }
 
@@ -189,7 +190,7 @@ public class IconMenu implements Listener {
 
     public void open(HumanEntity player) {
         if (player.isSleeping()) {
-            player.sendMessage(Translation.getString("Message.No.CanUse", player));
+            player.sendMessage(Translation.getComponent("Message.No.CanUse", player));
             return;
         }
         if (inventory == null) {

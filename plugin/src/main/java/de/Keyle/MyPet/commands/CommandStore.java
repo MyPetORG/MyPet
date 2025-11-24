@@ -46,12 +46,12 @@ public class CommandStore implements CommandTabCompleter {
             return true;
         }
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
+            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
             return true;
         }
 
         if (!Permissions.has(player, "MyPet.command.store")) {
-            player.sendMessage(Translation.getString("Message.No.Allowed", player));
+            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
             return true;
         }
 
@@ -60,7 +60,7 @@ public class CommandStore implements CommandTabCompleter {
             final int maxPetCount = getMaxPetCount(owner.getPlayer());
 
             if (maxPetCount == 0) {
-                player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
                 return true;
             }
 
@@ -74,22 +74,22 @@ public class CommandStore implements CommandTabCompleter {
 
                             int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
                             if (inactivePetCount >= maxPetCount) {
-                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), maxPetCount));
+                                sender.sendMessage(Util.formatTranslation("Message.Command.Switch.Limit", player, maxPetCount));
                                 return;
                             }
                             if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
                                 owner.setMyPetForWorldGroup(worldGroup, null);
-                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Success", player), myPet.getPetName()));
+                                sender.sendMessage(Util.formatTranslation("Message.Command.Switch.Success", player, myPet.getPetName()));
                             }
                         } else {
-                            player.sendMessage(Translation.getString("Message.Command.Switch.NoPet", player));
+                            player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
                         }
                     }
                 });
                 return true;
             }
         }
-        player.sendMessage(Translation.getString("Message.Command.Switch.NoPet", player));
+        player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
         return true;
     }
 

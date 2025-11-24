@@ -100,7 +100,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 				petEntity = (EntityMyPet) obj;
 			}
 		} catch (Exception e) {
-			MyPetApi.getLogger().info(ChatColor.RED + Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
+			MyPetApi.getLogger().severe(Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
 			e.printStackTrace();
 		}
 

@@ -47,6 +47,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -291,7 +292,7 @@ public class EntityListener implements Listener {
                                 if (myPetPlayer.isCaptureHelperActive()) {
                                     String message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
                                     if (message != null) {
-                                        myPetPlayer.sendMessage(LeashFlag.getMessagePrefix(false) + message, 10000);
+                                        myPetPlayer.sendMessage(Component.text(LeashFlag.getMessagePrefix(false) + message), 10000);
                                     }
                                 }
                             }
@@ -300,7 +301,7 @@ public class EntityListener implements Listener {
                                 if (myPetPlayer.isCaptureHelperActive()) {
                                     String message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
                                     if (message != null) {
-                                        myPetPlayer.sendMessage(LeashFlag.getMessagePrefix(true) + message, 10000);
+                                        myPetPlayer.sendMessage(Component.text(LeashFlag.getMessagePrefix(true) + message), 10000);
                                     }
                                 }
                             }
@@ -372,13 +373,13 @@ public class EntityListener implements Listener {
                         MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
                             @Override
                             public void callback(Boolean value) {
-                                owner.sendMessage(Translation.getString("Message.Leash.Add", owner));
+                                owner.sendMessage(Translation.getComponent("Message.Leash.Add", owner));
 
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                                 myPet.ifPresent(pet -> pet.createEntity(capturedEntityLocation));
                                 if (owner.isCaptureHelperActive()) {
                                     owner.setCaptureHelperActive(false);
-                                    owner.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", owner), Translation.getString("Name.Disabled", owner)));
+                                    owner.sendMessage(Util.formatTranslation("Message.Command.CaptureHelper.Mode", owner, Translation.getString("Name.Disabled", owner)));
                                 }
                                 justLeashed.remove(player.getUniqueId());
                             }

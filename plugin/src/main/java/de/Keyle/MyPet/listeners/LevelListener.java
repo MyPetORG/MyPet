@@ -35,8 +35,8 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.animation.particle.FixedCircleAnimation;
 import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
-import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
@@ -58,9 +58,9 @@ public class LevelListener implements Listener {
         if (!event.isQuiet()) {
             int maxlevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
             if (maxlevel != 0 && lvl >= maxlevel) {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.ReachedMaxLevel", event.getOwner()), myPet.getPetName(), maxlevel));
+                myPet.getOwner().sendMessage(Util.formatTranslation("Message.LevelSystem.ReachedMaxLevel", event.getOwner(), myPet.getPetName(), maxlevel));
             } else {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelUp", event.getOwner()), myPet.getPetName(), event.getLevel()));
+                myPet.getOwner().sendMessage(Util.formatTranslation("Message.LevelSystem.LevelUp", event.getOwner(), myPet.getPetName(), event.getLevel()));
             }
         }
         Skilltree skilltree = myPet.getSkilltree();
@@ -76,7 +76,7 @@ public class LevelListener implements Listener {
                         notification = Colorizer.setColors(notification);
                         String[] lines = notification.split("(<br>|\\\\n|\n|<br\\s?/>)");
                         for (String line : lines) {
-                            myPet.getOwner().sendMessage(line);
+                            myPet.getOwner().sendMessage(Component.text(line));
                         }
                     }
                 }
@@ -97,7 +97,7 @@ public class LevelListener implements Listener {
                         String[] messages = skill.getUpgradeMessage();
                         if (messages != null) {
                             for (String message : messages) {
-                                myPet.getOwner().sendMessage("  " + message);
+                                myPet.getOwner().sendMessage(Component.text("  " + message));
                             }
                         }
                     }
@@ -132,7 +132,7 @@ public class LevelListener implements Listener {
         int fromLvl = event.fromLevel();
 
         if (!event.isQuiet()) {
-            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.LevelSystem.LevelDown", event.getOwner()), myPet.getPetName(), event.getLevel()));
+            myPet.getOwner().sendMessage(Util.formatTranslation("Message.LevelSystem.LevelDown", event.getOwner(), myPet.getPetName(), event.getLevel()));
         }
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {

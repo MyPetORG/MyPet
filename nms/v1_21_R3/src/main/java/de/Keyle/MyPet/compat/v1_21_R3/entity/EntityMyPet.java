@@ -446,9 +446,9 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		if (!sitEvent.isCancelled()) {
 			this.sitPathfinder.toggleSitting();
 			if (isSitting()) {
-				getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Stay", myPet.getOwner()), getMyPet().getPetName()));
+				getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Sit.Stay", myPet.getOwner()), getMyPet().getPetName()));
 			} else {
-				getOwner().sendMessage(Util.formatText(Translation.getString("Message.Sit.Follow", myPet.getOwner()), getMyPet().getPetName()));
+				getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Sit.Follow", myPet.getOwner()), getMyPet().getPetName()));
 			}
 			sitCounter = 0;
 		}
@@ -521,7 +521,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 						((CraftPlayer) owner).getHandle().startRiding(this, true);
 						return InteractionResult.CONSUME;
 					} else {
-						getOwner().sendMessage(Translation.getString("Message.No.CanUse", myPet.getOwner()), 2000);
+						getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", myPet.getOwner()), 2000);
 					}
 				}
 			}
@@ -536,7 +536,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 						final String name = itemStack.getHoverName().getString();
 						getMyPet().setPetName(name);
 						EntityMyPet.super.setCustomName(CraftChatMessage.fromStringOrNull("-"));
-						myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", myPet.getOwner()), name));
+						myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Command.Name.New", myPet.getOwner()), name));
 						if (!entityhuman.getAbilities().instabuild) {
 							itemStack.shrink(1);
 						}
@@ -710,7 +710,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
         if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
             net.kyori.adventure.text.Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, getHealth(), maxHealth);
-            MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
+            getOwner().sendActionBar(msg);
         }
     }
 

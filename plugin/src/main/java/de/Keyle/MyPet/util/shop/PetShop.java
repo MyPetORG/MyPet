@@ -42,6 +42,7 @@ import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -79,12 +80,12 @@ public class PetShop {
 
     public void open(final Player player) {
         if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-            player.sendMessage(Translation.getString("Message.No.Economy", player));
+            player.sendMessage(Translation.getComponent("Message.No.Economy", player));
             return;
         }
         VaultHook economyHook = (VaultHook) MyPetApi.getHookHelper().getEconomy();
 
-        IconMenu shop = new IconMenu(Colorizer.setColors(displayName), event -> {
+        IconMenu shop = new IconMenu(Component.text(Colorizer.setColors(displayName)), event -> {
             if (pets.containsKey(event.getPosition())) {
                 final ShopMyPet pet = pets.get(event.getPosition());
                 if (pet != null) {
@@ -94,7 +95,7 @@ public class PetShop {
                         owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
                         if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
-                            p.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", player));
+                            p.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                             return;
                         }
                     } else {
@@ -104,7 +105,7 @@ public class PetShop {
                     final BukkitRunnable confirmRunner = new BukkitRunnable() {
                         @Override
                         public void run() {
-                            IconMenu menu = new IconMenu(Util.formatText(Translation.getString("Message.Shop.Confirm.Title", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
+                            IconMenu menu = new IconMenu(Util.formatTranslation("Message.Shop.Confirm.Title", player, pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
                                 if (event1.getPosition() == 3) {
                                     if (pet.getPrice() > 0) {
                                         if (economyHook.canPay(p.getUniqueId(), pet.getPrice())) {
@@ -120,11 +121,11 @@ public class PetShop {
                                                         break;
                                                 }
                                             } else {
-                                                p.sendMessage(Translation.getString("Message.No.Money", player));
+                                                p.sendMessage(Translation.getComponent("Message.No.Money", player));
                                                 return;
                                             }
                                         } else {
-                                            p.sendMessage(Translation.getString("Message.Shop.NoMoney", player));
+                                            p.sendMessage(Translation.getComponent("Message.Shop.NoMoney", player));
                                             return;
                                         }
                                     }
@@ -146,11 +147,11 @@ public class PetShop {
                                     MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<>() {
                                         @Override
                                         public void callback(Boolean value) {
-                                            p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
+                                            p.sendMessage(Util.formatTranslation("Message.Shop.Success", player, clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
                                             MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
                                             if (petOwner.hasMyPet()) {
-                                                p.sendMessage(Util.formatText(Translation.getString("Message.Shop.SuccessStorage", player), clonedPet.getPetName()));
+                                                p.sendMessage(Util.formatTranslation("Message.Shop.SuccessStorage", player, clonedPet.getPetName()));
                                             } else {
                                                 petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
                                                 MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
@@ -188,7 +189,7 @@ public class PetShop {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
                                 int limit = getMaxPetCount(p);
                                 if (petCount >= limit) {
-                                    p.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), limit));
+                                    p.sendMessage(Util.formatTranslation("Message.Command.Switch.Limit", player, limit));
                                     return;
                                 }
                                 confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);

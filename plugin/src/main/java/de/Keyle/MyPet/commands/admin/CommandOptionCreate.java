@@ -370,7 +370,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
     @Override
     public boolean onCommandOption(final CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + ChatColor.RED + "<a player name>");
             return false;
         }
@@ -381,7 +381,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         }
 
         if (args.length < 2 + forceOffset) {
-            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " " + ChatColor.RED + "<a pet-type>");
             return false;
         }
@@ -447,19 +447,19 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                                 if (myPet.isPresent()) {
                                     myPet.get().createEntity();
-                                    sender.sendMessage(Translation.getString("Message.Command.Success", sender));
+                                    sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                                 } else {
                                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
                                 }
                             } else {
-                                sender.sendMessage(Translation.getString("Message.Command.Success", sender));
+                                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                             }
                         }
                     }
                 });
             }
         } catch (MyPetTypeNotFoundException e) {
-            sender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", lang));
+            sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));
         }
         return true;
     }

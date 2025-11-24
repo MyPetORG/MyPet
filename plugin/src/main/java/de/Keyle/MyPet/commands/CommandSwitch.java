@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,11 +58,11 @@ public class CommandSwitch implements CommandTabCompleter {
             return true;
         }
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
+            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
             return true;
         }
         if (!Permissions.has(player, "MyPet.command.switch")) {
-            player.sendMessage(Translation.getString("Message.No.Allowed", player));
+            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
             return true;
         }
 
@@ -85,7 +86,7 @@ public class CommandSwitch implements CommandTabCompleter {
                 @Override
                 public void callback(List<StoredMyPet> pets) {
                     if (pets.size() - (owner.hasMyPet() ? 1 : 0) == 0) {
-                        owner.sendMessage(Translation.getString("Message.Command.Switch.NoStoredPets", owner));
+                        owner.sendMessage(Translation.getComponent("Message.Command.Switch.NoStoredPets", owner));
                         return;
                     }
                     if (owner.isOnline()) {
@@ -93,46 +94,46 @@ public class CommandSwitch implements CommandTabCompleter {
                         int inactivePetCount = getInactivePetCount(pets, worldGroup);
                         int maxPetCount = getMaxPetCount(owner.getPlayer());
 
-                        String title;
+                        Component title;
                         if (owner.hasMyPet()) {
                             inactivePetCount--;
-                            title = Translation.getString("Message.Npc.SwitchTitle", owner);
+                            title = Translation.getComponent("Message.Npc.SwitchTitle", owner);
                         } else {
-                            title = Translation.getString("Message.SelectMyPet", owner);
+                            title = Translation.getComponent("Message.SelectMyPet", owner);
                         }
 
-                        String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
+                        Component stats = Component.text(" (" + inactivePetCount + "/" + maxPetCount + ")");
 
-                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title + " " + stats, finalPage);
+                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title.append(stats), finalPage);
                         gui.open(pets, new RepositoryCallback<>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
                                 Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                 if (activePet.isPresent() && owner.isOnline()) {
                                     Player player = owner.getPlayer();
-                                    activePet.get().getOwner().sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", owner), activePet.get().getPetName()));
+                                    activePet.get().getOwner().sendMessage(Util.formatTranslation("Message.Npc.ChosenPet", owner, activePet.get().getPetName()));
                                     WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
                                     owner.setMyPetForWorldGroup(wg, activePet.get().getUUID());
 
                                     switch (activePet.get().createEntity()) {
                                         case Canceled:
-                                            owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), activePet.get().getPetName()));
+                                            owner.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", owner, activePet.get().getPetName()));
                                             break;
                                         case NoSpace:
-                                            owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), activePet.get().getPetName()));
+                                            owner.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", owner, activePet.get().getPetName()));
                                             break;
                                         case NotAllowed:
-                                            owner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner), activePet.get().getPetName()));
+                                            owner.sendMessage(Util.formatTranslation("Message.No.AllowedHere", owner, activePet.get().getPetName()));
                                             break;
                                         case Dead:
                                             if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                owner.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), activePet.get().getPetName()));
+                                                owner.sendMessage(Util.formatTranslation("Message.Call.Dead", owner, activePet.get().getPetName()));
                                             } else {
-                                                owner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner), activePet.get().getPetName(), activePet.get().getRespawnTime()));
+                                                owner.sendMessage(Util.formatTranslation("Message.Spawn.Respawn.In", owner, activePet.get().getPetName(), activePet.get().getRespawnTime()));
                                             }
                                             break;
                                         case Spectator:
-                                            sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", owner), activePet.get().getPetName()));
+                                            sender.sendMessage(Util.formatTranslation("Message.Spawn.Spectator", owner, activePet.get().getPetName()));
                                             break;
                                     }
                                 }
@@ -142,7 +143,7 @@ public class CommandSwitch implements CommandTabCompleter {
                 }
             });
         } else {
-            sender.sendMessage(Translation.getString("Message.No.HasPet", player));
+            sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
         }
         return true;
     }

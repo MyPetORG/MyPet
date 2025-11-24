@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class CommandCaptureHelper implements CommandTabCompleter {
         if (commandSender instanceof Player player) {
 
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
+                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
                 return true;
             }
 
@@ -50,7 +51,7 @@ public class CommandCaptureHelper implements CommandTabCompleter {
                     myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
                     if (myPetPlayer.hasMyPet()) {
-                        player.sendMessage(Translation.getString("Message.Command.CaptureHelper.HasPet", player));
+                        player.sendMessage(Translation.getComponent("Message.Command.CaptureHelper.HasPet", player));
                         return true;
                     }
                 } else {
@@ -58,11 +59,11 @@ public class CommandCaptureHelper implements CommandTabCompleter {
                 }
 
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
-                String mode = myPetPlayer.isCaptureHelperActive() ? Translation.getString("Name.Enabled", player) : Translation.getString("Name.Disabled", player);
-                player.sendMessage(Util.formatText(Translation.getString("Message.Command.CaptureHelper.Mode", player), mode));
+                Component mode = myPetPlayer.isCaptureHelperActive() ? Translation.getComponent("Name.Enabled", player) : Translation.getComponent("Name.Disabled", player);
+                player.sendMessage(Util.formatTranslation("Message.Command.CaptureHelper.Mode", player, mode));
                 return true;
             }
-            player.sendMessage(Translation.getString("Message.No.Allowed", player));
+            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
         }
         return true;
     }

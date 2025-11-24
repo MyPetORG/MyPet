@@ -39,23 +39,23 @@ public class CommandStop implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player petOwner) {
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
+                petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Call.First", petOwner, myPet.getPetName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Action.Dead", petOwner, myPet.getPetName()));
                     return true;
                 }
-                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Stop.Attack", petOwner), myPet.getPetName()));
+                sender.sendMessage(Util.formatTranslation("Message.Command.Stop.Attack", petOwner, myPet.getPetName()));
                 myPet.getEntity().ifPresent(MyPetBukkitEntity::forgetTarget);
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
             }
             return true;
         }

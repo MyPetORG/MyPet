@@ -58,6 +58,7 @@ import de.Keyle.MyPet.util.hooks.VaultHook;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -84,7 +85,7 @@ public class StorageTrait extends Trait {
         final Player player = npcEvent.getClicker();
 
         if (!Permissions.has(player, "MyPet.npc.storage")) {
-            player.sendMessage(Translation.getString("Message.No.Allowed", player));
+            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
             return;
         }
 
@@ -123,14 +124,14 @@ public class StorageTrait extends Trait {
                         }
 
                         if (inactivePetCount == 0 && maxPetCount == 0) {
-                            player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
                             return;
                         }
 
                         if (inactivePetCount >= maxPetCount) {
                             String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                            final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, stats + " " + Translation.getString("Message.Npc.SwitchTitle", player));
+                            final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(stats + " " + Translation.getString("Message.Npc.SwitchTitle", player)));
                             gui.open(pets, new RepositoryCallback<>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
@@ -138,36 +139,36 @@ public class StorageTrait extends Trait {
                                     Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                     if (activePet.isPresent() && myPetPlayer.isOnline()) {
                                         Player p = myPetPlayer.getPlayer();
-                                        myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", player), activePet.get().getPetName()));
+                                        myPetPlayer.sendMessage(Util.formatTranslation("Message.Npc.ChosenPet", player, activePet.get().getPetName()));
                                         WorldGroup wg = WorldGroup.getGroupByWorld(p.getWorld().getName());
                                         myPetPlayer.setMyPetForWorldGroup(wg, activePet.get().getUUID());
 
                                         switch (activePet.get().createEntity()) {
                                             case Canceled:
-                                                myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", player), activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", player, activePet.get().getPetName()));
                                                 break;
                                             case NoSpace:
-                                                myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", player), activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", player, activePet.get().getPetName()));
                                                 break;
                                             case NotAllowed:
-                                                myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", player), activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.No.AllowedHere", player, activePet.get().getPetName()));
                                                 break;
                                             case Dead:
                                                 if (de.Keyle.MyPet.api.Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                    myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", myPetPlayer), activePet.get().getPetName()));
+                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead", myPetPlayer, activePet.get().getPetName()));
                                                 } else {
-                                                    myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead.Respawn", myPetPlayer), activePet.get().getPetName(), activePet.get().getRespawnTime()));
+                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead.Respawn", myPetPlayer, activePet.get().getPetName(), activePet.get().getRespawnTime()));
                                                 }
                                                 break;
                                             case Spectator:
-                                                myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", myPetPlayer), activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.Spectator", myPetPlayer, activePet.get().getPetName()));
                                                 break;
                                         }
                                     }
                                 }
                             });
                         } else {
-                            IconMenu menu = new IconMenu(Translation.getString("Message.Npc.HandOverTitle", myPetPlayer), event -> {
+                            IconMenu menu = new IconMenu(Translation.getComponent("Message.Npc.HandOverTitle", myPetPlayer), event -> {
                                 if (!myPetPlayer.hasMyPet()) {
                                     return;
                                 }
@@ -177,7 +178,7 @@ public class StorageTrait extends Trait {
                                     if (MyPetApi.getHookHelper().isEconomyEnabled() && costs > 0 && npc.hasTrait(WalletTrait.class)) {
                                         WalletTrait walletTrait = npc.getTrait(WalletTrait.class);
                                         if (!MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, costs)) {
-                                            player.sendMessage(Util.formatText(Translation.getString("Message.No.Money", myPetPlayer), myPetPlayer.getMyPet().getPetName(), npcEvent.getNPC().getName()));
+                                            player.sendMessage(Util.formatTranslation("Message.No.Money", myPetPlayer, myPetPlayer.getMyPet().getPetName(), npcEvent.getNPC().getName()));
                                             store = false;
                                         }
                                         if (MyPetApi.getHookHelper().getEconomy().pay(myPetPlayer, costs)) {
@@ -195,7 +196,7 @@ public class StorageTrait extends Trait {
                                             myPetPlayer.setMyPetForWorldGroup(wg1, null);
                                             MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer, null);
 
-                                            player.sendMessage(Util.formatText(Translation.getString("Message.Npc.HandOver", myPetPlayer), storedMyPet.getPetName(), npcEvent.getNPC().getName()));
+                                            player.sendMessage(Util.formatTranslation("Message.Npc.HandOver", myPetPlayer, storedMyPet.getPetName(), npcEvent.getNPC().getName()));
                                         }
                                     }
                                 }
@@ -235,33 +236,33 @@ public class StorageTrait extends Trait {
                                 maxPetCount = Misc.MAX_STORED_PET_COUNT;
                             }
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
-                            MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Translation.getString("Message.Npc.TakeTitle", myPetPlayer) + " " + stats);
+                            MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(Translation.getString("Message.Npc.TakeTitle", myPetPlayer) + " " + stats));
                             gui.open(pets, new RepositoryCallback<>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
                                     Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                     if (myPet.isPresent()) {
                                         Player player = myPetPlayer.getPlayer();
-                                        myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Npc.ChosenPet", myPetPlayer), myPet.get().getPetName()));
+                                        myPetPlayer.sendMessage(Util.formatTranslation("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getPetName()));
                                         WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
                                         myPetPlayer.setMyPetForWorldGroup(wg, myPet.get().getUUID());
                                         MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer, null);
 
                                         switch (myPet.get().createEntity()) {
                                             case Canceled:
-                                                myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPetPlayer), myPet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", myPetPlayer, myPet.get().getPetName()));
                                                 break;
                                             case NoSpace:
-                                                myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPetPlayer), myPet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", myPetPlayer, myPet.get().getPetName()));
                                                 break;
                                             case NotAllowed:
-                                                myPetPlayer.sendMessage(Translation.getString("Message.No.AllowedHere", myPetPlayer).replace("%petname%", myPet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.No.AllowedHere", myPetPlayer, myPet.get().getPetName()));
                                                 break;
                                             case Dead:
                                                 if (de.Keyle.MyPet.api.Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                    myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", myPetPlayer), myPet.get().getPetName()));
+                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead", myPetPlayer, myPet.get().getPetName()));
                                                 } else {
-                                                    myPetPlayer.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead.Respawn", myPetPlayer), myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead.Respawn", myPetPlayer, myPet.get().getPetName(), myPet.get().getRespawnTime()));
                                                 }
                                                 break;
                                         }
@@ -269,14 +270,14 @@ public class StorageTrait extends Trait {
                                 }
                             });
                         } else {
-                            myPetPlayer.sendMessage(Translation.getString("Message.No.HasPet", myPetPlayer), 5000);
+                            myPetPlayer.sendMessage(Translation.getComponent("Message.No.HasPet", myPetPlayer), 5000);
                         }
                     }
                 });
             }
             return;
         }
-        player.sendMessage(Translation.getString("Message.No.HasPet", player));
+        player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
     }
 
     public double calculateStorageCosts(MyPet myPet) {

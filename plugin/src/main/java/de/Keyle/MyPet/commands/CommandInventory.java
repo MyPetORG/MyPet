@@ -44,36 +44,36 @@ public class CommandInventory implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
+                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
                 return true;
             }
             if (args.length == 0) {
                 if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned) {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", player), myPet.getPetName()));
+                        sender.sendMessage(Util.formatTranslation("Message.Call.First", player, myPet.getPetName()));
                         return true;
                     }
                     if (myPet.getStatus() == PetState.Dead) {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", player), myPet.getPetName()));
+                        sender.sendMessage(Util.formatTranslation("Message.Action.Dead", player, myPet.getPetName()));
                         return true;
                     }
                     if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin", false)) {
-                        myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", player));
+                        myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", player));
                         return true;
                     }
                     if (myPet.getSkills().has(BackpackImpl.class)) {
                         myPet.getSkills().get(BackpackImpl.class).activate();
                     }
                 } else {
-                    sender.sendMessage(Translation.getString("Message.No.HasPet", player));
+                    sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
                 }
             } else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false)) {		//Active Pet
             	Player petOwner = Bukkit.getServer().getOfflinePlayer(args[0]).getPlayer();
             	MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
             	
             	if (petOwner == null) {
-                    sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
+                    sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", player));
                 } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) { 
 	                if (myPet.getSkills().isActive(BackpackImpl.class)) {
 	                    myPet.getSkills().get(BackpackImpl.class).openInventory(player);
@@ -84,13 +84,13 @@ public class CommandInventory implements CommandTabCompleter {
                 final MyPetPlayer myPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
 
                 if (petOwner == null) {
-                    sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
+                    sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", player));
                 } else {
                 	MyPetApi.getRepository().getMyPets(myPetOwner, new RepositoryCallback<List<StoredMyPet>>() {
                         @Override
                         public void callback(List<StoredMyPet> pets) {
                             if (pets.size() - (myPetOwner.hasMyPet() ? 1 : 0) == 0) {
-                            	myPetOwner.sendMessage(Translation.getString("Message.Command.Switch.NoStoredPets", myPetOwner));
+                            	myPetOwner.sendMessage((Translation.getComponent("Message.Command.Switch.NoStoredPets", myPetOwner));
                                 return;
                             }
                             if (myPetOwner.isOnline()) {

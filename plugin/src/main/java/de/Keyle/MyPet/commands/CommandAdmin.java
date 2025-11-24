@@ -70,13 +70,13 @@ public class CommandAdmin implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (!Permissions.has((Player) sender, "MyPet.admin", false)) {
-                sender.sendMessage(Translation.getString("Message.No.Allowed", sender));
+                sender.sendMessage(Translation.getComponent("Message.No.Allowed", sender));
                 return true;
             }
         }
 
         if (args.length < 1) {
-            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, COMMAND_OPTIONS.keySet()));
             return false;
         }

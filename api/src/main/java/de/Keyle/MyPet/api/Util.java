@@ -31,6 +31,7 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -42,6 +43,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util {
 
@@ -119,6 +121,226 @@ public class Util {
             }
         }
         return text;
+    }
+
+    // ========== Component-Based Formatting (Adventure API) ==========
+
+    /**
+     * Formats a Component by replacing placeholders {0}, {1}, {2}... with provided arguments.
+     * Arguments can be Components (inserted with their styling) or Objects (converted to Components).
+     *
+     * This is the modern replacement for formatText() that works with Adventure Components
+     * and preserves formatting, colors, and styles.
+     *
+     * Example:
+     * <pre>
+     * Component template = Component.text("Welcome, {0}! You have {1} points.");
+     * Component result = Util.formatComponent(template,
+     *     Component.text("Player").color(NamedTextColor.AQUA),
+     *     Component.text("1234").color(NamedTextColor.GOLD)
+     * );
+     * </pre>
+     *
+     * @param component The template Component with placeholders {0}, {1}, etc.
+     * @param values Arguments to replace placeholders (can be Components or Objects)
+     * @return New Component with placeholders replaced
+     */
+    public static Component formatComponent(Component component, Object... values) {
+        if (component == null || values == null || values.length == 0) {
+            return component != null ? component : Component.empty();
+        }
+
+        // Recursively process the component tree
+        return replaceInComponent(component, values);
+    }
+
+    /**
+     * Recursively processes a Component tree to replace placeholders.
+     */
+    private static Component replaceInComponent(Component component, Object[] values) {
+        if (component == null) {
+            return Component.empty();
+        }
+
+        // Start building the result
+        TextComponent.Builder builder = Component.text();
+
+        // If this is a TextComponent, process its content
+        if (component instanceof TextComponent) {
+            TextComponent textComponent = (TextComponent) component;
+            String content = textComponent.content();
+
+            // Replace placeholders in the content
+            List<Component> replacedContent = replacePlaceholders(content, textComponent.style(), values);
+            for (Component part : replacedContent) {
+                builder.append(part);
+            }
+        } else {
+            // For non-text components, preserve as-is
+            builder.append(component);
+        }
+
+        // Process children recursively
+        for (Component child : component.children()) {
+            builder.append(replaceInComponent(child, values));
+        }
+
+        // Preserve the original component's styling (but not on the builder itself, applied to parts)
+        return builder.build();
+    }
+
+    /**
+     * Replaces placeholders in a text string and returns a list of Components.
+     * If a placeholder is found, it's replaced with the corresponding value.
+     * The resulting components preserve the original style.
+     */
+    private static List<Component> replacePlaceholders(String text, Style style, Object[] values) {
+        List<Component> result = new ArrayList<>();
+
+        if (text == null || text.isEmpty()) {
+            return result;
+        }
+
+        int lastIndex = 0;
+        Pattern pattern = Pattern.compile("\\{(\\d+)}");
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            // Add text before the placeholder
+            if (matcher.start() > lastIndex) {
+                String beforeText = text.substring(lastIndex, matcher.start());
+                result.add(Component.text(beforeText).style(style));
+            }
+
+            // Get the placeholder index
+            int index = Integer.parseInt(matcher.group(1));
+
+            // Replace with the corresponding value
+            if (index < values.length && values[index] != null) {
+                Object value = values[index];
+
+                if (value instanceof Component) {
+                    // Use Component argument directly
+                    result.add((Component) value);
+                } else {
+                    // Convert to Component with the same style as the template
+                    result.add(Component.text(value.toString()).style(style));
+                }
+            } else {
+                // Placeholder not found in values, keep original
+                result.add(Component.text(matcher.group()).style(style));
+            }
+
+            lastIndex = matcher.end();
+        }
+
+        // Add remaining text after the last placeholder
+        if (lastIndex < text.length()) {
+            String remainingText = text.substring(lastIndex);
+            result.add(Component.text(remainingText).style(style));
+        }
+
+        // If no placeholders were found, return the original text as a component
+        if (result.isEmpty() && !text.isEmpty()) {
+            result.add(Component.text(text).style(style));
+        }
+
+        return result;
+    }
+
+    // ========== Translation + Formatting Convenience Methods ==========
+
+    /**
+     * Convenience method that combines Translation.getComponent() with formatComponent().
+     * Gets a translated Component and replaces placeholders in one call.
+     *
+     * Example:
+     * <pre>
+     * // Translation: Message.Welcome=<gold>Welcome, {0}! You have {1} points.
+     * Component result = Util.formatTranslation("Message.Welcome", player,
+     *     Component.text("Steve").color(NamedTextColor.AQUA),
+     *     Component.text("1234").color(NamedTextColor.GOLD)
+     * );
+     * </pre>
+     *
+     * @param key Translation key
+     * @param player Player for language detection
+     * @param values Arguments to replace placeholders
+     * @return Formatted Component
+     */
+    public static Component formatTranslation(String key, org.bukkit.entity.Player player, Object... values) {
+        Component template = Translation.getComponent(key, player);
+        return formatComponent(template, values);
+    }
+
+    /**
+     * Convenience method for CommandSender.
+     */
+    public static Component formatTranslation(String key, org.bukkit.command.CommandSender sender, Object... values) {
+        Component template = Translation.getComponent(key, sender);
+        return formatComponent(template, values);
+    }
+
+    /**
+     * Convenience method for MyPetPlayer.
+     */
+    public static Component formatTranslation(String key, de.Keyle.MyPet.api.player.MyPetPlayer player, Object... values) {
+        Component template = Translation.getComponent(key, player);
+        return formatComponent(template, values);
+    }
+
+    /**
+     * Convenience method for specific locale.
+     */
+    public static Component formatTranslation(String key, String localeString, Object... values) {
+        Component template = Translation.getComponent(key, localeString);
+        return formatComponent(template, values);
+    }
+
+    /**
+     * Convenience method that combines Translation.getComponentMiniMessage() with formatComponent().
+     * Gets a translated Component with MiniMessage support and replaces placeholders.
+     *
+     * Example:
+     * <pre>
+     * // Translation: Message.Welcome=<gradient:gold:yellow>Welcome, {0}!</gradient>
+     * Component result = Util.formatTranslationMiniMessage("Message.Welcome", player,
+     *     Component.text("Steve").color(NamedTextColor.AQUA)
+     * );
+     * </pre>
+     *
+     * @param key Translation key
+     * @param player Player for language detection
+     * @param values Arguments to replace placeholders
+     * @return Formatted Component with MiniMessage formatting
+     */
+    public static Component formatTranslationMiniMessage(String key, org.bukkit.entity.Player player, Object... values) {
+        Component template = Translation.getComponentMiniMessage(key, player);
+        return formatComponent(template, values);
+    }
+
+    /**
+     * Convenience method for CommandSender with MiniMessage.
+     */
+    public static Component formatTranslationMiniMessage(String key, org.bukkit.command.CommandSender sender, Object... values) {
+        Component template = Translation.getComponentMiniMessage(key, sender);
+        return formatComponent(template, values);
+    }
+
+    /**
+     * Convenience method for MyPetPlayer with MiniMessage.
+     */
+    public static Component formatTranslationMiniMessage(String key, de.Keyle.MyPet.api.player.MyPetPlayer player, Object... values) {
+        Component template = Translation.getComponentMiniMessage(key, player);
+        return formatComponent(template, values);
+    }
+
+    /**
+     * Convenience method for specific locale with MiniMessage.
+     */
+    public static Component formatTranslationMiniMessage(String key, String localeString, Object... values) {
+        Component template = Translation.getComponentMiniMessage(key, localeString);
+        return formatComponent(template, values);
     }
 
     public static String capitalizeName(String name) {
@@ -417,9 +639,10 @@ public class Util {
             }
         }
 
-        // Pet Type
+        // Pet Type - use client-side translatable for entity name
+        String entityKey = "entity.minecraft." + mypet.getPetType().getBukkitName().toLowerCase();
         builder.append(Component.text(Translation.getString("Name.Type", lang) + ": "))
-                .append(Component.text(mypet.getPetType().name())
+                .append(Component.translatable(entityKey)
                         .color(NamedTextColor.GOLD))
                 .append(Component.newline());
 

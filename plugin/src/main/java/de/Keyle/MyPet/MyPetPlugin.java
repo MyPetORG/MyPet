@@ -469,26 +469,26 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                                                         MyPet runMyPet = myPetPlayer.getMyPet();
                                                         switch (runMyPet.createEntity()) {
                                                             case Canceled:
-                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getPetName()));
                                                                 break;
                                                             case NoSpace:
-                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getPetName()));
                                                                 break;
                                                             case NotAllowed:
-                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", myPet.getOwner()), myPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.No.AllowedHere", myPet.getOwner(), myPet.getPetName()));
                                                                 break;
                                                             case Dead:
                                                                 if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                                    runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", myPet.getOwner()), myPet.getPetName()));
+                                                                    runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Call.Dead", myPet.getOwner(), myPet.getPetName()));
                                                                 } else {
-                                                                    runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", myPet.getOwner()), myPet.getPetName(), myPet.getRespawnTime()));
+                                                                    runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Respawn.In", myPet.getOwner(), myPet.getPetName(), myPet.getRespawnTime()));
                                                                 }
                                                                 break;
                                                             case Flying:
-                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Flying", myPet.getOwner(), myPet.getPetName()));
                                                                 break;
                                                             case Success:
-                                                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getPetName()));
                                                                 break;
                                                         }
                                                     }
@@ -693,7 +693,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             // cloudCommandManager.registerAnnotationCommands(new CommandPetCall());
             // TODO: Register remaining commands as they are migrated
 
-            getLogger().info("Cloud Command Framework enabled - 8 command(s) migrated");
+            getLogger().info("Cloud Command Framework enabled");
 
         } catch (Exception e) {
             getLogger().severe("Failed to initialize Cloud Command Framework:");

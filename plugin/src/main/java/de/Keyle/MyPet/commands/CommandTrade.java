@@ -56,7 +56,7 @@ public class CommandTrade implements CommandTabCompleter {
         if (sender instanceof Player player) {
 
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
+                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
                 return true;
             }
 
@@ -69,14 +69,14 @@ public class CommandTrade implements CommandTabCompleter {
                     Offer offer = offers.get(player.getUniqueId());
                     Player owner = Bukkit.getServer().getPlayer(offer.getOwner());
                     if (owner == null || !owner.isOnline()) {
-                        sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.PetUnavailable", player));
+                        sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                         offers.remove(player.getUniqueId());
                         return true;
                     }
 
                     if (!Permissions.has(player, "MyPet.command.trade.receive." + offer.getPet().getPetType().name())) {
-                        sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.NoPermission", player));
-                        owner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Reject", owner), player.getName(), offer.getPet().getPetName()));
+                        sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoPermission", player));
+                        owner.sendMessage(Util.formatTranslation("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.getPet().getPetName()));
                         offers.remove(player.getUniqueId());
                         return true;
                     }
@@ -84,27 +84,27 @@ public class CommandTrade implements CommandTabCompleter {
                     if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
                         final MyPetPlayer oldOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
                         if (!oldOwner.hasMyPet() || oldOwner.getMyPet() != offer.getPet()) {
-                            sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.PetUnavailable", player));
+                            sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                             offers.remove(player.getUniqueId());
                             return true;
                         }
                         if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                            sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", player));
+                            sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                             return true;
                         }
 
                         if (!player.getWorld().equals(owner.getWorld()) || MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), owner.getLocation()) > 100) {
-                            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Distance", player), owner.getName()));
+                            sender.sendMessage(Util.formatTranslation("Message.Command.Trade.Receiver.Distance", player, owner.getName()));
                             return true;
                         }
 
                         if (offer.getPrice() > 0) {
                             if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-                                player.sendMessage(Translation.getString("Message.No.Economy", player));
+                                player.sendMessage(Translation.getComponent("Message.No.Economy", player));
                                 return true;
                             }
                             if (!MyPetApi.getHookHelper().getEconomy().transfer(player, owner, offer.getPrice())) {
-                                sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.NotEnoughMoney", player), MyPetApi.getHookHelper().getEconomy().format(offer.getPrice())));
+                                sender.sendMessage(Util.formatTranslation("Message.Command.Trade.Receiver.NotEnoughMoney", player, MyPetApi.getHookHelper().getEconomy().format(offer.getPrice())));
                                 return true;
                             }
                         }
@@ -134,40 +134,40 @@ public class CommandTrade implements CommandTabCompleter {
 
                                 if (myPet.isPresent()) {
 
-                                    newOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Success", newOwner), oldOwner.getName(), myPet.get().getPetName()));
-                                    oldOwner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Success", oldOwner), newOwner.getName(), myPet.get().getPetName()));
+                                    newOwner.sendMessage(Util.formatTranslation("Message.Command.Trade.Receiver.Success", newOwner, oldOwner.getName(), myPet.get().getPetName()));
+                                    oldOwner.sendMessage(Util.formatTranslation("Message.Command.Trade.Owner.Success", oldOwner, newOwner.getName(), myPet.get().getPetName()));
 
                                     switch (myPet.get().createEntity()) {
                                         case Canceled:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", newOwner), myPet.get().getPetName()));
+                                            newOwner.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", newOwner, myPet.get().getPetName()));
                                             break;
                                         case NoSpace:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", newOwner), myPet.get().getPetName()));
+                                            newOwner.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", newOwner, myPet.get().getPetName()));
                                             break;
                                         case NotAllowed:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", newOwner), myPet.get().getPetName()));
+                                            newOwner.sendMessage(Util.formatTranslation("Message.No.AllowedHere", newOwner, myPet.get().getPetName()));
                                             break;
                                         case Dead:
                                             if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", newOwner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                                newOwner.sendMessage(Util.formatTranslation("Message.Spawn.Respawn.In", newOwner, myPet.get().getPetName(), myPet.get().getRespawnTime()));
                                             }
                                             break;
                                         case Spectator:
-                                            newOwner.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", newOwner), myPet.get().getPetName()));
+                                            newOwner.sendMessage(Util.formatTranslation("Message.Spawn.Spectator", newOwner, myPet.get().getPetName()));
                                             break;
                                     }
                                 } else {
-                                    newOwner.sendMessage(Translation.getString("Message.Command.Trade.Receiver.Error", newOwner));
+                                    newOwner.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.Error", newOwner));
                                 }
                             }
                         });
                     } else {
-                        sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.PetUnavailable", player));
+                        sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                         offers.remove(player.getUniqueId());
                         return true;
                     }
                 } else {
-                    sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.NoOffer", player));
+                    sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
                 }
                 return true;
 
@@ -176,12 +176,12 @@ public class CommandTrade implements CommandTabCompleter {
                     Offer offer = offers.get(player.getUniqueId());
                     Player owner = Bukkit.getServer().getPlayer(offer.getOwner());
                     if (owner != null && owner.isOnline()) {
-                        owner.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Reject", owner), player.getName(), offer.getPet().getPetName()));
+                        owner.sendMessage(Util.formatTranslation("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.getPet().getPetName()));
                     }
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Reject", player), offer.getOwnerName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Command.Trade.Receiver.Reject", player, offer.getOwnerName()));
                     offers.remove(player.getUniqueId());
                 } else {
-                    sender.sendMessage(Translation.getString("Message.Command.Trade.Receiver.NoOffer", player));
+                    sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
                 }
                 return true;
             } else if (args[0].equalsIgnoreCase("cancel")) {
@@ -189,38 +189,38 @@ public class CommandTrade implements CommandTabCompleter {
                 for (Offer offer : offers.values()) {
                     if (offer.getOwner().equals(ownerUUID)) {
                         offers.remove(offer.getReceiver());
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Cancel", player), offer.getReceiverName()));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.Trade.Owner.Cancel", player, offer.getReceiverName()));
                         Player receiver = Bukkit.getPlayer(offer.getReceiver());
                         if (receiver != null && receiver.isOnline()) {
-                            receiver.sendMessage(Translation.getString("Message.Command.Trade.Receiver.PetUnavailable", player));
+                            receiver.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                         }
                         return true;
                     }
                 }
-                sender.sendMessage(Translation.getString("Message.Command.Trade.Owner.NoOffer", player));
+                sender.sendMessage(Translation.getComponent("Message.Command.Trade.Owner.NoOffer", player));
                 return true;
             } else {
                 if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
 
                     if (!Permissions.has((Player) sender, "MyPet.command.trade.offer." + myPet.getPetType().name())) {
-                        player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                        player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
                         return true;
                     }
 
                     Player receiver = Bukkit.getPlayer(args[0]);
                     if (receiver == null) {
-                        sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
+                        sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", player));
                         return true;
                     }
 
                     if (offers.containsKey(receiver.getUniqueId())) {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.OpenOffer", player), receiver.getName()));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.Trade.Owner.OpenOffer", player, receiver.getName()));
                         return true;
                     }
 
                     if (receiver.equals(player)) {
-                        sender.sendMessage(Translation.getString("Message.Command.Trade.Owner.Yourself", player));
+                        sender.sendMessage(Translation.getComponent("Message.Command.Trade.Owner.Yourself", player));
                         return true;
                     }
 
@@ -231,11 +231,11 @@ public class CommandTrade implements CommandTabCompleter {
                             if (Util.isDouble(args[1])) {
                                 price = Double.parseDouble(args[1]);
                             } else {
-                                receiver.sendMessage(Translation.getString("Message.Command.Trade.Owner.InvalidPrice", player));
+                                receiver.sendMessage(Translation.getComponent("Message.Command.Trade.Owner.InvalidPrice", player));
                                 return true;
                             }
                         } else {
-                            sender.sendMessage(Translation.getString("Message.No.Economy", player));
+                            sender.sendMessage(Translation.getComponent("Message.No.Economy", player));
                             return true;
                         }
                     }
@@ -243,11 +243,11 @@ public class CommandTrade implements CommandTabCompleter {
                     Offer offer = new Offer(price, myPet, player.getUniqueId(), receiver.getUniqueId(), receiver.getName(), player.getName());
                     offers.put(receiver.getUniqueId(), offer);
                     if (price > 0) {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Offer.Price", player), myPet.getPetName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
-                        receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer.Price", receiver), player.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.Trade.Owner.Offer.Price", player, myPet.getPetName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+                        receiver.sendMessage(Util.formatTranslation("Message.Command.Trade.Receiver.Offer.Price", receiver, player.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
                     } else {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Owner.Offer", player), myPet.getPetName(), receiver.getName()));
-                        receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer", receiver), player.getName()));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.Trade.Owner.Offer", player, myPet.getPetName(), receiver.getName()));
+                        receiver.sendMessage(Util.formatTranslation("Message.Command.Trade.Receiver.Offer", receiver, player.getName()));
                     }
 
                     receiver.sendMessage(
@@ -258,7 +258,7 @@ public class CommandTrade implements CommandTabCompleter {
 
                     return true;
                 } else {
-                    sender.sendMessage(Translation.getString("Message.No.HasPet", player));
+                    sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
                     return true;
                 }
             }

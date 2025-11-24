@@ -41,17 +41,14 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
+import de.Keyle.MyPet.util.PetInfoBuilder;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,12 +60,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 public class MyPetEntityListener implements Listener {
 
@@ -171,114 +164,109 @@ public class MyPetEntityListener implements Listener {
                 }
                 if (MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType()).compare(leashItem)) {
                     boolean infoShown = false;
+
+                    // Pet name header
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet)) {
-                        damager.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
+                        damager.sendMessage(PetInfoBuilder.petNameHeader(myPet));
                         infoShown = true;
                     }
+
+                    // Owner line (only show if viewing someone else's pet)
                     if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, damager, myPet) && myPet.getOwner().getPlayer() != damager) {
-                        damager.sendMessage("   " + Translation.getString("Name.Owner", damager) + ": " + myPet.getOwner().getName());
+                        damager.sendMessage(PetInfoBuilder.ownerLine(myPet, damager));
                         infoShown = true;
                     }
+
+                    // HP line
                     if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, damager, myPet)) {
-                        String msg;
-                        double health = myPet.getHealth();
-                        double maxHealth = myPet.getMaxHealth();
-                        if (health > maxHealth / 3 * 2) {
-                            msg = "" + ChatColor.GREEN;
-                        } else if (health > maxHealth / 3) {
-                            msg = "" + ChatColor.YELLOW;
-                        } else {
-                            msg = "" + ChatColor.RED;
+                        damager.sendMessage(PetInfoBuilder.hpLine(myPet, damager));
+                        infoShown = true;
+                    }
+
+                    // Respawn time (if dead)
+                    if (CommandInfo.canSee(PetInfoDisplay.RespawnTime.adminOnly, damager, myPet)) {
+                        Component respawnTime = PetInfoBuilder.respawnTimeLine(myPet, damager);
+                        if (respawnTime != null) {
+                            damager.sendMessage(respawnTime);
+                            infoShown = true;
                         }
-                        msg += String.format("%1.2f", health) + ChatColor.WHITE + "/" + String.format("%1.2f", maxHealth);
-                        damager.sendMessage("   " + Translation.getString("Name.HP", damager) + ": " + msg);
-                        infoShown = true;
                     }
-                    if (myPet.getStatus() == PetState.Dead && CommandInfo.canSee(PetInfoDisplay.RespawnTime.adminOnly, damager, myPet)) {
-                        damager.sendMessage("   " + Translation.getString("Name.Respawntime", damager) + ": " + myPet.getRespawnTime());
-                        infoShown = true;
-                    }
-                    if (myPet.getDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
-                        damager.sendMessage("   " + Translation.getString("Name.Damage", damager) + ": " + String.format("%1.2f", myPet.getDamage()));
-                        infoShown = true;
-                    }
-                    if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet)) {
-                        damager.sendMessage("   " + Translation.getString("Name.RangedDamage", damager) + ": " + String.format("%1.2f", myPet.getRangedDamage()));
-                        infoShown = true;
-                    }
-                    if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
-                        damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + Math.round(myPet.getSaturation()));
 
-                        TextComponent.Builder messageBuilder = Component.text()
-                                .append(Component.text("   " + Translation.getString("Name.Food", damager) + ": "));
-
-                        boolean comma = false;
-                        for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPet.getPetType())) {
-                            ItemStack is = material.getItem();
-                            if (is == null || is.getType() == Material.AIR) {
-                                continue;
-                            }
-                            if (comma) {
-                                messageBuilder.append(Component.text(", "));
-                            }
-
-                            ItemMeta meta = is.getItemMeta();
-
-                            Component itemComponent;
-                            if (meta != null && meta.hasDisplayName()) {
-                                itemComponent = Component.text(meta.getDisplayName())
-                                        .hoverEvent(Util.myPetToItemHover(myPet, damager.getName()));
-                            } else {
-                                try {
-                                    itemComponent = Component.translatable(MyPetApi.getPlatformHelper().getVanillaName(is))
-                                            .color(NamedTextColor.GOLD)
-                                            .hoverEvent(Util.myPetToItemHover(myPet, damager.getName()));
-                                } catch (Exception e) {
-                                    MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
-                                    MyPetApi.getLogger().warning("" + is);
-                                    e.printStackTrace();
-                                    continue;
-                                }
-                            }
-                            messageBuilder.append(itemComponent);
-                            comma = true;
+                    // Damage line
+                    if (CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
+                        Component damage = PetInfoBuilder.damageLine(myPet, damager);
+                        if (damage != null) {
+                            damager.sendMessage(damage);
+                            infoShown = true;
                         }
-                        damager.sendMessage(messageBuilder.build());
+                    }
 
-                        infoShown = true;
+                    // Ranged damage line
+                    if (CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet)) {
+                        Component rangedDamage = PetInfoBuilder.rangedDamageLine(myPet, damager);
+                        if (rangedDamage != null) {
+                            damager.sendMessage(rangedDamage);
+                            infoShown = true;
+                        }
                     }
-                    if (myPet.getSkills().has(Behavior.class) && CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {
-                        Behavior behavior = myPet.getSkills().get(Behavior.class);
-                        damager.sendMessage("   " + Translation.getString("Name.Skill.Behavior", damager) + ": " + Translation.getString("Name." + behavior.getBehavior().name(), damager));
-                        infoShown = true;
+
+                    // Hunger system
+                    if (CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
+                        Component hunger = PetInfoBuilder.hungerLine(myPet, damager);
+                        if (hunger != null) {
+                            damager.sendMessage(hunger);
+                            infoShown = true;
+                        }
+
+                        Component food = PetInfoBuilder.foodLine(myPet, damager);
+                        if (food != null) {
+                            damager.sendMessage(food);
+                            infoShown = true;
+                        }
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet) && myPet.getSkilltree() != null) {
-                        damager.sendMessage("   " + Translation.getString("Name.Skilltree", damager) + ": " + Colorizer.setColors(myPet.getSkilltree().getDisplayName()));
-                        infoShown = true;
+
+                    // Behavior line
+                    if (CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {
+                        Component behavior = PetInfoBuilder.behaviorLine(myPet, damager);
+                        if (behavior != null) {
+                            damager.sendMessage(behavior);
+                            infoShown = true;
+                        }
                     }
+
+                    // Skilltree line
+                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet)) {
+                        Component skilltree = PetInfoBuilder.skilltreeLine(myPet, damager);
+                        if (skilltree != null) {
+                            damager.sendMessage(skilltree);
+                            infoShown = true;
+                        }
+                    }
+
+                    // Level line
                     if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet)) {
-                        int lvl = myPet.getExperience().getLevel();
-                        damager.sendMessage("   " + Translation.getString("Name.Level", damager) + ": " + lvl);
+                        damager.sendMessage(PetInfoBuilder.levelLine(myPet, damager));
                         infoShown = true;
                     }
-                    int maxLevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : Configuration.LevelSystem.Experience.LEVEL_CAP;
-                    if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet) && myPet.getExperience().getLevel() < maxLevel) {
-                        double exp = myPet.getExperience().getCurrentExp();
-                        double reqEXP = myPet.getExperience().getRequiredExp();
-                        damager.sendMessage("   " + Translation.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
-                        infoShown = true;
+
+                    // Experience line
+                    if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet)) {
+                        Component exp = PetInfoBuilder.expLine(myPet, damager);
+                        if (exp != null) {
+                            damager.sendMessage(exp);
+                            infoShown = true;
+                        }
                     }
-                    if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
+
+                    // Donation rank line
+                    Component donation = PetInfoBuilder.donationRankLine(myPet, damager);
+                    if (donation != null) {
+                        damager.sendMessage(donation);
                         infoShown = true;
-                        String donationMessage = "" + ChatColor.GOLD;
-                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), damager) + " ";
-                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        damager.sendMessage("   " + donationMessage);
                     }
 
                     if (!infoShown) {
-                        damager.sendMessage(Translation.getString("Message.No.NothingToSeeHere", myPet.getOwner()));
+                        damager.sendMessage(Translation.getComponent("Message.No.NothingToSeeHere", myPet.getOwner()));
                     }
 
                     event.setCancelled(true);
@@ -420,27 +408,27 @@ public class MyPetEntityListener implements Listener {
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 
                 myPet.removePet();
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPetPlayer.getLanguage()), myPet.getPetName()));
+                myPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Despawn", myPetPlayer.getLanguage(), myPet.getPetName()));
 
                 MyPetApi.getPlugin().getServer().getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
                     if (myPetPlayer.hasMyPet()) {
                         MyPet runMyPet = myPetPlayer.getMyPet();
                         switch (runMyPet.createEntity()) {
                             case Canceled:
-                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
+                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getPetName()));
                                 break;
                             case NoSpace:
-                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getPetName()));
                                 break;
                             case NotAllowed:
-                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", myPet.getOwner()), myPet.getPetName()));
+                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.No.AllowedHere", myPet.getOwner(), myPet.getPetName()));
                                 break;
                             case Flying:
-                                runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Flying", myPet.getOwner(), myPet.getPetName()));
                                 break;
                             case Success:
                                 if (runMyPet != myPet) {
-                                    runMyPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
+                                    runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getPetName()));
                                 }
                                 break;
                         }
@@ -486,7 +474,7 @@ public class MyPetEntityListener implements Listener {
                 myPet.removePet();
                 owner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()), null);
 
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Dead", owner), myPet.getPetName()));
+                myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Release.Dead", owner, myPet.getPetName()));
 
                 MyPetApi.getMyPetManager().deactivateMyPet(owner, false);
                 MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
@@ -550,16 +538,16 @@ public class MyPetEntityListener implements Listener {
                 }
             }
             sendDeathMessage(event);
-            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", owner.getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
+            myPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Respawn.In", owner.getPlayer(), myPet.getPetName(), myPet.getRespawnTime()));
 
             if (MyPetApi.getHookHelper().isEconomyEnabled() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() <= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
                 double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
                 if (MyPetApi.getHookHelper().getEconomy().canPay(owner, costs)) {
                     MyPetApi.getHookHelper().getEconomy().pay(owner, costs);
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", owner.getPlayer()), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                    myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.Paid", owner.getPlayer(), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                     myPet.setRespawnTime(1);
                 } else {
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", owner.getPlayer()), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                    myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.NoMoney", owner.getPlayer(), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                 }
             }
         }
@@ -625,7 +613,7 @@ public class MyPetEntityListener implements Listener {
 
             String deathMessageKey = MyPetApi.getPlatformHelper().getLastDamageSource(event.getEntity());
             if (deathMessageKey == null) {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.DeathMessage", myPet.getOwner()), myPet.getPetName(), killer));
+                myPet.getOwner().sendMessage(Util.formatTranslation("Message.DeathMessage", myPet.getOwner(), myPet.getPetName(), killer));
                 return;
             }
 
@@ -646,7 +634,7 @@ public class MyPetEntityListener implements Listener {
                 );
             }
 
-            myPet.getOwner().getPlayer().sendMessage(deathMessage);
+            myPet.getOwner().sendMessage(deathMessage);
         }
     }
 }

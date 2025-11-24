@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -106,9 +107,11 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     Player getPlayer();
 
-    void sendMessage(String message);
+    void sendMessage(Component message);
 
-    boolean sendMessage(String message, int cooldown);
+    boolean sendMessage(Component message, int cooldown);
+
+    void sendActionBar(Component message);
 
     DonateCheck.DonationRank getDonationRank();
 

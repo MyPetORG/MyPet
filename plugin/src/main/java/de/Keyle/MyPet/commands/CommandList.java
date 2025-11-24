@@ -70,14 +70,14 @@ public class CommandList implements CommandTabCompleter {
         }
 
         if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage(Translation.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", lang));
             return true;
         }
         final MyPetPlayer owner;
         if (MyPetApi.getPlayerManager().isMyPetPlayer(petOwner)) {
             owner = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
         } else {
-            sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
+            sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", lang, petOwner.getName()));
             return true;
         }
 
@@ -87,9 +87,9 @@ public class CommandList implements CommandTabCompleter {
                 @Override
                 public void callback(List<StoredMyPet> value) {
                     if (petOwner == sender) {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.List.Yours", lang), owner.getName()));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.List.Yours", lang, owner.getName()));
                     } else {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.List.Player", lang), owner.getName()));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.List.Player", lang, owner.getName()));
                     }
                     boolean doComma = false;
                     TextComponent.Builder messageBuilder = Component.text();

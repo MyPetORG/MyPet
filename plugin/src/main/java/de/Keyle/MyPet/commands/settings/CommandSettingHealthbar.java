@@ -33,10 +33,10 @@ public class CommandSettingHealthbar implements CommandOption {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
             myPetPlayer.setHealthBarActive(!myPetPlayer.isHealthBarActive());
-            sender.sendMessage(Translation.getString("Message.Command.Success", sender));
+            sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
             return true;
         }
-        sender.sendMessage(Translation.getString("Message.Command.Fail", sender));
+        sender.sendMessage(Translation.getComponent("Message.Command.Fail", sender));
         return true;
     }
 }

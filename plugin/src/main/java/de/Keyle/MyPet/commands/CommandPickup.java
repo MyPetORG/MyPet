@@ -40,27 +40,27 @@ public class CommandPickup implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player owner) {
             if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
-                owner.sendMessage(Translation.getString("Message.No.AllowedHere", owner));
+                owner.sendMessage(Translation.getComponent("Message.No.AllowedHere", owner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
 
                 if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
-                    sender.sendMessage(Translation.getString("Message.No.Allowed", owner));
+                    sender.sendMessage(Translation.getComponent("Message.No.Allowed", owner));
                     return true;
                 } else if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", owner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Call.First", owner, myPet.getPetName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", owner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Action.Dead", owner, myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getSkills().has(PickupImpl.class)) {
                     myPet.getSkills().get(PickupImpl.class).activate();
                 }
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", owner));
+                sender.sendMessage(Translation.getComponent("Message.No.HasPet", owner));
             }
             return true;
         }

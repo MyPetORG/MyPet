@@ -316,7 +316,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 return false;
             }
-            getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()), 120000);
+            getOwner().sendMessage(Util.formatTranslation("Message.Skilltree.SelectionPrompt", getOwner(), getPetName()), 120000);
         }
         return true;
     }
@@ -614,16 +614,16 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             respawnTime = 0;
             switch (createEntity()) {
                 case Success:
-                    getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn", petOwner), petName));
+                    getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Respawn", petOwner, petName));
                     break;
                 case Canceled:
-                    getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", petOwner), petName));
+                    getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Prevent", petOwner, petName));
                     break;
                 case NoSpace:
-                    getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", petOwner), petName));
+                    getOwner().sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", petOwner, petName));
                     break;
                 case Flying:
-                    getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", petOwner), petName));
+                    getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Flying", petOwner, petName));
                     break;
             }
             if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
@@ -659,7 +659,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     VaultHook vaultHook = MyPetApi.getPluginHookManager().getHook(VaultHook.class);
                     if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
                         vaultHook.pay(getOwner().getPlayer(), cost);
-                        getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + vaultHook.currencyNameSingular()));
+                        getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.Paid", petOwner.getLanguage(), petName, cost + " " + vaultHook.currencyNameSingular()));
                         respawnTime = 0;
                     }
                 }
@@ -688,11 +688,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         if (!event.isCancelled()) {
                             saturation--;
                             if (saturation == 66) {
-                                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
+                                getOwner().sendMessage(Util.formatTranslation("Message.Hunger.Rumbling", getOwner(), getPetName()));
                             } else if (saturation == 33) {
-                                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Hungry", getOwner()), getPetName()));
+                                getOwner().sendMessage(Util.formatTranslation("Message.Hunger.Hungry", getOwner(), getPetName()));
                             } else if (saturation == 1) {
-                                getOwner().sendMessage(Util.formatText(Translation.getString("Message.Hunger.Starving", getOwner()), getPetName()));
+                                getOwner().sendMessage(Util.formatTranslation("Message.Hunger.Starving", getOwner(), getPetName()));
                             }
                         }
                     }

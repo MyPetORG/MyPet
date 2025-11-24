@@ -49,7 +49,7 @@ public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter 
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             if (args.length < 1) {
-                sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+                sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
                 sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petsettings idle-volume " + ChatColor.RED + "<amount>");
                 return false;
             }
@@ -59,11 +59,11 @@ public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter 
                 MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
                 myPetPlayer.setPetLivingSoundVolume(volume);
 
-                sender.sendMessage(Translation.getString("Message.Command.Success", sender));
+                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                 return true;
             }
         }
-        sender.sendMessage(Translation.getString("Message.Command.Fail", sender));
+        sender.sendMessage(Translation.getComponent("Message.Command.Fail", sender));
         return true;
     }
 

@@ -90,7 +90,7 @@ public class BossShopProHook implements PluginHook {
                 MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(p);
 
                 if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
-                    p.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", p));
+                    p.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.HasPet", p));
                     return false;
                 }
             }
@@ -119,7 +119,7 @@ public class BossShopProHook implements PluginHook {
                 @Override
                 public void callback(Boolean value) {
                     if (petOwner.hasMyPet()) {
-                        p.sendMessage(Util.formatText(Translation.getString("Message.Shop.SuccessStorage", p), clonedPet.getPetName()));
+                        p.sendMessage(Util.formatTranslation("Message.Shop.SuccessStorage", p, clonedPet.getPetName()));
                     } else {
                         petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(p.getWorld().getName()), clonedPet.getUUID());
                         MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);

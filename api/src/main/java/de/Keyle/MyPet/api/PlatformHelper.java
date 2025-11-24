@@ -103,12 +103,6 @@ public abstract class PlatformHelper {
         return lang;
     }
 
-    public void sendMessage(Player player, String Message) {
-        if (player != null && player.isOnline()) {
-            player.sendMessage(Message);
-        }
-    }
-
     public boolean copyResource(Plugin plugin, String ressource, File destination) {
         try {
             InputStream template = plugin.getResource(ressource);
@@ -132,11 +126,6 @@ public abstract class PlatformHelper {
     public abstract TagCompound itemStackToCompund(ItemStack itemStack);
 
     public abstract ItemStack compundToItemStack(TagCompound compound);
-
-    public void sendMessageActionBar(Player player, Component message) {
-        if (player == null || !player.isOnline()) return;
-        player.sendActionBar(message);
-    }
 
     /**
      * Builds the action bar message for pet health updates so it can be reused by all NMS modules.

@@ -49,7 +49,7 @@ public class CommandShop implements CommandTabCompleter {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-            sender.sendMessage(Translation.getString("Message.No.Economy", sender));
+            sender.sendMessage(Translation.getComponent("Message.No.Economy", sender));
             return true;
         }
         Player player = null;
@@ -61,7 +61,7 @@ public class CommandShop implements CommandTabCompleter {
 
         if (sender instanceof Player) {
             if (WorldGroup.getGroupByWorld(((Player) sender).getWorld()).isDisabled()) {
-                sender.sendMessage(Translation.getString("Message.No.AllowedHere", sender));
+                sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", sender));
                 return true;
             }
         }
@@ -70,7 +70,7 @@ public class CommandShop implements CommandTabCompleter {
             if (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin")) {
                 player = Bukkit.getPlayer(args[1]);
                 if (player == null || !player.isOnline()) {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", sender));
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getComponent("Message.No.PlayerOnline", sender));
                     return true;
                 }
             }
@@ -90,7 +90,7 @@ public class CommandShop implements CommandTabCompleter {
                 if (Permissions.has(player, "MyPet.shop.access." + shop) || Permissions.has(player, "MyPet.admin")) {
                     shopManager.get().open(shop, player);
                 } else {
-                    player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                    player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
                 }
 
             } else {
@@ -105,7 +105,7 @@ public class CommandShop implements CommandTabCompleter {
                     if (availableShops != null && !availableShops.isEmpty()) {
                         final Player finalPlayer = player;
                         Map<Integer, String> shops = new HashMap<>();
-                        IconMenu menu = new IconMenu(Translation.getString("Message.Shop.Available", player), event -> {
+                        IconMenu menu = new IconMenu(Translation.getComponent("Message.Shop.Available", player), event -> {
                             String shopname = shops.get(event.getPosition());
                             if (shopname != null) {
                                 final String finalShopname = shopname;
@@ -150,7 +150,7 @@ public class CommandShop implements CommandTabCompleter {
                         return true;
                     }
                 }
-                player.sendMessage(Translation.getString("Message.No.Allowed", player));
+                player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
             }
         }
 

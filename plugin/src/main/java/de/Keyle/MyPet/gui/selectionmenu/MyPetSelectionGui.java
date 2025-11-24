@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
+import net.kyori.adventure.text.Component;
 
 import java.util.*;
 
@@ -42,16 +43,16 @@ import static org.bukkit.ChatColor.RESET;
 public class MyPetSelectionGui {
 
     private final MyPetPlayer player;
-    private final String title;
+    private final Component title;
     private final int page;
 
-    public MyPetSelectionGui(MyPetPlayer player, String title) {
+    public MyPetSelectionGui(MyPetPlayer player, Component title) {
         this.player = player;
         this.title = title;
         this.page = 1;
     }
 
-    public MyPetSelectionGui(MyPetPlayer player, String title, int page) {
+    public MyPetSelectionGui(MyPetPlayer player, Component title, int page) {
         this.player = player;
         this.title = title;
         this.page = page;

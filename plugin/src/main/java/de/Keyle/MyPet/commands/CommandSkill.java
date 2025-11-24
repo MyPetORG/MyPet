@@ -48,15 +48,15 @@ public class CommandSkill implements CommandTabCompleter {
             petOwner = Bukkit.getServer().getPlayer(args[0]);
 
             if (petOwner == null || !petOwner.isOnline()) {
-                sender.sendMessage(Translation.getString("Message.No.PlayerOnline", sender));
+                sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", sender));
                 return true;
             } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-                sender.sendMessage(Util.formatText(Translation.getString("Message.No.UserHavePet", sender), petOwner.getName()));
+                sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", sender, petOwner.getName()));
                 return true;
             }
         } else {
             if (sender instanceof Player) {
-                sender.sendMessage(Translation.getString("Message.No.AllowedHere", sender));
+                sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", sender));
             } else {
                 sender.sendMessage("You can't use this command from server console!");
             }
@@ -64,13 +64,13 @@ public class CommandSkill implements CommandTabCompleter {
         }
 
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-            sender.sendMessage(Translation.getString("Message.No.AllowedHere", sender));
+            sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", sender));
         }
 
         if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
             myPet.autoAssignSkilltree();
-            sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Skills.Show", sender), myPet.getPetName(), myPet.getSkilltree() == null ? "-" : Colorizer.setColors(myPet.getSkilltree().getDisplayName())));
+            sender.sendMessage(Util.formatTranslation("Message.Command.Skills.Show", sender, myPet.getPetName(), myPet.getSkilltree() == null ? "-" : Colorizer.setColors(myPet.getSkilltree().getDisplayName())));
 
             for (Skill skill : myPet.getSkills().all()) {
                 if (skill.isActive()) {
@@ -79,7 +79,7 @@ public class CommandSkill implements CommandTabCompleter {
             }
             return true;
         } else {
-            sender.sendMessage(Translation.getString("Message.No.HasPet", sender));
+            sender.sendMessage(Translation.getComponent("Message.No.HasPet", sender));
         }
         return true;
     }

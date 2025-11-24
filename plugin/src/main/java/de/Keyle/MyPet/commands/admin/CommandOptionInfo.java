@@ -48,7 +48,7 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin info " + ChatColor.RED + "<what info you want to see>");
             return false;
         }
@@ -83,10 +83,10 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                             ((Player) sender).getInventory().addItem(configItemStack);
                         }
                     } catch (MyPetTypeNotFoundException e) {
-                        sender.sendMessage(Translation.getString("Message.Command.PetType.Unknown", sender));
+                        sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", sender));
                     }
                 } else {
-                    sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+                    sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
                     sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin info leashitem " + ChatColor.RED + "<pet type>");
                 }
                 break;

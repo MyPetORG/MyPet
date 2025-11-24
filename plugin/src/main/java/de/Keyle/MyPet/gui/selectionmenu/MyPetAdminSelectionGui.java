@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -52,9 +53,9 @@ import de.keyle.knbt.TagInt;
 public class MyPetAdminSelectionGui {
     MyPetPlayer petOwner;
     Player admin;
-    String title;
+    Component title;
     
-    public MyPetAdminSelectionGui(MyPetPlayer player, Player admin,  String title) {
+    public MyPetAdminSelectionGui(MyPetPlayer player, Player admin,  Component title) {
         this.petOwner = player;
         this.admin = admin;
         this.title = title;

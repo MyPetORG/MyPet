@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.MessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -38,7 +39,7 @@ public class CommandCall implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player petOwner) {
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                sender.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
+                sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
@@ -51,34 +52,83 @@ public class CommandCall implements CommandTabCompleter {
 
                 switch (myPet.createEntity()) {
                     case Success:
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", petOwner), myPet.getPetName()));
+                        sender.sendMessage(MessageUtil.success(
+                            Util.formatTranslation(
+                                "Message.Command.Call.Success",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                            ), false
+                        ));
                         break;
                     case Canceled:
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", petOwner), myPet.getPetName()));
+                        sender.sendMessage(MessageUtil.error(
+                            Util.formatTranslation(
+                                "Message.Spawn.Prevent",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                            ), false
+                        ));
                         break;
                     case NoSpace:
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", petOwner), myPet.getPetName()));
+                        sender.sendMessage(MessageUtil.error(
+                            Util.formatTranslation(
+                                "Message.Spawn.NoSpace",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                            ), false
+                        ));
                         break;
                     case NotAllowed:
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", petOwner), myPet.getPetName()));
+                        sender.sendMessage(MessageUtil.error(
+                            Util.formatTranslation(
+                                "Message.No.AllowedHere",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                            ), false
+                        ));
                         break;
                     case Dead:
                         if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                            sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", petOwner), myPet.getPetName()));
+                            sender.sendMessage(MessageUtil.info(
+                                Util.formatTranslation(
+                                    "Message.Call.Dead",
+                                    petOwner,
+                                    MessageUtil.petName(myPet.getPetName())
+                                ), false
+                            ));
                         } else {
-                            sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead.Respawn", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                            sender.sendMessage(MessageUtil.info(
+                                Util.formatTranslation(
+                                    "Message.Call.Dead.Respawn",
+                                    petOwner,
+                                    MessageUtil.petName(myPet.getPetName()),
+                                    myPet.getRespawnTime()
+                                ), false
+                            ));
                         }
                         break;
                     case Flying:
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", petOwner), myPet.getPetName()));
+                        sender.sendMessage(MessageUtil.error(
+                            Util.formatTranslation(
+                                "Message.Spawn.Flying",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                            ), false
+                        ));
                         break;
                     case Spectator:
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Spectator", petOwner), myPet.getPetName()));
+                        sender.sendMessage(MessageUtil.error(
+                            Util.formatTranslation(
+                                "Message.Spawn.Spectator",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                            ), false
+                        ));
                         break;
                 }
                 return true;
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
             }
             return true;
         }

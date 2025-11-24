@@ -50,13 +50,13 @@ public class CommandRespawn implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player petOwner) {
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
+                petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                 if (!MyPetApi.getHookHelper().isEconomyEnabled() || !Permissions.has(petOwner, "MyPet.command.respawn")) {
-                    myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
+                    myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", petOwner));
                     return true;
                 }
 
@@ -68,8 +68,8 @@ public class CommandRespawn implements CommandTabCompleter {
                     } else {
                         costsString = costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
                     }
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
-                    myPet.getOwner().sendMessage(Translation.getString("Message.Command.Respawn.Show.Pay", petOwner));
+                    myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.Show", petOwner, myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
+                    myPet.getOwner().sendMessage(Translation.getComponent("Message.Command.Respawn.Show.Pay", petOwner));
                     return true;
                 }
 
@@ -77,23 +77,23 @@ public class CommandRespawn implements CommandTabCompleter {
                     if (args.length >= 2) {
                         if (Util.isInt(args[1])) {
                             myPet.getOwner().setAutoRespawnMin(Integer.parseInt(args[1]));
-                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.AutoMin", petOwner), args[1]));
+                            myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.AutoMin", petOwner, args[1]));
                         }
                     } else {
                         myPet.getOwner().setAutoRespawnEnabled(!myPet.getOwner().hasAutoRespawnEnabled());
-                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Auto", petOwner), Translation.getString("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
+                        myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.Auto", petOwner, Translation.getComponent("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
                     }
                 } else if (args[0].equalsIgnoreCase("pay")) {
                     if (myPet.getStatus() == PetState.Dead) {
                         if (MyPetApi.getHookHelper().getEconomy().canPay(myPet.getOwner(), costs)) {
                             MyPetApi.getHookHelper().getEconomy().pay(myPet.getOwner(), costs);
-                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Paid", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                            myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.Paid", petOwner, myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                             myPet.setRespawnTime(0);
                         } else {
-                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.NoMoney", petOwner), myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                            myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.NoMoney", petOwner, myPet.getPetName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                         }
                     } else {
-                        myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
+                        myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", petOwner));
                     }
                 } else if (args[0].equalsIgnoreCase("show")) {
                     String costsString;
@@ -102,11 +102,11 @@ public class CommandRespawn implements CommandTabCompleter {
                     } else {
                         costsString = costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
                     }
-                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
-                    myPet.getOwner().sendMessage(Translation.getString("Message.Command.Respawn.Show.Pay", petOwner));
+                    myPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Respawn.Show", petOwner, myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
+                    myPet.getOwner().sendMessage(Translation.getComponent("Message.Command.Respawn.Show.Pay", petOwner));
                 }
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
             }
             return true;
         }

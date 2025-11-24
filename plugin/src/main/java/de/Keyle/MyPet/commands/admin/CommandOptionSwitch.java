@@ -130,36 +130,36 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                         }
 
                         Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
-                        sender.sendMessage(Translation.getString("Message.Command.Success", sender));
+                        sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                         if (myPet.isPresent()) {
 
                             WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
                             newPet.setWorldGroup(worldGroup.getName());
                             newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
 
-                            owner.sendMessage(Util.formatText(Translation.getString("Message.MultiWorld.NowActivePet", owner), myPet.get().getPetName()));
+                            owner.sendMessage(Util.formatTranslation("Message.MultiWorld.NowActivePet", owner, myPet.get().getPetName()));
                             switch (myPet.get().createEntity()) {
                                 case Success:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", owner), myPet.get().getPetName()));
+                                    sender.sendMessage(Util.formatTranslation("Message.Command.Call.Success", owner, myPet.get().getPetName()));
                                     break;
                                 case Canceled:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Prevent", owner), myPet.get().getPetName()));
+                                    sender.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", owner, myPet.get().getPetName()));
                                     break;
                                 case NoSpace:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.NoSpace", owner), myPet.get().getPetName()));
+                                    sender.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", owner, myPet.get().getPetName()));
                                     break;
                                 case NotAllowed:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.AllowedHere", owner), myPet.get().getPetName()));
+                                    sender.sendMessage(Util.formatTranslation("Message.No.AllowedHere", owner, myPet.get().getPetName()));
                                     break;
                                 case Dead:
                                     if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                        sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead", owner), myPet.get().getPetName()));
+                                        sender.sendMessage(Util.formatTranslation("Message.Call.Dead", owner, myPet.get().getPetName()));
                                     } else {
-                                        sender.sendMessage(Util.formatText(Translation.getString("Message.Call.Dead.Respawn", owner), myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                        sender.sendMessage(Util.formatTranslation("Message.Call.Dead.Respawn", owner, myPet.get().getPetName(), myPet.get().getRespawnTime()));
                                     }
                                     break;
                                 case Flying:
-                                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Flying", owner), myPet.get().getPetName()));
+                                    sender.sendMessage(Util.formatTranslation("Message.Spawn.Flying", owner, myPet.get().getPetName()));
                                     break;
                             }
                         }

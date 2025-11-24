@@ -44,7 +44,7 @@ public class CommandName implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player petOwner) {
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
+                petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
@@ -54,7 +54,7 @@ public class CommandName implements CommandTabCompleter {
 
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
                 if (!Permissions.has(petOwner, "MyPet.command.name")) {
-                    myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", petOwner));
+                    myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", petOwner));
                     return true;
                 }
 
@@ -67,7 +67,7 @@ public class CommandName implements CommandTabCompleter {
                 }
 
                 if (!NameFilter.isClean(name.toString())) {
-                    sender.sendMessage(Translation.getString("Message.Command.Name.Filter", petOwner));
+                    sender.sendMessage(Translation.getComponent("Message.Command.Name.Filter", petOwner));
                     return true;
                 }
 
@@ -85,15 +85,15 @@ public class CommandName implements CommandTabCompleter {
                 if (nameWihtoutColors.length() <= Configuration.Name.MAX_LENGTH) {
                     myPet.setPetName(name.toString());
                     if (Permissions.has(petOwner, "MyPet.command.name.color")) {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), name.toString()));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.Name.New", petOwner, name.toString()));
                     } else {
-                        sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.New", petOwner), nameWihtoutColors));
+                        sender.sendMessage(Util.formatTranslation("Message.Command.Name.New", petOwner, nameWihtoutColors));
                     }
                 } else {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Name.ToLong", petOwner), name.toString(), Configuration.Name.MAX_LENGTH));
+                    sender.sendMessage(Util.formatTranslation("Message.Command.Name.ToLong", petOwner, name.toString(), Configuration.Name.MAX_LENGTH));
                 }
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
             }
             return true;
         }

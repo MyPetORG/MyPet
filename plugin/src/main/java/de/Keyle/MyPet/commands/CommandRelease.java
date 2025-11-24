@@ -56,7 +56,7 @@ public class CommandRelease implements CommandTabCompleter {
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player petOwner) {
             if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Translation.getString("Message.No.AllowedHere", petOwner));
+                sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
@@ -66,10 +66,10 @@ public class CommandRelease implements CommandTabCompleter {
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Call.First", petOwner, myPet.getPetName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Spawn.Respawn.In", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatTranslation("Message.Spawn.Respawn.In", petOwner, myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
 
@@ -109,7 +109,7 @@ public class CommandRelease implements CommandTabCompleter {
                     myPet.removePet();
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);
 
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Command.Release.Success", petOwner, myPet.getPetName()));
                     MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
                     MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
 
@@ -117,7 +117,7 @@ public class CommandRelease implements CommandTabCompleter {
                 } else {
                     // Build hover item with pet stats
                     TextComponent.Builder hoverBuilder = Component.text();
-                    
+
                     hoverBuilder.append(Component.text(Translation.getString("Name.Hunger", petOwner) + ": ")
                             .append(Component.text(Math.round(myPet.getSaturation()) + "")
                                     .color(NamedTextColor.GOLD)));
@@ -162,7 +162,7 @@ public class CommandRelease implements CommandTabCompleter {
                     return true;
                 }
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", petOwner));
+                sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
             }
             return true;
         }

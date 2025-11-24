@@ -62,7 +62,7 @@ public class UltimateSurvivalGamesHook implements AllowedHook {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getUser().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
-                player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
+                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player.getPlayer()));
             }
         }
     }

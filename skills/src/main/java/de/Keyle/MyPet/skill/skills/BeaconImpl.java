@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.inventory.meta.SkullMeta;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -148,7 +149,7 @@ public class BeaconImpl implements Beacon {
         final Player owner = myPet.getOwner().getPlayer();
 
         final BeaconImpl beacon = this;
-        String title = RESET + Translation.getString("Name.Skill.Beacon", myPet.getOwner());
+        Component title = Translation.getComponent("Name.Skill.Beacon", myPet.getOwner());
         IconMenu menu = new IconMenu(title, new IconMenu.OptionClickEventHandler() {
 
             Set<Buff> selectedBuffs = new HashSet<>(beacon.selectedBuffs);

@@ -41,12 +41,12 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin skilltree " + ChatColor.RED + "<a player name> " + ChatColor.RED + "<new skilltree>");
             return false;
         }
         if (args.length == 1) {
-            sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
             sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin skilltree " + args[0] + " " + ChatColor.RED + "<new skilltree>");
             return false;
         }

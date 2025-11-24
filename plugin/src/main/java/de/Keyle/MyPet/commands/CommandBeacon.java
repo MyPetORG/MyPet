@@ -40,31 +40,31 @@ public class CommandBeacon implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Translation.getString("Message.No.AllowedHere", player));
+                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
                 return true;
             }
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                 if (!Permissions.hasExtended(player, "MyPet.extended.beacon")) {
-                    myPet.getOwner().sendMessage(Translation.getString("Message.No.CanUse", player));
+                    myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", player));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Call.First", player), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Call.First", player, myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.Action.Dead", player), myPet.getPetName()));
+                    sender.sendMessage(Util.formatTranslation("Message.Action.Dead", player, myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getSkills().isActive(BeaconImpl.class)) {
                     myPet.getSkills().get(BeaconImpl.class).activate();
                 } else {
-                    sender.sendMessage(Util.formatText(Translation.getString("Message.No.Skill", player), myPet.getPetName(), Translation.getString("Name.Skill.Beacon", player)));
+                    sender.sendMessage(Util.formatTranslation("Message.No.Skill", player, myPet.getPetName(), Translation.getComponent("Name.Skill.Beacon", player)));
                 }
                 return true;
             } else {
-                sender.sendMessage(Translation.getString("Message.No.HasPet", player));
+                sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
             }
             return true;
         }

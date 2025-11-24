@@ -61,7 +61,7 @@ public class ShopTrait extends Trait {
         final Player player = npcEvent.getClicker();
 
         if (!Permissions.has(player, "MyPet.npc.shop")) {
-            player.sendMessage(Translation.getString("Message.No.Allowed", player));
+            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
             return;
         }
 

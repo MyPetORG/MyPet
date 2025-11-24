@@ -90,14 +90,14 @@ public class ShopManager implements ShopService {
 
     public void open(String name, Player player) {
         if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-            player.sendMessage(Translation.getString("Message.No.Economy", player));
+            player.sendMessage(Translation.getComponent("Message.No.Economy", player));
             return;
         }
         PetShop shop = shops.get(name);
         if (shop != null) {
             shop.open(player);
         } else {
-            player.sendMessage(Translation.getString("Message.Shop.NotFound", player));
+            player.sendMessage(Translation.getComponent("Message.Shop.NotFound", player));
         }
     }
 
@@ -106,10 +106,10 @@ public class ShopManager implements ShopService {
             open(defaultShop, player);
         } else {
             if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
-                player.sendMessage(Translation.getString("Message.No.Economy", player));
+                player.sendMessage(Translation.getComponent("Message.No.Economy", player));
                 return;
             }
-            player.sendMessage(Translation.getString("Message.No.Allowed", player));
+            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
         }
     }
 

@@ -25,12 +25,12 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.util.LogFormat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginLogger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,15 +48,14 @@ public class MyPetLogger extends PluginLogger {
     private static FileHandler debugLogFileHandler = null;
     private static final ANSIComponentSerializer ANSI_SERIALIZER = ANSIComponentSerializer.ansi();
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
-    private String customName;
+    private final String customName;
 
     public MyPetLogger(Plugin context) {
         super(context);
 
         // Get the plugin name
         String prefix = context.getDescription().getPrefix();
-        String name = prefix != null ? prefix : context.getDescription().getName();
-        this.customName = name;
+        this.customName = prefix != null ? prefix : context.getDescription().getName();
 
         try {
             // Set pluginName to empty string to prevent double [MyPet] prefix
@@ -74,7 +73,8 @@ public class MyPetLogger extends PluginLogger {
         return customName != null ? customName : super.getName();
     }
 
-    public void log(LogRecord logRecord) {
+    @Override
+    public void log(@NotNull LogRecord logRecord) {
         if (!debugSetup) {
             setupDebugLogger();
             debugSetup = true;
@@ -87,97 +87,87 @@ public class MyPetLogger extends PluginLogger {
 
         String message = logRecord.getMessage();
         if (message != null) {
-            // Add red color for warnings and errors
-            if (logRecord.getLevel() == Level.WARNING || logRecord.getLevel() == Level.SEVERE) {
-                message = ChatColor.RED + message;
+            // If this already looks like an ANSI-colored string (i.e. produced from a Component),
+            // skip legacy processing entirely.
+            boolean containsAnsi = message.indexOf('\u001b') >= 0;
+
+            if (!containsAnsi) {
+                // Add red color for warnings and errors (legacy path only)
+                if (logRecord.getLevel() == Level.WARNING || logRecord.getLevel() == Level.SEVERE) {
+                    message = ChatColor.RED + message;
+                }
+
+                // Convert legacy color codes to ANSI escape sequences
+                message = applyStyles(message);
             }
 
-            // Convert legacy color codes to ANSI escape sequences
-            message = applyStyles(message);
             logRecord.setMessage(message);
         }
 
         super.log(logRecord);
     }
 
+    /**
+     * Converts a legacy-colored string (section codes) to an ANSI-colored string
+     * by going through an Adventure Component.
+     */
     public String applyStyles(String message) {
-        // Convert legacy color codes (§) to Adventure IChatBaseComponent
+        // Convert legacy color codes (§) to Adventure Component
         Component component = LEGACY_SERIALIZER.deserialize(message);
 
-        // Convert Adventure IChatBaseComponent to ANSI-colored string
+        // Convert Adventure Component to ANSI-colored string
         return ANSI_SERIALIZER.serialize(component);
     }
 
-    public void updateDebugLoggerLogLevel() {
-        if (debugLogFileHandler != null) {
-            Level level;
-            try {
-                level = Level.parse(Configuration.Log.LEVEL);
-            } catch (IllegalArgumentException e) {
-                level = Level.OFF;
-                this.warning(e.getMessage());
-            }
-            debugLogFileHandler.setLevel(level);
+    /**
+     * Logs an Adventure Component at the given level.
+     * The Component is serialized to an ANSI-colored String for the console.
+     */
+    private void logComponent(Level level, Component component) {
+        if (component == null) {
+            return;
         }
+
+        // Serialize the component directly to ANSI so we don't need legacy codes here
+        String ansi = ANSI_SERIALIZER.serialize(component);
+
+        LogRecord record = new LogRecord(level, ansi);
+        // Let our overridden log(LogRecord) handle debug setup and name,
+        // but it will detect ANSI and skip legacy processing.
+        this.log(record);
     }
 
-    public void disableDebugLogger() {
-        for (Handler h : getHandlers()) {
-            if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
-                removeHandler(h);
-                h.close();
-            }
-        }
+    // ----- Component-based convenience methods -----
+
+    public void info(Component component) {
+        logComponent(Level.INFO, component);
     }
 
-    protected boolean setupDebugLogger() {
-        getHandlers();
-        for (Handler h : getHandlers()) {
-            if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
-                if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
-                    removeHandler(h);
-                    h.close();
-                    return false;
-                }
-                debugLogFileHandler = (FileHandler) h;
-                return true;
-            }
-        }
-        if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
-            return false;
-        }
-        if (debugLogFileHandler != null) {
-            addHandler(debugLogFileHandler);
-            return true;
-        }
-        try {
-            File logsFolder = new File(MyPetApi.getPlugin().getDataFolder(), "logs");
-            logsFolder.mkdirs();
-            File logFile = new File(logsFolder, File.separator + "MyPet.log");
-            FileHandler fileHandler = new FileHandler(logFile.getAbsolutePath(), true) {
-                @Override
-                public String toString() {
-                    return "MyPet-Debug-Logger-FileHandler";
-                }
-            };
-
-            Level level;
-            try {
-                level = Level.parse(Configuration.Log.LEVEL);
-            } catch (IllegalArgumentException e) {
-                level = Level.OFF;
-                this.warning(e.getMessage());
-            }
-            fileHandler.setLevel(level);
-            fileHandler.setFormatter(new LogFormat());
-            addHandler(fileHandler);
-            debugLogFileHandler = fileHandler;
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void warning(Component component) {
+        logComponent(Level.WARNING, component);
     }
+
+    public void severe(Component component) {
+        logComponent(Level.SEVERE, component);
+    }
+
+    public void config(Component component) {
+        logComponent(Level.CONFIG, component);
+    }
+
+    public void fine(Component component) {
+        logComponent(Level.FINE, component);
+    }
+
+    public void finer(Component component) {
+        logComponent(Level.FINER, component);
+    }
+
+    public void finest(Component component) {
+        logComponent(Level.FINEST, component);
+    }
+
+    // ----- Existing Object... helpers (string-based) -----
 
     public void info(Object... params) {
         this.info(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
@@ -205,5 +195,76 @@ public class MyPetLogger extends PluginLogger {
 
     public void finest(Object... params) {
         this.finest(Arrays.stream(params).map(String::valueOf).collect(Collectors.joining(" ")));
+    }
+
+    // ----- Debug logger management -----
+
+    public void updateDebugLoggerLogLevel() {
+        if (debugLogFileHandler != null) {
+            Level level;
+            try {
+                level = Level.parse(Configuration.Log.LEVEL);
+            } catch (IllegalArgumentException e) {
+                level = Level.OFF;
+                this.warning(e.getMessage());
+            }
+            debugLogFileHandler.setLevel(level);
+        }
+    }
+
+    public void disableDebugLogger() {
+        for (Handler h : getHandlers()) {
+            if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
+                removeHandler(h);
+                h.close();
+            }
+        }
+    }
+
+    protected void setupDebugLogger() {
+        getHandlers();
+        for (Handler h : getHandlers()) {
+            if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
+                if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
+                    removeHandler(h);
+                    h.close();
+                    return;
+                }
+                debugLogFileHandler = (FileHandler) h;
+                return;
+            }
+        }
+        if (Configuration.Log.LEVEL.equalsIgnoreCase("OFF")) {
+            return;
+        }
+        if (debugLogFileHandler != null) {
+            addHandler(debugLogFileHandler);
+            return;
+        }
+        try {
+            File logsFolder = new File(MyPetApi.getPlugin().getDataFolder(), "logs");
+            logsFolder.mkdirs();
+            File logFile = new File(logsFolder, File.separator + "MyPet.log");
+            FileHandler fileHandler = new FileHandler(logFile.getAbsolutePath(), true) {
+                @Override
+                public String toString() {
+                    return "MyPet-Debug-Logger-FileHandler";
+                }
+            };
+
+            Level level;
+            try {
+                level = Level.parse(Configuration.Log.LEVEL);
+            } catch (IllegalArgumentException e) {
+                level = Level.OFF;
+                this.warning(e.getMessage());
+            }
+            fileHandler.setLevel(level);
+            fileHandler.setFormatter(new LogFormat());
+            addHandler(fileHandler);
+            debugLogFileHandler = fileHandler;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

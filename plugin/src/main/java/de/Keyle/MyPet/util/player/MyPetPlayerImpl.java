@@ -37,8 +37,8 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -67,7 +67,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
     protected TagCompound extendedInfo = new TagCompound();
-    Map<String, Long> sentMessages = new HashMap<>();
+    Map<Component, Long> sentMessages = new HashMap<>();
 
     private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
     private boolean donationChecked = false;
@@ -290,13 +290,13 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return Bukkit.getPlayer(getPlayerUUID());
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(Component message) {
         if (isOnline()) {
-            getPlayer().sendMessage(message);
+            sendMessage(message);
         }
     }
 
-    public boolean sendMessage(String message, int cooldown) {
+    public boolean sendMessage(Component message, int cooldown) {
         long currentTime = System.currentTimeMillis();
         if (sentMessages.containsKey(message)) {
             if (currentTime >= sentMessages.get(message)) {
@@ -310,6 +310,12 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             return true;
         }
         return false;
+    }
+
+    public void sendActionBar(Component message) {
+        if (isOnline()) {
+            getPlayer().sendActionBar(message);
+        }
     }
 
     public DonateCheck.DonationRank getDonationRank() {
@@ -434,16 +440,16 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                     myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
                     if(!MyPetApi.getCompatUtil().getMinecraftVersion().startsWith("1.8")) {
                         if (!p.isGliding()) {
-                            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
+                            myPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Despawn", myPet.getOwner(), myPet.getPetName()));
                         }
                     } else {
-                        myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Spawn.Despawn", myPet.getOwner()), myPet.getPetName()));
+                        myPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Despawn", myPet.getOwner(), myPet.getPetName()));
                     }
                 }
 
                 if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
-                    net.kyori.adventure.text.Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
-                    MyPetApi.getPlatformHelper().sendMessageActionBar(getPlayer(), msg);
+                    Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
+                    getPlayer().sendActionBar(msg);
                 }
             } else if (myPet.getStatus() == PetState.Despawned) {
                 if (myPet.wantsToRespawn() && !p.isFlying()) {
@@ -468,7 +474,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         }
 
                         if (spawn && myPet.createEntity() == MyPet.SpawnFlags.Success) {
-                            p.sendMessage(Util.formatText(Translation.getString("Message.Command.Call.Success", p), myPet.getPetName()));
+                            p.sendMessage(Util.formatTranslation("Message.Command.Call.Success", p, myPet.getPetName()));
                         }
                     }
                 }
