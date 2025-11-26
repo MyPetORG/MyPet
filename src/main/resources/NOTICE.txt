@@ -1,1 +1,0 @@
-This product bundles Gson, which is available under a "Apache License Version 2.0" license. For details, see licences/.
