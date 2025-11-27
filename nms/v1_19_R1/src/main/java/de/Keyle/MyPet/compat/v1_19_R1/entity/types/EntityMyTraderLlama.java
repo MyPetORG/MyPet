@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyTraderLlama;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_19_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -128,7 +129,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 							try {
 								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ex.printStackTrace();
+								ErrorUtil.report(ex);
 							}
 						});
 					}

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.util.hooks;
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -86,8 +87,7 @@ public class PluginHookManager {
                 PluginHook hook = hookClass.newInstance();
                 registeredHooks.add(hook);
             } catch (Throwable e) {
-                MyPetApi.getLogger().warning("Error occured while enabling " + pluginName + " (" + Bukkit.getPluginManager().getPlugin(pluginName).getDescription().getVersion() + ") hook.");
-                e.printStackTrace();
+                ErrorUtil.report("Error occured while enabling " + pluginName + " (" + Bukkit.getPluginManager().getPlugin(pluginName).getDescription().getVersion() + ") hook.", e);
             }
         }
     }
@@ -138,8 +138,7 @@ public class PluginHookManager {
                 return true;
             }
         } catch (Throwable e) {
-            MyPetApi.getLogger().warning("Error occured while enabling " + hook.getPluginName() + " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ") hook.");
-            e.printStackTrace();
+            ErrorUtil.report("Error occured while enabling " + hook.getPluginName() + " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ") hook.", e);
         }
         return false;
     }

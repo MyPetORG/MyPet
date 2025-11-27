@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySnowman;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_18_R2.CompatManager;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -76,7 +77,7 @@ public class EntityMySnowman extends EntityMyPet {
 							try {
 								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ex.printStackTrace();
+								ErrorUtil.report(ex);
 							}
 						});
 					}

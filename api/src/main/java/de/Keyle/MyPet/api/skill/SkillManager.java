@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.skill;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -124,7 +125,7 @@ public class SkillManager implements ServiceContainer {
             return (Skill) obj;
         } catch (Exception e) {
             MyPetApi.getLogger().warning(clazz.getName() + " is not a valid skill)!");
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return null;
     }

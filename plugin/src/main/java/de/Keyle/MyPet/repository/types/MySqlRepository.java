@@ -38,6 +38,7 @@ import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
@@ -127,7 +128,7 @@ public class MySqlRepository implements Repository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -184,7 +185,7 @@ public class MySqlRepository implements Repository {
             insert.executeUpdate();
             insert.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -196,7 +197,7 @@ public class MySqlRepository implements Repository {
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "info ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -213,7 +214,7 @@ public class MySqlRepository implements Repository {
                 updatePlayer(player);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -224,7 +225,7 @@ public class MySqlRepository implements Repository {
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN pet_idle_volume FLOAT DEFAULT 1 AFTER health_bar;");
             update.executeUpdate("ALTER IGNORE TABLE " + Configuration.Repository.MySQL.PREFIX + "info ADD UNIQUE (version);");
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -234,7 +235,7 @@ public class MySqlRepository implements Repository {
 
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY COLUMN hunger DOUBLE NOT NULL;");
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -246,7 +247,7 @@ public class MySqlRepository implements Repository {
             update.executeUpdate("ALTER IGNORE TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD UNIQUE (name);");
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets ADD INDEX `owner_uuid` (`owner_uuid`);");
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -257,7 +258,7 @@ public class MySqlRepository implements Repository {
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN resource_pack BOOLEAN NULL DEFAULT NULL AFTER `pet_idle_volume`;");
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY name VARBINARY (1024)");
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -267,7 +268,7 @@ public class MySqlRepository implements Repository {
 
             update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players DROP COLUMN resource_pack;");
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -286,7 +287,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), 0);
                     }
@@ -307,7 +308,7 @@ public class MySqlRepository implements Repository {
                     callback.setValue(resultSet.getInt(1));
                     callback.runTask(MyPetApi.getPlugin());
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -327,7 +328,7 @@ public class MySqlRepository implements Repository {
                     callback.runTask(MyPetApi.getPlugin());
                     resultSet.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -347,7 +348,7 @@ public class MySqlRepository implements Repository {
             update.setString(3, MyPetVersion.getBuild());
             update.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -395,7 +396,7 @@ public class MySqlRepository implements Repository {
 
             statement.executeUpdate();
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
             return false;
         }
         return true;
@@ -443,7 +444,7 @@ public class MySqlRepository implements Repository {
 
             statement.executeUpdate();
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -492,7 +493,7 @@ public class MySqlRepository implements Repository {
                 pets.add(pet);
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
         return pets;
     }
@@ -544,7 +545,7 @@ public class MySqlRepository implements Repository {
 
             return pets;
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
         return new ArrayList<>();
     }
@@ -564,7 +565,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
                         resultSet.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -585,7 +586,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), pets);
                         resultSet.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -622,7 +623,7 @@ public class MySqlRepository implements Repository {
                         }
                         resultSet.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
 
                     this.cancel();
@@ -646,7 +647,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), false);
                     }
@@ -699,7 +700,7 @@ public class MySqlRepository implements Repository {
                         statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
                         statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
 
                     boolean result = statement.executeUpdate() > 0;
@@ -708,7 +709,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                 }
 
             }
@@ -753,12 +754,12 @@ public class MySqlRepository implements Repository {
                 try {
                     statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                 }
                 try {
                     statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                 }
 
                 statement.addBatch();
@@ -770,7 +771,7 @@ public class MySqlRepository implements Repository {
             statement.executeBatch();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
         return false;
     }
@@ -823,7 +824,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
                     }
                 } catch (SQLException | IOException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -884,13 +885,13 @@ public class MySqlRepository implements Repository {
                                 petPlayer.setMyPetForWorldGroup(uuid, UUID.fromString(petUUID));
                             }
                         } catch (JsonParseException e) {
-                            e.printStackTrace();
+                            ErrorUtil.reportError("MySQL database operation failed", e);
                         }
                 }
                 return petPlayer;
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
         return null;
     }
@@ -912,7 +913,7 @@ public class MySqlRepository implements Repository {
             }
             return players;
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
         return new ArrayList<>();
     }
@@ -933,7 +934,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
                         resultSet.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -955,7 +956,7 @@ public class MySqlRepository implements Repository {
                         }
                         resultSet.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -980,7 +981,7 @@ public class MySqlRepository implements Repository {
                         }
                         resultSet.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -1041,7 +1042,7 @@ public class MySqlRepository implements Repository {
 
             return result > 0;
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
         return false;
     }
@@ -1077,7 +1078,7 @@ public class MySqlRepository implements Repository {
                     try {
                         statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("MySQL database operation failed", e);
                     }
 
                     JsonObject multiWorldObject = new JsonObject();
@@ -1094,7 +1095,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -1152,7 +1153,7 @@ public class MySqlRepository implements Repository {
             statement.executeBatch();
             return true;
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MySQL database operation failed", e);
         }
         return false;
     }
@@ -1172,7 +1173,7 @@ public class MySqlRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("MySQL database operation failed", e);
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), false);
                     }

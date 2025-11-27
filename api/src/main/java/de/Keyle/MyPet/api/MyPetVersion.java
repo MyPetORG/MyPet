@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.api;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -37,16 +40,16 @@ public class MyPetVersion {
     private static String build = "0";
     private static String minecraftVersion = "0.0.0";
     private static List<String> bukkitPackets = new ArrayList<>();
-    private static List<String> specialMCVersions = new ArrayList<>();
 
     private static void loadData() {
         try {
-            String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-            Attributes attr = getClassLoaderForExtraModule(path).getMainAttributes();
+            // Get version from plugin.yml via Bukkit's plugin description
+            version = MyPetApi.getPlugin().getDescription().getVersion();
 
-            if (attr.getValue("Project-Version") != null) {
-                version = attr.getValue("Project-Version");
-            }
+            // Get other metadata from JAR manifest
+            String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            Attributes attr = getManifestAttributes(path);
+
             if (attr.getValue("Project-Build") != null) {
                 build = attr.getValue("Project-Build");
             }
@@ -58,22 +61,17 @@ public class MyPetVersion {
                 MyPetVersion.bukkitPackets.clear();
                 Collections.addAll(MyPetVersion.bukkitPackets, bukkitPackets.split(";"));
             }
-            if (attr.getValue("Special-MC-Versions") != null) {
-                String specialMCVersion = attr.getValue("Special-MC-Versions");
-                MyPetVersion.specialMCVersions.clear();
-                Collections.addAll(MyPetVersion.specialMCVersions, specialMCVersion.split(";"));
-            }
         } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 
-    private static Manifest getClassLoaderForExtraModule(String filepath) throws IOException {
+    private static Attributes getManifestAttributes(String filepath) throws IOException {
         File jar = new File(filepath);
         JarFile jf = new JarFile(jar);
         Manifest mf = jf.getManifest();
         jf.close();
-        return mf;
+        return mf.getMainAttributes();
     }
 
     public static String getVersion() {
@@ -110,19 +108,6 @@ public class MyPetVersion {
             updated = true;
         }
         for (String p2 : bukkitPackets) {
-            if (p1.equals(p2)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isSpecialMCVersion(String p1) {
-        if (!updated) {
-            loadData();
-            updated = true;
-        }
-        for (String p2 : specialMCVersions) {
             if (p1.equals(p2)) {
                 return true;
             }

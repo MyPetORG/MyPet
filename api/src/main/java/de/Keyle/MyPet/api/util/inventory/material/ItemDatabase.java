@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import org.bukkit.Material;
@@ -46,7 +47,7 @@ public class ItemDatabase implements ServiceContainer {
         try {
             loadFile();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return true;
     }
@@ -66,7 +67,7 @@ public class ItemDatabase implements ServiceContainer {
             JsonArray obj = gson.fromJson(reader, JsonArray.class);
             obj.forEach(jsonElement -> loadEntry(jsonElement.getAsJsonObject()));
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 

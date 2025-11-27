@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyAllay;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_20_R3.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyFlyingPet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -138,7 +139,7 @@ public class EntityMyAllay extends EntityMyFlyingPet {
 									try {
 										CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 									} catch (IllegalAccessException | InvocationTargetException ex) {
-										ex.printStackTrace();
+										ErrorUtil.report(ex);
 									}
 								});
 							}

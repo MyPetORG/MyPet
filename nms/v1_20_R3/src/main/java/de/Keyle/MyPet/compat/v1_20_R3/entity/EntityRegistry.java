@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
 import net.minecraft.core.DefaultedMappedRegistry;
@@ -42,7 +43,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
-import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -107,7 +107,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			}
 		} catch (Exception e) {
 			MyPetApi.getLogger().severe(Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
 
 		return petEntity;
@@ -214,7 +214,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 						}
 						return reg;
 					} catch (IllegalAccessException e) {
-						e.printStackTrace();
+						ErrorUtil.report(e);
 					}
 				}
 			}
@@ -231,9 +231,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
 			mapPut.setAccessible(true);
 			mapPut.invoke(map, types, id);
-		} catch (ReflectiveOperationException ex) {
-
-			ex.printStackTrace();
+		} catch (ReflectiveOperationException e) {
+			ErrorUtil.report(e);
 		}
 
 	}

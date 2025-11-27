@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_18_R2.entity.types;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 
@@ -68,7 +69,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 				this.makeSound("entity.iron_golem.attack", 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
 		return flag;
 	}
@@ -139,7 +140,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 							try {
 								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ex.printStackTrace();
+								ErrorUtil.report(ex);
 							}
 						});
 					}

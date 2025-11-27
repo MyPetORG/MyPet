@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.util.ComponentColorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.kyori.adventure.text.Component;
@@ -250,7 +251,7 @@ public class PetInfoBuilder {
                     } catch (Exception e) {
                         MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
                         MyPetApi.getLogger().warning("" + is);
-                        e.printStackTrace();
+                        ErrorUtil.reportError("PetInfoBuilder operation failed", e);
                         continue;
                     }
                 }

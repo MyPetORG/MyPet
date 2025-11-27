@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R5.util.VariantConverter;
 import de.Keyle.MyPet.compat.v1_21_R5.util.inventory.ItemStackNBTConverter;
@@ -284,7 +285,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     }
                     ReflectionUtil.setFieldValue("cr", entityVillager, true); // Field: AssignProfessionWhenSpawned (natural?)
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtil.report(e);
                 }
                 if (villagerTag.containsKey("Xp")) {
                     int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
@@ -377,7 +378,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 Wolf.Variant leVariant = (Wolf.Variant) getVariant.invoke(null, ((MyWolf)myPet).getVariant());
                 ((Wolf) normalEntity).setVariant(leVariant);
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         }
 

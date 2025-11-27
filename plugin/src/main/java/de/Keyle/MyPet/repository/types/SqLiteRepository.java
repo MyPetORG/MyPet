@@ -35,6 +35,7 @@ import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
 import org.bukkit.entity.Player;
@@ -60,7 +61,7 @@ public class SqLiteRepository implements Repository {
         try {
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("Failed to close SQLite database connection", e);
         }
     }
 
@@ -91,7 +92,7 @@ public class SqLiteRepository implements Repository {
             }
             resultSet.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
             throw new RepositoryInitException(e);
         }
     }
@@ -109,7 +110,7 @@ public class SqLiteRepository implements Repository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
     }
 
@@ -166,7 +167,7 @@ public class SqLiteRepository implements Repository {
             insert.setString(3, MyPetVersion.getBuild());
             insert.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
     }
 
@@ -182,7 +183,7 @@ public class SqLiteRepository implements Repository {
                     "    WHERE NEW." + id + "=OLD." + id + ";" +
                     "END;");
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
     }
 
@@ -203,7 +204,7 @@ public class SqLiteRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), 0);
                     }
@@ -224,7 +225,7 @@ public class SqLiteRepository implements Repository {
                     callback.setValue(resultSet.getInt(1));
                     callback.runTask(MyPetApi.getPlugin());
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -243,7 +244,7 @@ public class SqLiteRepository implements Repository {
                     callback.setValue(resultSet.getInt(1));
                     callback.runTask(MyPetApi.getPlugin());
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -263,7 +264,7 @@ public class SqLiteRepository implements Repository {
             update.setString(3, MyPetVersion.getBuild());
             update.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
     }
 
@@ -313,7 +314,7 @@ public class SqLiteRepository implements Repository {
 
             //MyPetLogger.write("UPDATE pet: " + result);
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
             return false;
         }
         return true;
@@ -363,7 +364,7 @@ public class SqLiteRepository implements Repository {
 
             //MyPetLogger.write("UPDATE player: " + result);
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
     }
 
@@ -405,7 +406,7 @@ public class SqLiteRepository implements Repository {
                 pets.add(pet);
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return pets;
     }
@@ -457,7 +458,7 @@ public class SqLiteRepository implements Repository {
 
             return pets;
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return new ArrayList<>();
     }
@@ -477,7 +478,7 @@ public class SqLiteRepository implements Repository {
 
                         callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -498,7 +499,7 @@ public class SqLiteRepository implements Repository {
                         //MyPetLogger.write("LOAD pets: " + pets);
                         callback.runTask(MyPetApi.getPlugin(), pets);
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -532,7 +533,7 @@ public class SqLiteRepository implements Repository {
                             }
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
 
                     cancel();
@@ -558,7 +559,7 @@ public class SqLiteRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), false);
                     }
@@ -611,7 +612,7 @@ public class SqLiteRepository implements Repository {
                         statement.setBytes(13, TagStream.writeTag(storedMyPet.getSkillInfo(), true));
                         statement.setBytes(14, TagStream.writeTag(storedMyPet.getInfo(), true));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
 
                     boolean result = statement.executeUpdate() > 0;
@@ -621,7 +622,7 @@ public class SqLiteRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -665,12 +666,12 @@ public class SqLiteRepository implements Repository {
                 try {
                     statement.setBytes(13, TagStream.writeTag(storedMyPet.getSkillInfo(), true));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
                 try {
                     statement.setBytes(14, TagStream.writeTag(storedMyPet.getInfo(), true));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
 
                 statement.addBatch();
@@ -682,7 +683,7 @@ public class SqLiteRepository implements Repository {
             statement.executeBatch();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return false;
     }
@@ -737,7 +738,7 @@ public class SqLiteRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
                     }
                 } catch (SQLException | IOException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -779,13 +780,13 @@ public class SqLiteRepository implements Repository {
                         petPlayer.setMyPetForWorldGroup(uuid, UUID.fromString(petUUID));
                     }
                 } catch (JsonParseException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
 
                 return petPlayer;
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return null;
     }
@@ -807,7 +808,7 @@ public class SqLiteRepository implements Repository {
             }
             return players;
         } catch (SQLException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return new ArrayList<>();
     }
@@ -829,7 +830,7 @@ public class SqLiteRepository implements Repository {
 
                         callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -851,7 +852,7 @@ public class SqLiteRepository implements Repository {
                             callback.runTask(MyPetApi.getPlugin(), player);
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -876,7 +877,7 @@ public class SqLiteRepository implements Repository {
                             callback.runTask(MyPetApi.getPlugin(), player);
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
                 }
             }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -939,7 +940,7 @@ public class SqLiteRepository implements Repository {
 
             return result > 0;
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return false;
     }
@@ -975,7 +976,7 @@ public class SqLiteRepository implements Repository {
                     try {
                         statement.setBytes(9, TagStream.writeTag(player.getExtendedInfo(), true));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportError("SQLite database operation failed", e);
                     }
 
                     JsonObject multiWorldObject = new JsonObject();
@@ -992,7 +993,7 @@ public class SqLiteRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                 }
             }
         }.runTaskAsynchronously(MyPetApi.getPlugin());
@@ -1051,7 +1052,7 @@ public class SqLiteRepository implements Repository {
             statement.executeBatch();
             return true;
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return false;
     }
@@ -1073,7 +1074,7 @@ public class SqLiteRepository implements Repository {
                         callback.runTask(MyPetApi.getPlugin(), result > 0);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    ErrorUtil.reportError("SQLite database operation failed", e);
                     if (callback != null) {
                         callback.runTask(MyPetApi.getPlugin(), false);
                     }

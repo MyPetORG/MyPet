@@ -29,6 +29,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.ChatColor;
 
 import java.io.File;
@@ -122,7 +123,7 @@ public class Updater {
             }
             return update;
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("Updater operation failed", e);
         }
         return Optional.empty();
     }
@@ -208,8 +209,8 @@ public class Updater {
             MyPetApi.getLogger().info("Wait for the update download to finish...");
             try {
                 thread.join();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+            } catch (InterruptedException e) {
+                ErrorUtil.report(e);
             }
         }
     }

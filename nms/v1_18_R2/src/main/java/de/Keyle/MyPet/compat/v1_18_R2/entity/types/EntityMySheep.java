@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySheep;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_18_R2.CompatManager;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.ai.movement.EatGrass;
@@ -128,7 +129,7 @@ public class EntityMySheep extends EntityMyPet {
 							try {
 								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ex.printStackTrace();
+								ErrorUtil.report(ex);
 							}
 						});
 					}

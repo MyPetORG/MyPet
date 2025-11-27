@@ -37,13 +37,14 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.compat.v1_21_R6.PlatformHelper;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.attack.RangedAttack;
-import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.movement.*;
+import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.movement.Float;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.target.*;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.types.EntityMyDolphin;
@@ -69,7 +70,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Input;
@@ -170,7 +174,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             this.updateVisuals();
             this.getAttributes();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 
@@ -361,7 +365,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 super.setCustomName(CraftChatMessage.fromStringOrNull(Util.cutString(prefix + name + suffix, 64)));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 
@@ -460,7 +464,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             }
             damageEntity = entity.hurtServer(this.level().getMinecraftWorld(), this.damageSources().mobAttack(this), (float) damage);
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return damageEntity;
     }
@@ -965,7 +969,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             }
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return InteractionResult.FAIL;
     }
@@ -982,7 +986,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         try {
             playMyPetStepSound(blockposition, iblockdata);
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 
@@ -995,7 +999,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         try {
             return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.tryParse(getHurtSound())).get().value();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return null;
     }
@@ -1008,7 +1012,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         try {
             return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.tryParse(getMyPetDeathSound())).get().value();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return null;
     }
@@ -1020,7 +1024,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         try {
             return getSoundSpeed();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return 1F;
     }
@@ -1235,7 +1239,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             getLookControl().tick(); // look
             getJumpControl().tick(); // jump
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 
@@ -1420,7 +1424,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         try {
             onLivingUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 
@@ -1436,7 +1440,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return null;
     }

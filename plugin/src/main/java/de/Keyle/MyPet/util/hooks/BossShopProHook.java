@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -64,7 +65,7 @@ public class BossShopProHook implements PluginHook {
             List<BSRewardType> types = (List<BSRewardType>) FIELD_TYPES.get(null);
             types.removeIf(type -> type.getClass().getName().equals("MyPetReward"));
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            ErrorUtil.reportWarning("Third-party plugin integration failed", e);
         }
     }
 

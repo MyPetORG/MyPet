@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R6.util.VariantConverter;
 import de.Keyle.MyPet.compat.v1_21_R6.util.inventory.ItemStackNBTConverter;
@@ -51,11 +52,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftRegistry;
-import org.bukkit.craftbukkit.entity.CraftCopperGolem;
-import org.bukkit.craftbukkit.entity.CraftCow;
-import org.bukkit.craftbukkit.entity.CraftTropicalFish;
-import org.bukkit.craftbukkit.entity.CraftVillager;
-import org.bukkit.craftbukkit.entity.CraftVillagerZombie;
+import org.bukkit.craftbukkit.entity.*;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
@@ -288,7 +285,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     }
                     ReflectionUtil.setFieldValue("cr", entityVillager, true); // Field: AssignProfessionWhenSpawned (natural?)
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtil.report(e);
                 }
                 if (villagerTag.containsKey("Xp")) {
                     int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
@@ -381,7 +378,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 Wolf.Variant leVariant = (Wolf.Variant) getVariant.invoke(null, ((MyWolf)myPet).getVariant());
                 ((Wolf) normalEntity).setVariant(leVariant);
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         } else if (myPet instanceof MyCopperGolem) {
             // Apply oxidation state, waxed status, and poppy back to the vanilla entity
@@ -415,7 +412,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     nmsGolem.setItemSlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, poppyStack);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         }
 
@@ -735,7 +732,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 properties.getCompoundData().put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompund(poppyBukkit));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
             // Fallback: use default values
             properties.getCompoundData().put("OxidationState", new TagString("UNAFFECTED"));
             properties.getCompoundData().put("Waxed", new TagByte(0));

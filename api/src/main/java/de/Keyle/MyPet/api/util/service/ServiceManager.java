@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.util.service;
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 
 import java.util.*;
 
@@ -55,8 +56,7 @@ public class ServiceManager {
             ServiceContainer service = serviceClass.newInstance();
             registeredServices.put(loadingState, service);
         } catch (Throwable e) {
-            MyPetApi.getLogger().warning("Error occured while creating the " + serviceClass.getName() + " service.");
-            e.printStackTrace();
+            ErrorUtil.report("Error occured while creating the " + serviceClass.getName() + " service.", e);
         }
     }
 

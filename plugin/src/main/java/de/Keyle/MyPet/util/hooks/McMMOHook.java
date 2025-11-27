@@ -24,6 +24,7 @@ import com.gmail.nossr50.api.PartyAPI;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.util.player.UserManager;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
@@ -127,7 +128,7 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
                     }
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                ErrorUtil.reportWarning("Third-party plugin integration failed", e);
             }
             return true;
         }

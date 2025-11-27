@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import com.nisovin.magicspells.events.SpellEvent;
 import com.nisovin.magicspells.events.SpellTargetEvent;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
@@ -64,7 +65,7 @@ public class MagicSpellsHook implements PluginHook {
                     event.setCancelled(true);
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                ErrorUtil.reportWarning("Third-party plugin integration failed", e);
             }
         }
     }

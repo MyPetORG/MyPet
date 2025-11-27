@@ -37,6 +37,7 @@ import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
 import org.bson.Document;
@@ -302,7 +303,7 @@ public class MongoDbRepository implements Repository {
 
             return pet;
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MongoDB database operation failed", e);
         }
 
         return null;
@@ -456,7 +457,7 @@ public class MongoDbRepository implements Repository {
             petDocument.append("skills", TagStream.writeTag(storedMyPet.getSkillInfo(), true));
             petDocument.append("info", TagStream.writeTag(storedMyPet.getInfo(), true));
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MongoDB database operation failed", e);
         }
 
         petCollection.insertOne(petDocument);
@@ -508,7 +509,7 @@ public class MongoDbRepository implements Repository {
             petDocument.append("skills", TagStream.writeTag(storedMyPet.getSkillInfo(), true));
             petDocument.append("info", TagStream.writeTag(storedMyPet.getInfo(), true));
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MongoDB database operation failed", e);
         }
 
         petCollection.replaceOne(filter, petDocument);
@@ -561,7 +562,7 @@ public class MongoDbRepository implements Repository {
 
             return petPlayer;
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MongoDB database operation failed", e);
         }
 
         return null;
@@ -691,7 +692,7 @@ public class MongoDbRepository implements Repository {
         try {
             playerDocument.append("extended_info", TagStream.writeTag(player.getExtendedInfo(), true));
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportError("MongoDB database operation failed", e);
         }
 
         Document multiWorldDocument = new Document();

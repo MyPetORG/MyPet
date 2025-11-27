@@ -21,9 +21,10 @@
 package de.Keyle.MyPet.compat.v1_20_R2.util.inventory;
 
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
+import de.keyle.knbt.TagType;
 import net.minecraft.nbt.*;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
@@ -120,7 +121,7 @@ public class ItemStackNBTConverter {
                         compoundList.add(vanillaCompoundToCompound((Tag) aList));
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    ErrorUtil.report(e);
                 }
 
                 return new TagList(compoundList);

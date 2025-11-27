@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.api.entity.types.MyZombieVillager;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_19_R2.CompatManager;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -128,7 +129,7 @@ public class EntityMyZombieVillager extends EntityMyPet {
 								try {
 									CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 								} catch (IllegalAccessException | InvocationTargetException ex) {
-									ex.printStackTrace();
+									ErrorUtil.report(ex);
 								}
 							});
 						}

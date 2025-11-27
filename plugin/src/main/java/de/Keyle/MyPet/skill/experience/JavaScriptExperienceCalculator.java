@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.experience;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.exceptions.MyPetExperienceCalculatorInitException;
@@ -65,7 +66,7 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
         } catch (Exception e) {
             MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error.");
             MyPetApi.getLogger().warning("   " + e.getLocalizedMessage());
-            e.printStackTrace();
+            ErrorUtil.reportWarning("JavaScriptExperienceCalculator operation failed", e);
             isUsable = false;
         }
         return 0;
@@ -111,7 +112,7 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
                         "}\n\n" + content;
                 cx.evaluateString(scope, content, "exp.js", 0, null);
             } catch (IOException e) {
-                e.printStackTrace();
+                ErrorUtil.reportWarning("JavaScriptExperienceCalculator operation failed", e);
             }
             this.cx = cx;
             this.scope = scope;

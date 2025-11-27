@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyVex;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_19_R3.CompatManager;
 import de.Keyle.MyPet.compat.v1_19_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
@@ -122,7 +123,7 @@ public class EntityMyVex extends EntityMyPet {
 								try {
 									CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 								} catch (IllegalAccessException | InvocationTargetException ex) {
-									ex.printStackTrace();
+									ErrorUtil.report(ex);
 								}
 							});
 						}

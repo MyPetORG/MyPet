@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.intervaltree.DoubleInterval;
 import de.Keyle.MyPet.api.util.intervaltree.Interval;
 import de.Keyle.MyPet.api.util.intervaltree.IntervalTree;
@@ -153,8 +154,8 @@ public class ExperienceCache implements ServiceContainer {
             cacheObject.addProperty("calculator", calculator);
             Gson gson = new Gson();
             oos.write(gson.toJson(cacheObject));
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            ErrorUtil.report(e);
         }
     }
 

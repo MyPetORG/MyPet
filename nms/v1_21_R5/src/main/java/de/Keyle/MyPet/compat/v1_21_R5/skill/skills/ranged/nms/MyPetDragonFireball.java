@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetDragonFireball;
 import net.minecraft.world.entity.Entity;
@@ -90,7 +91,7 @@ public class MyPetDragonFireball extends DragonFireball implements EntityMyPetPr
             	discard();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 }

@@ -20,11 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_19_R1.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySnowman;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_19_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -38,6 +37,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+
+import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
@@ -76,7 +77,7 @@ public class EntityMySnowman extends EntityMyPet {
 							try {
 								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ex.printStackTrace();
+								ErrorUtil.report(ex);
 							}
 						});
 					}

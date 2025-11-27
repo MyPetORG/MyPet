@@ -83,6 +83,9 @@ dependencies {
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
     compileOnly("de.keyle:knbt:0.0.5")
+    compileOnly("ch.qos.logback:logback-classic:1.2.11")
+    compileOnly("org.slf4j:slf4j-api:1.7.36")
+    compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")
 
     // Prefer Lombok as compileOnly + annotationProcessor in Gradle:
     compileOnly("org.projectlombok:lombok:1.18.42")

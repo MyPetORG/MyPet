@@ -26,6 +26,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -158,7 +159,7 @@ public class ProtocolLibHook implements PluginHook {
                     } catch (TimeoutException e) {
                         // Assume the main thread is blocked and should free this netty thread.
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        ErrorUtil.reportWarning("Third-party plugin integration failed", e);
                     }
                 }
             }
@@ -218,7 +219,7 @@ public class ProtocolLibHook implements PluginHook {
                                     // Assume the main thread is blocked and should free this netty thread.
                                     return;
                                 }  catch (Exception e) {
-                                    e.printStackTrace();
+                                    ErrorUtil.reportWarning("Third-party plugin integration failed", e);
                                 }
                             } else {
                                 entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());

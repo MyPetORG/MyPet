@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.exceptions.InvalidSkilltreeException;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -56,7 +57,7 @@ public class ShopManager implements ShopService {
             try {
                 config.load(petConfigFile);
             } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
+                ErrorUtil.reportError("ShopManager operation failed", e);
             }
         }
 

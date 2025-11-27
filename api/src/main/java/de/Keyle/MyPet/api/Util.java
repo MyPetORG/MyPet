@@ -26,6 +26,7 @@ import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -413,7 +414,7 @@ public class Util {
                     br.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         }
         return contents.toString();
@@ -703,7 +704,7 @@ public class Util {
             bis.close();
             return hasher.hash().asLong();
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
         return 0;
     }

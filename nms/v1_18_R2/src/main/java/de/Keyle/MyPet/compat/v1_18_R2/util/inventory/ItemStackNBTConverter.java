@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_18_R2.util.inventory;
 
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
@@ -120,7 +121,7 @@ public class ItemStackNBTConverter {
                         compoundList.add(vanillaCompoundToCompound((Tag) aList));
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    ErrorUtil.report(e);
                 }
 
                 return new TagList(compoundList);

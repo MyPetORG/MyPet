@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ComponentColorizer;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.MiniMessageColorizer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -367,7 +368,7 @@ public class Translation {
                 newLocale.load(new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8));
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         } catch (IOException ignored) {
         }
 
@@ -376,7 +377,7 @@ public class Translation {
             try {
                 newLocale.load(new InputStreamReader(Files.newInputStream(localeFile.toPath()), StandardCharsets.UTF_8));
             } catch (IOException e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         }
 

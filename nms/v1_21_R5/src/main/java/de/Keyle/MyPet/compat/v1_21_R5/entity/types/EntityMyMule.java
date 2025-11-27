@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMule;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -87,7 +88,7 @@ public class EntityMyMule extends EntityMyPet {
 				this.makeSound("entity.mule.angry", 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
 		return flag;
 	}

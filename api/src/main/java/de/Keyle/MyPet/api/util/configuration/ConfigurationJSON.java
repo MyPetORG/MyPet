@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 
 import java.io.*;
 
@@ -56,7 +57,7 @@ public class ConfigurationJSON {
             MyPetApi.getLogger().warning("Could not parse/load " + jsonFile.getName());
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
             return false;
         }
         return true;
@@ -71,7 +72,7 @@ public class ConfigurationJSON {
             writer.close();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
             return false;
         }
     }

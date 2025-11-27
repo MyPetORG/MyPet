@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,7 +64,7 @@ public class CommandOptionTicket implements CommandOption {
             sender.sendMessage("  " + ticketFile.getAbsoluteFile());
             sender.sendMessage(ChatColor.RED + "------------------------------------------------");
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.reportWarning("Failed to create debug ticket file", e);
         }
         return true;
     }

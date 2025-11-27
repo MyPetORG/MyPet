@@ -1,0 +1,197 @@
+name: Build Release
+
+on:
+  push:
+    branches: [ master, v4 ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      JAVA_VERSION: '21'
+      PROJECT_VERSION: ""
+      GAME_VERSIONS: ""
+      GAME_VERSIONS_JSON: ""
+      CHANGELOG: ""
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
+      USER_GITHUB: ${{ secrets.USER_GITHUB }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
+      POLYMART_TOKEN: ${{ secrets.POLYMART_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Read version and game versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
+
+          # Extract Minecraft versions from versionmatcher.csv (first column)
+          GAME_VERSIONS=$(cut -d',' -f1 src/main/resources/versionmatcher.csv | grep -v '^$' | paste -sd $'\n' -)
+          echo "GAME_VERSIONS<<EOF" >> "$GITHUB_ENV"
+          echo "$GAME_VERSIONS" >> "$GITHUB_ENV"
+          echo "EOF" >> "$GITHUB_ENV"
+
+          # Create JSON array for Hangar platform_dependencies (compact single-line format)
+          GAME_VERSIONS_JSON=$(cut -d',' -f1 src/main/resources/versionmatcher.csv | grep -v '^$' | jq -R . | jq -sc .)
+          echo "GAME_VERSIONS_JSON=$GAME_VERSIONS_JSON" >> "$GITHUB_ENV"
+
+      - name: Generate changelog
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Get the previous release tag (non-prerelease)
+          PREV_TAG=$(gh release list --limit 10 --exclude-pre-releases --json tagName -q '.[0].tagName' || echo "")
+          if [[ -n "$PREV_TAG" && "$PREV_TAG" != "null" ]]; then
+            CHANGELOG=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
+              -f tag_name="${PROJECT_VERSION}" \
+              -f target_commitish="${{ github.sha }}" \
+              -f previous_tag_name="${PREV_TAG}" \
+              -q '.body' || echo "Release ${PROJECT_VERSION}")
+          else
+            CHANGELOG="Initial release ${PROJECT_VERSION}"
+          fi
+          echo "CHANGELOG<<EOF" >> "$GITHUB_ENV"
+          echo "$CHANGELOG" >> "$GITHUB_ENV"
+          echo "EOF" >> "$GITHUB_ENV"
+
+      - name: Build MyPet
+        run: |
+          ./gradlew --no-daemon build -PbuildType=release -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
+
+      - name: Find JAR
+        id: findjar
+        shell: bash
+        run: |
+          set -euo pipefail
+          JAR="build/libs/MyPet-${PROJECT_VERSION}.jar"
+          if [[ ! -f "$JAR" ]]; then
+            echo "Expected jar not found: $JAR" >&2
+            ls -la build/libs || true
+            exit 1
+          fi
+          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          echo "Found: $JAR"
+
+      - name: Upload workflow artifact (jar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mypet-release-jar
+          path: ${{ steps.findjar.outputs.jar }}
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.PROJECT_VERSION }}
+          name: v${{ env.PROJECT_VERSION }}
+          generate_release_notes: true
+          prerelease: false
+          files: ${{ steps.findjar.outputs.jar }}
+
+      - name: Upload to Hangar
+        uses: benwoo1110/hangar-upload-action@v1
+        with:
+          api_token: ${{ env.HANGAR_TOKEN }}
+          slug: 'MyPet'
+          version: ${{ env.PROJECT_VERSION }}
+          channel: release
+          description: ${{ env.CHANGELOG }}
+          files: |
+            [
+              {
+                "path": "${{ steps.findjar.outputs.jar }}",
+                "platforms": ["PAPER"]
+              }
+            ]
+          platform_dependencies: |
+            {
+              "PAPER": ${{ env.GAME_VERSIONS_JSON }}
+            }
+
+      - name: Upload to Modrinth
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: SnE2iTno
+          channel: release
+          featured: true
+          name: ${{ env.PROJECT_VERSION }}
+          version: ${{ env.PROJECT_VERSION }}
+          changelog: ${{ env.CHANGELOG }}
+          loaders: paper
+          game-versions: ${{ env.GAME_VERSIONS }}
+          files: ${{ steps.findjar.outputs.jar }}
+
+      - name: Upload to Polymart
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESPONSE=$(curl -s -X POST "https://api.polymart.org/v1/postUpdate" \
+            -F "api_key=${{ env.POLYMART_TOKEN }}" \
+            -F "resource_id=8915" \
+            -F "version=${{ env.PROJECT_VERSION }}" \
+            -F "snapshot=0" \
+            -F "title=v${{ env.PROJECT_VERSION }}" \
+            -F "message=${{ env.CHANGELOG }}" \
+            -F "file=@${{ steps.findjar.outputs.jar }}")
+          echo "Polymart response: $RESPONSE"
+          if echo "$RESPONSE" | jq -e '.response.success' > /dev/null 2>&1; then
+            echo "Upload successful"
+          else
+            echo "Upload may have failed, check response above"
+            exit 1
+          fi
+
+      - name: Send a Discord webhook notification
+        run: |
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
+          "username": "MyPet Release",
+          "content": "<@&1431929679626895450>",
+          "embeds": [
+            {
+              "type": "rich",
+              "title": "${{ env.PROJECT_VERSION }}",
+              "description": "New release published",
+              "color": 65280,
+              "thumbnail": {
+                "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
+              },
+              "author": {
+                "name": "${{ github.actor }}",
+                "url": "https://github.com/${{ github.actor_id }}",
+                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
+              },
+              "url": "https://hangar.papermc.io/MyPet/MyPet/versions/${{ env.PROJECT_VERSION }}"
+            }
+          ]
+          }' ${{ secrets.WEBHOOK_URL }})
+          echo "Webhook server response: $RESPONSE"

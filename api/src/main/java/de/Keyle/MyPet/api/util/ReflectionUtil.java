@@ -243,7 +243,7 @@ public class ReflectionUtil {
                 try {
                     THE_UNSAFE = getField(Class.forName("sun.misc.Unsafe"), "theUnsafe").get(null);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtil.report(e);
                     return null;
                 }
                 STATIC_FIELD_OFFSET = getMethodHandle(THE_UNSAFE.getClass(), "staticFieldOffset", Field.class).bindTo(THE_UNSAFE);

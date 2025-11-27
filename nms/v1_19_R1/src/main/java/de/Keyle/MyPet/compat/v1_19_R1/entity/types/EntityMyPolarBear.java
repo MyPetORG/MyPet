@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPolarBear;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -101,7 +102,7 @@ public class EntityMyPolarBear extends EntityMyPet {
 				rearCounter = 10;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
 		return flag;
 	}

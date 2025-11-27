@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyZombieHorse;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -86,7 +87,7 @@ public class EntityMyZombieHorse extends EntityMyPet {
 				rearCounter = 10;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
 		return flag;
 	}

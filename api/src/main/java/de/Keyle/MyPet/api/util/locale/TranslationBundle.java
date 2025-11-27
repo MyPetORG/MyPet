@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.util.locale;
 
+import de.Keyle.MyPet.api.util.ErrorUtil;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
@@ -41,7 +43,7 @@ public class TranslationBundle {
         try {
             properties.load(reader);
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
 
         for (Object o : properties.keySet()) {

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v1_21_R6.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R6.skill.skills.ranged.bukkit.CraftMyPetArrow;
 import net.minecraft.server.level.ServerLevel;
@@ -66,7 +67,7 @@ public class MyPetArrow extends Arrow implements EntityMyPetProjectile {
 				discard();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
 	}
 

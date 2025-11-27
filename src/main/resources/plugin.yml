@@ -1,6 +1,6 @@
 name: MyPet
 main: de.Keyle.MyPet.MyPetPlugin
-version: ${mypetVersion}
+version: "${mypetVersion}"
 api-version: '1.18'
 author: Keyle
 website: https://mypet.plugin.de/

@@ -8,15 +8,20 @@ plugins {
     id("com.gradleup.shadow") version "9.2.2"
     id("io.freefair.lombok") version "9.0.0"
     id("io.typst.gradlesource.spigot") version "2.0.0" apply false
+    id ("io.sentry.jvm.gradle") version "5.12.2"
     `maven-publish`
 }
 
 group = "de.keyle"
 
-val buildType = project.findProperty("buildType")?.toString() ?: "local"
-val minecraftVersion by extra("1.21.9")
-
-version = "4.0.0"
+val buildType = project.findProperty("buildType")?.toString() ?: "dev"
+val buildNumber = project.findProperty("BUILD_NUMBER")?.toString() ?: "local"
+val baseVersion = "4.0.0"
+val versionSuffix = if (buildType == "dev") {
+    if (buildNumber == "local") "-SNAPSHOT-local" else "-SNAPSHOT-b${buildNumber}"
+} else ""
+version = "$baseVersion$versionSuffix"
+val minecraftVersion by extra("1.21.10")
 
 val nmsModules: List<String> = File(rootDir, "nms")
     .listFiles()
@@ -44,6 +49,7 @@ repositories {
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.freefair.lombok")
+    apply(plugin = "io.sentry.jvm.gradle")
 
     repositories {
         mavenCentral()
@@ -83,7 +89,7 @@ val archivesBaseName = "MyPet"
 
 val filteringProps = mapOf(
     "project" to project,
-    "buildNumber" to providers.gradleProperty("BUILD_NUMBER").orElse(""),
+    "buildNumber" to buildNumber,
     "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
     "minecraft" to mapOf("version" to minecraftVersion),
     "bukkit" to mapOf("packets" to bukkitPackets),
@@ -91,11 +97,6 @@ val filteringProps = mapOf(
     "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
 )
 
-sourceSets {
-    main {
-        resources { srcDir("src/main/resources/") }
-    }
-}
 
 val downloadVersionmatcher by tasks.register("downloadVersionmatcher") {
     val dest = layout.projectDirectory.file("src/main/resources/versionmatcher.csv")
@@ -133,8 +134,7 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
 }
 
 tasks.processResources {
-    dependsOn(downloadVersionmatcher, downloadTranslations)
-    duplicatesStrategy = DuplicatesStrategy.WARN
+    dependsOn(downloadTranslations)
 
     filesMatching("plugin.yml") { expand(filteringProps) }
     filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
@@ -144,8 +144,8 @@ fun Manifest.attributesForMyPet() = attributes(
     mapOf(
         "Main-Class" to "de.Keyle.MyPet.Main",
         "Project-Name" to project.name,
-        "Project-Version" to project.version.toString(),
-        "Project-Build" to (System.getenv("BUILD_NUMBER") ?: ""),
+        "Project-Version" to version,
+        "Project-Build" to buildNumber,
         "Project-Type" to buildType,
         "Project-Minecraft-Version" to minecraftVersion,
         "Project-Bukkit-Packets" to bukkitPackets,
@@ -155,7 +155,7 @@ fun Manifest.attributesForMyPet() = attributes(
 
 tasks.jar {
     archiveBaseName.set(archivesBaseName)
-    archiveFileName.set("${archivesBaseName}-${project.version}.jar")
+    archiveFileName.set("${archivesBaseName}-${version}.jar")
     archiveVersion.set(project.version.toString())
     manifest { attributesForMyPet() }
 }
@@ -185,12 +185,15 @@ dependencies {
     add("shade", "net.kyori:adventure-text-minimessage:4.17.0")
     add("shade", "net.kyori:adventure-text-serializer-ansi:4.17.0")
     add("shade", "net.kyori:adventure-text-serializer-legacy:4.17.0")
+    add("shade", "io.sentry:sentry:8.22.0")
+    add("shade", "io.sentry:sentry-logback:8.22.0")
 
 }
 
 // Build the shaded jar strictly from the 'shade' configuration
 tasks.shadowJar {
     archiveBaseName.set(archivesBaseName)
+    archiveFileName.set("${archivesBaseName}-${project.version}.jar")
     archiveVersion.set(project.version.toString())
     archiveClassifier.set("")
     exclude("META-INF/**")
@@ -209,7 +212,15 @@ tasks.shadowJar {
 tasks.assemble { dependsOn(tasks.shadowJar) }
 tasks.build { dependsOn(tasks.shadowJar) }
 
-/* ---------- Root compilation settings (Java 8 output) ---------- */
+sentry {
+    includeSourceContext = true
+
+    org = "mypet"
+    projectName = "mypet"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+
+/* ---------- Root compilation settings (Java 17 output) ---------- */
 
 java {
     toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }

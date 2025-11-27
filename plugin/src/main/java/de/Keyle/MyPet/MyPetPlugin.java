@@ -58,9 +58,11 @@ import de.Keyle.MyPet.skill.skilltree.requirements.PermissionRequirement;
 import de.Keyle.MyPet.skill.skilltree.requirements.PetLevelRequirement;
 import de.Keyle.MyPet.skill.skilltree.requirements.SkilltreeRequirement;
 import de.Keyle.MyPet.util.ConfigurationLoader;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
@@ -97,6 +99,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     private ServiceManager serviceManager;
     private MiniMessage miniMessage;
     private CloudCommandManager cloudCommandManager;
+    private SentryErrorReporter errorReporter = null;
 
     public void onDisable() {
         isDisabling = true;
@@ -123,6 +126,9 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         if (serviceManager != null) {
             serviceManager.disableServices();
         }
+        if (errorReporter != null) {
+            errorReporter.onDisable();
+        }
     }
 
     public void onLoad() {
@@ -132,6 +138,19 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         // load version from manifest
         MyPetVersion.reset();
+
+        if (getConfig().contains("MyPet.Log.Unique-ID")) {
+            try {
+                UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Unique-ID"));
+                SentryErrorReporter.setServerUUID(serverUUID);
+            } catch (Throwable ignored) {
+            }
+        }
+        this.errorReporter = new SentryErrorReporter();
+        if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
+            this.errorReporter.onEnable();
+            MyPetApi.getLogger().info("Error-Reporter ENABLED");
+        }
 
         compatUtil = new CompatUtil();
 
@@ -327,7 +346,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             try {
                 repo.init();
             } catch (RepositoryInitException e) {
-                e.printStackTrace();
+                ErrorUtil.reportSevere("Failed to initialize NBT repository", e);
                 repo = null;
             }
         } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
@@ -337,8 +356,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 repo.init();
                 MyPetApi.getLogger().info("MySQL connection successful.");
             } catch (RepositoryInitException e) {
-                MyPetApi.getLogger().warning("MySQL connection failed!");
-                e.printStackTrace();
+                ErrorUtil.reportSevere("MySQL database connection failed during initialization", e);
                 repo = null;
             }
         } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
@@ -348,8 +366,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 repo.init();
                 MyPetApi.getLogger().info("MongoDB connection successful.");
             } catch (RepositoryInitException e) {
-                MyPetApi.getLogger().warning("MongoDB connection failed!");
-                e.printStackTrace();
+                ErrorUtil.reportSevere("MongoDB database connection failed during initialization", e);
                 repo = null;
             }
         }
@@ -413,7 +430,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 ));
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            errorReporter.sendError(e, "Init Metrics failed");
         }
 
         getLogger().info("Version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
@@ -661,6 +678,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         return platformHelper;
     }
 
+    public SentryErrorReporter getErrorReporter() {
+        return errorReporter;
+    }
+
     private void replaceLogger() {
         try {
             Field logger = ReflectionUtil.getField(JavaPlugin.class, "logger");
@@ -668,7 +689,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 logger.set(this, new MyPetLogger(this));
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            ErrorUtil.reportWarning("Failed to replace default logger with MyPetLogger", e);
         }
     }
 
@@ -696,9 +717,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             getLogger().info("Cloud Command Framework enabled");
 
         } catch (Exception e) {
-            getLogger().severe("Failed to initialize Cloud Command Framework:");
-            e.printStackTrace();
-            getLogger().warning("Commands will use legacy Bukkit system");
+            ErrorUtil.reportWarning("Failed to initialize Cloud Command Framework - falling back to legacy Bukkit command system", e);
         }
     }
 

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util.configuration;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
@@ -56,7 +57,7 @@ public class ConfigurationNBT {
             os.close();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
             return false;
         }
     }

@@ -23,9 +23,10 @@ package de.Keyle.MyPet.compat.v1_21_R1.util.inventory;
 import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
+import de.keyle.knbt.TagType;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
@@ -261,7 +262,7 @@ public class ItemStackNBTConverter {
                         compoundList.add(vanillaCompoundToCompound((Tag) aList));
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    ErrorUtil.report(e);
                 }
 
                 return new TagList(compoundList);

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
@@ -69,19 +68,7 @@ public class CompatUtil {
 
         String classPath = clazz.getCanonicalName();
         if (classPath.startsWith("de.Keyle.MyPet")) {
-            if (MyPetVersion.isSpecialMCVersion(minecraftVersion)) {
-                int special = Integer.parseInt(minecraftVersion.split("\\.")[2]);
-                for (int i = special; i > 0; i--)
-                    try {
-                        String specVers = internalVersion + "_" + i;
-                        classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
-                        Class.forName(classPath);
-                        break;
-                    } catch (ClassNotFoundException ignored) {
-                    }
-            } else {
                 classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
-            }
         }
 
         try {
@@ -104,7 +91,7 @@ public class CompatUtil {
             return constructor.newInstance(parameters);
 
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
 
         return null;

@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
 import net.minecraft.core.DefaultedRegistry;
@@ -102,8 +103,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 				petEntity = (EntityMyPet) obj;
 			}
 		} catch (Exception e) {
-			MyPetApi.getLogger().severe(Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
-			e.printStackTrace();
+			ErrorUtil.report(Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!", e);
 		}
 
 		return petEntity;
@@ -179,7 +179,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
 						return reg;
 					} catch (IllegalAccessException e) {
-						e.printStackTrace();
+						ErrorUtil.report(e);
 					}
 				}
 			}
@@ -196,9 +196,9 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 			Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
 			mapPut.setAccessible(true);
 			mapPut.invoke(map, types, id);
-		} catch (ReflectiveOperationException ex) {
+		} catch (ReflectiveOperationException e) {
 
-			ex.printStackTrace();
+			ErrorUtil.report(e);
 		}
 
 	}

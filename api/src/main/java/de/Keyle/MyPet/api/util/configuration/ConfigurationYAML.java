@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.util.configuration;
 
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class ConfigurationYAML {
             config.save(yamlFile);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
             return false;
         }
     }

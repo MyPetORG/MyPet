@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v1_18_R2.entity.types;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_18_R2.util.CraftMagicNumbers;
 
@@ -95,7 +96,7 @@ public class EntityMyEnderman extends EntityMyPet {
 							try {
 								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
 							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ex.printStackTrace();
+								ErrorUtil.report(ex);
 							}
 						});
 					}

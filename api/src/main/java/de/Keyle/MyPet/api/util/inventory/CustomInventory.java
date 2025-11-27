@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.util.inventory;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
@@ -379,7 +380,7 @@ public class CustomInventory implements InventoryHolder {
                     oos.writeObject(itemStack);
                     oos.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    ErrorUtil.report(e);
                 }
                 String b64 = Base64.getEncoder().encodeToString(bos.toByteArray());
                 item.getCompoundData().put("Slot", new TagByte((byte) i));
@@ -413,7 +414,7 @@ public class CustomInventory implements InventoryHolder {
                     itemStack = (ItemStack) obj;
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
             if (slot >= 0 && slot < this.size) {
                 this.bukkitInventory.setItem(slot, itemStack);

@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.compat.Compat;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.keyle.knbt.TagCompound;
 import net.kyori.adventure.text.Component;
@@ -118,7 +119,7 @@ public abstract class PlatformHelper {
 
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
             return false;
         }
     }

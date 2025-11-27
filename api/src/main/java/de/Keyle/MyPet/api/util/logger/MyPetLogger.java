@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.util.logger;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.LogFormat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import net.kyori.adventure.text.Component;
@@ -64,7 +65,7 @@ public class MyPetLogger extends PluginLogger {
             pluginNameField.set(this, "");
 
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 
@@ -264,7 +265,7 @@ public class MyPetLogger extends PluginLogger {
             addHandler(fileHandler);
             debugLogFileHandler = fileHandler;
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorUtil.report(e);
         }
     }
 }

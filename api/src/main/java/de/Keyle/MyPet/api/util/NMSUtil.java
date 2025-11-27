@@ -1,6 +1,7 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +22,7 @@ public class NMSUtil {
 		try {
 			MinecraftKeyGetKey = MinecraftKeyClazz.getDeclaredMethod("getKey");
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
 		SoundEffectClazz = getNMSClass("SoundEffect");
 		for(Field f : SoundEffectClazz.getDeclaredFields()){
@@ -34,8 +35,8 @@ public class NMSUtil {
 
 			try {
 				throw new Throwable("Unable to find sound effect key field.");
-			} catch (Throwable throwable) {
-				throwable.printStackTrace();
+			} catch (Throwable e) {
+				ErrorUtil.report(e);
 			}
 
 		}
@@ -44,7 +45,7 @@ public class NMSUtil {
 		try {
 			return (String) MinecraftKeyGetKey.invoke(SoundEffectB.get(s));
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
+			ErrorUtil.report(e);
 		}
         return null;
 	}
@@ -52,12 +53,8 @@ public class NMSUtil {
 		String clazz = "net.minecraft.server." + MyPetApi.getCompatUtil().getInternalVersion() + "." + name;
 		try {
 			return Class.forName(clazz);
-		} catch (ClassNotFoundException e) {
-			try {
-				throw new Throwable("Unable to find class " + clazz + "." );
-			} catch (Throwable throwable) {
-				throwable.printStackTrace();
-			}
+		} catch (Throwable e) {
+            ErrorUtil.report(e);
 		}
 		return null;
 	}

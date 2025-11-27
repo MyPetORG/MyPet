@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -72,8 +73,7 @@ public class CloudCommandManager {
             MyPetApi.getLogger().info("Cloud Command Framework v2 initialized");
 
         } catch (Exception e) {
-            MyPetApi.getLogger().severe("Failed to initialize Cloud Command Framework:");
-            e.printStackTrace();
+            ErrorUtil.report("Failed to initialize Cloud Command Framework:", e);
         }
     }
 

@@ -26,6 +26,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyAquaticPet;
@@ -42,7 +43,6 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
@@ -110,7 +110,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             try {
                 particle = effect.getDeserializer().fromCommand(effect, new StringReader(" " + data.get().toString()));
             } catch (CommandSyntaxException e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         } else if (effect instanceof SimpleParticleType) {
             particle = (SimpleParticleType) effect;
@@ -163,7 +163,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             try {
                 particle = effect.getDeserializer().fromCommand(effect, new StringReader(" " + data.get().toString()));
             } catch (CommandSyntaxException e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         } else if (effect instanceof SimpleParticleType) {
             particle = (SimpleParticleType) effect;
@@ -241,7 +241,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             try {
                 b.invoke(entity, vanillaNBT);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                ErrorUtil.report(e);
             }
         }
 

@@ -33,6 +33,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
@@ -132,7 +133,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                     }
                 }
             } catch (NoSuchMethodError | IllegalAccessException | NoSuchFieldException e) {
-                e.printStackTrace();
+                ErrorUtil.reportWarning("Third-party plugin integration failed", e);
             }
         }
     }
@@ -172,7 +173,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                     missingEntityTypeFixValue.remove(world.getName());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtil.reportWarning("Third-party plugin integration failed", e);
             }
         }
     }
