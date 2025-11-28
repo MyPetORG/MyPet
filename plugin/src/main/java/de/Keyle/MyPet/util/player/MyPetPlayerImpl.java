@@ -292,7 +292,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public void sendMessage(Component message) {
         if (isOnline()) {
-            sendMessage(message);
+            getPlayer().sendMessage(message);
         }
     }
 
