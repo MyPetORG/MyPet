@@ -535,41 +535,31 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     }
 
     private void registerHooks() {
-        pluginHookManager.registerHook(AncientHook.class);
         pluginHookManager.registerHook(BattleArenaHook.class);
-        pluginHookManager.registerHook(BossShopProHook.class);
         pluginHookManager.registerHook(CitizensHook.class);
         pluginHookManager.registerHook(CombatLogXHook.class);
         pluginHookManager.registerHook(FabledSkyBlockHook.class);
         pluginHookManager.registerHook(FactionsHook.class);
         pluginHookManager.registerHook(GangsPlusHook.class);
         pluginHookManager.registerHook(GriefPreventionHook.class);
-        pluginHookManager.registerHook(GriefPreventionPlusHook.class);
         pluginHookManager.registerHook(GuildsHook.class);
         pluginHookManager.registerHook(HeroesHook.class);
         pluginHookManager.registerHook(KingdomsHook.class);
         pluginHookManager.registerHook(LandsHook.class);
-        pluginHookManager.registerHook(MagicSpellsHook.class);
         pluginHookManager.registerHook(McMMOHook.class);
         pluginHookManager.registerHook(MiniaturePetsHook.class);
-        pluginHookManager.registerHook(MinigamesHook.class);
         pluginHookManager.registerHook(MobArenaHook.class);
-        pluginHookManager.registerHook(MobStackerAHook.class);
-        pluginHookManager.registerHook(MobStackerBHook.class);
         pluginHookManager.registerHook(MythicMobsHook.class);
         pluginHookManager.registerHook(NoCheatPlusHook.class);
         pluginHookManager.registerHook(PlaceholderApiHook.class);
         pluginHookManager.registerHook(PlotSquaredHook.class);
-        pluginHookManager.registerHook(PreciousStonesHook.class);
         pluginHookManager.registerHook(PremiumVanishHook.class);
         pluginHookManager.registerHook(ProtocolLibHook.class);
         pluginHookManager.registerHook(PvPArenaHook.class);
-        pluginHookManager.registerHook(PvPDiffTimerHook.class);
         pluginHookManager.registerHook(PvPManagerHook.class);
         pluginHookManager.registerHook(RedProtectHook.class);
         pluginHookManager.registerHook(ResidenceHook.class);
         pluginHookManager.registerHook(SimpleClansHook.class);
-        pluginHookManager.registerHook(SkillApiHook.class);
         pluginHookManager.registerHook(StackMobHook.class);
         pluginHookManager.registerHook(SuperVanishHook.class);
         pluginHookManager.registerHook(SurvivalGamesHook.class);

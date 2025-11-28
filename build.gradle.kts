@@ -203,6 +203,19 @@ tasks.shadowJar {
 
     configurations = listOf(shade)
 
+    // Remove unused classes from shaded dependencies
+    minimize {
+        // Exclude packages that use reflection or are loaded dynamically
+        exclude(dependency("com.mongodb:.*:.*"))
+        exclude(dependency("io.sentry:.*:.*"))
+        exclude(dependency("org.bstats:.*:.*"))
+        exclude(dependency("de.keyle:knbt:.*"))
+        exclude(project(":plugin"))
+        exclude(project(":api"))
+        exclude(project(":skills"))
+        nmsModules.forEach { exclude(project(it)) }
+    }
+
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")

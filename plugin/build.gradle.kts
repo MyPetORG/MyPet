@@ -41,9 +41,8 @@ dependencies {
     compileOnly("org.natrolite:vault-api:1.7")
     compileOnly("com.gmail.nossr50:mcMMO:2.1.0")
 
-    compileOnly("com.sk89q.worldguard:worldguard-legacy:7.0.0")
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.5")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.5")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
     compileOnly("com.mewin:WGCustomFlags:1.9")
     compileOnly("com.ancientshores:ancient:1.1.0")

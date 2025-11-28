@@ -83,6 +83,8 @@ jobs:
           echo "EOF" >> "$GITHUB_ENV"
 
       - name: Build MyPet
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           ./gradlew --no-daemon build -PbuildType=release -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
 
