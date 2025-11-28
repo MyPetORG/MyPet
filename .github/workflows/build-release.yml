@@ -34,17 +34,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 100
 
       - name: Set up Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-          cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
+
+      - name: Cache Paperweight Dev Bundles
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/paperweight
+            ~/.gradle/caches/VanillaGradle
+          key: ${{ runner.os }}-paperweight-${{ hashFiles('nms/**/build.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-paperweight-
 
       - name: Read version and game versions
         shell: bash
@@ -86,7 +95,7 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          ./gradlew --no-daemon build -PbuildType=release -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
+          ./gradlew --no-daemon --build-cache build -PbuildType=release -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
 
       - name: Find JAR
         id: findjar
@@ -119,26 +128,13 @@ jobs:
           prerelease: false
           files: ${{ steps.findjar.outputs.jar }}
 
-      - name: Upload to Hangar
+      - name: Publish to Hangar
         continue-on-error: true
-        uses: benwoo1110/hangar-upload-action@v1
-        with:
-          api_token: ${{ env.HANGAR_TOKEN }}
-          slug: 'MyPet'
-          version: ${{ env.PROJECT_VERSION }}
-          channel: release
-          description: ${{ env.CHANGELOG }}
-          files: |
-            [
-              {
-                "path": "${{ steps.findjar.outputs.jar }}",
-                "platforms": ["PAPER"]
-              }
-            ]
-          platform_dependencies: |
-            {
-              "PAPER": ${{ env.GAME_VERSIONS_JSON }}
-            }
+        env:
+          HANGAR_TOKEN: ${{ env.HANGAR_TOKEN }}
+          HANGAR_CHANGELOG: ${{ env.CHANGELOG }}
+        run: |
+          ./gradlew --no-daemon publishPluginPublicationToHangar
 
       - name: Upload to Modrinth
         continue-on-error: true

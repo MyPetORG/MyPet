@@ -9,6 +9,7 @@ plugins {
     id("io.freefair.lombok") version "9.0.0"
     id("io.typst.gradlesource.spigot") version "2.0.0" apply false
     id ("io.sentry.jvm.gradle") version "5.12.2"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
     `maven-publish`
 }
 
@@ -68,10 +69,11 @@ subprojects {
         maven { url = uri("https://repo.mypet-plugin.de/") }
     }
 
-    tasks.processResources { enabled = false }
-    tasks.test { enabled = false }
-    tasks.compileTestJava { enabled = false }
-    tasks.processTestResources { enabled = false }
+    // Use lazy task configuration for better configuration performance
+    tasks.named("processResources") { enabled = false }
+    tasks.named("test") { enabled = false }
+    tasks.named("compileTestJava") { enabled = false }
+    tasks.named("processTestResources") { enabled = false }
 
     plugins.withId("maven-publish") {
         tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
@@ -87,7 +89,8 @@ subprojects {
 
 val archivesBaseName = "MyPet"
 
-val filteringProps = mapOf(
+// Create filtering properties lazily to support configuration cache
+fun getFilteringProps() = mapOf(
     "project" to project,
     "buildNumber" to buildNumber,
     "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
@@ -113,31 +116,45 @@ val downloadVersionmatcher by tasks.register("downloadVersionmatcher") {
 val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     group = "resources"
     description = "Downloads MyPet translations into build/resources/main/locale"
-    val targetDir = layout.buildDirectory.dir("resources/main/locale").get().asFile
-    outputs.dir(targetDir)
-    doFirst {
-        if (targetDir.exists()) targetDir.deleteRecursively()
-        targetDir.mkdirs()
+    val targetDirProvider = layout.buildDirectory.dir("resources/main/locale")
+    outputs.dir(targetDirProvider)
+    outputs.cacheIf { true }
+
+    // Only run if directory doesn't exist or is older than 24 hours
+    onlyIf {
+        val dir = targetDirProvider.get().asFile
+        !dir.exists() ||
+        dir.listFiles()?.isEmpty() == true ||
+        (System.currentTimeMillis() - dir.lastModified()) > 86400000
     }
+
+    doFirst {
+        val dir = targetDirProvider.get().asFile
+        if (dir.exists()) {
+            dir.deleteRecursively()
+        }
+        dir.mkdirs()
+    }
+
     commandLine(
         "git", "clone", "--depth", "1", "--single-branch",
-        "https://github.com/MyPetORG/MyPet-Translations.git", targetDir
+        "https://github.com/MyPetORG/MyPet-Translations.git",
+        targetDirProvider.get().asFile.absolutePath
     )
-    delete(fileTree("build/resources/main/locale") {
-        include(
-            "exclude",
-            ".git",
-            ".gitignore",
-            "README.md"
-        )
-    })
+
+    doLast {
+        val dir = targetDirProvider.get().asFile
+        delete(fileTree(dir) {
+            include("exclude", ".git", ".gitignore", "README.md")
+        })
+    }
 }
 
 tasks.processResources {
     dependsOn(downloadTranslations)
 
-    filesMatching("plugin.yml") { expand(filteringProps) }
-    filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
+    filesMatching("plugin.yml") { expand(getFilteringProps()) }
+    filesMatching("*.yml") { if (name != "plugin.yml") expand(getFilteringProps()) }
 }
 
 fun Manifest.attributesForMyPet() = attributes(
@@ -210,6 +227,8 @@ tasks.shadowJar {
         exclude(dependency("io.sentry:.*:.*"))
         exclude(dependency("org.bstats:.*:.*"))
         exclude(dependency("de.keyle:knbt:.*"))
+        // Adventure API uses reflection for serializers - must exclude to prevent runtime errors
+        exclude(dependency("net.kyori:.*:.*"))
         exclude(project(":plugin"))
         exclude(project(":api"))
         exclude(project(":skills"))
@@ -241,4 +260,24 @@ java {
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(17)
     options.encoding = "UTF-8"
+}
+
+/* ---------- Hangar Publishing ---------- */
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(project.version as String)
+        id.set("MyPet")
+        channel.set(if (buildType == "dev") "Snapshot" else "Release")
+        changelog.set(project.findProperty("HANGAR_CHANGELOG")?.toString() ?: "Release ${project.version}")
+        apiKey.set(System.getenv("HANGAR_TOKEN") ?: "")
+
+        platforms {
+            register(io.papermc.hangarpublishplugin.model.Platforms.PAPER) {
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                val gameVersions = System.getenv("GAME_VERSIONS")?.split("\n")?.filter { it.isNotBlank() } ?: listOf()
+                platformVersions.set(gameVersions)
+            }
+        }
+    }
 }
