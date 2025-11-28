@@ -196,14 +196,8 @@ dependencies {
 
     // External libs to be shaded
     add("shade", "org.bstats:bstats-bukkit:1.7")
-    add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
-    add("shade", "com.zaxxer:HikariCP:3.4.2")
-    add("shade", "net.kyori:adventure-text-minimessage:4.17.0")
-    add("shade", "net.kyori:adventure-text-serializer-ansi:4.17.0")
-    add("shade", "net.kyori:adventure-text-serializer-legacy:4.17.0")
-    add("shade", "io.sentry:sentry:8.22.0")
-    add("shade", "io.sentry:sentry-logback:8.22.0")
+
 
 }
 
@@ -223,7 +217,6 @@ tasks.shadowJar {
     // Remove unused classes from shaded dependencies
     minimize {
         // Exclude packages that use reflection or are loaded dynamically
-        exclude(dependency("com.mongodb:.*:.*"))
         exclude(dependency("io.sentry:.*:.*"))
         exclude(dependency("org.bstats:.*:.*"))
         exclude(dependency("de.keyle:knbt:.*"))
@@ -236,9 +229,7 @@ tasks.shadowJar {
     }
 
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
-    relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
-    relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }

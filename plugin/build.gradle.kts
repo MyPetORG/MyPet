@@ -22,8 +22,8 @@ dependencies {
     compileOnly("com.mojang:brigadier:1.0.18")
 
     // Cloud Command Framework v2
-    implementation("org.incendo:cloud-paper:2.0.0-beta.13")
-    implementation("org.incendo:cloud-annotations:2.0.0")
+    compileOnly("org.incendo:cloud-paper:2.0.0-beta.13")
+    compileOnly("org.incendo:cloud-annotations:2.0.0")
 
     compileOnly("net.citizensnpcs:citizensapi:2.0.24")
     compileOnly("br.net.fabiozumbi12:PvPDiffTimer:1.4.4")
