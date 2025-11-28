@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_21_R6;
 
 import com.mojang.brigadier.StringReader;
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
@@ -36,17 +35,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -83,111 +77,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
     private static final RegistryAccess REGISTRY_ACCESS = CraftRegistry.getMinecraftRegistry();
     private static Method readParticleMethod = ReflectionUtil.getMethod(ParticleArgument.class,"a", TagParser.class, StringReader.class, ParticleType.class, HolderLookup.Provider.class);
-
-
-    /**
-     * @param location   the {@link Location} around which players must be to see the effect
-     * @param effectName list of effects: https://gist.github.com/riking/5759002
-     * @param offsetX    the amount to be randomly offset by in the X axis
-     * @param offsetY    the amount to be randomly offset by in the Y axis
-     * @param offsetZ    the amount to be randomly offset by in the Z axis
-     * @param speed      the speed of the particles
-     * @param count      the number of particles
-     * @param radius     the radius around the location
-     */
-    @Override
-    public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
-        ParticleType<?> effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName)).get().value();
-
-        if (location == null) {
-            MyPetApi.getLogger().warning("Location is null");
-            return;
-        }
-        if (effect == null) {
-            MyPetApi.getLogger().warning("Effect is null");
-            return;
-        }
-        if (location.getWorld() == null) {
-            MyPetApi.getLogger().warning("World is null for location " + location);
-            return;
-        }
-
-        ParticleOptions particle = null;
-
-        if (effect.codec().codec() != null && data != null) {
-            try {
-                String nbt_string = parseNBTForEffect(effectName);
-                particle = (ParticleOptions) readParticleMethod.invoke(null, TAG_PARSER_INSTANCE, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
-            } catch (Exception e) {
-                ErrorUtil.report(e);
-            }
-        } else if (effect instanceof SimpleParticleType) {
-            particle = (SimpleParticleType) effect;
-        }
-        if (particle == null) {
-            return;
-        }
-
-        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(particle, false, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
-        radius = radius * radius;
-
-        for (Player player : location.getWorld().getPlayers()) {
-            if ((int) MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), location) <= radius) {
-                ((CraftPlayer) player).getHandle().connection.send(packet);
-            }
-        }
-
-    }
-
-    /**
-     * @param location   the {@link Location} around which players must be to see the effect
-     * @param effectName list of effects: https://gist.github.com/riking/5759002
-     * @param offsetX    the amount to be randomly offset by in the X axis
-     * @param offsetY    the amount to be randomly offset by in the Y axis
-     * @param offsetZ    the amount to be randomly offset by in the Z axis
-     * @param speed      the speed of the particles
-     * @param count      the number of particles
-     * @param radius     the radius around the location
-     */
-    @Override
-    public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
-    	ParticleType<?> effect = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(effectName)).get().value();
-
-        if (location == null) {
-            MyPetApi.getLogger().warning("Location is null");
-            return;
-        }
-        if (effect == null) {
-            MyPetApi.getLogger().warning("Effect is null");
-            return;
-        }
-        if (location.getWorld() == null) {
-            MyPetApi.getLogger().warning("World is null for location " + location);
-            return;
-        }
-
-        ParticleOptions particle = null;
-
-        if (effect.codec().codec() != null && data != null) {
-            try {
-                String nbt_string = parseNBTForEffect(effectName);
-                particle = (ParticleOptions) readParticleMethod.invoke(null, TAG_PARSER_INSTANCE, new StringReader("{"+nbt_string+":\""+data.get().toString()+"\"}"), effect, REGISTRY_ACCESS);
-            } catch (Exception e) {
-                ErrorUtil.report(e);
-            }
-        } else if (effect instanceof SimpleParticleType) {
-            particle = (SimpleParticleType) effect;
-        }
-        if (particle == null) {
-            return;
-        }
-
-        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(particle, false, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
-
-        if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), location) <= radius) {
-            ((CraftPlayer) player).getHandle().connection.send(packet);
-        }
-    }
 
     @Override
     public boolean canSpawn(Location loc, MyPetMinecraftEntity entity) {

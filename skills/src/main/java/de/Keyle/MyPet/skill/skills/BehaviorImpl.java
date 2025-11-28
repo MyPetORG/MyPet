@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills;
 import com.google.common.collect.Iterables;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -32,6 +31,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -291,8 +291,7 @@ public class BehaviorImpl implements Behavior {
     @Override
     public void schedule() {
         if (selectedBehavior == Aggressive && random.nextBoolean() && myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().ifPresent(entity -> MyPetApi.getPlatformHelper()
-                    .playParticleEffect(entity.getLocation().add(0, entity.getEyeHeight(), 0), ParticleCompat.VILLAGER_ANGRY.get(), 0.2F, 0.2F, 0.2F, 0.5F, 1, 20));
+            myPet.getEntity().ifPresent(entity -> entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F));
         }
     }
 

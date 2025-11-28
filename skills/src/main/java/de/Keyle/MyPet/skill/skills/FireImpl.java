@@ -22,12 +22,12 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Fire;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.Random;
@@ -83,7 +83,7 @@ public class FireImpl implements Fire {
 
     public void apply(LivingEntity target) {
         target.setFireTicks(getDuration().getValue() * 20);
-        MyPetApi.getPlatformHelper().playParticleEffect(target.getLocation(), ParticleCompat.SMOKE_LARGE.get(), .5f, .5f, .5f, 0.02f, 20, 20);
+        target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target.getLocation(), 20, .5f, .5f, .5f, 0.02f);
     }
 
     @Override

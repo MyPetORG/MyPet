@@ -22,7 +22,6 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
@@ -38,6 +37,8 @@ import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -115,7 +116,7 @@ public class LevelListener implements Listener {
                     new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
                         @Override
                         protected void playParticleEffect(Location location) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.CRIT_MAGIC.get(), 0, 0, 0, 0, 1, 32);
+                            location.getWorld().spawnParticle(Particle.CRIT_MAGIC, location, 1, 0, 0, 0, 0);
                         }
                     }.loop(2);
 
@@ -160,7 +161,7 @@ public class LevelListener implements Listener {
                     new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, new EntityLocationHolder(entity)) {
                         @Override
                         protected void playParticleEffect(Location location) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(location, ParticleCompat.BLOCK_CRACK.get(), 0, 0, 0, 0, 1, 32, ParticleCompat.REDSTONE_BLOCK_DATA);
+                            location.getWorld().spawnParticle(Particle.BLOCK_CRACK, location, 1, 0, 0, 0, 0, Material.REDSTONE_BLOCK.createBlockData());
                         }
                     }.once();
 

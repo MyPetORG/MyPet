@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_20_R2.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyAquaticPet;
@@ -30,6 +29,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
+import org.bukkit.Particle;
 
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyAquaticPet {
@@ -62,7 +62,7 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (!isInWater() && this.random.nextBoolean()) {
-			MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 0.7, 0), ParticleCompat.WATER_SPLASH.get(), 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
+			myPet.getLocation().get().getWorld().spawnParticle(Particle.WATER_SPLASH, myPet.getLocation().get().add(0, 0.7, 0), 10, 0.2F, 0.2F, 0.2F, 0.5F);
 		}
 		if (!this.canDolphinjump &&
 			(this.level().getBlockState(new BlockPos(this.getBlockX(),this.getBlockY()+3,this.getBlockZ())).liquid())) {

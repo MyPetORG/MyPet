@@ -26,7 +26,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
@@ -41,11 +40,14 @@ import de.keyle.knbt.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -508,9 +510,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
                         if (checkTamable((LivingEntity) entity, p)) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 100, ParticleCompat.LIME_GREEN_WOOL_DATA);
+                            p.spawnParticle(Particle.ITEM_CRACK, l, 20, 0, 0, 0, 0.02f, new ItemStack(Material.LIME_DYE));
                         } else {
-                            MyPetApi.getPlatformHelper().playParticleEffect(p, l, ParticleCompat.ITEM_CRACK.get(), 0, 0, 0, 0.02f, 20, 100, ParticleCompat.RED_WOOL_DATA);
+                            p.spawnParticle(Particle.ITEM_CRACK, l, 20, 0, 0, 0, 0.02f, new ItemStack(Material.RED_DYE));
                         }
                         if (count++ > 20) {
                             break;

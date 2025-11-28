@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R3;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -34,15 +32,9 @@ import de.Keyle.MyPet.compat.v1_20_R3.util.inventory.ItemStackNBTConverter;
 import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
@@ -75,109 +67,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableContents.class, "k");
     private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
     public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "aa"); //Mojang Field: dragonParts
-
-
-    /**
-     * @param location   the {@link Location} around which players must be to see the effect
-     * @param effectName list of effects: https://gist.github.com/riking/5759002
-     * @param offsetX    the amount to be randomly offset by in the X axis
-     * @param offsetY    the amount to be randomly offset by in the Y axis
-     * @param offsetZ    the amount to be randomly offset by in the Z axis
-     * @param speed      the speed of the particles
-     * @param count      the number of particles
-     * @param radius     the radius around the location
-     */
-    @Override
-    public void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
-        ParticleType effect = BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(effectName));
-
-        if (location == null) {
-            MyPetApi.getLogger().warning("Location is null");
-            return;
-        }
-        if (effect == null) {
-            MyPetApi.getLogger().warning("Effect is null");
-            return;
-        }
-        if (location.getWorld() == null) {
-            MyPetApi.getLogger().warning("World is null for location " + location);
-            return;
-        }
-
-        ParticleOptions particle = null;
-
-        if (effect.getDeserializer() != null && data != null) {
-            try {
-                particle = effect.getDeserializer().fromCommand(effect, new StringReader(" " + data.get().toString()));
-            } catch (CommandSyntaxException e) {
-                ErrorUtil.report(e);
-            }
-        } else if (effect instanceof SimpleParticleType) {
-            particle = (SimpleParticleType) effect;
-        }
-        if (particle == null) {
-            return;
-        }
-
-        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(particle, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
-        radius = radius * radius;
-
-        for (Player player : location.getWorld().getPlayers()) {
-            if ((int) MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), location) <= radius) {
-                ((CraftPlayer) player).getHandle().connection.send(packet);
-            }
-        }
-
-    }
-
-    /**
-     * @param location   the {@link Location} around which players must be to see the effect
-     * @param effectName list of effects: https://gist.github.com/riking/5759002
-     * @param offsetX    the amount to be randomly offset by in the X axis
-     * @param offsetY    the amount to be randomly offset by in the Y axis
-     * @param offsetZ    the amount to be randomly offset by in the Z axis
-     * @param speed      the speed of the particles
-     * @param count      the number of particles
-     * @param radius     the radius around the location
-     */
-    @Override
-    public void playParticleEffect(Player player, Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, de.Keyle.MyPet.api.compat.Compat<Object> data) {
-    	ParticleType effect = BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(effectName));
-
-        if (location == null) {
-            MyPetApi.getLogger().warning("Location is null");
-            return;
-        }
-        if (effect == null) {
-            MyPetApi.getLogger().warning("Effect is null");
-            return;
-        }
-        if (location.getWorld() == null) {
-            MyPetApi.getLogger().warning("World is null for location " + location);
-            return;
-        }
-
-        ParticleOptions particle = null;
-
-        if (effect.getDeserializer() != null && data != null) {
-            try {
-                particle = effect.getDeserializer().fromCommand(effect, new StringReader(" " + data.get().toString()));
-            } catch (CommandSyntaxException e) {
-                ErrorUtil.report(e);
-            }
-        } else if (effect instanceof SimpleParticleType) {
-            particle = (SimpleParticleType) effect;
-        }
-        if (particle == null) {
-            return;
-        }
-
-        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(particle, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
-
-        if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), location) <= radius) {
-            ((CraftPlayer) player).getHandle().connection.send(packet);
-        }
-    }
 
     @Override
     public boolean canSpawn(Location loc, MyPetMinecraftEntity entity) {

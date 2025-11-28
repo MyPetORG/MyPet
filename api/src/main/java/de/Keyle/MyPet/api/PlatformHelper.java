@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.compat.Compat;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -49,38 +48,6 @@ import java.nio.file.Files;
 import java.util.UUID;
 
 public abstract class PlatformHelper {
-
-    /**
-     * @param location the {@link Location} around which players must be to see the effect
-     * @param effect   list of effects: https://gist.github.com/riking/5759002
-     * @param offsetX  the amount to be randomly offset by in the X axis
-     * @param offsetY  the amount to be randomly offset by in the Y axis
-     * @param offsetZ  the amount to be randomly offset by in the Z axis
-     * @param speed    the speed of the particles
-     * @param count    the number of particles
-     * @param radius   the radius around the location
-     */
-    public abstract void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, Compat<Object> data);
-
-    public void playParticleEffect(Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
-        playParticleEffect(location, effect, offsetX, offsetY, offsetZ, speed, count, radius, null);
-    }
-
-    /**
-     * @param location the {@link Location} around which players must be to see the effect
-     * @param effect   list of effects: https://gist.github.com/riking/5759002
-     * @param offsetX  the amount to be randomly offset by in the X axis
-     * @param offsetY  the amount to be randomly offset by in the Y axis
-     * @param offsetZ  the amount to be randomly offset by in the Z axis
-     * @param speed    the speed of the particles
-     * @param count    the number of particles
-     * @param radius   the radius around the location
-     */
-    public abstract void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius, Compat<Object> data);
-
-    public void playParticleEffect(Player player, Location location, String effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
-        playParticleEffect(player, location, effect, offsetX, offsetY, offsetZ, speed, count, radius, null);
-    }
 
     public abstract boolean canSpawn(Location loc, MyPetMinecraftEntity entity);
 

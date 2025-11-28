@@ -24,7 +24,6 @@ import com.google.common.base.Preconditions;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
@@ -81,10 +80,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_20_R3.attribute.CraftAttributeMap;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
@@ -595,7 +591,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 								entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
 							}
 						}
-						MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, getEyeHeight(), 0), ParticleCompat.HEART.get(), 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+						myPet.getLocation().get().getWorld().spawnParticle(Particle.HEART, myPet.getLocation().get().add(0, getEyeHeight(), 0), 5, 0.5F, 0.5F, 0.5F, 0.5F);
 
 						return InteractionResult.CONSUME;
 					}
@@ -658,7 +654,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			}
 		}
 		if (sitPathfinder.isSitting() && sitCounter-- <= 0) {
-			MyPetApi.getPlatformHelper().playParticleEffect(getOwner().getPlayer(), this.getBukkitEntity().getLocation().add(0, getEyeHeight() + 1, 0), ParticleCompat.BARRIER.get(), 0F, 0F, 0F, 5F, 1, 32, ParticleCompat.BARRIER_BLOCK_DATA);
+			getOwner().getPlayer().spawnParticle(Particle.BLOCK_MARKER, this.getBukkitEntity().getLocation().add(0, getEyeHeight() + 1, 0), 1, 0F, 0F, 0F, 5F, Material.BARRIER.createBlockData());
 			sitCounter = 60;
 		}
 		Player p = myPet.getOwner().getPlayer();
@@ -677,7 +673,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			}
 			if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
 				donatorParticleCounter = 20 + getRandom().nextInt(10);
-				MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), ParticleCompat.VILLAGER_HAPPY.get(), 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+				this.getBukkitEntity().getLocation().getWorld().spawnParticle(Particle.VILLAGER_HAPPY, this.getBukkitEntity().getLocation().add(0, 1, 0), 5, 0.4F, 0.4F, 0.4F, 0.4F);
 			}
 		}
 	}

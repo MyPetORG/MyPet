@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.ParticleCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
@@ -37,6 +36,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -514,7 +514,7 @@ public class BeaconImpl implements Beacon {
             }
 
             range = range * range;
-            MyPetApi.getPlatformHelper().playParticleEffect(myPet.getLocation().get().add(0, 1, 0), ParticleCompat.SPELL_WITCH.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+            myPet.getLocation().get().getWorld().spawnParticle(Particle.SPELL_WITCH, myPet.getLocation().get().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
 
             List<Player> members = null;
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BuffReceiver.Party) {
@@ -549,7 +549,7 @@ public class BeaconImpl implements Beacon {
                                 player.addPotionEffect(effect, true);
                             }
                             if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                                MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                                player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
                             }
                             break targetLoop;
                         }
@@ -558,7 +558,7 @@ public class BeaconImpl implements Beacon {
                             player.addPotionEffect(effect, true);
                         }
                         if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                            MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                            player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
                         }
                         break;
                     case Party:
@@ -568,7 +568,7 @@ public class BeaconImpl implements Beacon {
                                     player.addPotionEffect(effect, true);
                                 }
                                 if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                                    MyPetApi.getPlatformHelper().playParticleEffect(player.getLocation().add(0, 1, 0), ParticleCompat.SPELL_INSTANT.get(), 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                                    player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
                                 }
                             }
                             break;
