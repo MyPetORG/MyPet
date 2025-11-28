@@ -39,6 +39,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
@@ -103,7 +104,7 @@ public class EntityMyCamel extends EntityMyPet {
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
 				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-				makeSound("entity.camel.saddle", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CAMEL_SADDLE, 1.0F, 1.0F);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
@@ -117,7 +118,7 @@ public class EntityMyCamel extends EntityMyPet {
 				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 				this.level().addFreshEntity(entityitem);
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setSaddle(null);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
@@ -176,7 +177,7 @@ public class EntityMyCamel extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.camel.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CAMEL_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

@@ -20,16 +20,15 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Shield;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.Random;
 
@@ -88,7 +87,7 @@ public class ShieldImpl implements Shield {
             myPet.getEntity().ifPresent(myPetBukkitEntity -> {
                 myPetBukkitEntity.damage(redirectedDamage);
                 event.setDamage(event.getDamage() - redirectedDamage);
-                myPetBukkitEntity.getHandle().makeSound(SoundCompat.ENDERMAN_TELEPORT.get(), 0.2F, 1.0F);
+                myPetBukkitEntity.getWorld().playSound(myPetBukkitEntity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.2F, 1.0F);
                 myPet.getOwner().getPlayer().getWorld().spawnParticle(Particle.CRIT_MAGIC, myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
                 myPet.getLocation().get().getWorld().spawnParticle(Particle.CRIT, myPet.getLocation().get().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
             });

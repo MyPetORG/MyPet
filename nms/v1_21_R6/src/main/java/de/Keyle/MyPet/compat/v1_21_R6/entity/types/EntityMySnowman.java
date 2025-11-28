@@ -37,6 +37,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
@@ -65,7 +66,7 @@ public class EntityMySnowman extends EntityMyPet {
 				return InteractionResult.CONSUME;
 			} else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isShiftKeyDown()) {
 				getMyPet().setSheared(true);
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
 						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));

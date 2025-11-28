@@ -34,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
@@ -119,7 +120,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.cow.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_COW_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

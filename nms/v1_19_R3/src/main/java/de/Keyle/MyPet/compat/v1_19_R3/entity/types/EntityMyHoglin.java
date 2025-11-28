@@ -33,6 +33,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.3965F, height = 1.4F)
 public class EntityMyHoglin extends EntityMyPet {
@@ -95,7 +96,7 @@ public class EntityMyHoglin extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.hoglin.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_HOGLIN_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

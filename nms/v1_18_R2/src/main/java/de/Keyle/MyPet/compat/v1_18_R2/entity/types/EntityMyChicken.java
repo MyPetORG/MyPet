@@ -34,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
@@ -105,7 +106,7 @@ public class EntityMyChicken extends EntityMyPet {
 		}
 
 		if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
-			this.makeSound("entity.chicken.egg", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
 			spawnAtLocation(Items.EGG, 1);
 			nextEggTimer = this.random.nextInt(6000) + 6000;
 		}
@@ -113,7 +114,7 @@ public class EntityMyChicken extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.chicken.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CHICKEN_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreaking extends EntityMyPet {
@@ -49,6 +50,6 @@ public class EntityMyCreaking extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.creaking.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CREAKING_STEP, 0.15F, 1.0F);
 	}
 }

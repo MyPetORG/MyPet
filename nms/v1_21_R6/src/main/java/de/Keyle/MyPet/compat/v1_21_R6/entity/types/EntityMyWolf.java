@@ -49,6 +49,7 @@ import net.minecraft.world.level.Level;
 import org.bukkit.DyeColor;
 
 import java.util.Optional;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
@@ -221,7 +222,7 @@ public class EntityMyWolf extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.wolf.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_WOLF_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

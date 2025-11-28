@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import java.util.List;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 1.95F)
 public class EntityMyDrowned extends EntityMyAquaticPet {
@@ -172,7 +173,7 @@ public class EntityMyDrowned extends EntityMyAquaticPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.drowned.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_DROWNED_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

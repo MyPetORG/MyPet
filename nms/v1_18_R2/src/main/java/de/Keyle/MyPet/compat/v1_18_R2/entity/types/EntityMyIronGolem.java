@@ -20,17 +20,12 @@
 
 package de.Keyle.MyPet.compat.v1_18_R2.entity.types;
 
-import java.lang.reflect.InvocationTargetException;
-
-import de.Keyle.MyPet.api.util.ErrorUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_18_R2.CompatManager;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -45,6 +40,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+
+import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
@@ -66,7 +66,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 			flag = super.attack(entity);
 			if (Configuration.MyPet.IronGolem.CAN_TOSS_UP && flag) {
 				entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.4000000059604645D, 0));
-				this.makeSound("entity.iron_golem.attack", 1.0F, 1.0F);
+				this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
 			ErrorUtil.report(e);
@@ -129,7 +129,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 				this.level.addFreshEntity(entityitem);
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setFlower(null);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
@@ -165,7 +165,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.iron_golem.step", 1.0F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_IRON_GOLEM_STEP, 1.0F, 1.0F);
 	}
 
 	@Override

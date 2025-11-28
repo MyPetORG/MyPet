@@ -43,6 +43,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WeatheringCopper;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
@@ -66,7 +67,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
 			this.level().broadcastEntityEvent(this, (byte) 4);
 			flag = super.attack(entity);
 			if (flag) {
-				this.makeSound("entity.copper_golem.hurt", 1.0F, 1.0F);
+				this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_COPPER_GOLEM_HURT, 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
 			ErrorUtil.report(e);
@@ -192,7 +193,6 @@ public class EntityMyCopperGolem extends EntityMyPet {
 						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 					}
 				}
-				makeSound("entity.iron_golem.repair", 1.0F, 1.0F);
 				return InteractionResult.CONSUME;
 			}
 			// Remove poppy with shears
@@ -203,7 +203,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
 				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 				this.level().addFreshEntity(entityitem);
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setPoppy(null);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {

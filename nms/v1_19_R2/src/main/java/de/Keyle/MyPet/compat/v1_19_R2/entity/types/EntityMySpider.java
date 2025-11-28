@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.4F, height = 0.9F)
 public class EntityMySpider extends EntityMyPet {
@@ -49,6 +50,6 @@ public class EntityMySpider extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.spider.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SPIDER_STEP, 0.15F, 1.0F);
 	}
 }

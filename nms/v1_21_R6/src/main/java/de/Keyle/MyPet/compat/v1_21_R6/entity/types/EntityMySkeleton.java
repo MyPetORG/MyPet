@@ -44,6 +44,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import java.util.List;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMySkeleton extends EntityMyPet {
@@ -141,13 +142,13 @@ public class EntityMySkeleton extends EntityMyPet {
 	@Override
 	public void playPetStepSound() {
 		if (getMyPet().isStray()) {
-			makeSound("entity.stray.step", 0.15F, 1.0F);
+			getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_STRAY_STEP, 0.15F, 1.0F);
 		} else if (getMyPet().isWither()) {
-			makeSound("entity.wither_skeleton.step", 0.15F, 1.0F);
+			getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_WITHER_SKELETON_STEP, 0.15F, 1.0F);
 		} else if (getMyPet().isBogged()) {
-			makeSound("entity.bogged.step", 0.15F, 1.0F);
+			getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_BOGGED_STEP, 0.15F, 1.0F);
 		} else {
-			makeSound("entity.skeleton.step", 0.15F, 1.0F);
+			getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SKELETON_STEP, 0.15F, 1.0F);
 		}
 	}
 

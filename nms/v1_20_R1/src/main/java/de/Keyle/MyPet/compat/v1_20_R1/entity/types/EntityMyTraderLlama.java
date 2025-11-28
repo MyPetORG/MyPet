@@ -44,6 +44,7 @@ import net.minecraft.world.level.block.WoolCarpetBlock;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyTraderLlama extends EntityMyPet {
@@ -114,7 +115,7 @@ public class EntityMyTraderLlama extends EntityMyPet {
 					this.level().addFreshEntity(entityitem);
 				}
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setChest(null);
 				getMyPet().setDecor(null);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {

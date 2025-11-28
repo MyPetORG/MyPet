@@ -46,6 +46,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @Compat("v1_19_R3")
 public class RangedAttack implements AIGoal {
@@ -206,7 +207,7 @@ public class RangedAttack implements AIGoal {
 				double distance20percent = Mth.sqrt((float)(distanceX * distanceX + distanceZ * distanceZ)) * 0.2F;
 				snowball.setDamage(damage);
 				snowball.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
-				entityMyPet.makeSound("entity.arrow.shoot", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_ARROW_SHOOT, 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
 				world.addFreshEntity(snowball);
 				break;
 			}
@@ -218,7 +219,7 @@ public class RangedAttack implements AIGoal {
 				double distance20percent = Mth.sqrt((float)(distanceX * distanceX + distanceZ * distanceZ)) * 0.2F;
 				egg.setDamage(damage);
 				egg.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
-				entityMyPet.makeSound("entity.arrow.shoot", 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_ARROW_SHOOT, 0.5F, 0.4F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
 				world.addFreshEntity(egg);
 				break;
 			}
@@ -230,7 +231,7 @@ public class RangedAttack implements AIGoal {
 				largeFireball.setPosRaw(largeFireball.getX(), (entityMyPet.getY() + entityMyPet.getBbHeight() / 2.0F + 0.5D), largeFireball.getZ());
 				largeFireball.setDamage(damage);
 				world.addFreshEntity(largeFireball);
-				entityMyPet.makeSound("entity.ghast.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_GHAST_SHOOT, 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
 				break;
 			}
 			case SmallFireball: {
@@ -241,7 +242,7 @@ public class RangedAttack implements AIGoal {
 				smallFireball.setPosRaw(smallFireball.getX(), (entityMyPet.getY() + entityMyPet.getBbHeight() / 2.0F + 0.5D), smallFireball.getZ());
 				smallFireball.setDamage(damage);
 				world.addFreshEntity(smallFireball);
-				entityMyPet.makeSound("entity.ghast.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_GHAST_SHOOT, 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
 				break;
 			}
 			case WitherSkull: {
@@ -252,7 +253,7 @@ public class RangedAttack implements AIGoal {
 				witherSkull.setPosRaw(witherSkull.getX(), (entityMyPet.getY() + entityMyPet.getBbHeight() / 2.0F + 0.5D), witherSkull.getZ());
 				witherSkull.setDamage(damage);
 				world.addFreshEntity(witherSkull);
-				entityMyPet.makeSound("entity.wither.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_WITHER_SHOOT, 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
 				break;
 			}
 			case DragonFireball: {
@@ -263,14 +264,14 @@ public class RangedAttack implements AIGoal {
 				dragonFireball.setPosRaw(dragonFireball.getX(), (entityMyPet.getY() + entityMyPet.getBbHeight() / 2.0F + 0.5D), dragonFireball.getZ());
 				dragonFireball.setDamage(damage);
 				world.addFreshEntity(dragonFireball);
-				entityMyPet.makeSound("entity.ender_dragon.shoot", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
 				break;
 			}
 			case Trident: {
 				MyPetTrident trident = new MyPetTrident(world, entityMyPet);
 				trident.setBaseDamage(damage);
 				trident.setCritArrow(false);
-				entityMyPet.makeSound("item.trident.throw", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ITEM_TRIDENT_THROW, 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
 				double distanceX = target.getX() - entityMyPet.getX();
 				double distanceY = target.getY() + target.getEyeHeight() - 1.100000023841858D - trident.getY();
 				double distanceZ = target.getZ() - entityMyPet.getZ();
@@ -282,7 +283,7 @@ public class RangedAttack implements AIGoal {
 			case EnderPearl: {
 				MyPetEnderPearl enderPearl = new MyPetEnderPearl(world, entityMyPet);
 				enderPearl.setDamage(damage);
-				entityMyPet.makeSound("entity.ender_pearl.throw", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_ENDER_PEARL_THROW, 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
 				double distanceX = target.getX() - entityMyPet.getX();
 				double distanceY = target.getY() + target.getEyeHeight() - 1.100000023841858D - enderPearl.getY();
 				double distanceZ = target.getZ() - entityMyPet.getZ();
@@ -294,7 +295,7 @@ public class RangedAttack implements AIGoal {
 			case LlamaSpit: {
 				MyPetLlamaSpit llamaSpit = new MyPetLlamaSpit(world, entityMyPet);
 				llamaSpit.setDamage(damage);
-				entityMyPet.makeSound("entity.llama.spit", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_LLAMA_SPIT, 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
 				double distanceX = target.getX() - entityMyPet.getX();
 				double distanceY = target.getY() + (target.getEyeHeight() / 3.0F) - llamaSpit.getY();
 				double distanceZ = target.getZ() - entityMyPet.getZ();
@@ -308,7 +309,7 @@ public class RangedAttack implements AIGoal {
 				Arrow arrow = new MyPetArrow(world, entityMyPet);
 				arrow.setBaseDamage(damage);
 				arrow.setCritArrow(false);
-				entityMyPet.makeSound("entity.arrow.shoot", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
+				entityMyPet.getBukkitEntity().getWorld().playSound(entityMyPet.getBukkitEntity().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
 				double distanceX = target.getX() - entityMyPet.getX();
 				double distanceY = target.getY() + target.getEyeHeight() - 1.100000023841858D - arrow.getY();
 				double distanceZ = target.getZ() - entityMyPet.getZ();

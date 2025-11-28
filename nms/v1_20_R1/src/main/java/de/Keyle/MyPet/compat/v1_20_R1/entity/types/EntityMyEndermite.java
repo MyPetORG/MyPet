@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.4F, height = 0.1F)
 public class EntityMyEndermite extends EntityMyPet {
@@ -49,7 +50,7 @@ public class EntityMyEndermite extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.endermite.step", 1.0F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_ENDERMITE_STEP, 1.0F, 1.0F);
 	}
 
 	@Override

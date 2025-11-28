@@ -47,6 +47,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 
 import java.lang.reflect.InvocationTargetException;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyDonkey extends EntityMyPet {
@@ -88,7 +89,7 @@ public class EntityMyDonkey extends EntityMyPet {
 			if (flag) {
 				applyVisual(64, true);
 				rearCounter = 10;
-				this.makeSound("entity.donkey.angry", 1.0F, 1.0F);
+				this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_DONKEY_ANGRY, 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
 			ErrorUtil.report(e);
@@ -135,7 +136,7 @@ public class EntityMyDonkey extends EntityMyPet {
 					this.level.addFreshEntity(entityitem);
 				}
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setChest(null);
 				getMyPet().setSaddle(null);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {

@@ -33,6 +33,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class EntityMyBogged extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.bogged.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_BOGGED_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

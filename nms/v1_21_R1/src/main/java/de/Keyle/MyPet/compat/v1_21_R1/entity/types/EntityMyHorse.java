@@ -52,6 +52,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import java.util.List;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.3965F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet{
@@ -92,7 +93,7 @@ public class EntityMyHorse extends EntityMyPet{
 			if (flag) {
 				applyVisual(64, true);
 				rearCounter = 10;
-				this.makeSound("entity.horse.angry", 1.0F, 1.0F);
+				this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_HORSE_ANGRY, 1.0F, 1.0F);
 			}
 		} catch (Exception e) {
 			ErrorUtil.report(e);
@@ -161,7 +162,7 @@ public class EntityMyHorse extends EntityMyPet{
 					this.level().addFreshEntity(entityitem);
 				}
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setChest(null);
 				getMyPet().setSaddle(null);
 				getMyPet().setArmor(null);

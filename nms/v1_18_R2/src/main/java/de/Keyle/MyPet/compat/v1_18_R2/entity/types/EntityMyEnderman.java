@@ -47,6 +47,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
@@ -85,7 +86,7 @@ public class EntityMyEnderman extends EntityMyPet {
 				entityitem.pickupDelay = 10;
 				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setBlock(null);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {

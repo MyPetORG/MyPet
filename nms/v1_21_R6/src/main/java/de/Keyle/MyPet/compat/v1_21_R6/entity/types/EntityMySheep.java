@@ -45,6 +45,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
@@ -118,7 +119,7 @@ public class EntityMySheep extends EntityMyPet {
 					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 					this.level().addFreshEntity(entityitem);
 				}
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {
 						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
@@ -158,7 +159,7 @@ public class EntityMySheep extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.sheep.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SHEEP_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

@@ -35,6 +35,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.3F, height = 1.4F)
 public class EntityMyPolarBear extends EntityMyPet {
@@ -123,7 +124,7 @@ public class EntityMyPolarBear extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.polar_bear.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_POLAR_BEAR_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

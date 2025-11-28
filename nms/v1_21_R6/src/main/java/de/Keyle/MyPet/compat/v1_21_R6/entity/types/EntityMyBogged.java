@@ -35,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyBogged extends EntityMyPet {
@@ -67,7 +68,7 @@ public class EntityMyBogged extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.bogged.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_BOGGED_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

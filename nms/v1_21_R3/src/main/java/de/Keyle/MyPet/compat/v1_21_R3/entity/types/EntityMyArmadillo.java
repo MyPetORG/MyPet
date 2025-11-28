@@ -34,6 +34,7 @@ import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 0.65F)
 public class EntityMyArmadillo extends EntityMyPet {
@@ -91,7 +92,7 @@ public class EntityMyArmadillo extends EntityMyPet {
 
     @Override
     public void playPetStepSound() {
-        makeSound("entity.armadillo.step", 0.15F, 1.0F);
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_ARMADILLO_STEP, 0.15F, 1.0F);
     }
 
 

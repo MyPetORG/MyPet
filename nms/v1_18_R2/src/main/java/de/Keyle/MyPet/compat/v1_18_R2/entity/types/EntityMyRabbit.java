@@ -33,6 +33,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
@@ -64,7 +65,7 @@ public class EntityMyRabbit extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.rabbit.jump", 1.0F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_RABBIT_JUMP, 1.0F, 1.0F);
 	}
 
 	@Override

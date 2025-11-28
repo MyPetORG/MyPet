@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 
 import java.util.concurrent.ThreadLocalRandom;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyWarden extends EntityMyPet {
@@ -55,7 +56,7 @@ public class EntityMyWarden extends EntityMyPet {
 		try {
 			this.level.broadcastEntityEvent(this, (byte) 4);
 			flag = super.attack(entity);
-			this.makeSound("entity.warden.attack_impact", 1.0F, 1.0F);
+			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_ATTACK_IMPACT, 1.0F, 1.0F);
 		} catch (Exception e) {
 			ErrorUtil.report(e);
 		}
@@ -67,7 +68,7 @@ public class EntityMyWarden extends EntityMyPet {
 		super.tick();
 		if(!this.emerged) {
 			this.setPose(Pose.EMERGING);
-			this.makeSound("entity.warden.emerge");
+			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_EMERGE, 1.0F, 1.0F);
 			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> this.setPose(Pose.STANDING), 135);
 			this.emerged = true;
 		}
@@ -99,7 +100,7 @@ public class EntityMyWarden extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.warden.step", 1.0F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_STEP, 1.0F, 1.0F);
 	}
 
 	@Override
@@ -107,7 +108,7 @@ public class EntityMyWarden extends EntityMyPet {
 		//We don't want it to dig multiple times
 		if(this.getPose()!=Pose.DIGGING && entity_removalreason!=RemovalReason.KILLED && !getMyPet().wantsToRespawn()) {
 			//Play sound
-			this.makeSound("entity.warden.dig");
+			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_DIG, 5.0F, 1.0F);
 			this.setPose(Pose.DIGGING);
 			if(!MyPetApi.getPlugin().isDisabling()) {
 				Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> super.remove(entity_removalreason), 100);
@@ -119,8 +120,4 @@ public class EntityMyWarden extends EntityMyPet {
 		}
 	}
 
-	private void makeSound(String leSound) {
-		SoundEvent se = Registry.SOUND_EVENT.get(new ResourceLocation(leSound));
-		this.playSound(se, 5F,1F);
-	}
 }

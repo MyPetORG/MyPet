@@ -45,6 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyZombieHorse extends EntityMyPet {
@@ -132,7 +133,7 @@ public class EntityMyZombieHorse extends EntityMyPet {
 					this.level().addFreshEntity(entityitem);
 				}
 
-				makeSound("entity.sheep.shear", 1.0F, 1.0F);
+				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
 				getMyPet().setSaddle(null);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					try {

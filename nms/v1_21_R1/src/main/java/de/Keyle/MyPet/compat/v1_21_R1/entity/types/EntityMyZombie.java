@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import java.util.List;
+import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet {
@@ -171,7 +172,7 @@ public class EntityMyZombie extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.zombie.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_ZOMBIE_STEP, 0.15F, 1.0F);
 	}
 
 	@Override

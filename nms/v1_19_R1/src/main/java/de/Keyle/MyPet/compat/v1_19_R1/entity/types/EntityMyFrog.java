@@ -32,6 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.animal.FrogVariant;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 import java.util.OptionalInt;
 
@@ -96,7 +97,7 @@ public class EntityMyFrog extends EntityMyAquaticPet {
 
     @Override
     public void playPetStepSound() {
-        makeSound("entity.frog.step", 0.15F, 1.0F);
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_FROG_STEP, 0.15F, 1.0F);
     }
 
     @Override

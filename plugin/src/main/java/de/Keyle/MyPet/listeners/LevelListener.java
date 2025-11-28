@@ -20,9 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelEvent;
@@ -120,7 +118,7 @@ public class LevelListener implements Listener {
                         }
                     }.loop(2);
 
-                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_UP.get()), 1F, 0.7F);
+                    entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1F, 0.7F);
                 }
             });
         }
@@ -165,7 +163,7 @@ public class LevelListener implements Listener {
                         }
                     }.once();
 
-                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_DOWN.get()), 1F, 0.7F);
+                    entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 1F, 0.7F);
                 }
             });
         }

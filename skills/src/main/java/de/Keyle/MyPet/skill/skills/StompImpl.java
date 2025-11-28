@@ -22,7 +22,6 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -85,7 +84,7 @@ public class StompImpl implements Stomp {
     public void apply(LivingEntity target) {
         Location location = target.getLocation();
         location.getWorld().playEffect(location, Effect.STEP_SOUND, Material.BEDROCK);
-        location.getWorld().playSound(location, Sound.valueOf(SoundCompat.FALL_BIG.get()), 0.9F, 0.7F);
+        location.getWorld().playSound(location, Sound.ENTITY_HOSTILE_BIG_FALL, 0.9F, 0.7F);
 
         double posX = location.getX();
         double posY = location.getY();

@@ -21,13 +21,13 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -97,7 +97,7 @@ public class ThornsImpl implements Thorns {
         }
         myPet.getEntity().ifPresent(entity -> {
             damager.damage(calculateReflectedDamage(event.getDamage()), entity);
-            entity.getHandle().makeSound(SoundCompat.THORNS_HIT.get(), 0.2F, 1.0F);
+            entity.getWorld().playSound(entity.getLocation(), Sound.ENCHANT_THORNS_HIT, 0.2F, 1.0F);
             entity.getWorld().spawnParticle(Particle.CRIT_MAGIC, entity.getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
             entity.getWorld().spawnParticle(Particle.CRIT, entity.getLocation().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
         });

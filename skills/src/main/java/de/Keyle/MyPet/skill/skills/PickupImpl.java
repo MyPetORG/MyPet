@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.compat.SoundCompat;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
@@ -35,9 +34,7 @@ import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
@@ -148,7 +145,7 @@ public class PickupImpl implements Pickup {
                                 int itemAmount = inv.addItem(itemStack);
                                 if (itemAmount == 0) {
                                     MyPetApi.getPlatformHelper().doPickupAnimation(petEntity, itemEntity);
-                                    petEntity.getHandle().makeSound(SoundCompat.ITEM_PICKUP.get(), 0.2F, 1.0F);
+                                    petEntity.getWorld().playSound(petEntity.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.2F, 1.0F);
                                     itemStack.setAmount(0);
                                     itemEntity.remove();
                                 } else {

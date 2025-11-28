@@ -28,6 +28,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 
 @EntitySize(width = 1.95F, height = 2.2F)
 public class EntityMyRavager extends EntityMyPet {
@@ -63,7 +64,7 @@ public class EntityMyRavager extends EntityMyPet {
 
 	@Override
 	public void playPetStepSound() {
-		makeSound("entity.ravager.step", 0.15F, 1.0F);
+		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_RAVAGER_STEP, 0.15F, 1.0F);
 	}
 
 	@Override
