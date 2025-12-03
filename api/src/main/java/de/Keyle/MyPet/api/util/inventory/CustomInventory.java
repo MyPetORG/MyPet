@@ -22,15 +22,14 @@ package de.Keyle.MyPet.api.util.inventory;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
 import de.keyle.knbt.TagString;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -40,12 +39,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.bukkit.util.io.BukkitObjectInputStream;
-
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -68,7 +62,7 @@ public class CustomInventory implements InventoryHolder {
      * Defaults to "Inventory".
      */
     @Getter
-    private String name = "Inventory";
+    private Component name = Component.text("Inventory");
     /**
      * Logical size of the inventory in slots. Always a multiple of 9 in the
      * inclusive range [9, 54].
@@ -140,7 +134,7 @@ public class CustomInventory implements InventoryHolder {
      * @param size initial size in slots (will be normalized to a multiple of 9 and clamped [9,54])
      * @param name initial GUI title (will be truncated to 64 chars if longer)
      */
-    public CustomInventory(int size, String name) {
+    public CustomInventory(int size, Component name) {
         this();
         setSize(size);
         setName(name);
@@ -169,7 +163,7 @@ public class CustomInventory implements InventoryHolder {
     }
 
     /**
-     * Sets the inventory GUI title.
+     * Sets the inventory GUI title from a String.
      * <p>
      * Renaming reconstructs the underlying Bukkit inventory to apply the new
      * title while preserving contents and max stack size.
@@ -181,11 +175,24 @@ public class CustomInventory implements InventoryHolder {
 
         // Enforce reasonable title bounds and remove control chars
         String cleaned = name.replaceAll("\\p{Cntrl}", "");
-        String newName = cleaned.length() > 64 ? cleaned.substring(0, 64) : cleaned;
+        String truncated = cleaned.length() > 64 ? cleaned.substring(0, 64) : cleaned;
 
-        if (Objects.equals(this.name, newName)) return;
+        setName(Component.text(truncated));
+    }
 
-        this.name = newName;
+    /**
+     * Sets the inventory GUI title from a Component.
+     * <p>
+     * Renaming reconstructs the underlying Bukkit inventory to apply the new
+     * title while preserving contents and max stack size.
+     *
+     * @param name new title Component (null is ignored)
+     */
+    public void setName(Component name) {
+        if (name == null) return;
+        if (Objects.equals(this.name, name)) return;
+
+        this.name = name;
 
         // If no backing inventory yet, we only cache the title
         if (bukkitInventory == null) {
@@ -260,7 +267,7 @@ public class CustomInventory implements InventoryHolder {
      * @return the amount that could not be added (0 if fully inserted)
      */
     public int addItem(ItemStack itemAdd) {
-        if (itemAdd == null || itemAdd.getType() == Material.AIR) {
+        if (itemAdd == null || itemAdd.getType().isAir()) {
             return 0;
         }
         createInventoryIfNeeded();
@@ -280,20 +287,20 @@ public class CustomInventory implements InventoryHolder {
      * Returns the underlying Bukkit Inventory instance for integration points
      * that require direct access.
      *
-     * @return the backing Bukkit inventory, creating it if needed
+     * @return the backing Bukkit inventory, or null if not yet initialized
      */
-    public Inventory getBukkitInventory() {
+    public @Nullable Inventory getBukkitInventory() {
         return getInventory();
     }
 
     /**
-     * InventoryHolder contract. Returns the held Bukkit Inventory, creating it
-     * lazily if the size has been set. The holder is always this instance.
+     * InventoryHolder contract. Returns the held Bukkit Inventory.
+     * May be null if size has not been set yet.
      *
      * @return the held Bukkit inventory or null if size has not been set yet
      */
     @Override
-    public Inventory getInventory() {
+    public @Nullable Inventory getInventory() {
         return bukkitInventory;
     }
 
@@ -310,7 +317,7 @@ public class CustomInventory implements InventoryHolder {
         if (world == null) return;
         for (int i = 0; i < this.getSize(); i++) {
             ItemStack is = this.removeItemNoUpdate(i);
-            if (is != null && is.getType() != Material.AIR) {
+            if (is != null && !is.getType().isAir()) {
                 world.dropItem(loc, is);
             }
         }
@@ -329,7 +336,7 @@ public class CustomInventory implements InventoryHolder {
         if (this.bukkitInventory == null) return null;
         if (slot < 0 || slot >= this.size) return null;
         ItemStack current = this.bukkitInventory.getItem(slot);
-        if (current == null || current.getType() == Material.AIR) return null;
+        if (current == null || current.getType().isAir()) return null;
         int take = Math.min(subtract, current.getAmount());
         ItemStack result = current.clone();
         result.setAmount(take);
@@ -358,8 +365,8 @@ public class CustomInventory implements InventoryHolder {
     /**
      * Serializes the inventory contents into the provided K-NBT compound.
      * <p>
-     * Each non-empty slot is stored as a Base64-encoded Bukkit ItemStack under
-     * the key "BukkitItem" along with its slot index.
+     * Each non-empty slot is stored as a Base64-encoded ItemStack using Paper's
+     * native {@code serializeAsBytes()} method under the key "PaperItem".
      *
      * @param compound destination compound to write into (must not be null)
      * @return the same compound instance for chaining
@@ -373,18 +380,12 @@ public class CustomInventory implements InventoryHolder {
         }
         for (int i = 0; i < this.bukkitInventory.getSize(); i++) {
             ItemStack itemStack = this.bukkitInventory.getItem(i);
-            if (itemStack != null && itemStack.getType() != Material.AIR) {
+            if (itemStack != null && !itemStack.getType().isAir()) {
                 TagCompound item = new TagCompound();
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                try (BukkitObjectOutputStream oos = new BukkitObjectOutputStream(bos)) {
-                    oos.writeObject(itemStack);
-                    oos.flush();
-                } catch (IOException e) {
-                    ErrorUtil.report(e);
-                }
-                String b64 = Base64.getEncoder().encodeToString(bos.toByteArray());
+                byte[] serialized = itemStack.serializeAsBytes();
+                String b64 = Base64.getEncoder().encodeToString(serialized);
                 item.getCompoundData().put("Slot", new TagByte((byte) i));
-                item.getCompoundData().put("BukkitItem", new TagString(b64));
+                item.getCompoundData().put("PaperItem", new TagString(b64));
                 itemList.add(item);
             }
         }
@@ -393,7 +394,11 @@ public class CustomInventory implements InventoryHolder {
     }
 
     /**
-     * Restores inventory contents from the provided K-NBT compound created by {@link #save(TagCompound)}.
+     * Restores inventory contents from the provided NBT compound.
+     * <p>
+     * Supports the current "PaperItem" format (Paper's {@code serializeAsBytes()}).
+     * Old formats ("BukkitItem" or K-NBT/NMS) are incompatible with MyPet v4
+     * and will be skipped with a warning logged.
      *
      * @param nbtTagCompound source compound containing an "Items" list
      */
@@ -402,28 +407,38 @@ public class CustomInventory implements InventoryHolder {
         TagList items = nbtTagCompound.getAs("Items", TagList.class);
         if (items == null) return;
         if (this.bukkitInventory == null) return;
+
         for (int i = 0; i < items.size(); i++) {
             TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
             TagByte slotTag = itemCompound.getAs("Slot", TagByte.class);
-            TagString b64Tag = itemCompound.getAs("BukkitItem", TagString.class);
-            if (slotTag == null || b64Tag == null) {
-                continue; // Skip items without required tags
+            if (slotTag == null) {
+                MyPetApi.getLogger().warning("Skipped item in pet inventory: missing Slot tag");
+                continue;
             }
             int slot = slotTag.getByteData();
-            String b64 = b64Tag.getStringData();
-            byte[] bytes = Base64.getDecoder().decode(b64);
-            ItemStack itemStack = null;
-            try (BukkitObjectInputStream ois = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
-                Object obj = ois.readObject();
-                if (obj instanceof ItemStack) {
-                    itemStack = (ItemStack) obj;
+
+            // Current format: Paper's serializeAsBytes()
+            TagString paperTag = itemCompound.getAs("PaperItem", TagString.class);
+            if (paperTag != null) {
+                try {
+                    byte[] bytes = Base64.getDecoder().decode(paperTag.getStringData());
+                    ItemStack itemStack = ItemStack.deserializeBytes(bytes);
+                    if (slot >= 0 && slot < this.size) {
+                        this.bukkitInventory.setItem(slot, itemStack);
+                    }
+                } catch (Exception e) {
+                    MyPetApi.getLogger().warning("Failed to load item in slot " + slot + ": " + e.getMessage());
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                ErrorUtil.report(e);
+                continue;
             }
-            if (slot >= 0 && slot < this.size) {
-                this.bukkitInventory.setItem(slot, itemStack);
+
+            // Old incompatible formats - log warning and skip
+            if (itemCompound.containsKey("BukkitItem") || itemCompound.containsKey("id")) {
+                MyPetApi.getLogger().warning("Removed item in slot " + slot + ": incompatible format from v3.");
+                continue;
             }
+
+            MyPetApi.getLogger().warning("Skipped item in slot " + slot + ": unknown format");
         }
     }
 
@@ -479,7 +494,7 @@ public class CustomInventory implements InventoryHolder {
 
     public List<HumanEntity> getViewers() {
         if (bukkitInventory != null) return bukkitInventory.getViewers();
-        return new ArrayList<>(transaction); // soft fallback, no allocation
+        return new ArrayList<>(transaction);
     }
 
     /**
@@ -524,6 +539,7 @@ public class CustomInventory implements InventoryHolder {
     public ItemStack removeItemNoUpdate(int i) {
         createInventoryIfNeeded();
         if (this.bukkitInventory == null) return null;
+        if (i < 0 || i >= this.size) return null;
         ItemStack current = this.bukkitInventory.getItem(i);
         if (current == null) return null;
         this.bukkitInventory.clear(i);
@@ -536,14 +552,6 @@ public class CustomInventory implements InventoryHolder {
      * @return true if inventory has no meaningful items; false otherwise
      */
     public boolean isEmpty() {
-        if (this.bukkitInventory == null) {
-            return true;
-        }
-        for (ItemStack is : this.bukkitInventory.getContents()) {
-            if (is != null && is.getType() != Material.AIR) {
-                return false;
-            }
-        }
-        return true;
+        return this.bukkitInventory == null || this.bukkitInventory.isEmpty();
     }
 }

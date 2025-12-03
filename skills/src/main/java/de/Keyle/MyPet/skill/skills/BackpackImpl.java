@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -67,8 +66,8 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
     protected UpgradeComputer<Boolean> dropOnDeath = new UpgradeComputer<>(false);
 
     /**
-     * Backing inventory implementation, provided by a version-dependent compat layer.
-     * Returns the underlying CustomInventory for direct interactions (e.g., drop,
+     * Backing inventory implementation using Paper's native ItemStack serialization.
+     * Returns CustomInventory for direct interactions (e.g., drop,
      * set/get items, or querying the Bukkit inventory).
      */
     @Getter
@@ -86,7 +85,7 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
      */
     public BackpackImpl(MyPet myPet) {
         this.myPet = myPet;
-        inventory = MyPetApi.getCompatUtil().getCompatInstance(CustomInventory.class, "util.inventory", "CustomInventory");
+        inventory = new CustomInventory();
         // Ensure inventory reflects current row count immediately
         if(rows.getValue().intValue() > 0) {
             inventory.setSize(rows.getValue().intValue() * 9);
