@@ -262,7 +262,7 @@ jobs:
             {
               "type": "rich",
               "title": "${{ env.PROJECT_VERSION }}",
-              "description": "New snapshot published",
+              "description": "New snapshot released. **Do NOT use in production!**",
               "color": 439741,
               "thumbnail": {
                 "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
