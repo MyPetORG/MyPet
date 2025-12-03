@@ -65,6 +65,10 @@ public class ItemStackNBTConverter {
         return itemstack;
     }
 
+    public static org.bukkit.inventory.ItemStack compoundToBukkitItemStack(TagCompound compound) {
+        return CraftItemStack.asBukkitCopy(compoundToItemStack(compound));
+    }
+
     @SuppressWarnings("unchecked")
     public static NBTBase compoundToVanillaCompound(TagBase tag) {
         switch (TagType.getTypeById(tag.getTagTypeId())) {

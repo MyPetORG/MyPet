@@ -403,8 +403,13 @@ public class CustomInventory implements InventoryHolder {
         if (this.bukkitInventory == null) return;
         for (int i = 0; i < items.size(); i++) {
             TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
-            int slot = itemCompound.getAs("Slot", TagByte.class).getByteData();
-            String b64 = itemCompound.getAs("BukkitItem", TagString.class).getStringData();
+            TagByte slotTag = itemCompound.getAs("Slot", TagByte.class);
+            TagString b64Tag = itemCompound.getAs("BukkitItem", TagString.class);
+            if (slotTag == null || b64Tag == null) {
+                continue; // Skip items without required tags
+            }
+            int slot = slotTag.getByteData();
+            String b64 = b64Tag.getStringData();
             byte[] bytes = Base64.getDecoder().decode(b64);
             ItemStack itemStack = null;
             try (BukkitObjectInputStream ois = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {

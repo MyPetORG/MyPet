@@ -76,6 +76,10 @@ public class ItemStackNBTConverter {
         return ItemStack.of(tagCompound);
     }
 
+    public static org.bukkit.inventory.ItemStack compoundToBukkitItemStack(TagCompound compound) {
+        return CraftItemStack.asBukkitCopy(compoundToItemStack(compound));
+    }
+
     public static Tag compoundToVanillaCompound(TagBase tag) {
         switch (TagType.getTypeById(tag.getTagTypeId())) {
             case Int:

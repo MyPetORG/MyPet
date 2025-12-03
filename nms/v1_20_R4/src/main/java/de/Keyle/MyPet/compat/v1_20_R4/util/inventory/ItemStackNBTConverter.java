@@ -62,6 +62,10 @@ public class ItemStackNBTConverter {
         return vanillaCompoundToItemStack(tagCompound);
     }
 
+    public static org.bukkit.inventory.ItemStack compoundToBukkitItemStack(TagCompound compound) {
+        return CraftItemStack.asBukkitCopy(compoundToItemStack(compound));
+    }
+
     public static ItemStack vanillaCompoundToItemStack(CompoundTag compoundTag) {
         // Conversion is fun
         if (compoundTag.contains("tag")) {
