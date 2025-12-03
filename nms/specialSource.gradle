@@ -16,20 +16,28 @@ buildscript {
 // Spigot server code remapping: https://www.spigotmc.org/threads/spigot-bungeecord-1-17-1-17-1.510208/
 // These dependencies and mappings are installed into the local Maven repository when BuildTools builds the Spigot dependencies.
 def gradleCache = new File(System.getProperty("user.home"), '.gradle/caches/modules-2/files-2.1')
-def findInGradleCache = { group, module, version, fileName ->
-    def baseDir = new File(gradleCache, "${group}/${module}/${version}")
-
-    if (!baseDir.exists()) {
-        throw new Exception("Failed to resolve ${baseDir} when trying to load ${fileName}. Cache missing. If resolved using local maven repo, be advised that this script expects a cache from remote, which is stored via gradle.");
+def mavenLocal = new File(System.getProperty("user.home"), '.m2/repository')
+def findInCache = { group, module, version, fileName ->
+    // First, try Gradle cache
+    def gradleBaseDir = new File(gradleCache, "${group}/${module}/${version}")
+    if (gradleBaseDir.exists()) {
+        def result = gradleBaseDir.listFiles()?.findAll { it.isDirectory() }?.collectMany({ it.listFiles().flatten() })?.find { it.name == fileName }?.path
+        if (result != null) {
+            return result
+        }
     }
 
-    def result = baseDir.listFiles()?.findAll { it.isDirectory() }?.collectMany({ it.listFiles().flatten() })?.find { it.name == fileName }?.path
-
-    if (result == null) {
-        throw new Exception("Failed to resolve ${baseDir}/<cache key>/${fileName}");
+    // Fallback to Maven local repository
+    def groupPath = group.replace('.', '/')
+    def mavenBaseDir = new File(mavenLocal, "${groupPath}/${module}/${version}")
+    if (mavenBaseDir.exists()) {
+        def mavenFile = new File(mavenBaseDir, fileName)
+        if (mavenFile.exists()) {
+            return mavenFile.path
+        }
     }
 
-    return result;
+    throw new Exception("Failed to resolve ${fileName} for ${group}:${module}:${version}. Checked Gradle cache (${gradleBaseDir}) and Maven local (${mavenBaseDir}). Run BuildTools to install the required Spigot artifacts.");
 }
 
 
@@ -39,8 +47,8 @@ def specialSource = buildscript.configurations.specialSource.resolvedConfigurati
 
 // Converts from Mojang's mappings to Minecraft's obfuscated mappings.
 ext.remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
-    def remappedMojang = findInGradleCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-mojang.jar")
-    def mojangMappings = findInGradleCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-mojang.txt")
+    def remappedMojang = findInCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-mojang.jar")
+    def mojangMappings = findInCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-mojang.txt")
 
     println '> remapMojangToObfuscated'
     println '  Input: ' + inputFile.path
@@ -61,8 +69,8 @@ ext.remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
 
 // Converts from Minecraft's obfuscated mappings to Spigot's mappings.
 ext.remapObfuscatedToSpigot = { inputFile, outputFile, craftbukkitVersion ->
-    def spigotMappings = findInGradleCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-spigot.csrg")
-    def remappedObf = findInGradleCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-obf.jar")
+    def spigotMappings = findInCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-spigot.csrg")
+    def remappedObf = findInCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-obf.jar")
 
     println '> remapObfuscatedToSpigot'
     println '  Input: ' + inputFile.path
