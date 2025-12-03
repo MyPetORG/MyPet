@@ -15,7 +15,7 @@ dependencies {
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("de.keyle:knbt:0.0.5")
     compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
-    compileOnly("org.mozilla:rhino:1.7.12")
+    compileOnly("org.mozilla:rhino:1.8.0")
 
     compileOnly("org.slf4j:slf4j-api:1.7.30")
     compileOnly("org.slf4j:slf4j-nop:1.7.30")
