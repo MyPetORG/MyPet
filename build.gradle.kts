@@ -46,20 +46,12 @@ subprojects {
         maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
         maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
         maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
-        maven { url = uri("https://maven.pkg.github.com/MyPetORG/*") }
         maven { url = uri("https://maven.enginehub.org/repo/") }
         maven { url = uri("https://hub.spigotmc.org/nexus/content/groups/public/") }
         maven { url = uri("https://repo.md-5.net/content/repositories/public") }
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
 
-        maven {
-            url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
-            credentials {
-                username = providers.gradleProperty("USER_GITHUB").orNull ?: System.getenv("GITHUB_ACTOR")
-                password = providers.gradleProperty("TOKEN_GITHUB").orNull ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
     }
 
     tasks.processResources { enabled = false }
