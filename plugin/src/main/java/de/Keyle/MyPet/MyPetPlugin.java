@@ -60,6 +60,7 @@ import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -93,6 +94,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     private HookHelper hookHelper;
     private PluginHookManager pluginHookManager;
     private ServiceManager serviceManager;
+    private SentryErrorReporter errorReporter = null;
 
     public void onDisable() {
         isDisabling = true;
@@ -119,6 +121,9 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         if (serviceManager != null) {
             serviceManager.disableServices();
         }
+        if (errorReporter != null) {
+            errorReporter.onDisable();
+        }
     }
 
     public void onLoad() {
@@ -128,6 +133,19 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         // load version from manifest
         MyPetVersion.reset();
+
+        if (getConfig().contains("MyPet.Log.Unique-ID")) {
+            try {
+                UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Report-Errors"));
+                SentryErrorReporter.setServerUUID(serverUUID);
+            } catch (Throwable ignored) {
+            }
+        }
+        this.errorReporter = new SentryErrorReporter();
+        if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
+            this.errorReporter.onEnable();
+            MyPetApi.getLogger().info("Error-Reporter ENABLED");
+        }
 
         compatUtil = new CompatUtil();
 
@@ -648,6 +666,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     public PlatformHelper getPlatformHelper() {
         return platformHelper;
+    }
+
+    public ErrorReporter getErrorReporter() {
+        return errorReporter;
     }
 
     private void replaceLogger() {

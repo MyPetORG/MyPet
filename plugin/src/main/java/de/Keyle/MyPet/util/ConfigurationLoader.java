@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -69,6 +70,8 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.RetainEquipmentOnTame", Misc.RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
         config.addDefault("MyPet.Log.Level", Log.LEVEL);
+        config.addDefault("MyPet.Log.Report-Errors", true);
+        config.addDefault("MyPet.Log.Unique-ID", SentryErrorReporter.getServerUUID().toString());
         config.addDefault("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
         config.addDefault("MyPet.Throw-PlayerMoveEvent-While-Riding", Misc.THROW_PLAYER_MOVE_EVENT_WHILE_RIDING);
         config.addDefault("MyPet.Disable-All-Actionbar-Messages", Misc.DISABLE_ALL_ACTIONBAR_MESSAGES);

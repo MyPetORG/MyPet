@@ -178,6 +178,7 @@ dependencies {
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
     add("shade", "com.google.code.gson:gson:2.8.9")
+    add("shade", "io.sentry:sentry:1.7.30")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
 }
 
@@ -196,6 +197,7 @@ tasks.shadowJar {
     relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
+    relocate("io.sentry", "de.Keyle.MyPet.util.sentry")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
     relocate("org.bson", "de.Keyle.MyPet.util.bson")
     relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
