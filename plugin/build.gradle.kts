@@ -18,7 +18,7 @@ dependencies {
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("net.kyori:adventure-nbt:4.17.0")
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
-    compileOnly("org.mozilla:rhino:1.7.12")
+    compileOnly("org.mozilla:rhino:1.7.15")
     compileOnly("com.mojang:brigadier:1.0.18")
 
     // Cloud Command Framework v2
