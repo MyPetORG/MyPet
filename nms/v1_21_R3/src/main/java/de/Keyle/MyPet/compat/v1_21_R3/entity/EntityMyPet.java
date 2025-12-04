@@ -73,6 +73,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+
+import static org.bukkit.attribute.Attribute.MAX_HEALTH;
+import static org.bukkit.attribute.Attribute.MOVEMENT_SPEED;
+import static org.bukkit.attribute.Attribute.STEP_HEIGHT;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Input;
@@ -156,10 +160,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 			this.navigation = this.setSpecialNav();
 			this.petNavigation = new VanillaNavigation(this);
 			this.sitPathfinder = new Sit(this);
-			this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(Integer.MAX_VALUE);
+			getBukkitAttribute(MAX_HEALTH).setBaseValue(Integer.MAX_VALUE);
 			this.setHealth((float) myPet.getHealth());
 			this.updateNameTag();
-			this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(walkSpeed);
+			getBukkitAttribute(MOVEMENT_SPEED).setBaseValue(walkSpeed);
 			this.setPathfinder();
 			this.updateVisuals();
 		} catch (Exception e) {
@@ -482,6 +486,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		return this.bukkitEntity;
 	}
 
+	/**
+	 * Helper method to safely get a Bukkit attribute instance.
+	 * Uses Paper/Bukkit API instead of NMS for attribute access.
+	 */
+	public org.bukkit.attribute.AttributeInstance getBukkitAttribute(org.bukkit.attribute.Attribute attribute) {
+		return getBukkitEntity().getAttribute(attribute);
+	}
+
 	// Obfuscated Method handler ------------------------------------------------------------------------------------
 
 	/**
@@ -632,7 +644,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	}
 
 	public void setMaxUpStep(float f) {
-		Objects.requireNonNull(getAttribute(Attributes.STEP_HEIGHT)).setBaseValue(f);
+		Objects.requireNonNull(getBukkitAttribute(STEP_HEIGHT)).setBaseValue(f);
 	}
 
 	public void onLivingUpdate() {
@@ -700,8 +712,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     public void setHealth(float f) {
         double maxHealth = myPet.getMaxHealth();
 
-        boolean silent = this.getAttribute(Attributes.MAX_HEALTH).getValue() != maxHealth;
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHealth);
+        boolean silent = getBukkitAttribute(MAX_HEALTH).getValue() != maxHealth;
+        getBukkitAttribute(MAX_HEALTH).setBaseValue(maxHealth);
 
         super.setHealth(Mth.clamp(f, 0.0F, (float) maxHealth));
 
@@ -1381,8 +1393,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 				}
 				myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
 				double factor = Math.log10(myPet.getSaturation()) / 2;
-				getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
-				this.setSpeed((float) this.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+				getBukkitAttribute(MOVEMENT_SPEED).setBaseValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
+				this.setSpeed((float) getBukkitAttribute(MOVEMENT_SPEED).getValue());
 			}
 		}
 	}

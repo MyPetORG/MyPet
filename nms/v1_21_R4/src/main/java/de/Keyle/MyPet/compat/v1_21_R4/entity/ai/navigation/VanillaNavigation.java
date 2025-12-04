@@ -30,9 +30,9 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement.MyPetAquaticMoveControl;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import org.bukkit.attribute.Attribute;
 
 @Compat("v1_21_R4")
 public class VanillaNavigation extends AbstractNavigation {
@@ -86,7 +86,7 @@ public class VanillaNavigation extends AbstractNavigation {
 		} else if(!(petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
 			petEntity.switchMovement(new MoveControl(petEntity));
 		}
-		
+
 		nav.tick();
 	}
 
@@ -94,7 +94,7 @@ public class VanillaNavigation extends AbstractNavigation {
 	public void applyNavigationParameters() {
 		this.nav.setCanFloat(parameters.avoidWater());
 		((EntityMyPet) this.entityMyPet)
-				.getAttribute(Attributes.MOVEMENT_SPEED)
+				.getBukkitAttribute(Attribute.MOVEMENT_SPEED)
 				.setBaseValue(parameters.speed() + parameters.speedModifier());
 	}
 }

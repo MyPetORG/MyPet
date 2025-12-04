@@ -29,7 +29,7 @@ import org.bukkit.entity.LivingEntity;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.navigation.NavigationParameters;
 import de.Keyle.MyPet.api.util.Compat;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.bukkit.attribute.Attribute;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 
@@ -85,7 +85,7 @@ public class VanillaNavigation extends AbstractNavigation {
 		} else if(!petEntity.isInWaterOrBubble() && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
 			petEntity.switchMovement(new MoveControl(petEntity));
 		}
-		
+
 		nav.tick();
 	}
 
@@ -93,7 +93,7 @@ public class VanillaNavigation extends AbstractNavigation {
 	public void applyNavigationParameters() {
 		this.nav.setCanFloat(parameters.avoidWater());
 		((EntityMyPet) this.entityMyPet)
-				.getAttribute(Attributes.MOVEMENT_SPEED)
+				.getBukkitAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
 				.setBaseValue(parameters.speed() + parameters.speedModifier());
 	}
 }

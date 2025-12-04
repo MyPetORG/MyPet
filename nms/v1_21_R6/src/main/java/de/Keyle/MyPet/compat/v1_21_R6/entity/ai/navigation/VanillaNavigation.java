@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.compat.v1_21_R6.entity.ai.navigation;
 
 import net.minecraft.world.level.block.Blocks;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
@@ -30,71 +31,70 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.movement.MyPetAquaticMoveControl;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 
 @Compat("v1_21_R6")
 public class VanillaNavigation extends AbstractNavigation {
 
-	PathNavigation nav;
+    PathNavigation nav;
 
-	public VanillaNavigation(EntityMyPet entityMyPet) {
-		super(entityMyPet);
-		nav = entityMyPet.getNavigation();
-	}
+    public VanillaNavigation(EntityMyPet entityMyPet) {
+        super(entityMyPet);
+        nav = entityMyPet.getNavigation();
+    }
 
-	public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
-		super(entityMyPet, parameters);
-		nav = entityMyPet.getNavigation();
-	}
+    public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
+        super(entityMyPet, parameters);
+        nav = entityMyPet.getNavigation();
+    }
 
-	@Override
-	public void stop() {
-		nav.stop();
-	}
+    @Override
+    public void stop() {
+        nav.stop();
+    }
 
-	@Override
-	public boolean navigateTo(double x, double y, double z) {
-		if (this.nav.moveTo(x, y, z, 1.D)) {
-			applyNavigationParameters();
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean navigateTo(double x, double y, double z) {
+        if (this.nav.moveTo(x, y, z, 1.D)) {
+            applyNavigationParameters();
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public boolean navigateTo(LivingEntity entity) {
-		return navigateTo(((CraftLivingEntity) entity).getHandle());
-	}
+    @Override
+    public boolean navigateTo(LivingEntity entity) {
+        return navigateTo(((CraftLivingEntity) entity).getHandle());
+    }
 
-	public boolean navigateTo(net.minecraft.world.entity.LivingEntity entity) {
-		if (this.nav.moveTo(entity, 1.D)) {
-			applyNavigationParameters();
-			return true;
-		}
-		return false;
-	}
+    public boolean navigateTo(net.minecraft.world.entity.LivingEntity entity) {
+        if (this.nav.moveTo(entity, 1.D)) {
+            applyNavigationParameters();
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public void tick() {
-		//This switches between movesets enabling the pet to move naturally on land and water
-		EntityMyPet petEntity = (EntityMyPet) this.entityMyPet;
-		if((petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && this.entityMyPet instanceof EntityMyAquaticPet
-				&& !(petEntity.getMoveControl() instanceof MyPetAquaticMoveControl)) {
-			petEntity.switchMovement(new MyPetAquaticMoveControl(petEntity));
-		} else if(!(petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
-			petEntity.switchMovement(new MoveControl(petEntity));
-		}
-		
-		nav.tick();
-	}
+    @Override
+    public void tick() {
+        //This switches between movesets enabling the pet to move naturally on land and water
+        EntityMyPet petEntity = (EntityMyPet) this.entityMyPet;
+        if ((petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && this.entityMyPet instanceof EntityMyAquaticPet
+                && !(petEntity.getMoveControl() instanceof MyPetAquaticMoveControl)) {
+            petEntity.switchMovement(new MyPetAquaticMoveControl(petEntity));
+        } else if (!(petEntity.isInWater() || petEntity.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
+            petEntity.switchMovement(new MoveControl(petEntity));
+        }
 
-	@Override
-	public void applyNavigationParameters() {
-		this.nav.setCanFloat(parameters.avoidWater());
-		((EntityMyPet) this.entityMyPet)
-				.getAttribute(Attributes.MOVEMENT_SPEED)
-				.setBaseValue(parameters.speed() + parameters.speedModifier());
-	}
+        nav.tick();
+    }
+
+    @Override
+    public void applyNavigationParameters() {
+        this.nav.setCanFloat(parameters.avoidWater());
+        ((EntityMyPet) this.entityMyPet)
+                .getBukkitAttribute(Attribute.MOVEMENT_SPEED)
+                .setBaseValue(parameters.speed() + parameters.speedModifier());
+    }
 }
