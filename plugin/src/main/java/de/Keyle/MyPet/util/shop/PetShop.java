@@ -60,8 +60,12 @@ public class PetShop {
     protected String displayName = "Pet - Shop";
     protected Map<Integer, ShopMyPet> pets = new HashMap<>();
     protected WalletType wallet = WalletType.None;
-    @Getter @Setter protected int position = -1;
-    @Getter @Setter protected SkilltreeIcon icon = new SkilltreeIcon().setMaterial("chest");
+    @Getter
+    @Setter
+    protected int position = -1;
+    @Getter
+    @Setter
+    protected SkilltreeIcon icon = new SkilltreeIcon().setMaterial("chest");
     protected String walletOwner = null;
     protected boolean defaultShop = false;
     protected double privateWallet = 0;

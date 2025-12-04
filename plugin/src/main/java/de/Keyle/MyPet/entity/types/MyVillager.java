@@ -144,12 +144,12 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
         }
     }
 
-    public void setOriginalData(TagCompound compound) {
-        this.originalData = compound;
-    }
-
     public TagCompound getOriginalData() {
         return this.originalData;
+    }
+
+    public void setOriginalData(TagCompound compound) {
+        this.originalData = compound;
     }
 
     public boolean hasOriginalData() {

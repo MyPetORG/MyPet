@@ -45,9 +45,9 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     boolean hasAutoRespawnEnabled();
 
-    void setAutoRespawnMin(int value);
-
     int getAutoRespawnMin();
+
+    void setAutoRespawnMin(int value);
 
     float getPetLivingSoundVolume();
 
@@ -77,13 +77,13 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     boolean hasMyPetInWorldGroup(WorldGroup worldGroup);
 
-    void setExtendedInfo(TagCompound compound);
-
     void addExtendedInfo(String key, TagBase tag);
 
     Optional<TagBase> getExtendedInfo(String key);
 
     TagCompound getExtendedInfo();
+
+    void setExtendedInfo(TagCompound compound);
 
     // -----------------------------------------------------------------------------
 

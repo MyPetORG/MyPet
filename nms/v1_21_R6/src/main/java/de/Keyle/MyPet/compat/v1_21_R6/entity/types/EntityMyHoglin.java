@@ -38,69 +38,69 @@ import org.bukkit.Sound;
 @EntitySize(width = 1.3965F, height = 1.4F)
 public class EntityMyHoglin extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyHoglin.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> NO_SHAKE_WATCHER = SynchedEntityData.defineId(EntityMyHoglin.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyHoglin.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> NO_SHAKE_WATCHER = SynchedEntityData.defineId(EntityMyHoglin.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyHoglin(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyHoglin(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.hoglin.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.hoglin.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.hoglin.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.hoglin.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.hoglin.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.hoglin.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (Configuration.MyPet.Hoglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (Configuration.MyPet.Hoglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(NO_SHAKE_WATCHER, false);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(NO_SHAKE_WATCHER, false);
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        this.getEntityData().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_HOGLIN_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_HOGLIN_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyHoglin getMyPet() {
-		return (MyHoglin) myPet;
-	}
+    @Override
+    public MyHoglin getMyPet() {
+        return (MyHoglin) myPet;
+    }
 }

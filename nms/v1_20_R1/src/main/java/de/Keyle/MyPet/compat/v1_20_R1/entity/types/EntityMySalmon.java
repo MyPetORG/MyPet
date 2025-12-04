@@ -31,30 +31,30 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.7F, height = 0.4f)
 public class EntityMySalmon extends EntityMyAquaticPet {
 
-	private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMySalmon.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMySalmon.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMySalmon(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMySalmon(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.salmon.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.salmon.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.salmon.flop";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.salmon.flop";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.salmon.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.salmon.ambient";
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(FROM_BUCKET_WATCHER, false);
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(FROM_BUCKET_WATCHER, false);
+    }
 }

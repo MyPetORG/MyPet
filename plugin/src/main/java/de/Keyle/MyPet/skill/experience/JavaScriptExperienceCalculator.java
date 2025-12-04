@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.skill.experience;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.exceptions.MyPetExperienceCalculatorInitException;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.mozilla.javascript.*;
 
 import java.io.File;

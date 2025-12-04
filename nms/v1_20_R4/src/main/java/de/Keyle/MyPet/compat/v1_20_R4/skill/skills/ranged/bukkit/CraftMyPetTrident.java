@@ -20,17 +20,16 @@
 
 package de.Keyle.MyPet.compat.v1_20_R4.skill.skills.ranged.bukkit;
 
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.entity.CraftTrident;
-import org.bukkit.entity.SpawnCategory;
-import org.jetbrains.annotations.NotNull;
-
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.ThrownTrident;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftTrident;
+import org.bukkit.entity.SpawnCategory;
+import org.jetbrains.annotations.NotNull;
 
 @Compat("v1_20_R4")
 public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProjectile {

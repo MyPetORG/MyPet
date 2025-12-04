@@ -33,9 +33,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Stomp")
 public class StompUpgrade implements Upgrade<Stomp> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier chanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier damageModifier = null;
 
     @Override

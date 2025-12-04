@@ -7,6 +7,14 @@ import net.minecraft.world.entity.animal.FrogVariant;
  * Converts numerical variants into fancy new variants
  */
 public class VariantConverter {
+    public static CatVariant convertCatVariant(int varId) {
+        return CatVariants.values()[varId].variant;
+    }
+
+    public static FrogVariant convertFrogVariant(int varId) {
+        return FrogVariants.values()[varId].variant;
+    }
+
     private enum CatVariants {
         TABBY(CatVariant.TABBY),
         BLACK(CatVariant.BLACK),
@@ -21,6 +29,7 @@ public class VariantConverter {
         ALL_BLACK(CatVariant.ALL_BLACK);
 
         CatVariant variant;
+
         CatVariants(CatVariant cV) {
             this.variant = cV;
         }
@@ -32,16 +41,9 @@ public class VariantConverter {
         COLD(FrogVariant.COLD);
 
         FrogVariant variant;
+
         FrogVariants(FrogVariant fV) {
             this.variant = fV;
         }
-    }
-
-    public static CatVariant convertCatVariant(int varId) {
-        return CatVariants.values()[varId].variant;
-    }
-
-    public static FrogVariant convertFrogVariant(int varId) {
-        return FrogVariants.values()[varId].variant;
     }
 }

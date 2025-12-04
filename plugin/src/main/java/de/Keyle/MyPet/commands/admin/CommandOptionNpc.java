@@ -52,8 +52,8 @@ import java.util.*;
 
 public class CommandOptionNpc implements CommandOptionTabCompleter {
 
-    private static List<String> optionsList = new ArrayList<>();
     public static final Map<String, CommandOption> COMMAND_OPTIONS = new HashMap<>();
+    private static List<String> optionsList = new ArrayList<>();
 
     public CommandOptionNpc() {
         COMMAND_OPTIONS.put("wallet", new CommandOptionWallet());

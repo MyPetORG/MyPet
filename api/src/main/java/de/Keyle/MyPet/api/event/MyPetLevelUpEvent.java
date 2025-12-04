@@ -32,16 +32,16 @@ public class MyPetLevelUpEvent extends MyPetLevelEvent {
         this.fromLevel = fromLevel;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public int fromLevel() {
         return fromLevel;
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

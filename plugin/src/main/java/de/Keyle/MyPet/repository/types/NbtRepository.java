@@ -47,6 +47,42 @@ public class NbtRepository implements Repository {
     protected Map<UUID, TagCompound> playerTags = new HashMap<>();
     protected Multimap<UUID, UUID> petPlayerMultiMap = HashMultimap.create();
 
+    public static MyPetPlayer createMyPetPlayer(TagCompound playerTag) {
+        MyPetPlayerImpl petPlayer = null;
+        UUID mojangUUID = null;
+        UUID internalUUID = null;
+        String playerName = null;
+        if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
+            TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+            if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
+                internalUUID = UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
+            }
+            if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
+                mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
+            }
+            if (uuidTag.containsKeyAs("Name", TagString.class)) {
+                playerName = uuidTag.getAs("Name", TagString.class).getStringData();
+            }
+        }
+        if (playerTag.containsKeyAs("Name", TagString.class)) {
+            playerName = playerTag.getAs("Name", TagString.class).getStringData();
+        }
+        if (internalUUID == null) {
+            return null;
+        }
+        if (mojangUUID != null) {
+            petPlayer = new MyPetPlayerImpl(internalUUID, mojangUUID);
+            petPlayer.setLastKnownName(playerName);
+        } else if (playerName != null) {
+            petPlayer = new MyPetPlayerImpl(internalUUID, playerName);
+            petPlayer.setLastKnownName(playerName);
+        }
+        if (petPlayer != null) {
+            petPlayer.load(playerTag);
+        }
+        return petPlayer;
+    }
+
     @Override
     public void disable() {
         petTags.clear();
@@ -89,6 +125,8 @@ public class NbtRepository implements Repository {
         callback.run(petTags.size());
     }
 
+    // Pets ------------------------------------------------------------------------------------------------------------
+
     @Override
     public void countMyPets(MyPetType type, final RepositoryCallback<Integer> callback) {
         int counter = 0;
@@ -99,8 +137,6 @@ public class NbtRepository implements Repository {
         }
         callback.run(counter);
     }
-
-    // Pets ------------------------------------------------------------------------------------------------------------
 
     @Override
     public List<StoredMyPet> getAllMyPets() {
@@ -256,11 +292,11 @@ public class NbtRepository implements Repository {
         return petCount;
     }
 
+    // Players ---------------------------------------------------------------------------------------------------------
+
     public UUID getPetUUID(TagCompound petTag) {
         return UUID.fromString(petTag.getAs("UUID", TagString.class).getStringData());
     }
-
-    // Players ---------------------------------------------------------------------------------------------------------
 
     @Override
     public List<MyPetPlayer> getAllMyPetPlayers() {
@@ -392,41 +428,5 @@ public class NbtRepository implements Repository {
             }
         }
         return null;
-    }
-
-    public static MyPetPlayer createMyPetPlayer(TagCompound playerTag) {
-        MyPetPlayerImpl petPlayer = null;
-        UUID mojangUUID = null;
-        UUID internalUUID = null;
-        String playerName = null;
-        if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
-            TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
-            if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
-                internalUUID = UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
-            }
-            if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
-                mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
-            }
-            if (uuidTag.containsKeyAs("Name", TagString.class)) {
-                playerName = uuidTag.getAs("Name", TagString.class).getStringData();
-            }
-        }
-        if (playerTag.containsKeyAs("Name", TagString.class)) {
-            playerName = playerTag.getAs("Name", TagString.class).getStringData();
-        }
-        if (internalUUID == null) {
-            return null;
-        }
-        if (mojangUUID != null) {
-            petPlayer = new MyPetPlayerImpl(internalUUID, mojangUUID);
-            petPlayer.setLastKnownName(playerName);
-        } else if (playerName != null) {
-            petPlayer = new MyPetPlayerImpl(internalUUID, playerName);
-            petPlayer.setLastKnownName(playerName);
-        }
-        if (petPlayer != null) {
-            petPlayer.load(playerTag);
-        }
-        return petPlayer;
     }
 }

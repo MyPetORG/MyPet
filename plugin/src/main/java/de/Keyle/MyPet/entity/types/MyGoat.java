@@ -78,11 +78,11 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
-    
+
     public boolean isScreaming() {
         return isScreaming;
     }
-    
+
     public void setScreaming(boolean flag) {
         this.isScreaming = flag;
         if (status == PetState.Here) {
@@ -93,6 +93,7 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
     public boolean hasLeftHorn() {
         return leftHorn;
     }
+
     public boolean hasRightHorn() {
         return rightHorn;
     }

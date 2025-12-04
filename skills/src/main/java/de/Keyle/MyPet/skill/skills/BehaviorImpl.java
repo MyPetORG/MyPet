@@ -21,14 +21,14 @@
 package de.Keyle.MyPet.skill.skills;
 
 import com.google.common.collect.Iterables;
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.*;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagString;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -53,11 +53,11 @@ import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
  */
 public class BehaviorImpl implements Behavior {
 
+    protected static Random random = new Random();
     @Getter
     protected MyPet myPet;
     protected Set<BehaviorMode> activeBehaviors = new HashSet<>();
     protected BehaviorMode selectedBehavior = BehaviorMode.Normal;
-    protected static Random random = new Random();
     Iterator<BehaviorMode> behaviorCycler;
 
     @Getter
@@ -142,26 +142,6 @@ public class BehaviorImpl implements Behavior {
     }
 
     /**
-     * Selects the given behavior mode for this pet.
-     * <p>
-     * Note: The selected mode must be present in the active behaviors set; otherwise the
-     * internal alignment could misbehave. The current implementation of this class ensures
-     * safety by validating and aligning in {@link #updateCycler()}.
-     *
-     * @param mode the behavior mode to select (must not be null)
-     */
-    @Override
-    public void setBehavior(@NotNull BehaviorMode mode) {
-        // If the requested mode isn’t currently usable, fall back to Normal
-        if (!activeBehaviors.contains(mode)) {
-            mode = BehaviorMode.Normal;
-        }
-        selectedBehavior = mode;
-        // Rebuild and safely align the cycler
-        updateCycler();
-    }
-
-    /**
      * Enables or disables a specific behavior mode and updates the cycler accordingly.
      * <p>
      * If a mode is disabled while it is currently selected, the selection falls back to Normal.
@@ -189,6 +169,26 @@ public class BehaviorImpl implements Behavior {
     @Override
     public @NotNull BehaviorMode getBehavior() {
         return selectedBehavior;
+    }
+
+    /**
+     * Selects the given behavior mode for this pet.
+     * <p>
+     * Note: The selected mode must be present in the active behaviors set; otherwise the
+     * internal alignment could misbehave. The current implementation of this class ensures
+     * safety by validating and aligning in {@link #updateCycler()}.
+     *
+     * @param mode the behavior mode to select (must not be null)
+     */
+    @Override
+    public void setBehavior(@NotNull BehaviorMode mode) {
+        // If the requested mode isn’t currently usable, fall back to Normal
+        if (!activeBehaviors.contains(mode)) {
+            mode = BehaviorMode.Normal;
+        }
+        selectedBehavior = mode;
+        // Rebuild and safely align the cycler
+        updateCycler();
     }
 
     /**

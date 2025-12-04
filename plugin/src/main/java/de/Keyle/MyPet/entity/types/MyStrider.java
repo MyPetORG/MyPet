@@ -32,8 +32,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.MyStrider {
 
-    protected boolean isBaby = false;
     public ItemStack saddle = null;
+    protected boolean isBaby = false;
 
     public MyStrider(MyPetPlayer petOwner) {
         super(petOwner);
@@ -91,10 +91,6 @@ public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.
         return saddle;
     }
 
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
-
     public void setSaddle(ItemStack item) {
         if (item != null && item.getType() != Material.SADDLE) {
             return;
@@ -108,6 +104,10 @@ public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
     }
 
     @Override

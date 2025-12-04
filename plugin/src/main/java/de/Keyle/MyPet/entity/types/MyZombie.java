@@ -155,6 +155,11 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         }
     }
 
+    @Override
+    public int getProfession() {
+        return profession;
+    }
+
     public void setProfession(int profession) {
         this.profession = profession;
         if (status == PetState.Here) {
@@ -164,11 +169,6 @@ public class MyZombie extends MyPet implements de.Keyle.MyPet.api.entity.types.M
                 createEntity();
             }
         }
-    }
-
-    @Override
-    public int getProfession() {
-        return profession;
     }
 
     @Override

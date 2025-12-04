@@ -36,38 +36,69 @@ import lombok.experimental.Accessors;
 @SkillName("Beacon")
 public class BeaconUpgrade implements Upgrade<Beacon> {
 
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier rangeModifier = null;
-    @Getter @Setter
+    @Getter
+    @Setter
     @Accessors(chain = true)
     protected UpgradeIntegerModifier durationModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier numberOfBuffsModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier absorptionModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier hasteModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier healthBoostModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier jumpBoostModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier resistanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier speedModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier strengthModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier regenerationModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier fireResistanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier luckModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier nightVisionModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier waterBreathingModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier invisibilityModifier = null;
 
     @Override

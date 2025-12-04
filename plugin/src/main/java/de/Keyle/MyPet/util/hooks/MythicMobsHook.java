@@ -81,7 +81,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
             }
         }
 
-        if(isV4) {
+        if (isV4) {
             METHOD_getDamageModifiers_list = ReflectionUtil.getMethod(MythicMob.class, "getDamageModifiers");
             if (METHOD_getDamageModifiers_list.getReturnType() != List.class) {
                 METHOD_getDamageModifiers_list = null;
@@ -120,7 +120,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
 
     @Override
     public boolean canLeash(Player attacker, Entity defender) {
-        if(isV4) {
+        if (isV4) {
             return V4.canLeash(attacker, defender);
         } else {
             return V5.canLeash(attacker, defender);
@@ -129,7 +129,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
-        if(isV4) {
+        if (isV4) {
             return V4.canHurt(attacker, defender);
         } else {
             return V5.canHurt(attacker, defender);
@@ -138,7 +138,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
 
     @Override
     public MonsterExperience getMonsterExperience(Entity entity) {
-        if(isV4) {
+        if (isV4) {
             return V4.getMonsterExperience(entity);
         } else {
             return V5.getMonsterExperience(entity);
@@ -150,37 +150,6 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
 
         public V4(MythicMobsHook leHook) {
             V4.leHook = leHook;
-        }
-
-        @EventHandler
-        public void on(MyPetDamageEvent event) {
-            try {
-                if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(event.getTarget()))) {
-                    ActiveMob defender = MythicMobs.inst().getMobManager().getMythicMobInstance(event.getTarget());
-                    MythicMob defenderType = defender.getType();
-
-                    if (defenderType.getIsInvincible()) {
-                        event.setCancelled(true);
-                        return;
-                    }
-
-                    double damage, baseDamage = damage = event.getDamage();
-                    damage -= defender.getArmor();
-                    if (baseDamage >= 1D && damage < 1D) {
-                        damage = 1D;
-                    }
-                    double modifier = getEntityAttackModifier(defenderType);
-                    damage *= modifier;
-                    event.setDamage(damage);
-                    if (damage == 0) {
-                        event.setCancelled(true);
-                    }
-                }
-
-            } catch (NumberFormatException ignored) {
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
         }
 
         public static boolean canLeash(Player attacker, Entity defender) {
@@ -262,23 +231,13 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
             }
             return null;
         }
-    }
-
-
-
-    private static class V5 implements Listener {
-        private static MythicMobsHook leHook;
-
-        public V5(MythicMobsHook leHook) {
-            V5.leHook = leHook;
-        }
 
         @EventHandler
         public void on(MyPetDamageEvent event) {
             try {
-                if (MythicBukkit.inst().getMobManager().isActiveMob(io.lumine.mythic.bukkit.BukkitAdapter.adapt(event.getTarget()))) {
-                    io.lumine.mythic.core.mobs.ActiveMob defender = MythicBukkit.inst().getMobManager().getMythicMobInstance(event.getTarget());
-                    io.lumine.mythic.api.mobs.MythicMob defenderType = defender.getType();
+                if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(event.getTarget()))) {
+                    ActiveMob defender = MythicMobs.inst().getMobManager().getMythicMobInstance(event.getTarget());
+                    MythicMob defenderType = defender.getType();
 
                     if (defenderType.getIsInvincible()) {
                         event.setCancelled(true);
@@ -302,6 +261,15 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
             } catch (Throwable t) {
                 t.printStackTrace();
             }
+        }
+    }
+
+
+    private static class V5 implements Listener {
+        private static MythicMobsHook leHook;
+
+        public V5(MythicMobsHook leHook) {
+            V5.leHook = leHook;
         }
 
         public static boolean canLeash(Player attacker, Entity defender) {
@@ -383,6 +351,37 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
             }
             return null;
         }
+
+        @EventHandler
+        public void on(MyPetDamageEvent event) {
+            try {
+                if (MythicBukkit.inst().getMobManager().isActiveMob(io.lumine.mythic.bukkit.BukkitAdapter.adapt(event.getTarget()))) {
+                    io.lumine.mythic.core.mobs.ActiveMob defender = MythicBukkit.inst().getMobManager().getMythicMobInstance(event.getTarget());
+                    io.lumine.mythic.api.mobs.MythicMob defenderType = defender.getType();
+
+                    if (defenderType.getIsInvincible()) {
+                        event.setCancelled(true);
+                        return;
+                    }
+
+                    double damage, baseDamage = damage = event.getDamage();
+                    damage -= defender.getArmor();
+                    if (baseDamage >= 1D && damage < 1D) {
+                        damage = 1D;
+                    }
+                    double modifier = getEntityAttackModifier(defenderType);
+                    damage *= modifier;
+                    event.setDamage(damage);
+                    if (damage == 0) {
+                        event.setCancelled(true);
+                    }
+                }
+
+            } catch (NumberFormatException ignored) {
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
     }
 
 
@@ -396,7 +395,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
 
         @Override
         public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-            if(isV4) {
+            if (isV4) {
                 if (MythicMobs.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
                     String name = MythicMobs.inst().getMobManager().getMythicMobInstance(entity).getType().getInternalName();
                     for (Setting setting : settings.all()) {

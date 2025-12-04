@@ -35,44 +35,44 @@ import net.minecraft.world.level.Level;
 @Compat("v1_21_R6")
 public class MyPetArrow extends Arrow implements EntityMyPetProjectile {
 
-	protected CraftMyPetArrow bukkitEntity = null;
+    protected CraftMyPetArrow bukkitEntity = null;
 
-	public MyPetArrow(Level world, EntityMyPet entityMyPet) {
-		super(world, entityMyPet, new ItemStack(Items.ARROW), null);
-	}
+    public MyPetArrow(Level world, EntityMyPet entityMyPet) {
+        super(world, entityMyPet, new ItemStack(Items.ARROW), null);
+    }
 
-	@Override
-	public EntityMyPet getShooter() {
-		return (EntityMyPet) super.getOwner();
-	}
+    @Override
+    public EntityMyPet getShooter() {
+        return (EntityMyPet) super.getOwner();
+    }
 
-	@Override
-	public CraftMyPetArrow getBukkitEntity() {
-		if (this.bukkitEntity == null) {
-			this.bukkitEntity = new CraftMyPetArrow(this.level().getCraftServer(), this);
-		}
-		return this.bukkitEntity;
-	}
+    @Override
+    public CraftMyPetArrow getBukkitEntity() {
+        if (this.bukkitEntity == null) {
+            this.bukkitEntity = new CraftMyPetArrow(this.level().getCraftServer(), this);
+        }
+        return this.bukkitEntity;
+    }
 
-	@Override
+    @Override
     public ItemStack getPickupItem() {
-		return new ItemStack(Items.ARROW);
-	}
+        return new ItemStack(Items.ARROW);
+    }
 
-	@Override
-	public void tick() {
-		try {
-			super.tick();
-			if (this.isInGround()) {
-				discard();
-			}
-		} catch (Exception e) {
-			ErrorUtil.report(e);
-		}
-	}
+    @Override
+    public void tick() {
+        try {
+            super.tick();
+            if (this.isInGround()) {
+                discard();
+            }
+        } catch (Exception e) {
+            ErrorUtil.report(e);
+        }
+    }
 
-	@Override
-	public boolean hurtServer(ServerLevel level, DamageSource damagesource, float f) {
-		return false;
-	}
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource damagesource, float f) {
+        return false;
+    }
 }

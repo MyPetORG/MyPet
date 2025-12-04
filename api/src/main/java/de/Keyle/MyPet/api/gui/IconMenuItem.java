@@ -46,29 +46,14 @@ public class IconMenuItem implements Cloneable {
 
     protected boolean hasChanged = true;
 
-    public IconMenuItem setMaterial(Material material) {
-        if (material != null && this.material != material) {
-            this.material = material;
-            hasChanged = true;
+    public static IconMenuItem fromItemStack(ItemStack itemStack) {
+        IconMenuItem icon = new IconMenuItem();
+        icon.setMaterial(itemStack.getType());
+        icon.setAmount(itemStack.getAmount());
+        if (itemStack.hasItemMeta()) {
+            icon.setMeta(itemStack.getItemMeta(), true, true);
         }
-        return this;
-    }
-
-    public IconMenuItem setData(int data) {
-        if (this.data != data) {
-            this.data = data;
-            hasChanged = true;
-        }
-        return this;
-    }
-
-    public IconMenuItem setAmount(int amount) {
-        amount = Math.max(1, amount);
-        if (this.amount != amount) {
-            this.amount = amount;
-            hasChanged = true;
-        }
-        return this;
+        return icon;
     }
 
     @SuppressWarnings("unchecked")
@@ -89,29 +74,6 @@ public class IconMenuItem implements Cloneable {
             hasChanged = true;
         }
 
-        return this;
-    }
-
-    public IconMenuItem setMeta(IconMeta meta) {
-        this.meta = meta;
-        this.bukkitMeta = null;
-        return this;
-    }
-
-    public IconMenuItem setTitle(String title) {
-        if (title != null && !this.title.equals(title)) {
-            this.title = title;
-            hasChanged = true;
-        }
-        return this;
-    }
-
-    public IconMenuItem setLore(String... lore) {
-        if (lore != null) {
-            this.lore.clear();
-            Collections.addAll(this.lore, lore);
-            hasChanged = true;
-        }
         return this;
     }
 
@@ -144,14 +106,6 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
-    public IconMenuItem setGlowing(boolean glowing) {
-        if (this.glowing != glowing) {
-            this.glowing = glowing;
-            hasChanged = true;
-        }
-        return this;
-    }
-
     public IconMenuItem addLore(List<String> lore) {
         if (lore != null && !lore.isEmpty()) {
             this.lore.addAll(lore);
@@ -164,12 +118,34 @@ public class IconMenuItem implements Cloneable {
         return material;
     }
 
+    public IconMenuItem setMaterial(Material material) {
+        if (material != null && this.material != material) {
+            this.material = material;
+            hasChanged = true;
+        }
+        return this;
+    }
+
     public int getData() {
         return data;
     }
 
+    public IconMenuItem setData(int data) {
+        if (this.data != data) {
+            this.data = data;
+            hasChanged = true;
+        }
+        return this;
+    }
+
     public IconMeta getMeta() {
         return meta;
+    }
+
+    public IconMenuItem setMeta(IconMeta meta) {
+        this.meta = meta;
+        this.bukkitMeta = null;
+        return this;
     }
 
     public boolean hasMeta() {
@@ -180,16 +156,50 @@ public class IconMenuItem implements Cloneable {
         return amount;
     }
 
+    public IconMenuItem setAmount(int amount) {
+        amount = Math.max(1, amount);
+        if (this.amount != amount) {
+            this.amount = amount;
+            hasChanged = true;
+        }
+        return this;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public IconMenuItem setTitle(String title) {
+        if (title != null && !this.title.equals(title)) {
+            this.title = title;
+            hasChanged = true;
+        }
+        return this;
     }
 
     public List<String> getLore() {
         return Collections.unmodifiableList(lore);
     }
 
+    public IconMenuItem setLore(String... lore) {
+        if (lore != null) {
+            this.lore.clear();
+            Collections.addAll(this.lore, lore);
+            hasChanged = true;
+        }
+        return this;
+    }
+
     public boolean isGlowing() {
         return glowing;
+    }
+
+    public IconMenuItem setGlowing(boolean glowing) {
+        if (this.glowing != glowing) {
+            this.glowing = glowing;
+            hasChanged = true;
+        }
+        return this;
     }
 
     public ItemMeta getBukkitMeta() {
@@ -206,16 +216,6 @@ public class IconMenuItem implements Cloneable {
 
     public TagCompound getTags() {
         return tag;
-    }
-
-    public static IconMenuItem fromItemStack(ItemStack itemStack) {
-        IconMenuItem icon = new IconMenuItem();
-        icon.setMaterial(itemStack.getType());
-        icon.setAmount(itemStack.getAmount());
-        if (itemStack.hasItemMeta()) {
-            icon.setMeta(itemStack.getItemMeta(), true, true);
-        }
-        return icon;
     }
 
     public IconMenuItem clone() {

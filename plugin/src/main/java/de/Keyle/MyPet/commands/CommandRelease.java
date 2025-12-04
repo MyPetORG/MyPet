@@ -150,13 +150,13 @@ public class CommandRelease implements CommandTabCompleter {
                     HoverEvent<Component> hoverEvent = HoverEvent.showText(hoverBuilder.build());
 
                     petOwner.sendMessage(
-                        Component.text(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ")
-                            .append(
-                                Component.text(myPet.getPetName())
-                                    .color(NamedTextColor.AQUA)
-                                    .clickEvent(ClickEvent.runCommand("/petrelease " + ChatColor.stripColor(myPet.getPetName())))
-                                    .hoverEvent(hoverEvent)
-                            )
+                            Component.text(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ")
+                                    .append(
+                                            Component.text(myPet.getPetName())
+                                                    .color(NamedTextColor.AQUA)
+                                                    .clickEvent(ClickEvent.runCommand("/petrelease " + ChatColor.stripColor(myPet.getPetName())))
+                                                    .hoverEvent(hoverEvent)
+                                    )
                     );
 
                     return true;

@@ -20,10 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R1.util;
 
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
@@ -34,6 +30,9 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 
 @Compat("v1_19_R1_2")
 public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {

@@ -26,8 +26,8 @@ import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
-import org.jetbrains.annotations.NotNull;
 import org.bukkit.entity.SpawnCategory;
+import org.jetbrains.annotations.NotNull;
 
 @Compat("v1_19_R1_2")
 public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {

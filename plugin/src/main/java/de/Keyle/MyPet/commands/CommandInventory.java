@@ -20,14 +20,6 @@
 
 package de.Keyle.MyPet.commands;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
@@ -39,6 +31,13 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
 
 public class CommandInventory implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -68,16 +67,16 @@ public class CommandInventory implements CommandTabCompleter {
                 } else {
                     sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
                 }
-            } else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false)) {		//Active Pet
-            	Player petOwner = Bukkit.getServer().getOfflinePlayer(args[0]).getPlayer();
-            	MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-            	
-            	if (petOwner == null) {
+            } else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false)) {        //Active Pet
+                Player petOwner = Bukkit.getServer().getOfflinePlayer(args[0]).getPlayer();
+                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+
+                if (petOwner == null) {
                     sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", player));
-                } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) { 
-	                if (myPet.getSkills().isActive(BackpackImpl.class)) {
-	                    myPet.getSkills().get(BackpackImpl.class).openInventory(player);
-	                }
+                } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+                    if (myPet.getSkills().isActive(BackpackImpl.class)) {
+                        myPet.getSkills().get(BackpackImpl.class).openInventory(player);
+                    }
                 }
             }/* else if (args.length == 2 && Permissions.has(player, "MyPet.admin", false) && args[1].equalsIgnoreCase("inactive")) {		//Inactive Pets
                 final Player petOwner = Bukkit.getServer().getOfflinePlayer(args[0]).getPlayer();
@@ -145,7 +144,7 @@ public class CommandInventory implements CommandTabCompleter {
         }
         return Collections.emptyList();
     }
-    
+
     private int getMaxPetCount(Player p) {
         int maxPetCount = 0;
         if (Permissions.has(p, "MyPet.admin")) {

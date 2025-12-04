@@ -39,14 +39,14 @@ public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager impleme
     public static Method ENTITY_LIVING_broadcastItemBreak = ReflectionUtil.getMethod(LivingEntity.class, "d", InteractionHand.class);
 
     @Override
-	public void init() {
+    public void init() {
         MyPetApi.getServiceManager().registerService(EggIconService.class);
         MyPetApi.getServiceManager().registerService(EntityConverterService.class);
         MyPetApi.getServiceManager().registerService(RepositoryMyPetConverterService.class);
     }
 
     @Override
-	public void enable() {
+    public void enable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, MyPetApi.getPlugin());
     }
 }

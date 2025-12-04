@@ -30,15 +30,15 @@ import org.bukkit.inventory.ItemStack;
 public interface MyLlama extends MyPet, MyPetBaby {
     ItemStack getChest();
 
-    boolean hasChest();
-
     void setChest(ItemStack item);
+
+    boolean hasChest();
 
     ItemStack getDecor();
 
-    boolean hasDecor();
-
     void setDecor(ItemStack item);
+
+    boolean hasDecor();
 
     int getVariant();
 

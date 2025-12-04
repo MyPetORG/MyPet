@@ -92,8 +92,8 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
             String nbtString = data.trim();
             if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 try {
-                    String mergedString = isTagString.substring(0,isTagString.length()-1) + ",tag:" + nbtString + "}";
-                    mergedString = mergedString.replace("count","Count");
+                    String mergedString = isTagString.substring(0, isTagString.length() - 1) + ",tag:" + nbtString + "}";
+                    mergedString = mergedString.replace("count", "Count");
                     tag = TagParser.parseTag(mergedString);
                 } catch (Exception e) {
                     MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");

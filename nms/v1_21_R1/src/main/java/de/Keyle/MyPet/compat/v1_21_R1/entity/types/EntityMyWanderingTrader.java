@@ -32,35 +32,35 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyWanderingTrader extends EntityMyPet {
 
-	private static final EntityDataAccessor<Integer> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.INT);
 
-	public EntityMyWanderingTrader(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyWanderingTrader(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.villager.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.villager.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.villager.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.villager.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.villager.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.villager.ambient";
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
         builder.define(UNUSED_WATCHER, 0);
-	}
+    }
 
-	@Override
-	public MyWanderingTrader getMyPet() {
-		return (MyWanderingTrader) myPet;
-	}
+    @Override
+    public MyWanderingTrader getMyPet() {
+        return (MyWanderingTrader) myPet;
+    }
 }

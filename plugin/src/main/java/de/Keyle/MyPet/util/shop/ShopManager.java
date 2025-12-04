@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.exceptions.InvalidSkilltreeException;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -44,9 +44,9 @@ import java.util.Set;
 @Load(Load.State.OnReady)
 public class ShopManager implements ShopService {
 
-    YamlConfiguration config;
     protected Map<String, PetShop> shops = new HashMap<>();
     protected String defaultShop = null;
+    YamlConfiguration config;
 
     @Override
     public boolean onEnable() {

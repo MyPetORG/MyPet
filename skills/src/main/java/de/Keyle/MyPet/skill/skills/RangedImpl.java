@@ -38,12 +38,12 @@ public class RangedImpl implements Ranged {
         this.myPet = myPet;
     }
 
-    public void setMyPet(MyPet myPet) {
-        this.myPet = myPet;
-    }
-
     public MyPet getMyPet() {
         return myPet;
+    }
+
+    public void setMyPet(MyPet myPet) {
+        this.myPet = myPet;
     }
 
     public boolean isActive() {

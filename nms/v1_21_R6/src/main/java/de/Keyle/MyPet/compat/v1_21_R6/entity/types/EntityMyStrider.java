@@ -33,7 +33,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -45,174 +44,174 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
-import org.bukkit.Sound;
 
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyStrider extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> BOOST_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Boolean> SUFFOCATING_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> BOOST_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SUFFOCATING_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyStrider(Level world, MyPet myPet) {
-		super(world, myPet);
-		indirectRiding = true;
-	}
+    public EntityMyStrider(Level world, MyPet myPet) {
+        super(world, myPet);
+        indirectRiding = true;
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.strider.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.strider.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.strider.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.strider.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.strider.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.strider.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
-				entityitem.pickupDelay = 10;
-				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-				this.level().addFreshEntity(entityitem);
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+                entityitem.pickupDelay = 10;
+                entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                this.level().addFreshEntity(entityitem);
 
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				getMyPet().setSaddle(null);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-					}
-				}
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                getMyPet().setSaddle(null);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                    }
+                }
 
-				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Strider.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+                return InteractionResult.CONSUME;
+            } else if (Configuration.MyPet.Strider.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(BOOST_TICKS_WATCHER, 0);
-		builder.define(SUFFOCATING_WATCHER, false);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(BOOST_TICKS_WATCHER, 0);
+        builder.define(SUFFOCATING_WATCHER, false);
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
-		equipment.set(EquipmentSlot.SADDLE, getMyPet().hasSaddle() ? Items.SADDLE.getDefaultInstance() : ItemStack.EMPTY);
-	}
+        equipment.set(EquipmentSlot.SADDLE, getMyPet().hasSaddle() ? Items.SADDLE.getDefaultInstance() : ItemStack.EMPTY);
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_STRIDER_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_STRIDER_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyStrider getMyPet() {
-		return (MyStrider) myPet;
-	}
-	
-	//Special Strider-Behavior
+    @Override
+    public MyStrider getMyPet() {
+        return (MyStrider) myPet;
+    }
 
-	@Override
-	public boolean floatsInLava() {
-		return true;
-	}
+    //Special Strider-Behavior
 
-	@Override
-	public boolean canStandOnFluid(FluidState fluid) {
-		return fluid.is(FluidTags.LAVA);
-	}
-	
-	@Override	//Special riding for Lava
-	protected void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
-		float speed;
-		
-		if(this.specialFloat()) {	//This already has the floating/walking on Lava logic -> Now we just ride it like it's solid
-			double minY;
-			minY = this.getBoundingBox().minY;
+    @Override
+    public boolean floatsInLava() {
+        return true;
+    }
 
-			float friction = 0.91F;
-			if (this.onGround) {
-				friction = this.level().getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
-			}
+    @Override
+    public boolean canStandOnFluid(FluidState fluid) {
+        return fluid.is(FluidTags.LAVA);
+    }
 
-			speed = speedModifier * (0.16277136F / (friction * friction * friction));
-			this.moveRelative(speed, new Vec3(motionSideways, motionUpwards, motionForward));
-			
-			double motX = this.getDeltaMovement().x();
-			double motY = this.getDeltaMovement().y();
-			double motZ = this.getDeltaMovement().z();
+    @Override    //Special riding for Lava
+    protected void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
+        float speed;
 
-			Vec3 mot = new Vec3(motX, motY, motZ);
+        if (this.specialFloat()) {    //This already has the floating/walking on Lava logic -> Now we just ride it like it's solid
+            double minY;
+            minY = this.getBoundingBox().minY;
 
-			this.move(MoverType.SELF, mot);
-			if (this.horizontalCollision && this.onClimbable()) {
-				motY = 0.2D;
-			}
+            float friction = 0.91F;
+            if (this.onGround) {
+                friction = this.level().getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
+            }
 
-			motY -= 0.08D;
+            speed = speedModifier * (0.16277136F / (friction * friction * friction));
+            this.moveRelative(speed, new Vec3(motionSideways, motionUpwards, motionForward));
 
-			motY *= 0.9800000190734863D;
-			motX *= friction;
-			motZ *= friction;
-			this.setDeltaMovement(motX, motY, motZ);
-			
-			this.startRiding(this);
-		} else { //Call normal riding when not in lava aka when specialFloat returned false
-			super.ride(motionSideways, motionForward, motionUpwards, speedModifier);
-		}
-	}
-	
-	@Override	//Striders stand on Lava. This does this
-	public boolean specialFloat() {
-		if(this.isInLava()) {
-			CollisionContext collisioncontext = CollisionContext.of(this);
-			
-			if (collisioncontext.isAbove(LiquidBlock.SHAPE_STABLE, this.blockPosition(), true) && !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.LAVA)) {
-				this.onGround = true;
-	        } else {
-	        	this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
-	        }
-	    	return true;
-		}
-		return false;
-	}
+            double motX = this.getDeltaMovement().x();
+            double motY = this.getDeltaMovement().y();
+            double motZ = this.getDeltaMovement().z();
+
+            Vec3 mot = new Vec3(motX, motY, motZ);
+
+            this.move(MoverType.SELF, mot);
+            if (this.horizontalCollision && this.onClimbable()) {
+                motY = 0.2D;
+            }
+
+            motY -= 0.08D;
+
+            motY *= 0.9800000190734863D;
+            motX *= friction;
+            motZ *= friction;
+            this.setDeltaMovement(motX, motY, motZ);
+
+            this.startRiding(this);
+        } else { //Call normal riding when not in lava aka when specialFloat returned false
+            super.ride(motionSideways, motionForward, motionUpwards, speedModifier);
+        }
+    }
+
+    @Override    //Striders stand on Lava. This does this
+    public boolean specialFloat() {
+        if (this.isInLava()) {
+            CollisionContext collisioncontext = CollisionContext.of(this);
+
+            if (collisioncontext.isAbove(LiquidBlock.SHAPE_STABLE, this.blockPosition(), true) && !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.LAVA)) {
+                this.onGround = true;
+            } else {
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
+            }
+            return true;
+        }
+        return false;
+    }
 }

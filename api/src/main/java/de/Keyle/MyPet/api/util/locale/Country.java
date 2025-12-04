@@ -24,8 +24,10 @@ import lombok.Getter;
 
 public class Country {
 
-    @Getter private Language language;
-    @Getter private String code;
+    @Getter
+    private Language language;
+    @Getter
+    private String code;
     private TranslationBundle translations;
 
     public Country(Language language, String code) {

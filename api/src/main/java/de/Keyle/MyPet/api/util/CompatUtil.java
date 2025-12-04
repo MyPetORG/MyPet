@@ -68,7 +68,7 @@ public class CompatUtil {
 
         String classPath = clazz.getCanonicalName();
         if (classPath.startsWith("de.Keyle.MyPet")) {
-                classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
+            classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
         }
 
         try {
@@ -90,7 +90,8 @@ public class CompatUtil {
             Constructor<T> constructor = (Constructor<T>) compatClass.getConstructor(paramterClasses);
             return constructor.newInstance(parameters);
 
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException |
+                 InvocationTargetException e) {
             ErrorUtil.report(e);
         }
 
@@ -127,7 +128,7 @@ public class CompatUtil {
                 String[] parts = line.split(",");
                 versionMap.put(parts[0], parts[1]);
             }
-        } catch(Exception ignored) {
+        } catch (Exception ignored) {
         }
 
         String bukkitVersion = null;

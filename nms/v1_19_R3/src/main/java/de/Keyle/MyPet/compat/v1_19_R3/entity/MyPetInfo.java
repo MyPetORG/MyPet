@@ -29,17 +29,17 @@ import org.bukkit.entity.EntityType;
 @Compat("v1_19_R3")
 public class MyPetInfo extends de.Keyle.MyPet.api.entity.MyPetInfo {
 
-	@Override
-	public boolean isLeashableEntityType(EntityType bukkitType) {
-		if (bukkitType == EntityType.ENDER_DRAGON) {
-			return MyPetApi.getPluginHookManager().isHookActive("ProtocolLib");
-		}
+    @Override
+    public boolean isLeashableEntityType(EntityType bukkitType) {
+        if (bukkitType == EntityType.ENDER_DRAGON) {
+            return MyPetApi.getPluginHookManager().isHookActive("ProtocolLib");
+        }
 
-		try {
-			MyPetType type = MyPetType.byEntityTypeName(bukkitType.name());
-			return type != null;
-		} catch (MyPetTypeNotFoundException e) {
-			return false;
-		}
-	}
+        try {
+            MyPetType type = MyPetType.byEntityTypeName(bukkitType.name());
+            return type != null;
+        } catch (MyPetTypeNotFoundException e) {
+            return false;
+        }
+    }
 }

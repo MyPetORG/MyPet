@@ -40,95 +40,95 @@ import org.bukkit.Sound;
 @EntitySize(width = 1.3F, height = 1.4F)
 public class EntityMyPolarBear extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> REAR_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> REAR_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
 
-	int rearCounter = -1;
+    int rearCounter = -1;
 
-	public EntityMyPolarBear(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyPolarBear(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.polar_bear.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.polar_bear.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.polar_bear.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.polar_bear.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.polar_bear.ambient" + (getMyPet().isBaby() ? "_baby" : "");
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.polar_bear.ambient" + (getMyPet().isBaby() ? "_baby" : "");
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (Configuration.MyPet.PolarBear.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (Configuration.MyPet.PolarBear.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(REAR_WATCHER, false);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(REAR_WATCHER, false);
 
-	}
+    }
 
-	@Override
-	public boolean attack(Entity entity) {
-		boolean flag = false;
-		try {
-			flag = super.attack(entity);
-			if (flag) {
-				this.getEntityData().set(REAR_WATCHER, true);
-				rearCounter = 10;
-			}
-		} catch (Exception e) {
-			ErrorUtil.report(e);
-		}
-		return flag;
-	}
+    @Override
+    public boolean attack(Entity entity) {
+        boolean flag = false;
+        try {
+            flag = super.attack(entity);
+            if (flag) {
+                this.getEntityData().set(REAR_WATCHER, true);
+                rearCounter = 10;
+            }
+        } catch (Exception e) {
+            ErrorUtil.report(e);
+        }
+        return flag;
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (rearCounter > -1 && rearCounter-- == 0) {
-			this.getEntityData().set(REAR_WATCHER, false);
-			rearCounter = -1;
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (rearCounter > -1 && rearCounter-- == 0) {
+            this.getEntityData().set(REAR_WATCHER, false);
+            rearCounter = -1;
+        }
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_POLAR_BEAR_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_POLAR_BEAR_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyPolarBear getMyPet() {
-		return (MyPolarBear) myPet;
-	}
+    @Override
+    public MyPolarBear getMyPet() {
+        return (MyPolarBear) myPet;
+    }
 }

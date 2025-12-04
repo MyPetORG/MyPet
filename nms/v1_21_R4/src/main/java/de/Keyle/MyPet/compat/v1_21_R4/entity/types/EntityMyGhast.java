@@ -30,38 +30,38 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 4.F, height = 4.F)
 public class EntityMyGhast extends EntityMyFlyingPet {
 
-	public EntityMyGhast(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyGhast(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.ghast.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.ghast.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.ghast.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.ghast.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.ghast.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.ghast.ambient";
+    }
 
-	@Override
-	public void setPathfinder() {
-		super.setPathfinder();
-		petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 5.5, 20));
-	}
+    @Override
+    public void setPathfinder() {
+        super.setPathfinder();
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 5.5, 20));
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (Configuration.MyPet.Ghast.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (Configuration.MyPet.Ghast.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
+    }
 }

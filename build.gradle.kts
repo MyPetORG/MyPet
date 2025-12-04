@@ -1,14 +1,13 @@
+import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import org.gradle.api.attributes.Usage
-import java.net.URI
 
 plugins {
     java
     id("com.gradleup.shadow") version "9.2.2"
     id("io.freefair.lombok") version "9.0.0"
     id("io.typst.gradlesource.spigot") version "2.0.0" apply false
-    id ("io.sentry.jvm.gradle") version "5.12.2"
+    id("io.sentry.jvm.gradle") version "5.12.2"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
     `maven-publish`
 }
@@ -124,8 +123,8 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     onlyIf {
         val dir = targetDirProvider.get().asFile
         !dir.exists() ||
-        dir.listFiles()?.isEmpty() == true ||
-        (System.currentTimeMillis() - dir.lastModified()) > 86400000
+                dir.listFiles()?.isEmpty() == true ||
+                (System.currentTimeMillis() - dir.lastModified()) > 86400000
     }
 
     doFirst {
@@ -190,7 +189,7 @@ val shade by configurations.creating {
 dependencies {
     // Pull submodules as built jars (regardless of their target JVM)
     add("shade", project(path = ":plugin", configuration = "runtimeElements"))
-    add("shade", project(path = ":api",    configuration = "runtimeElements"))
+    add("shade", project(path = ":api", configuration = "runtimeElements"))
     add("shade", project(path = ":skills", configuration = "runtimeElements"))
     nmsModules.forEach { add("shade", project(path = it, configuration = "runtimeElements")) }
 

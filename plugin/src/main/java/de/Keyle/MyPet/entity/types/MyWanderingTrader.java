@@ -55,12 +55,12 @@ public class MyWanderingTrader extends MyPet implements de.Keyle.MyPet.api.entit
         return MyPetType.WanderingTrader;
     }
 
-    public void setOriginalData(TagCompound compound) {
-        this.originalData = compound;
-    }
-
     public TagCompound getOriginalData() {
         return this.originalData;
+    }
+
+    public void setOriginalData(TagCompound compound) {
+        this.originalData = compound;
     }
 
     public boolean hasOriginalData() {

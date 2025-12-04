@@ -28,9 +28,9 @@ import de.keyle.knbt.TagCompound;
 @DefaultInfo(food = {"apple"})
 public interface MyWanderingTrader extends MyPet {
 
-    void setOriginalData(TagCompound compound);
-
     TagCompound getOriginalData();
+
+    void setOriginalData(TagCompound compound);
 
     boolean hasOriginalData();
 }

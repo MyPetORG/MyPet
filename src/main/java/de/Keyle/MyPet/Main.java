@@ -20,16 +20,17 @@
 
 package de.Keyle.MyPet;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.net.URI;
 
 public class Main {
     static String url = "https://skilltree.mypet-plugin.de";
+
     public static void main(String[] args) {
         try {
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                    Desktop.getDesktop().browse(new URI(url));
-                    System.out.println("Opening MyPet Skilltree Editor in your default browser...");
+                Desktop.getDesktop().browse(new URI(url));
+                System.out.println("Opening MyPet Skilltree Editor in your default browser...");
             } else {
                 System.err.println("Failed to open Skilltree Editor.");
                 System.out.println("Please visit: " + url);

@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.MyPetRandomSwim;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.navigation.MyAquaticPetPathNavigation;
 import net.minecraft.core.BlockPos;
@@ -36,71 +36,71 @@ import net.minecraft.world.phys.Vec3;
 @EntitySize(width = 0.5F, height = 0.3f)
 public abstract class EntityMyAquaticPet extends EntityMyPet {
 
-	public EntityMyAquaticPet(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyAquaticPet(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected PathNavigation setSpecialNav() {
-		return new MyAquaticPetPathNavigation(this, this.level);
-	}
+    @Override
+    protected PathNavigation setSpecialNav() {
+        return new MyAquaticPetPathNavigation(this, this.level);
+    }
 
-	@Override
-	public boolean specialFloat() {
+    @Override
+    public boolean specialFloat() {
         return this.isInWater();
     }
 
-	@Override
-	public void setPathfinder() {
-		super.setPathfinder();
-		petPathfinderSelector.addGoal("RandomSwim", new MyPetRandomSwim(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
-	}
+    @Override
+    public void setPathfinder() {
+        super.setPathfinder();
+        petPathfinderSelector.addGoal("RandomSwim", new MyPetRandomSwim(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
+    }
 
-	@Override
-	public boolean canBreatheUnderwater() {
-		return true;
-	}
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
 
-	@Override
-	public boolean rideableUnderWater() {
-		return true;
-	}
+    @Override
+    public boolean rideableUnderWater() {
+        return true;
+    }
 
-	@Override	//Special riding for Underwater
-	protected void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
-		float speed;
+    @Override    //Special riding for Underwater
+    protected void ride(double motionSideways, double motionForward, double motionUpwards, float speedModifier) {
+        float speed;
 
-		if(this.isEyeInFluid(FluidTags.WATER)) {	//No floating, just riding
-			double minY;
-			minY = this.getBoundingBox().minY;
+        if (this.isEyeInFluid(FluidTags.WATER)) {    //No floating, just riding
+            double minY;
+            minY = this.getBoundingBox().minY;
 
-			float friction = 0.91F;
-			if (this.onGround) {
-				friction = this.level.getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
-			}
+            float friction = 0.91F;
+            if (this.onGround) {
+                friction = this.level.getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
+            }
 
-			speed = speedModifier * (0.16277136F / (friction * friction * friction));
-			this.moveRelative(speed, new Vec3(motionSideways, motionUpwards, motionForward));
+            speed = speedModifier * (0.16277136F / (friction * friction * friction));
+            this.moveRelative(speed, new Vec3(motionSideways, motionUpwards, motionForward));
 
-			double motX = this.getDeltaMovement().x();
-			double motY = this.getDeltaMovement().y();
-			double motZ = this.getDeltaMovement().z();
+            double motX = this.getDeltaMovement().x();
+            double motY = this.getDeltaMovement().y();
+            double motZ = this.getDeltaMovement().z();
 
-			Vec3 mot = new Vec3(motX, motY, motZ);
+            Vec3 mot = new Vec3(motX, motY, motZ);
 
-			this.move(MoverType.SELF, mot);
+            this.move(MoverType.SELF, mot);
 
-			motY -= 0.1D;
-			motY *= 0.6D;
+            motY -= 0.1D;
+            motY *= 0.6D;
 
-			motY *= 0.9800000190734863D;
-			motX *= friction;
-			motZ *= friction;
-			this.setDeltaMovement(motX, motY, motZ);
+            motY *= 0.9800000190734863D;
+            motX *= friction;
+            motZ *= friction;
+            this.setDeltaMovement(motX, motY, motZ);
 
-			this.startRiding(this, false);
-		} else { //Call normal riding when not in water
-			super.ride(motionSideways, motionForward, motionUpwards, speedModifier);
-		}
-	}
+            this.startRiding(this, false);
+        } else { //Call normal riding when not in water
+            super.ride(motionSideways, motionForward, motionUpwards, speedModifier);
+        }
+    }
 }

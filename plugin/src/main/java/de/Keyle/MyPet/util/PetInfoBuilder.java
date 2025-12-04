@@ -34,7 +34,6 @@ import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,7 +44,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  * Utility class for building consistent pet information displays.
  * Provides reusable Component builders for common pet info patterns used
  * in CommandInfo, MyPetEntityListener, and other places.
- *
+ * <p>
  * This eliminates code duplication and ensures consistent formatting across
  * all pet information displays.
  */
@@ -69,7 +68,7 @@ public class PetInfoBuilder {
      * Builds owner line component.
      * Format: "   Owner: <owner name>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with owner information
      */
@@ -87,7 +86,7 @@ public class PetInfoBuilder {
      * Green > 66%, Yellow 33-66%, Red < 33%
      * Format: "   HP: <current>/<max>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with HP information
      */
@@ -128,7 +127,7 @@ public class PetInfoBuilder {
      * Builds respawn time line component (shown when pet is dead).
      * Format: "   Respawn Time: <seconds>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with respawn time, or null if pet is not dead
      */
@@ -149,7 +148,7 @@ public class PetInfoBuilder {
      * Builds damage line component.
      * Format: "   Damage: <damage>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with damage info, or null if damage is 0
      */
@@ -170,7 +169,7 @@ public class PetInfoBuilder {
      * Builds ranged damage line component.
      * Format: "   Ranged Damage: <damage>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with ranged damage info, or null if ranged damage is 0
      */
@@ -191,7 +190,7 @@ public class PetInfoBuilder {
      * Builds hunger line component.
      * Format: "   Hunger: <value>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with hunger info, or null if hunger system disabled
      */
@@ -212,7 +211,7 @@ public class PetInfoBuilder {
      * Builds food list component with hover events showing pet info.
      * Format: "   Food: <item1>, <item2>, ..." (with hover tooltips)
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with food list, or null if hunger system disabled or sender is not a player
      */
@@ -280,7 +279,7 @@ public class PetInfoBuilder {
      * Builds behavior line component.
      * Format: "   Behavior: <behavior name>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with behavior info, or null if pet doesn't have behavior skill
      */
@@ -302,7 +301,7 @@ public class PetInfoBuilder {
      * Builds skilltree line component.
      * Format: "   Skilltree: <skilltree name>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with skilltree info, or null if pet has no skilltree
      */
@@ -323,7 +322,7 @@ public class PetInfoBuilder {
      * Builds level line component.
      * Format: "   Level: <level>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with level info
      */
@@ -341,7 +340,7 @@ public class PetInfoBuilder {
      * Builds experience line component.
      * Format: "   Exp: <current>/<required>"
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with exp info, or null if pet is at max level
      */
@@ -369,7 +368,7 @@ public class PetInfoBuilder {
      * Builds donation rank line component.
      * Format: "   <icon> <Title> <icon>" in gold
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation
      * @return Component with donation rank info, or null if no donation rank
      */
@@ -393,7 +392,7 @@ public class PetInfoBuilder {
      * Builds complete pet info display with all available information.
      * This is the full info display used by /petinfo command.
      *
-     * @param myPet The pet
+     * @param myPet  The pet
      * @param sender CommandSender for translation and display
      * @return Component with complete pet info
      */

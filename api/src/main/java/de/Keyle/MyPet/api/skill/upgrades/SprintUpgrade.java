@@ -32,7 +32,9 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Sprint")
 public class SprintUpgrade implements Upgrade<Sprint> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier activeModifier = null;
 
     @Override

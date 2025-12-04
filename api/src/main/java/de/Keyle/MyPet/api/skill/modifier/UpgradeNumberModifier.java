@@ -23,13 +23,8 @@ package de.Keyle.MyPet.api.skill.modifier;
 import java.math.BigDecimal;
 
 public class UpgradeNumberModifier implements UpgradeModifier<Number> {
-    public enum Type {
-        Add, Subtract
-    }
-
     Number value;
     Type type;
-
     public UpgradeNumberModifier(Number value, Type type) {
         this.value = value;
         this.type = type;
@@ -60,5 +55,9 @@ public class UpgradeNumberModifier implements UpgradeModifier<Number> {
     @Override
     public String toString() {
         return "{" + type.name() + ": " + value + '}';
+    }
+
+    public enum Type {
+        Add, Subtract
     }
 }

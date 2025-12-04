@@ -34,11 +34,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.MyHorse {
     public boolean baby = false;
-    protected byte horseType = 0;
-    protected int variant = 0;
     public ItemStack armor = null;
     public ItemStack chest = null;
     public ItemStack saddle = null;
+    protected byte horseType = 0;
+    protected int variant = 0;
 
     public MyHorse(MyPetPlayer petOwner) {
         super(petOwner);
@@ -61,10 +61,6 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         return armor;
     }
 
-    public boolean hasArmor() {
-        return armor != null;
-    }
-
     public void setArmor(ItemStack item) {
         if (item != null &&
                 !item.getType().name().equals("LEATHER_HORSE_ARMOR") &&
@@ -84,12 +80,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
     }
 
-    public ItemStack getChest() {
-        return chest;
+    public boolean hasArmor() {
+        return armor != null;
     }
 
-    public boolean hasChest() {
-        return chest != null;
+    public ItemStack getChest() {
+        return chest;
     }
 
     public void setChest(ItemStack item) {
@@ -105,12 +101,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
     }
 
-    public ItemStack getSaddle() {
-        return saddle;
+    public boolean hasChest() {
+        return chest != null;
     }
 
-    public boolean hasSaddle() {
-        return saddle != null;
+    public ItemStack getSaddle() {
+        return saddle;
     }
 
     public void setSaddle(ItemStack item) {
@@ -124,6 +120,10 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
     }
 
     @Override

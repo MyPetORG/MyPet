@@ -29,13 +29,9 @@ import de.Keyle.MyPet.api.util.Scheduler;
 
 @SkillName(value = "Behavior", translationNode = "Name.Skill.Behavior")
 public interface Behavior extends Skill, Scheduler, ActiveSkill, NBTStorage {
-    enum BehaviorMode {
-        Normal, Friendly, Aggressive, Raid, Farm, Duel
-    }
+    BehaviorMode getBehavior();
 
     void setBehavior(BehaviorMode mode);
-
-    BehaviorMode getBehavior();
 
     UpgradeComputer<Boolean> getFarmBehavior();
 
@@ -46,4 +42,8 @@ public interface Behavior extends Skill, Scheduler, ActiveSkill, NBTStorage {
     UpgradeComputer<Boolean> getAggressiveBehavior();
 
     UpgradeComputer<Boolean> getFriendlyBehavior();
+
+    enum BehaviorMode {
+        Normal, Friendly, Aggressive, Raid, Farm, Duel
+    }
 }

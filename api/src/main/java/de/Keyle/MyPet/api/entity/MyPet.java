@@ -32,14 +32,6 @@ import java.util.Optional;
 public interface MyPet extends StoredMyPet, Scheduler {
     MyPetExperience getExperience();
 
-    enum PetState {
-        Dead, Despawned, PetState, Here
-    }
-
-    enum SpawnFlags {
-        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, WrongWorldGroup, NotAllowed, InvalidPosition
-    }
-
     void removePet();
 
     void removePet(boolean wantsToRespawn);
@@ -71,6 +63,14 @@ public interface MyPet extends StoredMyPet, Scheduler {
     boolean hasTarget();
 
     void decreaseSaturation(double value);
-    
+
     boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source);
+
+    enum PetState {
+        Dead, Despawned, PetState, Here
+    }
+
+    enum SpawnFlags {
+        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, WrongWorldGroup, NotAllowed, InvalidPosition
+    }
 }

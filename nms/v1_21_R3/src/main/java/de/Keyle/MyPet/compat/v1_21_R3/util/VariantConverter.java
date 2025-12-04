@@ -9,6 +9,18 @@ import org.bukkit.entity.Frog;
  * Converts numerical variants into fancy new variants
  */
 public class VariantConverter {
+    public static CatVariant convertCatVariant(int varId) {
+        return CatVariants.values()[varId].variant;
+    }
+
+    public static FrogVariant convertFrogVariant(int varId) {
+        return FrogVariants.values()[varId].variant;
+    }
+
+    public static Frog.Variant getBukkitFrogVariant(int varId) {
+        return FrogVariants.values()[varId].bukkitVariant;
+    }
+
     private enum CatVariants {
         TABBY(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.TABBY).value()),
         BLACK(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BLACK).value()),
@@ -23,6 +35,7 @@ public class VariantConverter {
         ALL_BLACK(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.ALL_BLACK).value());
 
         CatVariant variant;
+
         CatVariants(CatVariant cV) {
             this.variant = cV;
         }
@@ -35,20 +48,10 @@ public class VariantConverter {
 
         FrogVariant variant;
         Frog.Variant bukkitVariant;
+
         FrogVariants(FrogVariant fV, Frog.Variant fV2) {
             this.variant = fV;
             this.bukkitVariant = fV2;
         }
-    }
-
-    public static CatVariant convertCatVariant(int varId) {
-        return CatVariants.values()[varId].variant;
-    }
-
-    public static FrogVariant convertFrogVariant(int varId) {
-        return FrogVariants.values()[varId].variant;
-    }
-    public static Frog.Variant getBukkitFrogVariant(int varId) {
-        return FrogVariants.values()[varId].bukkitVariant;
     }
 }

@@ -69,13 +69,13 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             return true;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-        
+
         int valueInd = 1;
         int operatorInd = 2;
-        
-        if(args.length > 2 && Util.isDouble(args[2])) {
-        	valueInd = 2;
-        	operatorInd  = 1;
+
+        if (args.length > 2 && Util.isDouble(args[2])) {
+            valueInd = 2;
+            operatorInd = 1;
         }
 
         String value = args[valueInd];

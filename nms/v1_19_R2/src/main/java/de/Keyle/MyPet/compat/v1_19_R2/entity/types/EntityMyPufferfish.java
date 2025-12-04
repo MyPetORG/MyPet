@@ -32,42 +32,42 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.5F, height = 0.5f)
 public class EntityMyPufferfish extends EntityMyAquaticPet {
 
-	private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMyPufferfish.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> PUFF_WATCHER = SynchedEntityData.defineId(EntityMyPufferfish.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMyPufferfish.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> PUFF_WATCHER = SynchedEntityData.defineId(EntityMyPufferfish.class, EntityDataSerializers.INT);
 
-	public EntityMyPufferfish(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyPufferfish(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.puffer_fish.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.puffer_fish.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.puffer_fish.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.puffer_fish.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.puffer_fish.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.puffer_fish.ambient";
+    }
 
-	@Override
-	public MyPufferfish getMyPet() {
-		return (MyPufferfish) myPet;
-	}
+    @Override
+    public MyPufferfish getMyPet() {
+        return (MyPufferfish) myPet;
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(PUFF_WATCHER, getMyPet().getPuffState().ordinal());
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(PUFF_WATCHER, getMyPet().getPuffState().ordinal());
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(FROM_BUCKET_WATCHER, false);
-		getEntityData().define(PUFF_WATCHER, 0);
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(FROM_BUCKET_WATCHER, false);
+        getEntityData().define(PUFF_WATCHER, 0);
+    }
 }

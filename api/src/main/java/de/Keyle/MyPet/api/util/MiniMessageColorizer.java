@@ -222,7 +222,7 @@ public class MiniMessageColorizer {
     /**
      * Creates a gradient Component from color1 to color2.
      *
-     * @param text Text to apply gradient to
+     * @param text   Text to apply gradient to
      * @param color1 Start color (hex like "ff0000" or name like "red")
      * @param color2 End color (hex like "00ff00" or name like "green")
      * @return Component with gradient applied
@@ -246,7 +246,7 @@ public class MiniMessageColorizer {
     /**
      * Creates a Component with hover text.
      *
-     * @param text Main text
+     * @param text      Main text
      * @param hoverText Text to show on hover
      * @return Component with hover event
      */
@@ -259,7 +259,7 @@ public class MiniMessageColorizer {
     /**
      * Creates a Component with click command.
      *
-     * @param text Main text
+     * @param text    Main text
      * @param command Command to run (without leading slash)
      * @return Component with click event
      */
@@ -272,7 +272,7 @@ public class MiniMessageColorizer {
     /**
      * Creates a Component with hex color.
      *
-     * @param text Text to color
+     * @param text     Text to color
      * @param hexColor Hex color without # (e.g., "ff0000")
      * @return Component with hex color
      */

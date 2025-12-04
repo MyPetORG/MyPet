@@ -28,17 +28,16 @@ import org.bukkit.event.HandlerList;
 
 public class MyPetRemoveEvent extends Event {
     protected static final HandlerList handlers = new HandlerList();
-
-    public enum Source {
-        Release, Death, AdminCommand, Other
-    }
-
     private final StoredMyPet myPet;
     private final Source source;
-
     public MyPetRemoveEvent(StoredMyPet myPet, Source source) {
         this.myPet = myPet;
         this.source = source;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public Source getSource() {
@@ -61,8 +60,7 @@ public class MyPetRemoveEvent extends Event {
         return handlers;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
+    public enum Source {
+        Release, Death, AdminCommand, Other
     }
 }

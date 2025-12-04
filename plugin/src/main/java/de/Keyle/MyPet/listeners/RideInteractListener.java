@@ -37,6 +37,12 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
  */
 public class RideInteractListener implements Listener {
 
+    private static boolean isOwner(Player player, MyPetBukkitEntity petEntity) {
+        MyPet apiPet = petEntity.getMyPet();
+        return apiPet != null && apiPet.getOwner() != null && apiPet.getOwner().getPlayer() != null
+                && apiPet.getOwner().getPlayer().getUniqueId().equals(player.getUniqueId());
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRideWithConfiguredItem(PlayerInteractEntityEvent event) {
         if (event.isCancelled()) {
@@ -103,11 +109,5 @@ public class RideInteractListener implements Listener {
         if (event.isCancelled() && !petEntity.getPassengers().contains(player)) {
             event.setCancelled(false);
         }
-    }
-
-    private static boolean isOwner(Player player, MyPetBukkitEntity petEntity) {
-        MyPet apiPet = petEntity.getMyPet();
-        return apiPet != null && apiPet.getOwner() != null && apiPet.getOwner().getPlayer() != null
-                && apiPet.getOwner().getPlayer().getUniqueId().equals(player.getUniqueId());
     }
 }

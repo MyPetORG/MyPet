@@ -7,7 +7,9 @@
 ![GitHub Release](https://img.shields.io/github/v/release/MyPetORG/MyPet?label=Download%20Latest%20Release&color=439741&link=https%3A%2F%2Fgithub.com%2FMyPetORG%2FMyPet%2Freleases%2Flatest&link=https%3A%2F%2Fgithub.com%2FMyPetORG%2FMyPet%2Freleases%2Flatest)
 
 [![MyPet][Logo]][Homepage]
+
 ## MyPet - The extensive pet plugin
+
 MyPet is a highly customizable pet plugin with a lot of features.<br />
 Take them on a lead, train them and make them a very powerful companion!
 
@@ -15,15 +17,17 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Spigot][SpigotImage]][Spigot] <br/>
 
 ---
+
 ## Building
+
 Download the latest builds from [GitHub Releases](https://github.com/MyPetORG/MyPet/releases/).
 
 If you'd prefer to build the plugin yourself:
+
 ### 🧩 Prerequisites
 
 - **Java 21** (required for compilation)
 - **Git** installed and available in your system PATH
-
 
 ### 📥 Clone the Repository
 
@@ -35,6 +39,7 @@ cd MyPet
 ### ⚙️ Build the Plugin
 
 ### Clean and Build
+
 Run the following command to build the plugin:
 
 ```bash
@@ -44,10 +49,13 @@ Run the following command to build the plugin:
 The output will be located in the `build/libs` folder.
 
 ---
+
 ## The License
+
 Copyright (c) 2011-2025, Keyle<br/>
 MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
 ---
+
 [Logo]: .github/readme-images/logo.png
 
 [License]: http://www.gnu.org/licenses/lgpl.html

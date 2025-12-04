@@ -239,80 +239,6 @@ public class Translation {
     // ========== Core translation + placeholder normalization ==========
 
     /**
-     * Internal method that retrieves the raw translation text without color processing.
-     * This is used by both legacy getString() and modern getComponent() methods.
-     * <p>
-     * On top of the underlying language lookup, this method also normalizes
-     * known placeholder mistakes from existing locale files, e.g. replacing
-     * &lt;r&gt; with &lt;reset&gt;.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Raw translation text (no color codes processed) with placeholders normalized
-     */
-    private String getRawText(String key, String localeString) {
-        String[] codes = localeString.toLowerCase().split("_");
-
-        String languageCode = codes[0];
-
-        if (!languages.containsKey(languageCode)) {
-            languages.put(languageCode, new Language(languageCode));
-        }
-
-        Language language = languages.get(languageCode);
-
-        String translatedPhrase = key;
-        if (codes.length >= 2) {
-            translatedPhrase = language.translate(key, codes[1]);
-        }
-        if (translatedPhrase.equals(key)) {
-            translatedPhrase = language.translate(key);
-        }
-        if (translatedPhrase.equals(key) && !languageCode.equals("en")) {
-            translatedPhrase = getRawText(key, "en");
-        }
-
-        // Normalize any incorrect or legacy placeholders from the locale files.
-        return normalizePlaceholders(translatedPhrase);
-    }
-
-    /**
-     * Legacy method that retrieves translation with ChatColor formatting.
-     * Maintained for backward compatibility.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Translation with ChatColor codes applied
-     */
-    public String getText(String key, String localeString) {
-        return Colorizer.setColors(getRawText(key, localeString));
-    }
-
-    /**
-     * Modern method that retrieves translation as an Adventure Component.
-     * Parses MyPet color codes (<red>, &c, etc.) into proper Components.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Translation as Adventure Component with colors applied
-     */
-    private Component getComponentText(String key, String localeString) {
-        return ComponentColorizer.parseToComponent(getRawText(key, localeString));
-    }
-
-    /**
-     * Advanced method that retrieves translation as an Adventure Component with MiniMessage support.
-     * Parses MiniMessage tags (gradients, hover, click, etc.) and falls back to legacy color codes.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Translation as Adventure Component with MiniMessage formatting applied
-     */
-    private Component getComponentTextMiniMessage(String key, String localeString) {
-        return MiniMessageColorizer.parseToComponent(getRawText(key, localeString));
-    }
-
-    /**
      * Normalizes common placeholder / tag mistakes from existing locale files so they
      * work correctly with MiniMessage and the colorizers.
      * <p>
@@ -342,13 +268,11 @@ public class Translation {
         return fixed;
     }
 
-    // ========== Locale file loading ==========
-
     /**
      * Loads a locale bundle from the plugin JAR and the data folder.
      * After loading, all values are passed through {@link #normalizePlaceholders(String)}
      * to fix known placeholder/tag mistakes at load time.
-     *
+     * <p>
      * This means downstream users of the bundle (e.g. Language, translators) will
      * see the corrected values.
      */
@@ -407,5 +331,81 @@ public class Translation {
             // If TranslationBundle does not support entrySet() mutation, we silently skip.
             // getRawText() still normalizes placeholders on access, so behavior is correct.
         }
+    }
+
+    /**
+     * Internal method that retrieves the raw translation text without color processing.
+     * This is used by both legacy getString() and modern getComponent() methods.
+     * <p>
+     * On top of the underlying language lookup, this method also normalizes
+     * known placeholder mistakes from existing locale files, e.g. replacing
+     * &lt;r&gt; with &lt;reset&gt;.
+     *
+     * @param key          Translation key
+     * @param localeString Locale string (e.g., "en", "de_DE")
+     * @return Raw translation text (no color codes processed) with placeholders normalized
+     */
+    private String getRawText(String key, String localeString) {
+        String[] codes = localeString.toLowerCase().split("_");
+
+        String languageCode = codes[0];
+
+        if (!languages.containsKey(languageCode)) {
+            languages.put(languageCode, new Language(languageCode));
+        }
+
+        Language language = languages.get(languageCode);
+
+        String translatedPhrase = key;
+        if (codes.length >= 2) {
+            translatedPhrase = language.translate(key, codes[1]);
+        }
+        if (translatedPhrase.equals(key)) {
+            translatedPhrase = language.translate(key);
+        }
+        if (translatedPhrase.equals(key) && !languageCode.equals("en")) {
+            translatedPhrase = getRawText(key, "en");
+        }
+
+        // Normalize any incorrect or legacy placeholders from the locale files.
+        return normalizePlaceholders(translatedPhrase);
+    }
+
+    /**
+     * Legacy method that retrieves translation with ChatColor formatting.
+     * Maintained for backward compatibility.
+     *
+     * @param key          Translation key
+     * @param localeString Locale string (e.g., "en", "de_DE")
+     * @return Translation with ChatColor codes applied
+     */
+    public String getText(String key, String localeString) {
+        return Colorizer.setColors(getRawText(key, localeString));
+    }
+
+    // ========== Locale file loading ==========
+
+    /**
+     * Modern method that retrieves translation as an Adventure Component.
+     * Parses MyPet color codes (<red>, &c, etc.) into proper Components.
+     *
+     * @param key          Translation key
+     * @param localeString Locale string (e.g., "en", "de_DE")
+     * @return Translation as Adventure Component with colors applied
+     */
+    private Component getComponentText(String key, String localeString) {
+        return ComponentColorizer.parseToComponent(getRawText(key, localeString));
+    }
+
+    /**
+     * Advanced method that retrieves translation as an Adventure Component with MiniMessage support.
+     * Parses MiniMessage tags (gradients, hover, click, etc.) and falls back to legacy color codes.
+     *
+     * @param key          Translation key
+     * @param localeString Locale string (e.g., "en", "de_DE")
+     * @return Translation as Adventure Component with MiniMessage formatting applied
+     */
+    private Component getComponentTextMiniMessage(String key, String localeString) {
+        return MiniMessageColorizer.parseToComponent(getRawText(key, localeString));
     }
 }

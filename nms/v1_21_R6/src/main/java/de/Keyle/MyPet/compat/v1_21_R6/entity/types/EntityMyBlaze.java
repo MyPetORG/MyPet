@@ -40,105 +40,105 @@ import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
 
-	private static final EntityDataAccessor<Byte> BURNING_WATCHER = SynchedEntityData.defineId(EntityMyBlaze.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> BURNING_WATCHER = SynchedEntityData.defineId(EntityMyBlaze.class, EntityDataSerializers.BYTE);
 
-	public EntityMyBlaze(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyBlaze(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.blaze.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.blaze.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.blaze.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.blaze.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.blaze.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.blaze.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == InteractionResult.CONSUME) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == InteractionResult.CONSUME) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (getMyPet().isOnFire() && itemStack.getItem() == Items.WATER_BUCKET && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setOnFire(false);
-				makeSound("block.fire.extinguish", 1.0F, 1.0F);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().flying) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), new ItemStack(Items.BUCKET));
-					} else {
-						if (!entityhuman.getInventory().add(new ItemStack(Items.BUCKET))) {
-							entityhuman.drop(new ItemStack(Items.BUCKET), true);
-						}
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setOnFire(true);
-				makeSound("item.flintandsteel.use", 1.0F, 1.0F);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-					}
-				}
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (getMyPet().isOnFire() && itemStack.getItem() == Items.WATER_BUCKET && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setOnFire(false);
+                makeSound("block.fire.extinguish", 1.0F, 1.0F);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().flying) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), new ItemStack(Items.BUCKET));
+                    } else {
+                        if (!entityhuman.getInventory().add(new ItemStack(Items.BUCKET))) {
+                            entityhuman.drop(new ItemStack(Items.BUCKET), true);
+                        }
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setOnFire(true);
+                makeSound("item.flintandsteel.use", 1.0F, 1.0F);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                    }
+                }
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(BURNING_WATCHER, (byte) 0);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(BURNING_WATCHER, (byte) 0);
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(BURNING_WATCHER, (byte) (getMyPet().isOnFire() ? 1 : 0));
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(BURNING_WATCHER, (byte) (getMyPet().isOnFire() ? 1 : 0));
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (Configuration.MyPet.Blaze.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (Configuration.MyPet.Blaze.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
+    }
 
-	@Override
-	public MyBlaze getMyPet() {
-		return (MyBlaze) myPet;
-	}
+    @Override
+    public MyBlaze getMyPet() {
+        return (MyBlaze) myPet;
+    }
 
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(double f, float f1) {
-		if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
-	}
+    /**
+     * -> disable falldamage
+     */
+    @Override
+    public int calculateFallDamage(double f, float f1) {
+        if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
+            super.calculateFallDamage(f, f1);
+        }
+        return 0;
+    }
 
-	@Override
-	protected boolean checkInteractCooldown() {
-		boolean val = super.checkInteractCooldown();
-		this.interactCooldown = 5;
-		return val;
-	}
+    @Override
+    protected boolean checkInteractCooldown() {
+        boolean val = super.checkInteractCooldown();
+        this.interactCooldown = 5;
+        return val;
+    }
 }

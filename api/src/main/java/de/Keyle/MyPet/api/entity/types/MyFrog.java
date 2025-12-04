@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 @DefaultInfo(food = {"slime_ball"})
 public interface MyFrog extends MyPet {
 
-    void setFrogVariant(int variant);
-
     int getFrogVariant();
+
+    void setFrogVariant(int variant);
 }

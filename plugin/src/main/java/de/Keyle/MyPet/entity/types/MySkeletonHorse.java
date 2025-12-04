@@ -43,10 +43,6 @@ public class MySkeletonHorse extends MyPet implements de.Keyle.MyPet.api.entity.
         return saddle;
     }
 
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
-
     public void setSaddle(ItemStack item) {
         if (item != null && item.getType() != Material.SADDLE) {
             return;
@@ -58,6 +54,10 @@ public class MySkeletonHorse extends MyPet implements de.Keyle.MyPet.api.entity.
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
     }
 
     @Override

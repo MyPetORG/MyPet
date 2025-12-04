@@ -283,7 +283,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
         }
         if (MyPetType.Hoglin.checkMinecraftVersion()) {
-            config.addDefault("MyPet.Pets.Hoglin.WillShake",MyPet.Hoglin.WILL_SHAKE);
+            config.addDefault("MyPet.Pets.Hoglin.WillShake", MyPet.Hoglin.WILL_SHAKE);
             config.addDefault("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
@@ -323,11 +323,11 @@ public class ConfigurationLoader {
         }
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
         if (MyPetType.Piglin.checkMinecraftVersion()) {
-            config.addDefault("MyPet.Pets.Piglin.WillShake",MyPet.Piglin.WILL_SHAKE);
+            config.addDefault("MyPet.Pets.Piglin.WillShake", MyPet.Piglin.WILL_SHAKE);
             config.addDefault("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle");
         }
         if (MyPetType.PiglinBrute.checkMinecraftVersion()) {
-            config.addDefault("MyPet.Pets.PiglinBrute.WillShake",MyPet.PiglinBrute.WILL_SHAKE);
+            config.addDefault("MyPet.Pets.PiglinBrute.WillShake", MyPet.PiglinBrute.WILL_SHAKE);
             config.addDefault("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");

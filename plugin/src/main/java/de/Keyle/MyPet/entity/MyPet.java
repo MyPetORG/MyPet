@@ -80,9 +80,23 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected MyPetExperience experience;
     protected long lastUsed = -1;
 
-    @Override
-    public void setExp(double exp) {
-        getExperience().setExp(exp);
+    protected MyPet(MyPetPlayer petOwner) {
+        if (petOwner == null) {
+            throw new IllegalArgumentException("Owner must not be null.");
+        }
+        this.petOwner = petOwner;
+        skills = new Skills(this);
+        experience = new MyPetExperience(this);
+        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
+        petName = Translation.getString("Name." + getPetType().name(), petOwner);
+    }
+
+    public static float[] getEntitySize(Class<? extends MyPetMinecraftEntity> entityMyPetClass) {
+        EntitySize es = entityMyPetClass.getAnnotation(EntitySize.class);
+        if (es != null) {
+            return new float[]{es.height(), es.width()};
+        }
+        return new float[]{0, 0};
     }
 
     @Override
@@ -107,31 +121,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 this.storage.put(key, storage.get(key));
             }
         }
-    }
-
-    @Override
-    public void setOwner(MyPetPlayer owner) {
-        throw new UnsupportedOperationException("You can't change the owner for an active MyPet!");
-    }
-
-    @Override
-    public void setPetType(MyPetType petType) {
-        throw new UnsupportedOperationException("You can't change the type for an active MyPet!");
-    }
-
-    @Override
-    public void setSkills(TagCompound skills) {
-    }
-
-    protected MyPet(MyPetPlayer petOwner) {
-        if (petOwner == null) {
-            throw new IllegalArgumentException("Owner must not be null.");
-        }
-        this.petOwner = petOwner;
-        skills = new Skills(this);
-        experience = new MyPetExperience(this);
-        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
-        petName = Translation.getString("Name." + getPetType().name(), petOwner);
     }
 
     public java.util.Optional<MyPetBukkitEntity> getEntity() {
@@ -179,6 +168,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public double getExp() {
         return getExperience().getExp();
+    }
+
+    @Override
+    public void setExp(double exp) {
+        getExperience().setExp(exp);
     }
 
     public MyPetExperience getExperience() {
@@ -290,6 +284,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public abstract MyPetType getPetType();
 
+    @Override
+    public void setPetType(MyPetType petType) {
+        throw new UnsupportedOperationException("You can't change the type for an active MyPet!");
+    }
+
     public int getRespawnTime() {
         return respawnTime;
     }
@@ -345,6 +344,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return skills;
     }
 
+    @Override
+    public void setSkills(TagCompound skills) {
+    }
+
     public PetState getStatus() {
         if (status == PetState.Here) {
             if (bukkitEntity == null || bukkitEntity.getHandle() == null) {
@@ -390,13 +393,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         this.uuid = uuid;
     }
 
-    public void setLastUsed(long date) {
-        this.lastUsed = date;
-    }
-
     @Override
     public long getLastUsed() {
         return lastUsed;
+    }
+
+    public void setLastUsed(long date) {
+        this.lastUsed = date;
     }
 
     @Override
@@ -638,6 +641,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return petOwner;
     }
 
+    @Override
+    public void setOwner(MyPetPlayer owner) {
+        throw new UnsupportedOperationException("You can't change the owner for an active MyPet!");
+    }
+
     public void setWantsToRespawn(boolean wantsToRespawn) {
         this.wantsToRespawn = wantsToRespawn;
     }
@@ -671,7 +679,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
                 }
 
-                if(bukkitEntity.getHandle().getPathfinder().hasGoal("RandomStroll")) {
+                if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomStroll")) {
                     ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomStroll")).schedule();
                 } else if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomSwim")) {
                     ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomSwim")).schedule();
@@ -697,12 +705,12 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         }
                     }
                     if (saturation == 1 && (getHealth() >= 2 || Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
-                        && this.bukkitEntity.getTicksLived() >= Configuration.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE * 20) {
+                            && this.bukkitEntity.getTicksLived() >= Configuration.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE * 20) {
                         getEntity().ifPresent(entity -> {
                             double leDamage = Configuration.HungerSystem.HUNGER_SYSTEM_FIXED +
                                     entity.getMyPet().getMaxHealth() * Configuration.HungerSystem.HUNGER_SYSTEM_FACTOR;
-                            if(leDamage >= entity.getHealth() && !Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
-                                    leDamage = entity.getHealth() - 1;
+                            if (leDamage >= entity.getHealth() && !Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
+                                leDamage = entity.getHealth() - 1;
                             entity.damage(leDamage);
                         });
                     }
@@ -756,15 +764,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return "MyPet{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skilltree.getName() + ", worldgroup=" + worldGroup + "}";
     }
 
-    public static float[] getEntitySize(Class<? extends MyPetMinecraftEntity> entityMyPetClass) {
-        EntitySize es = entityMyPetClass.getAnnotation(EntitySize.class);
-        if (es != null) {
-            return new float[]{es.height(), es.width()};
-        }
-        return new float[]{0, 0};
-    }
-
-
     public boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source) {
         if (skilltree == null || this.skilltree == skilltree) {
             return false;
@@ -778,7 +777,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         Bukkit.getServer().getPluginManager().callEvent(selectEvent);
         return true;
     }
-    
+
     public boolean setSkilltree(Skilltree skilltree) {
         if (skilltree == null || this.skilltree == skilltree) {
             return false;

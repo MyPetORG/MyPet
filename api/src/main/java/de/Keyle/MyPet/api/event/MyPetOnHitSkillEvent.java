@@ -31,16 +31,20 @@ import org.bukkit.event.HandlerList;
 
 public class MyPetOnHitSkillEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    protected boolean isCancelled = false;
-
     protected final MyPet myPet;
     protected final OnHitSkill skill;
+    protected boolean isCancelled = false;
     protected LivingEntity target;
 
     public MyPetOnHitSkillEvent(MyPet myPet, OnHitSkill skill, LivingEntity target) {
         this.myPet = myPet;
         this.skill = skill;
         this.target = target;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPet getMyPet() {
@@ -74,11 +78,6 @@ public class MyPetOnHitSkillEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

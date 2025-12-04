@@ -46,13 +46,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public abstract class Animation {
-    int taskID = -1;
     protected int framesPerTick = 1;
     protected int frame = 0;
     protected int length;
     protected int loops = 0;
     protected int tickRate = 1;
     protected LocationHolder locationHolder;
+    int taskID = -1;
 
     public Animation(int length, LocationHolder locationHolder) {
         this.length = length;

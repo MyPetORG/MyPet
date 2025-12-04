@@ -20,19 +20,14 @@
 
 package de.Keyle.MyPet.api.entity.ai;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 public class AIGoalSelector {
 
+    int skippedTicks = 0;
     private Map<String, AIGoal> AIGoalMap = new HashMap<>();
     private List<AIGoal> AIGoalList = new LinkedList<>();
     private List<AIGoal> activeAIGoalList = new LinkedList<>();
-
-    int skippedTicks = 0;
     private int skipTicks;
 
     public AIGoalSelector(int skipTicks) {

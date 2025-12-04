@@ -33,13 +33,13 @@ import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 
 @Compat("v1_19_R1_2")
 public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.movement.MyPetRandomStroll {
+    protected final int startDistance;
+    protected final Player owner;
     private final EntityMyPet petEntity;
     protected AbstractNavigation nav;
     protected Location moveTo = null;
     protected int timeToMove = 0;
-    protected final int startDistance;
     protected Control controlPathfinderGoal;
-    protected final Player owner;
     protected float strollChance = 0.02F;
 
     public MyPetRandomStroll(EntityMyPet entityMyPet, int startDistance) {
@@ -66,7 +66,7 @@ public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.m
             return false;
         } else if (this.petEntity.getOwner() == null) {
             return false;
-        } else if (((FollowOwner) petEntity.getPathfinder().getGoal("FollowOwner")).setPathTimer>0) {
+        } else if (((FollowOwner) petEntity.getPathfinder().getGoal("FollowOwner")).setPathTimer > 0) {
             return false;
         } else if (this.petEntity.distanceToSqr(owner) < this.startDistance) {
             return controlPathfinderGoal == null || controlPathfinderGoal.moveTo == null;
@@ -83,26 +83,26 @@ public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.m
             return true;
         } else if (!this.petEntity.canMove()) {
             return true;
-        } else if (moveTo == null){
+        } else if (moveTo == null) {
             return true;
         } else if (MyPetApi.getPlatformHelper().distance(petEntity.getMyPet().getLocation().get(), moveTo) < 2) {
             return true;
-        }else if (timeToMove <= 0) {
+        } else if (timeToMove <= 0) {
             return true;
-        }else return this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead();
+        } else return this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead();
     }
 
     @Override
     public void start() {
         Vec3 vec = getPosition();
-        if(vec == null)
+        if (vec == null)
             return;
         applySpeed();
         moveTo = new Location(this.petEntity.getBukkitEntity().getWorld(), vec.x, vec.y, vec.z);
         timeToMove = (int) MyPetApi.getPlatformHelper().distance(petEntity.getMyPet().getLocation().get(), moveTo) / 3;
         timeToMove = Math.max(timeToMove, 3);
 
-        if(!nav.navigateTo(moveTo)) {
+        if (!nav.navigateTo(moveTo)) {
             this.moveTo = null;
         }
     }
@@ -118,7 +118,7 @@ public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.m
     }
 
     protected void applySpeed() {
-        double walkSpeed = owner.getAbilities().walkingSpeed-0.15d;
+        double walkSpeed = owner.getAbilities().walkingSpeed - 0.15d;
         nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
     }
 

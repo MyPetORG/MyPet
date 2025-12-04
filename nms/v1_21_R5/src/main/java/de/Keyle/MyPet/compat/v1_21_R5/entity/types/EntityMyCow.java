@@ -40,90 +40,90 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.CraftRegistry;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Holder<CowVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.COW_VARIANT);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Holder<CowVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.COW_VARIANT);
 
-	public EntityMyCow(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyCow(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.cow.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.cow.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.cow.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.cow.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.cow.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.cow.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.BUCKET && Configuration.MyPet.Cow.CAN_GIVE_MILK) {
-				ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
-				itemStack.shrink(1);
-				if (itemStack.getCount() <= 0) {
-					entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), milkBucket);
-				} else {
-					if(!entityhuman.getInventory().add(milkBucket)) {
-						entityhuman.drop(milkBucket, true);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Items.BUCKET && Configuration.MyPet.Cow.CAN_GIVE_MILK) {
+                ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
+                itemStack.shrink(1);
+                if (itemStack.getCount() <= 0) {
+                    entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), milkBucket);
+                } else {
+                    if (!entityhuman.getInventory().add(milkBucket)) {
+                        entityhuman.drop(milkBucket, true);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (Configuration.MyPet.Cow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
 
-		Registry<CowVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.COW_VARIANT);
-		builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.COW_REGISTRY.getOrThrow(CowVariants.TEMPERATE).value()));
-	}
+        Registry<CowVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.COW_VARIANT);
+        builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.COW_REGISTRY.getOrThrow(CowVariants.TEMPERATE).value()));
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
-		Registry<CowVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.COW_VARIANT);
-		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCowVariant(getMyPet().getVariant())));
-	}
+        Registry<CowVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.COW_VARIANT);
+        this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCowVariant(getMyPet().getVariant())));
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_COW_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_COW_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyCow getMyPet() {
-		return (MyCow) myPet;
-	}
+    @Override
+    public MyCow getMyPet() {
+        return (MyCow) myPet;
+    }
 }

@@ -33,9 +33,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Backpack")
 public class BackpackUpgrade implements Upgrade<Backpack> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier rowsModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier dropOnDeathModifier = null;
 
     @Override

@@ -35,9 +35,9 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
 import org.bson.Document;
@@ -381,7 +381,7 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if(petsToBeSaved.containsKey(uuid)) {
+                    if (petsToBeSaved.containsKey(uuid)) {
                         return;
                     }
 

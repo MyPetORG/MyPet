@@ -37,8 +37,8 @@ public class SurvivalGamesHook implements AllowedHook {
 
     @Override
     public boolean onEnable() {
-            Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-            return true;
+        Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
+        return true;
     }
 
     @Override

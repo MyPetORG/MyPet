@@ -28,22 +28,22 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.7F, height = 0.475f)
 public class EntityMySquid extends EntityMyAquaticPet {
 
-	public EntityMySquid(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMySquid(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.squid.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.squid.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.squid.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.squid.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.squid.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.squid.ambient";
+    }
 }

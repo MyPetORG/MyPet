@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 public interface MySkeletonHorse extends MyPet, MyPetBaby {
     ItemStack getSaddle();
 
-    boolean hasSaddle();
-
     void setSaddle(ItemStack item);
+
+    boolean hasSaddle();
 }

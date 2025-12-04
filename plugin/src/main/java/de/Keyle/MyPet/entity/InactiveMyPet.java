@@ -30,13 +30,14 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.keyle.knbt.*;
+import org.bukkit.Bukkit;
 
 import java.util.Collection;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-
 public class InactiveMyPet implements StoredMyPet, NBTStorage {
+    public boolean wantsToRespawn = false;
+    protected long lastUsed = -1;
     private MyPetPlayer petOwner;
     private UUID uuid = null;
     private String petName = "";
@@ -45,12 +46,10 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private double saturation = 100;
     private int respawnTime = 0;
     private double exp = 0;
-    protected long lastUsed = -1;
     private MyPetType petType = MyPetType.Wolf;
     private Skilltree skilltree = null;
     private TagCompound NBTSkills;
     private TagCompound NBTextendetInfo;
-    public boolean wantsToRespawn = false;
 
     public InactiveMyPet(MyPetPlayer petOwner) throws IllegalArgumentException {
         if (petOwner == null) {
@@ -80,10 +79,6 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         return saturation;
     }
 
-    public double getHungerValue() {
-        return getSaturation();
-    }
-
     @Override
     public void setSaturation(double value) {
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
@@ -91,6 +86,10 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         } else {
             MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + Util.stackTraceToString());
         }
+    }
+
+    public double getHungerValue() {
+        return getSaturation();
     }
 
     public TagCompound getInfo() {
@@ -104,12 +103,12 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         NBTextendetInfo = info;
     }
 
-    public void setOwner(MyPetPlayer owner) {
-        petOwner = owner;
-    }
-
     public MyPetPlayer getOwner() {
         return petOwner;
+    }
+
+    public void setOwner(MyPetPlayer owner) {
+        petOwner = owner;
     }
 
     public String getPetName() {
@@ -156,7 +155,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         this.skilltree = skilltree;
         return true;
     }
-    
+
     public boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source) {
         this.skilltree = skilltree;
         MyPetSelectSkilltreeEvent selectEvent = new MyPetSelectSkilltreeEvent(this, skilltree, source);
@@ -192,6 +191,12 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         return worldGroup;
     }
 
+    public void setWorldGroup(String worldGroup) {
+        if (worldGroup != null) {
+            this.worldGroup = worldGroup;
+        }
+    }
+
     @Override
     public long getLastUsed() {
         return lastUsed;
@@ -199,12 +204,6 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
 
     public void setLastUsed(long lastUsed) {
         this.lastUsed = lastUsed;
-    }
-
-    public void setWorldGroup(String worldGroup) {
-        if (worldGroup != null) {
-            this.worldGroup = worldGroup;
-        }
     }
 
     @Override

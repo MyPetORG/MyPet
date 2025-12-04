@@ -20,14 +20,13 @@
 
 package de.Keyle.MyPet.entity.leashing;
 
-import org.bukkit.entity.Goat;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import org.bukkit.entity.Goat;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 @LeashFlagName("Screaming")
 public class ScreamingFlag implements LeashFlag {

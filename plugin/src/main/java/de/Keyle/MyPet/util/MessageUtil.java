@@ -46,9 +46,9 @@ public class MessageUtil {
     /**
      * Creates a success message with optional plugin prefix
      * Format: [MyPet] ✔ <message in GREEN> (if withPrefix=true)
-     *         ✔ <message in GREEN> (if withPrefix=false)
+     * ✔ <message in GREEN> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with success message in GREEN
      */
@@ -59,9 +59,9 @@ public class MessageUtil {
     /**
      * Creates a success message with optional plugin prefix
      * Format: [MyPet] ✔ <message in GREEN> (if withPrefix=true)
-     *         ✔ <message in GREEN> (if withPrefix=false)
+     * ✔ <message in GREEN> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with success message in GREEN
      */
@@ -82,9 +82,9 @@ public class MessageUtil {
     /**
      * Creates an error message with optional plugin prefix
      * Format: [MyPet] ✘ <message in RED> (if withPrefix=true)
-     *         ✘ <message in RED> (if withPrefix=false)
+     * ✘ <message in RED> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with error message in RED
      */
@@ -95,9 +95,9 @@ public class MessageUtil {
     /**
      * Creates an error message with optional plugin prefix
      * Format: [MyPet] ✘ <message in RED> (if withPrefix=true)
-     *         ✘ <message in RED> (if withPrefix=false)
+     * ✘ <message in RED> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with error message in RED
      */
@@ -118,9 +118,9 @@ public class MessageUtil {
     /**
      * Creates an info message with optional plugin prefix
      * Format: [MyPet] <message in GRAY> (if withPrefix=true)
-     *         <message in GRAY> (if withPrefix=false)
+     * <message in GRAY> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with info message in GRAY
      */
@@ -131,9 +131,9 @@ public class MessageUtil {
     /**
      * Creates an info message with optional plugin prefix
      * Format: [MyPet] <message in GRAY> (if withPrefix=true)
-     *         <message in GRAY> (if withPrefix=false)
+     * <message in GRAY> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with info message in GRAY
      */
@@ -150,9 +150,9 @@ public class MessageUtil {
     /**
      * Creates a warning message with optional plugin prefix
      * Format: [MyPet] <message in YELLOW> (if withPrefix=true)
-     *         <message in YELLOW> (if withPrefix=false)
+     * <message in YELLOW> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with warning message in YELLOW
      */
@@ -163,9 +163,9 @@ public class MessageUtil {
     /**
      * Creates a warning message with optional plugin prefix
      * Format: [MyPet] <message in YELLOW> (if withPrefix=true)
-     *         <message in YELLOW> (if withPrefix=false)
+     * <message in YELLOW> (if withPrefix=false)
      *
-     * @param message Message to display
+     * @param message    Message to display
      * @param withPrefix If true, the message will be prefixed with the plugin prefix
      * @return Component with warning message in YELLOW
      */

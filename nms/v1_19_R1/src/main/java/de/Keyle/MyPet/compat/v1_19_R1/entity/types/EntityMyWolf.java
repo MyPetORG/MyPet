@@ -47,166 +47,166 @@ import java.util.UUID;
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_UUID);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);
+    protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
 
-	protected boolean shaking;
-	protected boolean isWet;
-	protected float shakeCounter;
+    protected boolean shaking;
+    protected boolean isWet;
+    protected float shakeCounter;
 
-	public EntityMyWolf(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyWolf(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	public void applySitting(boolean sitting) {
-		int i = this.getEntityData().get(SIT_WATCHER);
-		if (sitting) {
-			this.getEntityData().set(SIT_WATCHER, (byte) (i | 0x1));
-		} else {
-			this.getEntityData().set(SIT_WATCHER, (byte) (i & 0xFFFFFFFE));
-		}
-	}
+    public void applySitting(boolean sitting) {
+        int i = this.getEntityData().get(SIT_WATCHER);
+        if (sitting) {
+            this.getEntityData().set(SIT_WATCHER, (byte) (i | 0x1));
+        } else {
+            this.getEntityData().set(SIT_WATCHER, (byte) (i & 0xFFFFFFFE));
+        }
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.wolf.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.wolf.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.wolf.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.wolf.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "entity.wolf.whine" : "entity.wolf.pant") : "entity.wolf.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "entity.wolf.whine" : "entity.wolf.pant") : "entity.wolf.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman)) {
-			if (itemStack != null && itemStack.getItem() != Items.AIR) {
-				if (canUseItem()) {
-					if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getCollarColor().ordinal()) {
-						if (getOwner().getPlayer().isSneaking()) {
-							getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
-							if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-								itemStack.shrink(1);
-								if (itemStack.getCount() <= 0) {
-									entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-								}
-							}
-							return InteractionResult.CONSUME;
-						} else {
-							this.getEntityData().set(COLLAR_COLOR_WATCHER, 0);
-							updateVisuals();
-						}
-					} else if (Configuration.MyPet.Wolf.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-						if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-							itemStack.shrink(1);
-							if (itemStack.getCount() <= 0) {
-								entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-							}
-						}
-						getMyPet().setBaby(false);
-						return InteractionResult.CONSUME;
-					}
-				}
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman)) {
+            if (itemStack != null && itemStack.getItem() != Items.AIR) {
+                if (canUseItem()) {
+                    if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getCollarColor().ordinal()) {
+                        if (getOwner().getPlayer().isSneaking()) {
+                            getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
+                            if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                                itemStack.shrink(1);
+                                if (itemStack.getCount() <= 0) {
+                                    entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                                }
+                            }
+                            return InteractionResult.CONSUME;
+                        } else {
+                            this.getEntityData().set(COLLAR_COLOR_WATCHER, 0);
+                            updateVisuals();
+                        }
+                    } else if (Configuration.MyPet.Wolf.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                        if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                            itemStack.shrink(1);
+                            if (itemStack.getCount() <= 0) {
+                                entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                            }
+                        }
+                        getMyPet().setBaby(false);
+                        return InteractionResult.CONSUME;
+                    }
+                }
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
 
-		getEntityData().define(AGE_WATCHER, false);
-		getEntityData().define(SIT_WATCHER, (byte) 0);
-		getEntityData().define(OWNER_WATCHER, Optional.empty());
-		getEntityData().define(UNUSED_WATCHER, false); // not used
-		getEntityData().define(COLLAR_COLOR_WATCHER, 14);
-		getEntityData().define(ANGER_WATCHER, 0);
-	}
+        getEntityData().define(AGE_WATCHER, false);
+        getEntityData().define(SIT_WATCHER, (byte) 0);
+        getEntityData().define(OWNER_WATCHER, Optional.empty());
+        getEntityData().define(UNUSED_WATCHER, false); // not used
+        getEntityData().define(COLLAR_COLOR_WATCHER, 14);
+        getEntityData().define(ANGER_WATCHER, 0);
+    }
 
-	@Override
-	protected void initAttributes() {
-		getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0D);
-	}
+    @Override
+    protected void initAttributes() {
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0D);
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
-		byte b0 = this.getEntityData().get(SIT_WATCHER);
-		if (getMyPet().isTamed()) {
-			this.getEntityData().set(SIT_WATCHER, (byte) (b0 | 0x4));
-		} else {
-			this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
-		}
+        byte b0 = this.getEntityData().get(SIT_WATCHER);
+        if (getMyPet().isTamed()) {
+            this.getEntityData().set(SIT_WATCHER, (byte) (b0 | 0x4));
+        } else {
+            this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
+        }
 
-		if (getMyPet().isAngry()) {
-			this.getEntityData().set(ANGER_WATCHER, 1);
-		} else {
-			this.getEntityData().set(ANGER_WATCHER, 0);
-		}
+        if (getMyPet().isAngry()) {
+            this.getEntityData().set(ANGER_WATCHER, 1);
+        } else {
+            this.getEntityData().set(ANGER_WATCHER, 0);
+        }
 
-		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
-	}
+        this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (this.isWet && !this.shaking && this.onGround) {
-			this.shaking = true;
-			this.shakeCounter = 0.0F;
-			this.level.broadcastEntityEvent(this, (byte) 8);
-		}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (this.isWet && !this.shaking && this.onGround) {
+            this.shaking = true;
+            this.shakeCounter = 0.0F;
+            this.level.broadcastEntityEvent(this, (byte) 8);
+        }
 
-		if (isInWater()) // -> is in water
-		{
-			this.isWet = true;
-			this.shaking = false;
-			this.shakeCounter = 0.0F;
-		} else if ((this.isWet || this.shaking) && this.shaking) {
-			if (this.shakeCounter == 0.0F) {
-				makeSound("entity.wolf.shake", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-			}
+        if (isInWater()) // -> is in water
+        {
+            this.isWet = true;
+            this.shaking = false;
+            this.shakeCounter = 0.0F;
+        } else if ((this.isWet || this.shaking) && this.shaking) {
+            if (this.shakeCounter == 0.0F) {
+                makeSound("entity.wolf.shake", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            }
 
-			this.shakeCounter += 0.05F;
-			if (this.shakeCounter - 0.05F >= 2.0F) {
-				this.isWet = false;
-				this.shaking = false;
-				this.shakeCounter = 0.0F;
-			}
+            this.shakeCounter += 0.05F;
+            if (this.shakeCounter - 0.05F >= 2.0F) {
+                this.isWet = false;
+                this.shaking = false;
+                this.shakeCounter = 0.0F;
+            }
 
-			if (this.shakeCounter > 0.4F) {
-				int i = (int) (Mth.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
-				for (; i >= 0; i--) {
-					float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
-					float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
+            if (this.shakeCounter > 0.4F) {
+                int i = (int) (Mth.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
+                for (; i >= 0; i--) {
+                    float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
+                    float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
 
-					this.level.addParticle(ParticleTypes.SPLASH, this.getX() + offsetX, this.getY() + 0.8F, this.getZ() + offsetZ, this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z());
-				}
-			}
-		}
-	}
+                    this.level.addParticle(ParticleTypes.SPLASH, this.getX() + offsetX, this.getY() + 0.8F, this.getZ() + offsetZ, this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z());
+                }
+            }
+        }
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_WOLF_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_WOLF_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyWolf getMyPet() {
-		return (MyWolf) myPet;
-	}
+    @Override
+    public MyWolf getMyPet() {
+        return (MyWolf) myPet;
+    }
 }

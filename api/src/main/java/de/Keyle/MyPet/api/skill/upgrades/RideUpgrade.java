@@ -35,17 +35,29 @@ import lombok.experimental.Accessors;
 @SkillName("Ride")
 public class RideUpgrade implements Upgrade<Ride> {
 
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier activeModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier speedIncreaseModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier jumpHeightModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier flyLimitModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier flyRegenRateModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier canFlyModifier = null;
 
     @Override

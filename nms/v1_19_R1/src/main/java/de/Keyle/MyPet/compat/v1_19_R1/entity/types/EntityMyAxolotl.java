@@ -60,27 +60,27 @@ public class EntityMyAxolotl extends EntityMyAquaticPet {
     protected String getLivingSound() {
         return "entity.axolotl.idle_air";
     }
-    
-    @Override
-	public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (Configuration.MyPet.Axolotl.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+    @Override
+    public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (Configuration.MyPet.Axolotl.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
     @Override
     protected void defineSynchedData() {
@@ -93,9 +93,9 @@ public class EntityMyAxolotl extends EntityMyAquaticPet {
     @Override
     public void tick() {
         super.tick();
-        if(this.getDeltaMovement().x() <= 0.0 && this.getDeltaMovement().y() <= 0.0 && this.getDeltaMovement().z() <= 0.0) {
+        if (this.getDeltaMovement().x() <= 0.0 && this.getDeltaMovement().y() <= 0.0 && this.getDeltaMovement().z() <= 0.0) {
             this.getEntityData().set(PLAYING_DEAD_WATCHER, getMyPet().getHealth() <= 1);
-        } else if(this.getEntityData().get(PLAYING_DEAD_WATCHER)) {
+        } else if (this.getEntityData().get(PLAYING_DEAD_WATCHER)) {
             this.getEntityData().set(PLAYING_DEAD_WATCHER, false);
         }
     }

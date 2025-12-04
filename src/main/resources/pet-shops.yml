@@ -6,8 +6,8 @@
 
 Shops:
   all:
-# When Default is set to true /petshop will open the sop instead of the shop selection GUI
-#    Default: true
+    # When Default is set to true /petshop will open the sop instead of the shop selection GUI
+    #    Default: true
     Name: "All Pets"
     Balance:
       Type: Private
@@ -16,18 +16,18 @@ Shops:
       Material: "chest"
       Glowing: false
     Pets:
-#      a_unique_name:
-#        Position: 0
-#        Name: "Ingame Name"
-#        Description:
-#        - <green>This is a description!
-#        PetType: PetTypeName
-#        EXP: 0
-#        Price: 100
-#        Skilltree: "skilltreename"
-#        Options:
-#          - baby
-#          - saddle
+      #      a_unique_name:
+      #        Position: 0
+      #        Name: "Ingame Name"
+      #        Description:
+      #        - <green>This is a description!
+      #        PetType: PetTypeName
+      #        EXP: 0
+      #        Price: 100
+      #        Skilltree: "skilltreename"
+      #        Options:
+      #          - baby
+      #          - saddle
       axolotl:
         Name: Axolotl
         Description:
@@ -419,27 +419,27 @@ Shops:
         PetType: ZombifiedPiglin
         EXP: 0
         Price: 100
-#      enderdragon:
-#        Name: EnderDragon
-#        Description:
-#        - <green>It's an EnderDragon!
-#        PetType: EnderDragon
-#        EXP: 0
-#        Price: 100
-#      ghast:
-#        Name: Ghast
-#        Description:
-#        - <green>It's a Ghast!
-#        PetType: Ghast
-#        EXP: 0
-#        Price: 100
-#      giant:
-#        Name: Giant
-#        Description:
-#        - <green>It's a Giant!
-#        PetType: Giant
-#        EXP: 0
-#        Price: 100
+  #      enderdragon:
+  #        Name: EnderDragon
+  #        Description:
+  #        - <green>It's an EnderDragon!
+  #        PetType: EnderDragon
+  #        EXP: 0
+  #        Price: 100
+  #      ghast:
+  #        Name: Ghast
+  #        Description:
+  #        - <green>It's a Ghast!
+  #        PetType: Ghast
+  #        EXP: 0
+  #        Price: 100
+  #      giant:
+  #        Name: Giant
+  #        Description:
+  #        - <green>It's a Giant!
+  #        PetType: Giant
+  #        EXP: 0
+  #        Price: 100
   babies:
     Name: "Baby Shop"
     Balance:

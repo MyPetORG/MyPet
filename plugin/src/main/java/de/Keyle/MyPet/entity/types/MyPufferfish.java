@@ -55,13 +55,13 @@ public class MyPufferfish extends MyPet implements de.Keyle.MyPet.api.entity.typ
     }
 
     @Override
-    public void setPuffState(PuffState state) {
-        this.puffState = state;
+    public PuffState getPuffState() {
+        return puffState;
     }
 
     @Override
-    public PuffState getPuffState() {
-        return puffState;
+    public void setPuffState(PuffState state) {
+        this.puffState = state;
     }
 
     @Override

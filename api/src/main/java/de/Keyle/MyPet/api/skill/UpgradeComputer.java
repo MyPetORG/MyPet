@@ -33,10 +33,6 @@ public class UpgradeComputer<T> {
     T currentValue;
     T baseValue;
 
-    public enum CallbackReason {
-        Add, Remove
-    }
-
     public UpgradeComputer(T baseValue) {
         this.baseValue = baseValue;
         this.currentValue = this.baseValue;
@@ -124,13 +120,17 @@ public class UpgradeComputer<T> {
         this.callbacks.remove(callback);
     }
 
-    public interface UpgradeCallback<T> {
-
-        void run(T newValue, CallbackReason reason);
-    }
-
     @Override
     public String toString() {
         return "" + currentValue;
+    }
+
+    public enum CallbackReason {
+        Add, Remove
+    }
+
+    public interface UpgradeCallback<T> {
+
+        void run(T newValue, CallbackReason reason);
     }
 }

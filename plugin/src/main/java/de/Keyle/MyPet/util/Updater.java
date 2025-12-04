@@ -38,40 +38,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Optional;
 
 public class Updater {
 
-    public class Update {
-
-        String version;
-        String downloadURL;
-
-        public Update(String version, String downloadURL) {
-            this.version = version;
-            this.downloadURL = downloadURL;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public String getDownloadURL() { return downloadURL; }
-
-        @Override
-        public String toString() {
-            return version;
-        }
-    }
-
     protected static Update latest = null;
     protected String plugin;
     protected Thread thread;
-
     public Updater(String plugin) {
         this.plugin = plugin;
         latest = null;
+    }
+
+    public static Update getLatest() {
+        return latest;
+    }
+
+    public static boolean isUpdateAvailable() {
+        return latest != null;
     }
 
     public void update() {
@@ -107,13 +91,13 @@ public class Updater {
             JsonArray resultArr = new Gson().fromJson(content, JsonArray.class);
             Optional<Update> update = Optional.empty();
 
-            for (int i = 0; i<resultArr.size(); i++) {
+            for (int i = 0; i < resultArr.size(); i++) {
                 JsonObject release = (JsonObject) resultArr.get(i);
 
                 // If prerelease and we allow prereleases or it is not a prerelease
                 if ((release.has("prerelease") && release.get("prerelease").getAsBoolean() == MyPetVersion.isDevBuild()) ||
                         !release.has("prerelease")) {
-                    if(!release.get("body").getAsString().contains(MyPetApi.getCompatUtil().getInternalVersion())) {
+                    if (!release.get("body").getAsString().contains(MyPetApi.getCompatUtil().getInternalVersion())) {
                         continue;
                     }
                     String downloadURL = release.get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
@@ -215,11 +199,27 @@ public class Updater {
         }
     }
 
-    public static Update getLatest() {
-        return latest;
-    }
+    public class Update {
 
-    public static boolean isUpdateAvailable() {
-        return latest != null;
+        String version;
+        String downloadURL;
+
+        public Update(String version, String downloadURL) {
+            this.version = version;
+            this.downloadURL = downloadURL;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getDownloadURL() {
+            return downloadURL;
+        }
+
+        @Override
+        public String toString() {
+            return version;
+        }
     }
 }

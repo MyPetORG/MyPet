@@ -20,16 +20,15 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import java.util.UUID;
-
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
-
 import de.Keyle.MyPet.api.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+
+import java.util.UUID;
 
 public interface MyPetMinecraftEntity {
     boolean isMyPet();
@@ -70,13 +69,13 @@ public interface MyPetMinecraftEntity {
 
     void hidePotionParticles();
 
-    void setSitting(boolean sitting);
-
     boolean isSitting();
+
+    void setSitting(boolean sitting);
 
     UUID getUniqueID();
 
-	LivingEntity getMyPetTarget();
+    LivingEntity getMyPetTarget();
 
-	void setMyPetTarget(LivingEntity entity, TargetPriority priority);
+    void setMyPetTarget(LivingEntity entity, TargetPriority priority);
 }

@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Timer {
-    private static List<Integer> timerIDs = new ArrayList<>();
     private static final List<Scheduler> tasksToSchedule = new ArrayList<>();
+    private static List<Integer> timerIDs = new ArrayList<>();
 
     private Timer() {
     }

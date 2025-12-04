@@ -20,9 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R1.entity.types;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -33,77 +30,80 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @EntitySize(width = 0.5F, height = 0.9f)
 public class EntityMyParrot extends EntityMyPet {
-	
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.OPTIONAL_UUID);
-	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.INT);
 
-	public EntityMyParrot(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BYTE);
+    protected static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.INT);
 
-	@Override
-	public MyParrot getMyPet() {
-		return (MyParrot) myPet;
-	}
+    public EntityMyParrot(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	/**
-	 * Returns the sound that is played when the MyPet dies
-	 */
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.parrot.death";
-	}
+    @Override
+    public MyParrot getMyPet() {
+        return (MyParrot) myPet;
+    }
 
-	/**
-	 * Returns the sound that is played when the MyPet get hurt
-	 */
-	@Override
-	protected String getHurtSound() {
-		return "entity.parrot.hurt";
-	}
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.parrot.death";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.parrot.ambient";
-	}
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound() {
+        return "entity.parrot.hurt";
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
-		getEntityData().define(SIT_WATCHER, (byte) 0);
-		getEntityData().define(OWNER_WATCHER, Optional.empty());
-		getEntityData().define(VARIANT_WATCHER, 0);
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.parrot.ambient";
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(AGE_WATCHER, false);
+        getEntityData().define(SIT_WATCHER, (byte) 0);
+        getEntityData().define(OWNER_WATCHER, Optional.empty());
+        getEntityData().define(VARIANT_WATCHER, 0);
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
+    }
 
-		if (Configuration.MyPet.Parrot.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
 
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
-	}
+        if (Configuration.MyPet.Parrot.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
+    }
+
+    /**
+     * -> disable falldamage
+     */
+    @Override
+    public int calculateFallDamage(float f, float f1) {
+        if (!Configuration.MyPet.Parrot.CAN_GLIDE) {
+            super.calculateFallDamage(f, f1);
+        }
+        return 0;
+    }
 }

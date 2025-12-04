@@ -274,8 +274,8 @@ public class PlayerListener implements Listener {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL &&
                         victim.isInsideVehicle() &&
-                            (victim.getVehicle() instanceof MyPetBukkitEntity ||
-                                    (victim.getVehicle().getType() == EntityType.ARMOR_STAND && victim.getVehicle().isInsideVehicle()))) {
+                        (victim.getVehicle() instanceof MyPetBukkitEntity ||
+                                (victim.getVehicle().getType() == EntityType.ARMOR_STAND && victim.getVehicle().isInsideVehicle()))) {
                     event.setCancelled(true);
                     return;
                 }
@@ -552,7 +552,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onMount(EntityMountEvent event) {
-        if(!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player)) {
         }
 
         //TODO Implement hooks

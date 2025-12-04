@@ -37,150 +37,152 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyCamel extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BYTE);
-	public static final EntityDataAccessor<Boolean> DASH = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.LONG);
+    public static final EntityDataAccessor<Boolean> DASH = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.LONG);
+    protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
+    private static final int SITDOWN_DURATION_TICKS = 40;
+    private static final int STANDUP_DURATION_TICKS = 52;
 
-	private static final int SITDOWN_DURATION_TICKS = 40;
-	private static final int STANDUP_DURATION_TICKS = 52;
+    public EntityMyCamel(Level world, MyPet myPet) {
+        super(world, myPet);
+        indirectRiding = true;
+    }
 
-	public EntityMyCamel(Level world, MyPet myPet) {
-		super(world, myPet);
-		indirectRiding = true;
-	}
+    public void applySitting(boolean sitting) {
+        if (sitting) {
+            this.sitDown();
+        } else {
+            this.standUp();
+        }
+    }
 
-	public void applySitting(boolean sitting) {
-		if (sitting) {
-			this.sitDown();
-		} else {
-			this.standUp();
-		}
-	}
+    public void sitDown() {
+        this.playSound(SoundEvents.CAMEL_SIT, 1.0F, 1.0F);
+        this.setPose(Pose.SITTING);
+        this.resetLastPoseChangeTick(-this.level().getGameTime());
+    }
 
-	public void sitDown() {
-		this.playSound(SoundEvents.CAMEL_SIT, 1.0F, 1.0F);
-		this.setPose(Pose.SITTING);
-		this.resetLastPoseChangeTick(-this.level().getGameTime());
-	}
+    public void standUp() {
+        this.playSound(SoundEvents.CAMEL_STAND, 1.0F, 1.0F);
+        this.setPose(Pose.STANDING);
+        this.resetLastPoseChangeTick(this.level().getGameTime());
+    }
 
-	public void standUp() {
-		this.playSound(SoundEvents.CAMEL_STAND, 1.0F, 1.0F);
-		this.setPose(Pose.STANDING);
-		this.resetLastPoseChangeTick(this.level().getGameTime());
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.camel.death";
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.camel.death";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.camel.hurt";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.camel.hurt";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.camel.ambient";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.camel.ambient";
-	}
+    @Override
+    public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(final Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CAMEL_SADDLE, 1.0F, 1.0F);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+                entityitem.pickupDelay = 10;
+                entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                this.level().addFreshEntity(entityitem);
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CAMEL_SADDLE, 1.0F, 1.0F);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
-				entityitem.pickupDelay = 10;
-				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-				this.level().addFreshEntity(entityitem);
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                getMyPet().setSaddle(null);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                    }
+                }
 
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				getMyPet().setSaddle(null);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-					}
-				}
+                return InteractionResult.CONSUME;
+            } else if (Configuration.MyPet.Camel.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Camel.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(SADDLE_CHEST_WATCHER, (byte) 0);
+        builder.define(DASH, false);
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(SADDLE_CHEST_WATCHER, (byte) 0);
-		builder.define(DASH, false);
+        builder.define(LAST_POSE_CHANGE_TICK, Math.max(0L, this.level().getGameTime() - 52L - 1L));
+    }
 
-		builder.define(LAST_POSE_CHANGE_TICK, Math.max(0L, this.level().getGameTime() - 52L - 1L));
-	}
-	private void resetLastPoseChangeTick(long i) {
-		this.getEntityData().set(LAST_POSE_CHANGE_TICK, i);
-	}
-	public long getPoseTime() {
-		return this.level().getGameTime() - Math.abs(this.getEntityData().get(LAST_POSE_CHANGE_TICK));
-	}
+    private void resetLastPoseChangeTick(long i) {
+        this.getEntityData().set(LAST_POSE_CHANGE_TICK, i);
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		applyVisual(4, getMyPet().hasSaddle());
-	}
+    public long getPoseTime() {
+        return this.level().getGameTime() - Math.abs(this.getEntityData().get(LAST_POSE_CHANGE_TICK));
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CAMEL_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        applyVisual(4, getMyPet().hasSaddle());
+    }
 
-	@Override
-	public MyCamel getMyPet() {
-		return (MyCamel) myPet;
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CAMEL_STEP, 0.15F, 1.0F);
+    }
 
-	/** Saddle things
-	 * Possible visual camel effects:
-	 * 4 saddle
-	 */
-	protected void applyVisual(int value, boolean flag) {
-		int i = this.getEntityData().get(SADDLE_CHEST_WATCHER);
-		if (flag) {
-			this.getEntityData().set(SADDLE_CHEST_WATCHER, (byte) (i | value));
-		} else {
-			this.getEntityData().set(SADDLE_CHEST_WATCHER, (byte) (i & (~value)));
-		}
-	}
+    @Override
+    public MyCamel getMyPet() {
+        return (MyCamel) myPet;
+    }
+
+    /**
+     * Saddle things
+     * Possible visual camel effects:
+     * 4 saddle
+     */
+    protected void applyVisual(int value, boolean flag) {
+        int i = this.getEntityData().get(SADDLE_CHEST_WATCHER);
+        if (flag) {
+            this.getEntityData().set(SADDLE_CHEST_WATCHER, (byte) (i | value));
+        } else {
+            this.getEntityData().set(SADDLE_CHEST_WATCHER, (byte) (i & (~value)));
+        }
+    }
 }

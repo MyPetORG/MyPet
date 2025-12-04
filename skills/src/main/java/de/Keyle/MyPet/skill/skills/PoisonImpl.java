@@ -35,10 +35,9 @@ import java.util.Random;
 public class PoisonImpl implements Poison {
 
     private static Random random = new Random();
-
-    private MyPet myPet;
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
+    private MyPet myPet;
 
     public PoisonImpl(MyPet myPet) {
         this.myPet = myPet;

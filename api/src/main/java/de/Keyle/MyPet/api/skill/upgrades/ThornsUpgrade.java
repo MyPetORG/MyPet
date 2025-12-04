@@ -32,9 +32,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Thorns")
 public class ThornsUpgrade implements Upgrade<Thorns> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier chanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier reflectedDamageModifier = null;
 
     @Override

@@ -46,140 +46,139 @@ import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.UUID;
-import org.bukkit.Sound;
 
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyTraderLlama extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.OPTIONAL_UUID);
-	private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> STRENGTH_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Optional<UUID>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Boolean> CHEST_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> STRENGTH_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyTraderLlama.class, EntityDataSerializers.INT);
 
-	public EntityMyTraderLlama(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyTraderLlama(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.llama.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.llama.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.llama.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.llama.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.llama.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.llama.ambient";
+    }
 
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (itemStack != null && canUseItem()) {
-			if (itemStack.is(ItemTags.WOOL_CARPETS) && !getMyPet().hasDecor() && getOwner().getPlayer().isSneaking() && canEquip()) {
-				getMyPet().setDecor(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Blocks.CHEST.asItem() && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
-				getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
-				if (getMyPet().hasChest()) {
-					ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
-					entityitem.pickupDelay = 10;
-					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-					this.level.addFreshEntity(entityitem);
-				}
-				if (getMyPet().hasDecor()) {
-					ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getDecor()));
-					entityitem.pickupDelay = 10;
-					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-					this.level.addFreshEntity(entityitem);
-				}
+        if (itemStack != null && canUseItem()) {
+            if (itemStack.is(ItemTags.WOOL_CARPETS) && !getMyPet().hasDecor() && getOwner().getPlayer().isSneaking() && canEquip()) {
+                getMyPet().setDecor(CraftItemStack.asBukkitCopy(itemStack));
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Blocks.CHEST.asItem() && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
+                getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                if (getMyPet().hasChest()) {
+                    ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
+                    entityitem.pickupDelay = 10;
+                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                    this.level.addFreshEntity(entityitem);
+                }
+                if (getMyPet().hasDecor()) {
+                    ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getDecor()));
+                    entityitem.pickupDelay = 10;
+                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                    this.level.addFreshEntity(entityitem);
+                }
 
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				getMyPet().setChest(null);
-				getMyPet().setDecor(null);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-							try {
-								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ErrorUtil.report(ex);
-							}
-						});
-					}
-				}
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                getMyPet().setChest(null);
+                getMyPet().setDecor(null);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
+                            try {
+                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+                            } catch (IllegalAccessException | InvocationTargetException ex) {
+                                ErrorUtil.report(ex);
+                            }
+                        });
+                    }
+                }
 
-				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Llama.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+                return InteractionResult.CONSUME;
+            } else if (Configuration.MyPet.Llama.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(AGE_WATCHER, false);
-		getEntityData().define(SADDLE_CHEST_WATCHER, (byte) 0);    // saddle & chest
-		getEntityData().define(OWNER_WATCHER, Optional.empty()); // owner
-		getEntityData().define(CHEST_WATCHER, false);
-		getEntityData().define(STRENGTH_WATCHER, 0);
-		getEntityData().define(COLOR_WATCHER, 0);
-		getEntityData().define(VARIANT_WATCHER, 0);
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(AGE_WATCHER, false);
+        getEntityData().define(SADDLE_CHEST_WATCHER, (byte) 0);    // saddle & chest
+        getEntityData().define(OWNER_WATCHER, Optional.empty()); // owner
+        getEntityData().define(CHEST_WATCHER, false);
+        getEntityData().define(STRENGTH_WATCHER, 0);
+        getEntityData().define(COLOR_WATCHER, 0);
+        getEntityData().define(VARIANT_WATCHER, 0);
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		if (getMyPet().hasDecor()) {
-			ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
-			Block block = Block.byItem(is.getItem());
-			int color = block instanceof WoolCarpetBlock ? ((WoolCarpetBlock) block).getColor().getId() : 0;
-			this.getEntityData().set(COLOR_WATCHER, color);
-		} else {
-			this.getEntityData().set(COLOR_WATCHER, -1);
-		}
-		this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        if (getMyPet().hasDecor()) {
+            ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
+            Block block = Block.byItem(is.getItem());
+            int color = block instanceof WoolCarpetBlock ? ((WoolCarpetBlock) block).getColor().getId() : 0;
+            this.getEntityData().set(COLOR_WATCHER, color);
+        } else {
+            this.getEntityData().set(COLOR_WATCHER, -1);
+        }
+        this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
+    }
 
-	@Override
-	public MyTraderLlama getMyPet() {
-		return (MyTraderLlama) myPet;
-	}
+    @Override
+    public MyTraderLlama getMyPet() {
+        return (MyTraderLlama) myPet;
+    }
 }

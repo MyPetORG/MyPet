@@ -32,36 +32,10 @@ import org.bukkit.entity.Cat.Type;
 
 public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCat {
 
-    // Needed as some newer versions have integer -> Type mismatches
-    enum OwnCatType {
-        TABBY(Type.TABBY),
-        BLACK(Type.BLACK),
-        RED(Type.RED),
-        SIAMESE(Type.SIAMESE),
-        BRITISH_SHORTHAIR(Type.BRITISH_SHORTHAIR),
-        CALICO(Type.CALICO),
-        PERSIAN(Type.PERSIAN),
-        RAGDOLL(Type.RAGDOLL),
-        WHITE(Type.WHITE),
-        JELLIE(Type.JELLIE),
-        ALL_BLACK(Type.ALL_BLACK),;
-
-        private Type bukkitType;
-
-        OwnCatType(Type type) {
-            bukkitType = type;
-        }
-
-        public Type getBukkitType() {
-            return bukkitType;
-        }
-    }
-
     protected boolean isBaby = false;
     protected boolean isTamed = false;
     protected Type catType = Type.TABBY;
     protected DyeColor collarColor = DyeColor.RED;
-
     public MyCat(MyPetPlayer petOwner) {
         super(petOwner);
     }
@@ -149,5 +123,31 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     @Override
     public String toString() {
         return "MyCat{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", cattype=" + getCatType().name() + ", tamed=" + isTamed() + ", collar=" + getCollarColor() + ", baby=" + isBaby() + "}";
+    }
+
+    // Needed as some newer versions have integer -> Type mismatches
+    enum OwnCatType {
+        TABBY(Type.TABBY),
+        BLACK(Type.BLACK),
+        RED(Type.RED),
+        SIAMESE(Type.SIAMESE),
+        BRITISH_SHORTHAIR(Type.BRITISH_SHORTHAIR),
+        CALICO(Type.CALICO),
+        PERSIAN(Type.PERSIAN),
+        RAGDOLL(Type.RAGDOLL),
+        WHITE(Type.WHITE),
+        JELLIE(Type.JELLIE),
+        ALL_BLACK(Type.ALL_BLACK),
+        ;
+
+        private Type bukkitType;
+
+        OwnCatType(Type type) {
+            bukkitType = type;
+        }
+
+        public Type getBukkitType() {
+            return bukkitType;
+        }
     }
 }

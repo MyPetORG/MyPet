@@ -190,13 +190,13 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 ((Creeper) normalEntity).setPowered(true);
             }
         } else if (myPet instanceof MyGoat) {
-        	if (((MyGoat) myPet).isScreaming()) {
+            if (((MyGoat) myPet).isScreaming()) {
                 ((Goat) normalEntity).setScreaming(true);
             }
-            if(!((MyGoat) myPet).hasLeftHorn()) {
+            if (!((MyGoat) myPet).hasLeftHorn()) {
                 ((Goat) normalEntity).setLeftHorn(false);
             }
-            if(!((MyGoat) myPet).hasRightHorn()) {
+            if (!((MyGoat) myPet).hasRightHorn()) {
                 ((Goat) normalEntity).setRightHorn(false);
             }
         } else if (myPet instanceof MyEnderman) {
@@ -237,7 +237,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         TagCompound offersTag = villagerTag.get("Offers");
                         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
                         DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT);
-                        if(dataresult.hasResultOrPartial() && dataresult.resultOrPartial().isPresent()) {
+                        if (dataresult.hasResultOrPartial() && dataresult.resultOrPartial().isPresent()) {
                             entityVillager.setOffers(dataresult.resultOrPartial().get());
                         }
                     }
@@ -248,14 +248,14 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                             net.minecraft.world.item.ItemStack itemstack = ItemStackNBTConverter.vanillaCompoundToItemStack(vanillaNBT.getCompoundOrEmpty(i));
                             ItemStack item = CraftItemStack.asCraftMirror(itemstack);
                             if (!itemstack.isEmpty()) {
-                            	Villager vill = ((Villager) Bukkit.getServer().getEntity(normalEntity.getUniqueId()));
-                            	vill.getInventory().addItem(item);
+                                Villager vill = ((Villager) Bukkit.getServer().getEntity(normalEntity.getUniqueId()));
+                                vill.getInventory().addItem(item);
                             }
                         }
                     }
                     if (villagerTag.containsKey("FoodLevel")) {
                         byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
-                        ReflectionUtil.setFieldValue("ch", entityVillager, (int) foodLevel);		// Field: foodLevel
+                        ReflectionUtil.setFieldValue("ch", entityVillager, (int) foodLevel);        // Field: foodLevel
                     }
                     if (villagerTag.containsKey("Gossips")) {
                         TagList inventoryTag = villagerTag.get("Gossips");
@@ -264,24 +264,24 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                         //((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "ci")) //Field: gossips
 
                         entityVillager.setGossips(
-                          GossipContainer.CODEC
-                            .decode(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT))
-                            .resultOrPartial()
-                            .orElseThrow()
-                            .getFirst()
+                                GossipContainer.CODEC
+                                        .decode(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT))
+                                        .resultOrPartial()
+                                        .orElseThrow()
+                                        .getFirst()
                         );
                     }
                     if (villagerTag.containsKey("LastRestock")) {
-                    	long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("cm", entityVillager, lastRestock);	//Field: lastRestock(Game)Time
+                        long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
+                        ReflectionUtil.setFieldValue("cm", entityVillager, lastRestock);    //Field: lastRestock(Game)Time
                     }
                     if (villagerTag.containsKey("LastGossipDecay")) {
                         long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
-                        ReflectionUtil.setFieldValue("ck", entityVillager, lastGossipDecay);	//Field: lastGossipDecayTime
+                        ReflectionUtil.setFieldValue("ck", entityVillager, lastGossipDecay);    //Field: lastGossipDecayTime
                     }
                     if (villagerTag.containsKey("RestocksToday")) {
                         int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
-                        ReflectionUtil.setFieldValue("cn", entityVillager, restocksToday);		//Field: numberOfRestocksToday or restocksToday
+                        ReflectionUtil.setFieldValue("cn", entityVillager, restocksToday);        //Field: numberOfRestocksToday or restocksToday
                     }
                     ReflectionUtil.setFieldValue("cr", entityVillager, true); // Field: AssignProfessionWhenSpawned (natural?)
                 } catch (Exception e) {
@@ -370,12 +370,12 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ((Bee) normalEntity).setHasStung(((MyBee) myPet).hasStung());
         } else if (myPet instanceof MyFox) {
             ((Fox) normalEntity).setFoxType(((MyFox) myPet).getFoxType());
-        }else if (myPet instanceof MyFrog) {
+        } else if (myPet instanceof MyFrog) {
             ((Frog) normalEntity).setVariant(VariantConverter.getBukkitFrogVariant(((MyFrog) myPet).getFrogVariant()));
-        }else if (myPet instanceof MyWolf) {
+        } else if (myPet instanceof MyWolf) {
             Method getVariant = ReflectionUtil.getMethod(Wolf.Variant.class, "getVariant", String.class);
             try {
-                Wolf.Variant leVariant = (Wolf.Variant) getVariant.invoke(null, ((MyWolf)myPet).getVariant());
+                Wolf.Variant leVariant = (Wolf.Variant) getVariant.invoke(null, ((MyWolf) myPet).getVariant());
                 ((Wolf) normalEntity).setVariant(leVariant);
             } catch (Exception e) {
                 ErrorUtil.report(e);
@@ -664,7 +664,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertBee(Bee bee, TagCompound properties) {
-        properties.getCompoundData().put("Angry", new TagByte(bee.getAnger()>1));
+        properties.getCompoundData().put("Angry", new TagByte(bee.getAnger() > 1));
         properties.getCompoundData().put("HasStung", new TagByte(bee.hasStung()));
         properties.getCompoundData().put("HasNectar", new TagByte(bee.hasNectar()));
     }

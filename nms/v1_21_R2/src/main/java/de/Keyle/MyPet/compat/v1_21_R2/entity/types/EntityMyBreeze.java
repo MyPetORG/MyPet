@@ -31,55 +31,55 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBreeze extends EntityMyPet {
 
-	public EntityMyBreeze(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyBreeze(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.blaze.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.blaze.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.blaze.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.blaze.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.blaze.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.blaze.ambient";
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (Configuration.MyPet.Breeze.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (Configuration.MyPet.Breeze.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
+    }
 
-	@Override
-	public MyBreeze getMyPet() {
-		return (MyBreeze) myPet;
-	}
+    @Override
+    public MyBreeze getMyPet() {
+        return (MyBreeze) myPet;
+    }
 
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(float f, float f1) {
-		if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
-	}
+    /**
+     * -> disable falldamage
+     */
+    @Override
+    public int calculateFallDamage(float f, float f1) {
+        if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
+            super.calculateFallDamage(f, f1);
+        }
+        return 0;
+    }
 
-	@Override
-	protected boolean checkInteractCooldown() {
-		boolean val = super.checkInteractCooldown();
-		this.interactCooldown = 5;
-		return val;
-	}
+    @Override
+    protected boolean checkInteractCooldown() {
+        boolean val = super.checkInteractCooldown();
+        this.interactCooldown = 5;
+        return val;
+    }
 }

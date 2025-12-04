@@ -56,12 +56,12 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
         Luck("Luck", 26, 17, false),
         HealthBoost("HealthBoost", -1, -1);
 
+        private static Map<Integer, Buff> buffPositions = new HashMap<>();
+        private static Map<Integer, Buff> buffIds = new HashMap<>();
         private final String name;
         private final int id;
         private final int position;
         private final boolean moreThanOneLevel;
-        private static Map<Integer, Buff> buffPositions = new HashMap<>();
-        private static Map<Integer, Buff> buffIds = new HashMap<>();
 
         Buff(String name, int id, int position) {
             this.name = name;
@@ -75,22 +75,6 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
             this.id = id;
             this.position = position;
             this.moreThanOneLevel = moreThanOneLevel;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public int getPosition() {
-            return position;
-        }
-
-        public boolean hasMoreThanOneLevel() {
-            return moreThanOneLevel;
         }
 
         public static Buff getBuffAtPosition(int positiion) {
@@ -109,6 +93,22 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
                 }
             }
             return buffIds.get(id);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
+        public boolean hasMoreThanOneLevel() {
+            return moreThanOneLevel;
         }
     }
 

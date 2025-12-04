@@ -29,27 +29,27 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.7F, height = 0.85F)
 public class EntityMyElderGuardian extends EntityMyAquaticPet {
 
-	public EntityMyElderGuardian(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyElderGuardian(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.elder_guardian.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.elder_guardian.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.elder_guardian.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.elder_guardian.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.elder_guardian.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.elder_guardian.ambient";
+    }
 
-	@Override
-	public MyElderGuardian getMyPet() {
-		return (MyElderGuardian) myPet;
-	}
+    @Override
+    public MyElderGuardian getMyPet() {
+        return (MyElderGuardian) myPet;
+    }
 }

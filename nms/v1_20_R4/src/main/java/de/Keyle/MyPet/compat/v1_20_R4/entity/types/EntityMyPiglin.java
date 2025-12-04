@@ -50,145 +50,145 @@ import java.util.List;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPiglin extends EntityMyPet {
-	
-	//Funnily enough this one hasn't got the age_watcher before the No_Shake
-	private static final EntityDataAccessor<Boolean> NO_SHAKE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyPiglin(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    //Funnily enough this one hasn't got the age_watcher before the No_Shake
+    private static final EntityDataAccessor<Boolean> NO_SHAKE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPiglin.class, EntityDataSerializers.BOOLEAN);
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.piglin.death";
-	}
+    public EntityMyPiglin(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.piglin.hurt";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.piglin.death";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.piglin.ambient";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.piglin.hurt";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == InteractionResult.CONSUME) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    protected String getLivingSound() {
+        return "entity.piglin.ambient";
+    }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
-				boolean hadEquipment = false;
-				for (EquipmentSlot slot : EquipmentSlot.values()) {
-					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-					if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
-						ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
-						entityitem.pickupDelay = 10;
-						entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-						this.level().addFreshEntity(entityitem);
-						getMyPet().setEquipment(slot, null);
-						hadEquipment = true;
-					}
-				}
-				if (hadEquipment) {
-					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-						try {
-							itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-						} catch (Error e) {
-							// TODO REMOVE
-						}
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
-				EquipmentSlot slot = EquipmentSlot.getSlotById(Mob.getEquipmentSlotForItem(itemStack).getFilterFlag());
-				ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-				if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
-					entityitem.pickupDelay = 10;
-					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-					this.level().addFreshEntity(entityitem);
-				}
-				getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Piglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack) == InteractionResult.CONSUME) {
+            return InteractionResult.CONSUME;
+        }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(NO_SHAKE_WATCHER, false);
-		builder.define(AGE_WATCHER, false); // is baby
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                boolean hadEquipment = false;
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                    if (itemInSlot != null && itemInSlot.getItem() != Items.AIR) {
+                        ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
+                        entityitem.pickupDelay = 10;
+                        entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                        this.level().addFreshEntity(entityitem);
+                        getMyPet().setEquipment(slot, null);
+                        hadEquipment = true;
+                    }
+                }
+                if (hadEquipment) {
+                    if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        try {
+                            itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                        } catch (Error e) {
+                            // TODO REMOVE
+                        }
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
+                EquipmentSlot slot = EquipmentSlot.getSlotById(Mob.getEquipmentSlotForItem(itemStack).getFilterFlag());
+                ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+                if (itemInSlot != null && itemInSlot.getItem() != Items.AIR && itemInSlot != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), itemInSlot);
+                    entityitem.pickupDelay = 10;
+                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                    this.level().addFreshEntity(entityitem);
+                }
+                getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (Configuration.MyPet.Piglin.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	/**
-	 * Returns the speed of played sounds
-	 * The faster the higher the sound will be
-	 */
-	@Override
-	public float getSoundSpeed() {
-		return super.getSoundSpeed() + 0.4F;
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(NO_SHAKE_WATCHER, false);
+        builder.define(AGE_WATCHER, false); // is baby
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
+    /**
+     * Returns the speed of played sounds
+     * The faster the higher the sound will be
+     */
+    @Override
+    public float getSoundSpeed() {
+        return super.getSoundSpeed() + 0.4F;
+    }
 
-		Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
-			if (getMyPet().getStatus() == PetState.Here) {
-				for (EquipmentSlot slot : EquipmentSlot.values()) {
-					setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
-				}
-			}
-		}, 5L);
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        this.getEntityData().set(NO_SHAKE_WATCHER, getMyPet().isShakeImmune());
 
-	@Override
-	public MyPiglin getMyPet() {
-		return (MyPiglin) myPet;
-	}
+        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            if (getMyPet().getStatus() == PetState.Here) {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    setPetEquipment(slot, CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot)));
+                }
+            }
+        }, 5L);
+    }
 
-	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
-	}
+    @Override
+    public MyPiglin getMyPet() {
+        return (MyPiglin) myPet;
+    }
 
-	@Override
-	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
-			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
-			if (getMyPet().getEquipment(slot) != null) {
-				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
-			}
-		}
-		return super.getItemBySlot(vanillaSlot);
-	}
+    public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
+        ((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
+    }
 
-	@Override
-	protected boolean checkInteractCooldown() {
-		boolean val = super.checkInteractCooldown();
-		this.interactCooldown = 5;
-		return val;
-	}
+    @Override
+    public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
+        if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
+            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
+            if (getMyPet().getEquipment(slot) != null) {
+                return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
+            }
+        }
+        return super.getItemBySlot(vanillaSlot);
+    }
+
+    @Override
+    protected boolean checkInteractCooldown() {
+        boolean val = super.checkInteractCooldown();
+        this.interactCooldown = 5;
+        return val;
+    }
 }

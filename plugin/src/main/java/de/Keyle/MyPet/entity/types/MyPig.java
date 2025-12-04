@@ -32,8 +32,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPig {
-    protected boolean isBaby = false;
     public ItemStack saddle = null;
+    protected boolean isBaby = false;
     protected String variantString = "temperate";
 
     public MyPig(MyPetPlayer petOwner) {
@@ -96,10 +96,6 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
         return saddle;
     }
 
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
-
     public void setSaddle(ItemStack item) {
         if (item != null && item.getType() != Material.SADDLE) {
             return;
@@ -113,6 +109,10 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
     }
 
     @Override

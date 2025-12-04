@@ -32,65 +32,65 @@ import de.Keyle.MyPet.compat.v1_18_R2.entity.types.EntityMyWolf;
 @Compat("v1_18_R2")
 public class Sit implements AIGoal {
 
-	private final EntityMyPet entityMyPet;
-	private boolean sitting = false;
+    private final EntityMyPet entityMyPet;
+    private boolean sitting = false;
 
-	public Sit(EntityMyPet entityMyPet) {
-		this.entityMyPet = entityMyPet;
-	}
+    public Sit(EntityMyPet entityMyPet) {
+        this.entityMyPet = entityMyPet;
+    }
 
-	@Override
-	public boolean shouldStart() {
-		if (!(this.entityMyPet instanceof EntityMyWolf) &&
-				!(this.entityMyPet instanceof EntityMyCat) &&
-				!(this.entityMyPet instanceof EntityMyPanda) &&
-				!(this.entityMyPet instanceof EntityMyFox)) {
-			return false;
-		} else if (this.entityMyPet.isInWater() && !(this.entityMyPet instanceof EntityMyAquaticPet)) {
-			return false;
-		} else if (!this.entityMyPet.isOnGround()) {
-			return false;
-		}
-		return this.sitting;
-	}
+    @Override
+    public boolean shouldStart() {
+        if (!(this.entityMyPet instanceof EntityMyWolf) &&
+                !(this.entityMyPet instanceof EntityMyCat) &&
+                !(this.entityMyPet instanceof EntityMyPanda) &&
+                !(this.entityMyPet instanceof EntityMyFox)) {
+            return false;
+        } else if (this.entityMyPet.isInWater() && !(this.entityMyPet instanceof EntityMyAquaticPet)) {
+            return false;
+        } else if (!this.entityMyPet.isOnGround()) {
+            return false;
+        }
+        return this.sitting;
+    }
 
-	@Override
-	public void start() {
-		this.entityMyPet.getPetNavigation().stop();
-		if (this.entityMyPet instanceof EntityMyWolf) {
-			((EntityMyWolf) this.entityMyPet).applySitting(true);
-		} else if (this.entityMyPet instanceof EntityMyCat) {
-			((EntityMyCat) this.entityMyPet).applySitting(true);
-		} else if (this.entityMyPet instanceof EntityMyFox) {
-			((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, true);
-		} else if (this.entityMyPet instanceof EntityMyPanda) {
-			((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, true);
-		}
-		entityMyPet.setTarget(null);
-	}
+    @Override
+    public void start() {
+        this.entityMyPet.getPetNavigation().stop();
+        if (this.entityMyPet instanceof EntityMyWolf) {
+            ((EntityMyWolf) this.entityMyPet).applySitting(true);
+        } else if (this.entityMyPet instanceof EntityMyCat) {
+            ((EntityMyCat) this.entityMyPet).applySitting(true);
+        } else if (this.entityMyPet instanceof EntityMyFox) {
+            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, true);
+        } else if (this.entityMyPet instanceof EntityMyPanda) {
+            ((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, true);
+        }
+        entityMyPet.setTarget(null);
+    }
 
-	@Override
-	public void finish() {
-		if (this.entityMyPet instanceof EntityMyWolf) {
-			((EntityMyWolf) this.entityMyPet).applySitting(false);
-		} else if (this.entityMyPet instanceof EntityMyCat) {
-			((EntityMyCat) this.entityMyPet).applySitting(false);
-		} else if (this.entityMyPet instanceof EntityMyFox) {
-			((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, false);
-		} else if (this.entityMyPet instanceof EntityMyPanda) {
-			((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, false);
-		}
-	}
+    @Override
+    public void finish() {
+        if (this.entityMyPet instanceof EntityMyWolf) {
+            ((EntityMyWolf) this.entityMyPet).applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyCat) {
+            ((EntityMyCat) this.entityMyPet).applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyFox) {
+            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, false);
+        } else if (this.entityMyPet instanceof EntityMyPanda) {
+            ((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, false);
+        }
+    }
 
-	public void setSitting(boolean sitting) {
-		this.sitting = sitting;
-	}
+    public boolean isSitting() {
+        return this.sitting;
+    }
 
-	public boolean isSitting() {
-		return this.sitting;
-	}
+    public void setSitting(boolean sitting) {
+        this.sitting = sitting;
+    }
 
-	public void toggleSitting() {
-		this.sitting = !this.sitting;
-	}
+    public void toggleSitting() {
+        this.sitting = !this.sitting;
+    }
 }

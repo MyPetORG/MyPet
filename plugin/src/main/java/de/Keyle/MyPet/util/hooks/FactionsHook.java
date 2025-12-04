@@ -35,11 +35,6 @@ import java.lang.reflect.Method;
 @PluginHookName("Factions")
 public class FactionsHook implements PlayerVersusPlayerHook {
 
-    enum ApiVersion {
-        V1, V2, V3,
-        Savage
-    }
-
     ApiVersion apiVersion = ApiVersion.V2;
     Method engineMethod;
     Object engine;
@@ -105,5 +100,10 @@ public class FactionsHook implements PlayerVersusPlayerHook {
         } catch (Throwable ignored) {
         }
         return true;
+    }
+
+    enum ApiVersion {
+        V1, V2, V3,
+        Savage
     }
 }

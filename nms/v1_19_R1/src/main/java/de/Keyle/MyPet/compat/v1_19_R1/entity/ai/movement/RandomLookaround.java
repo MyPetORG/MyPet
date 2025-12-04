@@ -27,42 +27,42 @@ import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
 @Compat("v1_19_R1_2")
 public class RandomLookaround implements AIGoal {
 
-	protected EntityMyPet petEntity;
-	protected double directionX;
-	protected double directionZ;
-	protected int ticksUntilStopLookingAround = 0;
+    protected EntityMyPet petEntity;
+    protected double directionX;
+    protected double directionZ;
+    protected int ticksUntilStopLookingAround = 0;
 
-	public RandomLookaround(EntityMyPet petEntity) {
-		this.petEntity = petEntity;
-	}
+    public RandomLookaround(EntityMyPet petEntity) {
+        this.petEntity = petEntity;
+    }
 
-	@Override
-	public boolean shouldStart() {
-		if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
-			return false;
-		}
-		if (this.petEntity.isVehicle()) {
-			return false;
-		}
-		return this.petEntity.getRandom().nextFloat() < 0.02F;
-	}
+    @Override
+    public boolean shouldStart() {
+        if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
+            return false;
+        }
+        if (this.petEntity.isVehicle()) {
+            return false;
+        }
+        return this.petEntity.getRandom().nextFloat() < 0.02F;
+    }
 
-	@Override
-	public boolean shouldFinish() {
-		return this.ticksUntilStopLookingAround <= 0 || this.petEntity.isVehicle();
-	}
+    @Override
+    public boolean shouldFinish() {
+        return this.ticksUntilStopLookingAround <= 0 || this.petEntity.isVehicle();
+    }
 
-	@Override
-	public void start() {
-		double circumference = 6.283185307179586D * this.petEntity.getRandom().nextDouble();
-		this.directionX = Math.cos(circumference);
-		this.directionZ = Math.sin(circumference);
-		this.ticksUntilStopLookingAround = (20 + this.petEntity.getRandom().nextInt(20));
-	}
+    @Override
+    public void start() {
+        double circumference = 6.283185307179586D * this.petEntity.getRandom().nextDouble();
+        this.directionX = Math.cos(circumference);
+        this.directionZ = Math.sin(circumference);
+        this.ticksUntilStopLookingAround = (20 + this.petEntity.getRandom().nextInt(20));
+    }
 
-	@Override
-	public void tick() {
-		this.ticksUntilStopLookingAround--;
-		this.petEntity.getLookControl().setLookAt(this.petEntity.getX() + this.directionX, this.petEntity.getY() + this.petEntity.getEyeHeight(), this.petEntity.getZ() + this.directionZ, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot());
-	}
+    @Override
+    public void tick() {
+        this.ticksUntilStopLookingAround--;
+        this.petEntity.getLookControl().setLookAt(this.petEntity.getX() + this.directionX, this.petEntity.getY() + this.petEntity.getEyeHeight(), this.petEntity.getZ() + this.directionZ, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot());
+    }
 }

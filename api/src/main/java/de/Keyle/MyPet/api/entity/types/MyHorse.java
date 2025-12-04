@@ -31,21 +31,21 @@ public interface MyHorse extends MyPet, MyPetBaby {
 
     ItemStack getArmor();
 
-    boolean hasArmor();
-
     void setArmor(ItemStack item);
+
+    boolean hasArmor();
 
     ItemStack getChest();
 
-    boolean hasChest();
-
     void setChest(ItemStack item);
+
+    boolean hasChest();
 
     ItemStack getSaddle();
 
-    boolean hasSaddle();
-
     void setSaddle(ItemStack item);
+
+    boolean hasSaddle();
 
     byte getHorseType();
 

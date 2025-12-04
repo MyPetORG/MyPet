@@ -27,6 +27,14 @@ import org.bukkit.entity.Player;
 
 public interface LeashFlag {
 
+    static String getMessagePrefix(boolean right) {
+        if (right) {
+            return "" + ChatColor.GREEN + ChatColor.BOLD + "✔ " + ChatColor.RESET;
+        } else {
+            return "" + ChatColor.RED + ChatColor.BOLD + "✘ " + ChatColor.RESET;
+        }
+    }
+
     boolean check(Player player, LivingEntity entity, double damage, Settings settings);
 
     default String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
@@ -35,13 +43,5 @@ public interface LeashFlag {
 
     default boolean ignoredByHelper() {
         return false;
-    }
-
-    static String getMessagePrefix(boolean right) {
-        if (right) {
-            return "" + ChatColor.GREEN + ChatColor.BOLD + "✔ " + ChatColor.RESET;
-        } else {
-            return "" + ChatColor.RED + ChatColor.BOLD + "✘ " + ChatColor.RESET;
-        }
     }
 }

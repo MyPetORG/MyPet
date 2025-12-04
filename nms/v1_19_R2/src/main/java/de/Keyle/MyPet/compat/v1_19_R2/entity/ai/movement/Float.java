@@ -20,57 +20,56 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement;
 
-import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
-
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 
 @Compat("v1_19_R2")
 public class Float implements AIGoal {
 
-	private final EntityMyPet entityMyPet;
-	private final Player owner;
+    private final EntityMyPet entityMyPet;
+    private final Player owner;
 
-	private int lavaCounter = 10;
-	private boolean inLava = false;
+    private int lavaCounter = 10;
+    private boolean inLava = false;
 
-	public Float(EntityMyPet entityMyPet) {
-		this.entityMyPet = entityMyPet;
-		//entityMyPet.getNavigation().e(true);
-		this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
-		entityMyPet.getNavigation().setCanFloat(true);
+    public Float(EntityMyPet entityMyPet) {
+        this.entityMyPet = entityMyPet;
+        //entityMyPet.getNavigation().e(true);
+        this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
+        entityMyPet.getNavigation().setCanFloat(true);
     }
 
-	@Override
-	public boolean shouldStart() {
-		if(entityMyPet.floatsInLava()) { //Some entities do that
-			return entityMyPet.isInWater() || entityMyPet.isInLava();
-		}
-		return entityMyPet.isInWater();
-	}
+    @Override
+    public boolean shouldStart() {
+        if (entityMyPet.floatsInLava()) { //Some entities do that
+            return entityMyPet.isInWater() || entityMyPet.isInLava();
+        }
+        return entityMyPet.isInWater();
+    }
 
-	@Override
-	public void finish() {
-		inLava = false;
-	}
+    @Override
+    public void finish() {
+        inLava = false;
+    }
 
-	@Override
-	public void tick() {
-		if(entityMyPet.specialFloat()) return;	//Check if the entity has some special floating-behaviour for the liquid it is in right now
-		
-		entityMyPet.setDeltaMovement(entityMyPet.getDeltaMovement().add(0, 0.05D, 0));
+    @Override
+    public void tick() {
+        if (entityMyPet.specialFloat())
+            return;    //Check if the entity has some special floating-behaviour for the liquid it is in right now
 
-		if (inLava && lavaCounter-- <= 0) {
-			if (entityMyPet.getPetNavigation().navigateTo(owner.getBukkitEntity())) {
-				lavaCounter = 10;
-			}
-		}
-		if (!inLava && entityMyPet.isEyeInFluid(FluidTags.LAVA)) {
-			inLava = true;
-		}
-	}
+        entityMyPet.setDeltaMovement(entityMyPet.getDeltaMovement().add(0, 0.05D, 0));
+
+        if (inLava && lavaCounter-- <= 0) {
+            if (entityMyPet.getPetNavigation().navigateTo(owner.getBukkitEntity())) {
+                lavaCounter = 10;
+            }
+        }
+        if (!inLava && entityMyPet.isEyeInFluid(FluidTags.LAVA)) {
+            inLava = true;
+        }
+    }
 }

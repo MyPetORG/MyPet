@@ -37,14 +37,13 @@ import java.util.Random;
 public class LightningImpl implements Lightning {
 
     private static Random random = new Random();
-
-    @Getter
-    private MyPet myPet;
-    private boolean isStriking = false;
     @Getter
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     @Getter
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
+    @Getter
+    private MyPet myPet;
+    private boolean isStriking = false;
 
     public LightningImpl(MyPet myPet) {
         this.myPet = myPet;
@@ -82,7 +81,7 @@ public class LightningImpl implements Lightning {
         myPet.getEntity().ifPresent(petEntity -> {
             Player owner = myPet.getOwner().getPlayer();
             World world = target.getLocation().getWorld();
-            if(world != null) {
+            if (world != null) {
                 world.strikeLightningEffect(target.getLocation());
             }
             target.damage(damage.getValue().doubleValue(), petEntity);

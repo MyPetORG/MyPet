@@ -25,25 +25,20 @@ import org.bukkit.inventory.ItemStack;
 
 public class MyPetFeedEvent extends MyPetInteractEvent {
 
-    public enum Result {
-        Heal, Eat, Self_Feed
-    }
-
     private double saturation;
     private Result result;
-
     public MyPetFeedEvent(MyPet myPet, ItemStack item, double saturation, Result result) {
         super(myPet, item);
         this.saturation = saturation;
         this.result = result;
     }
 
-    public void setSaturation(double saturation) {
-        this.saturation = saturation;
-    }
-
     public double getSaturation() {
         return saturation;
+    }
+
+    public void setSaturation(double saturation) {
+        this.saturation = saturation;
     }
 
     public Result getResult() {
@@ -52,5 +47,9 @@ public class MyPetFeedEvent extends MyPetInteractEvent {
 
     public void setResult(Result result) {
         this.result = result;
+    }
+
+    public enum Result {
+        Heal, Eat, Self_Feed
     }
 }

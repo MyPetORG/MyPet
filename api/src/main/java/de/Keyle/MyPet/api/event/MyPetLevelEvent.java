@@ -45,6 +45,11 @@ public class MyPetLevelEvent extends Event {
         this.beQuiet = beQuiet;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return myPet.getOwner();
     }
@@ -66,11 +71,6 @@ public class MyPetLevelEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

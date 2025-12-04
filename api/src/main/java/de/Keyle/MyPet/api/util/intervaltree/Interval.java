@@ -48,60 +48,69 @@ import java.util.Comparator;
 @SuppressWarnings("ALL")
 public abstract class Interval<T extends Comparable<? super T>, S> {
 
+    /**
+     * A comparator that can be used as a parameter for sorting functions. The start comparator sorts the intervals
+     * in <em>ascending</em> order by placing the intervals with a smaller start point before intervals with greater
+     * start points. This corresponds to a line sweep from left to right.
+     * <p>
+     * Intervals with start point null (negative infinity) are considered smaller than all other intervals.
+     * If two intervals have the same start point, the closed start point is considered smaller than the open one.
+     * For example, [0, 2) is considered smaller than (0, 2).
+     * </p>
+     * <p>
+     * To ensure that this comparator can also be used in sets it considers the end points of the intervals, if the
+     * start points are the same. Otherwise the set will not be able to handle two different intervals, sharing
+     * the same starting point, and omit one of the intervals.
+     * </p>
+     * <p>
+     * Since this is a static method of a generic class, it involves unchecked calls to class methods. It is left to
+     * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
+     * </p>
+     */
+    public static Comparator<Interval> sweepLeftToRight = (a, b) -> {
+        int compare = a.compareStarts(b);
+        if (compare != 0) {
+            return compare;
+        }
+        compare = a.compareEnds(b);
+        if (compare != 0) {
+            return compare;
+        }
+        return a.compareSpecialization(b);
+    };
+    /**
+     * A comparator that can be used as a parameter for sorting functions. The end comparator sorts the intervals
+     * in <em>descending</em> order by placing the intervals with a greater end point before intervals with smaller
+     * end points. This corresponds to a line sweep from right to left.
+     * <p>
+     * Intervals with end point null (positive infinity) are placed before all other intervals. If two intervals
+     * have the same end point, the closed end point is placed before the open one. For example,  [0, 10) is placed
+     * after (0, 10].
+     * </p>
+     * <p>
+     * To ensure that this comparator can also be used in sets it considers the start points of the intervals, if the
+     * end points are the same. Otherwise the set will not be able to handle two different intervals, sharing
+     * the same end point, and omit one of the intervals.
+     * </p>
+     * <p>
+     * Since this is a static method of a generic class, it involves unchecked calls to class methods. It is left to
+     * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
+     * </p>
+     */
+    public static Comparator<Interval> sweepRightToLeft = (a, b) -> {
+        int compare = b.compareEnds(a);
+        if (compare != 0) {
+            return compare;
+        }
+        compare = b.compareStarts(a);
+        if (compare != 0) {
+            return compare;
+        }
+        return a.compareSpecialization(b);
+    };
     private S value;
     private T start, end;
     private boolean isStartInclusive, isEndInclusive;
-
-    /**
-     * An enum representing all possible types of bounded intervals.
-     */
-    public enum Bounded {
-        /**
-         * An interval, in which both start and end point are exclusive.
-         */
-        OPEN,
-
-        /**
-         * An interval, in which both start and end point are inclusive.
-         */
-        CLOSED,
-
-        /**
-         * An interval, in which the start is exclusive and the end is inclusive.
-         */
-        CLOSED_RIGHT,
-
-        /**
-         * An interval, in which the start is inclusive and the end is exclusive.
-         */
-        CLOSED_LEFT
-    }
-
-    public enum Unbounded {
-        /**
-         * An interval extending to positive infinity and having an exclusive start
-         * point as a lower bound. For example, (5, +inf)
-         */
-        OPEN_LEFT,
-
-        /**
-         * An interval extending to positive infinity and having an inclusive start
-         * point as a lower bound. For example, [5, +inf)
-         */
-        CLOSED_LEFT,
-
-        /**
-         * An interval extending to negative infinity and having an exclusive end
-         * point as an upper bound. For example, (-inf, 5)
-         */
-        OPEN_RIGHT,
-
-        /**
-         * An interval extending to negative infinity and having an inclusive end
-         * point as an upper bound. For example, (-inf, 5]
-         */
-        CLOSED_RIGHT
-    }
 
     /**
      * Instantiates a new interval representing all points in the domain of definition,
@@ -587,68 +596,6 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
     }
 
     /**
-     * A comparator that can be used as a parameter for sorting functions. The start comparator sorts the intervals
-     * in <em>ascending</em> order by placing the intervals with a smaller start point before intervals with greater
-     * start points. This corresponds to a line sweep from left to right.
-     * <p>
-     * Intervals with start point null (negative infinity) are considered smaller than all other intervals.
-     * If two intervals have the same start point, the closed start point is considered smaller than the open one.
-     * For example, [0, 2) is considered smaller than (0, 2).
-     * </p>
-     * <p>
-     * To ensure that this comparator can also be used in sets it considers the end points of the intervals, if the
-     * start points are the same. Otherwise the set will not be able to handle two different intervals, sharing
-     * the same starting point, and omit one of the intervals.
-     * </p>
-     * <p>
-     * Since this is a static method of a generic class, it involves unchecked calls to class methods. It is left to
-     * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
-     * </p>
-     */
-    public static Comparator<Interval> sweepLeftToRight = (a, b) -> {
-        int compare = a.compareStarts(b);
-        if (compare != 0) {
-            return compare;
-        }
-        compare = a.compareEnds(b);
-        if (compare != 0) {
-            return compare;
-        }
-        return a.compareSpecialization(b);
-    };
-
-    /**
-     * A comparator that can be used as a parameter for sorting functions. The end comparator sorts the intervals
-     * in <em>descending</em> order by placing the intervals with a greater end point before intervals with smaller
-     * end points. This corresponds to a line sweep from right to left.
-     * <p>
-     * Intervals with end point null (positive infinity) are placed before all other intervals. If two intervals
-     * have the same end point, the closed end point is placed before the open one. For example,  [0, 10) is placed
-     * after (0, 10].
-     * </p>
-     * <p>
-     * To ensure that this comparator can also be used in sets it considers the start points of the intervals, if the
-     * end points are the same. Otherwise the set will not be able to handle two different intervals, sharing
-     * the same end point, and omit one of the intervals.
-     * </p>
-     * <p>
-     * Since this is a static method of a generic class, it involves unchecked calls to class methods. It is left to
-     * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
-     * </p>
-     */
-    public static Comparator<Interval> sweepRightToLeft = (a, b) -> {
-        int compare = b.compareEnds(a);
-        if (compare != 0) {
-            return compare;
-        }
-        compare = b.compareStarts(a);
-        if (compare != 0) {
-            return compare;
-        }
-        return a.compareSpecialization(b);
-    };
-
-    /**
      * A method that should be overwritten by subclasses of {@code Interval}, if they have properties
      * that characterize the objects of the class and are used to identify them. It is used to create
      * a total order between distinct objects, that would otherwise be considered equal, if only
@@ -725,9 +672,60 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
         return true;
     }
 
-
     public Builder builder() {
         return new Builder(this, value);
+    }
+
+    /**
+     * An enum representing all possible types of bounded intervals.
+     */
+    public enum Bounded {
+        /**
+         * An interval, in which both start and end point are exclusive.
+         */
+        OPEN,
+
+        /**
+         * An interval, in which both start and end point are inclusive.
+         */
+        CLOSED,
+
+        /**
+         * An interval, in which the start is exclusive and the end is inclusive.
+         */
+        CLOSED_RIGHT,
+
+        /**
+         * An interval, in which the start is inclusive and the end is exclusive.
+         */
+        CLOSED_LEFT
+    }
+
+
+    public enum Unbounded {
+        /**
+         * An interval extending to positive infinity and having an exclusive start
+         * point as a lower bound. For example, (5, +inf)
+         */
+        OPEN_LEFT,
+
+        /**
+         * An interval extending to positive infinity and having an inclusive start
+         * point as a lower bound. For example, [5, +inf)
+         */
+        CLOSED_LEFT,
+
+        /**
+         * An interval extending to negative infinity and having an exclusive end
+         * point as an upper bound. For example, (-inf, 5)
+         */
+        OPEN_RIGHT,
+
+        /**
+         * An interval extending to negative infinity and having an inclusive end
+         * point as an upper bound. For example, (-inf, 5]
+         */
+        CLOSED_RIGHT
     }
 
     /**

@@ -31,7 +31,7 @@ public interface MyStrider extends MyPet, MyPetBaby, MyPetLavaEntity {
 
     ItemStack getSaddle();
 
-    boolean hasSaddle();
-
     void setSaddle(ItemStack item);
+
+    boolean hasSaddle();
 }

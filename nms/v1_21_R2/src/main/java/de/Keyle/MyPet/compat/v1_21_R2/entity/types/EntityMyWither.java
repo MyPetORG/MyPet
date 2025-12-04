@@ -33,56 +33,56 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 1.9F, height = 3.5F)
 public class EntityMyWither extends EntityMyFlyingPet {
 
-	private static final EntityDataAccessor<Integer> TARGET_WATCHER = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> INVULNERABILITY_WATCHER = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TARGET_WATCHER = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> INVULNERABILITY_WATCHER = SynchedEntityData.defineId(EntityMyWither.class, EntityDataSerializers.INT);
 
-	public EntityMyWither(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyWither(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.wither.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.wither.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.wither.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.wither.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.wither.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.wither.ambient";
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(TARGET_WATCHER, 0);
-		builder.define(UNUSED_WATCHER_1, 0);
-		builder.define(UNUSED_WATCHER_2, 0);
-		builder.define(INVULNERABILITY_WATCHER, 0);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TARGET_WATCHER, 0);
+        builder.define(UNUSED_WATCHER_1, 0);
+        builder.define(UNUSED_WATCHER_2, 0);
+        builder.define(INVULNERABILITY_WATCHER, 0);
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (Configuration.MyPet.Wither.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (Configuration.MyPet.Wither.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(INVULNERABILITY_WATCHER, getMyPet().isBaby() ? 600 : 0);
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(INVULNERABILITY_WATCHER, getMyPet().isBaby() ? 600 : 0);
+    }
 
-	@Override
-	public MyWither getMyPet() {
-		return (MyWither) myPet;
-	}
+    @Override
+    public MyWither getMyPet() {
+        return (MyWither) myPet;
+    }
 }

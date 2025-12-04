@@ -59,8 +59,8 @@ public class MyPetWitherSkull extends WitherSkull implements EntityMyPetProjecti
         d0 += this.random.nextGaussian() * 0.2D;
         d1 += this.random.nextGaussian() * 0.2D;
         d2 += this.random.nextGaussian() * 0.2D;
-        double d3 = Mth.sqrt((float)(d0 * d0 + d1 * d1 + d2 * d2));
-        this.xPower = (d0 / d3 * 0.1D);	//TODO
+        double d3 = Mth.sqrt((float) (d0 * d0 + d1 * d1 + d2 * d2));
+        this.xPower = (d0 / d3 * 0.1D);    //TODO
         this.yPower = (d1 / d3 * 0.1D);
         this.zPower = (d2 / d3 * 0.1D);
     }

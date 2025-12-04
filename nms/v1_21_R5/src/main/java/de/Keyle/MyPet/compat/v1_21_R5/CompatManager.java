@@ -32,14 +32,14 @@ import org.bukkit.event.Listener;
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
 
     @Override
-	public void init() {
+    public void init() {
         MyPetApi.getServiceManager().registerService(EggIconService.class);
         MyPetApi.getServiceManager().registerService(EntityConverterService.class);
         MyPetApi.getServiceManager().registerService(RepositoryMyPetConverterService.class);
     }
 
     @Override
-	public void enable() {
+    public void enable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, MyPetApi.getPlugin());
     }
 }

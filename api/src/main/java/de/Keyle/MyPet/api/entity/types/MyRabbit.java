@@ -27,6 +27,10 @@ import org.bukkit.entity.Rabbit;
 
 @DefaultInfo(food = {"carrot"})
 public interface MyRabbit extends MyPet, MyPetBaby {
+    RabbitType getVariant();
+
+    void setVariant(RabbitType variant);
+
     enum RabbitType {
         BROWN(Rabbit.Type.BROWN, (byte) 0),
         WHITE(Rabbit.Type.WHITE, (byte) 1),
@@ -70,8 +74,4 @@ public interface MyRabbit extends MyPet, MyPetBaby {
             return id;
         }
     }
-
-    RabbitType getVariant();
-
-    void setVariant(RabbitType variant);
 }

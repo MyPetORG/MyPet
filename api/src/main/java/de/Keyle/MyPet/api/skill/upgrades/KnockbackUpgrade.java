@@ -32,7 +32,9 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Knockback")
 public class KnockbackUpgrade implements Upgrade<Knockback> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier chanceModifier = null;
 
     @Override

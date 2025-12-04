@@ -29,27 +29,27 @@ import org.bukkit.Sound;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreaking extends EntityMyPet {
 
-	public EntityMyCreaking(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyCreaking(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.creaking.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.creaking.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.creaking.sway";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.creaking.sway";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.creaking.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.creaking.ambient";
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CREAKING_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CREAKING_STEP, 0.15F, 1.0F);
+    }
 }

@@ -32,9 +32,9 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -129,10 +129,10 @@ public class Util {
     /**
      * Formats a Component by replacing placeholders {0}, {1}, {2}... with provided arguments.
      * Arguments can be Components (inserted with their styling) or Objects (converted to Components).
-     *
+     * <p>
      * This is the modern replacement for formatText() that works with Adventure Components
      * and preserves formatting, colors, and styles.
-     *
+     * <p>
      * Example:
      * <pre>
      * Component template = Component.text("Welcome, {0}! You have {1} points.");
@@ -143,7 +143,7 @@ public class Util {
      * </pre>
      *
      * @param component The template Component with placeholders {0}, {1}, etc.
-     * @param values Arguments to replace placeholders (can be Components or Objects)
+     * @param values    Arguments to replace placeholders (can be Components or Objects)
      * @return New Component with placeholders replaced
      */
     public static Component formatComponent(Component component, Object... values) {
@@ -254,7 +254,7 @@ public class Util {
     /**
      * Convenience method that combines Translation.getComponent() with formatComponent().
      * Gets a translated Component and replaces placeholders in one call.
-     *
+     * <p>
      * Example:
      * <pre>
      * // Translation: Message.Welcome=<gold>Welcome, {0}! You have {1} points.
@@ -264,7 +264,7 @@ public class Util {
      * );
      * </pre>
      *
-     * @param key Translation key
+     * @param key    Translation key
      * @param player Player for language detection
      * @param values Arguments to replace placeholders
      * @return Formatted Component
@@ -301,7 +301,7 @@ public class Util {
     /**
      * Convenience method that combines Translation.getComponentMiniMessage() with formatComponent().
      * Gets a translated Component with MiniMessage support and replaces placeholders.
-     *
+     * <p>
      * Example:
      * <pre>
      * // Translation: Message.Welcome=<gradient:gold:yellow>Welcome, {0}!</gradient>
@@ -310,7 +310,7 @@ public class Util {
      * );
      * </pre>
      *
-     * @param key Translation key
+     * @param key    Translation key
      * @param player Player for language detection
      * @param values Arguments to replace placeholders
      * @return Formatted Component with MiniMessage formatting

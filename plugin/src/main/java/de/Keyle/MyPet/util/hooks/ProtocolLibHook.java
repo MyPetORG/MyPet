@@ -26,10 +26,10 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
 import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -51,13 +51,14 @@ public class ProtocolLibHook implements PluginHook {
 
     protected boolean checkTemporaryPlayers = false;
     private Set<Player> tempBlockedPlayers = ConcurrentHashMap.newKeySet();
+
     @Override
     public boolean onEnable() {
         try {
-        	if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
-        		//This is async
-        		registerEnderDragonInteractionFix();
-        	} else {
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
+                //This is async
+                registerEnderDragonInteractionFix();
+            } else {
                 //This is not - 1.17+ does NOT like async stuff
                 registerSyncEnderDragonInteractionFix();
             }
@@ -153,7 +154,7 @@ public class ProtocolLibHook implements PluginHook {
                             }
                             return entity;
                         });
-                        if(ent != null) {
+                        if (ent != null) {
                             packet.getIntegers().write(0, ent.getEntityId());
                         }
                     } catch (TimeoutException e) {
@@ -167,11 +168,11 @@ public class ProtocolLibHook implements PluginHook {
     }
 
     private <T> T ensureMainThread(Supplier<T> supplier) throws ExecutionException, InterruptedException, TimeoutException {
-        if(Bukkit.isPrimaryThread()) {
+        if (Bukkit.isPrimaryThread()) {
             return supplier.get();
         } else {
             return Bukkit.getServer().getScheduler().callSyncMethod(MyPetApi.getPlugin(), supplier::get)
-                .get(100, TimeUnit.MILLISECONDS);
+                    .get(100, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -205,20 +206,20 @@ public class ProtocolLibHook implements PluginHook {
                         int id = packet.getIntegers().read(0);
 
                         Entity entity = null;
-                        if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
+                        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
                             try {
-                               entity = packet.getEntityModifier(event).readSafely(0);
+                                entity = packet.getEntityModifier(event).readSafely(0);
                             } catch (RuntimeException ignored) {
                             }
                         }
                         if (entity == null) {
-                            if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0) { //1.17+ does not like async
+                            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0) { //1.17+ does not like async
                                 try {
                                     entity = ensureMainThread(() -> MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld()));
                                 } catch (TimeoutException e) {
                                     // Assume the main thread is blocked and should free this netty thread.
                                     return;
-                                }  catch (Exception e) {
+                                } catch (Exception e) {
                                     ErrorUtil.reportWarning("Third-party plugin integration failed", e);
                                 }
                             } else {

@@ -8,7 +8,7 @@ import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
 import net.minecraft.world.level.pathfinder.PathFinder;
 
 public class MyAquaticPetPathNavigation extends WaterBoundPathNavigation {
-	public MyAquaticPetPathNavigation(Mob mob, Level level) {
+    public MyAquaticPetPathNavigation(Mob mob, Level level) {
         super(mob, level);
     }
 

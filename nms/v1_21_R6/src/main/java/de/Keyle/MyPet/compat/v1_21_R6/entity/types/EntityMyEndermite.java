@@ -29,34 +29,34 @@ import org.bukkit.Sound;
 @EntitySize(width = 0.4F, height = 0.1F)
 public class EntityMyEndermite extends EntityMyPet {
 
-	public EntityMyEndermite(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyEndermite(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.endermite.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.endermite.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.endermite.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.endermite.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.endermite.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.endermite.ambient";
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_ENDERMITE_STEP, 1.0F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_ENDERMITE_STEP, 1.0F, 1.0F);
+    }
 
-	@Override
-	public void setPathfinder() {
-		super.setPathfinder();
-		petPathfinderSelector.removeGoal("LookAtPlayer");
-		petPathfinderSelector.removeGoal("RandomLookaround");
-	}
+    @Override
+    public void setPathfinder() {
+        super.setPathfinder();
+        petPathfinderSelector.removeGoal("LookAtPlayer");
+        petPathfinderSelector.removeGoal("RandomLookaround");
+    }
 }

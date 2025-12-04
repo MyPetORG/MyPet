@@ -33,9 +33,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Pickup")
 public class PickupUpgrade implements Upgrade<Pickup> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier rangeModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier pickupExpModifier = null;
 
     @Override

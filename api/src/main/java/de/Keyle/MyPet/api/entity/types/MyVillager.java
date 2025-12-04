@@ -31,6 +31,24 @@ import lombok.Getter;
 @DefaultInfo(food = {"apple"})
 public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
 
+    int getProfession();
+
+    void setProfession(int value);
+
+    Type getType();
+
+    void setType(Type value);
+
+    int getVillagerLevel();
+
+    void setVillagerLevel(int level);
+
+    TagCompound getOriginalData();
+
+    void setOriginalData(TagCompound compound);
+
+    boolean hasOriginalData();
+
     enum Type {
         Desert("desert"),
         Jungle("jungle"),
@@ -40,7 +58,8 @@ public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
         Swamp("swamp"),
         Taiga("taiga");
 
-        @Getter String key;
+        @Getter
+        String key;
 
         Type(String key) {
             this.key = key;
@@ -64,28 +83,11 @@ public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
         TOOLSMITH("toolsmith"),
         WEAPONSMITH("weaponsmith");
 
-        @Getter String key;
+        @Getter
+        String key;
 
         Profession(String key) {
             this.key = key;
         }
     }
-
-    int getProfession();
-
-    void setProfession(int value);
-
-    Type getType();
-
-    void setType(Type value);
-
-    int getVillagerLevel();
-
-    void setVillagerLevel(int level);
-
-    void setOriginalData(TagCompound compound);
-
-    TagCompound getOriginalData();
-
-    boolean hasOriginalData();
 }

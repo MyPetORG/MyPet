@@ -33,9 +33,9 @@ public class HealImpl implements Heal {
 
     protected UpgradeComputer<Number> heal = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> timer = new UpgradeComputer<>(0);
+    protected boolean particles = false;
     private int timeCounter = 0;
     private MyPet myPet;
-    protected boolean particles = false;
 
     public HealImpl(MyPet myPet) {
         this.myPet = myPet;

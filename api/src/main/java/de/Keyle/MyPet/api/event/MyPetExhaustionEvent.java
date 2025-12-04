@@ -38,6 +38,11 @@ public class MyPetExhaustionEvent extends Event implements Cancellable {
         this.myPet = myPet;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPet getMyPet() {
         return myPet;
     }
@@ -59,11 +64,6 @@ public class MyPetExhaustionEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

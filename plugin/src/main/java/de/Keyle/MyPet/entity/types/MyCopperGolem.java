@@ -113,16 +113,16 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public boolean hasPoppy() {
-        return poppy != null;
-    }
-
-    @Override
     public void setPoppy(ItemStack item) {
         this.poppy = item;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    @Override
+    public boolean hasPoppy() {
+        return poppy != null;
     }
 
     @Override

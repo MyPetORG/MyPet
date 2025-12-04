@@ -22,8 +22,8 @@ package de.Keyle.MyPet.entity;
 
 
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.entity.types.*;
 
 import java.lang.reflect.Constructor;

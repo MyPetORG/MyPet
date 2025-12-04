@@ -32,9 +32,9 @@ public interface MyPetBukkitEntity extends Creature {
 
     boolean canMove();
 
-    void setSitting(boolean sitting);
-
     boolean isSitting();
+
+    void setSitting(boolean sitting);
 
     MyPetType getPetType();
 

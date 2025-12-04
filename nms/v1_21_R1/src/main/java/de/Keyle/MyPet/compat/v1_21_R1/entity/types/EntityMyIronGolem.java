@@ -40,130 +40,130 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
 
-	protected static final EntityDataAccessor<Byte> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyIronGolem.class, EntityDataSerializers.BYTE);
+    protected static final EntityDataAccessor<Byte> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyIronGolem.class, EntityDataSerializers.BYTE);
 
-	int flowerCounter = 0;
-	boolean flower = false;
+    int flowerCounter = 0;
+    boolean flower = false;
 
-	public EntityMyIronGolem(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyIronGolem(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	public boolean attack(Entity entity) {
-		boolean flag = false;
-		try {
-			this.level().broadcastEntityEvent(this, (byte) 4);
-			flag = super.attack(entity);
-			if (Configuration.MyPet.IronGolem.CAN_TOSS_UP && flag) {
-				entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.4000000059604645D, 0));
-				this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
-			}
-		} catch (Exception e) {
-			ErrorUtil.report(e);
-		}
-		return flag;
-	}
+    @Override
+    public boolean attack(Entity entity) {
+        boolean flag = false;
+        try {
+            this.level().broadcastEntityEvent(this, (byte) 4);
+            flag = super.attack(entity);
+            if (Configuration.MyPet.IronGolem.CAN_TOSS_UP && flag) {
+                entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.4000000059604645D, 0));
+                this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
+            }
+        } catch (Exception e) {
+            ErrorUtil.report(e);
+        }
+        return flag;
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.iron_golem.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.iron_golem.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.iron_golem.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.iron_golem.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return null;
-	}
+    @Override
+    protected String getLivingSound() {
+        return null;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(UNUSED_WATCHER, (byte) 0); // N/A
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(UNUSED_WATCHER, (byte) 0); // N/A
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (itemStack.getItem() == Items.IRON_INGOT) {
-			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
-				if (getMyPet().getStatus() == MyPet.PetState.Here) {
-					super.setHealth(this.getHealth() + 0.0001F);
-				}
-			}, 5L);
-			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
-				if (getMyPet().getStatus() == MyPet.PetState.Here) {
-					super.setHealth(this.getHealth());
-				}
-			}, 10L);
-		}
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Blocks.POPPY.asItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
-				ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
-				entityitem.pickupDelay = 10;
-				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-				this.level().addFreshEntity(entityitem);
+        if (itemStack.getItem() == Items.IRON_INGOT) {
+            Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+                if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                    super.setHealth(this.getHealth() + 0.0001F);
+                }
+            }, 5L);
+            Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+                if (getMyPet().getStatus() == MyPet.PetState.Here) {
+                    super.setHealth(this.getHealth());
+                }
+            }, 10L);
+        }
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Blocks.POPPY.asItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+                ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getFlower()));
+                entityitem.pickupDelay = 10;
+                entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                this.level().addFreshEntity(entityitem);
 
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				getMyPet().setFlower(null);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-					}
-				}
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                getMyPet().setFlower(null);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                    }
+                }
 
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	public void updateVisuals() {
-		flower = getMyPet().hasFlower();
-		flowerCounter = 0;
-	}
+    @Override
+    public void updateVisuals() {
+        flower = getMyPet().hasFlower();
+        flowerCounter = 0;
+    }
 
-	@Override
-	public MyIronGolem getMyPet() {
-		return (MyIronGolem) myPet;
-	}
+    @Override
+    public MyIronGolem getMyPet() {
+        return (MyIronGolem) myPet;
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_IRON_GOLEM_STEP, 1.0F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_IRON_GOLEM_STEP, 1.0F, 1.0F);
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (this.flower && this.flowerCounter-- <= 0) {
-			this.level().broadcastEntityEvent(this, (byte) 11);
-			flowerCounter = 300;
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (this.flower && this.flowerCounter-- <= 0) {
+            this.level().broadcastEntityEvent(this, (byte) 11);
+            flowerCounter = 300;
+        }
+    }
 }

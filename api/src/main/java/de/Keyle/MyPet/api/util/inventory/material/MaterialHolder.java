@@ -25,10 +25,10 @@ import org.bukkit.Material;
 
 public class MaterialHolder {
 
-    private String introduced;
     String id;
     LegacyNamedData legacyName = null;
     LegacyIdData legacyId = null;
+    private String introduced;
 
     public MaterialHolder(String introduced, String id) {
         this.introduced = introduced;

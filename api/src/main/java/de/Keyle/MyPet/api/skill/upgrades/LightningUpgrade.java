@@ -33,9 +33,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Lightning")
 public class LightningUpgrade implements Upgrade<Lightning> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier chanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier damageModifier = null;
 
     @Override

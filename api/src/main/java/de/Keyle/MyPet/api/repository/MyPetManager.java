@@ -86,6 +86,7 @@ public abstract class MyPetManager {
     public boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
         return deactivateMyPet(owner, update, false);
     }
+
     public boolean deactivateMyPet(MyPetPlayer owner, boolean update, boolean save) {
         if (mActivePlayerPets.containsKey(owner)) {
             final MyPet myPet = owner.getMyPet();

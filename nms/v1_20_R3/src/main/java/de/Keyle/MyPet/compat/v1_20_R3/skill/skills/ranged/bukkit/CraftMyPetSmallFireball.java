@@ -20,15 +20,14 @@
 
 package de.Keyle.MyPet.compat.v1_20_R3.skill.skills.ranged.bukkit;
 
-import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftSmallFireball;
-
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.SmallFireball;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftSmallFireball;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +39,7 @@ public class CraftMyPetSmallFireball extends CraftSmallFireball implements Craft
     }
 
     @Override
-	public EntityMyPetProjectile getMyPetProjectile() {
+    public EntityMyPetProjectile getMyPetProjectile() {
         return ((EntityMyPetProjectile) this.getHandle());
     }
 

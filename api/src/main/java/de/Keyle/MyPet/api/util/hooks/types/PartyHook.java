@@ -39,6 +39,7 @@ public interface PartyHook extends PluginHook {
 
     /**
      * Returns all members of a party if the player is in one (Ancient, mcMMO, Heroes)
+     *
      * @param player members of the party
      * @return all members of the party
      */

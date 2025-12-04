@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.event.MyPetOnHitSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
-import de.Keyle.MyPet.api.player.DonateCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
@@ -394,11 +393,11 @@ public class MyPetEntityListener implements Listener {
                 return;
             }
 
-            if(event.getCause() == DamageCause.FALL && bukkitEntity.hasPotionEffect(PotionEffectType.JUMP)) {
+            if (event.getCause() == DamageCause.FALL && bukkitEntity.hasPotionEffect(PotionEffectType.JUMP)) {
                 event.setCancelled(true);
                 return;
             }
-            
+
             if (event.getCause() == DamageCause.SUFFOCATION) {
                 if (bukkitEntity.getHandle().hasRider()) {
                     event.setCancelled(true);
@@ -622,15 +621,15 @@ public class MyPetEntityListener implements Listener {
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 // Entity damage - death message with two arguments (pet name and killer)
                 deathMessage = Component.translatable(
-                  deathMessageKey,
-                  Component.text(myPet.getPetName()).color(NamedTextColor.AQUA),
-                  Component.text(killer)
+                        deathMessageKey,
+                        Component.text(myPet.getPetName()).color(NamedTextColor.AQUA),
+                        Component.text(killer)
                 );
             } else {
                 // Environmental damage - death message with one argument (pet name only)
                 deathMessage = Component.translatable(
-                  deathMessageKey,
-                  Component.text(myPet.getPetName()).color(NamedTextColor.AQUA)
+                        deathMessageKey,
+                        Component.text(myPet.getPetName()).color(NamedTextColor.AQUA)
                 );
             }
 

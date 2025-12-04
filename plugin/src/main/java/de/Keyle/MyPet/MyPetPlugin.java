@@ -43,7 +43,6 @@ import de.Keyle.MyPet.api.util.logger.MyPetLogger;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.commands.*;
-import de.Keyle.MyPet.commands.CloudCommandManager;
 import de.Keyle.MyPet.entity.leashing.*;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
@@ -58,7 +57,6 @@ import de.Keyle.MyPet.skill.skilltree.requirements.PermissionRequirement;
 import de.Keyle.MyPet.skill.skilltree.requirements.PetLevelRequirement;
 import de.Keyle.MyPet.skill.skilltree.requirements.SkilltreeRequirement;
 import de.Keyle.MyPet.util.ConfigurationLoader;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -100,6 +98,54 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     private MiniMessage miniMessage;
     private CloudCommandManager cloudCommandManager;
     private SentryErrorReporter errorReporter = null;
+
+    public static void registerSkills() {
+        MyPetApi.getSkillManager().registerSkill(BackpackImpl.class);
+        MyPetApi.getSkillManager().registerSkill(HealImpl.class);
+        MyPetApi.getSkillManager().registerSkill(PickupImpl.class);
+        MyPetApi.getSkillManager().registerSkill(BehaviorImpl.class);
+        MyPetApi.getSkillManager().registerSkill(DamageImpl.class);
+        MyPetApi.getSkillManager().registerSkill(ControlImpl.class);
+        MyPetApi.getSkillManager().registerSkill(LifeImpl.class);
+        MyPetApi.getSkillManager().registerSkill(PoisonImpl.class);
+        MyPetApi.getSkillManager().registerSkill(RideImpl.class);
+        MyPetApi.getSkillManager().registerSkill(ThornsImpl.class);
+        MyPetApi.getSkillManager().registerSkill(FireImpl.class);
+        MyPetApi.getSkillManager().registerSkill(BeaconImpl.class);
+        MyPetApi.getSkillManager().registerSkill(WitherImpl.class);
+        MyPetApi.getSkillManager().registerSkill(LightningImpl.class);
+        MyPetApi.getSkillManager().registerSkill(SlowImpl.class);
+        MyPetApi.getSkillManager().registerSkill(KnockbackImpl.class);
+        MyPetApi.getSkillManager().registerSkill(RangedImpl.class);
+        MyPetApi.getSkillManager().registerSkill(SprintImpl.class);
+        MyPetApi.getSkillManager().registerSkill(StompImpl.class);
+        MyPetApi.getSkillManager().registerSkill(ShieldImpl.class);
+    }
+
+    public static void registerLeashFlags() {
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new AdultFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new AngryFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new BabyFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new BelowHpFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new CanBreedFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new ChanceFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new ImpossibleFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new LowHpFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new ScreamingFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new SizeFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new TamedFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new UserCreatedFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new WildFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new WorldFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new PermissionFlag());
+    }
+
+    public static void registerSkilltreeRequirements() {
+        MyPetApi.getSkilltreeManager().registerRequirement(new NoSkilltreeRequirement());
+        MyPetApi.getSkilltreeManager().registerRequirement(new PermissionRequirement());
+        MyPetApi.getSkilltreeManager().registerRequirement(new PetLevelRequirement());
+        MyPetApi.getSkilltreeManager().registerRequirement(new SkilltreeRequirement());
+    }
 
     public void onDisable() {
         isDisabling = true;
@@ -570,54 +616,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         pluginHookManager.registerHook(WorldGuardCustomFlagsHook.class);
     }
 
-    public static void registerSkills() {
-        MyPetApi.getSkillManager().registerSkill(BackpackImpl.class);
-        MyPetApi.getSkillManager().registerSkill(HealImpl.class);
-        MyPetApi.getSkillManager().registerSkill(PickupImpl.class);
-        MyPetApi.getSkillManager().registerSkill(BehaviorImpl.class);
-        MyPetApi.getSkillManager().registerSkill(DamageImpl.class);
-        MyPetApi.getSkillManager().registerSkill(ControlImpl.class);
-        MyPetApi.getSkillManager().registerSkill(LifeImpl.class);
-        MyPetApi.getSkillManager().registerSkill(PoisonImpl.class);
-        MyPetApi.getSkillManager().registerSkill(RideImpl.class);
-        MyPetApi.getSkillManager().registerSkill(ThornsImpl.class);
-        MyPetApi.getSkillManager().registerSkill(FireImpl.class);
-        MyPetApi.getSkillManager().registerSkill(BeaconImpl.class);
-        MyPetApi.getSkillManager().registerSkill(WitherImpl.class);
-        MyPetApi.getSkillManager().registerSkill(LightningImpl.class);
-        MyPetApi.getSkillManager().registerSkill(SlowImpl.class);
-        MyPetApi.getSkillManager().registerSkill(KnockbackImpl.class);
-        MyPetApi.getSkillManager().registerSkill(RangedImpl.class);
-        MyPetApi.getSkillManager().registerSkill(SprintImpl.class);
-        MyPetApi.getSkillManager().registerSkill(StompImpl.class);
-        MyPetApi.getSkillManager().registerSkill(ShieldImpl.class);
-    }
-
-    public static void registerLeashFlags() {
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new AdultFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new AngryFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new BabyFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new BelowHpFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new CanBreedFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new ChanceFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new ImpossibleFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new LowHpFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new ScreamingFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new SizeFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new TamedFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new UserCreatedFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new WildFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new WorldFlag());
-        MyPetApi.getLeashFlagManager().registerLeashFlag(new PermissionFlag());
-    }
-
-    public static void registerSkilltreeRequirements() {
-        MyPetApi.getSkilltreeManager().registerRequirement(new NoSkilltreeRequirement());
-        MyPetApi.getSkilltreeManager().registerRequirement(new PermissionRequirement());
-        MyPetApi.getSkilltreeManager().registerRequirement(new PetLevelRequirement());
-        MyPetApi.getSkilltreeManager().registerRequirement(new SkilltreeRequirement());
-    }
-
     @Override
     public PluginHookManager getPluginHookManager() {
         return pluginHookManager;
@@ -717,5 +715,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     }
 
     @Override
-    public MiniMessage miniMessage() { return miniMessage; }
+    public MiniMessage miniMessage() {
+        return miniMessage;
+    }
 }

@@ -39,36 +39,36 @@ import org.bukkit.Sound;
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyGoat extends EntityMyPet {
 
-    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> LEFT_HORN_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> RIGHT_HORN_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
+
     public EntityMyGoat(Level world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
     protected String getMyPetDeathSound() {
-    	if(entityData.get(SCREAMING_WATCHER)) {
-    		return "entity.goat.screaming.death";
-    	}
+        if (entityData.get(SCREAMING_WATCHER)) {
+            return "entity.goat.screaming.death";
+        }
         return "entity.goat.death";
     }
 
     @Override
     protected String getHurtSound() {
-    	if(entityData.get(SCREAMING_WATCHER)) {
-    		return "entity.goat.screaming.hurt";
-    	}
+        if (entityData.get(SCREAMING_WATCHER)) {
+            return "entity.goat.screaming.hurt";
+        }
         return "entity.goat.hurt";
     }
 
     @Override
     protected String getLivingSound() {
-    	if(entityData.get(SCREAMING_WATCHER)) {
-    		return "entity.goat.screaming.ambient";
-    	}
+        if (entityData.get(SCREAMING_WATCHER)) {
+            return "entity.goat.screaming.ambient";
+        }
         return "entity.goat.ambient";
     }
 
@@ -97,6 +97,7 @@ public class EntityMyGoat extends EntityMyPet {
         }
         return InteractionResult.PASS;
     }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();

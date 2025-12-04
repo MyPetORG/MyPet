@@ -34,11 +34,11 @@ import org.bukkit.inventory.ItemStack;
 public class MyTraderLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.MyTraderLlama {
 
     public boolean baby = false;
-    protected byte horseType = 0;
-    protected int variant = 0;
     public ItemStack armor = null;
     public ItemStack chest = null;
     public ItemStack decor = null;
+    protected byte horseType = 0;
+    protected int variant = 0;
 
     public MyTraderLlama(MyPetPlayer petOwner) {
         super(petOwner);
@@ -46,10 +46,6 @@ public class MyTraderLlama extends MyPet implements de.Keyle.MyPet.api.entity.ty
 
     public ItemStack getChest() {
         return chest;
-    }
-
-    public boolean hasChest() {
-        return chest != null;
     }
 
     public void setChest(ItemStack item) {
@@ -65,12 +61,12 @@ public class MyTraderLlama extends MyPet implements de.Keyle.MyPet.api.entity.ty
         }
     }
 
-    public ItemStack getDecor() {
-        return decor;
+    public boolean hasChest() {
+        return chest != null;
     }
 
-    public boolean hasDecor() {
-        return decor != null;
+    public ItemStack getDecor() {
+        return decor;
     }
 
     public void setDecor(ItemStack item) {
@@ -105,6 +101,10 @@ public class MyTraderLlama extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasDecor() {
+        return decor != null;
     }
 
     @Override

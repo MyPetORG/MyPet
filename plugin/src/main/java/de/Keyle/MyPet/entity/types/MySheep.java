@@ -36,7 +36,9 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     protected DyeColor color = DyeColor.WHITE;
     protected boolean isSheared = false;
     protected boolean isBaby = false;
-    @Getter @Setter protected boolean isRainbow = false;
+    @Getter
+    @Setter
+    protected boolean isRainbow = false;
 
     public MySheep(MyPetPlayer petOwner) {
         super(petOwner);
@@ -46,18 +48,18 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         return color;
     }
 
+    public void setColor(DyeColor color) {
+        this.color = color;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
+
     @Override
     public void schedule() {
         super.schedule();
         if (isRainbow) {
             this.setColor(DyeColor.values()[(getColor().ordinal() + 1) % (DyeColor.values().length - 1)]);
-        }
-    }
-
-    public void setColor(DyeColor color) {
-        this.color = color;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

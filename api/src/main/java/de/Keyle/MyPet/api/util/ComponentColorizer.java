@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Adventure Component-based color parser for MyPet's legacy color code formats.
  * Supports: <color>, <code> patterns
- *
+ * <p>
  * This is the modern replacement for Colorizer.setColors() that returns Components
  * instead of ChatColor-formatted strings.
  */

@@ -29,18 +29,17 @@ import org.bukkit.event.HandlerList;
 
 public class MyPetInventoryActionEvent extends Event implements Cancellable {
     protected static final HandlerList handlers = new HandlerList();
-
-    public enum Action {
-        Open, Pickup, Use
-    }
-
     protected final MyPet myPet;
     protected boolean isCancelled = false;
     protected Action action;
-
     public MyPetInventoryActionEvent(MyPet myPet, Action action) {
         this.myPet = myPet;
         this.action = action;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -71,8 +70,7 @@ public class MyPetInventoryActionEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
+    public enum Action {
+        Open, Pickup, Use
     }
 }

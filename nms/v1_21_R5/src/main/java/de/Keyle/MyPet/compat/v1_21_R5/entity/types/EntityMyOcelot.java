@@ -37,65 +37,65 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyOcelot.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> TRUSTING_WATCHER = SynchedEntityData.defineId(EntityMyOcelot.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyOcelot.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> TRUSTING_WATCHER = SynchedEntityData.defineId(EntityMyOcelot.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyOcelot(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyOcelot(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.ocelot.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.ocelot.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.ocelot.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.ocelot.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.ocelot.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.ocelot.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman)) {
-			if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
-				if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-						itemStack.shrink(1);
-						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-						}
-					}
-					getMyPet().setBaby(false);
-					return InteractionResult.CONSUME;
-				}
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman)) {
+            if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
+                if (Configuration.MyPet.Ocelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                    if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        itemStack.shrink(1);
+                        if (itemStack.getCount() <= 0) {
+                            entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                        }
+                    }
+                    getMyPet().setBaby(false);
+                    return InteractionResult.CONSUME;
+                }
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(TRUSTING_WATCHER, false);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(TRUSTING_WATCHER, false);
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    }
 
-	@Override
-	public MyOcelot getMyPet() {
-		return (MyOcelot) myPet;
-	}
+    @Override
+    public MyOcelot getMyPet() {
+        return (MyOcelot) myPet;
+    }
 }

@@ -60,95 +60,95 @@ import java.util.Map;
 @Compat("v1_21_R5")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
-	BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
-	Map<MyPetType, EntityType> entityTypes = new HashMap<>();
-	private DefaultedRegistry<EntityType> custReg = null;
+    BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
+    Map<MyPetType, EntityType> entityTypes = new HashMap<>();
+    private DefaultedRegistry<EntityType> custReg = null;
 
-	protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
-		EntityDimensions size = entityRegistry.get(ResourceLocation.tryParse(key.toLowerCase())).get().value().getDimensions();
-		EntityType leType;
-		if(!entityRegistry.containsKey(ResourceLocation.tryParse("mypet_" + key.toLowerCase()))) {
-			leType = Registry.register(entityRegistry, "mypet_" + key.toLowerCase(), EntityType.Builder.createNothing(MobCategory.CREATURE).noSave().noSummon().sized(size.width(), size.height()).build(
-					ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse(key))));
-		} else {
-			leType = entityRegistry.get(ResourceLocation.tryParse("mypet_" + key.toLowerCase())).get().value();
-		}
-		entityTypes.put(petType, leType);
-		EntityType<? extends LivingEntity> types = (EntityType<? extends LivingEntity>) entityRegistry.get(ResourceLocation.tryParse(key)).get().value();
-		registerDefaultAttributes(entityTypes.get(petType), types);
-		overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
-	}
+    @SneakyThrows
+    public static void registerDefaultAttributes(EntityType<? extends LivingEntity> customType, EntityType<? extends LivingEntity> rootType) {
+        MyAttributeDefaults.registerCustomEntityType(customType, rootType);
+    }
 
-	@SneakyThrows
-	public static void registerDefaultAttributes(EntityType<? extends LivingEntity> customType, EntityType<? extends LivingEntity> rootType) {
-		MyAttributeDefaults.registerCustomEntityType(customType, rootType);
-	}
+    protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
+        EntityDimensions size = entityRegistry.get(ResourceLocation.tryParse(key.toLowerCase())).get().value().getDimensions();
+        EntityType leType;
+        if (!entityRegistry.containsKey(ResourceLocation.tryParse("mypet_" + key.toLowerCase()))) {
+            leType = Registry.register(entityRegistry, "mypet_" + key.toLowerCase(), EntityType.Builder.createNothing(MobCategory.CREATURE).noSave().noSummon().sized(size.width(), size.height()).build(
+                    ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse(key))));
+        } else {
+            leType = entityRegistry.get(ResourceLocation.tryParse("mypet_" + key.toLowerCase())).get().value();
+        }
+        entityTypes.put(petType, leType);
+        EntityType<? extends LivingEntity> types = (EntityType<? extends LivingEntity>) entityRegistry.get(ResourceLocation.tryParse(key)).get().value();
+        registerDefaultAttributes(entityTypes.get(petType), types);
+        overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
+    }
 
-	protected void registerEntity(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
-		Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_21_R5.entity.types.EntityMy" + type.name());
-		entityClasses.forcePut(type, entityClass);
+    protected void registerEntity(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
+        Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_21_R5.entity.types.EntityMy" + type.name());
+        entityClasses.forcePut(type, entityClass);
 
-		String key = type.getTypeID().toString();
-		registerEntityType(type, key, entityRegistry);
-	}
+        String key = type.getTypeID().toString();
+        registerEntityType(type, key, entityRegistry);
+    }
 
-	public MyPetType getMyPetType(Class<? extends EntityMyPet> clazz) {
-		return entityClasses.inverse().get(clazz);
-	}
+    public MyPetType getMyPetType(Class<? extends EntityMyPet> clazz) {
+        return entityClasses.inverse().get(clazz);
+    }
 
-	@Override
-	public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
-		EntityMyPet petEntity = null;
-		Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
-		Level world = ((CraftWorld) bukkitWorld).getHandle();
+    @Override
+    public MyPetMinecraftEntity createMinecraftEntity(MyPet pet, org.bukkit.World bukkitWorld) {
+        EntityMyPet petEntity = null;
+        Class<? extends MyPetMinecraftEntity> entityClass = entityClasses.get(pet.getPetType());
+        Level world = ((CraftWorld) bukkitWorld).getHandle();
 
-		try {
-			Constructor<?> ctor = entityClass.getConstructor(Level.class, MyPet.class);
-			Object obj = ctor.newInstance(world, pet);
-			if (obj instanceof EntityMyPet) {
-				petEntity = (EntityMyPet) obj;
-			}
-		} catch (Exception e) {
-			MyPetApi.getLogger().severe(Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
-			ErrorUtil.report(e);
-		}
+        try {
+            Constructor<?> ctor = entityClass.getConstructor(Level.class, MyPet.class);
+            Object obj = ctor.newInstance(world, pet);
+            if (obj instanceof EntityMyPet) {
+                petEntity = (EntityMyPet) obj;
+            }
+        } catch (Exception e) {
+            MyPetApi.getLogger().severe(Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
+            ErrorUtil.report(e);
+        }
 
-		return petEntity;
-	}
+        return petEntity;
+    }
 
-	@Override
-	public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
-		if (entity != null) {
-			Level world = ((CraftWorld) bukkitWorld).getHandle();
-			return world.addFreshEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
-		}
-		return false;
-	}
+    @Override
+    public boolean spawnMinecraftEntity(MyPetMinecraftEntity entity, org.bukkit.World bukkitWorld) {
+        if (entity != null) {
+            Level world = ((CraftWorld) bukkitWorld).getHandle();
+            return world.addFreshEntity(((EntityMyPet) entity), CreatureSpawnEvent.SpawnReason.CUSTOM);
+        }
+        return false;
+    }
 
-	@Override
-	public void registerEntityTypes() {
-		//Let's prepare the Vanilla-Registry
-		DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(BuiltInRegistries.ENTITY_TYPE);
-		Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class,"l"); //frozen
-		Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class,"m"); //intrusiveHolderCache or unregisteredIntrusiveHolders or intrusiveValueToEntry
-		Field allTagsField = ReflectionUtil.getField(MappedRegistry.class,"k"); //allTags
-		MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "f"); //ENTITY_TYPE
+    @Override
+    public void registerEntityTypes() {
+        //Let's prepare the Vanilla-Registry
+        DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(BuiltInRegistries.ENTITY_TYPE);
+        Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class, "l"); //frozen
+        Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class, "m"); //intrusiveHolderCache or unregisteredIntrusiveHolders or intrusiveValueToEntry
+        Field allTagsField = ReflectionUtil.getField(MappedRegistry.class, "k"); //allTags
+        MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(BuiltInRegistries.class, "f"); //ENTITY_TYPE
 
-		Object allTagsSaved = ReflectionUtil.getFieldValue(allTagsField, entityRegistry);
+        Object allTagsSaved = ReflectionUtil.getFieldValue(allTagsField, entityRegistry);
 
-		if(custReg != null) {
-			//Gotta put the original Registry in. Just for a moment
-			try {
-				ENTITY_REGISTRY_SETTER.invoke(entityRegistry);
-			} catch (Throwable ignored) {
-			}
-		}
+        if (custReg != null) {
+            //Gotta put the original Registry in. Just for a moment
+            try {
+                ENTITY_REGISTRY_SETTER.invoke(entityRegistry);
+            } catch (Throwable ignored) {
+            }
+        }
 
-		//We are now working with the Vanilla-Registry
-		Class TagSetClass = MappedRegistry.class.getDeclaredClasses()[0];
-		Method unboundMethod = ReflectionUtil.getMethod(TagSetClass, "a"); //unbound
-		ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
-		ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
+        //We are now working with the Vanilla-Registry
+        Class TagSetClass = MappedRegistry.class.getDeclaredClasses()[0];
+        Method unboundMethod = ReflectionUtil.getMethod(TagSetClass, "a"); //unbound
+        ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
+        ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
         try {
             ReflectionUtil.setFinalFieldValue(allTagsField, entityRegistry, unboundMethod.invoke(entityRegistry));
         } catch (Exception e) {
@@ -156,16 +156,16 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         }
 
         //Now lets handle the Bukkit-Registry
-		//First copy the old registrie's map into a new one:
-		org.bukkit.Registry<org.bukkit.entity.EntityType> bukkitRegistry = org.bukkit.Registry.ENTITY_TYPE;
-		Field mapField =  ReflectionUtil.getField(org.bukkit.Registry.SimpleRegistry.class, "map");
-		Map<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (Map) ReflectionUtil.getFieldValue(mapField, bukkitRegistry);
-		ImmutableMap.Builder<NamespacedKey, org.bukkit.entity.EntityType> ownMap = ImmutableMap.builder();
-		ownMap.putAll(bukkitMap);
+        //First copy the old registrie's map into a new one:
+        org.bukkit.Registry<org.bukkit.entity.EntityType> bukkitRegistry = org.bukkit.Registry.ENTITY_TYPE;
+        Field mapField = ReflectionUtil.getField(org.bukkit.Registry.SimpleRegistry.class, "map");
+        Map<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (Map) ReflectionUtil.getFieldValue(mapField, bukkitRegistry);
+        ImmutableMap.Builder<NamespacedKey, org.bukkit.entity.EntityType> ownMap = ImmutableMap.builder();
+        ownMap.putAll(bukkitMap);
 
-		for (MyPetType type : MyPetType.all()) {
-			//The fun part
-			registerEntity(type, entityRegistry);
+        for (MyPetType type : MyPetType.all()) {
+            //The fun part
+            registerEntity(type, entityRegistry);
 
 			/*
 			A Tutorial on how to trick Spigot:
@@ -187,14 +187,14 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
             if (!(bukkitMap.containsKey(key) && bukkitMap.get(key) == org.bukkit.entity.EntityType.BLOCK_DISPLAY)) {
                 ownMap.put(key, org.bukkit.entity.EntityType.BLOCK_DISPLAY);
             }
-		}
+        }
 
-		//Post-Handle Bukkit-Registry
-		//We now have our entities and all the others in there
-		ReflectionUtil.setFieldValue(mapField, bukkitRegistry, ownMap.build());
+        //Post-Handle Bukkit-Registry
+        //We now have our entities and all the others in there
+        ReflectionUtil.setFieldValue(mapField, bukkitRegistry, ownMap.build());
 
-		//Post-Handle Vanilla Registry
-		entityRegistry.freeze();
+        //Post-Handle Vanilla Registry
+        entityRegistry.freeze();
 
 		/* Let me explain what's happening here:
 		Earlier we saved allTags. They contain stuff like special vulnerabilities to enchantments,
@@ -204,75 +204,75 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		First re-add the Tags (that's why we saved them)
 		And then tell Minecraft to reload those values for them to actually take effect.
 		Gotta love MC */
-		ReflectionUtil.setFieldValue(allTagsField, entityRegistry, allTagsSaved);
-		Method refreshMethod = ReflectionUtil.getMethod(MappedRegistry.class, "u"); //refreshTagsInHolders
+        ReflectionUtil.setFieldValue(allTagsField, entityRegistry, allTagsSaved);
+        Method refreshMethod = ReflectionUtil.getMethod(MappedRegistry.class, "u"); //refreshTagsInHolders
         try {
             refreshMethod.invoke(entityRegistry);
         } catch (Exception e) {
-			ErrorUtil.report(e);
+            ErrorUtil.report(e);
         }
 
-		if(custReg != null) {
-			//Gotta put the custom Registry back into place
-			try {
-				ENTITY_REGISTRY_SETTER.invoke(custReg);
-			} catch (Throwable ignored) {
-			}
-			custReg = null;
-		}
-	}
+        if (custReg != null) {
+            //Gotta put the custom Registry back into place
+            try {
+                ENTITY_REGISTRY_SETTER.invoke(custReg);
+            } catch (Throwable ignored) {
+            }
+            custReg = null;
+        }
+    }
 
-	public <T> T getEntityType(MyPetType petType) {
-		return (T) this.entityTypes.get(petType);
-	}
+    public <T> T getEntityType(MyPetType petType) {
+        return (T) this.entityTypes.get(petType);
+    }
 
-	@Override
-	public void unregisterEntityTypes() {
-	}
+    @Override
+    public void unregisterEntityTypes() {
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public DefaultedRegistry<EntityType<?>> getRegistry(DefaultedRegistry dMappedRegistry) {
-		if (!dMappedRegistry.getClass().getName().equals(DefaultedMappedRegistry.class.getName())) {
-			MyPetApi.getLogger().info("Custom entity registry found: " + dMappedRegistry.getClass().getName());
-			if(custReg == null) {
-				custReg = dMappedRegistry;
-			}
-			for (Field field : dMappedRegistry.getClass().getDeclaredFields()) {
-				if (field.getType() == DefaultedMappedRegistry.class || field.getType() == MappedRegistry.class) {
-					field.setAccessible(true);
-					try {
-						DefaultedRegistry<EntityType<?>> reg = (DefaultedRegistry<EntityType<?>>) field.get(dMappedRegistry);
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public DefaultedRegistry<EntityType<?>> getRegistry(DefaultedRegistry dMappedRegistry) {
+        if (!dMappedRegistry.getClass().getName().equals(DefaultedMappedRegistry.class.getName())) {
+            MyPetApi.getLogger().info("Custom entity registry found: " + dMappedRegistry.getClass().getName());
+            if (custReg == null) {
+                custReg = dMappedRegistry;
+            }
+            for (Field field : dMappedRegistry.getClass().getDeclaredFields()) {
+                if (field.getType() == DefaultedMappedRegistry.class || field.getType() == MappedRegistry.class) {
+                    field.setAccessible(true);
+                    try {
+                        DefaultedRegistry<EntityType<?>> reg = (DefaultedRegistry<EntityType<?>>) field.get(dMappedRegistry);
 
-						if (!reg.getClass().getName().equals(DefaultedMappedRegistry.class.getName())) {
-							reg = getRegistry(reg);
-						}
-						return reg;
-					} catch (IllegalAccessException e) {
-						ErrorUtil.report(e);
-					}
-				}
-			}
-		}
-		return dMappedRegistry;
-	}
+                        if (!reg.getClass().getName().equals(DefaultedMappedRegistry.class.getName())) {
+                            reg = getRegistry(reg);
+                        }
+                        return reg;
+                    } catch (IllegalAccessException e) {
+                        ErrorUtil.report(e);
+                    }
+                }
+            }
+        }
+        return dMappedRegistry;
+    }
 
-	protected void overwriteEntityID(EntityType types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
-		try {
-			Field bgF = MappedRegistry.class.getDeclaredField("d"); //This is toId
-			bgF.setAccessible(true);
-			Object map = bgF.get(entityRegistry);
-			Class<?> clazz = map.getClass();
-			Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
-			mapPut.setAccessible(true);
-			mapPut.invoke(map, types, id);
-		} catch (ReflectiveOperationException e) {
-			ErrorUtil.report(e);
-		}
+    protected void overwriteEntityID(EntityType types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
+        try {
+            Field bgF = MappedRegistry.class.getDeclaredField("d"); //This is toId
+            bgF.setAccessible(true);
+            Object map = bgF.get(entityRegistry);
+            Class<?> clazz = map.getClass();
+            Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
+            mapPut.setAccessible(true);
+            mapPut.invoke(map, types, id);
+        } catch (ReflectiveOperationException e) {
+            ErrorUtil.report(e);
+        }
 
-	}
+    }
 
-	protected int getEntityTypeId(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
-		EntityType<?> types = entityRegistry.get(ResourceLocation.tryParse(type.getTypeID().toString())).get().value();
-		return entityRegistry.getId(types);
-	}
+    protected int getEntityTypeId(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
+        EntityType<?> types = entityRegistry.get(ResourceLocation.tryParse(type.getTypeID().toString())).get().value();
+        return entityRegistry.getId(types);
+    }
 }

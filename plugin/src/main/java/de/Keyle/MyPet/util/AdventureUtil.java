@@ -20,18 +20,16 @@
 
 package de.Keyle.MyPet.util;
 
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +43,7 @@ public class AdventureUtil {
      */
     public static NamedTextColor getColor(String colorName) {
         if (colorName == null) return null;
-        
+
         return switch (colorName.toUpperCase()) {
             case "BLACK" -> NamedTextColor.BLACK;
             case "DARK_BLUE" -> NamedTextColor.DARK_BLUE;
@@ -78,13 +76,13 @@ public class AdventureUtil {
         try {
             // Create basic hover item with Material and amount
             ItemStack displayItem = itemStack.clone();
-            
+
             // Use Kyori's ItemStack integration via HoverEvent.ShowItem
             return HoverEvent.showItem(
-                net.kyori.adventure.key.Key.key("minecraft", itemStack.getType().getKey().getKey()),
-                itemStack.getAmount(),
-                BinaryTagHolder.binaryTagHolder(itemStack.getItemMeta() != null ?
-                    serializeItemMeta(itemStack) : "{}")
+                    net.kyori.adventure.key.Key.key("minecraft", itemStack.getType().getKey().getKey()),
+                    itemStack.getAmount(),
+                    BinaryTagHolder.binaryTagHolder(itemStack.getItemMeta() != null ?
+                            serializeItemMeta(itemStack) : "{}")
             );
         } catch (Exception e) {
             // Fallback to simple hover

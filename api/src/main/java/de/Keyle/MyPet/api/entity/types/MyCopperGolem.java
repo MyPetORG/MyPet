@@ -27,10 +27,6 @@ import org.bukkit.inventory.ItemStack;
 @DefaultInfo(food = {"copper_ingot"}, leashFlags = {"UserCreated"})
 public interface MyCopperGolem extends MyPet {
 
-    enum OxidationState {
-        UNAFFECTED, EXPOSED, WEATHERED, OXIDIZED
-    }
-
     OxidationState getOxidationState();
 
     void setOxidationState(OxidationState state);
@@ -41,7 +37,11 @@ public interface MyCopperGolem extends MyPet {
 
     ItemStack getPoppy();
 
+    void setPoppy(ItemStack item);
+
     boolean hasPoppy();
 
-    void setPoppy(ItemStack item);
+    enum OxidationState {
+        UNAFFECTED, EXPOSED, WEATHERED, OXIDIZED
+    }
 }

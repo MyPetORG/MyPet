@@ -39,55 +39,56 @@ import net.minecraft.world.phys.Vec3;
 @EntitySize(width = 0.5F, height = 0.3f)
 public abstract class EntityMyFlyingPet extends EntityMyPet {
 
-	public EntityMyFlyingPet(Level world, MyPet myPet) {
-		super(world, myPet);
-		this.setPathfindingMalus(PathType.WATER, -1.0f);
-		this.switchMovement(new MyPetFlyingMoveControl(this, this.maxTurn));
-	}
+    public EntityMyFlyingPet(Level world, MyPet myPet) {
+        super(world, myPet);
+        this.setPathfindingMalus(PathType.WATER, -1.0f);
+        this.switchMovement(new MyPetFlyingMoveControl(this, this.maxTurn));
+    }
 
-	@Override
-	protected PathNavigation setSpecialNav() {
-		return new FlyingPathNavigation(this, this.level());
-	}
+    @Override
+    protected PathNavigation setSpecialNav() {
+        return new FlyingPathNavigation(this, this.level());
+    }
 
-	//Disengage FallDamage
-	@Override
-	protected void checkFallDamage(double d0, boolean flag, BlockState iblockdata, BlockPos blockposition) {}
+    //Disengage FallDamage
+    @Override
+    protected void checkFallDamage(double d0, boolean flag, BlockState iblockdata, BlockPos blockposition) {
+    }
 
-	@Override
-	public void travel(Vec3 vec3d) {
-		if (this.isEffectiveAi() || this.isClientAuthoritative()) {
-			if (this.isInWater() || this.isInLava() || hasRider || this.isVehicle()) {
-				super.travel(vec3d);
-				return;
-			} else {
-				float f = 0.91F;
+    @Override
+    public void travel(Vec3 vec3d) {
+        if (this.isEffectiveAi() || this.isClientAuthoritative()) {
+            if (this.isInWater() || this.isInLava() || hasRider || this.isVehicle()) {
+                super.travel(vec3d);
+                return;
+            } else {
+                float f = 0.91F;
 
-				if (this.onGround()) {
-					f = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction() * 0.91F;
-				}
+                if (this.onGround()) {
+                    f = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction() * 0.91F;
+                }
 
-				float f1 = 0.16277137F / (f * f * f);
+                float f1 = 0.16277137F / (f * f * f);
 
-				f = 0.91F;
-				if (this.onGround()) {
-					f = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction() * 0.91F;
-				}
+                f = 0.91F;
+                if (this.onGround()) {
+                    f = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction() * 0.91F;
+                }
 
-				this.moveRelative(this.onGround() ? 0.1F * f1 : 0.02F, vec3d);
-				this.move(MoverType.SELF, this.getDeltaMovement());
-				this.setDeltaMovement(this.getDeltaMovement().scale(f));
-			}
-		}
+                this.moveRelative(this.onGround() ? 0.1F * f1 : 0.02F, vec3d);
+                this.move(MoverType.SELF, this.getDeltaMovement());
+                this.setDeltaMovement(this.getDeltaMovement().scale(f));
+            }
+        }
 
-		this.calculateEntityAnimation(false);
-	}
+        this.calculateEntityAnimation(false);
+    }
 
-	@Override
-	public void setPathfinder() {
-		super.setPathfinder();
-		petPathfinderSelector.addGoal("RandomFly", new MyPetRandomFly(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
-		petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.7F, this.getBbWidth() + 1.3, 20));
-		petPathfinderSelector.addGoal("Control", new Control(this, 0.8f));
-	}
+    @Override
+    public void setPathfinder() {
+        super.setPathfinder();
+        petPathfinderSelector.addGoal("RandomFly", new MyPetRandomFly(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
+        petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.7F, this.getBbWidth() + 1.3, 20));
+        petPathfinderSelector.addGoal("Control", new Control(this, 0.8f));
+    }
 }

@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 public interface MyIronGolem extends MyPet {
     ItemStack getFlower();
 
-    boolean hasFlower();
-
     void setFlower(ItemStack item);
+
+    boolean hasFlower();
 }

@@ -78,28 +78,28 @@ public class CommandSendAway implements CommandTabCompleter {
                 if (!event.isCancelled()) {
                     myPet.removePet(false);
                     sender.sendMessage(MessageUtil.success(
-                        Util.formatTranslation(
-                            "Message.Command.SendAway.Success",
-                            petOwner,
-                            MessageUtil.petName(myPet.getPetName())
-                        ), false
+                            Util.formatTranslation(
+                                    "Message.Command.SendAway.Success",
+                                    petOwner,
+                                    MessageUtil.petName(myPet.getPetName())
+                            ), false
                     ));
                 }
             } else if (myPet.getStatus() == PetState.Despawned) {
                 sender.sendMessage(MessageUtil.info(
-                    Util.formatTranslation(
-                        "Message.Command.SendAway.AlreadyAway",
-                        petOwner,
-                        MessageUtil.petName(myPet.getPetName())
-                    ), false
+                        Util.formatTranslation(
+                                "Message.Command.SendAway.AlreadyAway",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                        ), false
                 ));
             } else if (myPet.getStatus() == PetState.Dead) {
                 sender.sendMessage(MessageUtil.info(
-                    Util.formatTranslation(
-                        "Message.Action.Dead",
-                        petOwner,
-                        MessageUtil.petName(myPet.getPetName())
-                    ), false
+                        Util.formatTranslation(
+                                "Message.Action.Dead",
+                                petOwner,
+                                MessageUtil.petName(myPet.getPetName())
+                        ), false
                 ));
             }
         } else {

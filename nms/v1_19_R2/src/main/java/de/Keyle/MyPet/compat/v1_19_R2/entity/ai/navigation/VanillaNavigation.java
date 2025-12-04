@@ -20,80 +20,79 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.navigation;
 
-import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyAquaticPet;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.MyPetAquaticMoveControl;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
-
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.navigation.NavigationParameters;
 import de.Keyle.MyPet.api.util.Compat;
-import org.bukkit.attribute.Attribute;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyAquaticPet;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement.MyPetAquaticMoveControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
+import org.bukkit.entity.LivingEntity;
 
 @Compat("v1_19_R2")
 public class VanillaNavigation extends AbstractNavigation {
 
-	PathNavigation nav;
+    PathNavigation nav;
 
-	public VanillaNavigation(EntityMyPet entityMyPet) {
-		super(entityMyPet);
-		nav = entityMyPet.getNavigation();
-	}
+    public VanillaNavigation(EntityMyPet entityMyPet) {
+        super(entityMyPet);
+        nav = entityMyPet.getNavigation();
+    }
 
-	public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
-		super(entityMyPet, parameters);
-		nav = entityMyPet.getNavigation();
-	}
+    public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
+        super(entityMyPet, parameters);
+        nav = entityMyPet.getNavigation();
+    }
 
-	@Override
-	public void stop() {
-		nav.stop();
-	}
+    @Override
+    public void stop() {
+        nav.stop();
+    }
 
-	@Override
-	public boolean navigateTo(double x, double y, double z) {
-		if (this.nav.moveTo(x, y, z, 1.D)) {
-			applyNavigationParameters();
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean navigateTo(double x, double y, double z) {
+        if (this.nav.moveTo(x, y, z, 1.D)) {
+            applyNavigationParameters();
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public boolean navigateTo(LivingEntity entity) {
-		return navigateTo(((CraftLivingEntity) entity).getHandle());
-	}
+    @Override
+    public boolean navigateTo(LivingEntity entity) {
+        return navigateTo(((CraftLivingEntity) entity).getHandle());
+    }
 
-	public boolean navigateTo(net.minecraft.world.entity.LivingEntity entity) {
-		if (this.nav.moveTo(entity, 1.D)) {
-			applyNavigationParameters();
-			return true;
-		}
-		return false;
-	}
+    public boolean navigateTo(net.minecraft.world.entity.LivingEntity entity) {
+        if (this.nav.moveTo(entity, 1.D)) {
+            applyNavigationParameters();
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public void tick() {
-		//This switches between movesets enabling the pet to move naturally on land and water
-		EntityMyPet petEntity = (EntityMyPet) this.entityMyPet;
-		if(petEntity.isInWaterOrBubble() && this.entityMyPet instanceof EntityMyAquaticPet
-				&& !(petEntity.getMoveControl() instanceof MyPetAquaticMoveControl)) {
-			petEntity.switchMovement(new MyPetAquaticMoveControl(petEntity));
-		} else if(!petEntity.isInWaterOrBubble() && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
-			petEntity.switchMovement(new MoveControl(petEntity));
-		}
+    @Override
+    public void tick() {
+        //This switches between movesets enabling the pet to move naturally on land and water
+        EntityMyPet petEntity = (EntityMyPet) this.entityMyPet;
+        if (petEntity.isInWaterOrBubble() && this.entityMyPet instanceof EntityMyAquaticPet
+                && !(petEntity.getMoveControl() instanceof MyPetAquaticMoveControl)) {
+            petEntity.switchMovement(new MyPetAquaticMoveControl(petEntity));
+        } else if (!petEntity.isInWaterOrBubble() && petEntity.getMoveControl() instanceof MyPetAquaticMoveControl) {
+            petEntity.switchMovement(new MoveControl(petEntity));
+        }
 
-		nav.tick();
-	}
+        nav.tick();
+    }
 
-	@Override
-	public void applyNavigationParameters() {
-		this.nav.setCanFloat(parameters.avoidWater());
-		((EntityMyPet) this.entityMyPet)
-				.getBukkitAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
-				.setBaseValue(parameters.speed() + parameters.speedModifier());
-	}
+    @Override
+    public void applyNavigationParameters() {
+        this.nav.setCanFloat(parameters.avoidWater());
+        ((EntityMyPet) this.entityMyPet)
+                .getBukkitAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
+                .setBaseValue(parameters.speed() + parameters.speedModifier());
+    }
 }

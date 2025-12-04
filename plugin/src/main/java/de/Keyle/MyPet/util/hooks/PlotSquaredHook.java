@@ -70,6 +70,11 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
         return true;
     }
 
+    @Override
+    public boolean canHurt(Player attacker, Player defender) {
+        return canHurt(attacker, (Entity) defender);
+    }
+
     private static class V3 {
 
         public static boolean canHurt(Player attacker, Entity defender) {
@@ -288,10 +293,5 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
             }
             return true;
         }
-    }
-
-    @Override
-    public boolean canHurt(Player attacker, Player defender) {
-        return canHurt(attacker, (Entity) defender);
     }
 }

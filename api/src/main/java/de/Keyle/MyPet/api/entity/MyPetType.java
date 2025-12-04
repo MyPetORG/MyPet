@@ -167,8 +167,8 @@ public enum MyPetType {
             .v("1.7.10", 62)
             .v("1.13", "magma_cube")
             .search()),
-    Mooshroom((String) new Compat<>().v("1.7.10","MUSHROOM_COW")
-            .v("1.20.6","MOOSHROOM").search().get(),
+    Mooshroom((String) new Compat<>().v("1.7.10", "MUSHROOM_COW")
+            .v("1.20.6", "MOOSHROOM").search().get(),
             "1.7.10", MyMooshroom.class, new Compat<>()
             .v("1.7.10", 96)
             .v("1.13", "mooshroom")
@@ -249,8 +249,8 @@ public enum MyPetType {
     Sniffer("SNIFFER", "1.20", MySniffer.class, new Compat<>()
             .v("1.20", "sniffer")
             .search()),
-    Snowman((String) new Compat<>().v("1.7.10","SNOWMAN")
-            .v("1.20.6","SNOW_GOLEM").search().get(),
+    Snowman((String) new Compat<>().v("1.7.10", "SNOWMAN")
+            .v("1.20.6", "SNOW_GOLEM").search().get(),
             "1.7.10", MySnowman.class, new Compat<>()
             .v("1.7.10", 97)
             .v("1.13", "snow_golem")
@@ -349,23 +349,6 @@ public enum MyPetType {
         this.removed = id.isRemoved();
     }
 
-    public String getBukkitName() {
-        return bukkitName;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T getTypeID() {
-        return (T) typeID;
-    }
-
-    public Class<? extends MyPet> getMyPetClass() {
-        return mypetClass;
-    }
-
-    public boolean checkMinecraftVersion() {
-        return !removed && MyPetApi.getCompatUtil().compareWithMinecraftVersion(this.minVersion) >= 0;
-    }
-
     public static List<MyPetType> all() {
         List<MyPetType> all = new LinkedList<>();
         for (MyPetType t : values()) {
@@ -406,5 +389,22 @@ public enum MyPetType {
             }
         }
         throw new MyPetTypeNotFoundException(name);
+    }
+
+    public String getBukkitName() {
+        return bukkitName;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getTypeID() {
+        return (T) typeID;
+    }
+
+    public Class<? extends MyPet> getMyPetClass() {
+        return mypetClass;
+    }
+
+    public boolean checkMinecraftVersion() {
+        return !removed && MyPetApi.getCompatUtil().compareWithMinecraftVersion(this.minVersion) >= 0;
     }
 }

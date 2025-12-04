@@ -47,7 +47,9 @@ import java.util.stream.Collectors;
 
 public class SentryErrorReporter implements ErrorReporter {
 
-    @Getter @Setter private static UUID serverUUID = UUID.randomUUID();
+    @Getter
+    @Setter
+    private static UUID serverUUID = UUID.randomUUID();
 
     protected Appender loggerAppender = null;
     protected boolean enabled = false;

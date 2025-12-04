@@ -29,18 +29,19 @@ import lombok.Getter;
 @DefaultInfo(food = {"wheat"})
 public interface MyMooshroom extends MyPet, MyPetBaby {
 
+    Type getType();
+
+    void setType(Type type);
+
     enum Type {
         Red("red"),
         Brown("brown");
 
-        @Getter private String type;
+        @Getter
+        private String type;
 
         Type(String type) {
             this.type = type;
         }
     }
-
-    Type getType();
-
-    void setType(Type type);
 }

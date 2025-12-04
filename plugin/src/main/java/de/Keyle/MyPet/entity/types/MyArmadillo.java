@@ -43,7 +43,7 @@ public class MyArmadillo extends MyPet implements de.Keyle.MyPet.api.entity.type
     @Override
     public void setBaby(boolean flag) {
         this.isBaby = flag;
-        if(status == PetState.Here) {
+        if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
@@ -66,6 +66,7 @@ public class MyArmadillo extends MyPet implements de.Keyle.MyPet.api.entity.type
     public MyPetType getPetType() {
         return MyPetType.Armadillo;
     }
+
     @Override
     public String toString() {
         return "MyArmadillo{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", saddle=" + ", baby=" + isBaby() + "}";

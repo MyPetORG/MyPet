@@ -50,7 +50,7 @@ public class ErrorUtil {
      * Logs to console with full stack trace and sends to Sentry if enabled.
      *
      * @param message custom error message
-     * @param e the exception to report
+     * @param e       the exception to report
      */
     public static void report(String message, Throwable e) {
         reportSevere(message, e);
@@ -71,7 +71,7 @@ public class ErrorUtil {
      * Logs to console with full stack trace and sends to Sentry if enabled.
      *
      * @param message custom warning message
-     * @param e the exception to report
+     * @param e       the exception to report
      */
     public static void reportWarning(String message, Throwable e) {
         logAndReport(Level.WARNING, message, e);
@@ -92,7 +92,7 @@ public class ErrorUtil {
      * Logs to console with full stack trace and sends to Sentry if enabled.
      *
      * @param message custom error message
-     * @param e the exception to report
+     * @param e       the exception to report
      */
     public static void reportError(String message, Throwable e) {
         logAndReport(Level.SEVERE, message, e);
@@ -113,7 +113,7 @@ public class ErrorUtil {
      * Logs to console with full stack trace and sends to Sentry if enabled.
      *
      * @param message custom error message
-     * @param e the exception to report
+     * @param e       the exception to report
      */
     public static void reportSevere(String message, Throwable e) {
         logAndReport(Level.SEVERE, message, e);
@@ -122,9 +122,9 @@ public class ErrorUtil {
     /**
      * Internal method that logs to console and sends to Sentry.
      *
-     * @param level logging level
+     * @param level   logging level
      * @param message error message
-     * @param e the exception
+     * @param e       the exception
      */
     private static void logAndReport(Level level, String message, Throwable e) {
         Logger logger = MyPetApi.getLogger();

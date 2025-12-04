@@ -43,9 +43,9 @@ public interface StoredMyPet {
 
     void setInfo(TagCompound info);
 
-    void setOwner(MyPetPlayer owner);
-
     MyPetPlayer getOwner();
+
+    void setOwner(MyPetPlayer owner);
 
     String getPetName();
 

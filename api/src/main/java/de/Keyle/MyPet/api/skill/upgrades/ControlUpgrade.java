@@ -32,7 +32,9 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Control")
 public class ControlUpgrade implements Upgrade<Control> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeBooleanModifier activeModifier = null;
 
     @Override

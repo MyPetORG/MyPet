@@ -28,17 +28,17 @@ import org.bukkit.ChatColor;
 
 public class MyBogged extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBogged {
 
-	public MyBogged(MyPetPlayer petOwner) {
-		super(petOwner);
-	}
+    public MyBogged(MyPetPlayer petOwner) {
+        super(petOwner);
+    }
 
-	@Override
-	public MyPetType getPetType() {
-		return MyPetType.Bogged;
-	}
+    @Override
+    public MyPetType getPetType() {
+        return MyPetType.Bogged;
+    }
 
-	@Override
-	public String toString() {
-		return "MyBogged{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
-	}
+    @Override
+    public String toString() {
+        return "MyBogged{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
+    }
 }

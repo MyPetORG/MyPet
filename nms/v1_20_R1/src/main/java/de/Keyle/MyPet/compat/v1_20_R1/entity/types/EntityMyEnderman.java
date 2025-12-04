@@ -46,115 +46,114 @@ import org.bukkit.craftbukkit.v1_20_R1.util.CraftMagicNumbers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import org.bukkit.Sound;
 
 @EntitySize(width = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
 
-	private static final EntityDataAccessor<Optional<BlockState>> BLOCK_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.OPTIONAL_BLOCK_STATE);
-	private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Optional<BlockState>> BLOCK_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.OPTIONAL_BLOCK_STATE);
+    private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyEnderman.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyEnderman(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyEnderman(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.enderman.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.enderman.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.enderman.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.enderman.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return getMyPet().isScreaming() ? "entity.enderman.scream" : "entity.enderman.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return getMyPet().isScreaming() ? "entity.enderman.scream" : "entity.enderman.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.SHEARS && getMyPet().hasBlock() && getOwner().getPlayer().isSneaking()) {
-				ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getBlock()));
-				entityitem.pickupDelay = 10;
-				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Items.SHEARS && getMyPet().hasBlock() && getOwner().getPlayer().isSneaking()) {
+                ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getBlock()));
+                entityitem.pickupDelay = 10;
+                entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				getMyPet().setBlock(null);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-						itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-							try {
-								CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-							} catch (IllegalAccessException | InvocationTargetException ex) {
-								ErrorUtil.report(ex);
-							}
-						});
-					}
-				}
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                getMyPet().setBlock(null);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
+                            try {
+                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+                            } catch (IllegalAccessException | InvocationTargetException ex) {
+                                ErrorUtil.report(ex);
+                            }
+                        });
+                    }
+                }
 
-				return InteractionResult.CONSUME;
-			} else if (getMyPet().getBlock() == null && Util.isBetween(1, 255, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+                return InteractionResult.CONSUME;
+            } else if (getMyPet().getBlock() == null && Util.isBetween(1, 255, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(BLOCK_WATCHER, Optional.empty());
-		getEntityData().define(SCREAMING_WATCHER, false);
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(BLOCK_WATCHER, Optional.empty());
+        getEntityData().define(SCREAMING_WATCHER, false);
+    }
 
-	@Override
-	public void updateVisuals() {
-		Optional<BlockState> block;
-		if (getMyPet().getBlock() != null) {
-			BlockState data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getData());
-			block = Optional.ofNullable(data);
-		} else {
-			block = Optional.empty();
-		}
-		getEntityData().set(BLOCK_WATCHER, block);
-		getEntityData().set(SCREAMING_WATCHER, getMyPet().isScreaming());
-	}
+    @Override
+    public void updateVisuals() {
+        Optional<BlockState> block;
+        if (getMyPet().getBlock() != null) {
+            BlockState data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getData());
+            block = Optional.ofNullable(data);
+        } else {
+            block = Optional.empty();
+        }
+        getEntityData().set(BLOCK_WATCHER, block);
+        getEntityData().set(SCREAMING_WATCHER, getMyPet().isScreaming());
+    }
 
-	@Override
-	protected void doMyPetTick() {
-		super.doMyPetTick();
-		BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
-		Behavior.BehaviorMode behavior = skill.getBehavior();
-		if (behavior == Behavior.BehaviorMode.Aggressive) {
-			if (!getMyPet().isScreaming()) {
-				getMyPet().setScreaming(true);
-			}
-		} else {
-			if (getMyPet().isScreaming()) {
-				getMyPet().setScreaming(false);
-			}
-		}
-	}
+    @Override
+    protected void doMyPetTick() {
+        super.doMyPetTick();
+        BehaviorImpl skill = getMyPet().getSkills().get(BehaviorImpl.class);
+        Behavior.BehaviorMode behavior = skill.getBehavior();
+        if (behavior == Behavior.BehaviorMode.Aggressive) {
+            if (!getMyPet().isScreaming()) {
+                getMyPet().setScreaming(true);
+            }
+        } else {
+            if (getMyPet().isScreaming()) {
+                getMyPet().setScreaming(false);
+            }
+        }
+    }
 
-	@Override
-	public MyEnderman getMyPet() {
-		return (MyEnderman) myPet;
-	}
+    @Override
+    public MyEnderman getMyPet() {
+        return (MyEnderman) myPet;
+    }
 }

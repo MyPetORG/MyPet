@@ -20,15 +20,14 @@
 
 package de.Keyle.MyPet.compat.v1_18_R2.skill.skills.ranged.bukkit;
 
-import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftWitherSkull;
-
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.WitherSkull;
+import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftWitherSkull;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +39,7 @@ public class CraftMyPetWitherSkull extends CraftWitherSkull implements CraftMyPe
     }
 
     @Override
-	public EntityMyPetProjectile getMyPetProjectile() {
+    public EntityMyPetProjectile getMyPetProjectile() {
         return ((EntityMyPetProjectile) this.getHandle());
     }
 

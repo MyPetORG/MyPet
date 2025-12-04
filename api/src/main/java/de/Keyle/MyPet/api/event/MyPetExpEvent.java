@@ -45,6 +45,11 @@ public class MyPetExpEvent extends Event implements Cancellable {
         this(myPet, exp, false);
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return myPet.getOwner();
     }
@@ -57,12 +62,12 @@ public class MyPetExpEvent extends Event implements Cancellable {
         return myPet;
     }
 
-    public void setExp(double exp) {
-        this.exp = exp;
-    }
-
     public double getExp() {
         return exp;
+    }
+
+    public void setExp(double exp) {
+        this.exp = exp;
     }
 
     public boolean isQuiet() {
@@ -78,11 +83,6 @@ public class MyPetExpEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

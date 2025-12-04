@@ -33,16 +33,16 @@ public class MyPetPlayerJoinEvent extends Event {
         this.myPetPlayer = myPetPlayer;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getPlayer() {
         return myPetPlayer;
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

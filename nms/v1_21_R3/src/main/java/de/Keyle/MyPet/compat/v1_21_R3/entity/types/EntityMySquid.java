@@ -32,40 +32,40 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.7F, height = 0.475f)
 public class EntityMySquid extends EntityMyAquaticPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySquid.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySquid.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMySquid(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMySquid(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.squid.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.squid.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.squid.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.squid.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.squid.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.squid.ambient";
+    }
 
-	@Override
-	public MySquid getMyPet() {
-		return (MySquid) myPet;
-	}
+    @Override
+    public MySquid getMyPet() {
+        return (MySquid) myPet;
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+    }
 }

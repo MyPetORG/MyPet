@@ -43,10 +43,6 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
         return chest;
     }
 
-    public boolean hasChest() {
-        return chest != null;
-    }
-
     public void setChest(ItemStack item) {
         if (item != null && item.getType() != Material.CHEST && item.getType() != Material.TRAPPED_CHEST) {
             return;
@@ -60,12 +56,12 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
         }
     }
 
-    public ItemStack getSaddle() {
-        return saddle;
+    public boolean hasChest() {
+        return chest != null;
     }
 
-    public boolean hasSaddle() {
-        return saddle != null;
+    public ItemStack getSaddle() {
+        return saddle;
     }
 
     public void setSaddle(ItemStack item) {
@@ -79,6 +75,10 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
     }
 
     @Override

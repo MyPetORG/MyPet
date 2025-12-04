@@ -32,35 +32,35 @@ import org.bukkit.Sound;
 @EntitySize(width = 0.7F, height = 0.45F)
 public class EntityMyCaveSpider extends EntityMyPet {
 
-	private static final EntityDataAccessor<Byte> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyCaveSpider.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyCaveSpider.class, EntityDataSerializers.BYTE);
 
-	public EntityMyCaveSpider(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyCaveSpider(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.spider.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.spider.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.spider.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.spider.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.spider.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.spider.ambient";
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(UNUSED_WATCHER, (byte) 0);
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(UNUSED_WATCHER, (byte) 0);
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SPIDER_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SPIDER_STEP, 0.15F, 1.0F);
+    }
 }

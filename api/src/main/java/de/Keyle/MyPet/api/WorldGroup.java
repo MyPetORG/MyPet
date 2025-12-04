@@ -34,14 +34,13 @@ import java.util.stream.Collectors;
 
 public class WorldGroup {
 
-    private static Map<String, WorldGroup> allGroups = new HashMap<>();
-    private static Map<String, WorldGroup> groupWorlds = new HashMap<>();
-
+    private static final Map<String, WorldGroup> allGroups = new HashMap<>();
+    private static final Map<String, WorldGroup> groupWorlds = new HashMap<>();
     public static final WorldGroup DEFAULT_GROUP = new WorldGroup("default", false);
     public static final WorldGroup DISABLED_GROUP = new WorldGroup("---DISABLED---", true);
-
     private String name;
-    @Getter private boolean disabled;
+    @Getter
+    private boolean disabled;
     private List<String> worlds = new ArrayList<>();
 
 
@@ -52,41 +51,6 @@ public class WorldGroup {
             return;
         }
         allGroups.put(this.getName(), this);
-    }
-
-    public boolean addWorld(String world) {
-        if (groupWorlds.containsKey(world)) {
-            return false;
-        }
-        if (!this.worlds.contains(world)) {
-            this.worlds.add(world);
-            groupWorlds.put(world, this);
-            return true;
-        }
-        return false;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public List<String> getWorlds() {
-        return this.worlds;
-    }
-
-    @Override
-    public String toString() {
-        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
-    }
-
-    /**
-     * Checks whether a world group contains the world
-     *
-     * @param worldName The name of the checked world
-     * @return boolean
-     */
-    public boolean containsWorld(String worldName) {
-        return this.worlds.contains(worldName);
     }
 
     /**
@@ -232,5 +196,40 @@ public class WorldGroup {
             config.set("Groups.default", worldNames);
             yamlConfiguration.saveConfig();
         }
+    }
+
+    public boolean addWorld(String world) {
+        if (groupWorlds.containsKey(world)) {
+            return false;
+        }
+        if (!this.worlds.contains(world)) {
+            this.worlds.add(world);
+            groupWorlds.put(world, this);
+            return true;
+        }
+        return false;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public List<String> getWorlds() {
+        return this.worlds;
+    }
+
+    @Override
+    public String toString() {
+        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
+    }
+
+    /**
+     * Checks whether a world group contains the world
+     *
+     * @param worldName The name of the checked world
+     * @return boolean
+     */
+    public boolean containsWorld(String worldName) {
+        return this.worlds.contains(worldName);
     }
 }

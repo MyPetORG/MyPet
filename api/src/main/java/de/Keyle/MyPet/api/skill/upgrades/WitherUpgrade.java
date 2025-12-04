@@ -32,9 +32,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Wither")
 public class WitherUpgrade implements Upgrade<Wither> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier chanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier durationModifier = null;
 
     @Override

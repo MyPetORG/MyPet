@@ -37,14 +37,16 @@ import de.Keyle.MyPet.api.skill.skilltree.levelrule.StaticLevelRule;
 import de.Keyle.MyPet.api.skill.upgrades.*;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static de.Keyle.MyPet.api.util.configuration.Try.tryToLoad;
 

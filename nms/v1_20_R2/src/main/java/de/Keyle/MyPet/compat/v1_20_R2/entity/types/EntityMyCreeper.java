@@ -32,44 +32,44 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyCreeper extends EntityMyPet {
 
-	private static final EntityDataAccessor<Integer> FUSE_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Boolean> POWERED_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> FUSE_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> POWERED_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyCreeper.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyCreeper(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyCreeper(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.creeper.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.creeper.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.creeper.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.creeper.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return null;
-	}
+    @Override
+    protected String getLivingSound() {
+        return null;
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(FUSE_WATCHER, -1);
-		getEntityData().define(POWERED_WATCHER, false);
-		getEntityData().define(UNUSED_WATCHER, false);
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(FUSE_WATCHER, -1);
+        getEntityData().define(POWERED_WATCHER, false);
+        getEntityData().define(UNUSED_WATCHER, false);
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(POWERED_WATCHER, getMyPet().isPowered());
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(POWERED_WATCHER, getMyPet().isPowered());
+    }
 
-	@Override
-	public MyCreeper getMyPet() {
-		return (MyCreeper) myPet;
-	}
+    @Override
+    public MyCreeper getMyPet() {
+        return (MyCreeper) myPet;
+    }
 }

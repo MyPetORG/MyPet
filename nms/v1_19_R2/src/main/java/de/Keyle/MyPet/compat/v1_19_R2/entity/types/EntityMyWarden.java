@@ -28,96 +28,94 @@ import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 
 import java.util.concurrent.ThreadLocalRandom;
-import org.bukkit.Sound;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyWarden extends EntityMyPet {
-	boolean heartAttack = false;
-	boolean emerged;
+    boolean heartAttack = false;
+    boolean emerged;
 
-	public EntityMyWarden(Level world, MyPet myPet) {
-		super(world, myPet);
-		emerged = myPet.wantsToRespawn();
-		if(((MyWarden)myPet).hasHeartAttack() || ThreadLocalRandom.current().nextInt(100 + 1) == 42) {
-			this.heartAttack = true;
-		}
-	}
+    public EntityMyWarden(Level world, MyPet myPet) {
+        super(world, myPet);
+        emerged = myPet.wantsToRespawn();
+        if (((MyWarden) myPet).hasHeartAttack() || ThreadLocalRandom.current().nextInt(100 + 1) == 42) {
+            this.heartAttack = true;
+        }
+    }
 
-	@Override
-	public boolean attack(Entity entity) {
-		boolean flag = false;
-		try {
-			this.level.broadcastEntityEvent(this, (byte) 4);
-			flag = super.attack(entity);
-			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_ATTACK_IMPACT, 1.0F, 1.0F);
-		} catch (Exception e) {
-			ErrorUtil.report(e);
-		}
-		return flag;
-	}
+    @Override
+    public boolean attack(Entity entity) {
+        boolean flag = false;
+        try {
+            this.level.broadcastEntityEvent(this, (byte) 4);
+            flag = super.attack(entity);
+            this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_ATTACK_IMPACT, 1.0F, 1.0F);
+        } catch (Exception e) {
+            ErrorUtil.report(e);
+        }
+        return flag;
+    }
 
-	@Override
-	public void tick() {
-		super.tick();
-		if(!this.emerged) {
-			this.setPose(Pose.EMERGING);
-			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_EMERGE, 1.0F, 1.0F);
-			Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> this.setPose(Pose.STANDING), 135);
-			this.emerged = true;
-		}
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.emerged) {
+            this.setPose(Pose.EMERGING);
+            this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_EMERGE, 1.0F, 1.0F);
+            Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> this.setPose(Pose.STANDING), 135);
+            this.emerged = true;
+        }
 
-		if(this.heartAttack) {
-			this.playSound(BuiltInRegistries.SOUND_EVENT.get(new ResourceLocation("entity.warden.heartbeat")));
-		}
-	}
+        if (this.heartAttack) {
+            this.playSound(BuiltInRegistries.SOUND_EVENT.get(new ResourceLocation("entity.warden.heartbeat")));
+        }
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.warden.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.warden.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.warden.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.warden.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.warden.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.warden.ambient";
+    }
 
-	@Override
-	public MyWarden getMyPet() {
-		return (MyWarden) myPet;
-	}
+    @Override
+    public MyWarden getMyPet() {
+        return (MyWarden) myPet;
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_STEP, 1.0F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_STEP, 1.0F, 1.0F);
+    }
 
-	@Override
-	public void remove(Entity.RemovalReason entity_removalreason) {
-		//We don't want it to dig multiple times
-		if(this.getPose()!=Pose.DIGGING && entity_removalreason!=RemovalReason.KILLED && !getMyPet().wantsToRespawn()) {
-			//Play sound
-			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_DIG, 5.0F, 1.0F);
-			this.setPose(Pose.DIGGING);
-			if(!MyPetApi.getPlugin().isDisabling()) {
-				Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> super.remove(entity_removalreason), 100);
-			} else {
-				super.remove(entity_removalreason);
-			}
-		} else if(this.getPose()!=Pose.DIGGING) { //Just in case it get's called more than once
-			super.remove(entity_removalreason);
-		}
-	}
+    @Override
+    public void remove(Entity.RemovalReason entity_removalreason) {
+        //We don't want it to dig multiple times
+        if (this.getPose() != Pose.DIGGING && entity_removalreason != RemovalReason.KILLED && !getMyPet().wantsToRespawn()) {
+            //Play sound
+            this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_WARDEN_DIG, 5.0F, 1.0F);
+            this.setPose(Pose.DIGGING);
+            if (!MyPetApi.getPlugin().isDisabling()) {
+                Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> super.remove(entity_removalreason), 100);
+            } else {
+                super.remove(entity_removalreason);
+            }
+        } else if (this.getPose() != Pose.DIGGING) { //Just in case it get's called more than once
+            super.remove(entity_removalreason);
+        }
+    }
 
 }

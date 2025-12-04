@@ -29,54 +29,54 @@ import org.bukkit.craftbukkit.v1_19_R3.entity.CraftLivingEntity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 public class EntityMySeat extends ArmorStand {
-	public EntityMySeat(Level level, double x, double y, double z) {
-		super(level, x, y, z);
-		setSilent(true);
-		setNoGravity(true);
-		setSmall(true);
-		setMarker(true);
-		((CraftLivingEntity) getBukkitEntity()).setInvisible(true);
-		setInvulnerable(true);
-		persist = false;
-	}
+    public EntityMySeat(Level level, double x, double y, double z) {
+        super(level, x, y, z);
+        setSilent(true);
+        setNoGravity(true);
+        setSmall(true);
+        setMarker(true);
+        ((CraftLivingEntity) getBukkitEntity()).setInvisible(true);
+        setInvulnerable(true);
+        persist = false;
+    }
 
-	public static boolean mountToPet(Entity passenger, Entity myPet) {
-		var seat = new EntityMySeat(myPet.level, myPet.getX(), myPet.getY(), myPet.getZ());
-		if (myPet.level.addFreshEntity(seat, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
-			if (seat.startRiding(myPet)) {
-				if (passenger.startRiding(seat)) {
-					return true;
-				}
-				seat.stopRiding();
-			}
-			seat.discard();
-		}
-		return false;
-	}
+    public static boolean mountToPet(Entity passenger, Entity myPet) {
+        var seat = new EntityMySeat(myPet.level, myPet.getX(), myPet.getY(), myPet.getZ());
+        if (myPet.level.addFreshEntity(seat, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+            if (seat.startRiding(myPet)) {
+                if (passenger.startRiding(seat)) {
+                    return true;
+                }
+                seat.stopRiding();
+            }
+            seat.discard();
+        }
+        return false;
+    }
 
-	@Override
-	public void tick() {
-		super.tick();
-		if (getPassengers().isEmpty()) { //Done riding? Begone seat
-			stopRiding();
-			discard();
-		} else if (this.getVehicle() == null) { //Got blown off the thing or something
-			ejectPassengers();
-			discard();
-		}
-	}
+    @Override
+    public void tick() {
+        super.tick();
+        if (getPassengers().isEmpty()) { //Done riding? Begone seat
+            stopRiding();
+            discard();
+        } else if (this.getVehicle() == null) { //Got blown off the thing or something
+            ejectPassengers();
+            discard();
+        }
+    }
 
-	//This should never matter but... hey - futureproofing
-	@Override
-	public boolean dismountsUnderwater() {
-		if (getVehicle() != null) {
-			return getVehicle().dismountsUnderwater();
-		}
-		return true;
-	}
+    //This should never matter but... hey - futureproofing
+    @Override
+    public boolean dismountsUnderwater() {
+        if (getVehicle() != null) {
+            return getVehicle().dismountsUnderwater();
+        }
+        return true;
+    }
 
-	@Override
-	public boolean isEyeInFluid(TagKey<Fluid> tag) {
-		return false;
-	}
+    @Override
+    public boolean isEyeInFluid(TagKey<Fluid> tag) {
+        return false;
+    }
 }

@@ -47,6 +47,22 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
         return block;
     }
 
+    public void setBlock(ItemStack block) {
+        if (block != null) {
+            this.block = block.clone();
+            this.block.setAmount(1);
+
+            if (status == PetState.Here) {
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            }
+        } else {
+            this.block = null;
+            if (status == PetState.Here) {
+                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            }
+        }
+    }
+
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
@@ -113,7 +129,7 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
     }
 
     public void setScreaming(boolean flag) {
-        if(!flag && isPermaScreaming)
+        if (!flag && isPermaScreaming)
             return;
 
         this.isScreaming = flag;
@@ -129,22 +145,6 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
 
     public boolean hasBlock() {
         return block != null;
-    }
-
-    public void setBlock(ItemStack block) {
-        if (block != null) {
-            this.block = block.clone();
-            this.block.setAmount(1);
-
-            if (status == PetState.Here) {
-                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-            }
-        } else {
-            this.block = null;
-            if (status == PetState.Here) {
-                getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-            }
-        }
     }
 
     @Override

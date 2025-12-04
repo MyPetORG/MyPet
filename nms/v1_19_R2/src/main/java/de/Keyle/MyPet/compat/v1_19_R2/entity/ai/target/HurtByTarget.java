@@ -20,100 +20,99 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.target;
 
-import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 @Compat("v1_19_R2")
 public class HurtByTarget implements AIGoal {
 
-	EntityMyPet petEntity;
-	MyPet myPet;
-	net.minecraft.world.entity.LivingEntity target = null;
+    EntityMyPet petEntity;
+    MyPet myPet;
+    net.minecraft.world.entity.LivingEntity target = null;
 
-	public HurtByTarget(EntityMyPet petEntity) {
-		this.petEntity = petEntity;
-		myPet = petEntity.getMyPet();
-	}
+    public HurtByTarget(EntityMyPet petEntity) {
+        this.petEntity = petEntity;
+        myPet = petEntity.getMyPet();
+    }
 
-	@Override
-	public boolean shouldStart() {
+    @Override
+    public boolean shouldStart() {
 
-		if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
-			return false;
-		}
-		if (petEntity.getLastHurtByMob() == null) {
-			return false;
-		}
-		if (target != petEntity.getLastHurtByMob()) {
-			target = petEntity.getLastHurtByMob();
-		}
-		if (target == petEntity) {
-			return false;
-		}
-		if (target instanceof ArmorStand) {
-			return false;
-		}
-		if (target instanceof ServerPlayer) {
-			Player targetPlayer = (Player) target.getBukkitEntity();
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+            return false;
+        }
+        if (petEntity.getLastHurtByMob() == null) {
+            return false;
+        }
+        if (target != petEntity.getLastHurtByMob()) {
+            target = petEntity.getLastHurtByMob();
+        }
+        if (target == petEntity) {
+            return false;
+        }
+        if (target instanceof ArmorStand) {
+            return false;
+        }
+        if (target instanceof ServerPlayer) {
+            Player targetPlayer = (Player) target.getBukkitEntity();
 
-			if (targetPlayer == myPet.getOwner().getPlayer()) {
-				return false;
-			} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
-				return false;
-			}
-		} else if (target instanceof EntityMyPet) {
-			MyPet targetMyPet = ((EntityMyPet) target).getMyPet();
-			if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
-				return false;
-			}
-		} else if (target instanceof TamableAnimal tameable) {
+            if (targetPlayer == myPet.getOwner().getPlayer()) {
+                return false;
+            } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
+                return false;
+            }
+        } else if (target instanceof EntityMyPet) {
+            MyPet targetMyPet = ((EntityMyPet) target).getMyPet();
+            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                return false;
+            }
+        } else if (target instanceof TamableAnimal tameable) {
             if (tameable.isTame() && tameable.getOwner() != null) {
-				Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
-				if (myPet.getOwner().equals(tameableOwner)) {
-					return false;
-				} 
-			}
-		}
-		return MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), target.getBukkitEntity());
-	}
+                Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
+                if (myPet.getOwner().equals(tameableOwner)) {
+                    return false;
+                }
+            }
+        }
+        return MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), target.getBukkitEntity());
+    }
 
-	@Override
-	public boolean shouldFinish() {
-		if (!petEntity.canMove()) {
-			return true;
-		}
-		if (!petEntity.hasTarget()) {
-			return true;
-		}
+    @Override
+    public boolean shouldFinish() {
+        if (!petEntity.canMove()) {
+            return true;
+        }
+        if (!petEntity.hasTarget()) {
+            return true;
+        }
 
-		net.minecraft.world.entity.LivingEntity target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
+        net.minecraft.world.entity.LivingEntity target = ((CraftLivingEntity) this.petEntity.getMyPetTarget()).getHandle();
 
-		if (target.level != petEntity.level) {
-			return true;
-		} else if (petEntity.distanceToSqr(target) > 400) {
-			return true;
-		} else return petEntity.distanceToSqr(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
-	}
+        if (target.level != petEntity.level) {
+            return true;
+        } else if (petEntity.distanceToSqr(target) > 400) {
+            return true;
+        } else return petEntity.distanceToSqr(((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle()) > 600;
+    }
 
-	@Override
-	public void start() {
-		petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.GetHurt);
-	}
+    @Override
+    public void start() {
+        petEntity.setMyPetTarget((LivingEntity) this.target.getBukkitEntity(), TargetPriority.GetHurt);
+    }
 
-	@Override
-	public void finish() {
-		petEntity.forgetTarget();
-	}
+    @Override
+    public void finish() {
+        petEntity.forgetTarget();
+    }
 }

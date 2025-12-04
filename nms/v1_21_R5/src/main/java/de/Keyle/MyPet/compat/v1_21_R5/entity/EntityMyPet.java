@@ -72,10 +72,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-
-import static org.bukkit.attribute.Attribute.MAX_HEALTH;
-import static org.bukkit.attribute.Attribute.MOVEMENT_SPEED;
-import static org.bukkit.attribute.Attribute.STEP_HEIGHT;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Input;
@@ -114,10 +110,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.bukkit.attribute.Attribute.*;
+
 public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraftEntity {
 
     protected static final EntityDataAccessor<Byte> POTION_PARTICLE_WATCHER = Mob.DATA_SHARED_FLAGS_ID;
-
+    // Copied from prior version
+    protected final float rotA = (float) ((Math.random() + 1.0) * 0.009999999776482582);
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected LivingEntity target = null;
     protected int interactCooldown = 0;
@@ -143,9 +142,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     protected boolean indirectRiding = false;
     // Needed for the MyPetFlyingMoveControl - Sometimes overwritten by specific pets
     protected float maxTurn = 20;
-    // Copied from prior version
-    protected final float rotA = (float) ((Math.random() + 1.0) * 0.009999999776482582);
-
     // FIXME: This field has been removed at the v1_21_R5 update - what was its purpose?
     protected double lerpX;
 
@@ -175,6 +171,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         } catch (Exception e) {
             ErrorUtil.report(e);
         }
+    }
+
+    public static void setupAttributes(EntityMyPet pet, EntityType<? extends LivingEntity> types) {
+        pet.initAttributes();
     }
 
     protected void replaceCraftAttributes() {
@@ -258,10 +258,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         return super.getAttributeValue(holder);
     }
 
-    public static void setupAttributes(EntityMyPet pet, EntityType<? extends LivingEntity> types) {
-        pet.initAttributes();
-    }
-
     @Override
     public AbstractNavigation getPetNavigation() {
         return petNavigation;
@@ -342,11 +338,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     }
 
     @Override
-    public void setCustomName(Component ignored) {
-        updateNameTag();
-    }
-
-    @Override
     public void updateNameTag() {
         try {
             if (isCustomNameVisible()) {
@@ -375,6 +366,11 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         } catch (Exception e) {
             return super.getCustomName();
         }
+    }
+
+    @Override
+    public void setCustomName(Component ignored) {
+        updateNameTag();
     }
 
     @Override
@@ -488,6 +484,11 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     }
 
     @Override
+    public boolean isSitting() {
+        return this.sitPathfinder.isSitting();
+    }
+
+    @Override
     public void setSitting(boolean sitting) {
         if (isSitting() != sitting) {
             MyPetSitEvent sitEvent = new MyPetSitEvent(getMyPet(), sitting ? MyPetSitEvent.Action.Follow : MyPetSitEvent.Action.Stay);
@@ -497,11 +498,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 sitCounter = 0;
             }
         }
-    }
-
-    @Override
-    public boolean isSitting() {
-        return this.sitPathfinder.isSitting();
     }
 
     @Override
@@ -1160,15 +1156,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         }
     }
 
-    private static class MountEventWrapper {
-
-        public static boolean callEvent(final CraftEntity player, final CraftMyPet pet) {
-            Event event = new EntityMountEvent(player, pet);
-            Bukkit.getPluginManager().callEvent(event);
-            return ((Cancellable) event).isCancelled();
-        }
-    }
-
     /**
      * -> unmount(Entity)
      */
@@ -1260,7 +1247,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         }
         return 0;
     }
-
 
     /**
      * -> travel
@@ -1512,5 +1498,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     @Override
     public Component getDisplayName() {
         return getName().copy();
+    }
+
+    private static class MountEventWrapper {
+
+        public static boolean callEvent(final CraftEntity player, final CraftMyPet pet) {
+            Event event = new EntityMountEvent(player, pet);
+            Bukkit.getPluginManager().callEvent(event);
+            return ((Cancellable) event).isCancelled();
+        }
     }
 }

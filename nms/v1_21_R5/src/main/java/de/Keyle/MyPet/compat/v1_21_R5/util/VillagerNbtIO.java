@@ -1,9 +1,9 @@
 package de.Keyle.MyPet.compat.v1_21_R5.util;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -18,7 +18,9 @@ public final class VillagerNbtIO {
         return ra; // RegistryAccess implements Provider
     }
 
-    /** Read/apply NBT into an existing villager */
+    /**
+     * Read/apply NBT into an existing villager
+     */
     public static void readInto(Entity bukkitEntity, CompoundTag tag) {
         try {
             net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
@@ -32,7 +34,9 @@ public final class VillagerNbtIO {
         }
     }
 
-    /** Write NBT out of a villager */
+    /**
+     * Write NBT out of a villager
+     */
     public static CompoundTag writeFrom(Entity bukkitEntity) {
         try {
             net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();

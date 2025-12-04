@@ -35,63 +35,63 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 
-	public final EntityMyPet owner;
-	private final EntityDimensions size;
-	private final String part;
-	protected CraftMyPetPart bukkitEntity = null;
+    public final EntityMyPet owner;
+    private final EntityDimensions size;
+    private final String part;
+    protected CraftMyPetPart bukkitEntity = null;
 
-	public EntityMyPetPart(EntityMyPet owner, String part, float width, float height) {
-		super(EntityType.ENDER_DRAGON, owner.level());
-		ReflectionUtil.setFieldValue("bukkitEntity", this, new CraftMyPetPart(this.level().getCraftServer(), this));
-		this.owner = owner;
-		this.part = part;
-		this.size = EntityDimensions.scalable(width, height);
-	}
+    public EntityMyPetPart(EntityMyPet owner, String part, float width, float height) {
+        super(EntityType.ENDER_DRAGON, owner.level());
+        ReflectionUtil.setFieldValue("bukkitEntity", this, new CraftMyPetPart(this.level().getCraftServer(), this));
+        this.owner = owner;
+        this.part = part;
+        this.size = EntityDimensions.scalable(width, height);
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    }
 
-	@Override
-	public boolean isPickable() {
-		return true;
-	}
+    @Override
+    public boolean isPickable() {
+        return true;
+    }
 
-	@Override
-	protected void readAdditionalSaveData(ValueInput valueInput) {
+    @Override
+    protected void readAdditionalSaveData(ValueInput valueInput) {
 
-	}
+    }
 
-	@Override
-	protected void addAdditionalSaveData(ValueOutput valueOutput) {
+    @Override
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
 
-	}
+    }
 
-	@Override
-	public boolean hurtServer(ServerLevel var0, DamageSource var1, float var2) {
-		return false;
-	}
+    @Override
+    public boolean hurtServer(ServerLevel var0, DamageSource var1, float var2) {
+        return false;
+    }
 
-	@Override
-	public boolean is(Entity var1) {
-		return this == var1 || this.owner == var1;
-	}
+    @Override
+    public boolean is(Entity var1) {
+        return this == var1 || this.owner == var1;
+    }
 
-	@Override
-	public EntityDimensions getDimensions(Pose entitypose) {
-		return this.size;
-	}
+    @Override
+    public EntityDimensions getDimensions(Pose entitypose) {
+        return this.size;
+    }
 
-	@Override
-	public MyPetMinecraftEntity getPetOwner() {
-		return owner;
-	}
+    @Override
+    public MyPetMinecraftEntity getPetOwner() {
+        return owner;
+    }
 
-	@Override
-	public CraftMyPetPart getBukkitEntity() {
-		if (this.bukkitEntity == null) {
-			this.bukkitEntity = new CraftMyPetPart(this.level().getCraftServer(), this);
-		}
-		return this.bukkitEntity;
-	}
+    @Override
+    public CraftMyPetPart getBukkitEntity() {
+        if (this.bukkitEntity == null) {
+            this.bukkitEntity = new CraftMyPetPart(this.level().getCraftServer(), this);
+        }
+        return this.bukkitEntity;
+    }
 }

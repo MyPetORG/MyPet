@@ -97,7 +97,7 @@ public class MyPetDragonFireball extends DragonFireball implements EntityMyPetPr
         try {
             super.tick();
             if (deathCounter-- <= 0) {
-            	discard();
+                discard();
             }
         } catch (Exception e) {
             ErrorUtil.report(e);

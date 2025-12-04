@@ -20,11 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_20_R3.util.inventory;
 
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
-
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.nbt.CompoundTag;
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 
 @Compat("v1_20_R3")
 public class ItemStackComparator {

@@ -12,7 +12,9 @@ public final class VillagerNbtIO {
         return ((CraftWorld) world).getHandle().registryAccess(); // RegistryAccess implements Provider
     }
 
-    /** Read/apply NBT into an existing villager */
+    /**
+     * Read/apply NBT into an existing villager
+     */
     public static void readInto(Entity bukkitEntity, CompoundTag tag) {
         try {
             net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
@@ -57,7 +59,9 @@ public final class VillagerNbtIO {
         }
     }
 
-    /** Write NBT out of a villager */
+    /**
+     * Write NBT out of a villager
+     */
     public static CompoundTag writeFrom(Entity bukkitEntity) {
         try {
             net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();

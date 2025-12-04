@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_21_R2.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyDolphin;
@@ -34,65 +33,64 @@ import org.bukkit.Particle;
 
 @EntitySize(width = 0.9F, height = 0.6f)
 public class EntityMyDolphin extends EntityMyAquaticPet {
-	public boolean canDolphinjump = false;
+    private static final EntityDataAccessor<BlockPos> TREASURE_POS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BLOCK_POS);
+    private static final EntityDataAccessor<Boolean> GOT_FISH_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> MOISTNESS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
+    public boolean canDolphinjump = false;
 
-	private static final EntityDataAccessor<BlockPos> TREASURE_POS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BLOCK_POS);
-	private static final EntityDataAccessor<Boolean> GOT_FISH_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> MOISTNESS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
+    public EntityMyDolphin(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	public EntityMyDolphin(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.dolphin.death";
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.dolphin.death";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.dolphin.hurt";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.dolphin.hurt";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.dolphin.ambient";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.dolphin.ambient";
-	}
+    @Override
+    public MyDolphin getMyPet() {
+        return (MyDolphin) myPet;
+    }
 
-	@Override
-	public MyDolphin getMyPet() {
-		return (MyDolphin) myPet;
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (!isInWater() && this.random.nextBoolean()) {
+            myPet.getLocation().get().getWorld().spawnParticle(Particle.SPLASH, myPet.getLocation().get().add(0, 0.7, 0), 10, 0.2F, 0.2F, 0.2F, 0.5F);
+        }
+        if (!this.canDolphinjump &&
+                (this.level().getBlockState(new BlockPos(this.getBlockX(), this.getBlockY() + 3, this.getBlockZ())).liquid())) {
+            this.canDolphinjump = true;
+        }
+        if (this.canDolphinjump &&
+                this.onGround && !this.isInWaterOrBubble()) {
+            this.canDolphinjump = false;
+        }
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (!isInWater() && this.random.nextBoolean()) {
-			myPet.getLocation().get().getWorld().spawnParticle(Particle.SPLASH, myPet.getLocation().get().add(0, 0.7, 0), 10, 0.2F, 0.2F, 0.2F, 0.5F);
-		}
-		if (!this.canDolphinjump &&
-			(this.level().getBlockState(new BlockPos(this.getBlockX(),this.getBlockY()+3,this.getBlockZ())).liquid())) {
-			this.canDolphinjump = true;
-		}
-		if (this.canDolphinjump &&
-				this.onGround && !this.isInWaterOrBubble()) {
-			this.canDolphinjump = false;
-		}
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-
-		builder.define(TREASURE_POS_WATCHER, BlockPos.ZERO);
-		builder.define(GOT_FISH_WATCHER, false);
-		builder.define(MOISTNESS_WATCHER, 2400);
-		builder.define(AGE_WATCHER, false);
-	}
+        builder.define(TREASURE_POS_WATCHER, BlockPos.ZERO);
+        builder.define(GOT_FISH_WATCHER, false);
+        builder.define(MOISTNESS_WATCHER, 2400);
+        builder.define(AGE_WATCHER, false);
+    }
 }

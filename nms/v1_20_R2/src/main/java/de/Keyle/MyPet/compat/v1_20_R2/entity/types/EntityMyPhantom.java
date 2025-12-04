@@ -35,69 +35,69 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.51F, height = 0.51F)
 public class EntityMyPhantom extends EntityMyFlyingPet {
 
-	private static final EntityDataAccessor<Integer> SIZE_WATCHER = SynchedEntityData.defineId(EntityMyPhantom.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SIZE_WATCHER = SynchedEntityData.defineId(EntityMyPhantom.class, EntityDataSerializers.INT);
 
-	public EntityMyPhantom(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyPhantom(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.phantom.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.phantom.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.phantom.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.phantom.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.phantom.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.phantom.ambient";
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
 
-		getEntityData().define(SIZE_WATCHER, 0);
-	}
+        getEntityData().define(SIZE_WATCHER, 0);
+    }
 
-	@Override
-	public void updateVisuals() {
-		int size = Math.max(1, getMyPet().getSize());
-		getEntityData().set(SIZE_WATCHER, size);
-		this.refreshDimensions();
-		if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-			petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.2), 20));
-		}
-	}
+    @Override
+    public void updateVisuals() {
+        int size = Math.max(1, getMyPet().getSize());
+        getEntityData().set(SIZE_WATCHER, size);
+        this.refreshDimensions();
+        if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.2), 20));
+        }
+    }
 
-	@Override
-	public net.minecraft.world.entity.EntityDimensions getDimensions(Pose entitypose) {
-		EntitySize es = this.getClass().getAnnotation(EntitySize.class);
-		if (es != null) {
-			int size = Math.max(1, getMyPet().getSize());
-			float width = es.width();
-			float height = Float.isNaN(es.height()) ? width : es.height();
-			return new net.minecraft.world.entity.EntityDimensions(width * size, height * size, false);
-		}
-		return super.getDimensions(entitypose);
-	}
+    @Override
+    public net.minecraft.world.entity.EntityDimensions getDimensions(Pose entitypose) {
+        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
+        if (es != null) {
+            int size = Math.max(1, getMyPet().getSize());
+            float width = es.width();
+            float height = Float.isNaN(es.height()) ? width : es.height();
+            return new net.minecraft.world.entity.EntityDimensions(width * size, height * size, false);
+        }
+        return super.getDimensions(entitypose);
+    }
 
-	@Override
-	public MyPhantom getMyPet() {
-		return (MyPhantom) myPet;
-	}
+    @Override
+    public MyPhantom getMyPet() {
+        return (MyPhantom) myPet;
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
 
-		if (Configuration.MyPet.Phantom.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
-	}
+        if (Configuration.MyPet.Phantom.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
+    }
 }

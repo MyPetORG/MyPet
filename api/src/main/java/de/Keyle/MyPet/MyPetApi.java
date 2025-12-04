@@ -43,18 +43,18 @@ public class MyPetApi {
 
     private static MyPetPlugin plugin;
 
-    protected static void setPlugin(MyPetPlugin plugin) {
-        if (MyPetApi.plugin != null) {
-            return;
-        }
-        MyPetApi.plugin = plugin;
-    }
-
     /**
      * @return the main plugin instance
      */
     public static MyPetPlugin getPlugin() {
         return plugin;
+    }
+
+    protected static void setPlugin(MyPetPlugin plugin) {
+        if (MyPetApi.plugin != null) {
+            return;
+        }
+        MyPetApi.plugin = plugin;
     }
 
     /**

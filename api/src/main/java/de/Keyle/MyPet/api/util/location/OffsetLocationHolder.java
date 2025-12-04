@@ -44,10 +44,10 @@ import org.bukkit.Location;
 
 public class OffsetLocationHolder extends LocationHolder<LocationHolder> {
 
-    private LocationHolder location;
     protected double x;
     protected double y;
     protected double z;
+    private LocationHolder location;
 
     public OffsetLocationHolder(LocationHolder location, double x, double y, double z) {
         this.location = location;

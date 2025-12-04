@@ -25,7 +25,9 @@ import lombok.Setter;
 
 public class MultiplicativeModifier extends ExperienceModifier {
 
-    @Setter @Getter private double modifier = 1;
+    @Setter
+    @Getter
+    private double modifier = 1;
 
     public MultiplicativeModifier(double modifier) {
         this.modifier = modifier;

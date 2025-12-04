@@ -38,85 +38,85 @@ import org.bukkit.Sound;
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyRabbit extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyRabbit.class, EntityDataSerializers.INT);
 
-	int jumpDelay;
+    int jumpDelay;
 
-	public EntityMyRabbit(Level world, MyPet myPet) {
-		super(world, myPet);
-		this.jumpDelay = (this.random.nextInt(20) + 10);
-	}
+    public EntityMyRabbit(Level world, MyPet myPet) {
+        super(world, myPet);
+        this.jumpDelay = (this.random.nextInt(20) + 10);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.rabbit.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.rabbit.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.rabbit.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.rabbit.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.rabbit.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.rabbit.ambient";
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_RABBIT_JUMP, 1.0F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_RABBIT_JUMP, 1.0F, 1.0F);
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (Configuration.MyPet.Rabbit.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				this.getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (Configuration.MyPet.Rabbit.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                this.getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	public void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false); // is baby
-		builder.define(VARIANT_WATCHER, 0); // variant
-	}
+    @Override
+    public void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false); // is baby
+        builder.define(VARIANT_WATCHER, 0); // variant
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        this.getEntityData().set(VARIANT_WATCHER, (int) getMyPet().getVariant().getId());
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (this.onGround && !getNavigation().isDone() && jumpDelay-- <= 0) {
-			getJumpControl().jump();
-			jumpDelay = (this.random.nextInt(10) + 10);
-			if (getTarget() != null) {
-				jumpDelay /= 3;
-			}
-			this.level().broadcastEntityEvent(this, (byte) 1);
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (this.onGround && !getNavigation().isDone() && jumpDelay-- <= 0) {
+            getJumpControl().jump();
+            jumpDelay = (this.random.nextInt(10) + 10);
+            if (getTarget() != null) {
+                jumpDelay /= 3;
+            }
+            this.level().broadcastEntityEvent(this, (byte) 1);
+        }
+    }
 
-	@Override
-	public MyRabbit getMyPet() {
-		return (MyRabbit) myPet;
-	}
+    @Override
+    public MyRabbit getMyPet() {
+        return (MyRabbit) myPet;
+    }
 }

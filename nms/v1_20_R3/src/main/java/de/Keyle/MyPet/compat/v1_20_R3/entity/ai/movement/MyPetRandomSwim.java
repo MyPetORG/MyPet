@@ -33,54 +33,54 @@ import net.minecraft.world.phys.Vec3;
 @Compat("v1_20_R3")
 public class MyPetRandomSwim extends MyPetRandomStroll {
 
-	protected EntityMyPet petEntity;
+    protected EntityMyPet petEntity;
 
-	public MyPetRandomSwim(EntityMyPet petEntity, int startDistance) {
-		super(petEntity, startDistance);
-		this.petEntity = petEntity;
-	}
+    public MyPetRandomSwim(EntityMyPet petEntity, int startDistance) {
+        super(petEntity, startDistance);
+        this.petEntity = petEntity;
+    }
 
-	@Override
-	protected Vec3 getPosition() {
-		if(petEntity.isInWaterOrBubble() && owner.isInWaterOrBubble()) {
+    private static Vec3 leGen(PathfinderMob mobby, int i, int j) {
+        return RandomPos.generateRandomPos(mobby, () -> {
+            BlockPos blockPos = RandomPos.generateRandomDirection(mobby.getRandom(), i, j);
+            return generateRandomPosTowardDirection(mobby, i, GoalUtils.mobRestricted(mobby, i), blockPos);
+        });
+    }
+
+    private static BlockPos generateRandomPosTowardDirection(PathfinderMob entitycreature, int i, boolean flag, BlockPos blockposition) {
+        BlockPos lePos = RandomPos.generateRandomPosTowardDirection(entitycreature, i, entitycreature.getRandom(), blockposition);
+        return !GoalUtils.isOutsideLimits(lePos, entitycreature) && !GoalUtils.isRestricted(flag, entitycreature, lePos) && !GoalUtils.isNotStable(entitycreature.getNavigation(), lePos) ? lePos : null;
+    }
+
+    @Override
+    protected Vec3 getPosition() {
+        if (petEntity.isInWaterOrBubble() && owner.isInWaterOrBubble()) {
             return makeWaterPos(this.petEntity, 10, 7);
-		}
-		return super.getPosition();
-	}
+        }
+        return super.getPosition();
+    }
 
-	private Vec3 makeWaterPos(PathfinderMob mobby, int i, int j) {
-		Vec3 vec3d = leGen(mobby, i, j);
-		Vec3i vec3i = new Vec3i((int)vec3d.x,(int)vec3d.y,(int)vec3d.z);
-		Vec3i vec4i = vec3i.offset(0,1,0);
+    private Vec3 makeWaterPos(PathfinderMob mobby, int i, int j) {
+        Vec3 vec3d = leGen(mobby, i, j);
+        Vec3i vec3i = new Vec3i((int) vec3d.x, (int) vec3d.y, (int) vec3d.z);
+        Vec3i vec4i = vec3i.offset(0, 1, 0);
 
-		for (int k = 0;
-			 vec3d != null && !mobby.level().getBlockState(new BlockPos(vec3i)).isPathfindable(mobby.level(), new BlockPos(vec3i), PathComputationType.WATER)
-					 && !mobby.level().getBlockState(new BlockPos(vec4i)).liquid()
-					 && k++ < 10; vec3d = leGen(mobby, i, j)) {
+        for (int k = 0;
+             vec3d != null && !mobby.level().getBlockState(new BlockPos(vec3i)).isPathfindable(mobby.level(), new BlockPos(vec3i), PathComputationType.WATER)
+                     && !mobby.level().getBlockState(new BlockPos(vec4i)).liquid()
+                     && k++ < 10; vec3d = leGen(mobby, i, j)) {
         }
 
-		return vec3d;
-	}
+        return vec3d;
+    }
 
-	private static Vec3 leGen(PathfinderMob mobby, int i, int j) {
-		return RandomPos.generateRandomPos(mobby, () -> {
-			BlockPos blockPos = RandomPos.generateRandomDirection(mobby.getRandom(), i, j);
-			return generateRandomPosTowardDirection(mobby, i, GoalUtils.mobRestricted(mobby, i), blockPos);
-		});
-	}
-
-	private static BlockPos generateRandomPosTowardDirection(PathfinderMob entitycreature, int i, boolean flag, BlockPos blockposition) {
-		BlockPos lePos = RandomPos.generateRandomPosTowardDirection(entitycreature, i, entitycreature.getRandom(), blockposition);
-		return !GoalUtils.isOutsideLimits(lePos, entitycreature) && !GoalUtils.isRestricted(flag, entitycreature, lePos) && !GoalUtils.isNotStable(entitycreature.getNavigation(), lePos) ? lePos : null;
-	}
-
-	@Override
-	protected void applySpeed() {
-		if(petEntity.isInWaterOrBubble()) {
-			double walkSpeed = owner.getAbilities().walkingSpeed+0.3f;
-			nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
-		} else {
-			super.applySpeed();
-		}
-	}
+    @Override
+    protected void applySpeed() {
+        if (petEntity.isInWaterOrBubble()) {
+            double walkSpeed = owner.getAbilities().walkingSpeed + 0.3f;
+            nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
+        } else {
+            super.applySpeed();
+        }
+    }
 }

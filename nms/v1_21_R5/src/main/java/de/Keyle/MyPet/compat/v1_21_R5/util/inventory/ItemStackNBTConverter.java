@@ -48,8 +48,8 @@ import java.util.Set;
 public class ItemStackNBTConverter {
 
     private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "v"); //List-Field (or value)
-    public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
     private static final CompoundTag EMPTY_ITEM_COMPOUND;
+    public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
 
     static {
         EMPTY_ITEM_COMPOUND = new CompoundTag();

@@ -59,8 +59,8 @@ public class ReflectionUtil {
      * Retrieves a declared method from a class and makes it accessible.
      * This method can access private, protected, and package-private methods.
      *
-     * @param clazz the class containing the method
-     * @param method the name of the method
+     * @param clazz          the class containing the method
+     * @param method         the name of the method
      * @param parameterTypes the parameter types of the method (optional, for overloaded methods)
      * @return the Method object, or null if the method is not found
      */
@@ -96,9 +96,9 @@ public class ReflectionUtil {
      * Retrieves the value of a field from a target object by field name.
      * The field is accessed reflectively and can be private, protected, or package-private.
      *
-     * @param clazz the class containing the field
+     * @param clazz  the class containing the field
      * @param target the object instance to get the field value from (null for static fields)
-     * @param field the name of the field
+     * @param field  the name of the field
      * @return the value of the field, or null if the field is not found or cannot be accessed
      */
     public static Object getFieldValue(Class<?> clazz, Object target, String field) {
@@ -114,7 +114,7 @@ public class ReflectionUtil {
     /**
      * Retrieves the value of a field from a target object using a Field object.
      *
-     * @param field the Field object representing the field to access (must not be null)
+     * @param field  the Field object representing the field to access (must not be null)
      * @param target the object instance to get the field value from (null for static fields)
      * @return the value of the field, or null if the field cannot be accessed
      */
@@ -129,9 +129,9 @@ public class ReflectionUtil {
     /**
      * Sets the value of a field on a target object using a Field object.
      *
-     * @param field the Field object representing the field to modify (must not be null)
+     * @param field  the Field object representing the field to modify (must not be null)
      * @param target the object instance to set the field value on (null for static fields)
-     * @param value the new value to assign to the field
+     * @param value  the new value to assign to the field
      * @return true if the field was successfully set, false otherwise
      */
     public static boolean setFieldValue(@NonNull Field field, Object target, Object value) {
@@ -149,8 +149,8 @@ public class ReflectionUtil {
      * The field is accessed reflectively and can be private, protected, or package-private.
      *
      * @param fieldName the name of the field to modify
-     * @param target the object instance to set the field value on (null for static fields)
-     * @param value the new value to assign to the field
+     * @param target    the object instance to set the field value on (null for static fields)
+     * @param value     the new value to assign to the field
      * @return true if the field was successfully set, false if the field is not found or cannot be set
      */
     public static boolean setFieldValue(String fieldName, Object target, Object value) {
@@ -172,8 +172,8 @@ public class ReflectionUtil {
      * of fields declared as final. Use with caution as this breaks Java's immutability guarantees.
      *
      * @param fieldName the name of the final field to modify
-     * @param target the object instance to set the field value on (null for static fields)
-     * @param value the new value to assign to the field
+     * @param target    the object instance to set the field value on (null for static fields)
+     * @param value     the new value to assign to the field
      * @return true if the field was successfully set, false if the field is not found or cannot be set
      */
     public static boolean setFinalFieldValue(String fieldName, Object target, Object value) {
@@ -200,16 +200,16 @@ public class ReflectionUtil {
      * On Java 12+, the modifiers field is not accessible, but final field modification still works
      * through the Unsafe API internally.
      *
-     * @param field the Field object representing the final field to modify (must not be null)
+     * @param field  the Field object representing the final field to modify (must not be null)
      * @param target the object instance to set the field value on (null for static fields)
-     * @param value the new value to assign to the field
+     * @param value  the new value to assign to the field
      * @return true if the field was successfully set, false if the field cannot be set
      */
     public static boolean setFinalFieldValue(@NonNull Field field, Object target, Object value) {
         try {
             field.setAccessible(true);
 
-            if(Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) < 12) { //Java-Version-Check
+            if (Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) < 12) { //Java-Version-Check
                 Field modifiersField = Field.class.getDeclaredField("modifiers");
                 modifiersField.setAccessible(true);
                 modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
@@ -247,7 +247,7 @@ public class ReflectionUtil {
                     return null;
                 }
                 STATIC_FIELD_OFFSET = getMethodHandle(THE_UNSAFE.getClass(), "staticFieldOffset", Field.class).bindTo(THE_UNSAFE);
-                PUT_OBJECT = getMethodHandle(THE_UNSAFE.getClass(), "putObject",  Object.class, long.class, Object.class).bindTo(THE_UNSAFE);
+                PUT_OBJECT = getMethodHandle(THE_UNSAFE.getClass(), "putObject", Object.class, long.class, Object.class).bindTo(THE_UNSAFE);
             }
 
             try {
@@ -272,8 +272,8 @@ public class ReflectionUtil {
      * Creates a MethodHandle for a method, allowing for efficient repeated invocation.
      * MethodHandles provide better performance than standard reflection for repeated calls.
      *
-     * @param className the class containing the method
-     * @param method the name of the method
+     * @param className  the class containing the method
+     * @param method     the name of the method
      * @param parameters the parameter types of the method (optional, for overloaded methods)
      * @return a MethodHandle for the method, or null if the method is not found or className is null
      */
@@ -291,7 +291,7 @@ public class ReflectionUtil {
      * Checks if a class is a subclass of or equal to another class by recursively
      * checking the superclass hierarchy.
      *
-     * @param clazz the class to check
+     * @param clazz      the class to check
      * @param superClass the potential superclass to check against
      * @return true if clazz is equal to or extends superClass, false otherwise
      */

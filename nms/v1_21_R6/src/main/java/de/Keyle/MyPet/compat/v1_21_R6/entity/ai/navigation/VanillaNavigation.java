@@ -20,11 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_21_R6.entity.ai.navigation;
 
-import net.minecraft.world.level.block.Blocks;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
-
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.navigation.NavigationParameters;
 import de.Keyle.MyPet.api.util.Compat;
@@ -33,6 +28,10 @@ import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.ai.movement.MyPetAquaticMoveControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.block.Blocks;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.entity.LivingEntity;
 
 @Compat("v1_21_R6")
 public class VanillaNavigation extends AbstractNavigation {

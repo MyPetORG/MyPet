@@ -45,136 +45,136 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
-import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Holder<PigVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.PIG_VARIANT);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Holder<PigVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.PIG_VARIANT);
 
-	public EntityMyPig(Level world, MyPet myPet) {
-		super(world, myPet);
-		indirectRiding = true;
-	}
+    public EntityMyPig(Level world, MyPet myPet) {
+        super(world, myPet);
+        indirectRiding = true;
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.pig.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.pig.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.pig.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.pig.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.pig.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.pig.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(final net.minecraft.world.entity.player.Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
-		if (enumhand == InteractionHand.OFF_HAND) {
-			if (itemStack != null) {
-				if (itemStack.getItem() == Items.LEAD) {
-					((ServerLevel) this.level()).getChunkSource().sendToTrackingPlayersAndSelf(this, new ClientboundSetEntityLinkPacket(this, null));
-					entityhuman.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							if (entityhuman instanceof ServerPlayer) {
-								entityhuman.setItemInHand(InteractionHand.OFF_HAND, itemStack);//TODO
-								Player p = (Player) entityhuman.getBukkitEntity();
-								if (!p.isOnline()) {
-									p.saveData();
-								}
-							}
-						}
-					}.runTaskLater(MyPetApi.getPlugin(), 5);
-				}
-			}
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(final net.minecraft.world.entity.player.Player entityhuman, InteractionHand enumhand, final ItemStack itemStack) {
+        if (enumhand == InteractionHand.OFF_HAND) {
+            if (itemStack != null) {
+                if (itemStack.getItem() == Items.LEAD) {
+                    ((ServerLevel) this.level()).getChunkSource().sendToTrackingPlayersAndSelf(this, new ClientboundSetEntityLinkPacket(this, null));
+                    entityhuman.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if (entityhuman instanceof ServerPlayer) {
+                                entityhuman.setItemInHand(InteractionHand.OFF_HAND, itemStack);//TODO
+                                Player p = (Player) entityhuman.getBukkitEntity();
+                                if (!p.isOnline()) {
+                                    p.saveData();
+                                }
+                            }
+                        }
+                    }.runTaskLater(MyPetApi.getPlugin(), 5);
+                }
+            }
+            return InteractionResult.CONSUME;
+        }
 
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
-				entityitem.pickupDelay = 10;
-				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-				this.level().addFreshEntity(entityitem);
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+                entityitem.pickupDelay = 10;
+                entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                this.level().addFreshEntity(entityitem);
 
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				getMyPet().setSaddle(null);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-					}
-				}
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                getMyPet().setSaddle(null);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                    }
+                }
 
-				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Pig.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+                return InteractionResult.CONSUME;
+            } else if (Configuration.MyPet.Pig.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(DATA_BOOST_TIME, 0);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(DATA_BOOST_TIME, 0);
 
         Registry<PigVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.PIG_VARIANT);
         builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.PIG_REGISTRY.getOrThrow(PigVariants.TEMPERATE).value()));
-	}
+    }
 
- @Override
- public void updateVisuals() {
-     this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
-     Registry<PigVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.PIG_VARIANT);
-     this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertPigVariant(getMyPet().getVariant())));
-     equipment.set(EquipmentSlot.SADDLE, getMyPet().hasSaddle() ? Items.SADDLE.getDefaultInstance() : ItemStack.EMPTY);
- }
+        Registry<PigVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.PIG_VARIANT);
+        this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertPigVariant(getMyPet().getVariant())));
+        equipment.set(EquipmentSlot.SADDLE, getMyPet().hasSaddle() ? Items.SADDLE.getDefaultInstance() : ItemStack.EMPTY);
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_PIG_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_PIG_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyPig getMyPet() {
-		return (MyPig) myPet;
-	}
+    @Override
+    public MyPig getMyPet() {
+        return (MyPig) myPet;
+    }
 }

@@ -12,7 +12,6 @@ Guidelines for bug reports:
 
 3. **Include everything that helps to determine the problem** &mdash; See example below.
 
-
 A good bug report shouldn't leave others needing to chase you up for more
 information. Please try to be as detailed as possible in your report. What is
 your environment? What steps will reproduce the issue? What Server version and OS
@@ -24,7 +23,7 @@ Example:
 > Short and descriptive example bug report title
 >
 > Bukkit/Spigot Build: #  
-> MyPet Build: #  
+> MyPet Build: #
 >
 > 1. This is the first step
 > 2. This is the second step

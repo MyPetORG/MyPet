@@ -29,12 +29,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class MyPetInteractEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    boolean isCancelled = false;
-
     private final StoredMyPet myPet;
+    boolean isCancelled = false;
 
     public MyPetInteractEvent(MyPet myPet, ItemStack item) {
         this.myPet = myPet;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public StoredMyPet getMyPet() {
@@ -52,11 +56,6 @@ public class MyPetInteractEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

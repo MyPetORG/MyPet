@@ -31,73 +31,73 @@ commands:
     description: Changes the name of your pet
     usage: '/<command> <pet name>'
   petcall:
-    aliases: [petc, pc]
+    aliases: [ petc, pc ]
     description: Calls your pet.
   petsendaway:
-    aliases: [petsa, psa]
+    aliases: [ petsa, psa ]
     description: Send your pet away.
   petrelease:
     description: Releases your pet.
     usage: '/<command> <pet name>'
   petstop:
-    aliases: [pets, ps]
+    aliases: [ pets, ps ]
     description: Stops your pet from attacking.
   petpickup:
-    aliases: [petp, pp]
+    aliases: [ petp, pp ]
     description: Toogles pickup of your pet.
   petinventory:
-    aliases: [peti, pi]
+    aliases: [ peti, pi ]
     description: Opens the inventory of your pet.
     usage: '/<command> [player name]'
   petbehavior:
-    aliases: [petbehaviour, petb, pb]
+    aliases: [ petbehaviour, petb, pb ]
     description: Changes the behavior mode of your pet.
     usage: '/<command> [<friendly/aggressive/normal/farm/raid/duel>]'
   petinfo:
-    aliases: [pinfo]
+    aliases: [ pinfo ]
     description: Shows info about your pet.
     usage: '/<command> [player name]'
   petskill:
-    aliases: [pskill]
+    aliases: [ pskill ]
     description: Shows the skill levels of your pet.
     usage: '/<command> <player name>'
   mypetadmin:
-    aliases: [petadmin]
+    aliases: [ petadmin ]
     description: §6MyPet-Admin-Command §r-> §3https://wiki.mypet-plugin.de/doku.php?id=en:commands
     permission: MyPet.admin
   petchooseskilltree:
-    aliases: [pcst, petcst]
+    aliases: [ pcst, petcst ]
     description: Chooses a skilltree.
     usage: '/<command> <skilltree name>'
   petbeacon:
-    aliases: [pbeacon]
+    aliases: [ pbeacon ]
     description: Beacon!
   petrespawn:
-    aliases: [pr, petr]
+    aliases: [ pr, petr ]
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
   petcapturehelper:
-    aliases: [pch]
+    aliases: [ pch ]
     description: Toogles the CaptureHelper on/off
   petsettings:
-    aliases: [po, peto, petoption, petoptions, psettings]
+    aliases: [ po, peto, petoption, petoptions, psettings ]
     description: Settings command
   petswitch:
-    aliases: [pswitch, psw]
+    aliases: [ pswitch, psw ]
     description: Opens a pet selection GUI
   petstore:
-    aliases: [pstore, pst]
+    aliases: [ pstore, pst ]
     description: Stores your current pet
   petlist:
-    aliases: [plist]
+    aliases: [ plist ]
     description: Lists all your pet
     usage: '/<command> <player name>'
   pettrade:
-    aliases: [pett, pt]
+    aliases: [ pett, pt ]
     description: Trade pet with other players
     usage: '/<command> [accept/reject/cancel/<playername>] <price>'
   petshop:
-    aliases: [petsh, psh]
+    aliases: [ petsh, psh ]
     description: Opens a pet shop
     usage: '/<command> [shopname]'
 

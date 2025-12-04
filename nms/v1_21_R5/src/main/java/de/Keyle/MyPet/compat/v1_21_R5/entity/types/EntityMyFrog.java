@@ -36,10 +36,10 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.animal.frog.FrogVariant;
 import net.minecraft.world.entity.animal.frog.FrogVariants;
 import net.minecraft.world.level.Level;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftRegistry;
 
 import java.util.OptionalInt;
-import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyFrog extends EntityMyAquaticPet {

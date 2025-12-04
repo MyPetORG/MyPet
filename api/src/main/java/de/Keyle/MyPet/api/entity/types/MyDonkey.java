@@ -30,13 +30,13 @@ import org.bukkit.inventory.ItemStack;
 public interface MyDonkey extends MyPet, MyPetBaby {
     ItemStack getChest();
 
-    boolean hasChest();
-
     void setChest(ItemStack item);
+
+    boolean hasChest();
 
     ItemStack getSaddle();
 
-    boolean hasSaddle();
-
     void setSaddle(ItemStack item);
+
+    boolean hasSaddle();
 }

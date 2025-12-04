@@ -29,32 +29,32 @@ import de.Keyle.MyPet.compat.v1_21_R4.entity.types.*;
 @Compat("v1_21_R4")
 public class Sit implements AIGoal {
 
-	private final EntityMyPet entityMyPet;
-	private boolean sitting = false;
+    private final EntityMyPet entityMyPet;
+    private boolean sitting = false;
 
-	public Sit(EntityMyPet entityMyPet) {
-		this.entityMyPet = entityMyPet;
-	}
+    public Sit(EntityMyPet entityMyPet) {
+        this.entityMyPet = entityMyPet;
+    }
 
-	@Override
-	public boolean shouldStart() {
-		if (!(this.entityMyPet instanceof EntityMyWolf) &&
-				!(this.entityMyPet instanceof EntityMyCat) &&
-				!(this.entityMyPet instanceof EntityMyCamel) &&
-				!(this.entityMyPet instanceof EntityMyPanda) &&
-				!(this.entityMyPet instanceof EntityMyFox)) {
-			return false;
-		} else if (this.entityMyPet.isInWater() && !(this.entityMyPet instanceof EntityMyAquaticPet)) {
-			return false;
-		} else if (!this.entityMyPet.onGround()) {
-			return false;
-		}
-		return this.sitting;
-	}
+    @Override
+    public boolean shouldStart() {
+        if (!(this.entityMyPet instanceof EntityMyWolf) &&
+                !(this.entityMyPet instanceof EntityMyCat) &&
+                !(this.entityMyPet instanceof EntityMyCamel) &&
+                !(this.entityMyPet instanceof EntityMyPanda) &&
+                !(this.entityMyPet instanceof EntityMyFox)) {
+            return false;
+        } else if (this.entityMyPet.isInWater() && !(this.entityMyPet instanceof EntityMyAquaticPet)) {
+            return false;
+        } else if (!this.entityMyPet.onGround()) {
+            return false;
+        }
+        return this.sitting;
+    }
 
-	@Override
-	public void start() {
-		this.entityMyPet.getPetNavigation().stop();
+    @Override
+    public void start() {
+        this.entityMyPet.getPetNavigation().stop();
         switch (this.entityMyPet) {
             case EntityMyWolf entityMyWolf -> entityMyWolf.applySitting(true);
             case EntityMyCat entityMyCat -> entityMyCat.applySitting(true);
@@ -64,33 +64,33 @@ public class Sit implements AIGoal {
             default -> {
             }
         }
-		entityMyPet.setTarget(null);
-	}
+        entityMyPet.setTarget(null);
+    }
 
-	@Override
-	public void finish() {
-		if (this.entityMyPet instanceof EntityMyWolf) {
-			((EntityMyWolf) this.entityMyPet).applySitting(false);
-		} else if (this.entityMyPet instanceof EntityMyCat) {
-			((EntityMyCat) this.entityMyPet).applySitting(false);
-		} else if (this.entityMyPet instanceof EntityMyCamel) {
-			((EntityMyCamel) this.entityMyPet).applySitting(false);
-		} else if (this.entityMyPet instanceof EntityMyFox) {
-			((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, false);
-		} else if (this.entityMyPet instanceof EntityMyPanda) {
-			((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, false);
-		}
-	}
+    @Override
+    public void finish() {
+        if (this.entityMyPet instanceof EntityMyWolf) {
+            ((EntityMyWolf) this.entityMyPet).applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyCat) {
+            ((EntityMyCat) this.entityMyPet).applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyCamel) {
+            ((EntityMyCamel) this.entityMyPet).applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyFox) {
+            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, false);
+        } else if (this.entityMyPet instanceof EntityMyPanda) {
+            ((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, false);
+        }
+    }
 
-	public void setSitting(boolean sitting) {
-		this.sitting = sitting;
-	}
+    public boolean isSitting() {
+        return this.sitting;
+    }
 
-	public boolean isSitting() {
-		return this.sitting;
-	}
+    public void setSitting(boolean sitting) {
+        this.sitting = sitting;
+    }
 
-	public void toggleSitting() {
-		this.sitting = !this.sitting;
-	}
+    public void toggleSitting() {
+        this.sitting = !this.sitting;
+    }
 }

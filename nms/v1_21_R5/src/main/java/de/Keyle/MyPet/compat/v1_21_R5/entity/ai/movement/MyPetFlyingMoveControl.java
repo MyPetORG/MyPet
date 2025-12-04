@@ -25,7 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 
-public class MyPetFlyingMoveControl extends MoveControl{
+public class MyPetFlyingMoveControl extends MoveControl {
 
     private final float maxTurn;
 

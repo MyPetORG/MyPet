@@ -30,12 +30,16 @@ import org.bukkit.event.HandlerList;
 
 public class MyPetCallEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    boolean isCancelled = false;
-
     private final StoredMyPet myPet;
+    boolean isCancelled = false;
 
     public MyPetCallEvent(MyPet myPet) {
         this.myPet = myPet;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public StoredMyPet getMyPet() {
@@ -61,11 +65,6 @@ public class MyPetCallEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

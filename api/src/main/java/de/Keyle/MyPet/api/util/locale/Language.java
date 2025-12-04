@@ -27,7 +27,8 @@ import java.util.Map;
 
 public class Language {
 
-    @Getter private String code;
+    @Getter
+    private String code;
     private Map<String, Country> countries = new HashMap<>();
     private TranslationBundle translations;
 

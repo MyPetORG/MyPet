@@ -32,42 +32,42 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.5F, height = 0.4f)
 public class EntityMyTropicalFish extends EntityMyAquaticPet {
 
-	private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMyTropicalFish.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyTropicalFish.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET_WATCHER = SynchedEntityData.defineId(EntityMyTropicalFish.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyTropicalFish.class, EntityDataSerializers.INT);
 
-	public EntityMyTropicalFish(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyTropicalFish(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.tropical_fish.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.tropical_fish.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.tropical_fish.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.tropical_fish.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.tropical_fish.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.tropical_fish.ambient";
+    }
 
-	@Override
-	public MyTropicalFish getMyPet() {
-		return (MyTropicalFish) myPet;
-	}
+    @Override
+    public MyTropicalFish getMyPet() {
+        return (MyTropicalFish) myPet;
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(FROM_BUCKET_WATCHER, false);
-		getEntityData().define(VARIANT_WATCHER, 0);
-	}
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(FROM_BUCKET_WATCHER, false);
+        getEntityData().define(VARIANT_WATCHER, 0);
+    }
 }

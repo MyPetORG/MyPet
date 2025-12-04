@@ -33,9 +33,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Heal")
 public class HealUpgrade implements Upgrade<Heal> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier healModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier timerModifier = null;
 
     @Override

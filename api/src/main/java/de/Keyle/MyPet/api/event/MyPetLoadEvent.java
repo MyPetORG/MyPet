@@ -35,6 +35,11 @@ public class MyPetLoadEvent extends Event {
         this.myPet = mypet;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public StoredMyPet getMyPet() {
         return myPet;
     }
@@ -48,11 +53,6 @@ public class MyPetLoadEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -20,9 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R4.entity.types;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -45,129 +42,132 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Sound;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Byte> COLOR_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Byte> COLOR_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BYTE);
 
-	private static final Map<DyeColor, Block> colorMap = new HashMap<>();
+    private static final Map<DyeColor, Block> colorMap = new HashMap<>();
 
-	static {
-		colorMap.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
-		colorMap.put(DyeColor.ORANGE, Blocks.ORANGE_WOOL);
-		colorMap.put(DyeColor.MAGENTA, Blocks.MAGENTA_WOOL);
-		colorMap.put(DyeColor.LIGHT_BLUE, Blocks.LIGHT_BLUE_WOOL);
-		colorMap.put(DyeColor.YELLOW, Blocks.YELLOW_WOOL);
-		colorMap.put(DyeColor.LIME, Blocks.LIME_WOOL);
-		colorMap.put(DyeColor.PINK, Blocks.PINK_WOOL);
-		colorMap.put(DyeColor.GRAY, Blocks.GRAY_WOOL);
-		colorMap.put(DyeColor.LIGHT_GRAY, Blocks.LIGHT_GRAY_WOOL);
-		colorMap.put(DyeColor.CYAN, Blocks.CYAN_WOOL);
-		colorMap.put(DyeColor.PURPLE, Blocks.PURPLE_WOOL);
-		colorMap.put(DyeColor.BLUE, Blocks.BLUE_WOOL);
-		colorMap.put(DyeColor.BROWN, Blocks.BROWN_WOOL);
-		colorMap.put(DyeColor.GREEN, Blocks.GREEN_WOOL);
-		colorMap.put(DyeColor.RED, Blocks.RED_WOOL);
-		colorMap.put(DyeColor.BLACK, Blocks.BLACK_WOOL);
-	}
+    static {
+        colorMap.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
+        colorMap.put(DyeColor.ORANGE, Blocks.ORANGE_WOOL);
+        colorMap.put(DyeColor.MAGENTA, Blocks.MAGENTA_WOOL);
+        colorMap.put(DyeColor.LIGHT_BLUE, Blocks.LIGHT_BLUE_WOOL);
+        colorMap.put(DyeColor.YELLOW, Blocks.YELLOW_WOOL);
+        colorMap.put(DyeColor.LIME, Blocks.LIME_WOOL);
+        colorMap.put(DyeColor.PINK, Blocks.PINK_WOOL);
+        colorMap.put(DyeColor.GRAY, Blocks.GRAY_WOOL);
+        colorMap.put(DyeColor.LIGHT_GRAY, Blocks.LIGHT_GRAY_WOOL);
+        colorMap.put(DyeColor.CYAN, Blocks.CYAN_WOOL);
+        colorMap.put(DyeColor.PURPLE, Blocks.PURPLE_WOOL);
+        colorMap.put(DyeColor.BLUE, Blocks.BLUE_WOOL);
+        colorMap.put(DyeColor.BROWN, Blocks.BROWN_WOOL);
+        colorMap.put(DyeColor.GREEN, Blocks.GREEN_WOOL);
+        colorMap.put(DyeColor.RED, Blocks.RED_WOOL);
+        colorMap.put(DyeColor.BLACK, Blocks.BLACK_WOOL);
+    }
 
-	public EntityMySheep(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMySheep(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.sheep.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.sheep.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.sheep.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.sheep.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.sheep.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.sheep.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getColor().ordinal() && !getMyPet().isSheared()) {
-				getMyPet().setColor(org.bukkit.DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && Configuration.MyPet.Sheep.CAN_BE_SHEARED && !getMyPet().isSheared()) {
-				getMyPet().setSheared(true);
-				int woolDropCount = 1 + this.random.nextInt(3);
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getColor().ordinal() && !getMyPet().isSheared()) {
+                getMyPet().setColor(org.bukkit.DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Items.SHEARS && Configuration.MyPet.Sheep.CAN_BE_SHEARED && !getMyPet().isSheared()) {
+                getMyPet().setSheared(true);
+                int woolDropCount = 1 + this.random.nextInt(3);
 
-				for (int j = 0; j < woolDropCount; ++j) {
-					ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), new ItemStack(colorMap.get(DyeColor.values()[getMyPet().getColor().ordinal()])));
-					entityitem.pickupDelay = 10;
-					entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-					this.level().addFreshEntity(entityitem);
-				}
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (Configuration.MyPet.Sheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+                for (int j = 0; j < woolDropCount; ++j) {
+                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), new ItemStack(colorMap.get(DyeColor.values()[getMyPet().getColor().ordinal()])));
+                    entityitem.pickupDelay = 10;
+                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                    this.level().addFreshEntity(entityitem);
+                }
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (Configuration.MyPet.Sheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(COLOR_WATCHER, (byte) 0); // color/sheared
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(COLOR_WATCHER, (byte) 0); // color/sheared
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 
-		byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
-		this.getEntityData().set(COLOR_WATCHER, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
-	}
+        byte data = (byte) (getMyPet().isSheared() ? 16 : 0);
+        this.getEntityData().set(COLOR_WATCHER, (byte) (data & 0xF0 | getMyPet().getColor().ordinal() & 0xF));
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SHEEP_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SHEEP_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MySheep getMyPet() {
-		return (MySheep) myPet;
-	}
+    @Override
+    public MySheep getMyPet() {
+        return (MySheep) myPet;
+    }
 
-	@Override
-	public void setPathfinder() {
-		super.setPathfinder();
-		petPathfinderSelector.addGoal("EatGrass", new EatGrass(this));
-	}
+    @Override
+    public void setPathfinder() {
+        super.setPathfinder();
+        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this));
+    }
 }

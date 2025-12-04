@@ -22,7 +22,6 @@ package de.Keyle.MyPet.api.gui;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.locale.Translation;
-
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,20 +41,16 @@ import java.util.Map;
 
 public class IconMenu implements Listener {
 
+    private final Plugin plugin;
+    protected Map<Integer, IconMenuItem> options = new HashMap<>(54);
     private IconMenuInventory inventory;
     private Component title;
-
     private @Nullable String paginationBasePath;
     private @Nullable Integer pageSizeInSlots;
     private int currentPageIndex;
-
     private OptionClickEventHandler handler;
-
-    protected Map<Integer, IconMenuItem> options = new HashMap<>(54);
     private int maximumOptionPosition;
     private int nextVacantOptionPosition;
-
-    private final Plugin plugin;
 
     public IconMenu(Component title, OptionClickEventHandler handler, Plugin plugin) {
         this.title = title;
@@ -137,8 +132,8 @@ public class IconMenu implements Listener {
             return colorizedInput;
 
         return colorizedInput
-          .replace("{currentPage}", String.valueOf(currentPageIndex + 1))
-          .replace("{numberOfPages}", String.valueOf(getNumberOfPages()));
+                .replace("{currentPage}", String.valueOf(currentPageIndex + 1))
+                .replace("{numberOfPages}", String.valueOf(getNumberOfPages()));
     }
 
     private IconMenuItem makeConfigurableItem(String key) {
@@ -147,12 +142,14 @@ public class IconMenu implements Listener {
         try {
             String materialString = plugin.getConfig().getString(paginationBasePath + "." + key + ".Type");
             result.setMaterial(Material.valueOf(materialString));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             String titleString = plugin.getConfig().getString(paginationBasePath + "." + key + ".Title");
             result.setTitle(substituteVariablesAndColors(titleString));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             List<String> loreLines = plugin.getConfig().getStringList(paginationBasePath + "." + key + ".Lore");
@@ -162,7 +159,8 @@ public class IconMenu implements Listener {
                 loreContents[i] = substituteVariablesAndColors(loreLines.get(i));
 
             result.setLore(loreContents);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         return result;
     }

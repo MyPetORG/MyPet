@@ -20,13 +20,12 @@
 
 package de.Keyle.MyPet.api.event;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 public class MyPetSelectSkilltreeEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
@@ -34,17 +33,18 @@ public class MyPetSelectSkilltreeEvent extends Event {
     protected final StoredMyPet myPet;
     protected final Skilltree skilltree;
     private final Source source;
-    
-    public enum Source {
-        Auto, PlayerCommand, AdminCommand, AdminCreation, BossShopPro, Shop, Other
-    }
 
     public MyPetSelectSkilltreeEvent(StoredMyPet myPet, Skilltree skilltree, Source source) {
         this.myPet = myPet;
         this.skilltree = skilltree;
         this.source = source;
     }
-    
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public Source getSource() {
         return source;
     }
@@ -69,8 +69,7 @@ public class MyPetSelectSkilltreeEvent extends Event {
         return handlers;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
+    public enum Source {
+        Auto, PlayerCommand, AdminCommand, AdminCreation, BossShopPro, Shop, Other
     }
 }

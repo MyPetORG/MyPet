@@ -32,17 +32,13 @@ public abstract class ConfigItem {
     protected ItemStack item = null;
     protected DurabilityMode durabilityMode = DurabilityMode.NotUsed;
 
-    public enum DurabilityMode {
-        Smaller, Bigger, NotUsed, Equal
-    }
-
     public ConfigItem(ItemStack item, DurabilityMode durabilityMode) {
         this.item = item;
         this.durabilityMode = durabilityMode;
     }
 
     public ConfigItem(String data) {
-        if(data.startsWith(".")) {
+        if (data.startsWith(".")) {
             // Assumption: This is a 1.20.5+ Item
             load(data.replace(". ", ""));
             return;
@@ -69,9 +65,9 @@ public abstract class ConfigItem {
     }
 
     public static ConfigItem createConfigItem(String data) {
-    	if(data.equalsIgnoreCase("none")) {	//For enabling non itembound interaction (riding etc)
-    		return null;
-    	}
+        if (data.equalsIgnoreCase("none")) {    //For enabling non itembound interaction (riding etc)
+            return null;
+        }
         return MyPetApi.getCompatUtil().getCompatInstance(ConfigItem.class, "util", "ConfigItem", data);
     }
 
@@ -128,4 +124,8 @@ public abstract class ConfigItem {
     }
 
     public abstract void load(MaterialHolder material, String data);
+
+    public enum DurabilityMode {
+        Smaller, Bigger, NotUsed, Equal
+    }
 }

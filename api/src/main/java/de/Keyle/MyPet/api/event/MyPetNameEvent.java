@@ -30,20 +30,23 @@ public class MyPetNameEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    @Getter private MyPet myPet;
-    @Getter @Setter private String newName;
+    @Getter
+    private MyPet myPet;
+    @Getter
+    @Setter
+    private String newName;
 
     public MyPetNameEvent(MyPet myPet, String newName) {
         this.myPet = myPet;
         this.newName = newName;
     }
 
-    public HandlerList getHandlers() {
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
+    public HandlerList getHandlers() {
         return handlers;
     }
 }

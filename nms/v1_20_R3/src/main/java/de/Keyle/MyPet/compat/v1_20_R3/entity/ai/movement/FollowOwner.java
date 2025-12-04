@@ -38,156 +38,156 @@ import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 @Compat("v1_20_R3")
 public class FollowOwner implements AIGoal {
 
-	private final EntityMyPet petEntity;
-	private AbstractNavigation nav;
-	protected int setPathTimer = 0;
-	private final float stopDistance;
-	private final double startDistance;
-	private final float teleportDistance;
-	private Control controlPathfinderGoal;
-	private final Player owner;
-	private boolean waitForGround = false;
+    private final EntityMyPet petEntity;
+    private final float stopDistance;
+    private final double startDistance;
+    private final float teleportDistance;
+    private final Player owner;
+    protected int setPathTimer = 0;
+    private AbstractNavigation nav;
+    private Control controlPathfinderGoal;
+    private boolean waitForGround = false;
 
-	public FollowOwner(EntityMyPet entityMyPet, double startDistance, float stopDistance, float teleportDistance) {
-		this.petEntity = entityMyPet;
-		this.nav = entityMyPet.getPetNavigation();
-		this.startDistance = startDistance * startDistance;
-		this.stopDistance = stopDistance * stopDistance;
-		this.teleportDistance = teleportDistance * teleportDistance;
-		this.owner = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
-	}
+    public FollowOwner(EntityMyPet entityMyPet, double startDistance, float stopDistance, float teleportDistance) {
+        this.petEntity = entityMyPet;
+        this.nav = entityMyPet.getPetNavigation();
+        this.startDistance = startDistance * startDistance;
+        this.stopDistance = stopDistance * stopDistance;
+        this.teleportDistance = teleportDistance * teleportDistance;
+        this.owner = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
+    }
 
-	@Override
-	public boolean shouldStart() {
-		if (controlPathfinderGoal == null) {
-			if (petEntity.getPathfinder().hasGoal("Control")) {
-				controlPathfinderGoal = (Control) petEntity.getPathfinder().getGoal("Control");
-			}
-		}
-		if (!this.petEntity.canMove()) {
-			return false;
-		} else if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
-			return false;
-		} else if (this.petEntity.getOwner() == null) {
-			return false;
-		} else if (this.petEntity.distanceToSqr(owner) < this.startDistance) {
-			return false;
-		} else return controlPathfinderGoal == null || controlPathfinderGoal.moveTo == null;
-	}
+    @Override
+    public boolean shouldStart() {
+        if (controlPathfinderGoal == null) {
+            if (petEntity.getPathfinder().hasGoal("Control")) {
+                controlPathfinderGoal = (Control) petEntity.getPathfinder().getGoal("Control");
+            }
+        }
+        if (!this.petEntity.canMove()) {
+            return false;
+        } else if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
+            return false;
+        } else if (this.petEntity.getOwner() == null) {
+            return false;
+        } else if (this.petEntity.distanceToSqr(owner) < this.startDistance) {
+            return false;
+        } else return controlPathfinderGoal == null || controlPathfinderGoal.moveTo == null;
+    }
 
-	@Override
-	public boolean shouldFinish() {
-		if (controlPathfinderGoal.moveTo != null) {
-			return true;
-		} else if (this.petEntity.getOwner() == null) {
-			return true;
-		} else if (this.petEntity.distanceToSqr(owner) < this.stopDistance) {
-			return true;
-		} else if (!this.petEntity.canMove()) {
-			return true;
-		} else return this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead();
-	}
+    @Override
+    public boolean shouldFinish() {
+        if (controlPathfinderGoal.moveTo != null) {
+            return true;
+        } else if (this.petEntity.getOwner() == null) {
+            return true;
+        } else if (this.petEntity.distanceToSqr(owner) < this.stopDistance) {
+            return true;
+        } else if (!this.petEntity.canMove()) {
+            return true;
+        } else return this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead();
+    }
 
-	@Override
-	public void start() {
-		applyWalkSpeed();
-		this.setPathTimer = 0;
-	}
+    @Override
+    public void start() {
+        applyWalkSpeed();
+        this.setPathTimer = 0;
+    }
 
-	@Override
-	public void finish() {
-		nav.getParameters().removeSpeedModifier("FollowOwner");
-		this.nav.stop();
-		this.setPathTimer = 0;
-	}
+    @Override
+    public void finish() {
+        nav.getParameters().removeSpeedModifier("FollowOwner");
+        this.nav.stop();
+        this.setPathTimer = 0;
+    }
 
-	@Override
-	public void tick() {
-		Location ownerLocation = this.petEntity.getOwner().getPlayer().getLocation();
-		Location petLocation = this.petEntity.getBukkitEntity().getLocation();
-		if (ownerLocation.getWorld() != petLocation.getWorld()) {
-			return;
-		}
+    @Override
+    public void tick() {
+        Location ownerLocation = this.petEntity.getOwner().getPlayer().getLocation();
+        Location petLocation = this.petEntity.getBukkitEntity().getLocation();
+        if (ownerLocation.getWorld() != petLocation.getWorld()) {
+            return;
+        }
 
-		//Look at Owner
-		this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot()); //TODO MIGHT be wrong (also in different places) ->getMaxHeadXRot
+        //Look at Owner
+        this.petEntity.getLookControl().setLookAt(owner, this.petEntity.getMaxHeadXRot(), this.petEntity.getMaxHeadXRot()); //TODO MIGHT be wrong (also in different places) ->getMaxHeadXRot
 
-		boolean flyingPet = petEntity instanceof EntityMyFlyingPet;
+        boolean flyingPet = petEntity instanceof EntityMyFlyingPet;
 
-		//Teleportation
-		if (this.petEntity.canMove()) {
-			if ((!owner.getAbilities().flying && !owner.getBukkitEntity().isGliding()) || flyingPet) {
-				if (!waitForGround) {
-					if (owner.fallDistance <= 4 || flyingPet) {
-						if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
-							if (controlPathfinderGoal.moveTo == null) {
-								if (!petEntity.hasTarget()) {
-									if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
-										this.petEntity.fallDistance = 0;
-										this.petEntity.moveTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.getYRot(), this.petEntity.getXRot());
-										this.setPathTimer = 0;
-										return;
-									}
-								}
-							}
-						}
-					}
-				} else if (owner.onGround()) {
-					waitForGround = false;
-				}
-			} else {
-				waitForGround = true;
-			}
+        //Teleportation
+        if (this.petEntity.canMove()) {
+            if ((!owner.getAbilities().flying && !owner.getBukkitEntity().isGliding()) || flyingPet) {
+                if (!waitForGround) {
+                    if (owner.fallDistance <= 4 || flyingPet) {
+                        if (this.petEntity.distanceToSqr(owner) >= this.teleportDistance) {
+                            if (controlPathfinderGoal.moveTo == null) {
+                                if (!petEntity.hasTarget()) {
+                                    if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
+                                        this.petEntity.fallDistance = 0;
+                                        this.petEntity.moveTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.getYRot(), this.petEntity.getXRot());
+                                        this.setPathTimer = 0;
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (owner.onGround()) {
+                    waitForGround = false;
+                }
+            } else {
+                waitForGround = true;
+            }
 
-			if (--this.setPathTimer <= 0) {
-				this.setPathTimer = 10;
-				if (this.nav.navigateTo(owner.getBukkitEntity())) {
-					applyWalkSpeed();
-				}
-			}
-		}
-	}
+            if (--this.setPathTimer <= 0) {
+                this.setPathTimer = 10;
+                if (this.nav.navigateTo(owner.getBukkitEntity())) {
+                    applyWalkSpeed();
+                }
+            }
+        }
+    }
 
-	private void applyWalkSpeed() {
-		float walkSpeed = owner.getAbilities().walkingSpeed;
-		if (owner.getAbilities().flying) {
-			// make the pet faster when the player is flying
-			walkSpeed += owner.getAbilities().flyingSpeed;
-		} else if (owner.isSprinting() || owner.getBukkitEntity().isGliding()) {
-			// make the pet faster when the player is sprinting
-			if (owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED) != null) {
-				walkSpeed += owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue() - 0.037f;
-			}
-		} else if (owner.isPassenger() && owner.getVehicle() instanceof LivingEntity) {
-			// adjust the speed to the pet can catch up with the vehicle the player is in
-			AttributeInstance vehicleSpeedAttribute = ((LivingEntity) owner.getVehicle()).getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
-			if (vehicleSpeedAttribute != null) {
-				walkSpeed = (float) vehicleSpeedAttribute.getValue();
-			}
-		} else if (owner.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-			// make the pet faster when the player is has the SPEED effect
-			walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
-		}
+    private void applyWalkSpeed() {
+        float walkSpeed = owner.getAbilities().walkingSpeed;
+        if (owner.getAbilities().flying) {
+            // make the pet faster when the player is flying
+            walkSpeed += owner.getAbilities().flyingSpeed;
+        } else if (owner.isSprinting() || owner.getBukkitEntity().isGliding()) {
+            // make the pet faster when the player is sprinting
+            if (owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED) != null) {
+                walkSpeed += owner.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue() - 0.037f;
+            }
+        } else if (owner.isPassenger() && owner.getVehicle() instanceof LivingEntity) {
+            // adjust the speed to the pet can catch up with the vehicle the player is in
+            AttributeInstance vehicleSpeedAttribute = ((LivingEntity) owner.getVehicle()).getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
+            if (vehicleSpeedAttribute != null) {
+                walkSpeed = (float) vehicleSpeedAttribute.getValue();
+            }
+        } else if (owner.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+            // make the pet faster when the player is has the SPEED effect
+            walkSpeed += owner.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() * 0.2 * walkSpeed;
+        }
 
-		// make aquatic/flying pets faster
-		// This is actually due to there being a difference between MovementSpeed and FlyingSpeed, FlyingSpeed being higher
-		// (I don't completely know why this is the case for swimming but I imagine it has a similar reason)
-		if(this.petEntity.isInWaterOrBubble() && this.petEntity.getNavigation() instanceof MyAquaticPetPathNavigation) {
-			walkSpeed += 0.6f;
-			if(owner.hasEffect(MobEffects.DOLPHINS_GRACE)) {
-				walkSpeed += 0.08f;
-			}
-		}
+        // make aquatic/flying pets faster
+        // This is actually due to there being a difference between MovementSpeed and FlyingSpeed, FlyingSpeed being higher
+        // (I don't completely know why this is the case for swimming but I imagine it has a similar reason)
+        if (this.petEntity.isInWaterOrBubble() && this.petEntity.getNavigation() instanceof MyAquaticPetPathNavigation) {
+            walkSpeed += 0.6f;
+            if (owner.hasEffect(MobEffects.DOLPHINS_GRACE)) {
+                walkSpeed += 0.08f;
+            }
+        }
 
-		if(this.petEntity.getMoveControl() instanceof MyPetFlyingMoveControl) {
-			walkSpeed += 0.575f;
-			if(owner.isSprinting()) {
-				walkSpeed -= 0.05f;
-			}
-		}
+        if (this.petEntity.getMoveControl() instanceof MyPetFlyingMoveControl) {
+            walkSpeed += 0.575f;
+            if (owner.isSprinting()) {
+                walkSpeed -= 0.05f;
+            }
+        }
 
-		// make the pet a little bit faster than the player so it can catch up
-		walkSpeed += 0.07f;
-		nav.getParameters().addSpeedModifier("FollowOwner", walkSpeed);
-	}
+        // make the pet a little bit faster than the player so it can catch up
+        walkSpeed += 0.07f;
+        nav.getParameters().addSpeedModifier("FollowOwner", walkSpeed);
+    }
 }

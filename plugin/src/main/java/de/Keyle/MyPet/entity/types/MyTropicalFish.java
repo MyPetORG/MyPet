@@ -36,6 +36,10 @@ public class MyTropicalFish extends MyPet implements de.Keyle.MyPet.api.entity.t
         super(petOwner);
     }
 
+    public static int generateVariant(int shape, int pattern, int baseColor, int patternColor) {
+        return shape & 255 | (pattern & 255) << 8 | (baseColor & 255) << 16 | (patternColor & 255) << 24;
+    }
+
     @Override
     public MyPetType getPetType() {
         return MyPetType.TropicalFish;
@@ -64,10 +68,6 @@ public class MyTropicalFish extends MyPet implements de.Keyle.MyPet.api.entity.t
         if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
-    }
-
-    public static int generateVariant(int shape, int pattern, int baseColor, int patternColor) {
-        return shape & 255 | (pattern & 255) << 8 | (baseColor & 255) << 16 | (patternColor & 255) << 24;
     }
 
     @Override

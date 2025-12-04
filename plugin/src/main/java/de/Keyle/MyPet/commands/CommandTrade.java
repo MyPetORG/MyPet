@@ -251,9 +251,9 @@ public class CommandTrade implements CommandTabCompleter {
                     }
 
                     receiver.sendMessage(
-                        Component.text(" »» " + myPet.getPetName())
-                            .hoverEvent(Util.myPetToItemHover(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)))
-                            .clickEvent(ClickEvent.runCommand("/pettrade accept"))
+                            Component.text(" »» " + myPet.getPetName())
+                                    .hoverEvent(Util.myPetToItemHover(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)))
+                                    .clickEvent(ClickEvent.runCommand("/pettrade accept"))
                     );
 
                     return true;

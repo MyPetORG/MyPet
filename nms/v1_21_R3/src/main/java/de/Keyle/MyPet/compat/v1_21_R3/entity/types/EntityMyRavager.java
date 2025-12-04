@@ -33,42 +33,42 @@ import org.bukkit.Sound;
 @EntitySize(width = 1.95F, height = 2.2F)
 public class EntityMyRavager extends EntityMyPet {
 
-	protected static final EntityDataAccessor<Boolean> RAID_WATCHER = SynchedEntityData.defineId(EntityMyRavager.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Boolean> RAID_WATCHER = SynchedEntityData.defineId(EntityMyRavager.class, EntityDataSerializers.BOOLEAN);
 
-	public EntityMyRavager(Level world, MyPet myPet) {
-		super(world, myPet);
-		indirectRiding = true;
-	}
+    public EntityMyRavager(Level world, MyPet myPet) {
+        super(world, myPet);
+        indirectRiding = true;
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.ravager.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.ravager.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.ravager.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.ravager.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.ravager.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.ravager.ambient";
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(RAID_WATCHER, false);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(RAID_WATCHER, false);
 
-	}
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_RAVAGER_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_RAVAGER_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyRavager getMyPet() {
-		return (MyRavager) myPet;
-	}
+    @Override
+    public MyRavager getMyPet() {
+        return (MyRavager) myPet;
+    }
 }

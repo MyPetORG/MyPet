@@ -40,57 +40,57 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.CraftRegistry;
 
 @EntitySize(width = 0.4F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Holder<ChickenVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.CHICKEN_VARIANT);
 
     private int nextEggTimer;
 
-	public EntityMyChicken(Level world, MyPet myPet) {
-		super(world, myPet);
-		nextEggTimer = (this.random.nextInt(6000) + 6000);
-	}
+    public EntityMyChicken(Level world, MyPet myPet) {
+        super(world, myPet);
+        nextEggTimer = (this.random.nextInt(6000) + 6000);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.chicken.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.chicken.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.chicken.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.chicken.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.chicken.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.chicken.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null) {
-			if (Configuration.MyPet.Chicken.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-					}
-				}
-				getMyPet().setBaby(false);
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null) {
+            if (Configuration.MyPet.Chicken.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                    }
+                }
+                getMyPet().setBaby(false);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -109,43 +109,43 @@ public class EntityMyChicken extends EntityMyPet {
         this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertChickenVariant(getMyPet().getVariant())));
     }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
 
-		if (Configuration.MyPet.Chicken.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
+        if (Configuration.MyPet.Chicken.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
 
-		if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
-			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-			this.forceDrops = true; // CraftBukkit
-			this.spawnAtLocation(this.level().getMinecraftWorld(), Items.EGG);
-			this.forceDrops = false; // CraftBukkit
-			nextEggTimer = this.random.nextInt(6000) + 6000;
-		}
-	}
+        if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
+            this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            this.forceDrops = true; // CraftBukkit
+            this.spawnAtLocation(this.level().getMinecraftWorld(), Items.EGG);
+            this.forceDrops = false; // CraftBukkit
+            nextEggTimer = this.random.nextInt(6000) + 6000;
+        }
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CHICKEN_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_CHICKEN_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyChicken getMyPet() {
-		return (MyChicken) myPet;
-	}
+    @Override
+    public MyChicken getMyPet() {
+        return (MyChicken) myPet;
+    }
 
-	/**
-	 * -> disable falldamage
-	 */
-	@Override
-	public int calculateFallDamage(double f, float f1) {
-		if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
-			super.calculateFallDamage(f, f1);
-		}
-		return 0;
-	}
+    /**
+     * -> disable falldamage
+     */
+    @Override
+    public int calculateFallDamage(double f, float f1) {
+        if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
+            super.calculateFallDamage(f, f1);
+        }
+        return 0;
+    }
 }

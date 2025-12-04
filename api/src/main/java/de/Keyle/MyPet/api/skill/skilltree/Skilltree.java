@@ -36,14 +36,18 @@ import java.util.*;
 public class Skilltree {
 
     protected String skilltreeName;
-    @Getter @Setter protected String inheritedSkilltreeName;
+    @Getter
+    @Setter
+    protected String inheritedSkilltreeName;
     protected List<String> description = new ArrayList<>();
     protected SkilltreeIcon icon = null;
     protected String displayName = null;
     protected int maxLevel = 0;
     protected int requiredLevel = 0;
     protected int order = 0;
-    @Getter @Setter protected double weight = 1;
+    @Getter
+    @Setter
+    protected double weight = 1;
     protected Set<MyPetType> mobTypes = new HashSet<>();
     protected Map<LevelRule, Upgrade> upgrades = new HashMap<>();
     protected Map<LevelRule, String> notifications = new HashMap<>();
@@ -79,15 +83,15 @@ public class Skilltree {
         description.clear();
     }
 
-    public void setIcon(SkilltreeIcon icon) {
-        this.icon = icon;
-    }
-
     public SkilltreeIcon getIcon() {
         if (icon == null) {
             icon = new SkilltreeIcon();
         }
         return icon;
+    }
+
+    public void setIcon(SkilltreeIcon icon) {
+        this.icon = icon;
     }
 
     public int getMaxLevel() {
@@ -113,12 +117,12 @@ public class Skilltree {
         return displayName;
     }
 
-    public boolean hasDisplayName() {
-        return displayName != null;
-    }
-
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public boolean hasDisplayName() {
+        return displayName != null;
     }
 
     public boolean hasInheritance() {

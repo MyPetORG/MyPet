@@ -367,129 +367,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         }
     }
 
-    @Override
-    public boolean onCommandOption(final CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + ChatColor.RED + "<a player name>");
-            return false;
-        }
-
-        int forceOffset = 0;
-        if (args[0].equalsIgnoreCase("-f")) {
-            forceOffset = 1;
-        }
-
-        if (args.length < 2 + forceOffset) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " " + ChatColor.RED + "<a pet-type>");
-            return false;
-        }
-
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-
-        try {
-            MyPetType myPetType = MyPetType.byName(args[1 + forceOffset]);
-            if (myPetType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
-                Player owner = Bukkit.getPlayer(args[forceOffset]);
-                if (owner == null || !owner.isOnline()) {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
-                    return true;
-                }
-
-                if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
-                    sender.sendMessage("Pets are not allowed in " + ChatColor.GOLD + owner.getWorld().getName());
-                    return true;
-                }
-
-                final MyPetPlayer newOwner;
-                if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
-                    newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
-
-                    if (newOwner.hasMyPet() && forceOffset == 1) {
-                        MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
-                    }
-                } else {
-                    newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
-                }
-
-                final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
-                inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
-
-                TagCompound compound = inactiveMyPet.getInfo();
-                createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);
-                updateData(inactiveMyPet, Arrays.copyOfRange(args, 2 + forceOffset, args.length));
-
-                final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
-
-                inactiveMyPet.setWorldGroup(wg.getName());
-
-                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                for (RepositoryMyPetConverterService converter : converters) {
-                    converter.convert(inactiveMyPet);
-                }
-
-                MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
-                Bukkit.getServer().getPluginManager().callEvent(createEvent);
-
-                MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
-                Bukkit.getServer().getPluginManager().callEvent(saveEvent);
-
-                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
-                    @Override
-                    public void callback(Boolean added) {
-                        if (added) {
-                            if (!newOwner.hasMyPet()) {
-                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
-                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
-
-                                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
-                                if (myPet.isPresent()) {
-                                    myPet.get().createEntity();
-                                    sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
-                                } else {
-                                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
-                                }
-                            } else {
-                                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
-                            }
-                        }
-                    }
-                });
-            }
-        } catch (MyPetTypeNotFoundException e) {
-            sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));
-        }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        int forceOffset = 0;
-        if (strings.length >= 2 && strings[1].equalsIgnoreCase("-f")) {
-            forceOffset = 1;
-        }
-        if (strings.length == 2 + forceOffset) {
-            return null;
-        }
-        if (strings.length == 3 + forceOffset) {
-            return filterTabCompletionResults(petTypeList, strings[2 + forceOffset]);
-        }
-        if (strings.length >= 4 + forceOffset) {
-            if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase())) {
-                List<String> options = petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
-                if (!options.contains(commonTypeOptionList.get(0))) {
-                    options.addAll(commonTypeOptionList);
-                }
-                return filterTabCompletionResults(options, strings[strings.length - 1]);
-            } else {
-                return filterTabCompletionResults(commonTypeOptionList, strings[3 + forceOffset]);
-            }
-        }
-        return Collections.emptyList();
-    }
-
     public static void updateData(InactiveMyPet inactiveMyPet, String[] args) {
         for (String arg : args) {
             if (arg.startsWith("skilltree:")) {
@@ -502,7 +379,10 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 String name = arg.replace("name:", "");
                 int index = -1;
                 for (int i = 0; i < args.length; i++) {
-                    if (Objects.equals(args[i], arg)) { index = i; break; }
+                    if (Objects.equals(args[i], arg)) {
+                        index = i;
+                        break;
+                    }
                 }
                 if (args.length > index + 1) {
                     name += " " + String.join(" ", Arrays.copyOfRange(args, index + 1, args.length));
@@ -747,5 +627,128 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onCommandOption(final CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + ChatColor.RED + "<a player name>");
+            return false;
+        }
+
+        int forceOffset = 0;
+        if (args[0].equalsIgnoreCase("-f")) {
+            forceOffset = 1;
+        }
+
+        if (args.length < 2 + forceOffset) {
+            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " " + ChatColor.RED + "<a pet-type>");
+            return false;
+        }
+
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+
+        try {
+            MyPetType myPetType = MyPetType.byName(args[1 + forceOffset]);
+            if (myPetType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
+                Player owner = Bukkit.getPlayer(args[forceOffset]);
+                if (owner == null || !owner.isOnline()) {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+                    return true;
+                }
+
+                if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
+                    sender.sendMessage("Pets are not allowed in " + ChatColor.GOLD + owner.getWorld().getName());
+                    return true;
+                }
+
+                final MyPetPlayer newOwner;
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
+                    newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
+
+                    if (newOwner.hasMyPet() && forceOffset == 1) {
+                        MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
+                    }
+                } else {
+                    newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
+                }
+
+                final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
+                inactiveMyPet.setPetType(myPetType);
+                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
+
+                TagCompound compound = inactiveMyPet.getInfo();
+                createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);
+                updateData(inactiveMyPet, Arrays.copyOfRange(args, 2 + forceOffset, args.length));
+
+                final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
+
+                inactiveMyPet.setWorldGroup(wg.getName());
+
+                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
+                for (RepositoryMyPetConverterService converter : converters) {
+                    converter.convert(inactiveMyPet);
+                }
+
+                MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
+                Bukkit.getServer().getPluginManager().callEvent(createEvent);
+
+                MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+                Bukkit.getServer().getPluginManager().callEvent(saveEvent);
+
+                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
+                    @Override
+                    public void callback(Boolean added) {
+                        if (added) {
+                            if (!newOwner.hasMyPet()) {
+                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
+                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
+
+                                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
+                                if (myPet.isPresent()) {
+                                    myPet.get().createEntity();
+                                    sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
+                                } else {
+                                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
+                                }
+                            } else {
+                                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (MyPetTypeNotFoundException e) {
+            sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));
+        }
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
+        int forceOffset = 0;
+        if (strings.length >= 2 && strings[1].equalsIgnoreCase("-f")) {
+            forceOffset = 1;
+        }
+        if (strings.length == 2 + forceOffset) {
+            return null;
+        }
+        if (strings.length == 3 + forceOffset) {
+            return filterTabCompletionResults(petTypeList, strings[2 + forceOffset]);
+        }
+        if (strings.length >= 4 + forceOffset) {
+            if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase())) {
+                List<String> options = petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
+                if (!options.contains(commonTypeOptionList.get(0))) {
+                    options.addAll(commonTypeOptionList);
+                }
+                return filterTabCompletionResults(options, strings[strings.length - 1]);
+            } else {
+                return filterTabCompletionResults(commonTypeOptionList, strings[3 + forceOffset]);
+            }
+        }
+        return Collections.emptyList();
     }
 }

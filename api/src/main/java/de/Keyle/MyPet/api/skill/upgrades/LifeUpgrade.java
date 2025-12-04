@@ -32,7 +32,9 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Life")
 public class LifeUpgrade implements Upgrade<Life> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier lifeModifier = null;
 
     @Override

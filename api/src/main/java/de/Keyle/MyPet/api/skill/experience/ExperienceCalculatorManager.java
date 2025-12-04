@@ -35,8 +35,10 @@ import java.util.Map;
 public class ExperienceCalculatorManager implements ServiceContainer {
 
     protected Map<String, Class<? extends ExperienceCalculator>> calculators = new HashMap<>();
-    @Getter() protected ExperienceCalculator defaultCalculator = new DefaultExperienceCalculator();
-    @Getter() protected ExperienceCalculator calculator = defaultCalculator;
+    @Getter()
+    protected ExperienceCalculator defaultCalculator = new DefaultExperienceCalculator();
+    @Getter()
+    protected ExperienceCalculator calculator = defaultCalculator;
     protected ExperienceCache cache;
 
     @Override

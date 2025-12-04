@@ -40,48 +40,49 @@ import java.util.List;
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyBogged extends EntityMyPet {
 
-	public EntityMyBogged(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.bogged.death";
-	}
+    public EntityMyBogged(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.bogged.hurt";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.bogged.death";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.bogged.ambient";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.bogged.hurt";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
-		return InteractionResult.PASS;
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.bogged.ambient";
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_BOGGED_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	public MyBogged getMyPet() {
-		return (MyBogged) myPet;
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_BOGGED_STEP, 0.15F, 1.0F);
+    }
 
-	public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-		((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
-	}
+    @Override
+    public MyBogged getMyPet() {
+        return (MyBogged) myPet;
+    }
 
-	@Override
-	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		return super.getItemBySlot(vanillaSlot);
-	}
+    public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
+        ((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
+    }
+
+    @Override
+    public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
+        return super.getItemBySlot(vanillaSlot);
+    }
 }

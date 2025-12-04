@@ -40,6 +40,11 @@ public class MyPetPickupItemEvent extends Event implements Cancellable {
         this.item = item;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return myPet.getOwner();
     }
@@ -65,11 +70,6 @@ public class MyPetPickupItemEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

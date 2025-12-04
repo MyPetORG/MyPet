@@ -45,7 +45,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
     public static boolean ENABLED = true;
     public static boolean ALLOW_PETS = true;
     public static boolean RESPECT_PVP_RULE = true;
-    
+
     protected MobArenaHandler mobArenaHandler;
 
     @Override

@@ -50,106 +50,106 @@ import java.util.Optional;
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyCat extends EntityMyPet {
 
-	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BYTE);
-	protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
-	protected static final EntityDataAccessor<Holder<CatVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.CAT_VARIANT);
-	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BYTE);
+    protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
+    protected static final EntityDataAccessor<Holder<CatVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.CAT_VARIANT);
+    protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_1 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Boolean> UNUSED_WATCHER_2 = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.INT);
 
-	public EntityMyCat(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyCat(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	public void applySitting(boolean sitting) {
-		byte i = this.getEntityData().get(SIT_WATCHER);
-		if (sitting) {
-			this.getEntityData().set(SIT_WATCHER, (byte) (i | 1));
-		} else {
-			this.getEntityData().set(SIT_WATCHER, (byte) (i & -2));
-		}
-	}
+    public void applySitting(boolean sitting) {
+        byte i = this.getEntityData().get(SIT_WATCHER);
+        if (sitting) {
+            this.getEntityData().set(SIT_WATCHER, (byte) (i | 1));
+        } else {
+            this.getEntityData().set(SIT_WATCHER, (byte) (i & -2));
+        }
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.cat.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.cat.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.cat.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.cat.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return this.random.nextInt(4) == 0 ? "entity.cat.purr" : "entity.cat.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return this.random.nextInt(4) == 0 ? "entity.cat.purr" : "entity.cat.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman)) {
-			if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
-				if (itemStack.getItem() instanceof DyeItem) {
-					if (((DyeItem) itemStack.getItem()).getDyeColor().getId() != getMyPet().getCollarColor().ordinal()) {
-						getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().getId()]);
-						if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-							itemStack.shrink(1);
-							if (itemStack.getCount() <= 0) {
-								entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-							}
-						}
-						return InteractionResult.SUCCESS;
-					}
-				} else if (Configuration.MyPet.Cat.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-						itemStack.shrink(1);
-						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-						}
-					}
-					getMyPet().setBaby(false);
-					return InteractionResult.CONSUME;
-				}
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman)) {
+            if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack.getItem() instanceof DyeItem) {
+                    if (((DyeItem) itemStack.getItem()).getDyeColor().getId() != getMyPet().getCollarColor().ordinal()) {
+                        getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().getId()]);
+                        if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                            itemStack.shrink(1);
+                            if (itemStack.getCount() <= 0) {
+                                entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                            }
+                        }
+                        return InteractionResult.SUCCESS;
+                    }
+                } else if (Configuration.MyPet.Cat.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                    if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        itemStack.shrink(1);
+                        if (itemStack.getCount() <= 0) {
+                            entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+                        }
+                    }
+                    getMyPet().setBaby(false);
+                    return InteractionResult.CONSUME;
+                }
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(SIT_WATCHER, (byte) 0);
-		builder.define(OWNER_WATCHER, Optional.empty());
-		Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);
-		builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.CAT_REGISTRY.getOrThrow(CatVariants.BLACK).value()));
-		builder.define(UNUSED_WATCHER_1, false);
-		builder.define(UNUSED_WATCHER_2, false);
-		builder.define(COLLAR_COLOR_WATCHER, 14);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(SIT_WATCHER, (byte) 0);
+        builder.define(OWNER_WATCHER, Optional.empty());
+        Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);
+        builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.CAT_REGISTRY.getOrThrow(CatVariants.BLACK).value()));
+        builder.define(UNUSED_WATCHER_1, false);
+        builder.define(UNUSED_WATCHER_2, false);
+        builder.define(COLLAR_COLOR_WATCHER, 14);
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);
-		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(getMyPet().getCatType().ordinal())));
-		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);
+        this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(getMyPet().getCatType().ordinal())));
+        this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
-		byte b0 = this.getEntityData().get(SIT_WATCHER);
-		if (getMyPet().isTamed()) {
-			this.getEntityData().set(SIT_WATCHER, (byte) (b0 | 0x4));
-		} else {
-			this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
-		}
-	}
+        byte b0 = this.getEntityData().get(SIT_WATCHER);
+        if (getMyPet().isTamed()) {
+            this.getEntityData().set(SIT_WATCHER, (byte) (b0 | 0x4));
+        } else {
+            this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
+        }
+    }
 
-	@Override
-	public MyCat getMyPet() {
-		return (MyCat) myPet;
-	}
+    @Override
+    public MyCat getMyPet() {
+        return (MyCat) myPet;
+    }
 }

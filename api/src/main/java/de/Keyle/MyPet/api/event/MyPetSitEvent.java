@@ -25,10 +25,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 public class MyPetSitEvent extends MyPetInteractEvent {
     private Action action;
 
-    public enum Action {
-        Stay, Follow
-    }
-
     public MyPetSitEvent(MyPet myPet, Action action) {
         super(myPet, null);
         this.action = action;
@@ -36,5 +32,9 @@ public class MyPetSitEvent extends MyPetInteractEvent {
 
     public Action getAction() {
         return action;
+    }
+
+    public enum Action {
+        Stay, Follow
     }
 }

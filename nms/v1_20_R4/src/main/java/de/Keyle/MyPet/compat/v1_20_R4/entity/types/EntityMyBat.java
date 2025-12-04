@@ -32,53 +32,53 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.5F, height = 0.45f)
 public class EntityMyBat extends EntityMyFlyingPet {
 
-	private static final EntityDataAccessor<Byte> HANGING_WATCHER = SynchedEntityData.defineId(EntityMyBat.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> HANGING_WATCHER = SynchedEntityData.defineId(EntityMyBat.class, EntityDataSerializers.BYTE);
 
-	public EntityMyBat(Level world, MyPet myPet) {
-		super(world, myPet);
+    public EntityMyBat(Level world, MyPet myPet) {
+        super(world, myPet);
 
-	}
+    }
 
-	/**
-	 * Returns the sound that is played when the MyPet dies
-	 */
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.bat.death";
-	}
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.bat.death";
+    }
 
-	/**
-	 * Returns the sound that is played when the MyPet get hurt
-	 */
-	@Override
-	protected String getHurtSound() {
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound() {
 
-		return "entity.bat.hurt";
-	}
+        return "entity.bat.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.bat.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.bat.ambient";
+    }
 
-	@Override
-	public float getSoundSpeed() {
-		return super.getSoundSpeed() * 0.95F;
-	}
+    @Override
+    public float getSoundSpeed() {
+        return super.getSoundSpeed() * 0.95F;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(HANGING_WATCHER, (byte) 0xFFFFFFFE); // hanging
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HANGING_WATCHER, (byte) 0xFFFFFFFE); // hanging
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (Configuration.MyPet.Bat.CAN_GLIDE) {
-			if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
-				this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
-			}
-		}
-	}
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (Configuration.MyPet.Bat.CAN_GLIDE) {
+            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+                this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
+            }
+        }
+    }
 }

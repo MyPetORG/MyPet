@@ -29,53 +29,53 @@ import org.bukkit.ChatColor;
 
 public class MyGlowSquid extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGlowSquid {
 
-	protected boolean isBaby = false;
+    protected boolean isBaby = false;
 
-	public MyGlowSquid(MyPetPlayer petOwner) {
-		super(petOwner);
-	}
+    public MyGlowSquid(MyPetPlayer petOwner) {
+        super(petOwner);
+    }
 
-	@Override
-	public MyPetType getPetType() {
-		return MyPetType.GlowSquid;
-	}
+    @Override
+    public MyPetType getPetType() {
+        return MyPetType.GlowSquid;
+    }
 
-	public boolean isBaby() {
-		return isBaby;
-	}
+    public boolean isBaby() {
+        return isBaby;
+    }
 
-	public void setBaby(boolean flag) {
-		this.isBaby = flag;
-		if (status == PetState.Here) {
-			getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-		}
-	}
+    public void setBaby(boolean flag) {
+        this.isBaby = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
+    }
 
-	@Override
-	public TagCompound writeExtendedInfo() {
-		TagCompound info = super.writeExtendedInfo();
-		info.getCompoundData().put("Baby", new TagByte(isBaby()));
-		return info;
-	}
+    @Override
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        return info;
+    }
 
-	@Override
-	public void readExtendedInfo(TagCompound info) {
-		if (info.containsKey("Baby")) {
-			setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-		}
-	}
+    @Override
+    public void readExtendedInfo(TagCompound info) {
+        if (info.containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "MyGlowSquid{owner=" + getOwner().getName() +
-				", name=" + ChatColor.stripColor(petName) +
-				", exp=" + experience.getExp() +
-				"/" + experience.getRequiredExp() +
-				", lv=" + experience.getLevel() +
-				", status=" + status.name() +
-				", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
-				", worldgroup=" + worldGroup +
-				", baby=" + isBaby() + "}";
-	}
+    @Override
+    public String toString() {
+        return "MyGlowSquid{owner=" + getOwner().getName() +
+                ", name=" + ChatColor.stripColor(petName) +
+                ", exp=" + experience.getExp() +
+                "/" + experience.getRequiredExp() +
+                ", lv=" + experience.getLevel() +
+                ", status=" + status.name() +
+                ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
+                ", worldgroup=" + worldGroup +
+                ", baby=" + isBaby() + "}";
+    }
 
 }

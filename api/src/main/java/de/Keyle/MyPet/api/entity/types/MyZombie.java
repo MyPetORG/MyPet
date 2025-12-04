@@ -28,10 +28,6 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 @DefaultInfo(food = {"rotten_flesh"})
 public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
-    enum Type {
-        NORMAL, HUSK, VILLAGER
-    }
-
     boolean isHusk();
 
     void setHusk(boolean flag);
@@ -40,9 +36,9 @@ public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
 
     void setVillager(boolean flag);
 
-    void setProfession(int type);
-
     int getProfession();
+
+    void setProfession(int type);
 
     int getType();
 
@@ -51,4 +47,8 @@ public interface MyZombie extends MyPet, MyPetEquipment, MyPetBaby {
     Type getZombieType();
 
     void setZombieType(Type type);
+
+    enum Type {
+        NORMAL, HUSK, VILLAGER
+    }
 }

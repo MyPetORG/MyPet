@@ -207,7 +207,7 @@ public class Configuration {
 
         public static class Axolotl {
             public static ConfigItem GROW_UP_ITEM;
-    	}
+        }
 
         public static class Armadillo {
             public static ConfigItem GROW_UP_ITEM;
@@ -267,17 +267,17 @@ public class Configuration {
 
             public static ConfigItem GROW_UP_ITEM;
         }
-        
+
         public static class Drowned {
 
             public static ConfigItem GROW_UP_ITEM;
         }
-        
+
         public static class Fox {
 
             public static ConfigItem GROW_UP_ITEM;
         }
-        
+
         public static class EnderDragon {
 
             public static boolean CAN_GLIDE = true;
@@ -304,7 +304,7 @@ public class Configuration {
 
             public static ConfigItem GROW_UP_ITEM;
         }
-        
+
         public static class Husk {
 
             public static ConfigItem GROW_UP_ITEM;
@@ -409,12 +409,12 @@ public class Configuration {
 
             public static ConfigItem GROW_UP_ITEM;
         }
-        
+
         public static class TraderLlama {
 
             public static ConfigItem GROW_UP_ITEM;
         }
-        
+
         public static class Turtle {
 
             public static ConfigItem GROW_UP_ITEM;

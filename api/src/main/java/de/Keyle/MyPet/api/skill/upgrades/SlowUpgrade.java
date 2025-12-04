@@ -32,9 +32,13 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Slow")
 public class SlowUpgrade implements Upgrade<Slow> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier chanceModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier durationModifier = null;
 
     @Override

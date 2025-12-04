@@ -32,7 +32,9 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Damage")
 public class DamageUpgrade implements Upgrade<Damage> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier damageModifier = null;
 
     @Override

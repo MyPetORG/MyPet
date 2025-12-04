@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
 import de.keyle.knbt.TagCompound;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -129,12 +128,12 @@ public class ShopMyPet implements StoredMyPet {
         NBTextendetInfo = info;
     }
 
-    public void setOwner(MyPetPlayer owner) {
-        petOwner = owner;
-    }
-
     public MyPetPlayer getOwner() {
         return petOwner;
+    }
+
+    public void setOwner(MyPetPlayer owner) {
+        petOwner = owner;
     }
 
     public String getPetName() {
@@ -213,6 +212,12 @@ public class ShopMyPet implements StoredMyPet {
         return worldGroup;
     }
 
+    public void setWorldGroup(String worldGroup) {
+        if (worldGroup != null) {
+            this.worldGroup = worldGroup;
+        }
+    }
+
     @Override
     public long getLastUsed() {
         return System.currentTimeMillis();
@@ -220,12 +225,6 @@ public class ShopMyPet implements StoredMyPet {
 
     @NotImplemented
     public void setLastUsed(long lastUsed) {
-    }
-
-    public void setWorldGroup(String worldGroup) {
-        if (worldGroup != null) {
-            this.worldGroup = worldGroup;
-        }
     }
 
     public void load(ConfigurationSection config) {

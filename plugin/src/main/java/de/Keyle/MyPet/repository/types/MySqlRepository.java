@@ -36,9 +36,9 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
@@ -501,8 +501,8 @@ public class MySqlRepository implements Repository {
     @Override
     public List<StoredMyPet> getAllMyPets() {
         try (Connection connection = dataSource.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets;")) {
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets;")) {
             List<MyPetPlayer> playerList = getAllMyPetPlayers();
             Map<UUID, MyPetPlayer> owners = new HashMap<>();
 
@@ -599,7 +599,7 @@ public class MySqlRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if(petsToBeSaved.containsKey(uuid)) {
+                    if (petsToBeSaved.containsKey(uuid)) {
                         return;
                     }
 

@@ -33,7 +33,6 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
@@ -41,6 +40,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -76,15 +76,13 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public static StateFlag PVP;
     public static StateFlag DAMAGE_ANIMALS;
-
-    protected WorldGuardPlugin wgp;
-    protected boolean customFlags = false;
-
-    protected Map<String, Boolean> missingEntityTypeFixValue = new HashMap<>();
-    protected boolean is7 = false;
     protected static Method METHOD_getRegionManager = ReflectionUtil.getMethod(WorldGuardPlugin.class, "getRegionManager", World.class);
     protected static Method METHOD_getFlagRegistry = ReflectionUtil.getMethod(WorldGuardPlugin.class, "getFlagRegistry");
     protected static Method METHOD_getApplicableRegions = ReflectionUtil.getMethod(RegionManager.class, "getApplicableRegions", Location.class);
+    protected WorldGuardPlugin wgp;
+    protected boolean customFlags = false;
+    protected Map<String, Boolean> missingEntityTypeFixValue = new HashMap<>();
+    protected boolean is7 = false;
 
     public WorldGuardHook() {
         if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {

@@ -23,8 +23,8 @@ package de.Keyle.MyPet.compat.v1_18_R2.util.inventory;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
+import de.keyle.knbt.TagType;
 import net.minecraft.nbt.*;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
@@ -37,7 +37,7 @@ import java.util.Set;
 @Compat("v1_18_R2")
 public class ItemStackNBTConverter {
 
-	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "c"); //List-Field
+    private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "c"); //List-Field
 
     public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));

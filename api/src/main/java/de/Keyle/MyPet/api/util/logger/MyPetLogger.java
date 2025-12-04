@@ -45,11 +45,11 @@ import java.util.stream.Collectors;
 
 public class MyPetLogger extends PluginLogger {
 
-    protected boolean debugSetup = false;
-    private static FileHandler debugLogFileHandler = null;
     private static final ANSIComponentSerializer ANSI_SERIALIZER = ANSIComponentSerializer.ansi();
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
+    private static FileHandler debugLogFileHandler = null;
     private final String customName;
+    protected boolean debugSetup = false;
 
     public MyPetLogger(Plugin context) {
         super(context);

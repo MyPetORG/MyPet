@@ -39,86 +39,86 @@ import org.bukkit.Sound;
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
 
-	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<String> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> COLOR_WATCHER = SynchedEntityData.defineId(EntityMyMooshroom.class, EntityDataSerializers.STRING);
 
-	public EntityMyMooshroom(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyMooshroom(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.cow.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.cow.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.cow.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.cow.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.cow.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.cow.ambient";
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (itemStack != null) {
-			if (itemStack.getItem().equals(Items.BOWL)) {
-				if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
+        if (itemStack != null) {
+            if (itemStack.getItem().equals(Items.BOWL)) {
+                if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
                     return InteractionResult.FAIL;
-				} else {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.MUSHROOM_STEW));
-					} else {
-						if (!entityhuman.getInventory().add(new ItemStack(Items.MUSHROOM_STEW))) {
-							entityhuman.drop(new ItemStack(Items.MUSHROOM_STEW), true);
-						}
-					}
-					return InteractionResult.CONSUME;
-				}
-			}
-			if (getOwner().equals(entityhuman) && canUseItem()) {
-				if (Configuration.MyPet.Mooshroom.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
-					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-						itemStack.shrink(1);
-						if (itemStack.getCount() <= 0) {
-							entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-						}
-					}
-					getMyPet().setBaby(false);
-					return InteractionResult.CONSUME;
-				}
-			}
-		}
-		return InteractionResult.PASS;
-	}
+                } else {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.MUSHROOM_STEW));
+                    } else {
+                        if (!entityhuman.getInventory().add(new ItemStack(Items.MUSHROOM_STEW))) {
+                            entityhuman.drop(new ItemStack(Items.MUSHROOM_STEW), true);
+                        }
+                    }
+                    return InteractionResult.CONSUME;
+                }
+            }
+            if (getOwner().equals(entityhuman) && canUseItem()) {
+                if (Configuration.MyPet.Mooshroom.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                    if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        itemStack.shrink(1);
+                        if (itemStack.getCount() <= 0) {
+                            entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                        }
+                    }
+                    getMyPet().setBaby(false);
+                    return InteractionResult.CONSUME;
+                }
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(AGE_WATCHER, false);
-		builder.define(COLOR_WATCHER, "red");
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_WATCHER, false);
+        builder.define(COLOR_WATCHER, "red");
+    }
 
-	@Override
-	public void updateVisuals() {
-		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());
-	}
+    @Override
+    public void updateVisuals() {
+        this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
+        this.getEntityData().set(COLOR_WATCHER, getMyPet().getType().getType());
+    }
 
-	@Override
-	public void playPetStepSound() {
-		getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_COW_STEP, 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_COW_STEP, 0.15F, 1.0F);
+    }
 
-	@Override
-	public MyMooshroom getMyPet() {
-		return (MyMooshroom) myPet;
-	}
+    @Override
+    public MyMooshroom getMyPet() {
+        return (MyMooshroom) myPet;
+    }
 }

@@ -42,11 +42,12 @@ import java.util.*;
  */
 public class PluginHookManager {
 
+    @Getter
+    public ConfigurationYAML config;
     protected ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
     protected Map<String, PluginHook> hookByName = new HashMap<>();
     protected Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
     protected Queue<PluginHook> registeredHooks = new ArrayDeque<>();
-    @Getter public ConfigurationYAML config;
 
     public PluginHookManager() {
         File hookConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "hooks-config.yml");
@@ -61,6 +62,30 @@ public class PluginHookManager {
                 """);
         config.getConfig().options().copyHeader(true);
         config.getConfig().options().copyDefaults(true);
+    }
+
+    /**
+     * checks if a plugin with a specific class name is enabled
+     *
+     * @param pluginName name of the plugin
+     * @param className  class name
+     * @return if the plugin is enabled
+     */
+    public static boolean isPluginUsable(String pluginName, String className) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className);
+    }
+
+    /**
+     * checks if a plugin with a specific class name is available
+     *
+     * @param pluginName name of the plugin
+     * @param className  class name
+     * @return if the plugin is available
+     */
+    public static boolean isPluginAvailable(String pluginName, String className) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.getClass().getName().equals(className);
     }
 
     /**
@@ -327,18 +352,6 @@ public class PluginHookManager {
     }
 
     /**
-     * checks if a plugin with a specific class name is enabled
-     *
-     * @param pluginName name of the plugin
-     * @param className  class name
-     * @return if the plugin is enabled
-     */
-    public static boolean isPluginUsable(String pluginName, String className) {
-        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
-        return plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className);
-    }
-
-    /**
      * checks if a plugin is available
      *
      * @param pluginName name of the plugin
@@ -347,17 +360,5 @@ public class PluginHookManager {
     public boolean isPluginAvailable(String pluginName) {
         JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
         return plugin != null;
-    }
-
-    /**
-     * checks if a plugin with a specific class name is available
-     *
-     * @param pluginName name of the plugin
-     * @param className  class name
-     * @return if the plugin is available
-     */
-    public static boolean isPluginAvailable(String pluginName, String className) {
-        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
-        return plugin != null && plugin.getClass().getName().equals(className);
     }
 }

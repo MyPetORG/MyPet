@@ -30,26 +30,6 @@ import java.util.Map;
 public class DonateCheck {
     private static Map<String, Character> donMap = new HashMap<>();
 
-    public enum DonationRank {
-        Creator("☣"),
-        Donator("❤"),
-        Translator("✈"),
-        Developer("✪"),
-        Helper("☘"),
-        Premium("$"),
-        None("");
-
-        String defaultIcon;
-
-        DonationRank(String defaultIcon) {
-            this.defaultIcon = defaultIcon;
-        }
-
-        public String getDefaultIcon() {
-            return defaultIcon;
-        }
-    }
-
     private static void fillDonMap() {
         BufferedReader donation = null;
         int timeout = 2000;
@@ -64,9 +44,9 @@ public class DonateCheck {
 
             String line;
             while ((line = donation.readLine()) != null) {
-                donMap.put(line.substring(0,line.length()-1), line.charAt(line.length() - 1));
+                donMap.put(line.substring(0, line.length() - 1), line.charAt(line.length() - 1));
             }
-        } catch(Exception ignored) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -84,17 +64,17 @@ public class DonateCheck {
             // no data will be saved on the server
             String check;
             if (player.getMojangUUID() != null) {
-                check = player.getName()+","+player.getMojangUUID()+",";
+                check = player.getName() + "," + player.getMojangUUID() + ",";
             } else {
-                check = player.getName()+",,";
+                check = player.getName() + ",,";
             }
 
-            if(donMap.isEmpty()) {
+            if (donMap.isEmpty()) {
                 fillDonMap();
             }
 
             Character donCheck = '0';
-            if(donMap.containsKey(check)) {
+            if (donMap.containsKey(check)) {
                 donCheck = donMap.get(check);
             }
             switch (donCheck) {
@@ -114,6 +94,26 @@ public class DonateCheck {
         } catch (Exception ignored) {
         } finally {
             return DonationRank.None;
+        }
+    }
+
+    public enum DonationRank {
+        Creator("☣"),
+        Donator("❤"),
+        Translator("✈"),
+        Developer("✪"),
+        Helper("☘"),
+        Premium("$"),
+        None("");
+
+        String defaultIcon;
+
+        DonationRank(String defaultIcon) {
+            this.defaultIcon = defaultIcon;
+        }
+
+        public String getDefaultIcon() {
+            return defaultIcon;
         }
     }
 }

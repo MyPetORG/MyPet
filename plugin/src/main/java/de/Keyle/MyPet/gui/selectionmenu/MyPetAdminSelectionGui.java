@@ -20,22 +20,6 @@
 
 package de.Keyle.MyPet.gui.selectionmenu;
 
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RESET;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -49,13 +33,23 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
+import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.*;
+
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RESET;
 
 public class MyPetAdminSelectionGui {
     MyPetPlayer petOwner;
     Player admin;
     Component title;
-    
-    public MyPetAdminSelectionGui(MyPetPlayer player, Player admin,  Component title) {
+
+    public MyPetAdminSelectionGui(MyPetPlayer player, Player admin, Component title) {
         this.petOwner = player;
         this.admin = admin;
         this.title = title;
@@ -175,7 +169,7 @@ public class MyPetAdminSelectionGui {
                 );
             }
 
-            menu.open(admin); 
+            menu.open(admin);
         }
     }
 }

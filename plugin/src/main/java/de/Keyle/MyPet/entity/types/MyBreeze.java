@@ -27,24 +27,24 @@ import org.bukkit.ChatColor;
 
 public class MyBreeze extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBreeze {
 
-	public MyBreeze(MyPetPlayer petOwner) {
-		super(petOwner);
-	}
+    public MyBreeze(MyPetPlayer petOwner) {
+        super(petOwner);
+    }
 
-	@Override
-	public MyPetType getPetType() {
-		return MyPetType.Breeze;
-	}
+    @Override
+    public MyPetType getPetType() {
+        return MyPetType.Breeze;
+    }
 
-	@Override
-	public String toString() {
-		return "MyBreeze{owner=" + getOwner().getName() +
-				", name=" + ChatColor.stripColor(petName) +
-				", exp=" + experience.getExp() +
-				"/" + experience.getRequiredExp() +
-				", lv=" + experience.getLevel() +
-				", status=" + status.name() +
-				", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
-				", worldgroup=" + worldGroup + "}";
-	}
+    @Override
+    public String toString() {
+        return "MyBreeze{owner=" + getOwner().getName() +
+                ", name=" + ChatColor.stripColor(petName) +
+                ", exp=" + experience.getExp() +
+                "/" + experience.getRequiredExp() +
+                ", lv=" + experience.getLevel() +
+                ", status=" + status.name() +
+                ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
+                ", worldgroup=" + worldGroup + "}";
+    }
 }

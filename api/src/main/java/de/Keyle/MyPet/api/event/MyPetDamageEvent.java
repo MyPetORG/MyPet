@@ -43,6 +43,11 @@ public class MyPetDamageEvent extends Event implements Cancellable {
         this.damage = damage;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPet getMyPet() {
         return myPet;
     }
@@ -76,11 +81,6 @@ public class MyPetDamageEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

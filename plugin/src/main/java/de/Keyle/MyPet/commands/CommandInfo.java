@@ -41,13 +41,11 @@ import java.util.List;
 
 public class CommandInfo implements CommandTabCompleter {
 
-    public enum PetInfoDisplay {
-        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);
-
-        public boolean adminOnly;
-
-        PetInfoDisplay(boolean adminOnly) {
-            this.adminOnly = adminOnly;
+    public static boolean canSee(boolean adminOnly, CommandSender sender, StoredMyPet storedMyPet) {
+        if (sender instanceof Player player) {
+            return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin", false);
+        } else {
+            return true;
         }
     }
 
@@ -218,11 +216,13 @@ public class CommandInfo implements CommandTabCompleter {
         return Collections.emptyList();
     }
 
-    public static boolean canSee(boolean adminOnly, CommandSender sender, StoredMyPet storedMyPet) {
-        if (sender instanceof Player player) {
-            return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin", false);
-        } else {
-            return true;
+    public enum PetInfoDisplay {
+        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);
+
+        public boolean adminOnly;
+
+        PetInfoDisplay(boolean adminOnly) {
+            this.adminOnly = adminOnly;
         }
     }
 }

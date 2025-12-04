@@ -45,7 +45,7 @@ public class CommandCall implements CommandTabCompleter {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
-                if(myPet.getEntity().isPresent()) {
+                if (myPet.getEntity().isPresent()) {
                     //Only let it respawn if it actually was there before
                     myPet.removePet(true);
                 }
@@ -53,76 +53,76 @@ public class CommandCall implements CommandTabCompleter {
                 switch (myPet.createEntity()) {
                     case Success:
                         sender.sendMessage(MessageUtil.success(
-                            Util.formatTranslation(
-                                "Message.Command.Call.Success",
-                                petOwner,
-                                MessageUtil.petName(myPet.getPetName())
-                            ), false
+                                Util.formatTranslation(
+                                        "Message.Command.Call.Success",
+                                        petOwner,
+                                        MessageUtil.petName(myPet.getPetName())
+                                ), false
                         ));
                         break;
                     case Canceled:
                         sender.sendMessage(MessageUtil.error(
-                            Util.formatTranslation(
-                                "Message.Spawn.Prevent",
-                                petOwner,
-                                MessageUtil.petName(myPet.getPetName())
-                            ), false
+                                Util.formatTranslation(
+                                        "Message.Spawn.Prevent",
+                                        petOwner,
+                                        MessageUtil.petName(myPet.getPetName())
+                                ), false
                         ));
                         break;
                     case NoSpace:
                         sender.sendMessage(MessageUtil.error(
-                            Util.formatTranslation(
-                                "Message.Spawn.NoSpace",
-                                petOwner,
-                                MessageUtil.petName(myPet.getPetName())
-                            ), false
+                                Util.formatTranslation(
+                                        "Message.Spawn.NoSpace",
+                                        petOwner,
+                                        MessageUtil.petName(myPet.getPetName())
+                                ), false
                         ));
                         break;
                     case NotAllowed:
                         sender.sendMessage(MessageUtil.error(
-                            Util.formatTranslation(
-                                "Message.No.AllowedHere",
-                                petOwner,
-                                MessageUtil.petName(myPet.getPetName())
-                            ), false
+                                Util.formatTranslation(
+                                        "Message.No.AllowedHere",
+                                        petOwner,
+                                        MessageUtil.petName(myPet.getPetName())
+                                ), false
                         ));
                         break;
                     case Dead:
                         if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
                             sender.sendMessage(MessageUtil.info(
-                                Util.formatTranslation(
-                                    "Message.Call.Dead",
-                                    petOwner,
-                                    MessageUtil.petName(myPet.getPetName())
-                                ), false
+                                    Util.formatTranslation(
+                                            "Message.Call.Dead",
+                                            petOwner,
+                                            MessageUtil.petName(myPet.getPetName())
+                                    ), false
                             ));
                         } else {
                             sender.sendMessage(MessageUtil.info(
-                                Util.formatTranslation(
-                                    "Message.Call.Dead.Respawn",
-                                    petOwner,
-                                    MessageUtil.petName(myPet.getPetName()),
-                                    myPet.getRespawnTime()
-                                ), false
+                                    Util.formatTranslation(
+                                            "Message.Call.Dead.Respawn",
+                                            petOwner,
+                                            MessageUtil.petName(myPet.getPetName()),
+                                            myPet.getRespawnTime()
+                                    ), false
                             ));
                         }
                         break;
                     case Flying:
                         sender.sendMessage(MessageUtil.error(
-                            Util.formatTranslation(
-                                "Message.Spawn.Flying",
-                                petOwner,
-                                MessageUtil.petName(myPet.getPetName())
-                            ), false
+                                Util.formatTranslation(
+                                        "Message.Spawn.Flying",
+                                        petOwner,
+                                        MessageUtil.petName(myPet.getPetName())
+                                ), false
                         ));
                         break;
                     case Spectator:
                         sender.sendMessage(MessageUtil.error(
-                            Util.formatTranslation(
-                                "Message.Spawn.Spectator",
-                                petOwner,
-                                MessageUtil.petName(myPet.getPetName())
-                            ), false
+                                Util.formatTranslation(
+                                        "Message.Spawn.Spectator",
+                                        petOwner,
+                                        MessageUtil.petName(myPet.getPetName())
+                                ), false
                         ));
                         break;
                 }

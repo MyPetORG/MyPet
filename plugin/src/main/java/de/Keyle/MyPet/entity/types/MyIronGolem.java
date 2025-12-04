@@ -68,10 +68,6 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
         return flower;
     }
 
-    public boolean hasFlower() {
-        return flower != null;
-    }
-
     public void setFlower(ItemStack item) {
         if (item != null && item.getType() != EnumSelector.find(Material.class, "RED_ROSE", "POPPY") && item.getData().getData() == 0) {
             return;
@@ -83,6 +79,10 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasFlower() {
+        return flower != null;
     }
 
     @Override

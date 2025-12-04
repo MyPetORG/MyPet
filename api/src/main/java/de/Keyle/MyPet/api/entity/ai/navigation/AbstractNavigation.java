@@ -21,19 +21,12 @@
 package de.Keyle.MyPet.api.entity.ai.navigation;
 
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
-
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
 public abstract class AbstractNavigation {
     protected MyPetMinecraftEntity entityMyPet;
     protected NavigationParameters parameters;
-
-    public abstract void stop();
-
-    public abstract boolean navigateTo(double x, double y, double z);
-
-    public abstract void applyNavigationParameters();
 
     public AbstractNavigation(MyPetMinecraftEntity entityMyPet) {
         this.entityMyPet = entityMyPet;
@@ -44,6 +37,12 @@ public abstract class AbstractNavigation {
         this.entityMyPet = entityMyPet;
         this.parameters = parameters;
     }
+
+    public abstract void stop();
+
+    public abstract boolean navigateTo(double x, double y, double z);
+
+    public abstract void applyNavigationParameters();
 
     public boolean navigateTo(Location loc) {
         return navigateTo(loc.getX(), loc.getY(), loc.getZ());

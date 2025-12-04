@@ -30,32 +30,32 @@ import net.minecraft.world.level.Level;
 @EntitySize(width = 0.7F, height = 0.4f)
 public class EntityMyTadpole extends EntityMyAquaticPet {
 
-	public EntityMyTadpole(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyTadpole(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.tadpole.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.tadpole.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.tadpole.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.tadpole.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.frog.tongue";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.frog.tongue";
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+    }
 
-	@Override
-	public MyTadpole getMyPet() {
-		return (MyTadpole) myPet;
-	}
+    @Override
+    public MyTadpole getMyPet() {
+        return (MyTadpole) myPet;
+    }
 }

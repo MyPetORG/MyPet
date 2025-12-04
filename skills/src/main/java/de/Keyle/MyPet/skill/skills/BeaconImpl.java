@@ -49,11 +49,6 @@ import static org.bukkit.Material.*;
 
 public class BeaconImpl implements Beacon {
 
-    SkullMeta disabledMeta = new SkullMeta();
-    SkullMeta partyMeta = new SkullMeta();
-    SkullMeta everyoneMeta = new SkullMeta();
-    org.bukkit.inventory.meta.SkullMeta ownerMeta;
-
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> selectableBuffs = new UpgradeComputer<>(0);
@@ -64,6 +59,10 @@ public class BeaconImpl implements Beacon {
     protected BuffReceiver receiver = BuffReceiver.Owner;
     protected int beaconTimer = 0;
     protected Set<Buff> selectedBuffs = new HashSet<>();
+    SkullMeta disabledMeta = new SkullMeta();
+    SkullMeta partyMeta = new SkullMeta();
+    SkullMeta everyoneMeta = new SkullMeta();
+    org.bukkit.inventory.meta.SkullMeta ownerMeta;
 
     public BeaconImpl(MyPet myPet) {
         this.myPet = myPet;

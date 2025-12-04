@@ -70,8 +70,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public Boolean canSpawn(Location loc, AABB bb, boolean canSpawnUnderwater) {
         net.minecraft.world.level.Level mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-        if(canSpawnUnderwater) {
-        	return getBlockBBsInBB(mcWorld, bb).isEmpty();
+        if (canSpawnUnderwater) {
+            return getBlockBBsInBB(mcWorld, bb).isEmpty();
         }
         return getBlockBBsInBB(mcWorld, bb).isEmpty() && !mcWorld.containsAnyLiquid(bb);
     }
@@ -138,10 +138,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(tag);
         if (vanillaNBT != null) {
             if (bukkitEntity instanceof Villager) {
-            	net.minecraft.world.entity.npc.Villager villager = (net.minecraft.world.entity.npc.Villager) entity;
+                net.minecraft.world.entity.npc.Villager villager = (net.minecraft.world.entity.npc.Villager) entity;
                 villager.readAdditionalSaveData(vanillaNBT);
             } else if (bukkitEntity instanceof net.minecraft.world.entity.npc.WanderingTrader) {
-            	net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
+                net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
                 villager.addAdditionalSaveData(vanillaNBT);
             }
         }
@@ -226,8 +226,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public Entity getEntity(int id, World world) {
-    	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntity(id);
-    	return e != null ? e.getBukkitEntity() : null;
+        net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntity(id);
+        return e != null ? e.getBukkitEntity() : null;
     }
 
     public org.bukkit.inventory.ItemStack asBukkitItemStack(ItemStack itemStack) {
@@ -268,6 +268,6 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean doStackWalking(Class leClass, int oldDepth) {
-        return leWalker.walk(s -> s.limit(oldDepth+1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
+        return leWalker.walk(s -> s.limit(oldDepth + 1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
     }
 }

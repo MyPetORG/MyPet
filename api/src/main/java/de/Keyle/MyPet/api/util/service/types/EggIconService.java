@@ -29,6 +29,13 @@ import org.bukkit.Material;
 @ServiceName("EggIconService")
 public class EggIconService implements ServiceContainer {
     /**
+     * Helper: convert PascalCase enum names (e.g., PiglinBrute) to UPPER_SNAKE (PIGLIN_BRUTE)
+     */
+    protected static String toUpperSnake(String in) {
+        return in.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
+    }
+
+    /**
      * API implementation for choosing an icon Material for a Pet type.
      * <p>
      * NMS-specific subclasses may override this to fix egg identification.
@@ -76,12 +83,5 @@ public class EggIconService implements ServiceContainer {
         }
 
         icon.setMaterial(material);
-    }
-
-    /**
-     * Helper: convert PascalCase enum names (e.g., PiglinBrute) to UPPER_SNAKE (PIGLIN_BRUTE)
-     */
-    protected static String toUpperSnake(String in) {
-        return in.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
     }
 }

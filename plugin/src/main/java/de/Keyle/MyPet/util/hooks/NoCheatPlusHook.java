@@ -58,7 +58,7 @@ public class NoCheatPlusHook implements PluginHook {
                     case "MOVING_MOREPACKETS":
                     case "MOVING_VEHICLE_MOREPACKETS":
                         if (player.isInsideVehicle()) {
-                            if(player.getVehicle().getType() == EntityType.ARMOR_STAND && player.getVehicle().isInsideVehicle()) {
+                            if (player.getVehicle().getType() == EntityType.ARMOR_STAND && player.getVehicle().isInsideVehicle()) {
                                 return player.getVehicle().getVehicle() instanceof MyPetBukkitEntity;
                             }
                             return player.getVehicle() instanceof MyPetBukkitEntity;

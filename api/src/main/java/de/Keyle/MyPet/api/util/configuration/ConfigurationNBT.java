@@ -22,11 +22,13 @@ package de.Keyle.MyPet.api.util.configuration;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 
 public class ConfigurationNBT {
@@ -37,17 +39,17 @@ public class ConfigurationNBT {
         NBTFile = file;
     }
 
+    public static boolean save(File file, TagCompound tag) {
+        ConfigurationNBT config = new ConfigurationNBT(file);
+        config.nbtTagCompound = tag;
+        return config.save();
+    }
+
     public TagCompound getNBTCompound() {
         if (nbtTagCompound == null) {
             clearConfig();
         }
         return nbtTagCompound;
-    }
-
-    public static boolean save(File file, TagCompound tag) {
-        ConfigurationNBT config = new ConfigurationNBT(file);
-        config.nbtTagCompound = tag;
-        return config.save();
     }
 
     public boolean save() {

@@ -92,13 +92,18 @@ import java.util.*;
 public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<Interval<T, S>> {
 
     /**
+     * The midpoint of the initial interval added to the node. It is an immutable value
+     * and can not be changed, even if the initial interval has been removed from the
+     * node.
+     */
+    protected final T midpoint;
+    /**
      * A set containing all {@link Interval}s stored in this node, ordered by their
      * starting points.
      *
      * @see Interval#sweepLeftToRight
      */
     protected NavigableSet<Interval<T, S>> increasing;
-
     /**
      * A set containing all {@link Interval}s stored in this node, ordered by their
      * end points.
@@ -106,28 +111,18 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
      * @see Interval#sweepRightToLeft
      */
     protected NavigableSet<Interval<T, S>> decreasing;
-
     /**
      * A pointer to the left child of the current node. The left child must either be
      * {@code null} or have a midpoint, smaller than the midpoint of the current node. More
      * formally, {@code left.midpoint.compareTo(this.midpoint) < 0} must evaluate to {@code true}.
      */
     protected TreeNode<T, S> left;
-
     /**
      * A pointer to the right child of the current node. The right child must either be
      * {@code null} or have a midpoint, larger than the midpoint of the current node. More
      * formally, {@code right.midpoint.compareTo(this.midpoint) > 0} must evaluate to {@code true}.
      */
     protected TreeNode<T, S> right;
-
-    /**
-     * The midpoint of the initial interval added to the node. It is an immutable value
-     * and can not be changed, even if the initial interval has been removed from the
-     * node.
-     */
-    protected final T midpoint;
-
     /**
      * The height of the node.
      */
@@ -184,16 +179,6 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
     }
 
     /**
-     * Returns the height of the subtree, rooted at the current node.
-     *
-     * @return The height of the subtree, rooted ad the current node. It will be 1, if
-     * the node is a leaf.
-     */
-    public int height() {
-        return height;
-    }
-
-    /**
      * Returns the height of a subtree, rooted at a given node. This function accepts
      * {@code null} values and returns 0 as height for them.
      *
@@ -203,113 +188,6 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
      */
     private static int height(TreeNode node) {
         return node == null ? 0 : node.height();
-    }
-
-    /**
-     * Checks if the subtree rooted at the current node is balanced and balances it
-     * if necessary.
-     *
-     * @return The new root of the subtree, after the balancing operation has been
-     * performed. It may return a {@code null} value, if the balancing has been
-     * triggered by a {@link #removeInterval(IntervalTree, TreeNode, Interval)} operation
-     * and the removed interval had been the last one in the subtree.
-     */
-    private TreeNode<T, S> balanceOut() {
-        int balance = height(left) - height(right);
-        if (balance < -1) {
-            // The tree is right-heavy.
-            if (height(right.left) > height(right.right)) {
-                this.right = this.right.rightRotate();
-                return leftRotate();
-            } else {
-                return leftRotate();
-            }
-        } else if (balance > 1) {
-            // The tree is left-heavy.
-            if (height(left.right) > height(left.left)) {
-                this.left = this.left.leftRotate();
-                return rightRotate();
-            } else {
-                return rightRotate();
-            }
-        } else {
-            // The tree is already balanced.
-            return this;
-        }
-    }
-
-    /**
-     * Performs a left rotation of the current node, by promoting its right child
-     * and demoting the current node. After the left rotation, the promoted node
-     * {@link #assimilateOverlappingIntervals(TreeNode) assimilates} the intervals in
-     * the demoted node, which intersect its middlepoint.
-     *
-     * @return The new root of the subtree rooted at the current node, after the
-     * rotation has been performed.
-     */
-    private TreeNode<T, S> leftRotate() {
-        TreeNode<T, S> head = right;
-        right = head.left;
-        head.left = this;
-        height = Math.max(height(right), height(left)) + 1;
-        head.left = head.assimilateOverlappingIntervals(this);
-        return head;
-    }
-
-    /**
-     * Performs a right rotation of the current node, by promoting its left child
-     * and demoting the current node. After the right rotation, the promoted node
-     * {@link #assimilateOverlappingIntervals(TreeNode) assimilates} the intervals in
-     * the demoted node, which intersect its middlepoint.
-     *
-     * @return The new root of the subtree rooted at the current node, after the
-     * rotation has been performed.
-     */
-    private TreeNode<T, S> rightRotate() {
-        TreeNode<T, S> head = left;
-        left = head.right;
-        head.right = this;
-        height = Math.max(height(right), height(left)) + 1;
-        head.right = head.assimilateOverlappingIntervals(this);
-        return head;
-    }
-
-    /**
-     * Transfers all intervals from a target node to the current node, if they
-     * intersect the middlepoint of the current node. After this operation, it
-     * is possible that the target node remains empty. If so, it needs to be
-     * deleted, possible causing the subtree to be rebalanced.
-     *
-     * @param from The target node, from which intervals will be assimilated.
-     * @return The new root of subtree, rooted at the current node.
-     */
-    private TreeNode<T, S> assimilateOverlappingIntervals(TreeNode<T, S> from) {
-        ArrayList<Interval<T, S>> tmp = new ArrayList<>();
-
-        if (midpoint.compareTo(from.midpoint) < 0) {
-            for (Interval<T, S> next : from.increasing) {
-                if (next.isRightOf(midpoint)) {
-                    break;
-                }
-                tmp.add(next);
-            }
-        } else {
-            for (Interval<T, S> next : from.decreasing) {
-                if (next.isLeftOf(midpoint)) {
-                    break;
-                }
-                tmp.add(next);
-            }
-        }
-
-        tmp.forEach(from.increasing::remove);
-        tmp.forEach(from.decreasing::remove);
-        increasing.addAll(tmp);
-        decreasing.addAll(tmp);
-        if (from.increasing.isEmpty()) {
-            return deleteNode(from);
-        }
-        return from;
     }
 
     /**
@@ -346,7 +224,6 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
             return TreeNode.query(root.right, point, res);
         }
     }
-
 
     /**
      * A helper function for the {@link IntervalTree#remove(Interval)} method.
@@ -500,6 +377,122 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
         }
     }
 
+    /**
+     * Returns the height of the subtree, rooted at the current node.
+     *
+     * @return The height of the subtree, rooted ad the current node. It will be 1, if
+     * the node is a leaf.
+     */
+    public int height() {
+        return height;
+    }
+
+    /**
+     * Checks if the subtree rooted at the current node is balanced and balances it
+     * if necessary.
+     *
+     * @return The new root of the subtree, after the balancing operation has been
+     * performed. It may return a {@code null} value, if the balancing has been
+     * triggered by a {@link #removeInterval(IntervalTree, TreeNode, Interval)} operation
+     * and the removed interval had been the last one in the subtree.
+     */
+    private TreeNode<T, S> balanceOut() {
+        int balance = height(left) - height(right);
+        if (balance < -1) {
+            // The tree is right-heavy.
+            if (height(right.left) > height(right.right)) {
+                this.right = this.right.rightRotate();
+                return leftRotate();
+            } else {
+                return leftRotate();
+            }
+        } else if (balance > 1) {
+            // The tree is left-heavy.
+            if (height(left.right) > height(left.left)) {
+                this.left = this.left.leftRotate();
+                return rightRotate();
+            } else {
+                return rightRotate();
+            }
+        } else {
+            // The tree is already balanced.
+            return this;
+        }
+    }
+
+    /**
+     * Performs a left rotation of the current node, by promoting its right child
+     * and demoting the current node. After the left rotation, the promoted node
+     * {@link #assimilateOverlappingIntervals(TreeNode) assimilates} the intervals in
+     * the demoted node, which intersect its middlepoint.
+     *
+     * @return The new root of the subtree rooted at the current node, after the
+     * rotation has been performed.
+     */
+    private TreeNode<T, S> leftRotate() {
+        TreeNode<T, S> head = right;
+        right = head.left;
+        head.left = this;
+        height = Math.max(height(right), height(left)) + 1;
+        head.left = head.assimilateOverlappingIntervals(this);
+        return head;
+    }
+
+    /**
+     * Performs a right rotation of the current node, by promoting its left child
+     * and demoting the current node. After the right rotation, the promoted node
+     * {@link #assimilateOverlappingIntervals(TreeNode) assimilates} the intervals in
+     * the demoted node, which intersect its middlepoint.
+     *
+     * @return The new root of the subtree rooted at the current node, after the
+     * rotation has been performed.
+     */
+    private TreeNode<T, S> rightRotate() {
+        TreeNode<T, S> head = left;
+        left = head.right;
+        head.right = this;
+        height = Math.max(height(right), height(left)) + 1;
+        head.right = head.assimilateOverlappingIntervals(this);
+        return head;
+    }
+
+    /**
+     * Transfers all intervals from a target node to the current node, if they
+     * intersect the middlepoint of the current node. After this operation, it
+     * is possible that the target node remains empty. If so, it needs to be
+     * deleted, possible causing the subtree to be rebalanced.
+     *
+     * @param from The target node, from which intervals will be assimilated.
+     * @return The new root of subtree, rooted at the current node.
+     */
+    private TreeNode<T, S> assimilateOverlappingIntervals(TreeNode<T, S> from) {
+        ArrayList<Interval<T, S>> tmp = new ArrayList<>();
+
+        if (midpoint.compareTo(from.midpoint) < 0) {
+            for (Interval<T, S> next : from.increasing) {
+                if (next.isRightOf(midpoint)) {
+                    break;
+                }
+                tmp.add(next);
+            }
+        } else {
+            for (Interval<T, S> next : from.decreasing) {
+                if (next.isLeftOf(midpoint)) {
+                    break;
+                }
+                tmp.add(next);
+            }
+        }
+
+        tmp.forEach(from.increasing::remove);
+        tmp.forEach(from.decreasing::remove);
+        increasing.addAll(tmp);
+        decreasing.addAll(tmp);
+        if (from.increasing.isEmpty()) {
+            return deleteNode(from);
+        }
+        return from;
+    }
 
     /**
      * An iterator over all intervals stored in subtree rooted at the current node. Traversal

@@ -72,11 +72,11 @@ import java.util.List;
 @Compat("v1_21_R6")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
+    public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
     private static final TagParser<?> TAG_PARSER_INSTANCE = TagParser.create(NbtOps.INSTANCE);
     private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
-    public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
     private static final RegistryAccess REGISTRY_ACCESS = CraftRegistry.getMinecraftRegistry();
-    private static Method readParticleMethod = ReflectionUtil.getMethod(ParticleArgument.class,"a", TagParser.class, StringReader.class, ParticleType.class, HolderLookup.Provider.class);
+    private static Method readParticleMethod = ReflectionUtil.getMethod(ParticleArgument.class, "a", TagParser.class, StringReader.class, ParticleType.class, HolderLookup.Provider.class);
 
     @Override
     public boolean canSpawn(Location loc, MyPetMinecraftEntity entity) {
@@ -85,8 +85,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public Boolean canSpawn(Location loc, AABB bb, boolean canSpawnUnderwater) {
         net.minecraft.world.level.Level mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-        if(canSpawnUnderwater) {
-        	return getBlockBBsInBB(mcWorld, bb).isEmpty();
+        if (canSpawnUnderwater) {
+            return getBlockBBsInBB(mcWorld, bb).isEmpty();
         }
         return getBlockBBsInBB(mcWorld, bb).isEmpty() && !mcWorld.containsAnyLiquid(bb);
     }
@@ -156,7 +156,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
             if (bukkitEntity instanceof Villager) {
                 VillagerNbtIO.readInto(bukkitEntity, nbtData);
             } else if (bukkitEntity instanceof net.minecraft.world.entity.npc.WanderingTrader) {
-            	net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
+                net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
                 VillagerNbtIO.writeFrom(bukkitEntity);
             }
         }
@@ -240,12 +240,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public Entity getEntity(int id, World world) {
-    	net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntities().get(id);
-        if(e==null) {
+        net.minecraft.world.entity.Entity e = ((CraftWorld) world).getHandle().getEntities().get(id);
+        if (e == null) {
             /*Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, ((CraftWorld)world).getHandle());
             e = (net.minecraft.world.entity.Entity) dragonParts.get(id);*/
         }
-    	return e != null ? e.getBukkitEntity() : null;
+        return e != null ? e.getBukkitEntity() : null;
     }
 
     public org.bukkit.inventory.ItemStack asBukkitItemStack(ItemStack itemStack) {
@@ -282,7 +282,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean doStackWalking(Class leClass, int oldDepth) {
-        return leWalker.walk(s -> s.limit(oldDepth+1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
+        return leWalker.walk(s -> s.limit(oldDepth + 1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
     }
 
     private String parseNBTForEffect(String effectName) {

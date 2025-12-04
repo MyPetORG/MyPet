@@ -35,83 +35,82 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
 
-	private static final EntityDataAccessor<Byte> SHEARED_WATCHER = SynchedEntityData.defineId(EntityMySnowman.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> SHEARED_WATCHER = SynchedEntityData.defineId(EntityMySnowman.class, EntityDataSerializers.BYTE);
 
-	public EntityMySnowman(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMySnowman(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
-		if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
-			return InteractionResult.CONSUME;
-		}
+    @Override
+    public InteractionResult handlePlayerInteraction(Player entityhuman, InteractionHand enumhand, ItemStack itemStack) {
+        if (super.handlePlayerInteraction(entityhuman, enumhand, itemStack).consumesAction()) {
+            return InteractionResult.CONSUME;
+        }
 
-		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-			if (itemStack.getItem() == Item.byBlock(Blocks.PUMPKIN) && getMyPet().isSheared() && entityhuman.isShiftKeyDown()) {
-				getMyPet().setSheared(false);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					itemStack.shrink(1);
-					if (itemStack.getCount() <= 0) {
-						entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
-					}
-				}
-				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isShiftKeyDown()) {
-				getMyPet().setSheared(true);
-				getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-					try {
-						itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-					} catch (Error e) {
-						// TODO REMOVE
-					}
-				}
-				return InteractionResult.CONSUME;
-			}
-		}
-		return InteractionResult.PASS;
-	}
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Item.byBlock(Blocks.PUMPKIN) && getMyPet().isSheared() && entityhuman.isShiftKeyDown()) {
+                getMyPet().setSheared(false);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                    if (itemStack.getCount() <= 0) {
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                    }
+                }
+                return InteractionResult.CONSUME;
+            } else if (itemStack.getItem() == Items.SHEARS && !getMyPet().isSheared() && entityhuman.isShiftKeyDown()) {
+                getMyPet().setSheared(true);
+                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                    try {
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    } catch (Error e) {
+                        // TODO REMOVE
+                    }
+                }
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
-	@Override
-	public void updateVisuals() {
-		getEntityData().set(SHEARED_WATCHER, (byte) (getMyPet().isSheared() ? 0 : 16));
-	}
+    @Override
+    public void updateVisuals() {
+        getEntityData().set(SHEARED_WATCHER, (byte) (getMyPet().isSheared() ? 0 : 16));
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
 
-		builder.define(SHEARED_WATCHER, (byte) 16);
-	}
+        builder.define(SHEARED_WATCHER, (byte) 16);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.snow_golem.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.snow_golem.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.snow_golem.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.snow_golem.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return "entity.snow_golem.ambient";
-	}
+    @Override
+    protected String getLivingSound() {
+        return "entity.snow_golem.ambient";
+    }
 
-	@Override
-	public void playPetStepSound() {
-		makeSound("block.snow.step", 0.15F, 1.0F);
-	}
+    @Override
+    public void playPetStepSound() {
+        makeSound("block.snow.step", 0.15F, 1.0F);
+    }
 
-	@Override
-	public MySnowman getMyPet() {
-		return (MySnowman) myPet;
-	}
+    @Override
+    public MySnowman getMyPet() {
+        return (MySnowman) myPet;
+    }
 }

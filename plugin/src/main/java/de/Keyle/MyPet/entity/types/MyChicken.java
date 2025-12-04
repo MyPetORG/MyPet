@@ -27,6 +27,7 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
+
 public class MyChicken extends MyPet implements de.Keyle.MyPet.api.entity.types.MyChicken {
     protected boolean isBaby = false;
     protected String variantString = "temperate";

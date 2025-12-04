@@ -29,9 +29,9 @@ import org.bukkit.inventory.ItemStack;
 public interface MyPig extends MyPet, MyPetBaby {
     ItemStack getSaddle();
 
-    boolean hasSaddle();
-
     void setSaddle(ItemStack item);
+
+    boolean hasSaddle();
 
     String getVariant();
 

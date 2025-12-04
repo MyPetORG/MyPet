@@ -36,76 +36,76 @@ import org.bukkit.Sound;
 @EntitySize(width = 0.5100001F, height = 0.5100001F)
 public class EntityMyMagmaCube extends EntityMyPet {
 
-	private static final EntityDataAccessor<Integer> SIZE_WATCHER = SynchedEntityData.defineId(EntityMyMagmaCube.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SIZE_WATCHER = SynchedEntityData.defineId(EntityMyMagmaCube.class, EntityDataSerializers.INT);
 
-	int jumpDelay;
+    int jumpDelay;
 
-	public EntityMyMagmaCube(Level world, MyPet myPet) {
-		super(world, myPet);
-	}
+    public EntityMyMagmaCube(Level world, MyPet myPet) {
+        super(world, myPet);
+    }
 
-	@Override
-	protected String getMyPetDeathSound() {
-		return "entity.magma_cube.death";
-	}
+    @Override
+    protected String getMyPetDeathSound() {
+        return "entity.magma_cube.death";
+    }
 
-	@Override
-	protected String getHurtSound() {
-		return "entity.magma_cube.hurt";
-	}
+    @Override
+    protected String getHurtSound() {
+        return "entity.magma_cube.hurt";
+    }
 
-	@Override
-	protected String getLivingSound() {
-		return null;
-	}
+    @Override
+    protected String getLivingSound() {
+        return null;
+    }
 
-	@Override
-	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(SIZE_WATCHER, 1); //size
-	}
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SIZE_WATCHER, 1); //size
+    }
 
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
 
-		if (this.onGround && jumpDelay-- <= 0) {
-			getJumpControl().jump();
-			jumpDelay = (this.random.nextInt(20) + 50);
-			this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_MAGMA_CUBE_JUMP, 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
-		}
-	}
+        if (this.onGround && jumpDelay-- <= 0) {
+            getJumpControl().jump();
+            jumpDelay = (this.random.nextInt(20) + 50);
+            this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_MAGMA_CUBE_JUMP, 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+        }
+    }
 
-	@Override
-	public void updateVisuals() {
-		int size = Math.max(1, getMyPet().getSize());
-		getEntityData().set(SIZE_WATCHER, size);
-		this.refreshDimensions();
-		if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-			petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
-		}
-	}
+    @Override
+    public void updateVisuals() {
+        int size = Math.max(1, getMyPet().getSize());
+        getEntityData().set(SIZE_WATCHER, size);
+        this.refreshDimensions();
+        if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
+        }
+    }
 
-	@Override
-	public net.minecraft.world.entity.EntityDimensions getDefaultDimensions(Pose entitypose) {
-		EntitySize es = this.getClass().getAnnotation(EntitySize.class);
-		if (es != null) {
-			int size = Math.max(1, getMyPet().getSize());
-			float width = es.width();
-			float height = Float.isNaN(es.height()) ? width : es.height();
-			return new net.minecraft.world.entity.EntityDimensions(width * size, height * size, (float) (0.85 * width * size), EntityAttachments.createDefault(width * size, height * size), false);
-		}
-		return super.getDimensions(entitypose);
-	}
+    @Override
+    public net.minecraft.world.entity.EntityDimensions getDefaultDimensions(Pose entitypose) {
+        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
+        if (es != null) {
+            int size = Math.max(1, getMyPet().getSize());
+            float width = es.width();
+            float height = Float.isNaN(es.height()) ? width : es.height();
+            return new net.minecraft.world.entity.EntityDimensions(width * size, height * size, (float) (0.85 * width * size), EntityAttachments.createDefault(width * size, height * size), false);
+        }
+        return super.getDimensions(entitypose);
+    }
 
-	@Override
-	public MyMagmaCube getMyPet() {
-		return (MyMagmaCube) myPet;
-	}
+    @Override
+    public MyMagmaCube getMyPet() {
+        return (MyMagmaCube) myPet;
+    }
 
-	@Override
-	public void setPathfinder() {
-		super.setPathfinder();
-		petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
-	}
+    @Override
+    public void setPathfinder() {
+        super.setPathfinder();
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
+    }
 }

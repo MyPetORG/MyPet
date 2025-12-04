@@ -38,11 +38,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.keyle.knbt.*;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -53,10 +49,10 @@ import java.util.*;
 
 public class MyPetPlayerImpl implements MyPetPlayer {
 
+    protected final UUID internalUUID;
     protected String lastKnownPlayerName;
     protected String lastLanguage = "en_US";
     protected UUID mojangUUID = null;
-    protected final UUID internalUUID;
     protected boolean onlineMode = false;
 
     protected boolean captureHelperMode = false;
@@ -128,12 +124,12 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return autoRespawn;
     }
 
-    public void setAutoRespawnMin(int value) {
-        autoRespawnMin = value;
-    }
-
     public int getAutoRespawnMin() {
         return autoRespawnMin;
+    }
+
+    public void setAutoRespawnMin(int value) {
+        autoRespawnMin = value;
     }
 
     public float getPetLivingSoundVolume() {
@@ -215,12 +211,6 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return petWorldUUID.containsKey(worldGroup.getName());
     }
 
-    public void setExtendedInfo(TagCompound compound) {
-        if (extendedInfo.getCompoundData().isEmpty()) {
-            extendedInfo = compound;
-        }
-    }
-
     public void addExtendedInfo(String key, TagBase tag) {
         extendedInfo.getCompoundData().put(key, tag);
     }
@@ -234,6 +224,12 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public TagCompound getExtendedInfo() {
         return extendedInfo;
+    }
+
+    public void setExtendedInfo(TagCompound compound) {
+        if (extendedInfo.getCompoundData().isEmpty()) {
+            extendedInfo = compound;
+        }
     }
 
     // -----------------------------------------------------------------------------
@@ -259,14 +255,14 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return Util.getOfflinePlayerUUID(getName());
     }
 
+    public UUID getMojangUUID() {
+        return mojangUUID;
+    }
+
     public void setMojangUUID(UUID uuid) {
         if (uuid != null) {
             this.mojangUUID = uuid;
         }
-    }
-
-    public UUID getMojangUUID() {
-        return mojangUUID;
     }
 
     public String getLanguage() {
@@ -440,7 +436,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             if (myPet.getStatus() == PetState.Here) {
                 if (myPet.getLocation().get().getWorld() != p.getLocation().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), p.getLocation()) > 40) {
                     myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
-                    if(!MyPetApi.getCompatUtil().getMinecraftVersion().startsWith("1.8")) {
+                    if (!MyPetApi.getCompatUtil().getMinecraftVersion().startsWith("1.8")) {
                         if (!p.isGliding()) {
                             myPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Despawn", myPet.getOwner(), myPet.getPetName()));
                         }

@@ -26,20 +26,7 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.commands.admin.CommandOptionCleanup;
-import de.Keyle.MyPet.commands.admin.CommandOptionClone;
-import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
-import de.Keyle.MyPet.commands.admin.CommandOptionExp;
-import de.Keyle.MyPet.commands.admin.CommandOptionExpRate;
-import de.Keyle.MyPet.commands.admin.CommandOptionInfo;
-import de.Keyle.MyPet.commands.admin.CommandOptionName;
-import de.Keyle.MyPet.commands.admin.CommandOptionReload;
-import de.Keyle.MyPet.commands.admin.CommandOptionRemove;
-import de.Keyle.MyPet.commands.admin.CommandOptionRespawn;
-import de.Keyle.MyPet.commands.admin.CommandOptionSkilltree;
-import de.Keyle.MyPet.commands.admin.CommandOptionSwitch;
-import de.Keyle.MyPet.commands.admin.CommandOptionTicket;
-import de.Keyle.MyPet.commands.admin.CommandOptionUpdate;
+import de.Keyle.MyPet.commands.admin.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -49,8 +36,8 @@ import java.util.*;
 
 public class CommandAdmin implements CommandTabCompleter {
 
-    private static List<String> optionsList = new ArrayList<>();
     public static final Map<String, CommandOption> COMMAND_OPTIONS = new HashMap<>();
+    private static List<String> optionsList = new ArrayList<>();
 
     public CommandAdmin() {
         COMMAND_OPTIONS.clear();

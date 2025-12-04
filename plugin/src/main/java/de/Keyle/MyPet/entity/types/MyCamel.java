@@ -42,10 +42,6 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         return saddle;
     }
 
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
-
     public void setSaddle(ItemStack item) {
         if (item != null && item.getType() != Material.SADDLE) {
             return;
@@ -57,6 +53,10 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
     }
 
     @Override

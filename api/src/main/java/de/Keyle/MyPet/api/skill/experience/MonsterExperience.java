@@ -145,51 +145,12 @@ public class MonsterExperience {
         this.identifier = identifier;
     }
 
-    public double getRandomExp() {
-        return max == min ? max : ((int) (doubleRandom(min, max) * 100)) / 100.;
-    }
-
-    public double getMin() {
-        return min;
-    }
-
-    public double getMax() {
-        return max;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setMin(double min) {
-        this.min = min;
-        if (min > max) {
-            max = min;
-        }
-    }
-
-    public void setMax(double max) {
-        this.max = max;
-        if (max < min) {
-            min = max;
-        }
-    }
-
-    public void setExp(double exp) {
-        max = (min = exp);
-    }
-
     public static void addCustomExperience(MonsterExperience experience) {
         CUSTOM_MOB_EXP.put(experience.identifier, experience);
     }
 
     private static double doubleRandom(double low, double high) {
         return Math.random() * (high - low) + low;
-    }
-
-    @Override
-    public String toString() {
-        return identifier + "{min=" + min + ", max=" + max + "}";
     }
 
     @SuppressWarnings("RedundantCast")
@@ -231,5 +192,44 @@ public class MonsterExperience {
             return mobExp.get(identifier);
         }
         return UNKNOWN;
+    }
+
+    public double getRandomExp() {
+        return max == min ? max : ((int) (doubleRandom(min, max) * 100)) / 100.;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public void setMin(double min) {
+        this.min = min;
+        if (min > max) {
+            max = min;
+        }
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public void setMax(double max) {
+        this.max = max;
+        if (max < min) {
+            min = max;
+        }
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setExp(double exp) {
+        max = (min = exp);
+    }
+
+    @Override
+    public String toString() {
+        return identifier + "{min=" + min + ", max=" + max + "}";
     }
 }

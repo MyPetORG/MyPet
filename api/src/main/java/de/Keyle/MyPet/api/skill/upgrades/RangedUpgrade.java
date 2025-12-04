@@ -34,11 +34,17 @@ import lombok.experimental.Accessors;
 @ToString
 @SkillName("Ranged")
 public class RangedUpgrade implements Upgrade<Ranged> {
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier damageModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeIntegerModifier rateOfFireModifier = null;
-    @Getter @Setter @Accessors(chain = true)
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeEnumModifier<Ranged.Projectile> projectileModifier = null;
 
     @Override

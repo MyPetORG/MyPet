@@ -26,11 +26,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 @DefaultInfo(food = {"seagrass"})
 public interface MyPufferfish extends MyPet {
 
-    enum PuffState {
-        Unpuffed, SemiPuffed, FullyPuffed
-    }
+    PuffState getPuffState();
 
     void setPuffState(PuffState state);
 
-    PuffState getPuffState();
+    enum PuffState {
+        Unpuffed, SemiPuffed, FullyPuffed
+    }
 }

@@ -29,25 +29,25 @@ import net.minecraft.world.phys.Vec3;
 @Compat("v1_21_R2")
 public class MyPetRandomFly extends MyPetRandomStroll {
 
-	protected EntityMyPet petEntity;
+    protected EntityMyPet petEntity;
 
-	public MyPetRandomFly(EntityMyPet petEntity, int startDistance) {
-		super(petEntity, startDistance);
-		this.petEntity = petEntity;
-	}
+    public MyPetRandomFly(EntityMyPet petEntity, int startDistance) {
+        super(petEntity, startDistance);
+        this.petEntity = petEntity;
+    }
 
-	@Override
-	protected Vec3 getPosition() {
-		Vec3 vec3d = this.petEntity.getViewVector(0.0F);
-		boolean flag = true;
-		Vec3 vec3d1 = HoverRandomPos.getPos(this.petEntity, 8, 7, vec3d.x, vec3d.z, 1.5707964F, 3, 1);
+    @Override
+    protected Vec3 getPosition() {
+        Vec3 vec3d = this.petEntity.getViewVector(0.0F);
+        boolean flag = true;
+        Vec3 vec3d1 = HoverRandomPos.getPos(this.petEntity, 8, 7, vec3d.x, vec3d.z, 1.5707964F, 3, 1);
 
-		return vec3d1 != null ? vec3d1 : AirAndWaterRandomPos.getPos(this.petEntity, 8, 4, -2, vec3d.x, vec3d.z, 1.5707963705062866D);
-	}
+        return vec3d1 != null ? vec3d1 : AirAndWaterRandomPos.getPos(this.petEntity, 8, 4, -2, vec3d.x, vec3d.z, 1.5707963705062866D);
+    }
 
-	@Override
-	protected void applySpeed() {
-		double walkSpeed = owner.getAbilities().walkingSpeed+0.4f;
-		nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
-	}
+    @Override
+    protected void applySpeed() {
+        double walkSpeed = owner.getAbilities().walkingSpeed + 0.4f;
+        nav.getParameters().addSpeedModifier("RandomStroll", walkSpeed);
+    }
 }

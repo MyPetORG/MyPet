@@ -39,6 +39,11 @@ public class MyPetStatusEvent extends Event {
         this.state = state;
     }
 
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public StoredMyPet getMyPet() {
         return myPet;
     }
@@ -52,11 +57,6 @@ public class MyPetStatusEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -53,10 +53,28 @@ import java.util.*;
  */
 public class CustomInventory implements InventoryHolder {
     /**
+     * Track instances and register a single shared shutdown listener (no per-instance listeners)
+     */
+    private static final Set<CustomInventory> INSTANCES = Collections.newSetFromMap(new WeakHashMap<>());
+    private static boolean LISTENER_REGISTERED = false;
+    private static final Listener SHUTDOWN_LISTENER = new Listener() {
+        @EventHandler
+        public void onPluginDisable(PluginDisableEvent e) {
+            if (!e.getPlugin().equals(MyPetApi.getPlugin())) return;
+            closeAllOpen();
+            INSTANCES.clear();
+            LISTENER_REGISTERED = false;
+        }
+    };
+    /**
+     * Auxiliary viewer list used to track open/close when the backing inventory
+     * may not yet be initialized.
+     */
+    private final List<HumanEntity> transaction = new ArrayList<>();
+    /**
      * Bukkit inventory that stores the actual contents.
      */
     private Inventory bukkitInventory;
-
     /**
      * Current display name (title) of the inventory GUI.
      * Defaults to "Inventory".
@@ -75,48 +93,6 @@ public class CustomInventory implements InventoryHolder {
      * Defaults to 64.
      */
     private int stackSize = 64;
-    /**
-     * Auxiliary viewer list used to track open/close when the backing inventory
-     * may not yet be initialized.
-     */
-    private final List<HumanEntity> transaction = new ArrayList<>();
-
-
-    /**
-     * Track instances and register a single shared shutdown listener (no per-instance listeners)
-     */
-    private static final Set<CustomInventory> INSTANCES = Collections.newSetFromMap(new WeakHashMap<>());
-    private static boolean LISTENER_REGISTERED = false;
-    private static final Listener SHUTDOWN_LISTENER = new Listener() {
-        @EventHandler
-        public void onPluginDisable(PluginDisableEvent e) {
-            if (!e.getPlugin().equals(MyPetApi.getPlugin())) return;
-            closeAllOpen();
-            INSTANCES.clear();
-            LISTENER_REGISTERED = false;
-        }
-    };
-
-    /**
-     * Ensures the shared shutdown listener is registered exactly once for the plugin.
-     * Thread-safe to guard against concurrent initialization.
-     */
-    private static synchronized void ensureListener() {
-        if (!LISTENER_REGISTERED) {
-            Bukkit.getPluginManager().registerEvents(SHUTDOWN_LISTENER, MyPetApi.getPlugin());
-            LISTENER_REGISTERED = true;
-        }
-    }
-
-    /**
-     * Closes all open inventories for all currently tracked CustomInventory instances.
-     * Invoked on plugin disable by the shared shutdown listener.
-     */
-    static void closeAllOpen() {
-        for (CustomInventory ci : new ArrayList<>(INSTANCES)) {
-            if (ci != null) ci.close();
-        }
-    }
 
     /**
      * Creates a new CustomInventory instance and ensures the shared shutdown listener
@@ -138,6 +114,27 @@ public class CustomInventory implements InventoryHolder {
         this();
         setSize(size);
         setName(name);
+    }
+
+    /**
+     * Ensures the shared shutdown listener is registered exactly once for the plugin.
+     * Thread-safe to guard against concurrent initialization.
+     */
+    private static synchronized void ensureListener() {
+        if (!LISTENER_REGISTERED) {
+            Bukkit.getPluginManager().registerEvents(SHUTDOWN_LISTENER, MyPetApi.getPlugin());
+            LISTENER_REGISTERED = true;
+        }
+    }
+
+    /**
+     * Closes all open inventories for all currently tracked CustomInventory instances.
+     * Invoked on plugin disable by the shared shutdown listener.
+     */
+    static void closeAllOpen() {
+        for (CustomInventory ci : new ArrayList<>(INSTANCES)) {
+            if (ci != null) ci.close();
+        }
     }
 
     /**
@@ -247,8 +244,8 @@ public class CustomInventory implements InventoryHolder {
     /**
      * Sets the item for the specified slot.
      *
-     * @param i          zero-based slot index
-     * @param itemStack  the item to set (may be null to clear)
+     * @param i         zero-based slot index
+     * @param itemStack the item to set (may be null to clear)
      */
     public void setItem(int i, ItemStack itemStack) {
         createInventoryIfNeeded();
