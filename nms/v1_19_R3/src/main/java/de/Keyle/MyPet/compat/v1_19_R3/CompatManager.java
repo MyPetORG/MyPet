@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.compat.v1_19_R3.services.EntityConverterService;
-import de.Keyle.MyPet.compat.v1_19_R3.services.RepositoryMyPetConverterService;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
@@ -42,7 +41,6 @@ public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager impleme
     public void init() {
         MyPetApi.getServiceManager().registerService(EggIconService.class);
         MyPetApi.getServiceManager().registerService(EntityConverterService.class);
-        MyPetApi.getServiceManager().registerService(RepositoryMyPetConverterService.class);
     }
 
     @Override

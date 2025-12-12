@@ -37,7 +37,6 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -686,11 +685,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
 
                 inactiveMyPet.setWorldGroup(wg.getName());
-
-                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                for (RepositoryMyPetConverterService converter : converters) {
-                    converter.convert(inactiveMyPet);
-                }
 
                 MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
                 Bukkit.getServer().getPluginManager().callEvent(createEvent);

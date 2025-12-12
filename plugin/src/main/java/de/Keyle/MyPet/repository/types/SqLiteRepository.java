@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagStream;
@@ -397,11 +396,6 @@ public class SqLiteRepository implements Repository {
 
                 pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
                 pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
-
-                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                for (RepositoryMyPetConverterService converter : converters) {
-                    converter.convert(pet);
-                }
 
                 pets.add(pet);
             }

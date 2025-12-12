@@ -34,11 +34,11 @@ import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.MinecraftVersion;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.Keyle.MyPet.skill.skills.LifeImpl;
@@ -181,7 +181,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public TagCompound writeExtendedInfo() {
         TagCompound newTag = new TagCompound();
-        newTag.put("Version", new TagShort(RepositoryMyPetConverterService.Version.valueOf(MyPetApi.getCompatUtil().getInternalVersion()).ordinal()));
+        newTag.put("Version", new TagShort(MinecraftVersion.valueOf(MyPetApi.getCompatUtil().getInternalVersion()).ordinal()));
         return newTag;
     }
 

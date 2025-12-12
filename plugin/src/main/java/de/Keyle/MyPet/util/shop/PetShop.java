@@ -38,7 +38,6 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import lombok.Getter;
 import lombok.Setter;
@@ -303,11 +302,6 @@ public class PetShop {
                     ShopMyPet pet = new ShopMyPet(name);
                     try {
                         pet.load(pets.getConfigurationSection(name));
-
-                        List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                        for (RepositoryMyPetConverterService converter : converters) {
-                            converter.convert(pet);
-                        }
 
                         if (pet.getPosition() < 0) {
                             filler.add(pet);

@@ -37,7 +37,6 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagCompound;
@@ -483,11 +482,6 @@ public class MySqlRepository implements Repository {
                     pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
                 } catch (ZipException exception) {
                     MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
-                }
-
-                List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                for (RepositoryMyPetConverterService converter : converters) {
-                    converter.convert(pet);
                 }
 
                 pets.add(pet);

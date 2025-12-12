@@ -30,11 +30,11 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationNBT;
-import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
+import de.keyle.knbt.TagString;
 import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -189,11 +189,6 @@ public class NbtRepository implements Repository {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTags.get(petUUID));
 
-                    List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                    for (RepositoryMyPetConverterService converter : converters) {
-                        converter.convert(myPet);
-                    }
-
                     petList.add(myPet);
                 }
             }
@@ -219,11 +214,6 @@ public class NbtRepository implements Repository {
                 if (owner != null) {
                     InactiveMyPet myPet = new InactiveMyPet(owner);
                     myPet.load(petTag);
-
-                    List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
-                    for (RepositoryMyPetConverterService converter : converters) {
-                        converter.convert(myPet);
-                    }
 
                     callback.run(myPet);
                 }

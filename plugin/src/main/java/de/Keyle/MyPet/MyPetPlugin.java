@@ -49,7 +49,6 @@ import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
-import de.Keyle.MyPet.services.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltree.requirements.NoSkilltreeRequirement;
@@ -570,7 +569,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     }
 
     private void registerServices() {
-        serviceManager.registerService(RepositoryMyPetConverterService.class);
         serviceManager.registerService(ItemDatabase.class);
         serviceManager.registerService(LeashFlagManager.class);
         serviceManager.registerService(ExperienceCache.class);
