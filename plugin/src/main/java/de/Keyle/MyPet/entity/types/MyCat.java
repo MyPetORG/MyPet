@@ -32,7 +32,7 @@ import org.bukkit.entity.Cat.Type;
 
 public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCat {
 
-    // Needed as some newer versions have integer -> Type mismatches
+    // Stable plugin-owned mapping for persistence and NMS conversion
     static enum OwnCatType {
         TABBY(Type.TABBY),
         BLACK(Type.BLACK),
@@ -44,9 +44,9 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         RAGDOLL(Type.RAGDOLL),
         WHITE(Type.WHITE),
         JELLIE(Type.JELLIE),
-        ALL_BLACK(Type.ALL_BLACK),;
+        ALL_BLACK(Type.ALL_BLACK);
 
-        private Type bukkitType;
+        private final Type bukkitType;
 
         OwnCatType(Type type) {
             bukkitType = type;
@@ -66,6 +66,30 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         super(petOwner);
     }
 
+    /**
+     * Map Bukkit Cat.Type to plugin-owned OwnCatType ordinal for stable persistence/NMS conversion
+     */
+    public static int getOwnTypeOrdinal(Type type) {
+        OwnCatType[] values = OwnCatType.values();
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].getBukkitType() == type) {
+                return i;
+            }
+        }
+        return 0; // default to TABBY
+    }
+
+    /**
+     * Map plugin-owned OwnCatType ordinal back to Bukkit Cat.Type
+     */
+    public static Type getTypeFromOwnOrdinal(int ownOrdinal) {
+        OwnCatType[] values = OwnCatType.values();
+        if (ownOrdinal >= 0 && ownOrdinal < values.length) {
+            return values[ownOrdinal].getBukkitType();
+        }
+        return Type.TABBY; // default
+    }
+
     public Type getCatType() {
         return catType;
     }
@@ -75,6 +99,11 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    @Override
+    public int getCatTypeOrdinal() {
+        return getOwnTypeOrdinal(catType);
     }
 
     @Override
@@ -115,7 +144,8 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("CatType", new TagInt(getCatType().ordinal()));
+        // Store plugin-owned OwnCatType ordinal for stable persistence
+        info.getCompoundData().put("CatType", new TagInt(getOwnTypeOrdinal(getCatType())));
         info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
         info.getCompoundData().put("Tamed", new TagByte(isTamed()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
@@ -125,8 +155,26 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     @Override
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKey("CatType")) {
-            Type leType = OwnCatType.values()[info.getAs("CatType", TagInt.class).getIntData()].getBukkitType();
-            setCatType(leType);
+            int stored = info.getAs("CatType", TagInt.class).getIntData();
+            OwnCatType[] values = OwnCatType.values();
+
+            // Try to read as OwnCatType ordinal (new format)
+            if (stored >= 0 && stored < values.length) {
+                setCatType(getTypeFromOwnOrdinal(stored));
+            } else {
+                // Fallback: try to interpret as old Bukkit Type.ordinal() for backwards compatibility
+                boolean found = false;
+                for (OwnCatType ownType : values) {
+                    if (ownType.getBukkitType().ordinal() == stored) {
+                        setCatType(ownType.getBukkitType());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    setCatType(Type.TABBY); // default fallback
+                }
+            }
         }
         if (info.containsKeyAs("CollarColor", TagInt.class)) {
             setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagInt.class).getIntData()]);

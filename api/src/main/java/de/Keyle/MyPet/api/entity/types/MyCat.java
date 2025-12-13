@@ -33,6 +33,11 @@ public interface MyCat extends MyPet, MyPetBaby {
 
     void setCatType(Type value);
 
+    /**
+     * Get the plugin-owned ordinal for this cat's type for NMS conversion
+     */
+    int getCatTypeOrdinal();
+
     DyeColor getCollarColor();
 
     void setCollarColor(DyeColor value);

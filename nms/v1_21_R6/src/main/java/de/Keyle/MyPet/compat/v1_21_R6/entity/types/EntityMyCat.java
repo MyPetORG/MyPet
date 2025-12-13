@@ -136,8 +136,9 @@ public class EntityMyCat extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);
-		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(getMyPet().getCatType().ordinal())));
+		// Use plugin-owned OwnCatType ordinal for consistent mapping
+		Registry<CatVariant> registry = this.registryAccess().lookupOrThrow(Registries.CAT_VARIANT);
+		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(getMyPet().getCatTypeOrdinal())));
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
 		byte b0 = this.getEntityData().get(SIT_WATCHER);

@@ -129,7 +129,8 @@ public class EntityMyCat extends EntityMyPet {
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(VARIANT_WATCHER, VariantConverter.convertCatVariant(getMyPet().getCatType().ordinal()));
+		// Use plugin-owned OwnCatType ordinal for consistent mapping
+		this.getEntityData().set(VARIANT_WATCHER, VariantConverter.convertCatVariant(getMyPet().getCatTypeOrdinal()));
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
 		byte b0 = this.getEntityData().get(SIT_WATCHER);
