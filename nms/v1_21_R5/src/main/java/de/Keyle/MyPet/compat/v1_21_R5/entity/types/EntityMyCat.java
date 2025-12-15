@@ -28,6 +28,7 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.util.VariantConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -137,7 +138,7 @@ public class EntityMyCat extends EntityMyPet {
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		// Use plugin-owned OwnCatType ordinal for consistent mapping
-		Registry<CatVariant> registry = this.registryAccess().lookupOrThrow(Registries.CAT_VARIANT);
+		Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);
 		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(getMyPet().getCatTypeOrdinal())));
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 

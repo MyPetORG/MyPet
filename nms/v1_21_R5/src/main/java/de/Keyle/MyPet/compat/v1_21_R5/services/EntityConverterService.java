@@ -644,7 +644,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     public void convertCat(Cat cat, TagCompound properties) {
         properties.getCompoundData().put("CollarColor", new TagInt(cat.getCollarColor().ordinal()));
         // Use plugin-owned OwnCatType ordinal for stable persistence
-        properties.getCompoundData().put("CatType", new TagInt(de.Keyle.MyPet.entity.types.MyCat.getOwnTypeOrdinal(cat.getCatType())));
+        properties.getCompoundData().put("CatType", new TagInt(MyCat.getOwnTypeOrdinal(cat.getCatType())));
     }
 
     public void convertMushroomCow(MushroomCow mushroomCow, TagCompound properties) {

@@ -136,7 +136,7 @@ public class EntityMyCat extends EntityMyPet {
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		// Use plugin-owned OwnCatType ordinal for consistent mapping
-		Registry<CatVariant> registry = this.registryAccess().lookupOrThrow(Registries.CAT_VARIANT);
+		Registry<CatVariant> registry = BuiltInRegistries.CAT_VARIANT;
 		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(getMyPet().getCatTypeOrdinal())));
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
